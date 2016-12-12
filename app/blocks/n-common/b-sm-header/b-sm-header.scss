@@ -1,10 +1,15 @@
+@import '../i-media/i-media';
+
 .b-sm-header {
+    position: relative;
+
     width: 100%;
 
     color: #000;
     border-bottom: 1px solid #eee;
 
     font-family: Proxima, sans-serif;
+    font-size: 20px;
     font-weight: 800;
 }
 
@@ -15,7 +20,7 @@
 }
 
 .b-sm-header__body {
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -44,13 +49,50 @@
 .b-sm-header__helper-text {
     display: inline-block;
 
+    padding-right: 10px;
+
+    vertical-align: middle;
+
     font-family: 'Times New Roman', Times, serif;
-    font-size: 20px;
     font-weight: 200;
 }
 
 .b-sm-header__contacts {
     display: inline-block;
+}
 
-    font-size: 20px;
+@include media-xl {
+    .b-sm-header__body {
+        padding: 0 40px;
+    }
+}
+
+@include media-l {
+}
+
+@include media-m {
+    .b-sm-header__helper-text {
+        display: none;
+    }
+}
+
+@include media-xs {
+    .b-sm-header__main-menu {
+        display: none;
+    }
+
+    .b-sm-header__menu-item {
+        display: block;
+        height: auto;
+        margin-right: 0;
+        padding: 10px 0 0 0;
+    }
+
+    .b-sm-header__menu-item_active-course {
+        border-bottom: none;
+    }
+
+    .b-sm-header__menu-item_active-school {
+        border-bottom: none;
+    }
 }

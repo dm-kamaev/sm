@@ -52,6 +52,7 @@ goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gList.TemplateStendhal');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
+goog.require('sm.gModal.TemplateSideMenu');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gModal.TemplateSuccess');
 goog.require('sm.gTab.TemplateCatalog');
@@ -199,6 +200,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'tab-catalog',
             sm.gTab.TemplateCatalog.tab
+        )
+        .setTemplateListItem(
+            'sideMenuModal',
+            sm.gModal.TemplateSideMenu.modalSideMenu
         );
 
     /** Heirs of the clobl blocks */

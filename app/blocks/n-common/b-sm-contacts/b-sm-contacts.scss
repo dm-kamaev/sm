@@ -1,8 +1,22 @@
-.b-sm-contacts__phone-number {
+.b-sm-contacts {
     display: inline-block;
-}
-.b-sm-contacts__phone-icon {
-    display: inline-block;
-    padding: 0 10px 0 10px;
+
+    text-align: left;
+
+    color: #000;
 }
 
+.b-sm-contacts__phone-number {
+    display: inline-block;
+
+    vertical-align: middle;
+
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.b-sm-contacts__phone-icon {
+    display: inline-block;
+
+    padding-right: 10px;
+}

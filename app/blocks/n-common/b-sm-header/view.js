@@ -2,6 +2,7 @@ goog.provide('sm.bSmHeader.View');
 
 goog.require('cl.iControl.View');
 goog.require('sm.bSmLink.View');
+goog.require('sm.gModal.ModalSideMenuView');
 
 
 goog.scope(function() {
@@ -60,6 +61,10 @@ goog.scope(function() {
     View.prototype.initDom = function() {
         this.dom.links = this.getElementsByClass(
             sm.bSmLink.View.CssClass.ROOT
+        );
+
+        this.dom.sideMenu = this.getElementByClass(
+            sm.gModal.ModalSideMenuView.CssClass.ROOT
         );
     };
 

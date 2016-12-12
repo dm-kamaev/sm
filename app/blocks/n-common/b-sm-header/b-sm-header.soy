@@ -51,6 +51,42 @@
  */
 {template .body}
     <div class="{call .rootClass /}__body">
+        {call .headerMainMenu data="all" /}
+        {call .headerSideMenu data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * headerSideMenu
+ */
+{template .headerSideMenu}
+    {let $content kind="html"}
+        {call .sectionNavigation data="all" /}
+    {/let}
+
+    <div class="{call .rootClass/}__side-menu">
+        {call .renderChild}
+            {param params: [
+                'type': 'sideMenuModal',
+                'renderParams': [
+                    'data': [
+                        'content': $content
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.bSmHeader.Template.Params.Data
+ * }}
+ */
+{template .headerMainMenu kind="html"}
+    <div class="{call .rootClass /}__main-menu">
         {call .sectionNavigation data="all" /}
         {call .sectionContacts data="all" /}
     </div>
@@ -123,7 +159,6 @@
 /**
  * Menu item template
  * @param params {{
- *
  *     name: string,
  *     url: string,
  *     type: string,

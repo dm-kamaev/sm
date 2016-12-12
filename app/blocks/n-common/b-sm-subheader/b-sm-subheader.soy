@@ -70,7 +70,9 @@
  */
 {template .body}
     <div class="{call .rootClass/}__body">
+        {call .sectionHamburgerMenu_ /}
         {call .sectionLogo_ data="all" /}
+        {call .sectionContacts_ data="all" /}
         {call .sectionLinks_ data="all" /}
         {call .sectionSearch_ data="all" /}
     </div>
@@ -94,6 +96,84 @@
                 {sp}{call .rootClass/}__section_logo
                 {sp}i-animate">
         {call .logo_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section Contacts
+ * @param params {{
+ *     data: {
+ *         contacts: {
+ *             phone: string
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionContacts_}
+    <div class="{call .rootClass/}__section
+                {sp}{call .rootClass/}__section_contacts
+                {sp}i-animate">
+        {call .contacts_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * sectionHamburgerMenu_
+ */
+{template .sectionHamburgerMenu_}
+    <div class="{call .rootClass /}__section
+                {sp}{call .rootClass /}__section_hamburger-menu">
+        {call .hamburgerMenu_ /}   
+    </div>
+{/template}
+
+
+/**
+ * hamburgerMenu_
+ */
+{template .hamburgerMenu_}
+    <div class="{call .rootClass /}__hamburger-menu">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon-svg',
+                'renderParams': [
+                    'data': [
+                        'type': 'hamburger-menu'
+                    ],
+                    'config': [
+                        'customClasses': ''
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+
+/**
+ * Contacts template
+ * @param params {{
+ *     data: {
+ *         contacts: sm.bSmContacts.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .contacts_ kind="html"}
+    <div class="{call .rootClass /}__contacts">
+        {call .renderChild}
+            {param params: [
+                'type': 'smContacts',
+                'renderParams': [
+                    'data': $params.data.contacts,
+                    'config': [
+                        'size': 'xl'
+                    ]
+                ]
+            ] /}
+        {/call}
     </div>
 {/template}
 

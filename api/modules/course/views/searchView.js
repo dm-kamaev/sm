@@ -106,8 +106,8 @@ searchView.render = function(data) {
             data.coursesList, data.aliases
         ),
         courses = courseView.list(aliasedCourses),
-        seoParams = data.seoParams || {};
-
+        seoParams = data.seoParams || {},
+        header = searchView.header(data.entityType, data.links);
     return {
         seo: {
             metaTitle: seoParams.tabTitle,
@@ -121,14 +121,13 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
-        header: searchView.header(data.entityType, data.links),
+        header: header,
         subHeader: searchView.subheader({
-            contacts: '',
+            contacts: header.data.contacts,
             listLinks: courseCategoryView.listLinks(
                 data.categories,
                 data.categoryAliases
             ),
-            pageAlias: data.currentCategory,
             favoriteEntities: favoriteView.list(data.favorites),
             user: user
         }),
@@ -248,7 +247,6 @@ searchView.subheader = function(data) {
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-
     return subheader.getParams();
 };
 

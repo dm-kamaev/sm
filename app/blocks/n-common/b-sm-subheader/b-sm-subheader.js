@@ -3,6 +3,7 @@ goog.provide('sm.bSmSubheader.SmSubheader');
 goog.require('cl.iControl.Control');
 goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
+goog.require('goog.dom.classes');
 goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmSubheader.View');
@@ -96,7 +97,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Subheader.Event = {
-        'SEARCH_SUBMIT': goog.events.getUniqueId('search_submit')
+        'SEARCH_SUBMIT': goog.events.getUniqueId('search_submit'),
+        'HAMBURGER_MENU_CLICK': goog.events.getUniqueId('hamburger_click')
     };
 
 
@@ -124,8 +126,44 @@ goog.scope(function() {
 
         this.initMinifiedSearchListeners_();
         this.initSearchListeners_();
+        this.initHamburgerMenuListener_();
+        this.initSearchModeListener_();
     };
 
+    /**
+     * Initializes search mode listener
+     * @private
+     */
+    Subheader.prototype.initSearchModeListener_ = function() {
+        this.listen(
+            sm.bSearch.Search.Event.SEARCH_MODE_INITED,
+            this.searchModeInitedHandler_
+        );
+        this.listen(
+            sm.bSearch.Search.Event.DEFAULT_MODE_INITED,
+            this.defaultModeInitedHandler_
+        );
+    };
+
+    /**
+     * @private
+     */
+    Subheader.prototype.searchModeInitedHandler_ = function() {
+        goog.dom.classes.add(
+            this.getView().getDom().searchSection,
+            View.CssClass.SEARCH_SECTION_ON_TOP
+        );
+    };
+
+    /**
+     * @private
+     */
+    Subheader.prototype.defaultModeInitedHandler_ = function() {
+        goog.dom.classes.remove(
+            this.getView().getDom().searchSection,
+            View.CssClass.SEARCH_SECTION_ON_TOP
+        );
+    };
 
     /**
      * Add given item to favorites
@@ -136,6 +174,25 @@ goog.scope(function() {
         this.favorite_.addItem(favoriteItem);
     };
 
+
+     /**
+     * Initializes listeners for view
+     * @private
+     */
+    Subheader.prototype.initHamburgerMenuListener_ = function() {
+        this.viewListen(
+            View.Event.HAMBURGER_MENU_CLICK,
+            this.onHamburgerMenuClick_
+        );
+    };
+
+    /**
+     * [onHamburgerMenuClick_ handler]
+     * @private
+     */
+    Subheader.prototype.onHamburgerMenuClick_ = function() {
+        this.dispatchEvent(Subheader.Event.HAMBURGER_MENU_CLICK);
+    };
 
     /**
      * Remove item with given id from favorites

@@ -5,6 +5,7 @@ goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
+goog.require('goog.events');
 goog.require('sm.iAnimate.Animate');
 
 
@@ -20,6 +21,12 @@ goog.require('sm.iAnimate.Animate');
 sm.bSmSubheader.View = function(opt_params, opt_type, opt_modifier) {
     sm.bSmSubheader.View.base(this, 'constructor', opt_params,
         opt_type, opt_modifier);
+
+    /**
+     * Dom elements collection
+     * @type {Object}
+     */
+    this.dom = {};
 };
 goog.inherits(sm.bSmSubheader.View, cl.iControl.View);
 
@@ -40,7 +47,18 @@ goog.scope(function() {
         DEFAULT_MODE: 'b-sm-subheader_mode_default',
         ANIMATION_ON: 'b-sm-subheader_animation_on',
         ANIMATION_OFF: 'b-sm-subheader_animation_off',
-        HEADER_LINK: 'b-sm-subheader__link'
+        HEADER_LINK: 'b-sm-subheader__link',
+        HAMBURGER_MENU: 'b-sm-subheader__hamburger-menu',
+        SEARCH_SECTION: 'b-sm-subheader__section_search',
+        SEARCH_SECTION_ON_TOP: 'b-sm-subheader__section_search_top'
+    };
+
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    View.Event = {
+        HAMBURGER_MENU_CLICK: goog.events.EventType.CLICK
     };
 
 
@@ -56,6 +74,51 @@ goog.scope(function() {
         this.initLinks_();
         this.initListLinks_();
         this.detectAnimationSupportion_();
+        this.initHamburgerMenu_();
+        this.initSearchSection_();
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.initHamburgerMenuListener_();
+    };
+
+    /**
+     * Initializes search section element
+     * @private
+     */
+    View.prototype.initSearchSection_ = function() {
+        this.dom.searchSection = this.getElementByClass(
+            View.CssClass.SEARCH_SECTION
+        );
+    };
+
+    /**
+     * Initializes listeners for root Element
+     * @private
+     */
+    View.prototype.initHamburgerMenuListener_ = function() {
+        this.getHandler().listen(
+            this.dom.hamburgerMenu,
+            View.Event.HAMBURGER_MENU_CLICK,
+            this.onHamburgerMenuClick_
+        );
+    };
+
+
+    /**
+     * Handler click on root Element
+     * @param {Object} event
+     * @private
+     */
+    View.prototype.onHamburgerMenuClick_ = function(event) {
+        this.dispatchEvent(View.Event.HAMBURGER_MENU_CLICK);
     };
 
 
@@ -101,6 +164,15 @@ goog.scope(function() {
         );
     };
 
+    /**
+     * Finds hamburger menu element on the page
+     * @private
+     */
+    View.prototype.initHamburgerMenu_ = function() {
+        this.dom.hamburgerMenu = this.getElementByClass(
+            View.CssClass.HAMBURGER_MENU
+        );
+    };
 
     /**
      * Find search dom elements

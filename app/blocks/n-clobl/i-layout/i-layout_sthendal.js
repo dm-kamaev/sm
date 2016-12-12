@@ -113,4 +113,17 @@ goog.scope(function() {
             this.getView().getDom().footer
         );
     };
+
+    /**
+     * Enter document
+     * @override
+     */
+    Layout.prototype.enterDocument = function() {
+        Layout.base(this, 'enterDocument');
+
+        this.listen(
+            sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
+            this.mainHeader.toggleMenu.bind(this.mainHeader)
+        );
+    };
 });  // goog.scope

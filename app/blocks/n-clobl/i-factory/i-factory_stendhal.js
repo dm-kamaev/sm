@@ -79,6 +79,8 @@ goog.require('sm.gList.ViewSelect');
 goog.require('sm.gList.ViewStendhal');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
+goog.require('sm.gModal.ModalSideMenu');
+goog.require('sm.gModal.ModalSideMenuView');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.ModalSuccess');
 goog.require('sm.gModal.ViewEnrollment');
@@ -209,6 +211,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('favorite-link', {
             control: sm.bFavoriteLink.FavoriteLink,
             view: sm.bFavoriteLink.View
+        })
+        .setControlListItem('sideMenuModal', {
+            control: sm.gModal.ModalSideMenu,
+            view: sm.gModal.ModalSideMenuView
         });
 
     /** Heirs of the clobl blocks */

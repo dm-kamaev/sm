@@ -22,8 +22,16 @@ goog.scope(function() {
         /**
          * Array of link instances
          * @type {array<sm.bSmLink.SmLink>}
+         * @private
          */
-        this.links = [];
+        this.links_ = [];
+
+        /**
+         * Side menu instance (actually it's a modal)
+         * @type {cl.gModal.Modal}
+         * @private
+         */
+        this.sideMenu_ = null;
     };
     goog.inherits(sm.bSmHeader.SmHeader, cl.iControl.Control);
     var Header = sm.bSmHeader.SmHeader;
@@ -46,6 +54,7 @@ goog.scope(function() {
         Header.base(this, 'decorateInternal', element);
 
         this.initLinks_();
+        this.initSideMenu_();
     };
 
 
@@ -55,15 +64,31 @@ goog.scope(function() {
      */
     Header.prototype.initLinks_ = function() {
         var links = this.getView().getLinks();
-        this.links = this.decorateChildren('smLink', links);
+        this.links_ = this.decorateChildren('smLink', links);
     };
 
+    /**
+     * @private
+     */
+    Header.prototype.initSideMenu_ = function() {
+        var dom = this.getView().getDom();
+        this.sideMenu_ =
+            this.decorateChild('sideMenuModal', dom.sideMenu);
+    };
 
     /**
      * @override
      */
     Header.prototype.enterDocument = function() {
         Header.base(this, 'enterDocument');
+    };
+
+    /**
+     * Shows or hides the menu
+     * @public
+     */
+    Header.prototype.toggleMenu = function() {
+        this.sideMenu_.show();
     };
 
 });  // goog.scope
