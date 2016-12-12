@@ -163,17 +163,19 @@
  */
 {template .contacts_ kind="html"}
     <div class="{call .rootClass /}__contacts">
-        {call .renderChild}
-            {param params: [
-                'type': 'smContacts',
-                'renderParams': [
-                    'data': $params.data.contacts,
-                    'config': [
-                        'size': 'xl'
-                    ]
-                ]
-            ] /}
-        {/call}
+    {if $params}
+    {/if}
+        // {call .renderChild}
+        //     {param params: [
+        //         'type': 'smContacts',
+        //         'renderParams': [
+        //             'data': $params.data.contacts,
+        //             'config': [
+        //                 'size': 'xl'
+        //             ]
+        //         ]
+        //     ] /}
+        // {/call}
     </div>
 {/template}
 

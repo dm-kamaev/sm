@@ -61,7 +61,7 @@ goog.scope(function() {
         Layout.base(this, 'decorateInternal', element);
 
         this.initAuthorization();
-        this.initMainHeader();
+        // this.initMainHeader();
         this.initSubheader();
         this.initFooter();
     };
@@ -121,9 +121,9 @@ goog.scope(function() {
     Layout.prototype.enterDocument = function() {
         Layout.base(this, 'enterDocument');
 
-        this.listen(
-            sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
-            this.mainHeader.toggleMenu.bind(this.mainHeader)
-        );
+        // this.listen(
+        //     sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
+        //     this.mainHeader.toggleMenu.bind(this.mainHeader)
+        // );
     };
 });  // goog.scope
