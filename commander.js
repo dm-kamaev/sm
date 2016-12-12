@@ -42,6 +42,7 @@ require('./console/seoDataOperator.js').Command;
 require('./console/specializedClassesOperator').Command;
 require('./console/activityOperator').Command;
 require('./console/updateAnalytics').Command;
+require('./console/getCoordsForArea').Command;
 
 /*
  * The line below initializes the interface on `node ./commander

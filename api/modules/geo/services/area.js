@@ -3,7 +3,7 @@
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const models = require('../../../../app/components/models').all;
-const geoView = require('../views/geoView');
+
 exports.name = 'area';
 
 
@@ -85,13 +85,11 @@ exports.getByName = async(function(areaName) {
  * @param  {Number} areaId
  * @return {Object[]} [ 55.733609, 37.633715 ],
  */
-exports.getCenterCoords = function (areaId) {
+exports.getCenterCoords = function(areaId) {
     return await(models.Area.findOne({
         attributes: ['centerCoords'],
         where: {
             id: areaId
         }
     })).centerCoords;
-    // sort order value
-    // return geoView.coordinatesDefault(area.centerCoords);
 };
