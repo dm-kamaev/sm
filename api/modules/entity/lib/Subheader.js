@@ -11,9 +11,7 @@ class Subheader {
          * @type {Object<string, string>}
          * @protected
          */
-        this.logo = {
-            linkUrl: '/'
-        };
+        this.logo = {};
 
 
         /**

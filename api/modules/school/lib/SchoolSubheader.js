@@ -21,6 +21,7 @@ class SchoolSubheader extends Subheader {
          */
         this.logo = {
             altText: '«Школы Мела»',
+            linkUrl: '/',
             imgUrl: '/static/images/n-common/b-sm-subheader/school-logo.svg'
         };
 

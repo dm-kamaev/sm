@@ -21,6 +21,7 @@ class CourseSubheader extends Subheader {
          */
         this.logo = {
             altText: '«Курсы Мела»',
+            linkUrl: '/',
             imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
         };
 

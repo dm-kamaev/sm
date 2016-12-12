@@ -6,9 +6,11 @@ const egeResultView = require('../../study/views/egeResultView'),
     userView = require('../../user/views/user'),
     schoolView = require('./schoolView');
 
-const FilterPanel = require('../lib/SchoolFilterPanel');
+const FilterPanel = require('../lib/SchoolFilterPanel'),
+    Subheader = require('../lib/SchoolSubheader');
 
-const searchViewEntity = require('../../entity/views/searchView');
+const searchViewEntity = require('../../entity/views/searchView'),
+    favoriteView = require('../../favorite/views/favoriteView');
 
 const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
@@ -23,7 +25,7 @@ const DEFAULT_TITLE = 'Школы Москвы на карте. ' +
     'Список школ Москвы с возможностью выбора по параметрам. ' +
     'Школы Мела.';
 
-// favoriteView = require('../../favorite/views/favoriteView');
+const PAGE_ALIAS = 'school';
 
 var searchView = {};
 
@@ -81,28 +83,11 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/schools_sharing.png',
             fbClientId: data.fbClientId,
         },
-        subHeader: {
-            logo: {
-                altText: '«Школы Мела»',
-                linkUrl: '/',
-                imgUrl: '/static/images/n-common/b-sm-subheader/school-logo.svg'
-            },
-            links: {
-                nameL: 'Все школы Москвы',
-                nameM: 'Все школы',
-                nameS: 'Все школы Москвы',
-                url: '',
-            },
-            search: {
-                placeholder: 'Район, метро, номер школы',
-                pageAlias: 'school',
-            },
-            user: user,
-            favorites: {
-                items: [],
-                //favoriteView.list(data.favorites)
-            },
-        },
+        subHeader: searchView.subheader({
+            contacts: '',
+            favoriteEntities: favoriteView.list(data.favorites),
+            user: user
+        }),
         user: user,
         authSocialLinks: data.authSocialLinks,
         map: searchViewEntity.map(aliasedSchools, {
@@ -113,7 +98,7 @@ searchView.render = function(data) {
         search: {
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, номер школы',
-            pageAlias: 'school'
+            pageAlias: PAGE_ALIAS
         },
         resultsList: {
             title: seoParams.title,
@@ -251,6 +236,25 @@ searchView.filterPanel = function(data) {
     filterPanel.init(data);
 
     return filterPanel.getParams();
+};
+
+
+/**
+ * @param {Object<string, string>} data
+ * @return {Object}
+ */
+searchView.subheader = function(data) {
+    let subheader = new Subheader();
+
+    subheader.init({
+        isLogoRedirect: true,
+        contacts: data.contacts,
+        isSearchRedirect: false,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
+    return subheader.getParams();
 };
 
 module.exports = searchView;
