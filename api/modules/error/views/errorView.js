@@ -17,7 +17,8 @@ let view = {};
  *     user: Object,
  *     entityType: string,
  *     authSocialLinks: Object,
- *     favorites: Object
+ *     favorites: Object,
+ *     errorText: string
  * }} data
  * @return {Object}
  */
@@ -37,7 +38,7 @@ view.render = function(data) {
         user: user,
         authSocialLinks: data.authSocialLinks,
         error: {
-            text: 'Страница, которую вы искали, не найдена'
+            text: data.errorText || 'Страница, которую вы искали, не найдена'
         }
     };
 };

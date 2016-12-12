@@ -11,7 +11,11 @@ module.exports = function() {
     });
 
     passport.deserializeUser(async(function(id, done) {
-        var userData = await(services.user.getUserById(id));
-        done(null, userData);
+        try {
+            var userData = await(services.user.getUserById(id));
+            done(null, userData);
+        } catch (error) {
+            done(error, null);
+        }
     }));
 };

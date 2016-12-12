@@ -16,8 +16,6 @@ const headerView = require('../../../../api/modules/entity/views/haderView');
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
 
-const PageNotFoundError = require('../../error/lib/PageNotFoundError');
-
 const config = require('../../../config').config;
 
 const ANALYTICS_ID = config.schools.analyticsId,
@@ -58,16 +56,16 @@ exports.view = async(function(req, res, next) {
             ));
 
         if (!page) {
-            throw new PageNotFoundError();
+            return next();
         } else if (!page.entityId) {
-            next();
+            return next();
         } else {
             var schoolInstance = await(services.urls.getEntityByUrl(
                 alias,
                 entityType.SCHOOL
             ));
             if (!schoolInstance) {
-                throw new PageNotFoundError();
+                return next();
             } else if (alias != schoolInstance.alias) {
                 res.redirect(schoolInstance.alias);
             } else {
@@ -234,7 +232,7 @@ exports.list = async(function(req, res, next) {
                 requestParams
             ));
             if (!seoData.listParams) {
-                throw new PageNotFoundError();
+                return next();
             }
 
             let storedParams = JSON.parse(seoData.listParams.searchParameters);

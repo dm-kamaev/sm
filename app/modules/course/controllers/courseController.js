@@ -16,8 +16,6 @@ const soy = require('../../../components/soy'),
     headerView = require('../../../../api/modules/entity/views/haderView'),
     entityType = require('../../../../api/modules/entity/enums/entityType');
 
-const PageNotFoundError = require('../../error/lib/PageNotFoundError');
-
 const filterName = require('../../../../api/modules/course/enums/filterName');
 
 const logger = require('../../../components/logger/logger').getLogger('app');
@@ -96,7 +94,7 @@ controller.search = async(function(req, res, next) {
                 services.courseCategory.getByAlias(categoryName)
             );
         if (!categoryInstance) {
-            throw new PageNotFoundError();
+            return next();
         } else {
             let authSocialLinks = services.auth.getAuthSocialUrl(),
                 user = req.user || {},
@@ -203,7 +201,7 @@ controller.information = async(function(req, res, next) {
                 )
             });
         if (!page.course || !page.brand || !page.category) {
-            throw new PageNotFoundError();
+            return next();
         } else {
             let courseInstance = await(services.urls.getEntityByUrl(
                     alias, entityType.COURSE
@@ -213,7 +211,7 @@ controller.information = async(function(req, res, next) {
                 course.brandId != page.brand.id ||
                 course.courseType.categoryId != page.category.id
             ) {
-                throw new PageNotFoundError();
+                return next();
             } else {
                 let authSocialLinks = services.auth.getAuthSocialUrl(),
                     user = req.user || {};

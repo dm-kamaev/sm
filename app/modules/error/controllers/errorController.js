@@ -51,6 +51,15 @@ controller.schoolNotFound = async(function(req, res) {
 
     var data = await(dataPromises);
 
+    let errorText;
+
+    if (/(\/error)$/.test(req.path)) {
+        res.status(500);
+        errorText = 'Что-то пошло не так';
+    } else {
+        res.status(404);
+    }
+
     var popularAliases = await(services.page.getAliases(
         data.popularSchools.map(school => school.id),
         entityTypeEnum.SCHOOL
@@ -70,7 +79,7 @@ controller.schoolNotFound = async(function(req, res) {
                 },
                 seoLinks: seoView.linksList(data.seoLinks)
             },
-            errorText: 'Страница, которую вы искали, не найдена',
+            errorText: errorText || 'Страница, которую вы искали, не найдена',
             popularSchools: schoolView.popular(data.popularSchools),
             dataLinks: schoolView.dataLinks(),
             amountSchools: data.amountSchools,
@@ -84,13 +93,14 @@ controller.schoolNotFound = async(function(req, res) {
             }
         }
     });
-    res.status(404);
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });
 
 
-controller.notFound = async(function(req, res, next, entityType, subdomain) {
+controller.generalError = async(function(
+    req, res, next, entityType, subdomain
+) {
     let html;
     try {
         let authSocialLinks = services.auth.getAuthSocialUrl(),
@@ -100,12 +110,22 @@ controller.notFound = async(function(req, res, next, entityType, subdomain) {
             favorites: services.favorite.getFavoriteEntities(user.id)
         });
 
+        let errorText;
+
+        if (/(\/error)$/.test(req.path)) {
+            res.status(500);
+            errorText = 'Что-то пошло не так';
+        } else {
+            res.status(404);
+        }
+
         let templateData = errorView.render({
             entityType: entityType,
             user: user,
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
-            header: headerView.render(config, entityType)
+            header: headerView.render(config, entityType),
+            errorText: errorText
         });
 
         html = soy.render('sm.lErrorNotFound.Template.errorNotFound', {
@@ -125,8 +145,6 @@ controller.notFound = async(function(req, res, next, entityType, subdomain) {
                 }
             }
         });
-
-        res.status(404);
     } catch (error) {
         logger.error(error);
 
