@@ -355,7 +355,7 @@ schoolView.getMapItems = function(school) {
                     text: school.description,
                     link: {
                         text: 'Подробнее',
-                        url: entityType.SCHOOL + '/' + school.alias
+                        url: '/' + entityType.SCHOOL + '/' + school.alias
                     }
                 },
                 content: {
@@ -371,7 +371,7 @@ schoolView.getMapItems = function(school) {
                 title: {
                     id: school.id,
                     text: school.name,
-                    url: entityType.SCHOOL + '/' + school.alias
+                    url: '/' + entityType.SCHOOL + '/' + school.alias
                 },
                 subtitle: address.stages && address.stages != 'Другие адреса' ?
                     address.stages + ' ' + address.name :
