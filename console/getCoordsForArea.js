@@ -9,23 +9,18 @@ const commander = require('commander');
 const Area = require('../api/modules/geo/models/area.js');
 const axios = require('axios');
 const path = require('path');
-const util = require('util');
 const logger = require('../app/components/logger/logger.js').getLogger('app');
 
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
-const Converter = require("csvtojson").Converter,
-    lodashCompact = require('lodash/array/compact');
 
-const services = require('../app/components/services').all,
-    CsvConverter = require('./modules/modelArchiver/CsvConverter'),
+const CsvConverter = require('./modules/modelArchiver/CsvConverter'),
     Archiver = require('./modules/modelArchiver/Archiver');
 
 
 class GetCoordsForArea {
     /**
      * [constructor description]
-     * @return {[type]} [description]
      */
     constructor() {
         this.prefixAdress = 'город Москва,';
@@ -35,7 +30,6 @@ class GetCoordsForArea {
 
     /**
      * [start description]
-     * @return {[type]} [description]
      */
     start() {
         logger.info('START: get coordinates for every area and save to CSV');
@@ -44,9 +38,12 @@ class GetCoordsForArea {
         let csv = createCsv_(this.areasCoords);
         logger.info('CSV:');
         logger.info(csv);
-        let pathMigrations = path.join(__dirname, '../api/modules/geo/migrations/');
+        let pathMigrations = path.join(
+            __dirname,
+            '../api/modules/geo/migrations/'
+        );
         pathMigrations += '20161209170000-area-update-coords.tar.gz';
-        logger.info('pathMigrations= '+pathMigrations);
+        logger.info('pathMigrations= ' + pathMigrations);
         new Archiver(pathMigrations).compress(csv);
         logger.info('END: get coordinates for every area and save to CSV');
     }
@@ -54,7 +51,6 @@ class GetCoordsForArea {
 
     /**
      * [getCoords description]
-     * @return {[type]} [description]
      */
     getCoords() {
         let areasCoords = this.areasCoords;
@@ -105,8 +101,9 @@ function readAllAreas_() {
        center_coords: '{55.780066,37.628801}'
     },
    ]
- * @return {String}
- * "id"|"name"|"center_coords"\n47|"Красносельский"|"{55.781286,37.663306}"\n40|"Мещанский"|"{55.780066,37.628801}"
+ * @return {string}
+ * "id"|"name"|"center_coords"\n47|"Красносельский"|"{55.781286,37.663306}"\n
+ * 40|"Мещанский"|"{55.780066,37.628801}"
  */
 function createCsv_(areasCoords) {
     return CsvConverter.createCsv(areasCoords);
@@ -116,15 +113,13 @@ function createCsv_(areasCoords) {
 /**
  * arrayToStr_ postgres ARRAY to string format
  * @param  {Object[]} array ['55.781286', '37.663306']
- * @return {String}        '{55.781286,37.663306}'
+ * @return {string}        '{55.781286,37.663306}'
  */
 function arrayToStr_(array) {
-    return '{'+array.join(',')+'}';
+    return '{' + array.join(',') + '}';
 }
 
-// async(() => {
-//     new GetCoordsForArea().start();
-// })();
+
 commander
     .command('getCoordsForArea')
     .description('get coordinates for every area and save to CSV')
