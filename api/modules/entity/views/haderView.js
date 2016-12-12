@@ -13,7 +13,8 @@ const headerView = {};
  *     protocol: string,
  *     coursesHost: string,
  *     schoolsHost: string
- * }} data
+ * }} config
+ * @param {string} entityType
  * @return {Object<string, (string|Object)>}
  */
 headerView.render = function(config, entityType) {
@@ -31,14 +32,14 @@ headerView.render = function(config, entityType) {
 /**
  * Generate links for header menu
  * @param {{
- *     protocol: string
+ *     protocol: string,
  *     courses: {
  *         host: string
  *     },
  *     schools: {
  *         host: string
  *     }
- * }} data
+ * }} config
  * @return {Object<string, string>}
  */
 headerView.links = function(config) {
