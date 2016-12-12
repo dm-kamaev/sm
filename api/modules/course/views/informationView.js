@@ -6,7 +6,8 @@ const seoView = require('../../entity/views/seoView');
 
 const courseCategoryView = require('./courseCategoryView');
 
-const Subheader = require('../lib/CourseSubheader');
+const Subheader = require('../lib/CourseSubheader'),
+    Header = require('../../entity/lib/Header');
 
 let view = {};
 
@@ -45,7 +46,6 @@ view.render = function(data) {
         },
         header: data.header,
         subHeader: view.subheader({
-            contacts: '',
             listLinks: courseCategoryView.listLinks(
                 data.categories,
                 data.categoryAliases
@@ -72,7 +72,7 @@ view.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: true,
-        contacts: data.contacts,
+        contacts: Header.CONTACTS,
         listLinks: data.listLinks,
         isSearchRedirect: true,
         user: data.user,

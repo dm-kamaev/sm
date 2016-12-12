@@ -4,7 +4,8 @@ const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('../../course/views/courseCategoryView');
 
-const Subheader = require('../lib/CourseSubheader');
+const Subheader = require('../lib/CourseSubheader'),
+    Header = require('../../entity/lib/Header');
 
 const PAGE_ALIAS = 'search';
 
@@ -35,7 +36,6 @@ view.render = function(data) {
         authSocialLinks: data.authSocialLinks,
         header: data.header,
         subHeader: view.subheader({
-            contacts: '',
             listLinks: courseCategoryView.listLinks(
                 data.categories,
                 data.categoryAliases
@@ -69,7 +69,7 @@ view.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: false,
-        contacts: data.contacts,
+        contacts: Header.CONTACTS,
         listLinks: data.listLinks,
         isSearchRedirect: true,
         user: data.user,

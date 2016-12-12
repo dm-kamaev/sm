@@ -108,6 +108,7 @@ searchView.render = function(data) {
         ),
         courses = courseView.list(aliasedCourses),
         seoParams = data.seoParams || {};
+
     return {
         seo: {
             metaTitle: seoParams.tabTitle,
@@ -123,7 +124,6 @@ searchView.render = function(data) {
         },
         header: data.header,
         subHeader: searchView.subheader({
-            contacts: data.header.data.contacts,
             listLinks: courseCategoryView.listLinks(
                 data.categories,
                 data.categoryAliases
@@ -240,7 +240,7 @@ searchView.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: true,
-        contacts: data.contacts,
+        contacts: Header.CONTACTS,
         listLinks: data.listLinks,
         isSearchRedirect: data.pageAlias != COMMON_PAGE_ALIAS,
         user: data.user,

@@ -4,7 +4,8 @@ const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 
 const CourseSubheader = require('../../course/lib/CourseSubheader'),
-    SchoolSubheader = require('../../school/lib/SchoolSubheader');
+    SchoolSubheader = require('../../school/lib/SchoolSubheader'),
+    Header = require('../../entity/lib/Header');
 
 const entityTypeEnum = require('../../entity/enums/entityType');
 
@@ -28,7 +29,6 @@ view.render = function(data) {
             metaTitle: '404: Страница не найдена'
         },
         subHeader: view.subheader({
-            contacts: '',
             favoriteEntities: favoriteView.list(data.favorites),
             user: user,
             entityType: data.entityType
@@ -56,7 +56,7 @@ view.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: true,
-        contacts: data.contacts,
+        contacts: Header.CONTACTS,
         isSearchRedirect: true,
         user: data.user,
         favoriteEntities: data.favoriteEntities,

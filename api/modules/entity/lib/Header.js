@@ -2,6 +2,10 @@
 
 const entityTypeEnum = require('../enums/entityType');
 
+const CONTACTS = {
+    phone: '+7 (495) 478-68-24'
+};
+
 class Header {
 
     /**
@@ -91,9 +95,7 @@ class Header {
      * @protected
      */
     setContacts() {
-        this.params_.data.contacts = {
-            phone: '+7 (495) 478-68-24'
-        };
+        this.params_.data.contacts = CONTACTS;
 
         return this;
     }
@@ -220,5 +222,14 @@ class Header {
         };
     }
 }
+
+/**
+ * contacts
+ * @type {{
+ *     phone: string
+ * }}
+ * @static
+ */
+Header.CONTACTS = CONTACTS;
 
 module.exports = Header;

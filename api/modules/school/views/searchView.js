@@ -7,7 +7,8 @@ const egeResultView = require('../../study/views/egeResultView'),
     schoolView = require('./schoolView');
 
 const FilterPanel = require('../lib/SchoolFilterPanel'),
-    Subheader = require('../lib/SchoolSubheader');
+    Subheader = require('../lib/SchoolSubheader'),
+    Header = require('../../entity/lib/Header');
 
 const searchViewEntity = require('../../entity/views/searchView'),
     favoriteView = require('../../favorite/views/favoriteView');
@@ -248,7 +249,7 @@ searchView.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: true,
-        contacts: data.contacts,
+        contacts: Header.CONTACTS,
         isSearchRedirect: false,
         user: data.user,
         favoriteEntities: data.favoriteEntities,
