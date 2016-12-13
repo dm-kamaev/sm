@@ -61,6 +61,7 @@ goog.scope(function() {
         Home.base(this, 'decorateInternal', element);
 
         this.initSectionSearch_();
+        this.initSectionRecommendations_();
     };
 
 
@@ -69,9 +70,25 @@ goog.scope(function() {
      * @private
      */
     Home.prototype.initSectionSearch_ = function() {
+        var dom = this.getView().getDom();
+
         this.searchPanel_ = this.decorateChild(
             'smSearchPanel',
-            this.getView().getDom().searchPanel
+            dom.searchPanel
+        );
+    };
+
+
+    /**
+     * Init recommendations section instances
+     * @private
+     */
+    Home.prototype.initSectionRecommendations_ = function() {
+        var dom = this.getView().getDom();
+
+        this.catalog_ = this.decorateChild(
+            'smCatalog',
+            dom.catalog
         );
     };
 });  // goog.scope

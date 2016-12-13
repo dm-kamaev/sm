@@ -37,11 +37,11 @@ controller.home = async(function(req, res, next) {
             user = req.user || {};
         let factory = contentExperiment.getFactoryByQuery(req.query);
 
-
         let data = await({
             favorites: services.favorite.getFavoriteEntities(user.id),
             categories: services.courseCategory.getAll({isActive: true}),
-            categoryAliases: services.courseCategory.getAliases()
+            categoryAliases: services.courseCategory.getAliases(),
+            recommendations: services.courseSearchCatalog.getAll()
         });
 
         let templateData = homeView.render({
@@ -52,7 +52,8 @@ controller.home = async(function(req, res, next) {
             authSocialLinks: authSocialLinks,
             categories: data.categories,
             categoryAliases: data.categoryAliases,
-            header: headerView.render(config, entityType.COURSE)
+            header: headerView.render(config, entityType.COURSE),
+            recommendations: data.recommendations
         });
 
         let html = soy.render(

@@ -32,6 +32,21 @@
  *         description: (string?undefined),
  *         metro: (Array<string>|undefined),
  *         totalScore: (number|undefined)
+ *     }>,
+ *     recommendations: Array<{
+ *         type: string,
+ *         header: {
+ *             label: string,
+ *             img: {
+ *                 url: string,
+ *                 altText: string
+ *             }
+ *         },
+ *         items: Array<{
+ *             id: number,
+ *             content: string,
+ *             url: string
+ *         }>
  *     }>
  * }} sm.lHome.Template.Params.Data
  */
@@ -189,14 +204,27 @@
  *                 name: string,
  *                 url: string
  *             }>
- *         }>,
+ *         }>
  *     }
  * }}
  * @private
  */
 {template .sectionRecomendations_ kind="html"}
     {let $content kind="html"}
-        {if $params}
+        {if $params.data.recommendations}
+
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smCatalog',
+                    'renderParams': [
+                        'data': [
+                            'items': $params.data.recommendations
+                        ]
+                    ]
+                ] /}
+            {/call}
+
         {/if}
     {/let}
     {call .section_}

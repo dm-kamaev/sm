@@ -26,7 +26,6 @@ let view = {};
  */
 view.render = function(data) {
     let user = userView.default(data.user);
-
     return {
         seo: {
             metaTitle: 'Курсы мела',
@@ -55,7 +54,8 @@ view.render = function(data) {
                 '«Курсов Мела»'
             ]
         },
-        searchPanel: view.searchPanel()
+        searchPanel: view.searchPanel(),
+        recommendations: view.recommendations(data.recommendations)
     };
 };
 
@@ -115,6 +115,130 @@ view.searchPanel = function() {
             url: '/search'
         }
     };
+};
+
+
+/**
+ * Separate array to array objects on type
+ * @param {Array<{
+ *     id: number,
+ *     name: string,
+ *     url: string,
+ *     type: string
+ * }>} data
+ *
+ * @return {Array<{
+ *     type: string,
+ *     header: {
+ *         label: string,
+ *         img: {
+ *             url: string,
+ *             altText: string
+ *         }
+ *     },
+ *     items: Array<{
+ *         id: number,
+ *         content: string,
+ *         url: string
+ *     }>
+ * }>}
+ */
+view.recommendations = function(data) {
+    let object = {};
+    let result = [];
+
+    data.forEach(function(item) {
+        if (object[item.type]) {
+            object[item.type].items.push({
+                id: item.id,
+                content: item.name,
+                url: item.url
+            });
+        } else {
+            object[item.type] = {
+                type: item.type,
+                index: view.getRecommendationIndex(item.type),
+                header: view.getRecommendationData(item.type),
+                items: []
+            };
+            object[item.type].items.push({
+                id: item.id,
+                content: item.name,
+                url: item.url
+            });
+        }
+    });
+
+    for (var key in object) {
+        result[object[key].index] = object[key];
+    }
+
+    return result;
+};
+
+
+/**
+ * Get data on type
+ * @param {string} type
+ * @return {Object}
+ */
+view.getRecommendationData = function(type) {
+    var result = {};
+    switch (type) {
+    case 'juniorSchool':
+        result = {
+            label: 'Для дошкольников и младших классов',
+            img: {
+                url: '/static/images/n-common/b-sm-catalog/' +
+                    'junior-school-logo.png',
+                altText: 'Младшая школа',
+            }
+        };
+        break;
+    case 'middleSchool':
+        result = {
+            label: 'Для средней школы',
+            img: {
+                url: '/static/images/n-common/b-sm-catalog/' +
+                    'middle-school-logo.png',
+                altText: 'Средняя школа',
+            }
+        };
+        break;
+    case 'highSchool':
+        result = {
+            label: 'Для старшеклассников',
+            img: {
+                url: '/static/images/n-common/b-sm-catalog/' +
+                    'high-school-logo.png',
+                altText: 'Старшая школа',
+            }
+        };
+        break;
+    }
+    return result;
+};
+
+
+/**
+ * Get index of recommendation in array
+ * @param {string} type
+ * @return {number}
+ */
+view.getRecommendationIndex = function(type) {
+    var index;
+    switch (type) {
+    case 'juniorSchool':
+        index = 0;
+        break;
+    case 'middleSchool':
+        index = 1;
+        break;
+    case 'highSchool':
+        index = 2;
+        break;
+    }
+    return index;
 };
 
 

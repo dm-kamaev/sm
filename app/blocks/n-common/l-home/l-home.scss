@@ -1,4 +1,4 @@
-@import "../i-media/i-media";
+@import '../i-media/i-media';
 
 /** content **/
 .l-home__body {
@@ -14,9 +14,9 @@
 }
 
 .l-home__section-content {
-    height: 100%;
     width: 1200px;
     min-width: 255px;
+    height: 100%;
     margin: 0 auto;
 }
 
@@ -91,11 +91,10 @@
     height: 100%;
 }
 
-.l-home__section_recommendations {
-    .l-home__section-content {
-        width: 1200px;
-        margin: 0 auto;
-    }
+.l-home__section-content_recommendations {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 42px;
 }
 
 .l-home_entity_course {
@@ -112,7 +111,7 @@
 .l-home__footer {
     margin: 60px auto 0;
 
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, .1);
 }
 
 /** layout end **/
@@ -121,8 +120,8 @@
 @include media-xl {
     .l-home__section-content {
         width: auto;
-        margin-left: 40px;
         margin-right: 40px;
+        margin-left: 40px;
     }
 
     .l-home__section_image-l {
@@ -136,7 +135,21 @@
     .l-home__image-description {
         padding-top: 30px;
     }
+
+    .l-home__section-content_recommendations {
+        width: auto;
+        margin-right: 40px;
+        margin-left: 40px;
+    }
 }
+
+
+@include media-l {
+    .l-home__section-content_recommendations {
+        padding-top: 50px;
+    }
+}
+
 
 @include media-m {
     .l-home__section_image-l {
@@ -160,10 +173,18 @@
     }
 }
 
+
+@include media-s {
+    .l-home__section-content_recommendations {
+        padding-top: 68px;
+    }
+}
+
+
 @include media-xs {
     .l-home__section-content {
-        margin-left: 30px;
         margin-right: 30px;
+        margin-left: 30px;
     }
 
     .l-home__image {
@@ -172,6 +193,7 @@
 
     .l-home__image-title {
         margin-bottom: 25px;
+
         font-size: 20.01px;
         line-height: 24px;
     }
@@ -184,7 +206,6 @@
         height: auto;
 
         border-bottom: none;
-
         .l-home__image {
             display: none;
         }
@@ -196,6 +217,14 @@
 
     .l-home__section_image-s {
         display: block;
+
         height: 165px;
+    }
+}
+
+
+@include media-xxs {
+    .l-home__section-content_recommendations {
+        padding-top: 23px;
     }
 }

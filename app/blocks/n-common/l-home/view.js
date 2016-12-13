@@ -65,6 +65,9 @@ goog.scope(function() {
             {
                 searchPanel: this.getElementByClass(
                     sm.bSmSearchPanel.View.CssClass.ROOT
+                ),
+                catalog: this.getElementByClass(
+                    sm.bSmCatalog.View.CssClass.ROOT
                 )
             }
         );

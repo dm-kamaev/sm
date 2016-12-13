@@ -1,0 +1,122 @@
+{namespace sm.bSmHeadedList.Template}
+
+/**
+ * @typedef {{
+ *         type: string,
+ *         header: {
+ *             label: string,
+ *             img: {
+ *                 url: string,
+ *                 altText: string
+ *             }
+ *         },
+ *         items: Array<{
+ *             id: number
+ *             content: string,
+ *             url: string
+ *         }>
+ * }} sm.bSmHeader.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ * }} sm.bSmHeader.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.bSmHeadedList.Template.Params.Data,
+ *     config: sm.bSmHeadedList.Template.Params.Config
+ * }} sm.bSmHeadedList.Template.Params
+ */
+
+
+/**
+ * Template for Headed list block
+ * @param params {{
+ *     data: sm.bSmHeader.Template.Params.Data
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .headedList}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .body}
+    {call .header data="all" /}
+    {call .list data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.bSmHeader.Template.Params.Data
+ * }}
+ */
+{template .header}
+    <div class="{call .rootClass /}__header">
+        {if $params.data.header.img}
+            <div class="{call .rootClass /}__header-img-wrap">
+                {let $altText kind="attributes"}
+                    {if $params.data.header.img.altText}
+                        {sp}alt="{$params.data.header.img.altText}"
+                    {/if}
+                {/let}
+
+                <img class="{call .rootClass/}__header-img"
+                    src="{$params.data.header.img.url}" {$altText}>
+            </div>
+        {/if}
+
+        {if $params.data.header.label}
+            <div class="{call .rootClass /}__header-title">
+                {$params.data.header.label}
+            </div>
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.bSmHeader.Template.Params.Data
+ * }}
+ */
+{template .list}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__item-list
+    {/let}
+    {call .renderChild}
+        {param params: [
+            'type': 'smItemList',
+            'renderParams': [
+                'data': [
+                    'items': $params?.data?.items,
+                    'itemType': 'smLink',
+                    'itemConfig': [
+                        'size': 'xxl',
+                        'theme': 'interval'
+                    ]
+                ],
+                'config': [
+                    'customClasses': [$customClasses]
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-sm-headed-list
+{/template}

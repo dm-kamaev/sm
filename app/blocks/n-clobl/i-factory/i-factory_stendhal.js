@@ -23,6 +23,8 @@ goog.require('sm.bSmBadge.SmBadge');
 goog.require('sm.bSmBadge.View');
 goog.require('sm.bSmBalloon.SmBalloon');
 goog.require('sm.bSmBalloon.View');
+goog.require('sm.bSmCatalog.SmCatalog');
+goog.require('sm.bSmCatalog.View');
 goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.bSmCheckbox.View');
 goog.require('sm.bSmCollapsedText.SmCollapsedText');
@@ -33,6 +35,8 @@ goog.require('sm.bSmFavorite.SmFavorite');
 goog.require('sm.bSmFavorite.View');
 goog.require('sm.bSmFooter.SmFooter');
 goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmHeadedList.SmHeadedList');
+goog.require('sm.bSmHeadedList.View');
 goog.require('sm.bSmHeader.SmHeader');
 goog.require('sm.bSmHeader.View');
 goog.require('sm.bSmItem.SmItem');
@@ -327,6 +331,14 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smSearchPanel', {
             control: sm.bSmSearchPanel.SmSearchPanel,
             view: sm.bSmSearchPanel.View
+        })
+        .setControlListItem('smCatalog', {
+            control: sm.bSmCatalog.SmCatalog,
+            view: sm.bSmCatalog.View
+        })
+        .setControlListItem('smHeadedList', {
+            control: sm.bSmHeadedList.SmHeadedList,
+            view: sm.bSmHeadedList.View
         });
 
     /** l-information blocks **/

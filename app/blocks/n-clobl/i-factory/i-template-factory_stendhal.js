@@ -13,6 +13,7 @@ goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBalloon.Template');
+goog.require('sm.bSmCatalog.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
 goog.require('sm.bSmContacts.Template');
@@ -20,6 +21,7 @@ goog.require('sm.bSmEmbed.Template');
 goog.require('sm.bSmExpander.Template');
 goog.require('sm.bSmFavorite.Template');
 goog.require('sm.bSmFooter.Template');
+goog.require('sm.bSmHeadedList.Template');
 goog.require('sm.bSmHeader.Template');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.TemplateEntity');
@@ -336,6 +338,14 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smSearchPanel',
             sm.bSmSearchPanel.Template.searchPanel
+        )
+        .setTemplateListItem(
+            'smCatalog',
+            sm.bSmCatalog.Template.catalog
+        )
+        .setTemplateListItem(
+            'smHeadedList',
+            sm.bSmHeadedList.Template.headedList
         );
 
     /** l-information blocks **/

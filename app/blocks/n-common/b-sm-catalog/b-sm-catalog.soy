@@ -1,0 +1,104 @@
+{namespace sm.bSmCatalog.Template}
+
+/**
+ * @typedef {{
+ *     items: Array<{
+ *         type: string,
+ *         header: {
+ *             label: string,
+ *             img: {
+ *                 url: string,
+ *                 altText: string
+ *             }
+ *         },
+ *         items: Array<{
+ *             id: number,
+ *             content: string,
+ *             url: string  
+ *         }>
+ *     }>
+ * }} sm.bSmCatalog.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ * }} sm.bSmCatalog.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.bSmCatalog.Template.Params.Data,
+ *     config: sm.bSmCatalog.Template.Params.Config
+ * }} sm.bSmCatalog.Template.Params
+ */
+
+
+/**
+ * Template for Header block
+ * @param params {{
+ *     data: sm.bSmCatalog.Template.Params.Data
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .catalog}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @override
+ * @param params {{
+ *     data: sm.bSmCatalog.Template.Params.Data
+ * }}
+ */
+{template .body}
+<div class="{call .rootClass /}__catalog">
+    {foreach $item in $params.data.items}
+        {call .item}
+            {param params: $item /}
+        {/call}
+    {/foreach}
+</div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     type: string,
+ *     label: string,
+ *     items: Array<{
+ *         id: number,
+ *         content: string,
+ *         url: string  
+ *     }>     
+ * }}
+ */
+{template .item}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__catalog-item
+    {/let}
+    <div class="{call .rootClass /}__catalog-item-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'smHeadedList',
+                'renderParams': [
+                    'data': $params,
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-sm-catalog
+{/template}
