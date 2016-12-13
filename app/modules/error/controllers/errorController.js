@@ -3,7 +3,7 @@
 const soy = require.main.require('./app/components/soy');
 const services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
-const headerView = require('../../../../api/modules/entity/views/haderView');
+const headerView = require('../../../../api/modules/entity/views/headerView');
 const userView = require('../../../../api/modules/user/views/user');
 const seoView = require('../../../../api/modules/school/views/seoView');
 

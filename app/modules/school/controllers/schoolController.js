@@ -11,7 +11,7 @@ const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
 const seoView = require('../../../../api/modules/school/views/seoView');
-const headerView = require('../../../../api/modules/entity/views/haderView');
+const headerView = require('../../../../api/modules/entity/views/headerView');
 
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');

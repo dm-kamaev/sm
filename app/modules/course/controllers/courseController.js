@@ -13,7 +13,7 @@ const soy = require('../../../components/soy'),
     informationView = require(
         '../../../../api/modules/course/views/informationView'
     ),
-    headerView = require('../../../../api/modules/entity/views/haderView'),
+    headerView = require('../../../../api/modules/entity/views/headerView'),
     entityType = require('../../../../api/modules/entity/enums/entityType');
 
 const filterName = require('../../../../api/modules/course/enums/filterName');
