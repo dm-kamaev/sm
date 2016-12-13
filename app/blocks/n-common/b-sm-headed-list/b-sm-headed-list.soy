@@ -77,7 +77,8 @@
 
         {if $params.data.header.label}
             <div class="{call .rootClass /}__header-title">
-                {$params.data.header.label}
+                {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                    data="$params.data.header.label" /}
             </div>
         {/if}
     </div>

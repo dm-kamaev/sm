@@ -187,7 +187,7 @@ view.getRecommendationData = function(type) {
     switch (type) {
     case 'juniorSchool':
         result = {
-            label: 'Для дошкольников и младших классов',
+            label: 'Для дошкольников и&nbsp;младших классов',
             img: {
                 url: '/static/images/n-common/b-sm-catalog/' +
                     'junior-school-logo.png',
