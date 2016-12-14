@@ -1,15 +1,19 @@
+"use strict";
+
 const Session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(Session.Store);
 const uid = require('uid-safe').sync;
-var express = require('express');
-var RedisStore = require('connect-redis')(Session);
+const express = require('express');
+const os = require('os');
+const RedisStore = require('connect-redis')(Session);
 
-var db = require('./db');
+const db = require('./db');
 
 const SECRET = 'schoolsnotfm';
 
 module.exports = Session({
     cookie: {
+        domain: '.'+os.hostname(),
         httpOnly: false,
         maxAge: 1000 * 60 * 60 * 24 * 30
     },

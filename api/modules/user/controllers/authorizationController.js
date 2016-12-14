@@ -6,6 +6,8 @@ const async = require('asyncawait/async'),
 
 const soy = require('../../../../app/components/soy'),
     services = require('../../../../app/components/services').all;
+const logger = require('../../../../app/components/logger/logger')
+    .getLogger('app');
 
 /**
  * @api {get} /authorize/:type
@@ -32,13 +34,24 @@ exports.authorize = async(function(req, res) {
 
         await(new Promise(function(resolve, reject) {
             req.logIn(user, function(err) {
-                err ? reject(err) : req.session.save(resolve);
+                if (err) {
+                    reject(err);
+                } else {
+                    req.session.save(resolve);
+                }
             });
         }));
 
         result = soy.render('sm.bAuthorizationModal.Template.complete');
     } catch (error) {
-        console.log(error); // TODO: change to logger
+        const validationError = error.data &&
+                                error.data[0] &&
+                                error.data[0].ValidationErrors;
+        if (validationError) {
+            logger.critical(validationError);
+        } else {
+            logger.critical(error);
+        }
         result = soy.render('sm.bAuthorizationModal.Template.error');
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
