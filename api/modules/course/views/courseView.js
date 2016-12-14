@@ -467,8 +467,8 @@ view.getListCourse = function(course) {
  * @return {Object}
  */
 view.joinListCourse = function(existingCourse, newCourse) {
-    if (newCourse.optionCost < existingCourse.cost) {
-        existingCourse.cost = newCourse.optionCost;
+    if (newCourse.optionCost < existingCourse.cost.value) {
+        existingCourse.cost.value = newCourse.optionCost;
     }
 
     if (existingCourse.online.type === 'only' && !newCourse.optionOnline ||
