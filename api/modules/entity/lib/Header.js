@@ -1,10 +1,23 @@
 'use strict';
-
+const moment = require('moment');
 const entityTypeEnum = require('../enums/entityType');
 
 const CONTACTS = {
     phone: '+7 (495) 478-68-24'
 };
+const FOOTER_LINKS = [
+    {
+        content: 'Сотрудничество',
+        url: '#'
+    },
+    {
+        content: 'Пользовательское соглашение',
+        url: '#'
+    },
+    {
+        content: `© Маркет Мела, ${moment().year()}`
+    }
+];
 
 class Header {
 
@@ -26,6 +39,13 @@ class Header {
          * @private
          */
         this.entityLinks_ = {};
+
+        /**
+         * Fotter links
+         * @type {Array<{label: string, url: string}>}
+         * @private
+         */
+        this.footerLinks_ = [];
 
         /**
          * Current header params
@@ -55,7 +75,8 @@ class Header {
 
         this.setContacts()
             .setHelperText()
-            .setMenuItems();
+            .setMenuItems()
+            .setFooterLinks();
     }
 
 
@@ -101,6 +122,17 @@ class Header {
     }
 
     /**
+     * Set footer links
+     * @return {Header}
+     * @protected
+     */
+    setFooterLinks() {
+        this.params_.data.footerLinks = FOOTER_LINKS;
+
+        return this;
+    }
+
+    /**
      * Set helper text
      * @return {Header}
      * @protected
@@ -121,6 +153,7 @@ class Header {
 
         return this;
     }
+
 
     /**
      * Set menu items
@@ -231,5 +264,4 @@ class Header {
  * @static
  */
 Header.CONTACTS = CONTACTS;
-
 module.exports = Header;

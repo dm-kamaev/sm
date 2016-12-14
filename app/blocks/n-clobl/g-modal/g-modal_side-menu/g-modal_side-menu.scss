@@ -1,15 +1,21 @@
-.g-modal-side {
-    overflow: hidden;
-}
-
-.g-modal-side-menu__content {
+.g-modal-side-menu {
     position: absolute;
+    top: 0;
+    left: 0;
+
+    overflow: auto;
+
+    width: 100%;
+    height: 100%;
+}
+.g-modal-side-menu__content {
+    position: fixed;
     z-index: 1000;
     top: 0;
     left: 0;
 
     display: inline-block;
-    overflow-y: auto;
+    overflow: auto;
 
     width: 100%;
     height: 100%;
@@ -19,14 +25,16 @@
 
 .g-modal-side-menu__close-icon {
     display: inline-block;
-    padding: 10px 0 10px 20px;
+
+    padding: 10px 0 10px 30px;
 }
 
 .g-modal-side-menu__header {
-    padding: 10px 0;
+    padding: 16px 0;
+
     border-bottom: 1px solid #e5e5e5;
 }
 
 .g-modal-side-menu__menu {
-    padding: 20px;
+    padding: 20px 30px;
 }

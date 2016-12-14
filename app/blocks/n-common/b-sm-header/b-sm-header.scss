@@ -5,8 +5,11 @@
 
     width: 100%;
 
-    color: #000;
     border-bottom: 1px solid #eee;
+}
+
+.b-sm-header__section_menu {
+    color: #000;
 
     font-family: Proxima, sans-serif;
     font-size: 20px;
@@ -61,6 +64,10 @@
     display: inline-block;
 }
 
+.b-sm-header__footer-link {
+    display: block;
+}
+
 @include media-xl {
     .b-sm-header__body {
         padding: 0 40px;
@@ -80,18 +87,17 @@
     .b-sm-header__main-menu {
         display: none;
     }
-
     .b-sm-header__menu-item {
         display: block;
+
         height: auto;
         margin-right: 0;
+        margin-bottom: 20px;
         padding: 10px 0 0 0;
     }
-
     .b-sm-header__menu-item_active-course {
         border-bottom: none;
     }
-
     .b-sm-header__menu-item_active-school {
         border-bottom: none;
     }

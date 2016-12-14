@@ -8,6 +8,10 @@
  *         type: string,
  *         isSelected: boolean
  *     }>,
+ *     footerLinks: Array<{
+ *         label: ?string,
+ *         url: ?string
+ *     }>
  *     contacts: sm.bSmContacts.Template.Params.Data,
  *     helperText: string
  * }} sm.bSmHeader.Template.Params.Data
@@ -63,6 +67,7 @@
 {template .headerSideMenu}
     {let $content kind="html"}
         {call .sectionNavigation data="all" /}
+        {call .sectionFooter data="all" /}
     {/let}
 
     <div class="{call .rootClass/}__side-menu">
@@ -78,6 +83,59 @@
         {/call}
     </div>
 {/template}
+
+/**
+ * sectionFooter
+ * @param params {{
+ *     data: sm.bSmHeader.Template.Params.Data
+ * }}
+ */
+{template .sectionFooter}
+    <div class="{call .rootClass /}__section_footer">
+        {foreach $item in $params.data.footerLinks}
+            {call .footerLink}
+                {param item: $item /}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * FooterLink
+ * @param item {{
+ *     name: string,
+ *     url: ?string
+ * }} 
+ */
+{template .footerLink}
+
+    {let $disableHover kind="js"}
+        {if not $item.url}
+            true
+        {else}
+            false
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__footer-link">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': $item,
+                    'config': [
+                        'size': 'xxxl',
+                        'theme': 'dark',
+                        'customClasses': ['b-sm-header__link'],
+                        'disableHover': $disableHover
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
 
 
 /**
