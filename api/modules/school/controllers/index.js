@@ -1,11 +1,10 @@
 'use strict';
 
-var express = require('express');
-var router = express.Router();
-var schoolController = require('./schoolController');
-
-var checkToken = require('../../../../app/middleware/checkToken');
-const csrf = require('../../../../app/middleware/csrf.js');
+const express = require('express');
+const router = express.Router();
+const schoolController = require('./schoolController');
+const csrf = require('../../../../app/middleware/csrf');
+const checkToken = require('../../../../app/middleware/checkToken');
 
 router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);

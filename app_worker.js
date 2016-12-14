@@ -81,8 +81,8 @@ app.use(morgan('dev', {
     stream: expressLogStream.warning
 }));
 
-app.use('/courses/api', api.course.router);
 
+app.use('/courses/api', api.course.router);
 app.use('/schools/api', api.school.router);
 // generate token in cookies, all request not GET
 app.use(csrf);
