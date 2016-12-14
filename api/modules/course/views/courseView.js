@@ -453,7 +453,7 @@ view.getListCourse = function(course) {
             id: course.areaId,
             name: course.areaName
         }] : [],
-        category: 'proforientacija'
+        category: course.categoryAlias
     };
 };
 
