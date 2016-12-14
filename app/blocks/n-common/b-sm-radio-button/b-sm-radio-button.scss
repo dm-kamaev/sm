@@ -28,3 +28,50 @@
 
     cursor: pointer;
 }
+
+.b-sm-radio-button_label-theme {
+    width: 25px;
+    height: 29px;
+    margin: 0;
+    padding: 0;
+
+    text-align: center;
+
+    font-size: 12px;
+    line-height: 29px;
+
+    &.b-sm-radio-button_view-type_low {
+        border: 1px solid #e5e1c2;
+        background-color: #fffbd8;
+    }
+
+    &.b-sm-radio-button_view-type_middle {
+        border: 1px solid #d7e2bf;
+        background-color: #f0fbd5;
+    }
+
+    &.b-sm-radio-button_view-type_high {
+        border: 1px solid #dbe1e3;
+        background-color: #f4fbfc;
+    }
+
+    .b-sm-radio-button__label {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .b-sm-radio-button__input {
+        display: none;
+    }
+}
+
+.b-sm-radio-button_label-theme.b-sm-radio-button_active {
+    border-color: #9da6a9;
+    box-shadow: inset 0 0 0 2px #9da6a9, inset -2px 0 0 0 #9da6a9;
+}
+
+.b-sm-radio-button_label-theme.b-sm-radio-button_inactive {
+    opacity: 0.4;
+}

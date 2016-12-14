@@ -150,6 +150,28 @@ goog.scope(function() {
 
 
     /**
+     * Send analytics by map pin
+     * @param {{
+     *     category: string,
+     *     action: string,
+     *     name: (string|undefined)
+     * }} actionParams
+     */
+    AnalyticsSender.prototype.sendMapAnalytics = function(actionParams) {
+
+        var params = this.getProductParams();
+
+        var impressionParams =
+            Analytics.getInstance().transformImpressionParams(params);
+
+        Analytics.getInstance().addImpression(impressionParams);
+        Analytics.getInstance().setView();
+
+        this.send(actionParams);
+    };
+
+
+    /**
      * Send data
      * @param {{
      *     category: string,

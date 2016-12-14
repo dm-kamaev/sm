@@ -110,7 +110,8 @@ goog.scope(function() {
                 description: rawParams['description'],
                 metro: metroParams.data,
                 area: areaParams.data,
-                category: rawParams['category']
+                category: rawParams['category'],
+                url: rawParams['url']
             },
             config: {
                 enableCover: rawParams['enableCover']

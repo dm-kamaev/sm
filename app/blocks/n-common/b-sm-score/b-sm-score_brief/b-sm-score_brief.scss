@@ -1,3 +1,5 @@
+@import '../../i-media/i-media';
+
 /** Layout start **/
 .b-sm-score_brief {
     .b-sm-score__mark {
@@ -129,3 +131,16 @@
     }
 }
 /** Themes end **/
+
+
+@include media-xs {
+    /** State when hint opened **/
+    .b-sm-score_brief.b-sm-score_primary-mark-name-hidden.b-sm-score_secondary-marks-visible {
+        .b-sm-score__mark_primary {
+            .b-sm-score__mark-name {
+                display: none;
+            }
+        }
+    }
+    /** State when hint opened end **/
+}

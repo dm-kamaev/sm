@@ -32,8 +32,8 @@ goog.scope(function() {
         this.itemList_ = null;
 
         /**
-         * Sort control (dropdown-select) instance
-         * @type {sm.gDropdown.DropdownSelect}
+         * Sort control (dropdown-list-links) instance
+         * @type {sm.gDropdown.DropdownListLinks}
          * @private
          */
         this.sort_ = null;
@@ -64,7 +64,7 @@ goog.scope(function() {
      * @const
      */
     SearchResults.Event = {
-        SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.SELECT,
+        SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.ITEM_SELECT,
         SHOW_MORE_CLICK: cl.gButton.Button.Event.CLICK,
         LIST_ITEM_CLICK: sm.bSmItemList.SmItemList.Event.ITEM_CLICK
     };
@@ -172,7 +172,7 @@ goog.scope(function() {
      * @public
      */
     SearchResults.prototype.resetSort = function() {
-        this.sort_.clear();
+        this.sort_.reset();
     };
 
 

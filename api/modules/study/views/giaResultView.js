@@ -1,13 +1,15 @@
+'use strict';
+
 const cityResultView = require('./cityResultView'),
-    subjectView = require('./subjectView'),
-    searchType = require('../../school/enums/searchType');
+    subjectView = require('./subjectView');
+
+const giaSortOrder = require('../views/constants/giaSubjectsOrder.json');
 
 /**
- * GiaResultView
+ * giaResultView
  * @constructor
  */
-var GiaResultView = function() {
-};
+var giaResultView = {};
 
 /**
  * Transforms results
@@ -15,7 +17,7 @@ var GiaResultView = function() {
  * @param {Array<Object>} cityResults
  * @return {{years: U[], results: U[], range: number}}
  */
-GiaResultView.prototype.transformResults = function(results, cityResults) {
+giaResultView.transformResults = function(results, cityResults) {
     var res = {},
         keys,
         range = 0.5,
@@ -100,33 +102,19 @@ GiaResultView.prototype.transformResults = function(results, cityResults) {
 };
 
 /**
- * Generate ege result filters with sorted values
- * @param {Array<models.GiaResult>} giaSubjectsIds
- * @param {Array<models.Subject>} subjects
- * @return {{
- *    filter: string,
- *    values: Array<{
- *       label: string,
- *       value: string,
- *       id: number
- *    }>
- * }}
+ * Transform raw filterData to filterdata for filter panel
+ * @param {{
+ *     giaSubjects: Array<number>,
+ *     subjects: Array<models.Subject>
+ * }} filtersData
+ * @return {Array<models.Subject>}
  */
-GiaResultView.prototype.searchFilter = function(giaSubjectsIds, subjects) {
-    var filters = subjectView.searchFilter(
-        giaSubjectsIds, subjects, searchType.fields.GIA
+giaResultView.getFilterData = function(filtersData) {
+    let subjects = subjectView.getSubjects(
+        filtersData.giaSubjects, filtersData.subjects
     );
 
-    filters.values.sort(
-        (a, b) => subjectView.sorter(a.label, b.label, 'GIA')
-    );
-
-    return filters;
+    return subjectView.sortByOrder(subjects, giaSortOrder);
 };
 
-
-/**
- * Exports
- * @type {GiaResultView}
- */
-module.exports = new GiaResultView();
+module.exports = giaResultView;

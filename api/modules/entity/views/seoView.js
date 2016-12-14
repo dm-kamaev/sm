@@ -1,6 +1,6 @@
 'use strict';
 
-const FormatText = require('../lib/FormatText');
+const FormatUtils = require('../lib/FormatUtils');
 
 let seoView = {};
 
@@ -15,15 +15,15 @@ seoView.formatSeoDescription = function(text) {
     let result;
 
     if (text) {
-        let formatText = new FormatText();
+        let formatUtils = new FormatUtils();
 
-        let maxDescription = formatText.cut(
+        let maxDescription = formatUtils.cutText(
             text,
             DESCRIPTION_LENGTH,
             ' '
         );
 
-        result = formatText.cut(
+        result = formatUtils.cutText(
             maxDescription,
             maxDescription.length - 1,
             '.',

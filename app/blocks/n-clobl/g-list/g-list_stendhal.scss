@@ -4,12 +4,22 @@
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
 }
 
+.g-list_mode_selection, .g-list_mode_multiselection {
+    .g-list__item_selected {
+        font-weight: 600;
+    }
+}
+
 .g-list__item {
     padding: 8px 10px 9px 10px;
 
     cursor: pointer;
     text-align: left;
     white-space: nowrap;
+}
+
+.g-list__item_selected {
+    font-weight: normal;
 }
 
 .g-list_hoverable {
