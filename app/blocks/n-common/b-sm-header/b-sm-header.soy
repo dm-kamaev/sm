@@ -117,7 +117,7 @@
                     'data': $item,
                     'config': [
                         'size': 'xl',
-                        'theme': 'default',
+                        'theme': $item.url? 'default': 'black',
                         'customClasses': ['b-sm-header__link'],
                         'disableHover': $item.url? false: true
                     ]
@@ -241,7 +241,7 @@
                     'config': [
                         'size': 'xxxl',
                         'theme': 'dark',
-                        'customClasses': ['b-sm-header__link', $customClasses],
+                        'customClasses': [$customClasses, 'b-sm-header__link'],
                         'target': $params.data.target or '',
                         'disableHover': false
                     ]
