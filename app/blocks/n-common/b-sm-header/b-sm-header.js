@@ -27,6 +27,13 @@ goog.scope(function() {
         this.links_ = [];
 
         /**
+         * Array of footer links
+         * @type {array<sm.bSmLink.SmLink>}
+         * @private
+         */
+        this.footerLinks_ = [];
+
+        /**
          * Side menu instance (actually it's a modal)
          * @type {cl.gModal.Modal}
          * @private
@@ -87,7 +94,7 @@ goog.scope(function() {
      * Shows or hides the menu
      * @public
      */
-    Header.prototype.toggleMenu = function() {
+    Header.prototype.showMenu = function() {
         this.sideMenu_.show();
     };
 

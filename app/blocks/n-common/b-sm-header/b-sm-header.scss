@@ -6,13 +6,14 @@
     width: 100%;
 
     border-bottom: 1px solid #eee;
+
+    font-size: 20px;
 }
 
 .b-sm-header__section_menu {
     color: #000;
 
     font-family: Proxima, sans-serif;
-    font-size: 20px;
     font-weight: 800;
 }
 
@@ -20,6 +21,10 @@
     display: inline-block;
 
     height: 100%;
+}
+
+.b-sm-header__footer-link {
+    padding-bottom: 20px;
 }
 
 .b-sm-header__body {
@@ -55,6 +60,8 @@
     padding-right: 10px;
 
     vertical-align: middle;
+
+    color: #000;
 
     font-family: 'Times New Roman', Times, serif;
     font-weight: 200;

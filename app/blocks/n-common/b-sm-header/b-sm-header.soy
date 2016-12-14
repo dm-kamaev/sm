@@ -109,15 +109,6 @@
  * }} 
  */
 {template .footerLink}
-
-    {let $disableHover kind="js"}
-        {if not $item.url}
-            true
-        {else}
-            false
-        {/if}
-    {/let}
-
     <div class="{call .rootClass/}__footer-link">
         {call .renderChild}
             {param params: [
@@ -125,10 +116,10 @@
                 'renderParams': [
                     'data': $item,
                     'config': [
-                        'size': 'xxxl',
-                        'theme': 'dark',
+                        'size': 'xl',
+                        'theme': 'default',
                         'customClasses': ['b-sm-header__link'],
-                        'disableHover': $disableHover
+                        'disableHover': $item.url? false: true
                     ]
                 ]
             ]/}
@@ -250,7 +241,7 @@
                     'config': [
                         'size': 'xxxl',
                         'theme': 'dark',
-                        'customClasses': [$customClasses],
+                        'customClasses': ['b-sm-header__link', $customClasses],
                         'target': $params.data.target or '',
                         'disableHover': false
                     ]

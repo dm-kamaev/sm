@@ -1,4 +1,7 @@
+@import "../../../n-common/i-media/i-media";
+
 .g-modal-side-menu {
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -37,4 +40,10 @@
 
 .g-modal-side-menu__menu {
     padding: 20px 30px;
+}
+
+@include media-xs {
+    .g-modal-side-menu {
+        display: block;
+    }
 }

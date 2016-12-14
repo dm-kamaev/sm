@@ -40,7 +40,8 @@ goog.scope(function() {
      * @const
      */
     View.CssClass = {
-        ROOT: 'b-sm-header'
+        ROOT: 'b-sm-header',
+        HEADER_LINKS: 'b-sm-header__link'
     };
 
 
@@ -60,7 +61,7 @@ goog.scope(function() {
      */
     View.prototype.initDom = function() {
         this.dom.links = this.getElementsByClass(
-            sm.bSmLink.View.CssClass.ROOT
+            View.CssClass.HEADER_LINKS
         );
 
         this.dom.sideMenu = this.getElementByClass(

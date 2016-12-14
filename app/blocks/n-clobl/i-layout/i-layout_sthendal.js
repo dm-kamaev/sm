@@ -122,7 +122,7 @@ goog.scope(function() {
 
         this.listen(
             sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
-            this.mainHeader.toggleMenu.bind(this.mainHeader)
+            this.mainHeader.showMenu.bind(this.mainHeader)
         );
     };
 });  // goog.scope
