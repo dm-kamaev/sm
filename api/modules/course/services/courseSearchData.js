@@ -1,3 +1,5 @@
+'use strict';
+
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
@@ -78,19 +80,24 @@ service.getSearchMapSql = function(searchParams, opt_limit) {
 };
 
 /**
- * @param  {string} searchString
+ * @param  {string}  searchString
+ * @param  {number=} opt_categoryId
  * @return {Object}
  */
-service.suggestSearch = function(searchString) {
-    var resultIds = await(services.textSearchData.entitiesSearch(searchString, [
-        entityType.COURSE,
-        entityType.METRO,
-        entityType.AREA,
-        entityType.DISTRICT
-    ]));
+service.suggestSearch = function(searchString, opt_categoryId) {
+    let resultIds = await(services.textSearchData.entitiesSearch(searchString, [
+            entityType.COURSE,
+            entityType.METRO,
+            entityType.AREA,
+            entityType.DISTRICT
+        ])),
+        categoryId = opt_categoryId || null,
+        getCourses = categoryId ?
+            services.course.getByIdsAndCategoryId :
+            services.course.getByIds;
 
     return await({
-        courses: services.course.getByIds(resultIds[entityType.COURSE] || []),
+        courses: getCourses(resultIds[entityType.COURSE] || [], categoryId),
         areas: services.area.getByIds(resultIds[entityType.AREA] || []),
         metros: services.metro.getByIds(resultIds[entityType.METRO] || []),
         districts: services.district.getByIds(
@@ -108,7 +115,7 @@ service.setSearchQueryParams = function(searchInstance, searchParams) {
     return searchInstance
         .setLimit(searchParams.limit)
         .setOffset(searchParams.page * searchParams.limit || 0)
-        .setSortType(searchParams.sortType, searchParams.costSortColumn)
+        .setSortType(searchParams.sortType)
         .setSearchString(searchParams.name)
         .setAge(searchParams.age)
         .setType(searchParams.type)

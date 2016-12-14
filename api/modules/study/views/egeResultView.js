@@ -1,12 +1,15 @@
+'use strict';
+
 const cityResultView = require('./cityResultView'),
-    subjectView = require('./subjectView'),
-    searchType = require('../../school/enums/searchType');
+    subjectView = require('./subjectView');
+
+const egeSortOrder = require('../views/constants/egeSubjectsOrder.json');
 
 /**
- * EgeResultView
+ * egeResultView
  * @constructor
  */
-var EgeResultView = function() {
+var egeResultView = {
 };
 
 /**
@@ -15,7 +18,7 @@ var EgeResultView = function() {
  * @param {Array<Object>} cityResults
  * @return {{years: U[], results: U[], range: number}}
  */
-EgeResultView.prototype.transformResults = function(results, cityResults) {
+egeResultView.transformResults = function(results, cityResults) {
     var res = {},
         keys,
         range = 5,
@@ -98,32 +101,19 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
 };
 
 /**
- * Generate ege result filters with sorted values
- * @param {Array<models.EgeResult>} egeSubjectsIds
- * @param {Array<models.Subject>} subjects
- * @return {{
- *    filter: string,
- *    values: Array<{
- *       label: string,
- *       value: string,
- *       id: number
- *    }>
- * }}
+ * Transform raw filterData to filterData for filter panel
+ * @param {{
+ *     egeSubjects: Array<number>,
+ *     subjects: Array<models.Subject>
+ * }} filtersData
+ * @return {Array<models.Subject>}
  */
-EgeResultView.prototype.searchFilter = function(egeSubjectsIds, subjects) {
-    var filters = subjectView.searchFilter(
-        egeSubjectsIds, subjects, searchType.fields.EGE
+egeResultView.getFilterData = function(filtersData) {
+    let subjects = subjectView.getSubjects(
+        filtersData.egeSubjects, filtersData.subjects
     );
 
-    filters.values.sort(
-        (a, b) => subjectView.sorter(a.label, b.label, 'EGE')
-    );
-
-    return filters;
+    return subjectView.sortByOrder(subjects, egeSortOrder);
 };
 
-/**
- * Exports
- * @type {EgeResultView}
- */
-module.exports = new EgeResultView();
+module.exports = egeResultView;

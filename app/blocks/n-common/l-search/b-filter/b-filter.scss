@@ -29,13 +29,24 @@
 }
 
 .b-sm-filter__title {
-    display: inline-block;
+    display: inline;
 }
 
 .b-sm-filter__tooltip {
+    position: relative;
+    top: -2px;
+
     display: inline-block;
 
     margin-left: 8px;
+}
+
+.b-sm-filter__tooltip-icon {
+    cursor: pointer;
+}
+
+.b-sm-filter__tooltip-content {
+    line-height: 14px;
 }
 
 .b-sm-filter__header-icon {
@@ -85,6 +96,14 @@
     }
 }
 
+.b-sm-filter_light-theme {
+    padding: 0;
+
+    .b-sm-filter__content {
+        margin-bottom: 0;
+    }
+}
+
 
 @include media-m {
     .b-sm-filter__option {
@@ -100,9 +119,6 @@
 @include media-s {
     .b-sm-filter__option {
         width: 33.33%;
-        min-width: 0;
-
-        vertical-align: top;
     }
 
     .b-sm-filter_minimal-theme {

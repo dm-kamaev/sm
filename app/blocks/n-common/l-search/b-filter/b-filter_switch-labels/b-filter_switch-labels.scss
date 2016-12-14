@@ -1,0 +1,21 @@
+.b-sm-filter_switch.b-sm-filter_switch-labels {
+    padding-bottom: 0;
+
+    .b-sm-filter__list-options {
+        display: inline-block;
+    }
+
+    .b-sm-filter__option {
+        display: inline-block;
+
+        margin-left: -1px;
+
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+
+    .b-sm-filter__button_reset {
+        display: inline-block;
+    }
+}

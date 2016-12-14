@@ -399,7 +399,7 @@ module.exports = class {
      */
     formatGroupSize_(maxGroupSize) {
         let result;
-        if (maxGroupSize === 0) {
+        if (!maxGroupSize) {
             result = 'Размер группы не указан';
         } else if (maxGroupSize === 1) {
             result = 'Индивидуальные занятия';

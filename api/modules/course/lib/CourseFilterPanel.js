@@ -68,11 +68,29 @@ class CourseFilterPanel extends FilterPanel {
                 options: []
             },
             config: {
-                showMoreButtonText: 'Все направления',
-                optionsToShow: 9,
                 isShowed: true
             }
         };
+
+
+        /**
+         * Params for filter by category
+         * @type {Object}
+         * @private
+         */
+        this.filterCategory_ = {
+            data: {
+                header: {
+                    title: 'Категории'
+                },
+                name: 'categoryId',
+                options: []
+            },
+            config: {
+                isShowed: true
+            }
+        };
+
 
         /**
          * Params for filter by cost
@@ -218,7 +236,8 @@ class CourseFilterPanel extends FilterPanel {
             [filterName.TIME]: this.setFilterTime.bind(this),
             [filterName.REGULARITY]: this.setFilterRegularity.bind(this),
             [filterName.FORM_TRAINING]: this.setFilterFormTraining.bind(this),
-            [filterName.DURATION]: this.setFilterDuration.bind(this)
+            [filterName.DURATION]: this.setFilterDuration.bind(this),
+            [filterName.CATEGORY]: this.setFilterCategory.bind(this)
         };
     }
 
@@ -258,9 +277,9 @@ class CourseFilterPanel extends FilterPanel {
      */
     setFilterType(options, opt_checkedValues) {
         var params = this.filterType_;
-        params.data.options = this.formatType_(options);
+        params.data.options = this.getOptions(options);
 
-        this.setFilterModal(params, opt_checkedValues);
+        this.setFilter(params, opt_checkedValues);
 
         return this;
     }
@@ -356,6 +375,22 @@ class CourseFilterPanel extends FilterPanel {
 
 
     /**
+     * Set filter by category
+     * @param {Array<Object>} options
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterCategory(options, opt_checkedValues) {
+        var params = this.filterCategory_;
+        params.data.options = this.getOptions(options);
+
+        this.setFilter(params, opt_checkedValues);
+
+        return this;
+    }
+
+
+    /**
      * Set value for filter age
      * @param {Array<{
      *     value: ?(number|string)
@@ -370,18 +405,6 @@ class CourseFilterPanel extends FilterPanel {
         options[0].value = (values && values[0]) ? values[0] : '';
 
         return options;
-    }
-
-    /**
-     * @private
-     * @param {Array<Object>} types
-     * @return {Array<Object>}
-     */
-    formatType_(types) {
-        return types.map(type => ({
-            value: type.id,
-            label: type.name
-        }));
     }
 }
 

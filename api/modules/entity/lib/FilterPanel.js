@@ -1,5 +1,9 @@
 'use strict';
 
+const lodash = require('lodash');
+
+const filterType = require('../enums/filterViewType');
+
 class FilterPanel {
 
     /**
@@ -51,7 +55,7 @@ class FilterPanel {
     /**
      * Initialize filter panel with given data
      * @param {{
-     *     enabledFilters: Array<string>,
+     *     enabledFilters: (Array<string>|undefined),
      *     filtersData: Array<Object>,
      *     searchParams: Object<string, Array<string, number>>
      * }} data
@@ -174,7 +178,7 @@ class FilterPanel {
     setFilterInput(filterParams, opt_checkedValues) {
         var params = filterParams;
 
-        params.config.type = 'input';
+        params.config.type = filterType.INPUT;
 
         this.setFilter(params, opt_checkedValues);
 
@@ -194,7 +198,7 @@ class FilterPanel {
     setFilterSwitch(filterParams, opt_checkedValues) {
         var params = filterParams;
 
-        params.config.type = 'switch';
+        params.config.type = filterType.SWITCH;
 
         this.setFilter(params, opt_checkedValues);
 
@@ -214,7 +218,7 @@ class FilterPanel {
     setFilterLabels(filterParams, opt_checkedValues) {
         var params = filterParams;
 
-        params.config.type = 'labels';
+        params.config.type = filterType.LABELS;
 
         this.setFilter(params, opt_checkedValues);
 
@@ -320,7 +324,7 @@ class FilterPanel {
      *         header: ?Object,
      *         options: Array<Object>
      *     },
-     *     congig: Object
+     *     config: Object
      * }} filterParams
      * @param {Array<(number|string)>|undefined} checkedValues
      * @return {Object}
@@ -368,6 +372,8 @@ class FilterPanel {
 
     /**
      * Set values for options in order
+     * It uses lodash.map as it can iterate over Arrays which create from Array
+     * constructor with defined length
      * @param {Array<{
      *     label: string,
      *     isChecked: (boolean|undefined)
@@ -380,11 +386,56 @@ class FilterPanel {
      * @protected
      */
     createOptionsValuesInOrder(options) {
-        return options.map((option, index) => {
-            option.value = index;
-            return option;
+        return lodash.map(options, (option, index) => {
+            let result = option || {};
+            result.value = index;
+            return result;
         });
     }
+
+    /**
+     * Transform array of models to options
+     * @param {Array<{
+     *     id: number,
+     *     name: string
+     * }>} models
+     * @return {Array<{
+     *     value: number,
+     *     label: string
+     * }>}
+     * @protected
+     */
+    getOptions(models) {
+        return models.map(this.getOption, this);
+    }
+
+    /**
+     * Create option from model
+     * @param {Object} model
+     * @return {{
+     *     value: number,
+     *     label: string
+     * }}
+     * @protected
+     */
+    getOption(model) {
+        return {
+            value: model.id,
+            label: this.getLabel(model)
+        };
+    }
+
+    /**
+     * Get label for option from model instance
+     * @param {Object} model
+     * @return {string}
+     * @protected
+     */
+    getLabel(model) {
+        return model.name;
+    }
+
+
 
     /**
      * Init filter

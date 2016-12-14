@@ -1,13 +1,17 @@
 'use strict';
 
 const FilterPanel = require('../lib/CourseFilterPanel'),
-    courseView = require('./courseView'),
-    mapViewType = require('../../entity/enums/mapViewType'),
+    FormatUtils = require('../../entity/lib/FormatUtils');
+
+const courseView = require('./courseView'),
     userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
-    courseCategoryView = require('./courseCategoryView');
+    courseCategoryView = require('./courseCategoryView'),
+    searchViewEntity = require('../../entity/views/searchView');
 
-const filterName = require('../enums/filterName');
+const filterName = require('../enums/filterName'),
+    mapViewType = require('../../entity/enums/mapViewType'),
+    entityType = require('../../entity/enums/entityType');
 
 let searchView = {};
 
@@ -72,41 +76,7 @@ searchView.filterPanel = function(data) {
 
 
 /**
- * View for courses on map
- * @param  {Array<Object>} courses
- * @param  {{
- *     viewType: string,
- *     position: {
- *         center: Array<number>,
- *         type: string
- *     }
- * }} options
- * @return {{
- *     itemGroups: Array<{
- *         viewType: string,
- *         items: Array<{Object}>
- *     }>,
- *     position: ({
- *         center: Array<number>,
- *         type: string
- *     }|undefined)
- * }}
- */
-searchView.map = function(courses, options) {
-    let viewType = options.viewType;
-    return {
-        itemGroups: [{
-            viewType: viewType,
-            items: courseView.listMap(courses, viewType)
-        }],
-        position: options.position
-    };
-};
-
-
-/**
  * @param {{
- *     entityType: string,
  *     user: Object,
  *     fbClientId: string,
  *     favorites: Array<Object>,
@@ -119,9 +89,10 @@ searchView.map = function(courses, options) {
  *     filtersData: Array<Object>,
  *     aliases: Array<Object>,
  *     seoParams: Object,
- *     currentCategory: string,
+ *     currentAlias: string,
  *     categories: Array<Object>,
- *     categoryAliases: Array<Object>
+ *     categoryAliases: Array<Object>,
+ *     categoryId: (number|undefined)
  * }} data
  * @return {Object}
  */
@@ -134,7 +105,6 @@ searchView.render = function(data) {
         seoParams = data.seoParams || {};
 
     return {
-        type: data.entityType,
         seo: {
             metaTitle: seoParams.tabTitle,
             metaDescription: seoParams.metaDescription
@@ -149,16 +119,12 @@ searchView.render = function(data) {
         },
         subHeader: {
             logo: {
+                altText: '«Курсы Мела»',
                 imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
-            },
-            links: {
-                nameL: 'Все курсы, кружки и секции',
-                nameM: 'Все курсы',
-                url: `/${data.currentCategory}`
             },
             search: {
                 placeholder: 'Район, метро, название курса',
-                pageAlias: data.currentCategory
+                pageAlias: data.currentAlias
             },
             user: user,
             favorites: {
@@ -176,14 +142,18 @@ searchView.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
-        map: this.map(data.mapCourses, {
+        map: searchViewEntity.map(data.mapCourses, {
+            entityType: entityType.COURSE,
             viewType: mapViewType.PIN,
             position: data.mapPosition
         }),
         search: {
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
-            pageAlias: data.currentCategory
+            pageAlias: data.currentAlias,
+            args: {
+                categoryId: data.categoryId
+            }
         },
         resultsList: {
             title: seoParams.listTitle,
@@ -201,13 +171,19 @@ searchView.render = function(data) {
                 content: {
                     items: [{
                         'label': 'по популярности',
-                        'value': 2
+                        'value': 4
                     }, {
-                        'label': 'по возрастанию цены',
+                        'label': 'по возрастанию цены за час',
                         'value': 0
                     }, {
-                        'label': 'по убыванию цены',
+                        'label': 'по убыванию цены за час',
                         'value': 1
+                    }, {
+                        'label': 'по возрастанию цены за курс',
+                        'value': 2
+                    }, {
+                        'label': 'по убыванию цены за курс',
+                        'value': 3
                     }]
                 }
             },
@@ -228,89 +204,47 @@ searchView.render = function(data) {
     };
 };
 
+
 /**
+ * @param {Array<Course>} courses
+ * @return {number}
+ */
+searchView.countResults = function(courses) {
+    return courses[0] &&
+        courses[0].countResults ||
+        0;
+};
+
+/**
+ * Normalize query params to search params
  * @param  {Object} params
  * @param {number=} opt_categoryId
  * @return {Object}
  */
 searchView.initSearchParams = function(params, opt_categoryId) {
     let categoryId = opt_categoryId || params.categoryId || '';
+    let formatUtils = new FormatUtils();
+
     return {
-        [filterName.AGE]: this.transformToArray(params.age),
-        [filterName.TYPE]: this.transformToArray(params.type),
-        [filterName.COST]: this.transformToArray(params.cost),
-        [filterName.WEEK_DAYS]: this.transformToArray(params.weekdays),
-        [filterName.TIME]: this.transformToArray(params.time),
-        [filterName.REGULARITY]: this.transformToArray(params.regularity),
-        [filterName.FORM_TRAINING]: this.transformToArray(params.formTraining),
-        [filterName.DURATION]: this.transformToArray(params.duration),
+        [filterName.AGE]: formatUtils.transformToArray(params.age),
+        [filterName.TYPE]: formatUtils.transformToArray(params.type),
+        [filterName.COST]: formatUtils.transformToArray(params.cost),
+        [filterName.WEEK_DAYS]: formatUtils.transformToArray(params.weekdays),
+        [filterName.TIME]: formatUtils.transformToArray(params.time),
+        [filterName.REGULARITY]:
+            formatUtils.transformToArray(params.regularity),
+        [filterName.FORM_TRAINING]:
+            formatUtils.transformToArray(params.formTraining),
+        [filterName.DURATION]: formatUtils.transformToArray(params.duration),
+        [filterName.CATEGORY]: formatUtils.transformToArray(params.category),
         page: params.page || 0,
         sortType: params.sortType,
         name: params.name,
         metroId: params.metroId || null,
         areaId: params.areaId || null,
         districtId: params.districtId || null,
-        categoryId: this.transformToArray(categoryId)
+        categoryId: formatUtils.transformToArray(categoryId)
     };
-};
-
-/**
- * @param  {(number|string|undefined|Array)} value
- * @return {Array}
- */
-searchView.transformToArray = function(value) {
-    let result = [];
-    if (value) {
-        switch (typeof value) {
-        case 'number':
-            result = searchView.transformNumberToArray(value);
-            break;
-        case 'string':
-            result = searchView.transformStringToArray(value);
-            break;
-        case 'object':
-            result = searchView.transformObjectToArray(value);
-            break;
-        }
-    }
-    return result;
-};
-
-/**
- * Transform string to array
- * @param {string} value
- * @return {Array<string>}
- */
-searchView.transformStringToArray = function(value) {
-    let result;
-    if (~value.indexOf(',')) {
-        result = value.split(',');
-    } else {
-        result = [value];
-    }
-    return result;
-};
-
-/**
- * Transform number to array
- * @param {number} value
- * @return {Array<number>}
- */
-searchView.transformNumberToArray = function(value) {
-    return [value];
-};
-
-/**
- * Transform object to array
- * @param {Object|Array} value
- * @return {Array}
- */
-searchView.transformObjectToArray = function(value) {
-    let result = [];
-    if (Array.isArray(value)) {
-        result = value;
-    }
-    return result;
 };
 
 module.exports = searchView;

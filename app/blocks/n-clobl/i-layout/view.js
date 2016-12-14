@@ -67,6 +67,9 @@ goog.scope(function() {
         this.dom = {
             subheader: this.getElementByClass(
                 sm.bSmSubheader.View.CssClass.ROOT
+            ),
+            footer: this.getElementByClass(
+                sm.bSmFooter.View.CssClass.ROOT
             )
         };
     };

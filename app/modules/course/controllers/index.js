@@ -8,6 +8,7 @@ router.get(
     courseController.information
 );
 
+router.get('/search', courseController.commonSearch);
 router.get('/:categoryName', courseController.search);
 router.get('/', courseController.home);
 

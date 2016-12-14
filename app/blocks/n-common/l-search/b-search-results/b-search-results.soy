@@ -2,8 +2,10 @@
 
 /**
  * @typedef {{
- *     title: string,
- *     description: Array<string>,
+ *     title: (string|undefined),
+ *     description: (Array<string>|undefined),
+ *     linksTitle: (string|undefined),
+ *     links: (Array<sm.bSmLink.SmLink.Template.Params.Data>|undefined),
  *     sort: sm.gDropdown.TemplateSelect.Params.Data,
  *     entityList: sm.bSmItemList.Template.Params.Data,
  *     countResults: number,
@@ -78,7 +80,9 @@
  * @param params {{
  *     data: {
  *         title: (string|undefined),
- *         description: (string|undefined)
+ *         description: (string|undefined),
+ *         linksTtile: (string|undefined),
+ *         links: (Array<sm.bSmLink.SmLink.Template.Params.Data>|undefined),
  *         countResults: number,
  *         searchText: ?string,
  *         declensionEntityType: {
@@ -98,14 +102,15 @@
         {if not $params?.config?.notActive}
             {sp}{call .rootClass /}__header_active
         {/if}
+
+        {if $params.data?.title}
+            {sp}{call .rootClass /}__header_seo
+        {/if}
     {/let}
+
     <div class="{$classes}">
         {if $params.data.title}
-            {call .headerTextSeo_ data="all" /}
-
-            {if $params.data.description}
-                {call .headerDescriptionSeo_ data="all" /}
-            {/if}
+            {call .headerSeo_ data="all" /}
         {else}
             {call .generateHeaderText_ data="all" /}
         {/if}
@@ -114,7 +119,26 @@
 
 
 /**
- * Text of header for list results
+ * Text of header for results
+ * @param params {{
+ *     data: {
+ *         title: (string|undefined),
+ *         description: (string|undefined),
+ *         linksTtile: (string|undefined),
+ *         links: (Array<sm.bSmLink.SmLink.Template.Params.Data>|undefined)
+ *     }
+ * }}
+ */
+{template .headerSeo_}
+    {call .headerTextSeo_ data="all" /}
+    {call .headerDescriptionSeo_ data="all" /}
+    {call .headerLinksTitleSeo_ data="all" /}
+    {call .headerLinksSeo_ data="all" /}
+{/template}
+
+
+/**
+ * Text of header for results
  * @param params {{
  *     data: {
  *         title: (string|undefined),
@@ -139,17 +163,82 @@
 
 
 /**
- * Description of header for list results
+ * Description of header for results
  * @param params {{
  *     data: {
- *         description: ?string
+ *         description: (string|undefined)
  *     }
  * }}
  */
 {template .headerDescriptionSeo_}
-    <div class="{call .rootClass/}__header-text{sp}
-                {call .rootClass/}__header-text_description">
-        {$params.data.description}
+    {if $params.data.description}
+        <div class="{call .rootClass/}__header-description">
+            {$params.data.description}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Links title of header
+ * @param params {{
+ *     data: {
+ *         linksTitle: (string|undefined)
+ *     }
+ * }}
+ */
+{template .headerLinksTitleSeo_}
+    {if $params.data.links and $params.data.linksTitle}
+        <div class="{call .rootClass/}__header-links-title">
+            {$params.data.linksTitle}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Links of header
+ * @param params {{
+ *     data: {
+ *         links: (Array<sm.bSmLink.SmLink.Template.Params.Data>|undefined),
+ *     }
+ * }}
+ */
+{template .headerLinksSeo_}
+    {if $params.data.links}
+        <div class="{call .rootClass/}__header-links">
+            {foreach $link in $params.data.links}
+                {call .linkSeo_}
+                    {param params: [
+                        'data': $link
+                    ]/}
+                {/call}
+            {/foreach}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Template link of header
+ * @param params {{
+ *     data: sm.bSmLink.SmLink.Template.Params.Data
+ * }}
+ */
+{template .linkSeo_}
+    <div class="{call .rootClass/}__link {call .rootClass/}__link_seo">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'theme': 'default',
+                        'size': 'm'
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -314,10 +403,11 @@
                     'renderParams': [
                         'data': $params.data.sort,
                         'config': [
-                            'isChangingOpenerText': true,
                             'viewType': 'link',
                             'iconSprite': 'small-opener-arrow',
-                            'theme': 'minimal',
+                            'theme': 'dense',
+                            'openerSize': 'm',
+                            'contentSize': 'm',
                             'customClasses': [$customClasses]
                         ]
                     ]

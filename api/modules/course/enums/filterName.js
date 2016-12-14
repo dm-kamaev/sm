@@ -10,7 +10,8 @@ let enumInstance = new Enum('filterName', {
     WEEK_DAYS: 'weekdays',
     TIME: 'time',
     REGULARITY: 'regularity',
-    DURATION: 'duration'
+    DURATION: 'duration',
+    CATEGORY: 'categoryId'
 });
 
 module.exports = enumInstance;

@@ -60,9 +60,9 @@
       "resolved": "https://registry.npmjs.org/after/-/after-0.8.1.tgz"
     },
     "ajv": {
-      "version": "4.9.1",
+      "version": "4.9.2",
       "from": "ajv@>=4.7.0 <5.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-4.9.1.tgz"
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-4.9.2.tgz"
     },
     "ajv-keywords": {
       "version": "1.2.0",
@@ -693,9 +693,9 @@
       "resolved": "https://registry.npmjs.org/camelcase-keys/-/camelcase-keys-2.1.0.tgz"
     },
     "caniuse-db": {
-      "version": "1.0.30000591",
+      "version": "1.0.30000592",
       "from": "caniuse-db@>=1.0.30000578 <2.0.0",
-      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000591.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000592.tgz"
     },
     "caseless": {
       "version": "0.11.0",
@@ -788,8 +788,8 @@
     },
     "clobl": {
       "version": "1.0.0",
-      "from": "git+ssh://git@github.com/c7s/clobl.git#release-20161201",
-      "resolved": "git+ssh://git@github.com/c7s/clobl.git#981f1bc082c941b20fb78c8fddcd7a7e7400e7a3",
+      "from": "git+ssh://git@github.com/c7s/clobl.git#release-20161207-BP-1857",
+      "resolved": "git+ssh://git@github.com/c7s/clobl.git#2f4b10837528d080f6f40fb342ad2c46366587e7",
       "dependencies": {
         "clone": {
           "version": "0.2.0",
@@ -1741,9 +1741,16 @@
       "resolved": "https://registry.npmjs.org/ecc-jsbn/-/ecc-jsbn-0.1.1.tgz"
     },
     "ecdsa-sig-formatter": {
-      "version": "1.0.8",
+      "version": "1.0.9",
       "from": "ecdsa-sig-formatter@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.8.tgz"
+      "resolved": "https://registry.npmjs.org/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.9.tgz",
+      "dependencies": {
+        "base64url": {
+          "version": "2.0.0",
+          "from": "base64url@>=2.0.0 <3.0.0",
+          "resolved": "https://registry.npmjs.org/base64url/-/base64url-2.0.0.tgz"
+        }
+      }
     },
     "editorconfig": {
       "version": "0.13.2",
@@ -1763,9 +1770,9 @@
       "resolved": "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz"
     },
     "ejs": {
-      "version": "2.5.3",
+      "version": "2.5.5",
       "from": "ejs@>=2.3.4 <3.0.0",
-      "resolved": "https://registry.npmjs.org/ejs/-/ejs-2.5.3.tgz"
+      "resolved": "https://registry.npmjs.org/ejs/-/ejs-2.5.5.tgz"
     },
     "encodeurl": {
       "version": "1.0.1",
@@ -3503,9 +3510,9 @@
       "resolved": "https://registry.npmjs.org/ignore/-/ignore-3.2.0.tgz"
     },
     "imap": {
-      "version": "0.8.18",
+      "version": "0.8.19",
       "from": "imap@>=0.8.14 <0.9.0",
-      "resolved": "https://registry.npmjs.org/imap/-/imap-0.8.18.tgz"
+      "resolved": "https://registry.npmjs.org/imap/-/imap-0.8.19.tgz"
     },
     "imap-simple": {
       "version": "1.6.3",
@@ -3784,9 +3791,9 @@
       "resolved": "https://registry.npmjs.org/is-typedarray/-/is-typedarray-1.0.0.tgz"
     },
     "is-unc-path": {
-      "version": "0.1.1",
+      "version": "0.1.2",
       "from": "is-unc-path@>=0.1.1 <0.2.0",
-      "resolved": "https://registry.npmjs.org/is-unc-path/-/is-unc-path-0.1.1.tgz"
+      "resolved": "https://registry.npmjs.org/is-unc-path/-/is-unc-path-0.1.2.tgz"
     },
     "is-utf8": {
       "version": "0.2.1",
@@ -3975,9 +3982,9 @@
       "resolved": "https://registry.npmjs.org/keypress/-/keypress-0.1.0.tgz"
     },
     "kind-of": {
-      "version": "3.0.4",
+      "version": "3.1.0",
       "from": "kind-of@>=3.0.2 <4.0.0",
-      "resolved": "https://registry.npmjs.org/kind-of/-/kind-of-3.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/kind-of/-/kind-of-3.1.0.tgz"
     },
     "klaw": {
       "version": "1.3.1",

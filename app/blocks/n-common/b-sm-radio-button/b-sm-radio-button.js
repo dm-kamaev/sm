@@ -68,6 +68,7 @@ goog.scope(function() {
 
     /**
      * Set checked true
+     * @public
      */
     RadioButton.prototype.check = function() {
         this.getView().check();
@@ -76,6 +77,7 @@ goog.scope(function() {
 
     /**
      * Set checked false
+     * @public
      */
     RadioButton.prototype.uncheck = function() {
         this.getView().uncheck();
@@ -85,6 +87,7 @@ goog.scope(function() {
     /**
      * Check marked Radio button
      * @return {boolean}
+     * @public
      */
     RadioButton.prototype.isChecked = function() {
         return this.getView().isChecked();
@@ -92,8 +95,36 @@ goog.scope(function() {
 
 
     /**
+     * Set default status
+     * @public
+     */
+    RadioButton.prototype.setDefaultStatus = function() {
+        this.getView().setStatus(View.Status.DEFAULT);
+    };
+
+
+    /**
+     * Set active status
+     * @public
+     */
+    RadioButton.prototype.setActiveStatus = function() {
+        this.getView().setStatus(View.Status.ACTIVE);
+    };
+
+
+    /**
+     * Set inactive status
+     * @public
+     */
+    RadioButton.prototype.setInactiveStatus = function() {
+        this.getView().setStatus(View.Status.INACTIVE);
+    };
+
+
+    /**
      * Get data
      * @return {sm.bSmRadioButton.SmRadioButton.Params}
+     * @public
      */
     RadioButton.prototype.getData = function() {
         var data = this.params;
