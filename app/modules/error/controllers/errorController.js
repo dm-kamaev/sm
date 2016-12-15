@@ -9,7 +9,9 @@ const seoView = require('../../../../api/modules/school/views/seoView');
 
 const entityTypeEnum =
     require('../../../../api/modules/entity/enums/entityType');
-const errorView = require('../../../../api/modules/error/views/errorView');
+const errorView = require('../../../../api/modules/error/views/errorView'),
+    schoolErrorView =
+        require('../../../../api/modules/error/views/schoolErrorView');
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 
@@ -39,13 +41,7 @@ controller.schoolNotFound = async(function(req, res) {
         popularSchools: services.school.getRandomPopularSchools(5),
         amountSchools: services.school.getSchoolsCount(),
         authSocialLinks: services.auth.getAuthSocialUrl(),
-        favorites: {
-            items: services.school.getByIdsWithGeoData(favoriteIds),
-            itemUrls: services.page.getAliases(
-                favoriteIds,
-                entityTypeEnum.SCHOOL
-            )
-        },
+        favorites: [],
         seoLinks: services.seoSchoolList.getByTypes()
     };
 
@@ -69,16 +65,16 @@ controller.schoolNotFound = async(function(req, res) {
         popularAliases
     );
 
+    let templateData = schoolErrorView.render({
+        user: user,
+        favorites: data.favorites,
+        authSocialLinks: data.authSocialLinks,
+        seoLinks: data.seoLinks
+    });
+
     var html = soy.render('sm.lErrorSchoolNotFound.Template.base', {
         params: {
-            data: {
-                authSocialLinks: data.authSocialLinks,
-                user: userView.default(user),
-                favorites: {
-                    schools: schoolView.listCompact(data.favorites)
-                },
-                seoLinks: seoView.linksList(data.seoLinks)
-            },
+            data: templateData,
             errorText: errorText || 'Страница, которую вы искали, не найдена',
             popularSchools: schoolView.popular(data.popularSchools),
             dataLinks: schoolView.dataLinks(),

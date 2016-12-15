@@ -1,31 +1,31 @@
 /**
- * @fileOverview Frontick view for school home page layout
+ * @fileOverview Frontick view for school not found page layout
  */
 'use strict';
 
 const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
-    seoView = require('./seoView');
+    seoView = require('../../school/views/seoView');
 
 const Header = require('../../entity/lib/Header'),
-    SubHeader = require('../lib/SchoolSubheader');
+    SubHeader = require('../../school/lib/SchoolSubheader');
 
-let homeView = {};
+let schoolErrorView = {};
 
 /**
  * Return template data for layout
  * @param {{
  *      user: Object,
- *      favorites: Array<Object>,
+ *      favoriteEntities: Array<Object>,
  *      seoLinks: Array<Object>
  * }} data
  * @return {Object}
  */
-homeView.render = function(data) {
+schoolErrorView.render = function(data) {
     let user = userView.default(data.user),
         favoriteEntities = favoriteView.list(data.favorites);
     return {
-        subHeader: homeView.subHeader({
+        subHeader: schoolErrorView.subHeader({
             favoriteEntities: favoriteEntities,
             user: user
         }),
@@ -43,19 +43,19 @@ homeView.render = function(data) {
  * }} data
  * @return {Object}
  */
-homeView.subHeader = function(data) {
+schoolErrorView.subHeader = function(data) {
     let subHeader = new SubHeader();
 
     subHeader.init({
-        isLogoRedirect: false,
+        isLogoRedirect: true,
         contacts: Header.CONTACTS,
         isSearchRedirect: true,
         user: data.user,
         favoriteEntities: data.favoriteEntities,
-        isBottomLine: false
+        isBottomLine: true
     });
 
     return subHeader.getParams();
 };
 
-module.exports = homeView;
+module.exports = schoolErrorView;
