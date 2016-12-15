@@ -82,12 +82,12 @@
  *            metro: ?list<string>,
  *            totalScore: ?number
  *        ]>,
+ *        subHeader: sm.bSmSubheader.Template.Params,
  *        user: ?{
  *            firstName: ?string,
  *            lastName: ?string,
  *            isCommented: boolean
  *        },
- *        favorites: sm.bSchoolListPaged.Template.Params.Data
  *        authSocialLinks: [
  *            vk: ?string,
  *            fb: ?string
@@ -129,14 +129,7 @@
                 'title': $title,
                 'description': $params?.data.seoDescription,
                 'content': $content,
-                'header': [
-                    'searchText': $params.searchText,
-                    'url': '/',
-                    'searchRedirect': true,
-                    'bottomLine': true,
-                    'user': $params.data?.user,
-                    'favorites': $params?.data?.favorites
-                ],
+                'subHeader': $params.data.subHeader,
                 'landingScript': '/static/l-school.js',
                 'openGraph': [
                     'title': $title,
@@ -235,16 +228,16 @@
         <div class="l-school__title">
             {call .name_ data="all" /}
 
-            {call .favoriteLink_}
-                {param params: [
-                    'data': [
-                        'isFavorite': $params.data?.isFavorite
-                    ],
-                    'config': [
-                        'modifier': 'l'
-                    ]
-                ]/}
-            {/call}
+            // {call .favoriteLink_}
+            //     {param params: [
+            //         'data': [
+            //             'isFavorite': $params.data?.isFavorite
+            //         ],
+            //         'config': [
+            //             'modifier': 'l'
+            //         ]
+            //     ]/}
+            // {/call}
         </div>
 
         {call .metro_ data="all" /}
@@ -440,16 +433,16 @@
         {/if}
     </div>
 
-    {call .favoriteLink_}
-        {param params: [
-            'data': [
-                'isFavorite': $params.data?.isFavorite
-            ],
-            'config': [
-                'modifier': 's'
-            ]
-        ]/}
-    {/call}
+    // {call .favoriteLink_}
+    //     {param params: [
+    //         'data': [
+    //             'isFavorite': $params.data?.isFavorite
+    //         ],
+    //         'config': [
+    //             'modifier': 's'
+    //         ]
+    //     ]/}
+    // {/call}
 
     <div class="l-school__link l-school__link_inaccuracy">
         {call sm.bLink.Template.base}

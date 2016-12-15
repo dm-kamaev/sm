@@ -3,7 +3,6 @@ goog.provide('sm.bSmSubheader.SmSubheader');
 goog.require('cl.iControl.Control');
 goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
-goog.require('goog.dom.classlist');
 goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmSubheader.View');
@@ -77,9 +76,7 @@ goog.inherits(sm.bSmSubheader.SmSubheader, cl.iControl.Control);
 goog.scope(function() {
     var Subheader = sm.bSmSubheader.SmSubheader,
         View = sm.bSmSubheader.View,
-        Search = sm.bSearch.Search,
-        AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
-        FactoryManager = cl.iFactory.FactoryManager;
+        Search = sm.bSearch.Search;
 
 
     /**
@@ -89,6 +86,15 @@ goog.scope(function() {
     Subheader.Mode = {
         'DEFAULT': 'default',
         'SEARCH': 'search'
+    };
+
+
+    /**
+     * Css class enum
+     * @enum {string}
+     */
+    Subheader.CssClass = {
+        ROOT: View.CssClass.ROOT
     };
 
 

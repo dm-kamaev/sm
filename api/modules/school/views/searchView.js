@@ -1,3 +1,6 @@
+/**
+ * @fileOverview Frontick view for school search page layout
+ */
 'use strict';
 
 const egeResultView = require('../../study/views/egeResultView'),

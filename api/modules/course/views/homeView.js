@@ -1,3 +1,6 @@
+/**
+ * @fileOverview Frontick view for course home page layout
+ */
 'use strict';
 
 const userView = require('../../user/views/user'),
