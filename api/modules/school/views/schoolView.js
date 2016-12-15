@@ -23,6 +23,9 @@ const olimpResultView = require(
 const scoreView = require('../views/scoreView');
 const scoreEntityView = require('../../entity/views/scoreView');
 const seoView = require('./seoView.js');
+const favoriteView = require('../../favorite/views/favoriteView');
+const Header = require('../../entity/lib/Header');
+const SubHeader = require('../lib/SchoolSubheader');
 
 const commentView = require('../../comment/views/commentView');
 
@@ -88,11 +91,11 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         authSocialLinks: data.authSocialLinks,
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
-        isFavorite: schoolView.isFavorite(schoolInstance, data.favorites.items),
         user: user,
-        favorites: {
-            schools: schoolView.listCompact(data.favorites)
-        },
+        subHeader: schoolView.subHeader({
+            user: user,
+            favoriteEntities: favoriteView.list(data.favorites)
+        }),
         seoDescription: data.page.description,
         seoLinks: seoView.linksList(data.seoLinks)
     };
@@ -101,6 +104,29 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
     }
 
     return result;
+};
+
+/**
+ * Sub header params init
+ * @param {{
+ *      user: Object,
+ *      favoriteEntities: Array<Object>
+ * }} data
+ * @return {Object}
+ */
+schoolView.subHeader = function(data) {
+    let subHeader = new SubHeader();
+
+    subHeader.init({
+        isLogoRedirect: false,
+        contacts: Header.CONTACTS,
+        isSearchRedirect: true,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
+
+    return subHeader.getParams();
 };
 
 

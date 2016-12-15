@@ -72,12 +72,6 @@ exports.view = async(function(req, res, next) {
             } else {
                 var user = req.user || {};
 
-                var favorites = await(services.favorite.getByUserId(user.id)),
-                    favoriteIds = services.favorite.getEntityIdsFiltredByType(
-                        favorites,
-                        entityType.SCHOOL
-                    );
-
                 var promises = {
                     ege: services.egeResult.getAllBySchoolId(
                         schoolInstance.id
@@ -98,15 +92,7 @@ exports.view = async(function(req, res, next) {
                     authSocialLinks: services.auth.getAuthSocialUrl(),
                     popularSchools:
                         services.school.getRandomPopularSchools(6),
-                    favorites: {
-                        items: services.school.getByIdsWithGeoData(
-                            favoriteIds
-                        ),
-                        itemUrls: services.page.getAliases(
-                            favoriteIds,
-                            entityType.SCHOOL
-                        )
-                    },
+                    favorites: [],
                     seoLinks: services.seoSchoolList.getByTypes()
                 };
                 var dataFromPromises = await(promises);
