@@ -4,7 +4,7 @@
 'use strict';
 
 const userView = require('../../user/views/user'),
-    favoriteVIew = require('../../favorite/views/favoriteView'),
+    favoriteView = require('../../favorite/views/favoriteView'),
     seoView = require('./seoView');
 
 const Header = require('../../entity/lib/Header'),
@@ -23,7 +23,7 @@ let homeView = {};
  */
 homeView.render = function(data) {
     let user = userView.default(data.user),
-        favoriteEntities = favoriteVIew.list(data.favorites);
+        favoriteEntities = favoriteView.list(data.favorites);
     return {
         subHeader: homeView.subHeader({
             favoriteEntities: favoriteEntities,
