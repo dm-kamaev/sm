@@ -1,3 +1,6 @@
+/**
+ * @fileoverview School information layout control
+ */
 goog.provide('sm.lSchool.School');
 
 goog.require('goog.dom.classes');
