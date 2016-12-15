@@ -120,18 +120,25 @@ class GeoTools {
         const square = this.getPointsSouthEastAndNorthWest(coords, searchRadius);
         const southWest = square.southWest, northEast = square.northEast;
 
-        const bbox = southWest.longitude+','+southWest.latitude+
-               '~'+
-               northEast.longitude+','+northEast.latitude
+        let geocode = Object.assign([], coords);
+        if (/^5/.test(coords[0])) {
+            geocode.reverse();
+        }
+        geocode = geocode.join(',');
+
+        const bbox =
+            southWest.latitude+','+southWest.longitude+
+            '~'+
+            northEast.latitude+','+northEast.longitude;
         const responceGeo = await(axios.get(GEOCODER, {
             params: {
-                geocode: coords.join(','),
+                geocode,
                 kind: 'metro',
                 format: 'json',
                 bbox,
             }
         })).data;
-
+        // console.log(geocode, ' | ', bbox);
         let metros = responceGeo.response.GeoObjectCollection.featureMember;
         metros = metros.map(metro => {
             metro = metro.GeoObject;
@@ -152,10 +159,32 @@ class GeoTools {
      * @return {Number}   1200 (kilometres)
      */
     distanceKm(coord1, coord2) {
-        coord1 = new GeoPoint(coord1.latitude, coord1.longitude);
-        coord2 = new GeoPoint(coord2.latitude, coord2.longitude);
+        console.log(coord1, coord2);
+        let coordinate1 = Object.assign({}, coord1);
+        let coordinate2 = Object.assign({}, coord2);
+        if (/^5/.test(coordinate1.latitude)) {
+            let longitude = coordinate1.longitude;
+            let latitude = coordinate1.latitude;
+            coordinate1.latitude  = longitude;
+            coordinate1.longitude = latitude;
+        }
+        if (/^5/.test(coordinate2.latitude)) {
+            let longitude = coordinate2.longitude;
+            let latitude = coordinate2.latitude;
+            coordinate2.latitude  = longitude;
+            coordinate2.longitude = latitude;
+        }
+        console.log(coordinate1, coordinate2);
+        coordinate1 = new GeoPoint(
+            parseFloat(coordinate1.latitude),
+            parseFloat(coordinate1.longitude)
+        );
+        coordinate2 = new GeoPoint(
+            parseFloat(coordinate2.latitude),
+            parseFloat(coordinate2.longitude)
+        );
         //kilometers
-        return coord1.distanceTo(coord2, true);
+        return coordinate1.distanceTo(coordinate2, true);
     }
 
 

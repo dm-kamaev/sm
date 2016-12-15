@@ -41,9 +41,16 @@ class GeoCoder {
             // {name: 'метро Чкаловская', coords: [ '37.659263', '55.75593' ]}
             // ]
             let foundMetros = [];
-            foundMetros = geoTools.getMetros(address.coords, this.searchRadius);
-            this.addedMetroStation(foundMetros);
-            this.addedMetrosForAdress(address, foundMetros);
+            try {
+                foundMetros = await(
+                    getMetros_(address.coords, this.searchRadius)
+                );
+                console.log(address.id, address.name, foundMetros);
+                this.addedMetroStation(foundMetros);
+                this.addedMetrosForAdress(address, foundMetros);
+            } catch (error) {
+                logger.critical(error);
+            }
         });
     }
 
@@ -72,13 +79,17 @@ class GeoCoder {
      * [ { name: "метро Тургеневская", coords:[37.636742,55.765276] }, ]
      */
     addedMetrosForAdress(address, foundMetros) {
-        let addressId = address.id;
+        let addressId = address.id,
+            addressMetros = this.addressMetros;
         foundMetros.forEach(metro => {
             let metroName = metro.name;
             metro = this.metros[metroName];
             metro.name = metroName;
             let metroId = metro.id, metroCoords = metro.coords;
-            if (!this.addressMetros[addressId][metroId]) {
+            if (!addressMetros[addressId]) {
+                addressMetros[addressId] = {};
+            }
+            if (!addressMetros[addressId][metroId]) {
                 let distance = geoTools.distanceKm({
                     latitude: address.coords[1],
                     longitude: address.coords[0],
@@ -94,6 +105,7 @@ class GeoCoder {
                     'metro="' + JSON.stringify(metro) + '"\n' +
                     'distance= "' + distance + ' meters"'
                 );
+
                 await(AdressMetro.create({
                     addressId,
                     metroId,
@@ -134,7 +146,10 @@ function getAllMetros_() {
  */
 function getAllAdresses_() {
     return await(Adress.findAll({
-        attributes: ['id', 'name', 'coords']
+        attributes: ['id', 'name', 'coords'],
+        // where: {
+        //     id:4610
+        // }
     }));
 }
 
@@ -190,3 +205,21 @@ function buildHashAdressMetros_(addressMetros) {
     });
     return hash;
 }
+
+
+/**
+ * getMetros_ one request per econd
+ * @param  {Object[]} coords       [ 37.506, 53,5678 ]
+ * @param  {number} searchRadius 3(km)
+ * @return {Object} promise
+ */
+function getMetros_(coords, searchRadius) {
+    return new Promise((resolve, reject) => {
+        setTimeout(function() {
+            async(() => {
+                resolve(geoTools.getMetros(coords, searchRadius));
+            })();
+        }, 1000);
+    });
+}
+
