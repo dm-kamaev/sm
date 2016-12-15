@@ -55,6 +55,10 @@
 
 .b-sm-link_dark-theme {
     color: #000;
+
+    &.b-sm-link_selected {
+        color: #f00;
+    }
 }
 
 .b-sm-link_block-theme {
