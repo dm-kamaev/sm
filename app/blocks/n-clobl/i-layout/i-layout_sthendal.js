@@ -122,7 +122,15 @@ goog.scope(function() {
 
         this.listen(
             sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
-            this.mainHeader.showMenu.bind(this.mainHeader)
+            this.onHamburgerMenuClick
         );
+    };
+
+
+    /**
+     * On hamburger menu click
+     */
+    Layout.prototype.onHamburgerMenuClick = function() {
+        this.mainHeader.showMenu();
     };
 });  // goog.scope

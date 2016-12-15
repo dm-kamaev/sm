@@ -10,7 +10,7 @@ goog.require('sm.gModal.ModalSideMenuView');
  * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
- * @extends {cl.iControl.Control}
+ * @extends {cl.gModal.Modal}
  */
 sm.gModal.ModalSideMenu = function(view, opt_params, opt_domHelper) {
     sm.gModal.ModalSideMenu.base(

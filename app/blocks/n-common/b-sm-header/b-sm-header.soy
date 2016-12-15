@@ -8,10 +8,7 @@
  *         type: string,
  *         isSelected: boolean
  *     }>,
- *     footerLinks: Array<{
- *         label: ?string,
- *         url: ?string
- *     }>
+ *     footerLinks: Array<sm.bSmLinks.Template.Params.Data>,
  *     contacts: sm.bSmContacts.Template.Params.Data,
  *     helperText: string
  * }} sm.bSmHeader.Template.Params.Data
@@ -109,6 +106,11 @@
  * }} 
  */
 {template .footerLink}
+    
+    {let $customClasses kind="html"}
+        {call .rootClass /}__menu-link
+    {/let}
+
     <div class="{call .rootClass/}__footer-link">
         {call .renderChild}
             {param params: [
@@ -118,8 +120,7 @@
                     'config': [
                         'size': 'xl',
                         'theme': $item.url? 'default': 'black',
-                        'customClasses': ['b-sm-header__link'],
-                        'disableHover': $item.url? false: true
+                        'customClasses': [$customClasses]
                     ]
                 ]
             ]/}
@@ -241,9 +242,8 @@
                     'config': [
                         'size': 'xxxl',
                         'theme': 'dark',
-                        'customClasses': [$customClasses, 'b-sm-header__link'],
-                        'target': $params.data.target or '',
-                        'disableHover': false
+                        'customClasses': [$customClasses],
+                        'target': $params.data.target or ''
                     ]
                 ]
             ]/}

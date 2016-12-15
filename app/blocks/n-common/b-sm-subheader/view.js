@@ -134,6 +134,10 @@ goog.scope(function() {
             this.getElement(),
             View.CssClass.DEFAULT_MODE
         );
+        goog.dom.classlist.remove(
+            this.dom.searchSection,
+            View.CssClass.SEARCH_SECTION_ON_TOP
+        );
     };
 
 
@@ -148,6 +152,10 @@ goog.scope(function() {
         goog.dom.classes.remove(
             this.getElement(),
             View.CssClass.DEFAULT_MODE
+        );
+        goog.dom.classlist.add(
+            this.dom.searchSection,
+            View.CssClass.SEARCH_SECTION_ON_TOP
         );
     };
 

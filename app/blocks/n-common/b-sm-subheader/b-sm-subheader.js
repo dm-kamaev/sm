@@ -3,7 +3,7 @@ goog.provide('sm.bSmSubheader.SmSubheader');
 goog.require('cl.iControl.Control');
 goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
-goog.require('goog.dom.classes');
+goog.require('goog.dom.classlist');
 goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmSubheader.View');
@@ -127,32 +127,6 @@ goog.scope(function() {
         this.initMinifiedSearchListeners_();
         this.initSearchListeners_();
         this.initHamburgerMenuListener_();
-        this.initSearchModeListener_();
-    };
-
-    /**
-     * Initializes search mode listener
-     * @private
-     */
-    Subheader.prototype.initSearchModeListener_ = function() {
-        this.listen(
-            sm.bSearch.Search.Event.SEARCH_MODE_INITED,
-            this.searchModeInitedHandler_
-        );
-        this.listen(
-            sm.bSearch.Search.Event.DEFAULT_MODE_INITED,
-            this.defaultModeInitedHandler_
-        );
-    };
-
-    /**
-     * @private
-     */
-    Subheader.prototype.searchModeInitedHandler_ = function() {
-        goog.dom.classes.add(
-            this.getView().getDom().searchSection,
-            View.CssClass.SEARCH_SECTION_ON_TOP
-        );
     };
 
     /**

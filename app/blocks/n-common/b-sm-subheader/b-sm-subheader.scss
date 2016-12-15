@@ -60,7 +60,7 @@
 }
 
 .b-sm-subheader__section_search.b-sm-subheader__section_search_top {
-    z-index: 9999;
+    z-index: 18;
 }
 
 .b-sm-subheader__hamburger-menu {
@@ -79,9 +79,9 @@
 
 .b-sm-subheader__section_hamburger-menu {
     position: absolute;
-    z-index: 999;
+    z-index: 17;
     top: 8px;
-    left: 30px;
+    left: 25px;
 
     display: none;
 
@@ -279,8 +279,6 @@
         display: inline-block;
     }
     .b-sm-subheader__logo {
-        width: 217px;
-
         text-align: left;
     }
 }
@@ -361,7 +359,7 @@
         height: 60px;
     }
     .b-sm-subheader__section_search {
-        z-index: 99;
+        z-index: 16;
 
         height: 72px;
     }
@@ -431,7 +429,7 @@
         border-left: none;
     }
     .b-sm-subheader__logo-img {
-        height: 26px;
+        height: 24px;
         margin-top: 14px;
     }
     .b-sm-subheader_entity-type_school {
@@ -448,11 +446,6 @@
     }
     .b-sm-subheader__section_hamburger-menu {
         display: inline-block;
-    }
-    .b-sm-subheader__contacts {
-        width: 220px;
-
-        text-align: left;
     }
     .b-sm-subheader__section_logo {
         display: block;

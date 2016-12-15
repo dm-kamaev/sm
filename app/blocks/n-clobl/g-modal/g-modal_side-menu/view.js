@@ -1,6 +1,7 @@
 goog.provide('sm.gModal.ModalSideMenuView');
 
 goog.require('cl.gModal.View');
+goog.require('goog.events');
 
 
 
@@ -10,7 +11,7 @@ goog.require('cl.gModal.View');
  * @param {Function=} opt_template
  * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.iControl.View}
+ * @extends {cl.gModal.View}
  */
 sm.gModal.ModalSideMenuView =
     function(opt_params, opt_template, opt_modifier) {
@@ -45,7 +46,7 @@ goog.scope(function() {
      * @enum
      */
     View.Event = {
-        CLOSE: 'closeSideMenu'
+        CLOSE: goog.events.getUniqueId('closeSideMenu')
     };
 
     /**

@@ -41,7 +41,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-header',
-        HEADER_LINKS: 'b-sm-header__link'
+        HEADER_LINKS: 'b-sm-header__menu-link'
     };
 
 
