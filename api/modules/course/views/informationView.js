@@ -28,7 +28,7 @@ let view = {};
  * @return {Object}
  */
 view.render = function(data) {
-    var user = userView.default(data.user);
+    let user = userView.default(data.user);
 
     return {
         seo: {
@@ -41,8 +41,10 @@ view.render = function(data) {
         openGraph: {
             title: 'Курс ' + data.entityData.name + ' на «Курсах Мела»',
             description: data.entityData.description,
-            image: '/static/images/n-clobl/i-layout/cources_sharing.png',
-            fbClientId: data.fbClientId,
+            image: data.entityData.relapImgUrl,
+            relapTag: data.entityData.category,
+            relapImage:  data.entityData.relapImgUrl,
+            fbClientId: data.fbClientId
         },
         header: data.header,
         subHeader: view.subheader({
