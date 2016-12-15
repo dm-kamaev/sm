@@ -3,6 +3,7 @@
  */
 goog.provide('sm.lSchool.School');
 
+goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
@@ -12,6 +13,7 @@ goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bMap.Map');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
+goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iCarrotquest.Carrotquest');
@@ -126,6 +128,21 @@ sm.lSchool.School = function() {
      * @private
      */
     this.favoriteLinks_ = [];
+
+
+    /**
+     * Subheader instance
+     * @type {sm.bSmSubheader.SmSubheader}
+     * @private
+     */
+    this.subHeader_ = null;
+
+    /**
+     * Current factory name
+     * @type {string}
+     * @private
+     */
+    this.factory_ = 'stendhal';
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -231,7 +248,7 @@ goog.scope(function() {
                 fb: dataParams['authSocialLinks']['fb'],
                 vk: dataParams['authSocialLinks']['vk']
             },
-            factoryType: 'stendhal'
+            factoryType: this.factory_
         };
 
         this.params_ = {
@@ -642,6 +659,7 @@ goog.scope(function() {
             .initComments_()
             .initPopularSchools_()
             .initDataBlockFeatures_()
+            .initSubHeader_()
             .initComponents_(DataBlockFoldList, DataBlockFoldList.CssClass.ROOT)
             .initComponents_(DBlockRatings, DBlockRatings.CssClass.ROOT)
             .initComponents_(Search, Search.CssClass.ROOT)
@@ -863,6 +881,28 @@ goog.scope(function() {
             bDataBlockFeatures,
             this
         );
+        return this;
+    };
+
+
+    /**
+     * Init sub header
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initSubHeader_ = function() {
+        var subHeader = goog.dom.getElementByClass(
+            sm.bSmSubheader.SmSubheader.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smSubheader',
+            subHeader,
+            this
+        );
+
         return this;
     };
 });  // goog.scope
