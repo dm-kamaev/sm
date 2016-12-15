@@ -4,15 +4,20 @@
  * School home template
  * @param? params {
  *     data: {
- *        user: ?{
- *            firstName: ?string,
- *            lastName: ?string
- *        },
- *        authSocialLinks: {
- *            vk: ?string,
- *            fb: ?string
- *        },
- *        favorites: sm.bSchoolListPaged.Template.Params.Data
+ *         subHeader: sm.bSmSubheader.Template.Params.Data,
+ *         seoLinks: Array<{
+ *             name: string,
+ *             url: string
+ *         }>,
+ *         authSocialLinks: {
+ *             vk: string,
+ *             fb: string
+ *         },
+ *         user: {
+ *             id: (number|undefined),
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         }
  *     },
  *     images: ?list<string>,
  *     popularSchools: ?list<[
@@ -28,10 +33,6 @@
  *         url: ?string
  *     ]>,
  *     amountSchools: ?number,
- *     seoLinks: Array<{
- *         name: string,
- *         url: string
- *     }>,
  *     config: {
  *         analyticsId: ?string,
  *         yandexMetrikaId: ?number,
@@ -61,11 +62,7 @@
                 'title': $title,
                 'description': $description,
                 'content': $content,
-                'header': [
-                    'searchRedirect': true,
-                    'user': $params.data?.user,
-                    'favorites': $params?.data?.favorites
-                ],
+                'subHeader': $params.data.subHeader,
                 'landingScript': '/static/l-school-home.js',
                 'openGraph': [
                     'title': 'Школы «Мела»',
@@ -95,12 +92,8 @@
  * @param? params {?}
  */
 {template .layoutContent_ autoescape="strict" kind="html"}
-    {let $data: [
-        'isUserAuthorized': $params?.data?.user ? true : false,
-        'authSocialLinks': $params.data?.authSocialLinks
-    ] /}
     <div class="l-school-home"
-         data-params="{call goog.json.serialize data="$data" /}">
+         data-params="{call .dataParams data="all" /}">
 
         <div class="l-school-home__body">
             {call .header_ /}
@@ -116,6 +109,20 @@
 
         {call .informationLinks_ data="all" /}
     </div>
+{/template}
+
+/**
+ * Create data params string
+ * @param params {{
+ *     data: {}
+ * }}
+ */
+{template .dataParams kind="html"}
+    {let $data: [
+        'isUserAuthorized': $params?.data?.user ? true : false,
+        'authSocialLinks': $params.data?.authSocialLinks
+    ] /}
+    {call goog.json.serialize data="$data" /}
 {/template}
 
 /**

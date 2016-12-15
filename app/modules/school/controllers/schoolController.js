@@ -10,6 +10,7 @@ const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
+const homeView = require('../../../../api/modules/school/views/homeView');
 const seoView = require('../../../../api/modules/school/views/seoView');
 const headerView = require('../../../../api/modules/entity/views/headerView');
 
@@ -161,23 +162,12 @@ exports.view = async(function(req, res, next) {
 exports.home = async(function(req, res) {
     var user = req.user || {};
 
-    var favorites = await(services.favorite.getByUserId(user.id)),
-        favoriteIds = services.favorite.getEntityIdsFiltredByType(
-            favorites,
-            entityType.SCHOOL
-        );
+    let authSocialLinks = services.auth.getAuthSocialUrl();
 
     var dataPromises = {
             popularSchools: services.school.getRandomPopularSchools(3),
             amountSchools: services.school.getSchoolsCount(),
             authSocialLinks: services.auth.getAuthSocialUrl(),
-            favorites: {
-                items: services.school.getByIdsWithGeoData(favoriteIds),
-                itemUrls: services.page.getAliases(
-                    favoriteIds,
-                    entityType.SCHOOL
-                )
-            },
             seoLinks: services.seoSchoolList.getByTypes()
         },
         data = await(dataPromises);
@@ -190,16 +180,16 @@ exports.home = async(function(req, res) {
     data.popularSchools =
         schoolView.joinAliases(data.popularSchools, schoolAliases);
 
+    let templateData = homeView.render({
+        favorites: [],
+        user: user,
+        seoLinks: data.seoLinks,
+        authSocialLinks: authSocialLinks
+    });
+
     var html = soy.render('sm.lSchoolHome.Template.base', {
         params: {
-            data: {
-                authSocialLinks: data.authSocialLinks,
-                user: userView.default(user),
-                favorites: {
-                    schools: schoolView.listCompact(data.favorites)
-                },
-                seoLinks: seoView.linksList(data.seoLinks)
-            },
+            data: templateData,
             popularSchools: schoolView.popular(data.popularSchools),
             dataLinks: schoolView.dataLinks(),
             amountSchools: data.amountSchools,

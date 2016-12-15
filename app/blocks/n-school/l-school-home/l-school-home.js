@@ -1,7 +1,9 @@
+/**
+ * @fileoverview School home page control
+ */
 goog.provide('sm.lSchoolHome.SchoolHome');
 
-goog.require('goog.dom.classes');
-goog.require('goog.dom.classlist');
+goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
@@ -45,13 +47,26 @@ sm.lSchoolHome.SchoolHome = function() {
      * @private
      */
     this.popularSchools_ = null;
+
+    /**
+     * Sub header instance
+     * @type {sm.bSmSubheader.SmSubheader}
+     * @private
+     */
+    this.subHeader_ = null;
+
+    /**
+     * Current factory name
+     * @type {string}
+     * @private
+     */
+    this.factory_ = 'stendhal';
 };
 goog.inherits(sm.lSchoolHome.SchoolHome, goog.ui.Component);
 
 
 goog.scope(function() {
-    var SchoolHome = sm.lSchoolHome.SchoolHome,
-        PopularSchools = sm.bPopularSchools.PopularSchools;
+    var SchoolHome = sm.lSchoolHome.SchoolHome;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance();
 
@@ -103,7 +118,8 @@ goog.scope(function() {
         this.initParams_()
             .initAuthorization_()
             .initSearchPanel_()
-            .initPopularSchools_();
+            .initPopularSchools_()
+            .initSubHeader_();
     };
 
 
@@ -132,7 +148,7 @@ goog.scope(function() {
                 fb: dataParams['authSocialLinks']['fb'],
                 vk: dataParams['authSocialLinks']['vk']
             },
-            factoryType: 'stendhal'
+            factoryType: this.factory_
         };
 
         return this;
@@ -192,6 +208,27 @@ goog.scope(function() {
 
         return this;
     };
+
+    /**
+     * Init sub header
+     * @return {sm.lSchoolHome.SchoolHome}
+     * @private
+     */
+    SchoolHome.prototype.initSubHeader_ = function() {
+        var subHeader = goog.dom.getElementByClass(
+            sm.bSmSubheader.SmSubheader.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smSubheader',
+            subHeader
+        );
+
+        return this;
+    };
+
 });  // goog.scope
 
 
