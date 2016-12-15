@@ -223,7 +223,8 @@ goog.scope(function() {
         this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
             this.factory_,
             'smSubheader',
-            subHeader
+            subHeader,
+            this
         );
 
         return this;
