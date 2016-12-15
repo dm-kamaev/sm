@@ -188,7 +188,9 @@
     }
 
     .l-home__image {
-        width: 250px;
+        width: 88%;
+        height: auto;
+        max-height: 225px;
     }
 
     .l-home__image-title {
@@ -218,12 +220,20 @@
     .l-home__section_image-s {
         display: block;
 
-        height: 165px;
+        height: 230px;
     }
 }
 
 
 @include media-xxs {
+    .l-home__section_image-s {
+        height: 165px;
+    }
+
+    .l-home__image {
+        height: 160px;
+    }
+
     .l-home__section-content_recommendations {
         padding-top: 23px;
     }
