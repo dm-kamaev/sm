@@ -10,9 +10,12 @@ const Adress = require('../api/modules/geo/models/address.js');
 const AdressMetro = require('../api/modules/geo/models/addressMetro.js');
 const geoTools = require('./modules/geoTools/geoTools.js');
 const logger = require('../app/components/logger/logger.js').getLogger('app');
-
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
+const util = require('util');
+
+// turn off logging for sequelize
+AdressMetro.sequelize.options.logging = false;
 
 class GeoCoder {
     /**
@@ -36,7 +39,8 @@ class GeoCoder {
      * iterateAdresses iterate all adresses
      */
     iterateAdresses() {
-        this.addresses.forEach(address => {
+        const len = this.addresses.length;
+        this.addresses.forEach((address, i) => {
             // [
             // {name: 'метро Чкаловская', coords: [ '37.659263', '55.75593' ]}
             // ]
@@ -45,9 +49,12 @@ class GeoCoder {
                 foundMetros = await(
                     getMetros_(address.coords, this.searchRadius)
                 );
-                console.log(address.id, address.name, foundMetros);
+                logger.info(`AddressId="${address.id}";`, `AddressName="${address.name}"`);
+                logger.info('Found metros= '+JSON.stringify(foundMetros, null, 2));
                 this.addedMetroStation(foundMetros);
                 this.addedMetrosForAdress(address, foundMetros);
+                logger.info(`${++i} from ${len}`);
+                logger.info('+++++++++++++++++++');
             } catch (error) {
                 logger.critical(error);
             }
@@ -90,12 +97,13 @@ class GeoCoder {
                 addressMetros[addressId] = {};
             }
             if (!addressMetros[addressId][metroId]) {
+                console.log('BEFORE distance', address);
                 let distance = geoTools.distanceKm({
                     latitude: address.coords[1],
                     longitude: address.coords[0],
                 }, {
-                    latitude: metroCoords[1],
                     longitude: metroCoords[0],
+                    latitude: metroCoords[1],
                 });
                 distance = (distance.toFixed(3) * 1000).toFixed(0);
 
@@ -116,9 +124,7 @@ class GeoCoder {
     }
 }
 
-// async(() => {
-//     new GeoCoder().start();
-// })();
+
 commander
     .command('geoCoder')
     .description('update number metro for every address via yandex api')
@@ -147,8 +153,10 @@ function getAllMetros_() {
 function getAllAdresses_() {
     return await(Adress.findAll({
         attributes: ['id', 'name', 'coords'],
+        order: 'id ASC',
         // where: {
-        //     id:4610
+        //     id:64
+        //     // id:4610
         // }
     }));
 }

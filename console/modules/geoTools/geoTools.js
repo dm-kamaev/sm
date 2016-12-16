@@ -5,6 +5,9 @@ const await = require('asyncawait/await'),
     lodash = require('lodash'),
     GeoPoint = require('geopoint');
 
+const logger = require('../../../app/components/logger/logger.js')
+    .getLogger('app');
+
 const GEOCODER = 'http://geocode-maps.yandex.ru/1.x/';
 
 class GeoTools {
@@ -117,19 +120,20 @@ class GeoTools {
      * [ { name: 'метро Смоленская', coords: [ '37.581658', '55.74906' ] }, ]
      */
     getMetros(coords, searchRadius) {
+        coords = toDigitArrayCoord_(coords);
+        coords = checkSortOrderCoordinate_(coords);
         const square = this.getPointsSouthEastAndNorthWest(coords, searchRadius);
-        const southWest = square.southWest, northEast = square.northEast;
 
-        let geocode = Object.assign([], coords);
-        if (/^5/.test(coords[0])) {
-            geocode.reverse();
-        }
-        geocode = geocode.join(',');
+        const southWest = toDigitObjectCoord_(square.southWest);
+        const northEast = toDigitObjectCoord_(square.northEast);
 
+        // console.log(southWest, checkOrderCoordinate_(southWest));
+        const geocode = coords.join(',');
         const bbox =
-            southWest.latitude+','+southWest.longitude+
+            southWest.longitude+','+southWest.latitude+
             '~'+
-            northEast.latitude+','+northEast.longitude;
+            northEast.longitude+','+northEast.latitude;
+
         const responceGeo = await(axios.get(GEOCODER, {
             params: {
                 geocode,
@@ -138,7 +142,7 @@ class GeoTools {
                 bbox,
             }
         })).data;
-        // console.log(geocode, ' | ', bbox);
+        console.log(geocode, ' | ', bbox);
         let metros = responceGeo.response.GeoObjectCollection.featureMember;
         metros = metros.map(metro => {
             metro = metro.GeoObject;
@@ -159,30 +163,27 @@ class GeoTools {
      * @return {Number}   1200 (kilometres)
      */
     distanceKm(coord1, coord2) {
-        console.log(coord1, coord2);
+        console.log('INPUT=', coord1, coord2);
         let coordinate1 = Object.assign({}, coord1);
         let coordinate2 = Object.assign({}, coord2);
-        if (/^5/.test(coordinate1.latitude)) {
-            let longitude = coordinate1.longitude;
-            let latitude = coordinate1.latitude;
-            coordinate1.latitude  = longitude;
-            coordinate1.longitude = latitude;
-        }
-        if (/^5/.test(coordinate2.latitude)) {
-            let longitude = coordinate2.longitude;
-            let latitude = coordinate2.latitude;
-            coordinate2.latitude  = longitude;
-            coordinate2.longitude = latitude;
-        }
-        console.log(coordinate1, coordinate2);
-        coordinate1 = new GeoPoint(
-            parseFloat(coordinate1.latitude),
-            parseFloat(coordinate1.longitude)
-        );
-        coordinate2 = new GeoPoint(
-            parseFloat(coordinate2.latitude),
-            parseFloat(coordinate2.longitude)
-        );
+        coordinate1 = toDigitObjectCoord_(coordinate1);
+        coordinate2 = toDigitObjectCoord_(coordinate2);
+        console.log('BEFORE', coordinate1);
+        coordinate1 = checkOrderCoordinate_(coordinate1);
+        console.log('AFTER', coordinate1);
+        coordinate2 = checkOrderCoordinate_(coordinate2);
+
+        console.log('TRANSFORM=', coordinate1, coordinate2);
+
+        let latitude1 = coordinate1.latitude;
+        let longitude1 = coordinate1.longitude;
+
+        let latitude2 = coordinate2.latitude;
+        let longitude2 = coordinate2.longitude;
+
+        coordinate1 = new GeoPoint(latitude1, longitude1);
+        coordinate2 = new GeoPoint(latitude2, longitude2);
+
         //kilometers
         return coordinate1.distanceTo(coordinate2, true);
     }
@@ -208,7 +209,7 @@ class GeoTools {
                 sinLon * sinLon * cos;
 
         return 2 * GeoTools.R * Math.atan2(Math.sqrt(arg), Math.sqrt(1 - arg));
-    };
+    }
 
     /**
      * converts to radians
@@ -222,3 +223,85 @@ class GeoTools {
 }
 
 module.exports = new GeoTools();
+
+
+/**
+ * toDigitObjectCoord_  coords to digit
+ * @param  {Object} coord { latitude, longitude }
+ * @return {Object}       { latitude, longitude }
+ */
+function toDigitObjectCoord_ (coord) {
+    let latitude = parseFloat(coord.latitude);
+    let longitude = parseFloat(coord.longitude);
+
+    if (isNaN(latitude) || isNaN(longitude)) {
+        let error =
+        'Original coord: ' + JSON.stringify(coord) + '\n'+
+        'After parseFloat: ' + JSON.stringify({ latitude, longitude });
+        logger.critical(error);
+        throw new Error(error).stack;
+
+    }
+
+    return {
+        latitude,
+        longitude
+    };
+}
+
+
+/**
+ * checkOrderCoordinate_ check sort order coordinates in object
+ * !!!CALL ONLY IF SORT ORDER WRONG!!!
+ * !!!ONLY MOSCOW REGION!!!
+ * @param  {Object}
+ * { latitude: 55.67864138954658, longitude: 37.439709605830046 }
+ * @return {Object}
+ * { latitude: 37.439709605830046, longitude: 55.67864138954658 }
+ */
+function checkOrderCoordinate_ (coord) {
+    if (coord.latitude > coord.longitude) {
+        return {
+            latitude: coord.longitude,
+            longitude: coord.latitude
+        };
+    }
+    return coord;
+}
+
+/**
+ * checkSortOrderCoordinate_ check sort order coordinates in array
+ * !!!ONLY MOSCOW REGION!!!
+ * @param  {Object[]}
+ * [ 55.67864138954658, 37.439709605830046 ]
+ * @return {Object[]}
+ * [ 37.439709605830046, 55.67864138954658 ]
+ */
+function checkSortOrderCoordinate_ (coord) {
+    let coordinates = Object.assign([], coord);
+    if (coordinates[0] > coordinates[1]) {
+        coordinates.reverse();
+    }
+    return coordinates;
+}
+
+
+/**
+ * toDigitArrayCoord_  coords to digit
+ * @param  {Object} coord [ latitude, longitude ]
+ * @return {Object}       [ latitude, longitude ]
+ */
+function toDigitArrayCoord_ (coord) {
+    let latitude = parseFloat(coord[0]);
+    let longitude = parseFloat(coord[1]);
+
+    if (isNaN(latitude) || isNaN(longitude)) {
+        let error =
+        'Original coord: ' + JSON.stringify(coord) + '\n'+
+        'After parseFloat: ' + JSON.stringify([ latitude, longitude ]);
+        logger.critical(error);
+        throw new Error(error).stack;
+    }
+
+    return [ latitude, longitude ];
+}
