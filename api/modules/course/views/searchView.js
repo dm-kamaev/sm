@@ -95,10 +95,11 @@ searchView.filterPanel = function(data) {
  *     filtersData: Array<Object>,
  *     aliases: Array<Object>,
  *     seoParams: Object,
- *     currentCategory: string,
+ *     currentAlias: string,
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
- *     header: Object
+ *     header: Object,
+ *     categoryId: (number|undefined)
  * }} data
  * @return {Object}
  */
@@ -107,7 +108,7 @@ searchView.render = function(data) {
         aliasedCourses = courseView.joinAliases(
             data.coursesList, data.aliases
         ),
-        courses = courseView.list(aliasedCourses),
+        courses = courseView.list(aliasedCourses, data.categories),
         seoParams = data.seoParams || {};
 
     return {
@@ -142,7 +143,10 @@ searchView.render = function(data) {
         search: {
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
-            pageAlias: data.currentCategory
+            pageAlias: data.currentAlias,
+            args: {
+                categoryId: data.categoryId
+            }
         },
         resultsList: {
             title: seoParams.listTitle,
@@ -160,19 +164,28 @@ searchView.render = function(data) {
                 content: {
                     items: [{
                         'label': 'по популярности',
-                        'value': 2
+                        'value': 4
                     }, {
-                        'label': 'по возрастанию цены',
+                        'label': 'по возрастанию цены за час',
                         'value': 0
                     }, {
-                        'label': 'по убыванию цены',
+                        'label': 'по убыванию цены за час',
                         'value': 1
+                    }, {
+                        'label': 'по возрастанию цены за курс',
+                        'value': 2
+                    }, {
+                        'label': 'по убыванию цены за курс',
+                        'value': 3
                     }]
                 }
             },
             entityList: {
                 items: courses,
-                itemType: 'smItemEntity'
+                itemType: 'smItemEntity',
+                itemConfig: {
+                    enableCover: true
+                }
             }
         },
         filterPanel: searchView.filterPanel({
@@ -183,6 +196,17 @@ searchView.render = function(data) {
         searchParams: data.searchParams,
         footer: footerView.render()
     };
+};
+
+
+/**
+ * @param {Array<Course>} courses
+ * @return {number}
+ */
+searchView.countResults = function(courses) {
+    return courses[0] &&
+        courses[0].countResults ||
+        0;
 };
 
 /**
@@ -206,6 +230,7 @@ searchView.initSearchParams = function(params, opt_categoryId) {
         [filterName.FORM_TRAINING]:
             formatUtils.transformToArray(params.formTraining),
         [filterName.DURATION]: formatUtils.transformToArray(params.duration),
+        [filterName.CATEGORY]: formatUtils.transformToArray(params.category),
         page: params.page || 0,
         sortType: params.sortType,
         name: params.name,

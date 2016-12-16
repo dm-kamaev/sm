@@ -36,12 +36,12 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     opener: string,
+     *     opener: (string|undefined),
+     *     defaultOpenerText: (string|undefined),
      *     items: Array<{
      *         label: string,
      *         value: string
-     *     }>,
-     *     isChangingOpenerText: boolean
+     *     }>
      * }}
      */
     sm.gDropdown.ViewSelect.Params;
@@ -55,6 +55,7 @@ goog.scope(function() {
         ROOT: 'g-dropdown_select',
         OPENER: 'g-dropdown__opener',
         OPENER_TEXT: 'g-dropdown__opener-text',
+        OPENER_TEXT_CHANGING: 'g-dropdown__text_changing',
         CONTENT: 'g-dropdown__content'
     };
 
@@ -85,9 +86,9 @@ goog.scope(function() {
      * @protected
      */
     View.prototype.changeOpenerText = function(text) {
-        if (this.params.isChangingOpenerText) {
+        if (this.dom.changingOpenerText) {
             goog.dom.setTextContent(
-                this.dom.openerText,
+                this.dom.changingOpenerText,
                 text
             );
         }
@@ -110,15 +111,23 @@ goog.scope(function() {
 
     /**
      * Transform params to compressed ones
-     * rawParams['opener']['content'] - get to soy parameters
+     * rawParams['defaultOpenerText']['content'] - get to soy parameters
      * passed through the value - let with kind="html"
      * @param {Object} rawParams
      * @return {sm.gDropdown.ViewSelect.Params}
      * @protected
      */
     View.prototype.transformParams = function(rawParams) {
+        var defaultOpenerText = null;
+
+        if (rawParams['defaultOpenerText']) {
+            defaultOpenerText = rawParams['defaultOpenerText']['content'] ||
+                rawParams['defaultOpenerText'];
+        }
+
         return {
-            opener: rawParams['opener']['content'] || rawParams['opener'],
+            opener: rawParams['opener'],
+            defaultOpenerText: defaultOpenerText,
             items: rawParams['items'] ?
                 rawParams['items'].map(function(item) {
                     return {
@@ -126,8 +135,7 @@ goog.scope(function() {
                         value: item['value']
                     };
                 }) :
-                [],
-            isChangingOpenerText: rawParams['isChangingOpenerText']
+                []
         };
     };
 
@@ -141,8 +149,8 @@ goog.scope(function() {
             View.CssClass.OPENER
         );
 
-        this.dom.openerText = this.getElementByClass(
-            View.CssClass.OPENER_TEXT
+        this.dom.changingOpenerText = this.getElementByClass(
+            View.CssClass.OPENER_TEXT_CHANGING
         );
 
         this.dom.list = this.getElementByClass(

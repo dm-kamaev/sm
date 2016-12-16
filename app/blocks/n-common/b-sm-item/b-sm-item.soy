@@ -9,6 +9,7 @@
  *         light: string,
  *         bold: ?string
  *     },
+ *     imageUrl: (string|undefined),
  *     alias: ?string,
  *     score: ?number,
  *     description: (string|undefined),
@@ -72,9 +73,7 @@
  * @protected
  */
 {template .sections}
-    {if ($params.config.enableCover or
-        $params.config.stylizationModifier == 'experimental')
-        and ($params.config.theme != 'minimal')}
+    {if $params.config.enableCover}
         {call .sectionGroupCover data="all" /}
     {/if}
 

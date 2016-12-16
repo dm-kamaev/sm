@@ -3,14 +3,14 @@
 .g-icon_svg {
     &:before {
         vertical-align: inherit;
+
     }
 }
 
 .g-icon_svg.g-icon_img_metro {
     vertical-align: baseline;
 
-    font-size: 0.4px;
-    line-height: 8px;
+    font-size: 9.5px;
 }
 
 .g-icon_svg.g-icon_img_hamburger-menu {
@@ -23,6 +23,10 @@
 
 .g-icon_svg.g-icon_img_online {
     font-size: 1.22px;
+}
+
+.g-icon_img_search {
+    font-size: 9.822px;
 }
 
 .g-icon_img_cross.g-icon_size_s {

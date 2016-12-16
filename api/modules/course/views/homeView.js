@@ -24,6 +24,7 @@ let view = {};
  *     favorites: Object,
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
+ *     recommendations: Array<Object>,
  *     entityType: string
  * }} data
  * @return {Object}

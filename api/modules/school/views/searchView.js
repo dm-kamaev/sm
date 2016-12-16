@@ -112,7 +112,7 @@ searchView.render = function(data) {
             countResults: data.countResults,
             searchText: data.searchParams.name,
             declensionEntityType: {
-                nom: 'школа',
+                nom: 'школу',
                 gen: 'школы',
                 plu: 'школ'
             },

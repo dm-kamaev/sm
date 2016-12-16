@@ -3,7 +3,8 @@
 
 /**
  * @typedef {{
- *     opener: string,
+ *     opener: (string|undefined),
+ *     defaultOpenerText: (string|undefined),
  *     content: sm.gList.TemplateSthendal.Params.Data,
  * }} sm.gDropdown.TemplateSelect.Params.Data
  */
@@ -14,8 +15,7 @@
  *     stylizationModifier: string,
  *     iconName: (string|undefined),
  *     customClasses: (Array<string>|undefined),
- *     theme: ('rectangle'|undefined),
- *     isChangingOpenerText: (boolean|undefined)
+ *     theme: ('rectangle'|undefined)
  * }} sm.gDropdown.TemplateSelect.Params.Config
  */
 
@@ -39,13 +39,12 @@
  * Control for displaying content
  * @param params {{
  *     data: {
- *         opener: string,
+ *         opener: (string|undefined),
  *         defaultOpenerText: (string|undefined)
  *     },
  *     config: {
  *         openerSize: ('m'|'xl'|undefined),
- *         iconName: (string|undefined),
- *         isChangingOpenerText: (boolean|undefined)
+ *         iconName: (string|undefined)
  *     }
  * }}
  * @override
@@ -59,7 +58,8 @@
  * Content of opener
  * @param params {{
  *     data: {
- *         opener: string
+ *         opener: (string|undefined),
+ *         defaultOpenerText: (string|undefined)
  *     },
  *     config: {
  *         iconName: (string|undefined)
@@ -79,14 +79,31 @@
  * Text of opener
  * @param params {{
  *     data: {
- *         opener: string
+ *         opener: (string|undefined),
+ *         defaultOpenerText: (string|undefined)
  *     }
  * }}
- * @protected
+ * @override
  */
 {template .openerText}
     <div class="{call .rootClass/}__opener-text">
-        {$params.data.opener}
+        {if $params.data.opener}
+            <div class="{call .rootClass/}__text{sp}
+                        {call .rootClass/}__text_main">
+                {$params.data.opener}
+            </div>
+        {/if}
+
+        {if $params.data.opener and $params.data.defaultOpenerText}
+            {sp}
+        {/if}
+
+        {if $params.data.defaultOpenerText}
+            <div class="{call .rootClass/}__text{sp}
+                        {call .rootClass/}__text_changing">
+                {$params.data.defaultOpenerText}
+            </div>
+        {/if}
     </div>
 {/template}
 
@@ -151,16 +168,14 @@
  * Attributes template
  * @param params {{
  *     data: {
- *         opener: string,
+ *         opener: (string|undefined),
+ *         defaultOpenerText: (string|undefined),
  *         content: {
  *              items: Array<{
  *                  label: (string|undefined),
  *                  value: (number|string|undefined)
  *              }>
  *         }
- *     },
- *     config: {
- *         isChangingOpenerText: (boolean|undefined)
  *     }
  * }}
  * @override
@@ -169,8 +184,8 @@
     data-params="{call cl.iUtils.Utils.stringify}
         {param json: quoteKeysIfJs([
             'opener': $params.data.opener,
+            'defaultOpenerText': $params.data.defaultOpenerText,
             'items': $params.data.content.items,
-            'isChangingOpenerText': $params.config.isChangingOpenerText
         ]) /}
     {/call}"
 {/template}

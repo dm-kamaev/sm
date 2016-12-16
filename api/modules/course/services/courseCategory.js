@@ -52,6 +52,7 @@ service.getAll = async(function(opt_params) {
         .field(`${CATEGORY}.is_active`, 'isActive')
         .field('count(course.id)', 'courseCount')
         .field(`${CATEGORY}.filters`)
+        .field(`${CATEGORY}.price_type`, 'priceType')
         .field(`${CATEGORY}.updated_at`, 'updatedAt')
         .left_join(
             'course_type',
@@ -118,7 +119,8 @@ service.create = async(function(data) {
     return await(models.CourseCategory.create({
         name: data.name,
         isActive: data.isActive,
-        filters: data.filters
+        filters: data.filters,
+        priceType: data.priceType
     }));
 });
 
@@ -135,7 +137,8 @@ service.update = async(function(id, data) {
     return await(models.CourseCategory.update({
         name: data.name,
         isActive: data.isActive,
-        filters: data.filters
+        filters: data.filters,
+        priceType: data.priceType
     }, {
         where: {
             id: id
