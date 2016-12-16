@@ -43,7 +43,7 @@ view.render = function(data) {
             description: data.entityData.description,
             image: data.entityData.relapImgUrl,
             relapTag: data.entityData.category,
-            relapImage:  data.entityData.relapImgUrl,
+            relapImage: data.entityData.relapImgUrl,
             fbClientId: data.fbClientId
         },
         header: data.header,
