@@ -5,7 +5,8 @@
 
 const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
-    seoView = require('../../school/views/seoView');
+    seoView = require('../../school/views/seoView'),
+    footerView = require('../../entity/views/footerView');
 
 const Header = require('../../entity/lib/Header'),
     SubHeader = require('../../school/lib/SchoolSubheader');
@@ -29,7 +30,9 @@ schoolErrorView.render = function(data) {
             favoriteEntities: favoriteEntities,
             user: user
         }),
-        seoLinks: seoView.linksList(data.seoLinks),
+        footer: footerView.render(
+            seoView.linksList(data.seoLinks)
+        ),
         user: user,
         authSocialLinks: data.authSocialLinks
     };

@@ -73,7 +73,6 @@ controller.schoolNotFound = async(function(req, res) {
             amountSchools: data.amountSchools,
             config: {
                 staticVersion: config.lastBuildTimestamp,
-                year: new Date().getFullYear(),
                 analyticsId: analyticsId,
                 yandexMetrikaId: yandexMetrikaId,
                 carrotquestId: CARROTQUEST_ID,
