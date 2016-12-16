@@ -124,7 +124,6 @@ controller.generalError = async(function(
                     staticVersion: config.lastBuildTimestamp,
                     entityType: entityType,
                     modifier: MODIFIER,
-                    year: new Date().getFullYear(),
                     analyticsId: config[subdomain].analyticsId,
                     yandexMetrikaId: config[subdomain].yandexMetrikaId,
                     carrotquestId: CARROTQUEST_ID,

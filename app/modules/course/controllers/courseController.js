@@ -66,7 +66,6 @@ controller.home = async(function(req, res, next) {
                         page: 'home',
                         modifier: factory,
                         staticVersion: config.lastBuildTimestamp,
-                        year: new Date().getFullYear(),
                         analyticsId: ANALYTICS_ID,
                         experimentId: EXPERIMENT_ID,
                         yandexMetrikaId: YANDEX_METRIKA_ID,
@@ -141,15 +140,13 @@ controller.commonSearch = async(function(req, res, next) {
                         page: 'search',
                         modifier: factory,
                         staticVersion: config.lastBuildTimestamp,
-                        year: new Date().getFullYear(),
                         analyticsId: ANALYTICS_ID,
                         experimentId: EXPERIMENT_ID,
                         yandexMetrikaId: YANDEX_METRIKA_ID,
                         carrotquestId: CARROTQUEST_ID,
                         csrf: req.csrfToken(),
                         domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID,
-                        type: entityType.COURSE
+                        fbClientId: FB_CLIENT_ID
                     }
                 }
             }
@@ -240,7 +237,6 @@ controller.search = async(function(req, res, next) {
                             page: 'search',
                             modifier: factory,
                             staticVersion: config.lastBuildTimestamp,
-                            year: new Date().getFullYear(),
                             analyticsId: ANALYTICS_ID,
                             experimentId: EXPERIMENT_ID,
                             yandexMetrikaId: YANDEX_METRIKA_ID,
@@ -334,7 +330,6 @@ controller.information = async(function(req, res, next) {
                                 page: entityType.COURSE,
                                 modifier: factory,
                                 staticVersion: config.lastBuildTimestamp,
-                                year: new Date().getFullYear(),
                                 analyticsId: ANALYTICS_ID,
                                 experimentId: EXPERIMENT_ID,
                                 yandexMetrikaId: YANDEX_METRIKA_ID,
