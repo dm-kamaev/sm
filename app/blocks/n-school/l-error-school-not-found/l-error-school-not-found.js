@@ -44,13 +44,26 @@ sm.lErrorSchoolNotFound.ErrorSchoolNotFound = function() {
      * @private
      */
     this.popularSchools_ = null;
+
+    /**
+     * Sub header instance
+     * @type {sm.bSmSubheader.SmSubheader}
+     * @private
+     */
+    this.subHeader_ = null;
+
+    /**
+     * Current factory name
+     * @type {string}
+     * @private
+     */
+    this.factory_ = 'stendhal';
 };
 goog.inherits(sm.lErrorSchoolNotFound.ErrorSchoolNotFound, goog.ui.Component);
 
 
 goog.scope(function() {
-    var ErrorSchoolNotFound = sm.lErrorSchoolNotFound.ErrorSchoolNotFound,
-        PopularSchools = sm.bPopularSchools.PopularSchools;
+    var ErrorSchoolNotFound = sm.lErrorSchoolNotFound.ErrorSchoolNotFound;
 
 
     /**
@@ -58,7 +71,7 @@ goog.scope(function() {
      * @enum {string}
      */
     ErrorSchoolNotFound.CssClass = {
-        ROOT: 'l-error-not-found'
+        ROOT: 'l-error-school-not-found'
     };
 
 
@@ -70,6 +83,7 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.initParams_()
+            .initSubHeader_()
             .initPopularSchools_()
             .initSearchPanel_()
             .initAuthorization_();
@@ -100,7 +114,7 @@ goog.scope(function() {
                 fb: dataParams['authSocialLinks']['fb'],
                 vk: dataParams['authSocialLinks']['vk']
             },
-            factoryType: 'stendhal'
+            factoryType: this.factory_
         };
 
         return this;
@@ -157,6 +171,27 @@ goog.scope(function() {
                 bSearchPanel,
                 this
             );
+
+        return this;
+    };
+
+    /**
+     * Init sub header
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.initSubHeader_ = function() {
+        var subHeader = goog.dom.getElementByClass(
+            sm.bSmSubheader.SmSubheader.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smSubheader',
+            subHeader,
+            this
+        );
 
         return this;
     };
