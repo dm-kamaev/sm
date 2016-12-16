@@ -2,13 +2,9 @@
 
 /**
  * School home template
- * @param? params {
+ * @param? params {{
  *     data: {
  *         subHeader: sm.bSmSubheader.Template.Params,
- *         seoLinks: Array<{
- *             name: string,
- *             url: string
- *         }>,
  *         authSocialLinks: {
  *             vk: string,
  *             fb: string
@@ -17,7 +13,8 @@
  *             id: (number|undefined),
  *             firstName: (string|undefined),
  *             lastName: (string|undefined)
- *         }
+ *         },
+ *         footer: sm.bSmFooter.Template.Params.Data
  *     },
  *     images: ?list<string>,
  *     popularSchools: ?list<[
@@ -40,7 +37,7 @@
  *         domain: ?string,
  *         fbClientId: ?number
  *     }
- * }
+ * }}
  */
 {template .base autoescape="strict" kind="html"}
     {let $title kind="text"}
@@ -72,13 +69,12 @@
                         '/static/images/n-school/i-layout/schools-share.png',
                     'fbClientId': $params?.config?.fbClientId
                 ],
-                'seoLinks': $params.data?.seoLinks
+                'footer': $params.data.footer
             ],
             'config': [
                 'modifier': 'stendhal',
                 'page': 'school-home',
                 'staticVersion': $params.config?.staticVersion,
-                'year':  $params.config?.year,
                 'analyticsId': $params.config?.analyticsId,
                 'yandexMetrikaId': $params.config?.yandexMetrikaId,
                 'carrotquestId': $params.config?.carrotquestId,

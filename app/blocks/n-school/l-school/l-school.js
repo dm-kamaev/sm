@@ -13,6 +13,7 @@ goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bMap.Map');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
+goog.require('sm.bSmFooter.View');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
@@ -136,6 +137,15 @@ sm.lSchool.School = function() {
      * @private
      */
     this.subHeader_ = null;
+
+
+    /**
+     * Footer instance
+     * @type {sm.bSmFooter.SmFooter}
+     * @private
+     */
+    this.footer_ = null;
+
 
     /**
      * Current factory name
@@ -660,6 +670,7 @@ goog.scope(function() {
             .initPopularSchools_()
             .initDataBlockFeatures_()
             .initSubHeader_()
+            .initFooter_()
             .initComponents_(DataBlockFoldList, DataBlockFoldList.CssClass.ROOT)
             .initComponents_(DBlockRatings, DBlockRatings.CssClass.ROOT)
             .initComponents_(Search, Search.CssClass.ROOT)
@@ -900,6 +911,28 @@ goog.scope(function() {
             this.factory_,
             'smSubheader',
             subHeader,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init footer
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initFooter_ = function() {
+        var footer = goog.dom.getElementByClass(
+            sm.bSmFooter.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.footer_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smFooter',
+            footer,
             this
         );
 

@@ -8,6 +8,7 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bSearchPanel.View');
+goog.require('sm.bSmFooter.View');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCarrotquest.Carrotquest');
 goog.require('sm.iFactory.FactoryStendhal');
@@ -48,12 +49,22 @@ sm.lSchoolHome.SchoolHome = function() {
      */
     this.popularSchools_ = null;
 
+
     /**
      * Sub header instance
      * @type {sm.bSmSubheader.SmSubheader}
      * @private
      */
     this.subHeader_ = null;
+
+
+    /**
+     * Footer instance
+     * @type {sm.bSmFooter.SmFooter}
+     * @private
+     */
+    this.footer_ = null;
+
 
     /**
      * Current factory name
@@ -119,7 +130,8 @@ goog.scope(function() {
             .initAuthorization_()
             .initSearchPanel_()
             .initPopularSchools_()
-            .initSubHeader_();
+            .initSubHeader_()
+            .initFooter_();
     };
 
 
@@ -230,6 +242,27 @@ goog.scope(function() {
         return this;
     };
 
+
+    /**
+     * Init footer
+     * @return {sm.lSchoolHome.SchoolHome}
+     * @private
+     */
+    SchoolHome.prototype.initFooter_ = function() {
+        var footer = goog.dom.getElementByClass(
+            sm.bSmFooter.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.footer_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smFooter',
+            footer,
+            this
+        );
+
+        return this;
+    };
 });  // goog.scope
 
 

@@ -5,7 +5,6 @@
  *     modifier: (string|undefined),
  *     page: (string|undefined),
  *     staticVersion: (string|undefined),
- *     year: (number|undefined),
  *     analyticsId: string,
  *     yandexMetrikaId: number,
  *     carrotquestId: string,
@@ -35,10 +34,7 @@
  *             imageWidth: ?string,
  *             imageHeight: ?string
  *         },
- *         seoLinks: Array<{
- *             name: string,
- *             url: string
- *         }>
+ *         footer: sm.bSmFooter.Template.Params.Data
  *     },
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
@@ -230,11 +226,14 @@
 
 /**
  * Subheader template
- * @param params {
+ * @param params {{
  *     data: {
  *         subHeader: sm.bSmSubheader.Template.Params
+ *     },
+ *     config: {
+ *         modifier: string
  *     }
- * }
+ * }}
  */
 {template .subHeader_ autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__sub-header">
@@ -251,35 +250,23 @@
 
 /**
  * Footer
- * @param? params {
+ * @param params {{
  *     data: {
- *         seoLinks: Array<{
- *             name: string,
- *             url: string
- *         }>
+ *         footer: sm.bSmFooter.Template.Params.Data
  *     },
- *     config: ?{
- *         year: ?number
+ *     config: {
+ *         modifier: string
  *     }
- * }
+ * }}
  */
 {template .footer_ autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__footer">
-        {call sm.lSchool.bFooter.Template.base}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'data': [
-                    'year': $params?.config?.year,
-                    'links': [
-                        [
-                            'name': 'Сотрудничество',
-                            'url': 'http://mel.fm/contacts'
-                        ],
-                        [
-                            'name': 'Пользовательское соглашение',
-                            'url': 'http://mel.fm/terms-of-use'
-                        ]
-                    ],
-                    'seoLinks': $params.data?.seoLinks
+                'factory': $params.config.modifier,
+                'type': 'smFooter',
+                'renderParams': [
+                    'data': $params.data.footer
                 ]
             ]/}
         {/call}
