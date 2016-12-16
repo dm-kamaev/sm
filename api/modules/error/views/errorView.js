@@ -2,6 +2,7 @@
 
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
+const footerView = require('../../entity/views/footerView');
 
 const CourseSubheader = require('../../course/lib/CourseSubheader'),
     SchoolSubheader = require('../../school/lib/SchoolSubheader'),
@@ -39,7 +40,8 @@ view.render = function(data) {
         authSocialLinks: data.authSocialLinks,
         error: {
             text: data.errorText || 'Страница, которую вы искали, не найдена'
-        }
+        },
+        footer: footerView.render()
     };
 };
 

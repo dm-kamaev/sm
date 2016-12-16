@@ -9,7 +9,8 @@ const courseView = require('./courseView'),
     userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('./courseCategoryView'),
-    searchViewEntity = require('../../entity/views/searchView');
+    searchViewEntity = require('../../entity/views/searchView'),
+    footerView = require('../../entity/views/footerView');
 
 const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
@@ -179,7 +180,8 @@ searchView.render = function(data) {
             enabledFilters: data.enabledFilters,
             searchParams: data.searchParams
         }),
-        searchParams: data.searchParams
+        searchParams: data.searchParams,
+        footer: footerView.render()
     };
 };
 

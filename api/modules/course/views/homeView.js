@@ -5,7 +5,8 @@
 
 const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
-    courseCategoryView = require('../../course/views/courseCategoryView');
+    courseCategoryView = require('../../course/views/courseCategoryView'),
+    footerView = require('../../entity/views/footerView');
 
 const Subheader = require('../lib/CourseSubheader'),
     Header = require('../../entity/lib/Header');
@@ -58,7 +59,8 @@ view.render = function(data) {
             ]
         },
         searchPanel: view.searchPanel(),
-        recommendations: view.recommendations(data.recommendations)
+        recommendations: view.recommendations(data.recommendations),
+        footer: footerView.render()
     };
 };
 

@@ -3,6 +3,7 @@
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
+const footerView = require('../../entity/views/footerView');
 
 const courseCategoryView = require('./courseCategoryView');
 
@@ -60,7 +61,8 @@ view.render = function(data) {
         entityData: data.entityData,
         map: data.map,
         priceLabelText: data.priceLabelText,
-        actionButtonText: data.actionButtonText
+        actionButtonText: data.actionButtonText,
+        footer: footerView.render()
     };
 };
 
