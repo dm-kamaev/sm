@@ -17,7 +17,11 @@ let homeView = {};
  * @param {{
  *      user: Object,
  *      favorites: Array<Object>,
- *      seoLinks: Array<Object>
+ *      seoLinks: Array<Object>,
+ *      authSocialLinks: {
+ *          vk: string,
+ *          fb: string
+ *      }
  * }} data
  * @return {Object}
  */

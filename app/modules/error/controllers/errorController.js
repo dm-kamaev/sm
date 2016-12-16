@@ -4,8 +4,6 @@ const soy = require.main.require('./app/components/soy');
 const services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const headerView = require('../../../../api/modules/entity/views/headerView');
-const userView = require('../../../../api/modules/user/views/user');
-const seoView = require('../../../../api/modules/school/views/seoView');
 
 const entityTypeEnum =
     require('../../../../api/modules/entity/enums/entityType');
@@ -30,12 +28,6 @@ let controller = {};
 
 controller.schoolNotFound = async(function(req, res) {
     var user = req.user || {};
-
-    var favorites = await(services.favorite.getByUserId(user.id)),
-        favoriteIds = services.favorite.getEntityIdsFiltredByType(
-            favorites,
-            entityTypeEnum.SCHOOL
-        );
 
     var dataPromises = {
         popularSchools: services.school.getRandomPopularSchools(5),
