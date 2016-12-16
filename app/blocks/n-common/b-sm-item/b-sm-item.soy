@@ -159,14 +159,23 @@
         {/if}
     {/let}
 
-    <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_cover">
+    {let $url kind="html"}
+        {if $params.data.url}
+            {$params.data.url}
+        {else}
+            /{$params.data.alias}
+        {/if}
+    {/let}
+
+    <a class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_cover"
+        href="{$url}">
 
         <img class="{call .rootClass/}__cover-image"
             src="{$imageUrl}"
             alt="{$description}"
         >
-    </div>
+    </a>
 {/template}
 
 
@@ -188,7 +197,42 @@
 {template .sectionLink}
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_link">
-    {$params.data.name.light}
+        {let $name kind="html"}
+            {$params.data.name.light}
+
+            {if $params.data.name?.bold}
+                {$params.data.name.bold}
+            {/if}
+        {/let}
+
+        {let $url kind="html"}
+            {if $params.data.url}
+                {$params.data.url}
+            {else}
+                /{$params.data.alias}
+            {/if}
+        {/let}
+
+        {let $customClasses kind="html"}
+            {call .rootClass/}__link-name
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'id': $params.data.id,
+                        'content': $name,
+                        'url': $url
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'size': 'l'
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -287,18 +331,32 @@
             {/if}
         {/let}
 
+        {let $url kind="html"}
+            {if $params.data.url}
+                {$params.data.url}
+            {else}
+                /{$params.data.alias}
+            {/if}
+        {/let}
+
         {let $customClasses kind="html"}
             {call .rootClass/}__link-name
         {/let}
 
-        {call sm.bLink.Template.base}
+        {call .renderChild}
             {param params: [
-                'data': [
-                    'name': $name
-                ],
-                'config': [
-                    'size': 'large',
-                    'customClasses': $customClasses
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'id': $params.data.id,
+                        'content': $name,
+                        'url': $url
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': 'dark',
+                        'size': '7xl'
+                    ]
                 ]
             ]/}
         {/call}
@@ -498,14 +556,6 @@
  * @override
  */
 {template .attributes kind="attributes"}
-    {let $url kind="html"}
-        {if $params.data.url}
-            {$params.data.url}
-        {else}
-            {$params.data.alias}
-        {/if}
-    {/let}
-    {sp}href="/{$url}"
     {sp}data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: quoteKeysIfJs([
@@ -523,5 +573,5 @@
  * @override
  */
 {template .tag}
-    a
+    div
 {/template}
