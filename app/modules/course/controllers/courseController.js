@@ -54,9 +54,6 @@ controller.home = async(function(req, res, next) {
             entityType: entityType.COURSE
         });
 
-        console.log(JSON.stringify(templateData, null, 4));
-
-
         let html = soy.render(
             'sm.lHome.Template.home', {
                 params: {

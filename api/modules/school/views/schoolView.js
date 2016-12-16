@@ -120,7 +120,7 @@ schoolView.subHeader = function(data) {
     let subHeader = new SubHeader();
 
     subHeader.init({
-        isLogoRedirect: false,
+        isLogoRedirect: true,
         contacts: Header.CONTACTS,
         isSearchRedirect: true,
         user: data.user,
