@@ -245,11 +245,20 @@ goog.scope(function() {
             case sm.lSearch.bFilter.FilterExtended.isControl(element) :
                 type = 'lSearch-filterExtended';
                 break;
+            case sm.lSearch.bFilter.FilterSwitchLabels.isControl(element) :
+                type = 'lSearch-filterSwitchLabels';
+                break;
             case sm.lSearch.bFilter.FilterSwitch.isControl(element) :
                 type = 'lSearch-filterSwitch';
                 break;
             case sm.lSearch.bFilter.FilterInput.isControl(element) :
                 type = 'lSearch-filterInput';
+                break;
+            case sm.lSearch.bFilter.FilterDropdown.isControl(element) :
+                type = 'lSearch-filterDropdown';
+                break;
+            case sm.lSearch.bFilter.FilterClasses.isControl(element) :
+                type = 'lSearch-filterClasses';
                 break;
             default:
                 type = 'lSearch-filter';

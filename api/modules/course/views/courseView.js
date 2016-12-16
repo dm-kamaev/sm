@@ -2,15 +2,16 @@
 
 const lodash = require('lodash');
 
-const scoreView = require('./scoreView'),
+const scoreView = require('../../entity/views/scoreView'),
     metroView = require('../../geo/views/metroView'),
     geoView = require('../../geo/views/geoView'),
     areaView = require('../../geo/views/areaView'),
     districtView = require('../../geo/views/districtView'),
     addressView = require('../../geo/views/addressView'),
-    FormatText = require('../../entity/lib/FormatText'),
+    FormatUtils = require('../../entity/lib/FormatUtils'),
     CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
-    pageView = require('../../entity/views/pageView');
+    pageView = require('../../entity/views/pageView'),
+    costView = require('../views/costView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType'),
     groupSizeTraining = require('../enums/groupSizeTraining');
@@ -24,23 +25,31 @@ const FULL_DESCRIPTION_LENGTH = 300,
 
 /**
  * @param  {Object} course
+ * @param  {string} categoryAlias
  * @return {Object}
  */
-view.page = function(course) {
+view.page = function(course, categoryAlias) {
     let options = course.courseOptions,
         generalOptions = this.formatGeneralOptions(course);
     return {
         id: course.id,
         name: course.name,
-        category: 'proforientacija',
+        category: categoryAlias,
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
-        cost: this.formatCost(options),
+        cost: costView.formatPageCost(
+            options,
+            course.courseType.category.priceType
+        ),
         generalOptions: {
             items: this.formatGeneralOptionsWithConfig(generalOptions)
         },
-        departmentList: this.formatDepartmentList(options, generalOptions),
+        departmentList: this.formatDepartmentList(
+            options,
+            generalOptions,
+            lodash.camelCase(course.courseType.category.priceType)
+        ),
         videoId: course.embedId,
         online: this.onlineStatus(generalOptions)
     };
@@ -57,10 +66,10 @@ view.formatFullDescription = function(text) {
 
     if (text) {
         if (text.length > FULL_DESCRIPTION_LENGTH) {
-            let formatText = new FormatText();
+            let formatUtils = new FormatUtils();
             result.fullText = [text];
             result.cutText.push(
-                formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ')
+                formatUtils.cutText(text, FULL_DESCRIPTION_LENGTH, ' ')
             );
         } else {
             result.cutText.push(text);
@@ -69,15 +78,6 @@ view.formatFullDescription = function(text) {
         result = null;
     }
     return result;
-};
-
-/**
- * @param  {Array<Object>} options
- * @return {string}
- */
-view.formatCost = function(options) {
-    return Math.min.apply(null, options.map(option => option.totalCost)) +
-        ' руб. / курс';
 };
 
 /**
@@ -94,10 +94,11 @@ view.formatGeneralOptions = function(course) {
 /**
  * @param  {Array<Object>} options
  * @param  {Array<Object>} generalOptions
+ * @param  {string}        priceType
  * @return {Array<Object>}
  */
-view.formatDepartmentList = function(options, generalOptions) {
-    let optionsTransformer = new CourseOptionsTransformer(options);
+view.formatDepartmentList = function(options, generalOptions, priceType) {
+    let optionsTransformer = new CourseOptionsTransformer(options, priceType);
     return optionsTransformer.getUniqueOptions(generalOptions);
 };
 
@@ -203,21 +204,28 @@ view.alignmentOption = function(option, opt_isHorizontal) {
 };
 
 /**
- * @param  {Object} course
+ * @param {Object} course
+ * @param {string} categoryAlias
  * @return {Object}
  */
-view.pageMap = function(course) {
+view.pageMap = function(course, categoryAlias) {
     let addresses = lodash.flatten(course.courseOptions.map(courseOption =>
         courseOption.departments.map(department => {
             let address = department.address;
             return {
                 addressId: address.id,
                 coordinates: geoView.coordinatesDefault(address.coords),
-                title: {
-                    text: course.courseBrand.name
+                header: {
+                    title: course.name
                 },
-                items: [],
-                description: address.name,
+                content: {
+                    items: []
+                },
+                footer: {
+                    title: address.name
+                },
+                id: course.id,
+                category: categoryAlias,
                 score: course.totalScore
             };
         })
@@ -265,11 +273,11 @@ view.listMap = function(courses, viewType) {
         );
 
         if (~addressPosition) {
-            let isCourseAdded = ~prev[addressPosition].items.findIndex(
+            let isCourseAdded = ~prev[addressPosition].content.items.findIndex(
                 mapCourse => mapCourse.id == curr.id
             );
             if (!isCourseAdded) {
-                prev[addressPosition].items.push(this.mapCourse(curr));
+                prev[addressPosition].content.items.push(this.mapCourse(curr));
             }
         } else {
             prev.push(this.getMapItem(curr));
@@ -349,7 +357,10 @@ view.getAddresses = function(courseOptions) {
  *     subtitle: string,
  *     items: Array<{
  *         id: number,
- *         content: string,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
  *         url: null
  *     }>
  * }}
@@ -358,7 +369,6 @@ view.getMapItem = function(course) {
     return course.addressId ?
         {
             addressId: course.addressId,
-            addressName: course.addressName,
             coordinates: geoView.coordinatesDefault(
                 course.addressCoords),
             score: course.totalScore,
@@ -367,8 +377,16 @@ view.getMapItem = function(course) {
                 text: course.brand,
                 url: null
             },
-            subtitle: course.addressName,
-            items: [this.mapCourse(course)]
+            header: {
+                title: course.brand
+            },
+            content: {
+                title: 'Курсы',
+                items: [this.mapCourse(course)]
+            },
+            footer: {
+                title: course.addressName
+            }
         } :
         null;
 };
@@ -379,14 +397,20 @@ view.getMapItem = function(course) {
  * @param  {Object} course
  * @return {{
  *     id: number,
- *     content: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
  *     url: string
  * }}
  */
 view.mapCourse = function(course) {
     return {
         id: course.id,
-        content: course.name,
+        name: {
+            light: course.name
+        },
+        category: course.categoryAlias,
         url: this.generateAlias(
             course.alias,
             course.brandAlias,
@@ -417,7 +441,7 @@ view.getListCourse = function(course) {
             course.score,
             course.totalScore
         ),
-        cost: course.optionCost,
+        cost: costView.formatListCost(course.optionCost, course.priceType),
         online: course.optionOnline ? {
             value: groupSizeTraining.ONLINE,
             type: 'only'

@@ -29,7 +29,7 @@ sm.lSchool.bResults.Results = function(opt_params) {
     /**
      * Contents with dropdown
      * @type {Array.<{
-     *     dropdown: sm.gDropdown.DropdownSelect,
+     *     dropdown: sm.gDropdown.DropdownSelectLegacy,
      *     selectedItemId: number,
      *     showMoreButton: Element,
      *     innerContents: Array.<{
@@ -57,7 +57,7 @@ goog.scope(function() {
         Factory = sm.iFactory.FactoryStendhal,
         TabView = cl.gTab.View,
         DropdownView = cl.gDropdown.View,
-        DropdownSelect = sm.gDropdown.DropdownSelect,
+        DropdownSelect = sm.gDropdown.DropdownSelectLegacy,
         Utils = cl.iUtils.Utils,
         Diagram = sm.bDiagram.Diagram;
 
@@ -314,7 +314,7 @@ goog.scope(function() {
 
                 this.contents_.push({
                     dropdown: factory.decorate(
-                        'dropdown-select',
+                        'dropdown-select-legacy',
                         dropdownElement,
                         this
                     ),

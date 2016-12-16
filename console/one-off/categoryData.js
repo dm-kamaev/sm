@@ -2,13 +2,23 @@
 
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
-    categoryModel = require('../../api/modules/course/models/courseCategory'),
+    fs = require('fs'),
+    path = require('path'),
+    minimist = require('minimist');
+
+const categoryModel = require('../../api/modules/course/models/courseCategory'),
     seoCourseListModel =
         require('../../api/modules/course/models/seoCourseList');
 
-const seoData = require('../../assets/categorySeoData.json');
+const DEFAULT_DATA_PATH = path.resolve('assets/categorySeoData.json');
 
-module.exports = async(function() {
+/**
+ * @param {string} filePath
+ */
+module.exports = async(function(filePath) {
+    let dataPath = filePath ? path.resolve(filePath) : DEFAULT_DATA_PATH,
+        seoData = JSON.parse(fs.readFileSync(dataPath));
+
     for (let categoryName in seoData) {
         let category = await(categoryModel.findOne({
                 where: {
@@ -16,12 +26,13 @@ module.exports = async(function() {
                 }
             })),
             data = seoData[categoryName];
-        data.categoryId = category.id;
+        data.categoryId = category && category.id || null;
 
         await(seoCourseListModel.create(data));
     }
 });
 
 if (!module.parent) {
-    module.exports();
+    let args = minimist(process.argv.slice(2));
+    module.exports(args.path);
 }

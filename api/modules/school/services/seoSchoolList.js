@@ -5,6 +5,8 @@ const async = require('asyncawait/async'),
 
 const models = require('../../../../app/components/models').all;
 
+const seoListType = require('../enums/seoListType');
+
 var service = {
     name: 'seoSchoolList'
 };
@@ -78,7 +80,8 @@ service.getByType = async(function(requestParams) {
         where: {
             listType: requestParams.listType,
             geoType: requestParams.geoType || null
-        }
+        },
+        raw: true
     }));
 });
 
@@ -91,9 +94,14 @@ service.getByTypes = async(function() {
     return await(models.SeoSchoolList.findAll({
         attributes: ['title', 'listType', 'geoType'],
         where: {
-            listType: ['licei', 'gimnazii', 'kadetskiye'],
+            listType: [
+                seoListType.LYCEUM,
+                seoListType.GYMNASIUM,
+                seoListType.CADET_SCHOOL
+            ],
             geoType: null
-        }
+        },
+        raw: true
     }));
 });
 
@@ -108,8 +116,27 @@ service.getByListType = async(function(listType) {
         attributes: ['title', 'listType', 'geoType'],
         where: {
             listType: listType
-        }
+        },
+        raw: true
     }));
+});
+
+/**
+ * Get all seodata for search page by request params
+ * @param {{
+ *     listType: string,
+ *     geoType: string
+ * }} params
+ * @return {{
+ *     listParams: models.SeoSchoolList,
+ *     linksParams: Array<models.SeoSchoolList>
+ * }}
+ */
+service.getDataByRequest = async(function(params) {
+    return await({
+        listParams: service.getByType(params),
+        linksParams: service.getByListType(params.listType)
+    });
 });
 
 module.exports = service;

@@ -73,6 +73,10 @@
 .b-sm-subheader__logo-img {
     height: 42px;
 }
+
+.b-sm-subheader__link {
+    display: inline-block;
+}
 /* logo end */
 
 
@@ -444,7 +448,8 @@
 
     .b-sm-subheader_entity-type_school {
         .b-sm-subheader__logo-img {
-            height: 20px;
+            margin-top: 4px;
+            height: 21px;
         }
     }
 }

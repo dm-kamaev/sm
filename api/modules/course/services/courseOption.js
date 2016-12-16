@@ -46,6 +46,15 @@ service.create = async(function(course, data) {
 
     let courseOption;
     try {
+        let departments = data.departments.map(department =>
+            !Number.isNaN(Number(department)) ?
+                department :
+                await(services.courseDepartment.findOrCreate(
+                    course.brandId,
+                    department
+                ))
+        );
+
         courseOption = await(models.CourseOption.create({
             courseId: course.id,
             name: data.name,
@@ -71,14 +80,7 @@ service.create = async(function(course, data) {
                 transaction
             ));
         }
-        await(courseOption.setDepartments(data.departments.map(department =>
-            !Number.isNaN(Number(department)) ?
-                department :
-                await(services.courseDepartment.findOrCreate(
-                    course.brandId,
-                    department
-                ))
-        ), {
+        await(courseOption.setDepartments(departments, {
             transaction: transaction
         }));
 

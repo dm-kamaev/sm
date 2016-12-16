@@ -1,5 +1,3 @@
 {
-    "lintIgnore": [
-        "app/blocks/n-doc/l-doc/**/*.js"
-    ]
+    "lintIgnore": []
 }

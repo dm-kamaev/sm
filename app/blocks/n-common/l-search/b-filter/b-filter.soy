@@ -24,8 +24,9 @@
  *     cannotBeHidden: (boolean|undefined),
  *     isShowed: (boolean|undefined),
  *     showMoreButtonText: (number|undefined),
- *     theme: (string|undefined),
+ *     theme: ('light'|'minimal'|undefined),
  *     align: (string|undefined),
+ *     customClasses: (Array<string>|undefined),
  *     stylizationModifier: string
  * }} sm.lSearch.bFilter.Template.Params.Config
  */
@@ -271,7 +272,7 @@
     {if $params.data?.header?.tooltip}
         <div class="{call .rootClass/}__tooltip i-hint">
             {call .tooltipIcon /}
-            {call .tooltipHint data="all" /}
+            {call .tooltipContent data="all" /}
         </div>
     {/if}
 {/template}
@@ -397,13 +398,13 @@
  * }}
  * @protected
  */
-{template .tooltipHint}
+{template .tooltipContent}
     {let $customClasses kind="html"}
         {call .rootClass/}__hint
     {/let}
 
     {let $tooltipData kind="html"}
-        <div class="{call .rootClass/}__hint-content">
+        <div class="{call .rootClass/}__tooltip-content">
             {$params.data?.header?.tooltip}
         </div>
     {/let}

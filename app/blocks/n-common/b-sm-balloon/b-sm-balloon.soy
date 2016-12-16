@@ -2,25 +2,37 @@
 
 /**
  * @typedef {{
- *     title: {
- *         id: number,
- *         text: string,
- *         url: ?string
- *     },
- *     subtitle: string,
- *     items: Array<{
- *         id: number,
- *         content: string,
- *         url: ?string
- *     }>,
- *     description: string
+ *     id: (number|undefined),
+ *     category: (string|undefined),
+ *     header: ({
+ *         title: (string|undefined),
+ *         description: (string|undefined)
+ *     }|undefined),
+ *     description: ({
+ *         text: (string|undefined),
+ *         link: {
+ *             text: (string|undefined),
+ *             url: (string|undefined)
+ *         }
+ *     }|undefined),
+ *     content: ({
+ *         title: (string|undefined),
+ *         items: Array<{
+ *             id: number,
+ *             content: string,
+ *             url: string
+ *         }>
+ *     }|undefined),
+ *     footer: ({
+ *         title: (string|undefined)
+ *     }|undefined)
  * }} sm.bSmBalloon.Template.Params.Data
  */
 
 /**
  * Template for Ymaps ballon content template block
  * @param params {{
- *     data:  sm.bSmBalloon.Template.Params.Data
+ *     data: sm.bSmBalloon.Template.Params.Data
  * }}
  * @constructor
  * @extends cl.iControl.Template
@@ -32,15 +44,25 @@
 
 /**
  * @param params {{
- *     data:  sm.bSmBalloon.Template.Params.Data
+ *     data: sm.bSmBalloon.Template.Params.Data
  * }}
  * @override
  */
 {template .body  kind="html"}
     <div class="{call .rootClass /}__wrap">
         {call .closer_ /}
-        {call .header_ data="all" /}
-        {call .content_ data="all" /}
+        {if $params.data.header}
+            {call .header_ data="all" /}
+        {/if}
+        {if $params.data.description}
+            {call .description_ data="all" /}
+        {/if}
+        {if $params.data.content}
+            {call .content_ data="all" /}
+        {/if}
+        {if $params.data.footer}
+            {call .footer_ data="all" /}
+        {/if}
     </div>
 {/template}
 
@@ -75,28 +97,23 @@
  * Header template
  * @param params {{
  *     data: {
- *         id: number,
- *         title: {
- *             url: (string|undefined),
- *             name: (string|undefined)
- *         },
- *         subtitle: (string|undefined),
- *         items: Array<string>
+ *         header: {
+ *             title: string,
+ *             subtitle: string
+ *         }
  *     }
  * }}
  */
 {template .header_ kind="html"}
     <div class="{call .rootClass /}__section
         {sp}{call .rootClass /}__section_header">
-        <div class="{call .rootClass /}__header">
-            {if $params.data.title}
-                {call .title_ data="all" /}
-            {/if}
+        {if isNonnull($params.data.header.title)}
+            {call .title_ data="all" /}
+        {/if}
 
-            {if $params.data.subtitle}
-                {call .subtitle_ data="all" /}
-            {/if}
-        </div>
+        {if isNonnull($params.data.header.description)}
+            {call .subtitle_ data="all" /}
+        {/if}
     </div>
 {/template}
 
@@ -105,38 +122,16 @@
  * Title template
  * @param params {{
  *     data: {
- *         title: {
- *             url: (string|undefined),
- *             text: (string|undefined)
+ *         header: {
+ *             title: string,
+ *             subtitle: string
  *         }
  *     }
  * }}
  */
 {template .title_ kind="html"}
-    <div class="{call .rootClass /}__title">
-        {if $params.data.title.url}
-            {let $customClasses kind="html"}
-                {call .rootClass /}__title-link
-            {/let}
-            {call .renderChild}
-                {param params: [
-                    'type': 'smLink',
-                    'renderParams': [
-                        'data': [
-                            'url': $params.data.title.url,
-                            'content': $params.data.title.text
-                        ],
-                        'config': [
-                            'size': 'l',
-                            'customClasses': [$customClasses],
-                            'theme': 'dark'
-                        ]
-                    ]
-                ]/}
-            {/call}
-        {else}
-            {$params.data.title.text}
-        {/if}
+    <div class="{call .rootClass /}__header-title">
+        {$params.data.header.title}
     </div>
 {/template}
 
@@ -145,13 +140,16 @@
  * Subtitle template
  * @param params {{
  *     data: {
- *         subtitle: string
+ *         header: {
+ *             title: string,
+ *             subtitle: string
+ *         }
  *     }
  * }}
  */
 {template .subtitle_ kind="html"}
-    <div class="{call .rootClass /}__subtitle">
-        {$params.data.subtitle}
+    <div class="{call .rootClass /}__header-subtitle">
+        {$params.data.header.description}
     </div>
 {/template}
 
@@ -160,57 +158,33 @@
  * Content template
  * @param params {{
  *     data: {
- *         items: Array<{
- *             url: string,
- *             text: string
- *         }>
+ *         content:{
+ *             title: string,
+ *             items: Array<{
+ *                 id: number,
+ *                 content: string,
+ *                 url: ?string
+ *             }>
+ *         }
  *     }
  * }}
  */
 {template .content_ kind="html"}
-    <div class="{call .rootClass /}__section
-        {sp}{call .rootClass /}__section_content">
-        {if length($params.data.items) == 1}
-            {call .item_ data="all" /}
-        {else}
-            {call .itemList_ data="all" /}
-        {/if}
+    {if isNonnull($params.data.content.title) or ($params.data.content.items.length > 0) }
+        <div class="{call .rootClass /}__section
+            {sp}{call .rootClass /}__section_content">
 
-        {if $params.data.description}
-            {call .description_ data="all" /}
-        {/if}
-    </div>
-{/template}
+            {if isNonnull($params.data.content.title)}
+                <div class="{call .rootClass /}__content-title">
+                    {$params.data.content.title}
+                </div>
+            {/if}
 
-
-
-/**
- * Item template for case, where ballon contain one link
- * @param params {{
- *     data: {
- *         items: Array<{
- *             url: string,
- *             content: string
- *         }>
- *     }
- * }}
- */
-{template .item_ kind="html"}
-    {let $customClasses kind="html"}
-        {call .rootClass /}__item
-    {/let}
-    {call .renderChild}
-        {param params: [
-            'type': 'smLink',
-            'renderParams': [
-                'data': $params.data.items[0],
-                'config': [
-                    'size': 'l',
-                    'customClasses': [$customClasses]
-                ]
-            ]
-        ] /}
-    {/call}
+            {if $params.data.content.items.length > 0}
+                {call .itemList_ data="all" /}
+            {/if}
+        </div>
+    {/if}
 {/template}
 
 
@@ -218,10 +192,13 @@
  * Item list template, for case, where ballon contain several link
  * @param params {{
  *     data: {
- *         items: Array<{
- *             url: string,
- *             content: string
- *         }>
+ *         content:{
+ *             items: Array<{
+ *                 id: number,
+ *                 content: string,
+ *                 url: ?string
+ *             }>
+ *         }
  *     }
  * }}
  */
@@ -235,17 +212,17 @@
             'type': 'smListPaged',
             'renderParams': [
                 'data': [
-                    'items': $params.data.items,
-                    'countItemsPerPage': 5,
+                    'items': $params.data.content.items,
+                    'countItemsPerPage': $params.data.content.items.length,
                     'itemConfig': [
-                        'size': 'l'
+                        'theme': 'minimal'
                     ],
                     'listConfig': [
-                        'theme': 'light'
+                        'theme': 'minimal'
                     ]
                 ],
                 'config': [
-                    'itemType': 'smLink',
+                    'itemType': 'smItem',
                     'customClasses': [$customClasses]
                 ]
             ]
@@ -258,15 +235,71 @@
  * Description template
  * @param params {{
  *     data: {
- *         description: string
+ *         description: {
+ *             text: string,
+ *             link: {
+ *                 text: string,
+ *                 url: string
+ *             }
+ *         }
  *     }
  * }}
  * @private
  */
 {template .description_ kind="html"}
-    <div class="{call .rootClass /}__description">
-        {$params.data.description}
+    <div class="{call .rootClass /}__section
+        {sp}{call .rootClass /}__section_description">
+        {if isNonnull($params.data.description.text)}
+            <div class="{call .rootClass /}__description-text">
+                {$params.data.description.text}
+            </div>
+        {/if}
+
+        {if $params.data.description.link}
+            {let $customClasses kind="html"}
+                {call .rootClass /}__description-link
+            {/let}
+
+            {call .renderChild}
+                {param params: [
+                    'type': 'smLink',
+                    'renderParams': [
+                        'data': [
+                            'url': $params.data.description.link.url,
+                            'content': $params.data.description.link.text
+                        ],
+                        'config': [
+                            'size': 'l',
+                            'customClasses': [$customClasses],
+                            'theme': 'default'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        {/if}
     </div>
+{/template}
+
+
+/**
+ * footer template
+ * @param params {{
+ *     data: {
+ *         footer: {
+ *             title: string
+ *         }
+ *     }
+ * }}
+ */
+{template .footer_}
+    {if isNonnull($params.data.footer.title)}
+        <div class="{call .rootClass /}__section
+        {sp}{call .rootClass /}__section_footer">
+            <div class="{call .rootClass /}__footer-text">
+                {$params.data.footer.title}
+            </div>
+        </div>
+    {/if}
 {/template}
 
 
@@ -291,21 +324,10 @@
 
 
 /**
- * @param params {{
- *     data: {
- *         items: Array<{
- *             url: string,
- *             content: string
- *         }>
- *     }
- * }}
+ * @override
  */
 {template .additionalClasses kind="html"}
-    {if length($params.data.items) == 1}
-        {call .rootClass /}_item
-    {else}
-        {call .rootClass /}_item-list
-    {/if}
+    {call .rootClass /}_item-list
 {/template}
 
 

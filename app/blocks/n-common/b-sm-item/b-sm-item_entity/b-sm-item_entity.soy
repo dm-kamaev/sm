@@ -9,7 +9,10 @@
  *         light: (string|undefined),
  *         bold: (string|undefined)
  *     },
- *     cost: (number|undefined),
+ *     cost: {
+ *         value: (number|undefined),
+ *         type: string
+ *     },
  *     alias: ?string,
  *     score: (sm.bSmScore.TemplateBrief.Params|undefined),
  *     description: string,
@@ -27,8 +30,7 @@
  *         type: ('only'|'available')
  *     }|undefined),
  *     isFavorite: ?boolean,
- *     countDepartment: ?number,
- *     position: (number|undefined)
+ *     countDepartment: ?number
  * }} sm.bSmItem.TemplateEntity.Params.Data
  */
 
@@ -52,7 +54,10 @@
  * @param params {{
  *     data: {
  *         type: string,
- *         cost: (number|undefined),
+ *         cost: {
+ *             value: (number|undefined),
+ *             type: string
+ *         },
  *         score: ?sm.bSmScore.Template.Params.Data
  *     }
  * }}
@@ -79,7 +84,10 @@
  * @param params {{
  *     data: {
  *         type: string,
- *         cost: (number|undefined),
+ *         cost: {
+ *             value: (number|undefined),
+ *             type: string
+ *         },
  *         description: (string|undefined),
  *         brand: (string|undefined)
  *     }
@@ -179,7 +187,10 @@
  * @param params {{
  *     data: {
  *         type: string,
- *         cost: (number|undefined)
+ *         cost: {
+ *             value: (number|undefined),
+ *             type: string
+ *         }
  *     },
  *     config: {
  *         size: string
@@ -204,15 +215,19 @@
  * Insert cost of
  * @param params {{
  *     data: {
- *         cost: (number|undefined)
+ *         cost: {
+ *             value: (number|undefined),
+ *             type: string
+ *         }
  *     }
  * }}
  */
 {template .insertCost_}
-    {if $params.data?.cost == 0}
+    {if $params.data.cost?.value == 0}
         бесплатно
-    {elseif $params.data?.cost}
-        от&nbsp;{$params.data.cost}&nbsp;руб.
+    {elseif $params.data.cost?.value}
+        от&nbsp;{$params.data.cost.value}&nbsp;руб.
+        &nbsp;/&nbsp;{$params.data.cost.type}
     {else}
         цена&nbsp;по&nbsp;запросу
     {/if}
@@ -232,7 +247,9 @@
     {let $classes kind="html"}
         {call .rootClass/}__score
 
-        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {if $params.data.type == 'course'}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
     {/let}
 
     <div class="{$classes}">
@@ -455,11 +472,17 @@
  * @param params {{
  *     data: {
  *         type: string
+ *     },
+ *     config: {
+ *         enableCover: (boolean|undefined),
+ *         stylizationModifier: string
  *     }
  * }}
  * @override
  */
 {template .additionalClasses}
+    {call .super_additionalClasses data="all"/}{sp}
+
     {call .rootClass/}_entity{sp}
     {call .rootClass/}_type_{$params.data.type}
 {/template}

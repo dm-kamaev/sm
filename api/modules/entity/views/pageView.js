@@ -18,6 +18,7 @@ view.joinAliases = function(entities, aliases, opt_fieldAlias) {
         alias = fieldAlias.outputField || 'alias',
         id = fieldAlias.inputId || 'id',
         aliasesDictionary = this.transformAliases(aliases);
+
     return lodash.clone(entities).map(entity => {
         entity[alias] = aliasesDictionary[entity[id]];
         return entity;
