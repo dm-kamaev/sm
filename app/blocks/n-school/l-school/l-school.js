@@ -9,7 +9,6 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bDataBlock.DataBlockFeatures');
-goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bMap.Map');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
@@ -124,14 +123,6 @@ sm.lSchool.School = function() {
 
 
     /**
-     * Favorite Links instances
-     * @type {sm.bFavoriteLink.FavoriteLink}
-     * @private
-     */
-    this.favoriteLinks_ = [];
-
-
-    /**
      * Subheader instance
      * @type {sm.bSmSubheader.SmSubheader}
      * @private
@@ -167,7 +158,6 @@ goog.scope(function() {
         Comments = sm.lSchool.bComments.Comments,
         DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
-        Header = sm.bHeader.Header,
         Authorization = sm.iAuthorization.Authorization;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance(),
@@ -232,8 +222,6 @@ goog.scope(function() {
         this.listenCommentButtons_();
 
         this.listenFeedbackLinks_();
-
-        this.listenFavoriteLinks_();
 
         this.incrementViews_();
         this.sendAnalyticsPageview_();
@@ -328,33 +316,6 @@ goog.scope(function() {
 
 
     /**
-     * listen to favorite links
-     * @private
-     */
-    School.prototype.listenFavoriteLinks_ = function() {
-        var handler = this.getHandler();
-
-        for (var i = 0, favoriteLink;
-             favoriteLink = this.favoriteLinks_[i];
-             i++) {
-            handler.listen(
-                favoriteLink,
-                sm.bFavoriteLink.FavoriteLink.Event.SET_FAVORITE_STATE,
-                this.onAddFavoriteClick_
-            ).listen(
-                favoriteLink,
-                sm.bFavoriteLink.FavoriteLink.Event.SET_NOT_FAVORITE_STATE,
-                this.onRemoveFavoriteClick_
-            ).listen(
-                favoriteLink,
-                sm.bFavoriteLink.FavoriteLink.Event.FAVORITE_ADDED,
-                this.onAddFavorite_
-            );
-        }
-    };
-
-
-    /**
      * listens map
      * @private
      */
@@ -443,63 +404,6 @@ goog.scope(function() {
 
 
     /**
-     * Add Favorite Click
-     * @param {goog.events.Event} event
-     * @private
-     */
-    School.prototype.onAddFavoriteClick_ = function(event) {
-        var favoriteInstance = event.target;
-        this.setEcAnalyticsAdd_();
-        this.sendDataAnalytics_('favorite', 'details add');
-        this.setFavoriteState_(true);
-        this.sendAddToFavorites_(favoriteInstance);
-    };
-
-
-    /**
-     * Remove Favorite Click
-     * @param {goog.events.Event} event
-     * @private
-     */
-    School.prototype.onRemoveFavoriteClick_ = function(event) {
-        var favoriteInstance = event.target;
-        this.setEcAnalyticsRemove_();
-        this.sendDataAnalytics_('favorite', 'details delete');
-        this.setFavoriteState_(false);
-        this.sendRemoveFromFavorites_(favoriteInstance);
-        Header.getInstance().removeFavorite(this.params_.id);
-    };
-
-
-    /**
-     * @param {sm.bFavoriteLink.Event.FavoriteAdded} event
-     * @private
-     */
-    School.prototype.onAddFavorite_ = function(event) {
-        var addedItem = event.data;
-        Header.getInstance().addFavorite(addedItem);
-    };
-
-
-    /**
-     * Sets EC analytics to add school from favorites
-     * @private
-     */
-    School.prototype.setEcAnalyticsAdd_ = function() {
-        Analytics.addProduct(this.getDataEc_(), 'School Details');
-    };
-
-
-    /**
-     * Sets EC analytics to remove school from favorites
-     * @private
-     */
-    School.prototype.setEcAnalyticsRemove_ = function() {
-        Analytics.removeProduct(this.getDataEc_(), 'School Details');
-    };
-
-
-    /**
      * Sets EC analytics on click
      * @param {number} id
      * @param {string} name
@@ -574,39 +478,6 @@ goog.scope(function() {
     };
 
 
-    /**
-     * Send data about adding to favorites
-     * @param {sm.bFavoriteLink.FavoriteLink} favoriteInstance
-     * @private
-     */
-    School.prototype.sendAddToFavorites_ = function(favoriteInstance) {
-        favoriteInstance.sendData(this.params_.id, 'add');
-    };
-
-
-    /**
-     * Send data about removing from favorites
-     * @param {sm.bFavoriteLink.FavoriteLink} favoriteInstance
-     * @private
-     */
-    School.prototype.sendRemoveFromFavorites_ = function(favoriteInstance) {
-        favoriteInstance.sendData(this.params_.id, 'remove');
-    };
-
-
-    /**
-     * Set added to favorite or removed from favorite state for school
-     * @param {boolean} isFavorite
-     * @private
-     */
-    School.prototype.setFavoriteState_ = function(isFavorite) {
-        goog.array.forEach(this.favoriteLinks_, function(favoriteLink) {
-            isFavorite ?
-                favoriteLink.addFavorite() :
-                favoriteLink.removeFavorite();
-        });
-    };
-
 
     /**
      * show Modal for comments
@@ -665,7 +536,6 @@ goog.scope(function() {
             .initModalInaccuracy_()
             .initMap_()
             .initBouton_()
-            .initFavoriteLinks_()
             .initComments_()
             .initPopularSchools_()
             .initDataBlockFeatures_()
@@ -848,31 +718,6 @@ goog.scope(function() {
             bPopularSchools,
             this
         );
-
-        return this;
-    };
-
-
-    /**
-     * Initialization Favorite Links
-     * @return {sm.lSchool.School}
-     * @private
-     */
-    School.prototype.initFavoriteLinks_ = function() {
-
-        var favoriteLinks = this.getElementsByClass(
-            sm.bFavoriteLink.View.CssClass.ROOT
-        );
-
-        for (var i = 0; i < favoriteLinks.length; i++) {
-            var instance = factory.decorate(
-                'favorite-link',
-                favoriteLinks[i],
-                this
-            );
-
-            this.favoriteLinks_.push(instance);
-        }
 
         return this;
     };

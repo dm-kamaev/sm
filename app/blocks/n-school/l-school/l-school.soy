@@ -73,7 +73,6 @@
  *        ]>,
  *        totalScore: number,
  *        reviewCount: number,
- *        isFavorite: bool,
  *        popularSchools: ?list<[
  *            id: ?number,
  *            alias: ?string,
@@ -212,9 +211,11 @@
 
 /**
  * School name + school description
- * @param? params {{
+ * @param params {{
  *    data: {
- *        isFavorite: boolean
+ *        schoolName: string,
+ *        metroStations: Array<string>,
+ *        schoolDescr: string
  *    }
  * }}
  */
@@ -222,17 +223,6 @@
     <div class="l-school__section l-school__section_description">
         <div class="l-school__title">
             {call .name_ data="all" /}
-
-            // {call .favoriteLink_}
-            //     {param params: [
-            //         'data': [
-            //             'isFavorite': $params.data?.isFavorite
-            //         ],
-            //         'config': [
-            //             'modifier': 'l'
-            //         ]
-            //     ]/}
-            // {/call}
         </div>
 
         {call .metro_ data="all" /}
@@ -256,47 +246,9 @@
 
 
 /**
- * favorite Link
  * @param? params {
  *      data: {
- *          isFavorite: boolean
- *      },
- *      config: {
- *          modifier: ?string
- *     }
- * }
- */
-{template .favoriteLink_ kind="html" private="true"}
-    {let $classes kind="html"}
-        l-school__link
-        {sp}l-school__link_favorite
-        {if $params?.config?.modifier}
-            {sp}l-school__link_{$params?.config?.modifier}
-        {/if}
-    {/let}
-    <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'favorite-link',
-                'renderParams': [
-                    'data': [
-                        'isFavorite': $params.data?.isFavorite
-                    ],
-                    'config': [
-                        'theme': 'full'
-                    ]
-                ]
-            ]/}
-        {/call}
-     </div>
-{/template}
-
-
-/**
- * @param? params {
- *      data: {
- *          metroStations: ?list<string>
+ *          metroStations: Array<string>
  *      }
  * }
  */
@@ -427,17 +379,6 @@
             {call .resultsEgeGiaAnchor_ /}
         {/if}
     </div>
-
-    // {call .favoriteLink_}
-    //     {param params: [
-    //         'data': [
-    //             'isFavorite': $params.data?.isFavorite
-    //         ],
-    //         'config': [
-    //             'modifier': 's'
-    //         ]
-    //     ]/}
-    // {/call}
 
     <div class="l-school__link l-school__link_inaccuracy">
         {call sm.bLink.Template.base}
