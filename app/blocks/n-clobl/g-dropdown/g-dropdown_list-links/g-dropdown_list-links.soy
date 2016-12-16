@@ -3,7 +3,7 @@
 
 /**
  * @typedef {{
- *     opener: string,
+ *     opener: (string|undefined),
  *     defaultOpenerText: (string|undefined),
  *     content: sm.gList.TemplateLinks.Params.Data
  * }} sm.gDropdown.TemplateListLinks.Params.Data
@@ -16,8 +16,7 @@
  *     customClasses: (Array<string>|undefined),
  *     openerSize: ('m'|'xl'|undefined),
  *     contentSize: ('m'|'l'|undefined),
- *     theme: ('minimal'|undefined),
- *     isChangingOpenerText: (boolean|undefined)
+ *     theme: ('dense'|undefined)
  * }} sm.gDropdown.TemplateListLinks.Params.Config
  */
 
@@ -41,12 +40,11 @@
  * Control for displaying content
  * @param params {{
  *     data: {
- *         opener: string,
+ *         opener: (string|undefined),
  *         defaultOpenerText: (string|undefined)
  *     },
  *     config: {
- *         openerSize: ('m'|'xl'|undefined),
- *         isChangingOpenerText: (boolean|undefined)
+ *         openerSize: ('m'|'xl'|undefined)
  *     }
  * }}
  * @override
@@ -75,27 +73,6 @@
             ]
         ]/}
     {/call}
-{/template}
-
-
-/**
- * Text of opener
- * @param params {{
- *     data: {
- *         opener: string,
- *         defaultOpenerText: (string|undefined)
- *     }
- * }}
- * @override
- */
-{template .openerText}
-    <div class="{call .rootClass/}__opener-text">
-        {$params.data.opener}
-
-        {if $params.data.defaultOpenerText}
-            {$params.data.defaultOpenerText}
-        {/if}
-    </div>
 {/template}
 
 

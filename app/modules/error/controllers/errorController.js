@@ -120,6 +120,7 @@ controller.generalError = async(function(
             params: {
                 data: templateData,
                 config: {
+                    page: 'error-not-found',
                     staticVersion: config.lastBuildTimestamp,
                     entityType: entityType,
                     modifier: MODIFIER,

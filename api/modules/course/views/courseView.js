@@ -10,7 +10,8 @@ const scoreView = require('../../entity/views/scoreView'),
     addressView = require('../../geo/views/addressView'),
     FormatUtils = require('../../entity/lib/FormatUtils'),
     CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
-    pageView = require('../../entity/views/pageView');
+    pageView = require('../../entity/views/pageView'),
+    costView = require('../views/costView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType'),
     groupSizeTraining = require('../enums/groupSizeTraining');
@@ -24,23 +25,31 @@ const FULL_DESCRIPTION_LENGTH = 300,
 
 /**
  * @param  {Object} course
+ * @param  {string} categoryAlias
  * @return {Object}
  */
-view.page = function(course) {
+view.page = function(course, categoryAlias) {
     let options = course.courseOptions,
         generalOptions = this.formatGeneralOptions(course);
     return {
         id: course.id,
         name: course.name,
-        category: 'proforientacija',
+        category: categoryAlias,
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
-        cost: this.formatCost(options),
+        cost: costView.formatPageCost(
+            options,
+            course.courseType.category.priceType
+        ),
         generalOptions: {
             items: this.formatGeneralOptionsWithConfig(generalOptions)
         },
-        departmentList: this.formatDepartmentList(options, generalOptions),
+        departmentList: this.formatDepartmentList(
+            options,
+            generalOptions,
+            lodash.camelCase(course.courseType.category.priceType)
+        ),
         videoId: course.embedId,
         online: this.onlineStatus(generalOptions)
     };
@@ -72,15 +81,6 @@ view.formatFullDescription = function(text) {
 };
 
 /**
- * @param  {Array<Object>} options
- * @return {string}
- */
-view.formatCost = function(options) {
-    return Math.min.apply(null, options.map(option => option.totalCost)) +
-        ' руб. / курс';
-};
-
-/**
  * @param  {Object} course
  * @return {Object}
  */
@@ -94,10 +94,11 @@ view.formatGeneralOptions = function(course) {
 /**
  * @param  {Array<Object>} options
  * @param  {Array<Object>} generalOptions
+ * @param  {string}        priceType
  * @return {Array<Object>}
  */
-view.formatDepartmentList = function(options, generalOptions) {
-    let optionsTransformer = new CourseOptionsTransformer(options);
+view.formatDepartmentList = function(options, generalOptions, priceType) {
+    let optionsTransformer = new CourseOptionsTransformer(options, priceType);
     return optionsTransformer.getUniqueOptions(generalOptions);
 };
 
@@ -203,10 +204,11 @@ view.alignmentOption = function(option, opt_isHorizontal) {
 };
 
 /**
- * @param  {Object} course
+ * @param {Object} course
+ * @param {string} categoryAlias
  * @return {Object}
  */
-view.pageMap = function(course) {
+view.pageMap = function(course, categoryAlias) {
     let addresses = lodash.flatten(course.courseOptions.map(courseOption =>
         courseOption.departments.map(department => {
             let address = department.address;
@@ -214,17 +216,16 @@ view.pageMap = function(course) {
                 addressId: address.id,
                 coordinates: geoView.coordinatesDefault(address.coords),
                 header: {
-                    title: course.courseBrand.name
+                    title: course.name
                 },
                 content: {
                     items: []
                 },
-                description: {
-                    text: address.name
+                footer: {
+                    title: address.name
                 },
                 id: course.id,
-                courseName: course.name,
-                category: course.categories[0].name,
+                category: categoryAlias,
                 score: course.totalScore
             };
         })
@@ -440,7 +441,7 @@ view.getListCourse = function(course) {
             course.score,
             course.totalScore
         ),
-        cost: course.optionCost,
+        cost: costView.formatListCost(course.optionCost, course.priceType),
         online: course.optionOnline ? {
             value: groupSizeTraining.ONLINE,
             type: 'only'

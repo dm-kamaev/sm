@@ -84,18 +84,6 @@ goog.scope(function() {
 
 
     /**
-     * Generate Opener Text
-     * @param {number} itemId
-     * @return {string}
-     * @protected
-     * @override
-     */
-    Dropdown.prototype.generateOpenerText = function(itemId) {
-        return this.params.opener + this.getLabel(itemId);
-    };
-
-
-    /**
      * Initializes instance of list links
      * @protected
      * @override

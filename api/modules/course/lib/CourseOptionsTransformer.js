@@ -32,14 +32,17 @@ const WEEK_DAYS = [
 module.exports = class {
     /**
      * @param {Array<Object>} options
+     * @param {string}        costField
      */
-    constructor(options) {
+    constructor(options, costField) {
         /**
+         * @private
          * @type {Array<Object>}
          */
         this.options_ = this.formatOptions_(options);
 
         /**
+         * @private
          * @type {Array<Object>}
          */
         this.availableOptions_ = [{
@@ -47,7 +50,10 @@ module.exports = class {
             name: 'Возраст'
         }, {
             key: 'totalCost',
-            name: 'Стоимость'
+            name: 'Стоимость за курс'
+        }, {
+            key: 'costPerHour',
+            name: 'Стоимость за час'
         }, {
             key: 'schedule',
             name: 'Расписание'
@@ -71,7 +77,17 @@ module.exports = class {
             name: 'Пакет'
         }];
 
-        this.globalOptions_ = ['totalCost', 'name'];
+        /**
+         * @private
+         * @type {Array<string>}
+         */
+        this.globalOptions_ = ['totalCost', 'name', 'costPerHour'];
+
+        /**
+         * @private
+         * @type {string}
+         */
+        this.costField_ = costField;
     }
 
     /**
@@ -204,7 +220,7 @@ module.exports = class {
      * @return {Object}
      */
     transformOption_(option) {
-        let costKey = this.globalOptions_[0],
+        let costKey = this.costField_ || this.globalOptions_[0],
             titleKey = this.globalOptions_[1];
         return {
             title: {
@@ -292,6 +308,7 @@ module.exports = class {
             schedule: this.formatSchedule_(option.schedule),
             maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
             totalCost: this.formatCost_(option.totalCost),
+            costPerHour: this.formatCost_(option.costPerHour),
             regularity: this.formatRegularity_(option.schedule),
             online: this.formatOnline_(option.online),
             duration: this.formatDuration_(option.duration),
@@ -382,7 +399,7 @@ module.exports = class {
      */
     formatGroupSize_(maxGroupSize) {
         let result;
-        if (maxGroupSize === 0) {
+        if (!maxGroupSize) {
             result = 'Размер группы не указан';
         } else if (maxGroupSize === 1) {
             result = 'Индивидуальные занятия';
@@ -404,7 +421,7 @@ module.exports = class {
         } else if (cost > 0) {
             result = cost + ' руб.';
         } else {
-            result = 'Цена не указана';
+            result = ''; // 'Цена не указана';
         }
         return result;
     }

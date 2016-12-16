@@ -2,29 +2,30 @@
 
 /**
  * @typedef {{
- *     id: number,
- *     header: {
- *         title: string,
- *         description: string
- *     },
- *     description: {
- *         text: string,
+ *     id: (number|undefined),
+ *     category: (string|undefined),
+ *     header: ({
+ *         title: (string|undefined),
+ *         description: (string|undefined)
+ *     }|undefined),
+ *     description: ({
+ *         text: (string|undefined),
  *         link: {
- *             text: string,
- *             url: string
+ *             text: (string|undefined),
+ *             url: (string|undefined)
  *         }
- *     },
- *     content:{
- *         title: string,
+ *     }|undefined),
+ *     content: ({
+ *         title: (string|undefined),
  *         items: Array<{
  *             id: number,
  *             content: string,
- *             url: ?string
+ *             url: string
  *         }>
- *     }
- *     footer: {
- *         title: string
- *     }
+ *     }|undefined),
+ *     footer: ({
+ *         title: (string|undefined)
+ *     }|undefined)
  * }} sm.bSmBalloon.Template.Params.Data
  */
 
@@ -158,7 +159,12 @@
  * @param params {{
  *     data: {
  *         content:{
- *             title: string
+ *             title: string,
+ *             items: Array<{
+ *                 id: number,
+ *                 content: string,
+ *                 url: ?string
+ *             }>
  *         }
  *     }
  * }}
@@ -177,7 +183,6 @@
             {if $params.data.content.items.length > 0}
                 {call .itemList_ data="all" /}
             {/if}
-
         </div>
     {/if}
 {/template}
@@ -201,6 +206,7 @@
     {let $customClasses kind="html"}
         {call .rootClass /}__item-list
     {/let}
+
     {call .renderChild}
         {param params: [
             'type': 'smListPaged',
@@ -248,10 +254,12 @@
                 {$params.data.description.text}
             </div>
         {/if}
+
         {if $params.data.description.link}
             {let $customClasses kind="html"}
                 {call .rootClass /}__description-link
             {/let}
+
             {call .renderChild}
                 {param params: [
                     'type': 'smLink',

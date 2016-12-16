@@ -44,7 +44,7 @@
  *         options: Array<{
  *             label: string,
  *             value: string,
- *             isSelected: (boolean|undefined)
+ *             isChecked: (boolean|undefined)
  *         }>
  *     },
  *     config: {
@@ -82,7 +82,7 @@
  *         options: Array<{
  *             label: string,
  *             value: string,
- *             isSelected: (boolean|undefined)
+ *             isChecked: (boolean|undefined)
  *         }>
  *     },
  *     config: {
@@ -104,9 +104,10 @@
             {/foreach}
         {/let}
 
-        {let $defaultOpener kind="html"}
-            {$params.data.options[(length($params.data.options))]}
-        {/let}
+        {let $opener: $checkedOpener == '' ?
+            $params.data.options[(length($params.data.options) - 1)].label :
+            $checkedOpener
+        /}
 
         {call .renderChild}
             {param params: [
@@ -114,13 +115,12 @@
                 'type': 'dropdown-select',
                 'renderParams': [
                     'data': [
-                        'opener': $checkedOpener ?: $defaultOpener,
+                        'defaultOpenerText': $opener,
                         'content': [
                             'items': $params.data.options
                         ]
                     ],
                     'config': [
-                        'isChangingOpenerText': true,
                         'theme': 'rectangle'
                     ]
                 ]

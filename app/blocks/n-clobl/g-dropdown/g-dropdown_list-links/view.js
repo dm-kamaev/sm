@@ -33,21 +33,9 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'g-dropdown_list-links',
-        OPENER: 'g-dropdown__opener',
-        OPENER_TEXT: 'g-dropdown__opener-text',
-        OPENER_LINK: 'g-dropdown__opener-link',
-        CONTENT: 'g-dropdown__content'
+        OPENER_LINK: 'g-dropdown__opener-link'
     };
 
-    /**
-     * Event enum
-     * @enum {string}
-     */
-    View.Event = {
-        OPENER_CLICK: sm.gDropdown.ViewSelect.Event.OPENER_CLICK,
-        CONTENT_CLICK: sm.gDropdown.ViewSelect.Event.CONTENT_CLICK,
-        CLOSE_DROPDOWN: sm.gDropdown.ViewSelect.Event.CLOSE_DROPDOWN
-    };
 
     /**
      * @override
@@ -64,13 +52,7 @@ goog.scope(function() {
      * @override
      */
     View.prototype.initDom = function() {
-        this.dom.opener = this.getElementByClass(
-            View.CssClass.OPENER
-        );
-
-        this.dom.openerText = this.getElementByClass(
-            View.CssClass.OPENER_TEXT
-        );
+        View.base(this, 'initDom');
 
         this.dom.openerLink = this.getElementByClass(
             View.CssClass.OPENER_LINK
