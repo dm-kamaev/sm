@@ -14,7 +14,8 @@ const FilterPanel = require('../lib/SchoolFilterPanel'),
     Header = require('../../entity/lib/Header');
 
 const searchViewEntity = require('../../entity/views/searchView'),
-    favoriteView = require('../../favorite/views/favoriteView');
+    favoriteView = require('../../favorite/views/favoriteView'),
+    footerView = require('../../entity/views/footerView');
 
 const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
@@ -148,9 +149,7 @@ searchView.render = function(data) {
             searchParams: data.searchParams
         }),
         searchParams: data.searchParams,
-        footer: {
-            seoLinks: data.seoLinks
-        }
+        footer: footerView.render(data.seoLinks)
     };
 };
 
