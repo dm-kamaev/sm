@@ -27,6 +27,8 @@ const favoriteView = require('../../favorite/views/favoriteView');
 const Header = require('../../entity/lib/Header');
 const SubHeader = require('../lib/SchoolSubheader');
 
+const footerView = require('../../entity/views/footerView');
+
 const commentView = require('../../comment/views/commentView');
 
 const entityType = require('../../entity/enums/entityType');
@@ -97,7 +99,7 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             favoriteEntities: favoriteView.list(data.favorites)
         }),
         seoDescription: data.page.description,
-        seoLinks: seoView.linksList(data.seoLinks)
+        footer: footerView.render(seoView.linksList(data.seoLinks))
     };
     if (data.popularSchools) {
         result.popularSchools = this.popular(data.popularSchools);

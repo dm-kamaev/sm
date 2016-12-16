@@ -5,6 +5,7 @@
 
 const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
+    footerView = require('../../entity/views/footerView'),
     seoView = require('./seoView');
 
 const Header = require('../../entity/lib/Header'),
@@ -33,9 +34,11 @@ homeView.render = function(data) {
             favoriteEntities: favoriteEntities,
             user: user
         }),
-        seoLinks: seoView.linksList(data.seoLinks),
         user: user,
-        authSocialLinks: data.authSocialLinks
+        authSocialLinks: data.authSocialLinks,
+        footer: footerView.render(
+            seoView.linksList(data.seoLinks)
+        )
     };
 };
 

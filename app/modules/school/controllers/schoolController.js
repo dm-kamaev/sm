@@ -127,7 +127,6 @@ exports.view = async(function(req, res, next) {
                             ),
                             config: {
                                 staticVersion: config.lastBuildTimestamp,
-                                year: new Date().getFullYear(),
                                 analyticsId: ANALYTICS_ID,
                                 yandexMetrikaId: YANDEX_METRIKA_ID,
                                 carrotquestId: CARROTQUEST_ID,
@@ -181,7 +180,6 @@ exports.home = async(function(req, res) {
             amountSchools: data.amountSchools,
             config: {
                 staticVersion: config.lastBuildTimestamp,
-                year: new Date().getFullYear(),
                 analyticsId: ANALYTICS_ID,
                 yandexMetrikaId: YANDEX_METRIKA_ID,
                 carrotquestId: CARROTQUEST_ID,
@@ -267,7 +265,6 @@ exports.list = async(function(req, res, next) {
                         page: 'search',
                         modifier: MODIFIER,
                         staticVersion: config.lastBuildTimestamp,
-                        year: new Date().getFullYear(),
                         analyticsId: ANALYTICS_ID,
                         yandexMetrikaId: YANDEX_METRIKA_ID,
                         carrotquestId: CARROTQUEST_ID,
@@ -330,7 +327,6 @@ exports.catalog = async(function(req, res, next) {
                 config: {
                     modifier: 'stendhal',
                     staticVersion: config.lastBuildTimestamp,
-                    year: new Date().getFullYear(),
                     analyticsId: ANALYTICS_ID,
                     yandexMetrikaId: YANDEX_METRIKA_ID,
                     carrotquestId: CARROTQUEST_ID,
