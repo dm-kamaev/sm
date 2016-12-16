@@ -2,7 +2,7 @@
 
 /** content **/
 .l-home__body {
-    margin: auto;
+    margin: 0 auto 60px;
 
     color: #000;
 
@@ -105,16 +105,6 @@
     }
 }
 /** content end **/
-
-
-/** layout **/
-.l-home__footer {
-    margin: 60px auto 0;
-
-    border-top: 1px solid rgba(0, 0, 0, .1);
-}
-
-/** layout end **/
 
 
 @include media-xl {

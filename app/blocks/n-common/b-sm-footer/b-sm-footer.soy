@@ -31,8 +31,10 @@
  * @override
  */
 {template .body}
-    {call .sectionCopyright_ data="all" /}
-    {call .sectionLinks_ data="all" /}
+    <div class="{call .rootClass/}__body">
+        {call .sectionCopyright_ data="all" /}
+        {call .sectionLinks_ data="all" /}
+    </div>
 {/template}
 
 
