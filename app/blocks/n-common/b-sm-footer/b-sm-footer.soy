@@ -3,7 +3,7 @@
 
 /**
  * @typedef {{
- *     year: number,
+ *     copyright: string,
  *     contactLinks: Array<sm.bSmLink.Template.Params.Data>,
  *     seoLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined)
  * }} sm.bSmFooter.Template.Params.Data
@@ -40,7 +40,7 @@
  * Copyright
  * @param params {{
  *     data: {
- *         year: number
+ *         copyright: string
  *     }
  * }}
  */
@@ -48,7 +48,7 @@
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_copyright">
         <div class="{call .rootClass/}__copyright">
-            © Маркет Мела, {$params.data.year}
+            {$params.data.copyright}
         </div>
     </div>
 {/template}
