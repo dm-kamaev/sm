@@ -3,7 +3,8 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     squel = require('squel'),
-    url = require('url');
+    url = require('url'),
+    lodash = require('lodash');
 
 const sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
@@ -11,6 +12,8 @@ const sequelize = require('../../../../app/components/db'),
     error = require('../../entity/lib/Error'),
     entityType = require('../../entity/enums/entityType'),
     pageView = require('../../entity/views/pageView');
+
+const CategoryNotFound = require('../controllers/errors/CategoryNotFound');
 
 let service = {
     name: 'course'
@@ -32,6 +35,7 @@ const informationFields = {
     ],
     BRAND: ['id', 'name', 'description'],
     TYPE: ['id', 'name'],
+    CATEGORY: ['id', 'name', 'priceType'],
     OPTION: [
         'id',
         'totalCost',
@@ -157,7 +161,12 @@ service.information = async(function(id) {
         }, {
             attributes: informationFields.TYPE,
             model: models.CourseType,
-            as: 'courseType'
+            as: 'courseType',
+            include: [{
+                attributes: informationFields.CATEGORY,
+                model: models.CourseCategory,
+                as: 'category'
+            }]
         }, {
             attributes: informationFields.OPTION,
             model: models.CourseOption,
@@ -168,21 +177,27 @@ service.information = async(function(id) {
 });
 
 /**
- * @param {Object} searchParams
- * @param {number=} opt_limit
- * @return {Array<Object>}
+ * @param  {Object}         searchParams
+ * @param  {Object=}        opt_params
+ * @param  {number=}        opt_params.limit
+ * @return {Promise.Array<Object>}
  */
-service.list = async(function(searchParams, opt_limit) {
+service.list = async(function(searchParams, opt_params) {
     let searchString = services.courseSearchData.getSearchSql(
         searchParams,
-        opt_limit
+        opt_params.limit
     );
 
-    let courses = await(sequelize.query(
-        searchString, {
-            type: sequelize.QueryTypes.SELECT
-        }
-    ));
+    let courses = sequelize
+        .query(
+            searchString, {
+                type: sequelize.QueryTypes.SELECT
+            }
+        )
+        .then(courses => courses.map(course => {
+            course.optionCost = course[lodash.camelCase(course.priceType)];
+            return course;
+        }));
 
     return courses;
 });
@@ -582,6 +597,21 @@ service.updateCtr = async(function(data) {
             id: data.courseId
         }
     }));
+});
+
+/**
+ * @param  {Array<number>} ids
+ * @param  {number}        categoryId
+ * @return {Array<Course>}
+ */
+service.getByIdsAndCategoryId = async(function(ids, categoryId) {
+    let category = await(services.courseCategory.getById(categoryId));
+    if (!category || !category.isActive) {
+        throw new CategoryNotFound(categoryId);
+    }
+    let courses = await(service.getByIds(ids));
+
+    return courses.filter(course => course.categoryId == category.id);
 });
 
 module.exports = service;

@@ -6,6 +6,8 @@ const db = require('../../../../app/components/db'),
     urlService = require('../../entity/services/urls'),
     courseCategoryService = require('../services/courseCategory');
 
+const categoryPrice = require('../enums/categoryPrice');
+
 let CourseCategory = db.define('CourseCategory', {
     name: {
         type: Sequelize.STRING,
@@ -16,6 +18,13 @@ let CourseCategory = db.define('CourseCategory', {
     isActive: {
         type: Sequelize.BOOLEAN,
         field: 'is_active'
+    },
+    priceType: {
+        type: Sequelize.STRING,
+        field: 'price_type',
+        validate: {
+            isIn: [categoryPrice.toArray()]
+        }
     }
 }, {
     underscored: true,

@@ -1,0 +1,342 @@
+{namespace sm.lSearch.bFilter.TemplateClasses}
+
+
+/**
+ * @typedef {{
+ *     name: string,
+ *     header: ({
+ *         title: (string|undefined),
+ *         tooltip: (string|undefined)
+ *     }|undefined),
+ *     options: Array<{
+ *         value: number,
+ *         isChecked: (boolean|undefined)
+ *     }>
+ * }} sm.lSearch.bFilter.TemplateClasses.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     type: (string|undefined),
+ *     cannotBeHidden: (boolean|undefined),
+ *     theme: (string|undefined),
+ *     stylizationModifier: string
+ * }} sm.lSearch.bFilter.TemplateClasses.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.TemplateClasses.Params.Data,
+ *     config: sm.lSearch.bFilter.TemplateClasses.Params.Config
+ * }} sm.lSearch.bFilter.TemplateClasses.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.TemplateClasses.Params}
+ * @extends sm.lSearch.bFilter.Template
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * List options template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             value: number,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         type: (string|undefined),
+ *         optionsToShow: (number|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @override
+ * @public
+ */
+{template .listOptions}
+    <div class="{call .rootClass/}__list-options">
+        {call .listClasses_ data="all" /}
+        {call .labelsClasses_ data="all" /}
+        {call .kindergarten_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * List classes template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             value: number,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     }
+ * }}
+ * @private
+ */
+{template .listClasses_}
+    <div class="{call .rootClass/}__option{sp}
+                {call .rootClass/}__option_list">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__option-list
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'lSearch-filterDropdown',
+                'renderParams': [
+                    'data': [
+                        'name': $params.data.name,
+                        'options': [
+                            [
+                                'label': 'Первый класс',
+                                'value': $params.data.options[1].value,
+                                'isChecked': $params.data.options[1].isChecked
+                            ],
+                            [
+                                'label': 'Второй класс',
+                                'value': $params.data.options[2].value,
+                                'isChecked': $params.data.options[2].isChecked
+                            ],
+                            [
+                                'label': 'Третий класс',
+                                'value': $params.data.options[3].value,
+                                'isChecked': $params.data.options[3].isChecked
+                            ],
+                            [
+                                'label': 'Четвертый класс',
+                                'value': $params.data.options[4].value,
+                                'isChecked': $params.data.options[4].isChecked
+                            ],
+                            [
+                                'label': 'Пятый класс',
+                                'value': $params.data.options[5].value,
+                                'isChecked': $params.data.options[5].isChecked
+                            ],
+                            [
+                                'label': 'Шестой класс',
+                                'value': $params.data.options[6].value,
+                                'isChecked': $params.data.options[6].isChecked
+                            ],
+                            [
+                                'label': 'Седьмой класс',
+                                'value': $params.data.options[7].value,
+                                'isChecked': $params.data.options[7].isChecked
+                            ],
+                            [
+                                'label': 'Восьмой класс',
+                                'value': $params.data.options[8].value,
+                                'isChecked': $params.data.options[8].isChecked
+                            ],
+                            [
+                                'label': 'Девятый класс',
+                                'value': $params.data.options[9].value,
+                                'isChecked': $params.data.options[9].isChecked
+                            ],
+                            [
+                                'label': 'Десятый класс',
+                                'value': $params.data.options[10].value,
+                                'isChecked': $params.data.options[10].isChecked
+                            ],
+                            [
+                                'label': 'Одиннадцатый класс',
+                                'value': $params.data.options[11].value,
+                                'isChecked': $params.data.options[11].isChecked
+                            ],
+                            [
+                                'label': 'Не выбран'
+                            ]
+                        ]
+                    ],
+                    'config': [
+                        'type': 'dropdown',
+                        'cannotBeHidden': true,
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Labels classes template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             value: number,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     }
+ * }}
+ * @private
+ */
+{template .labelsClasses_}
+    <div class="{call .rootClass/}__option{sp}
+                {call .rootClass/}__option_labels">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__option-labels
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'lSearch-filterSwitchLabels',
+                'renderParams': [
+                    'data': [
+                        'name': $params.data.name,
+                        'options': [
+                            [
+                                'label': 1,
+                                'value': $params.data.options[1].value,
+                                'isChecked': $params.data.options[1].isChecked,
+                                'viewType': 'low'
+                            ],
+                            [
+                                'label': 2,
+                                'value': $params.data.options[2].value,
+                                'isChecked': $params.data.options[2].isChecked,
+                                'viewType': 'low'
+                            ],
+                            [
+                                'label': 3,
+                                'value': $params.data.options[3].value,
+                                'isChecked': $params.data.options[3].isChecked,
+                                'viewType': 'low'
+                            ],
+                            [
+                                'label': 4,
+                                'value': $params.data.options[4].value,
+                                'isChecked': $params.data.options[4].isChecked,
+                                'viewType': 'low'
+                            ],
+                            [
+                                'label': 5,
+                                'value': $params.data.options[5].value,
+                                'isChecked': $params.data.options[5].isChecked,
+                                'viewType': 'middle'
+                            ],
+                            [
+                                'label': 6,
+                                'value': $params.data.options[6].value,
+                                'isChecked': $params.data.options[6].isChecked,
+                                'viewType': 'middle'
+                            ],
+                            [
+                                'label': 7,
+                                'value': $params.data.options[7].value,
+                                'isChecked': $params.data.options[7].isChecked,
+                                'viewType': 'middle'
+                            ],
+                            [
+                                'label': 8,
+                                'value': $params.data.options[8].value,
+                                'isChecked': $params.data.options[8].isChecked,
+                                'viewType': 'middle'
+                            ],
+                            [
+                                'label': 9,
+                                'value': $params.data.options[9].value,
+                                'isChecked': $params.data.options[9].isChecked,
+                                'viewType': 'middle'
+                            ],
+                            [
+                                'label': 10,
+                                'value': $params.data.options[10].value,
+                                'isChecked': $params.data.options[10].isChecked,
+                                'viewType': 'high'
+                            ],
+                            [
+                                'label': 11,
+                                'value': $params.data.options[11].value,
+                                'isChecked': $params.data.options[11].isChecked,
+                                'viewType': 'high'
+                            ],
+                        ]
+                    ],
+                    'config': [
+                        'type': 'switch-labels',
+                        'cannotBeHidden': true,
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Option kindergarten template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             value: number,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     }
+ * }}
+ * @private
+ */
+{template .kindergarten_}
+    <div class="{call .rootClass/}__option{sp}
+                {call .rootClass/}__option_kindergarten">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__option-kindergarten
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'lSearch-filter',
+                'renderParams': [
+                    'data': [
+                        'name': $params.data.name,
+                        'options': [[
+                            'label': 'При школе есть детский сад',
+                            'value': $params.data.options[0].value,
+                            'isChecked': $params.data.options[0].isChecked
+                        ]]
+                    ],
+                    'config': [
+                        'cannotBeHidden': true,
+                        'customClasses': [$customClasses],
+                        'theme': 'light'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Tempate button
+ * @override
+ * @protected
+ */
+{template .button}
+{/template}
+
+
+/**
+ * Css classes
+ * @overrides
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_classes
+{/template}

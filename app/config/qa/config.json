@@ -14,11 +14,11 @@
         "host": "schools.qa.lan"
     },
     "courses": {
-        "analyticsId": "UA-34116537-20",
+        "analyticsId": "UA-34116537-21",
         "yandexMetrikaId": 40580155,
         "host": "courses.qa.lan",
-        "analyticsViewId": "ga:130630878",
-        "experimentId": "130630878-15"
+        "analyticsViewId": "ga:134372507",
+        "experimentId": "134372507-16"
     },
     "carrotquestId": "6408-1ccff98844d996fc088fed318b4",
     "facebookClientId": 525358880980041

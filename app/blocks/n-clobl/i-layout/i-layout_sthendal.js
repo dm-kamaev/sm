@@ -32,6 +32,14 @@ sm.iLayout.LayoutStendhal = function(view, opt_domHelper) {
      * @protected
      */
     this.subheader = null;
+
+
+    /**
+     * Footer instance
+     * @type {sm.bSmFooter.SmFooter}
+     * @protected
+     */
+    this.footer = null;
 };
 goog.inherits(sm.iLayout.LayoutStendhal, cl.iControl.Control);
 
@@ -48,6 +56,7 @@ goog.scope(function() {
 
         this.initAuthorization();
         this.initSubheader();
+        this.initFooter();
     };
 
 
@@ -71,8 +80,20 @@ goog.scope(function() {
         var that = this;
         this.subheader = this.decorateChild(
             'smSubheader',
-            this.getView().getDom().subheader,
-            {parentElem: that.getElement()}
+            this.getView().getDom().subheader
+        );
+    };
+
+
+    /**
+     * Init footer instance
+     * @protected
+     */
+    Layout.prototype.initFooter = function() {
+        var that = this;
+        this.footer = this.decorateChild(
+            'smFooter',
+            this.getView().getDom().footer
         );
     };
 });  // goog.scope

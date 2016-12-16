@@ -9,7 +9,10 @@
  *         light: (string|undefined),
  *         bold: (string|undefined)
  *     },
- *     cost: (number|undefined),
+ *     cost: {
+ *         value: (number|undefined),
+ *         type: string
+ *     },
  *     alias: ?string,
  *     score: (sm.bSmScore.TemplateBrief.Params|undefined),
  *     description: string,
@@ -22,10 +25,12 @@
  *         id: number,
  *         name: string
  *     }>|undefined),
- *     online: ?('only'|'available'|undefidned),
+ *     online: ({
+ *         value: number,
+ *         type: ('only'|'available')
+ *     }|undefined),
  *     isFavorite: ?boolean,
- *     countDepartment: ?number,
- *     position: (number|undefined)
+ *     countDepartment: ?number
  * }} sm.bSmItem.TemplateEntity.Params.Data
  */
 
@@ -49,7 +54,10 @@
  * @param params {{
  *     data: {
  *         type: string,
- *         cost: (number|undefined),
+ *         cost: {
+ *             value: (number|undefined),
+ *             type: string
+ *         },
  *         score: ?sm.bSmScore.Template.Params.Data
  *     }
  * }}
@@ -76,7 +84,10 @@
  * @param params {{
  *     data: {
  *         type: string,
- *         cost: (number|undefined),
+ *         cost: {
+ *             value: (number|undefined),
+ *             type: string
+ *         },
  *         description: (string|undefined),
  *         brand: (string|undefined)
  *     }
@@ -122,7 +133,10 @@
  *             id: number,
  *             name: string
  *         }>|undefined),
- *         online: ('only'|'available'|undefidned),
+ *         online: ({
+ *             value: number,
+ *             type: ('only'|'available')
+ *         }|undefined),
  *         isFavorite: ?boolean,
  *         countDepartment: ?number
  *     },
@@ -173,7 +187,10 @@
  * @param params {{
  *     data: {
  *         type: string,
- *         cost: (number|undefined)
+ *         cost: {
+ *             value: (number|undefined),
+ *             type: string
+ *         }
  *     },
  *     config: {
  *         size: string
@@ -198,15 +215,19 @@
  * Insert cost of
  * @param params {{
  *     data: {
- *         cost: (number|undefined)
+ *         cost: {
+ *             value: (number|undefined),
+ *             type: string
+ *         }
  *     }
  * }}
  */
 {template .insertCost_}
-    {if $params.data?.cost == 0}
+    {if $params.data.cost?.value == 0}
         бесплатно
-    {elseif $params.data?.cost}
-        от&nbsp;{$params.data.cost}&nbsp;руб.
+    {elseif $params.data.cost?.value}
+        от&nbsp;{$params.data.cost.value}&nbsp;руб.
+        &nbsp;/&nbsp;{$params.data.cost.type}
     {else}
         цена&nbsp;по&nbsp;запросу
     {/if}
@@ -226,7 +247,9 @@
     {let $classes kind="html"}
         {call .rootClass/}__score
 
-        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {if $params.data.type == 'course'}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
     {/let}
 
     <div class="{$classes}">
@@ -295,12 +318,15 @@
  * Online access
  * @param params {{
  *     data: {
- *         online: ?('only'|'available'|undefidned)
+ *         online: ({
+ *             value: number,
+ *             type: ('only'|'available')
+ *         }|undefined)
  *     }
  * }}
  */
 {template .online_}
-    {if $params.data?.online}
+    {if $params.data?.online?.type}
         <div class="{call .rootClass/}__badge{sp}
                     {call .rootClass/}__badge_online">
             {call .insertOnline_ data="all" /}
@@ -313,22 +339,19 @@
  * Insert online access
  * @param params {{
  *     data: {
- *         online: ('only'|'available')
+ *         online: ({
+ *             value: number,
+ *             type: ('only'|'available')
+ *         }|undefined)
  *     }
  * }}
  */
 {template .insertOnline_}
     {let $text kind="html"}
-        {if $params.data.online == 'only'}
+        {if $params.data.online.type == 'only'}
             Онлайн-курсы
-        {elseif $params.data.online == 'available'}
+        {elseif $params.data.online.type == 'available'}
             Доступны онлайн-курсы
-        {/if}
-    {/let}
-
-    {let $icon kind="html"}
-        {if $params.data.online == 'only'}
-            online
         {/if}
     {/let}
 
@@ -337,13 +360,14 @@
             'type': 'smBadge',
             'renderParams': [
                 'data': [
-                    'items': [
-                        ['name': $text]
-                    ],
+                    'items': [[
+                        'name': $text,
+                        'id': $params.data.online.value
+                    ]],
                 ],
                 'config': [
-                    'type': 'online',
-                    'iconName': $icon ?: '',
+                    'searchType': 'formTraining',
+                    'iconName': 'online',
                     'iconType': 'svg'
                 ]
             ]
@@ -448,11 +472,17 @@
  * @param params {{
  *     data: {
  *         type: string
+ *     },
+ *     config: {
+ *         enableCover: (boolean|undefined),
+ *         stylizationModifier: string
  *     }
  * }}
  * @override
  */
 {template .additionalClasses}
+    {call .super_additionalClasses data="all"/}{sp}
+
     {call .rootClass/}_entity{sp}
     {call .rootClass/}_type_{$params.data.type}
 {/template}

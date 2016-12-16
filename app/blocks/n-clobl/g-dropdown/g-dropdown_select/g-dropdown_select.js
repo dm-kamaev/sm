@@ -1,49 +1,76 @@
 goog.provide('sm.gDropdown.DropdownSelect');
 
 goog.require('cl.gDropdown.Dropdown');
-goog.require('cl.gList.List');
+goog.require('sm.gDropdown.Event.ItemSelect');
+goog.require('sm.gDropdown.ViewSelect');
 
 
 
 /**
- * Dropdown select control
+ * Dropdown control
  * @param {Object} view
+ * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.gDropdown.Dropdown}
  */
-sm.gDropdown.DropdownSelect = function(view, opt_domHelper) {
-    goog.base(this, view, opt_domHelper);
+sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
+    sm.gDropdown.DropdownSelect.base(
+        this, 'constructor', view, opt_params, opt_domHelper
+    );
 
 
     /**
-     * manager of list
-     * @type {cl.gList.List}
-     * @private
+     * @type {sm.gDropdown.ViewSelect.Params}
+     * @override
+     * @protected
      */
-    this.listInstance_ = null;
+    this.params = view.getParams() || {};
 
 
     /**
-     * Selected value
-     * @type {number}
-     * @private
+     * Instance list
+     * @type {sm.gList.ListStendhal}
+     * @protected
      */
-    this.value_ = null;
+    this.list = null;
+
+
+    /**
+     * Data of the selected item
+     * @type {{
+     *     value: (string|number),
+     *     label: string
+     * }}
+     * @protected
+     */
+    this.selectedItemData = {};
 };
 goog.inherits(sm.gDropdown.DropdownSelect, cl.gDropdown.Dropdown);
 
+
 goog.scope(function() {
-    var DropdownSelect = sm.gDropdown.DropdownSelect,
-        DropdownView = cl.gDropdown.View;
+    var Dropdown = sm.gDropdown.DropdownSelect,
+        View = sm.gDropdown.ViewSelect;
+
+    var Event = sm.gDropdown.Event;
+
+
+    /**
+     * @typedef {sm.gDropdown.ViewSelect.Params}
+     */
+    sm.gDropdown.DropdownSelect.Params;
 
 
     /**
      * Event enum
-     * @enum
+     * @enum {string}
      */
-    DropdownSelect.Event = {
-        ITEM_SELECT: cl.gList.List.Event.ITEM_SELECT
+    Dropdown.Event = {
+        OPENER_CLICK: cl.gDropdown.Dropdown.Event.OPENER_CLICK,
+        CONTENT_CLICK: cl.gDropdown.Dropdown.Event.CONTENT_CLICK,
+        CLOSE_DROPDOWN: cl.gDropdown.Dropdown.Event.CLOSE_DROPDOWN,
+        ITEM_SELECT: Event.ItemSelect.Type
     };
 
 
@@ -51,137 +78,168 @@ goog.scope(function() {
      * @param {Element} element
      * @override
      */
-    DropdownSelect.prototype.decorateInternal = function(element) {
-        goog.base(this, 'decorateInternal', element);
+    Dropdown.prototype.decorateInternal = function(element) {
+        Dropdown.base(this, 'decorateInternal', element);
 
-        var factoryManager = cl.iFactory.FactoryManager.getInstance();
-        this.listInstance_ = factoryManager.decorate(
-            this.getView().getStylization(),
-            'list-select',
-            this.getView().getDom().selectList,
-            this
-        );
+        this.initList();
     };
 
 
     /**
      * @override
      */
-    DropdownSelect.prototype.enterDocument = function() {
+    Dropdown.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
         this.getHandler().listen(
-            this.listInstance_,
-            cl.gList.List.Event.ITEM_SELECT,
-            this.onListItemSelect_
-        );
-
-        this.getHandler().listen(
-            document.body,
-            goog.events.EventType.CLICK,
-            this.onOutsideClick_
+            this.list,
+            sm.gList.ListStendhal.Event.ITEM_SELECT,
+            this.onListItemSelect
         );
     };
 
 
     /**
-     * Get current selected index
+     * Get id on list item (index in array)
+     * @param {number} value
+     * @return {number}
      * @public
-     * @return {?number}
      */
-    DropdownSelect.prototype.getValue = function() {
-        return this.value_;
+    Dropdown.prototype.getItemId = function(value) {
+        return goog.array.findIndex(this.params.items, function(item) {
+            return item.value == value;
+        });
     };
 
 
     /**
-     * Get current selected text
+     * Get value on list item
+     * @param {number} itemId
+     * @return {?string}
      * @public
-     * @return {string}
      */
-    DropdownSelect.prototype.getSelectedValue = function() {
-        var selectedIndex = this.getValue();
-        return this.listInstance_.getItemValue(selectedIndex);
+    Dropdown.prototype.getValue = function(itemId) {
+        return this.params.items[itemId] ?
+            this.params.items[itemId].value :
+            null;
     };
 
 
     /**
-     * Return true if dropdown has value,
-     * and set or unset not valid state depends have it value or not
+     * Get label on list item
+     * @param {number} itemId
+     * @return {?string}
      * @public
+     */
+    Dropdown.prototype.getLabel = function(itemId) {
+        return this.params.items[itemId] ?
+            this.params.items[itemId].label :
+            null;
+    };
+
+
+    /**
+     * Set opener default and reset selected item data
+     * @public
+     */
+    Dropdown.prototype.reset = function() {
+        this.setSelectedItemData(null);
+        this.list.deselectAll();
+
+        var lastItem = this.params.items[this.params.items.length - 1];
+        this.getView().changeOpenerText(lastItem.label);
+    };
+
+
+    /**
+     * Get true if item was selected else - false
      * @return {boolean}
+     * @public
      */
-    DropdownSelect.prototype.validate = function() {
-        var isValid = false,
-            value = this.getValue();
+    Dropdown.prototype.isSelected = function() {
+        return !goog.object.isEmpty(this.selectedItemData);
+    };
 
-        if (value !== null) {
-            isValid = true;
-        }
 
-        var view = this.getView();
+    /**
+     * Select item
+     * @param {number} itemId
+     * @public
+     */
+    Dropdown.prototype.selectItem = function(itemId) {
+        this.setSelectedItemData(itemId);
 
-        if (isValid) {
-            view.unsetNotValidState();
+        var openerText = this.generateOpenerText(itemId);
+        this.getView().changeOpenerText(openerText);
+    };
+
+
+    /**
+     * Get selected item data
+     * @return {{
+     *     value: (string|number),
+     *     label: (string)
+     * }}
+     * @public
+     */
+    Dropdown.prototype.getSelectedItemData = function() {
+        return this.selectedItemData;
+    };
+
+
+    /**
+     * Set selected item data
+     * @param {number} itemId
+     * @protected
+     */
+    Dropdown.prototype.setSelectedItemData = function(itemId) {
+        var value = this.getValue(itemId);
+
+        if (goog.isDefAndNotNull(value)) {
+            this.selectedItemData = {
+                value: value,
+                label: this.getLabel(itemId)
+            };
         } else {
-            view.setNotValidState();
+            this.selectedItemData = {};
         }
-
-        return isValid;
-    };
-
-
-    /**
-     * Clear selection
-     */
-    DropdownSelect.prototype.clear = function() {
-        this.value_ = null;
-        this.listInstance_.deselectAll();
-
-        this.getView().clear();
-    };
-
-
-    /**
-     * Select item by index
-     * @param {number} index
-     */
-    DropdownSelect.prototype.selectByIndex = function(index) {
-        this.value_ = index;
-
-        var openerText = this.listInstance_.getItemValue(index);
-
-        var view = this.getView();
-        view.removePlaceholderModifier();
-        view.setOpenerCustomText(openerText);
     };
 
 
     /**
      * Handler for click on list items
-     * @param {Object} event
-     * @private
+     * @param {goog.events.Event} event
+     * @protected
      */
-    DropdownSelect.prototype.onListItemSelect_ = function(event) {
-        this.selectByIndex(event['itemId']);
+    Dropdown.prototype.onListItemSelect = function(event) {
+        var itemId = event['itemId'];
 
-        this.validate();
+        this.selectItem(itemId);
+
+        var event = new Event.ItemSelect(this.getSelectedItemData(), this);
+        this.dispatchEvent(event);
     };
 
 
     /**
-     * Handler for click on dropdown
-     * @param {Object} event
-     * @private
+     * Generate Opener Text
+     * @param {number} itemId
+     * @return {string}
+     * @protected
      */
-    DropdownSelect.prototype.onOutsideClick_ = function(event) {
-        if (goog.dom.getAncestorByClass(
-                event.target,
-                DropdownView.CssClass.OPENER
-            ) !==
-            this.getElementByClass(DropdownView.CssClass.OPENER)) {
+    Dropdown.prototype.generateOpenerText = function(itemId) {
+        return this.getLabel(itemId);
+    };
 
-            this.close();
-        }
+
+    /**
+     * Initializes instance of list
+     * @protected
+     */
+    Dropdown.prototype.initList = function() {
+        this.list = this.decorateChild(
+            'list',
+            this.getView().getDom().list
+        );
     };
 });  // goog.scope

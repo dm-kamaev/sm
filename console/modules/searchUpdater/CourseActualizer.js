@@ -2,8 +2,10 @@
 
 const lodash = require('lodash');
 
-const searchType = require('../../../api/modules/course/enums/searchType.js'),
-    services = require('../../../app/components/services').all;
+const services = require('../../../app/components/services').all,
+    searchType = require('../../../api/modules/course/enums/searchType.js'),
+    groupSize =
+        require('../../../api/modules/course/enums/groupSizeTraining.js');
 
 const ALL_WEEKDAYS = [0, 1, 2, 3, 4, 5, 6],
     ALL_TIMES = [0, 1, 2, 3],
@@ -326,11 +328,11 @@ class CourseActualizer {
     transfomGroupSize_(maxGroupSize, online) {
         var result;
         if (online) {
-            result = 2;
+            result = groupSize.ONLINE;
         } else if (maxGroupSize === 1) {
-            result = 0;
+            result = groupSize.INDIVIDUAL;
         } else {
-            result = 1;
+            result = groupSize.GROUP;
         }
         return result;
     }

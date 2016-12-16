@@ -39,7 +39,7 @@ goog.scope(function() {
     /**
      * Transform raw params to compressed ones
      * @param {Object<string, Object>} rawParams
-     * @return {sm.bSmBadge.View.RenderParams}
+     * @return {sm.bSmScore.View.RenderParams}
      */
     Score.getRenderParams = function(rawParams) {
         return View.getRenderParams(rawParams);

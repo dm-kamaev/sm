@@ -39,6 +39,7 @@ exports.render = function(data) {
         subHeader: {
             logo: {
                 linkUrl: '/',
+                altText: '«Курсы Мела»',
                 imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
             listLinks: {

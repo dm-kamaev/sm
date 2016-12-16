@@ -9,6 +9,7 @@
  *         light: string,
  *         bold: ?string
  *     },
+ *     imageUrl: (string|undefined),
  *     alias: ?string,
  *     score: ?number,
  *     description: (string|undefined),
@@ -20,7 +21,8 @@
  *         id: number,
  *         name: string
  *     }>,
- *     category: string
+ *     category: string,
+ *     url: ?string
  * }} sm.bSmItem.Template.Params.Data
  */
 
@@ -29,7 +31,8 @@
  * @typedef {{
  *     enableCover: boolean,
  *     stylizationModifier: string,
- *     customClasses: ?Array<string>
+ *     customClasses: ?Array<string>,
+ *     theme: ?string
  * }} sm.bSmItem.Template.Params.Config
  */
 
@@ -60,6 +63,7 @@
     {call .sections data="all" /}
 {/template}
 
+
 /**
  * sections
  * @param params {{
@@ -69,31 +73,11 @@
  * @protected
  */
 {template .sections}
-    {if $params.config.enableCover or
-        $params.config.stylizationModifier == 'experimental'}
+    {if $params.config.enableCover}
         {call .sectionGroupCover data="all" /}
     {/if}
 
     {call .sectionGroupInfo data="all" /}
-{/template}
-
-
-/**
- * Section group template
- * @param params {{
- *     content: string,
- *     classes: string
- * }}
- * @protected
- */
-{template .sectionGroup}
-    <div class="{call .rootClass/}__section-group
-        {if $params.classes}
-            {sp}{$params.classes}
-        {/if}
-    ">
-        {$params.content}
-    </div>
 {/template}
 
 
@@ -111,19 +95,14 @@
  * @protected
  */
 {template .sectionGroupCover kind="html"}
-    {let $content kind="html"}
-        {call .sectionCover data="all" /}
-    {/let}
     {let $classes kind="html"}
-        {call .rootClass /}__section-group_cover
+        {call .rootClass/}__section-group{sp}
+        {call .rootClass/}__section-group_cover
     {/let}
 
-    {call .sectionGroup}
-        {param params: [
-            'content': $content,
-            'classes': $classes
-        ] /}
-    {/call}
+    <div class="{$classes}">
+        {call .sectionCover data="all" /}
+    </div>
 {/template}
 
 
@@ -131,26 +110,25 @@
  * Iformation section group
  * @param params {{
  *     data: sm.bSmItem.Template.Params.Data
+ *     config: sm.bSmItem.Template.Params.Config
  * }}
  * @protected
  */
 {template .sectionGroupInfo kind="html"}
     {let $classes kind="html"}
+        {call .rootClass/}__section-group{sp}
         {call .rootClass/}__section-group_info
     {/let}
 
-    {let $content kind="html"}
-        {call .sectionHeader data="all" /}
-        {call .sectionDescription data="all" /}
-        {call .sectionDetails data="all" /}
-    {/let}
-
-    {call .sectionGroup}
-        {param params: [
-            'content': $content,
-            'classes': $classes
-        ] /}
-    {/call}
+    <div class="{$classes}">
+        {if $params.config.theme == 'minimal'}
+            {call .sectionLink data="all" /}
+        {else}
+            {call .sectionHeader data="all" /}
+            {call .sectionDescription data="all" /}
+            {call .sectionDetails data="all" /}
+        {/if}
+    </div>
 {/template}
 
 /**
@@ -190,6 +168,30 @@
         >
     </div>
 {/template}
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         id: number,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         category: string,
+ *         url: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionLink}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_link">
+    {$params.data.name.light}
+    </div>
+{/template}
+
 
 
 /**
@@ -402,7 +404,8 @@
                         'items': $params.data.metro,
                     ],
                     'config': [
-                        'type': 'metro',
+                        'searchType': 'metroId',
+                        'searchByName': true,
                         'iconName': 'metro',
                         'iconType': 'svg',
                         'entityType': $params.data.type
@@ -435,7 +438,8 @@
                         'items': $params.data.area,
                     ],
                     'config': [
-                        'type': 'area',
+                        'searchType': 'areaId',
+                        'searchByName': true,
                         'iconName': 'location',
                         'entityType': $params.data.type
                     ]
@@ -444,6 +448,25 @@
         {/call}
     </div>
 {/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     config: {
+ *         enableCover: (boolean|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params?.config?.enableCover or
+        $params.config.stylizationModifier == 'experimental'}
+        {call .rootClass/}_cover_enable
+    {/if}
+{/template}
+
 
 
 /**
@@ -467,13 +490,22 @@
  *             bold: ?string
  *         },
  *         category: string
- *         alias: string
- *     }
+ *         alias: ?string,
+ *         url: ?string
+ *     },
+ *     config: sm.bSmItem.Template.Params.Config
  * }}
  * @override
  */
 {template .attributes kind="attributes"}
-    {sp}href="/{$params.data.alias}"
+    {let $url kind="html"}
+        {if $params.data.url}
+            {$params.data.url}
+        {else}
+            {$params.data.alias}
+        {/if}
+    {/let}
+    {sp}href="/{$url}"
     {sp}data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: quoteKeysIfJs([

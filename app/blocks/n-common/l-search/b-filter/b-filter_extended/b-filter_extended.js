@@ -18,6 +18,14 @@ sm.lSearch.bFilter.FilterExtended = function(view, opt_domHelper) {
 
 
     /**
+     * @type {sm.lSearch.bFilter.ViewExtended.Params}
+     * @override
+     * @protected
+     */
+    this.params = view.getParams() || {};
+
+
+    /**
      * instance Modal
      * @type {sm.gModal.ModalStendhal}
      * @private
@@ -50,8 +58,6 @@ goog.scope(function() {
      */
     FilterExtended.prototype.enterDocument = function() {
         FilterExtended.base(this, 'enterDocument');
-
-        this.initViewListeners_();
     };
 
 
@@ -59,9 +65,24 @@ goog.scope(function() {
      * Reset options filters
      */
     FilterExtended.prototype.reset = function() {
-        this.updateOptions(this.getAllData());
-
+        this.updateOptions(this.getDefaultOptionsData_());
         this.collapse();
+    };
+
+
+    /**
+     * Get options data to show (data by default)
+     * @return {Array<sm.bSmCheckbox.SmCheckbox>}
+     * @private
+     */
+    FilterExtended.prototype.getDefaultOptionsData_ = function() {
+        var data = this.getAllData();
+
+        if (this.params.optionsToShow) {
+            data = data.slice(0, this.params.optionsToShow);
+        }
+
+        return data;
     };
 
 
@@ -70,7 +91,7 @@ goog.scope(function() {
      * @override
      */
     FilterExtended.prototype.setAllData = function() {
-        this.send_('/api/course/course-type/popular')
+        this.send_(this.params.api + '/popular')
             .then(function(data) {
                 this.allOptionsData = data;
             }
@@ -80,9 +101,10 @@ goog.scope(function() {
 
     /**
      * Initializes listeners for view
-     * @private
+     * @override
+     * @protected
      */
-    FilterExtended.prototype.initViewListeners_ = function() {
+    FilterExtended.prototype.initViewListeners = function() {
         this.viewListen(
             View.Event.SHOW_MODAL_CLICK,
             this.onShowModalClick_
@@ -121,7 +143,7 @@ goog.scope(function() {
     FilterExtended.prototype.onModalFilterButtonClick_ = function(event) {
         var params = event.data.filters.length ?
             event.data.filters :
-            this.allOptionsData;
+            this.getDefaultOptionsData_();
 
         this.updateOptions(params);
         this.removeFilterModal_();
@@ -185,7 +207,7 @@ goog.scope(function() {
      *     data: {
      *         header: string,
      *         search: {
-     *             placeholder: (string|undefined),
+     *             placeholder: ?string,
      *             sourceUrl: string
      *         },
      *         filter: {
@@ -211,15 +233,15 @@ goog.scope(function() {
 
         return {
             data: {
-                header: 'Курсы, кружки и секции',
+                header: this.params.modal.header,
                 search: {
-                    placeholder: 'Какие занятия вы ищете?',
-                    sourceUrl: '/api/course/course-type'
+                    placeholder: this.params.modal.placeholder,
+                    sourceUrl: this.params.api
                 },
                 filter: {
                     name: this.getName(),
                     header: {
-                        title: 'Популярные'
+                        title: this.params.modal.filterHeader
                     },
                     options: allOptionsData
                 },

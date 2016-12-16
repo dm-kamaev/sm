@@ -1,6 +1,7 @@
 goog.provide('sm.bSmListPaged.SmListPaged');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmListPaged.View');
 
 
@@ -36,7 +37,8 @@ goog.scope(function() {
      * @enum {string}
      */
     ListPaged.Event = {
-        PAGE_CHANGE: goog.events.getUniqueId('pageChange')
+        PAGE_CHANGE: goog.events.getUniqueId('pageChange'),
+        ITEM_CLICK: sm.bSmItemList.SmItemList.Event.ITEM_CLICK
     };
 
 
@@ -162,6 +164,17 @@ goog.scope(function() {
 
 
     /**
+     * Send Analytics when user clicks on item
+     * @param {number} itemId
+     * @param {string} list
+     * @public
+     */
+    ListPaged.prototype.sendAnalyticsItemClick = function(itemId, list) {
+        this.list_.sendAnalyticsItemClick(itemId, list);
+    };
+
+
+    /**
      * Initializes links Listeners
      * @private
      */
@@ -176,6 +189,7 @@ goog.scope(function() {
             this.onSetPreviousPageClick_
         );
     };
+
 
 
     /**

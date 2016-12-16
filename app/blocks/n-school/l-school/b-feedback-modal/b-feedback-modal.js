@@ -288,7 +288,7 @@ goog.scope(function() {
         );
 
         this.dropdowns_.userType = factory.decorate(
-            'dropdown-select',
+            'dropdown-select-legacy',
             userTypeElement,
             this
         );
@@ -301,7 +301,7 @@ goog.scope(function() {
         );
 
         this.dropdowns_.classType = factory.decorate(
-            'dropdown-select',
+            'dropdown-select-legacy',
             classTypeElement,
             this
         );
@@ -346,7 +346,7 @@ goog.scope(function() {
     FeedbackModal.prototype.initDropdownListeners_ = function(handler) {
         handler.listen(
             this.dropdowns_.userType,
-            sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+            sm.gDropdown.DropdownSelectLegacy.Event.ITEM_SELECT,
             this.onUserTypeClick_
         );
     };

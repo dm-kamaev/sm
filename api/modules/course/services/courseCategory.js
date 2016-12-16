@@ -17,19 +17,6 @@ let service = {
 };
 
 /**
- * Get one category by their id
- * @param {number} categoryId
- * @return {models.CourseCategory}
- */
-service.getOne = async(function(categoryId) {
-    return models.CourseCategory.findOne({
-        where: {
-            id: categoryId
-        }
-    });
-});
-
-/**
  * Delete alias for given course category
  * @param {models.CourseCategory} courseCategory
  */
@@ -65,6 +52,7 @@ service.getAll = async(function(opt_params) {
         .field(`${CATEGORY}.is_active`, 'isActive')
         .field('count(course.id)', 'courseCount')
         .field(`${CATEGORY}.filters`)
+        .field(`${CATEGORY}.price_type`, 'priceType')
         .field(`${CATEGORY}.updated_at`, 'updatedAt')
         .left_join(
             'course_type',
@@ -97,7 +85,7 @@ service.getByAlias = async(function(alias) {
         category = null;
 
     if (page) {
-        category = await(service.getOne(page.entityId));
+        category = await(service.getById(page.entityId));
 
         if (!category.isActive) {
             category = null;
@@ -131,7 +119,8 @@ service.create = async(function(data) {
     return await(models.CourseCategory.create({
         name: data.name,
         isActive: data.isActive,
-        filters: data.filters
+        filters: data.filters,
+        priceType: data.priceType
     }));
 });
 
@@ -148,7 +137,8 @@ service.update = async(function(id, data) {
     return await(models.CourseCategory.update({
         name: data.name,
         isActive: data.isActive,
-        filters: data.filters
+        filters: data.filters,
+        priceType: data.priceType
     }, {
         where: {
             id: id

@@ -142,8 +142,9 @@ controller.create = async(function(req, res) {
             res.status(error.status);
             result = error.response;
         } else {
-            logger.error(error.message);
-            result = error;
+            logger.error(error);
+            result = error.message;
+            res.status(400);
         }
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
@@ -186,8 +187,9 @@ controller.update = async(function(req, res) {
             res.status(error.status);
             result = error.response;
         } else {
-            logger.error(error.message);
-            result = error;
+            logger.error(error);
+            result = error.message;
+            res.status(400);
         }
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');

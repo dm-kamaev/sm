@@ -24,29 +24,14 @@
  *         name: string,
  *         value: (Array<(string|number)>)
  *     }>,
- *     resultsList: {
- *         title: string,
- *         description: Array<string>,
- *         sort: sm.gDropdown.TemplateSelect.Params.Data,
- *         entityList: sm.bSmItemList.Template.Params.Data,
- *         countResults: number,
- *         searchText: ?string,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     },
+ *     resultsList: sm.lSearch.bSearchResults.Template.Params.Data,
  *     search: {
  *         pageAlias: string,
  *         placeholder: ?string,
  *         searchText: ?string
  *     },
  *     filterPanel: sm.lSearch.bFilterPanel.Template.Params,
- *     searchParams: {Array<{
- *         name: string,
- *         value: (Array<(string|number)>)
- *     }>},
+ *     searchParams: {Array<{string, (string|Array<string>|number)}>},
  *     popularEntities: Array<{
  *         id: number,
  *         alias: string,
@@ -54,7 +39,10 @@
  *         description: (string?undefined),
  *         metro: (Array<string>|undefined),
  *         totalScore: (number|undefined)
- *     }>
+ *     }>,
+ *     footer: {
+ *         seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
+ *     }
  * }} sm.lSearch.Template.Params.Data
  */
 
@@ -283,6 +271,7 @@
                 'redirect': false,
                 'pageAlias': $params.data?.search?.pageAlias,
                 'inputSize': 'min',
+                'searchArgs': $params.data.search.args,
                 'customClasses': $customClasses,
                 'config': [
                     'entityType': $params.config.entityType,
@@ -319,6 +308,19 @@
  * Show more button template
  * @param params {{
  *     data: {
+ *         resultsList: {
+ *             title: string,
+ *             description: Array<string>,
+ *             sort: sm.gDropdown.TemplateSelect.Params.Data,
+ *             entityList: sm.bSmItemList.Template.Params.Data,
+ *             countResults: number,
+ *             searchText: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         }
  *     },
  *     config: {
  *         modifier: string
@@ -329,6 +331,7 @@
     {let $customClasses kind="html"}
         {call .rootClass /}__search-results
     {/let}
+
     <div class="{call .rootClass/}__search-results-wrap">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
@@ -401,17 +404,18 @@
 
         <div class="{call .rootClass/}__section{sp}
                     {call .rootClass/}__section_footer-seo">
-            <div class="{call .rootClass /}__section-inner">
+            <div class="{call .rootClass /}__section-inner{sp}
+                        {call .rootClass /}__section-inner_seo">
 
-                <div class="{call .rootClass/}__text-seo{sp}
-                            {call .rootClass/}__text-seo_left">
+                <div class="{call .rootClass/}__column-seo{sp}
+                            {call .rootClass/}__column-seo_left">
                     {call .textSeo_}
                         {param text: $params.data.seo.textLeft /}
                     {/call}
                 </div>
 
-                <div class="{call .rootClass/}__text-seo{sp}
-                            {call .rootClass/}__text-seo_right">
+                <div class="{call .rootClass/}__column-seo{sp}
+                            {call .rootClass/}__column-seo_right">
                     {call .textSeo_}
                         {param text: $params.data.seo.textRight /}
                     {/call}

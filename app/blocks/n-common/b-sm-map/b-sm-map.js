@@ -90,8 +90,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Map.Event = {
-      READY: 'ready',
-      ITEM_NAME_CLICK: 'item-name-click'
+        READY: 'ready',
+        BALLOON_OPEN: sm.bSmBalloon.SmBalloon.Event.OPEN
     };
 
 
@@ -286,6 +286,7 @@ goog.scope(function() {
      */
     Map.prototype.createBalloonComponent_ = function(params, balloonElement) {
         var renderParams = sm.bSmBalloon.SmBalloon.getRenderParams(params);
+
         this.setBalloon_(
             this.renderChild(
                 'smBalloon',
@@ -379,10 +380,14 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.addMapObject_ = function(viewType, addressItem) {
-        var geoObject = this.find_(addressItem);
+        var geoObject = this.find_(addressItem),
+            hasItems = addressItem['items'] && addressItem['items'].length;
+
         if (goog.isDefAndNotNull(geoObject)) {
-            this.updateViewType_(geoObject, viewType);
-            this.extendGeoObject_(geoObject, addressItem);
+            if (hasItems) {
+                this.updateViewType_(geoObject, viewType);
+                this.extendGeoObject_(geoObject, addressItem);
+            }
         } else {
             this.objectManager_.add(this.generateGeoObject_(
                 viewType,
@@ -417,11 +422,11 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.extendGeoObject_ = function(geoObject, addressItem) {
-
         var extendedItems = goog.array.concat(
             geoObject['properties']['items'],
             addressItem['items']
         );
+
         goog.array.removeDuplicates(
             extendedItems,
             null,
@@ -706,7 +711,6 @@ goog.scope(function() {
                         return CustomBalloonLayout.superclass.getShape
                             .call(this);
                     }
-
                     var position = goog.style.getPosition(this.element_);
                     return new ymaps.shape.Rectangle(
                         new ymaps.geometry.pixel.Rectangle([
@@ -799,7 +803,7 @@ goog.scope(function() {
     /**
      * Handler for event of changing page of paged list in balloon. In this case
      * is possible to change shape of ballon
-     * @param  {Object} balloonInstance
+     * @param {Object} balloonInstance
      * @private
      */
     Map.prototype.onBalloonListPageChange_ = function(balloonInstance) {
@@ -1006,6 +1010,7 @@ goog.scope(function() {
         }
         return behaviors;
     };
+
 
     /**
      * Generate position parameters for initialization of yandex map

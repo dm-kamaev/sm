@@ -31,6 +31,8 @@ goog.require('sm.bSmExpander.SmExpander');
 goog.require('sm.bSmExpander.View');
 goog.require('sm.bSmFavorite.SmFavorite');
 goog.require('sm.bSmFavorite.View');
+goog.require('sm.bSmFooter.SmFooter');
+goog.require('sm.bSmFooter.View');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.View');
@@ -56,8 +58,9 @@ goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.gDropdown.DropdownSelectLegacy');
 goog.require('sm.gDropdown.ViewListLinks');
-goog.require('sm.gDropdown.ViewSelect');
+goog.require('sm.gDropdown.ViewSelectLegacy');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
 goog.require('sm.gInput.InputPhone');
@@ -94,15 +97,21 @@ goog.require('sm.lInformation.bInformationBoard.View');
 goog.require('sm.lSchool.bFoldList.FoldList');
 goog.require('sm.lSchool.bFoldList.View');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.FilterClasses');
+goog.require('sm.lSearch.bFilter.FilterDropdown');
 goog.require('sm.lSearch.bFilter.FilterExtended');
 goog.require('sm.lSearch.bFilter.FilterInput');
 goog.require('sm.lSearch.bFilter.FilterLabels');
 goog.require('sm.lSearch.bFilter.FilterSwitch');
+goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
 goog.require('sm.lSearch.bFilter.View');
+goog.require('sm.lSearch.bFilter.ViewClasses');
+goog.require('sm.lSearch.bFilter.ViewDropdown');
 goog.require('sm.lSearch.bFilter.ViewExtended');
 goog.require('sm.lSearch.bFilter.ViewInput');
 goog.require('sm.lSearch.bFilter.ViewLabels');
 goog.require('sm.lSearch.bFilter.ViewSwitch');
+goog.require('sm.lSearch.bFilter.ViewSwitchLabels');
 goog.require('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('sm.lSearch.bFilterPanel.View');
 goog.require('sm.lSearch.bLabel.Label');
@@ -111,8 +120,6 @@ goog.require('sm.lSearch.bSearchResults.SearchResults');
 goog.require('sm.lSearch.bSearchResults.View');
 goog.require('sm.lSearch.bSuggestFilter.SuggestFilter');
 goog.require('sm.lSearch.bSuggestFilter.View');
-goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
-goog.require('sm.lSearchResult.bFilterSearch.View');
 
 
 
@@ -128,9 +135,9 @@ sm.iFactory.FactoryStendhal = function() {
         this, 'constructor', templateFactory.getInstance(), 'stendhal'
     );
 
-    this.setControlListItem('dropdown-select', {
-            control: sm.gDropdown.DropdownSelect,
-            view: sm.gDropdown.ViewSelect
+    this.setControlListItem('dropdown-select-legacy', {
+            control: sm.gDropdown.DropdownSelectLegacy,
+            view: sm.gDropdown.ViewSelectLegacy
         })
         .setControlListItem('list-select', {
             control: sm.gList.List.Select,
@@ -198,10 +205,6 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('favorite-link', {
             control: sm.bFavoriteLink.FavoriteLink,
             view: sm.bFavoriteLink.View
-        })
-        .setControlListItem('filter-search', {
-            control: sm.lSearchResult.bFilterSearch.FilterSearch,
-            view: sm.lSearchResult.bFilterSearch.View
         });
 
     /** Heirs of the clobl blocks */
@@ -225,6 +228,10 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.gList.ListLinks,
             view: sm.gList.ViewLinks
         })
+        .setControlListItem('dropdown-select', {
+            control: sm.gDropdown.DropdownSelect,
+            view: sm.gDropdown.ViewSelect
+        })
         .setControlListItem('dropdown-list-links', {
             control: sm.gDropdown.DropdownListLinks,
             view: sm.gDropdown.ViewListLinks
@@ -234,6 +241,10 @@ sm.iFactory.FactoryStendhal = function() {
     this.setControlListItem('smSubheader', {
             control: sm.bSmSubheader.SmSubheader,
             view: sm.bSmSubheader.View
+        })
+        .setControlListItem('smFooter', {
+            control: sm.bSmFooter.SmFooter,
+            view: sm.bSmFooter.View
         })
         .setControlListItem('smScore', {
             control: sm.bSmScore.SmScore,
@@ -334,6 +345,18 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('lSearch-filterLabels', {
             control: sm.lSearch.bFilter.FilterLabels,
             view: sm.lSearch.bFilter.ViewLabels
+        })
+        .setControlListItem('lSearch-filterSwitchLabels', {
+            control: sm.lSearch.bFilter.FilterSwitchLabels,
+            view: sm.lSearch.bFilter.ViewSwitchLabels
+        })
+        .setControlListItem('lSearch-filterDropdown', {
+            control: sm.lSearch.bFilter.FilterDropdown,
+            view: sm.lSearch.bFilter.ViewDropdown
+        })
+        .setControlListItem('lSearch-filterClasses', {
+            control: sm.lSearch.bFilter.FilterClasses,
+            view: sm.lSearch.bFilter.ViewClasses
         })
         .setControlListItem('lSearch-label', {
             control: sm.lSearch.bLabel.Label,

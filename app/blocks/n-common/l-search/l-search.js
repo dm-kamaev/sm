@@ -5,6 +5,7 @@ goog.provide('sm.lSearch.Search');
 
 
 goog.require('cl.iRequest.Request');
+goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
 goog.require('sm.bSearch.Search');
@@ -15,17 +16,20 @@ goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
 goog.require('sm.lSearch.View');
 goog.require('sm.lSearch.bFilterPanel.FilterPanel');
+goog.require('sm.lSearch.iAnalyticsSender.AnalyticsSender');
 goog.require('sm.lSearch.iSearchService.SearchService');
 goog.require('sm.lSearch.iUrlUpdater.UrlUpdater');
 
 
 goog.scope(function() {
-    var Request = cl.iRequest.Request;
-    var SearchService = sm.lSearch.iSearchService.SearchService;
-    var SearchParamsManager = sm.iSmSearchParamsManager.SmSearchParamsManager;
-    var UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater;
-
-    var Analytics = sm.iAnalytics.Analytics;
+    var Request = cl.iRequest.Request,
+        SearchService = sm.lSearch.iSearchService.SearchService,
+        SearchParamsManager = sm.iSmSearchParamsManager.SmSearchParamsManager,
+        UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater,
+        Map = sm.bSmMap.SmMap,
+        Analytics = sm.iAnalytics.Analytics,
+        AnalyticsSender = sm.lSearch.iAnalyticsSender.AnalyticsSender,
+        Balloon = sm.bSmBalloon.SmBalloon;
 
 
 
@@ -107,6 +111,14 @@ goog.scope(function() {
          * @private
          */
         this.urlUpdater_ = null;
+
+
+        /**
+         * Instances analytics sender
+         * @type {sm.lSearch.iAnalyticsSender.AnalyticsSender}
+         * @private
+         */
+        this.analyticsSender_ = null;
     };
     goog.inherits(sm.lSearch.Search, sm.iLayout.LayoutStendhal);
     var Search = sm.lSearch.Search;
@@ -127,6 +139,16 @@ goog.scope(function() {
 
 
     /**
+     * Entity type
+     * @const {Object<string>}
+     */
+    Search.EntityType = {
+        SCHOOL: 'school',
+        COURSE: 'course'
+    };
+
+
+    /**
      * @typedef {sm.lSearch.View.Params}
      */
     sm.lSearch.Params;
@@ -138,7 +160,6 @@ goog.scope(function() {
      */
     Search.prototype.enterDocument = function() {
         Search.base(this, 'enterDocument');
-
         this.initSubheaderListeners_()
             .initLeftMenuListeners_()
             .initSearchServiceListeners_()
@@ -270,8 +291,12 @@ goog.scope(function() {
     Search.prototype.initMapListeners_ = function() {
         this.getHandler().listen(
             this.map_,
-            sm.bSmMap.SmMap.Event.READY,
+            Map.Event.READY,
             this.onMapReady_
+        ).listen(
+            this.map_,
+            Map.Event.BALLOON_OPEN,
+            this.onBalloonOpen_
         );
 
         return this;
@@ -353,12 +378,15 @@ goog.scope(function() {
      */
     Search.prototype.onSortReleased_ = function(event) {
         this.resetSecondarySearchParams_();
-        this.paramsManager_.setSortType(event['data']);
+
+        var sortType = event.data ? event.data.value : null;
+        this.paramsManager_.setSortType(sortType);
 
         this.searchResults_.setStatus(
             sm.lSearch.bSearchResults.SearchResults.Status.SORT_IN_PROGRESS
         );
 
+        this.clearMap_();
         this.makeSearch_();
     };
 
@@ -379,7 +407,18 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onMapReady_ = function() {
+        this.initAnalyticsSender_();
         this.searchService_.loadMapData(this.paramsManager_.getParams());
+    };
+
+
+    /**
+     * Action pin handler
+     * @param {sm.bSmBalloon.Event.Open} event
+     * @private
+     */
+    Search.prototype.onBalloonOpen_ = function(event) {
+        this.sendMapAnalytics_(event.data);
     };
 
 
@@ -421,7 +460,9 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onScroll_ = function() {
-        if (this.isNextPageCanBeLoaded_()) {
+        if (this.isNextPageCanBeLoaded_() &&
+            !this.searchService_.isSearchDataPending()) {
+
             this.loadNextPage_();
         }
     };
@@ -534,10 +575,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.makeNewSearch_ = function() {
-        this.paramsManager_.setSortType(1);
+        this.paramsManager_.resetSortType();
+        this.searchResults_.resetSort();
 
         this.updatePage_();
-        this.sort_.clear();
         this.filterPanel_.reset();
     };
 
@@ -548,8 +589,25 @@ goog.scope(function() {
      */
     Search.prototype.updateUrl_ = function() {
         this.urlUpdater_.update(this.paramsManager_.getUrlParams(
-            Search.URL_PARAMS_TO_EXCLUDE
+            this.getUrlParamsToExclude_()
         ));
+    };
+
+
+    /**
+     * Search params names, which exclude when built url
+     * all names of filters used to build url
+     * @return {Array<string>}
+     * @private
+     */
+    Search.prototype.getUrlParamsToExclude_ = function() {
+        var filtersName = Object.keys(this.getParamsFromFilterPanel_());
+
+        return goog.array.filter(Search.URL_PARAMS_TO_EXCLUDE, function(param) {
+            return !filtersName.some(function(filterName) {
+                return param == filterName;
+            });
+        });
     };
 
 
@@ -807,6 +865,73 @@ goog.scope(function() {
         );
 
         return this;
+    };
+
+
+    /**
+     * Initializes instance of Analytics Sender
+     * @private
+     */
+    Search.prototype.initAnalyticsSender_ = function() {
+        this.analyticsSender_ = new AnalyticsSender('search page');
+    };
+
+
+    /**
+     * Send map analytics
+     * @param {sm.bSmBalloon.View.RenderParams} params
+     * @private
+     */
+    Search.prototype.sendMapAnalytics_ = function(params) {
+        var entityItems;
+        var name;
+
+        if (params.content.items.length > 0) {
+            entityItems = params.content.items;
+            name = params.footer.title;
+        } else {
+            entityItems = [params];
+            name = params.header.title;
+        }
+
+        entityItems = this.transformEntityItemsParams_(entityItems);
+
+        this.analyticsSender_.addImpressions(entityItems);
+
+        this.analyticsSender_.send({
+            category: 'search map',
+            action: 'pin details',
+            name: name
+        });
+    };
+
+
+    /**
+     * Transform entity items
+     * @param {Array<{Object}>} entityItems
+     * @return {Array<{
+     *             id: number,
+     *             name: string,
+     *             list: string,
+     *             category: ?string,
+     *             position: number
+     * }>}
+     * @private
+     */
+    Search.prototype.transformEntityItemsParams_ = function(entityItems) {
+        var result = [];
+
+        entityItems.forEach(function(item, index) {
+            result.push({
+                id: item.id,
+                name: item.name ? item.name.light : item.header.title,
+                list: 'map balloon',
+                category: item.category || null,
+                position: index + 1
+            });
+        });
+
+        return result;
     };
 });  // goog.scope
 
