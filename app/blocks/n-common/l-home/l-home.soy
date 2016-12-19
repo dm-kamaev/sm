@@ -18,13 +18,6 @@
  *         items: Array<string>,
  *     },
  *     searchPanel: sm.bSmSearchPanel.Template.Params.Data,
- *     recomendations: Array<{
- *         header: string,
- *         links: Array<{
- *             name: string,
- *             url: string
- *         }>
- *     }>,
  *     popularEntities: Array<{
  *         id: number,
  *         alias: string,
@@ -33,21 +26,7 @@
  *         metro: (Array<string>|undefined),
  *         totalScore: (number|undefined)
  *     }>,
- *     recommendations: Array<{
- *         type: string,
- *         header: {
- *             label: string,
- *             img: {
- *                 url: string,
- *                 altText: string
- *             }
- *         },
- *         items: Array<{
- *             id: number,
- *             content: string,
- *             url: string
- *         }>
- *     }>
+ *     recommendations: sm.bSmCatalog.Template.Params.Data
  * }} sm.lHome.Template.Params.Data
  */
 
@@ -197,47 +176,39 @@
 /**
  * Recomendations links section
  * @param params {{
- *     data: {
- *         recomendations: Array<{
- *             header: string,
- *             links: Array<{
- *                 name: string,
- *                 url: string
- *             }>
- *         }>
- *     }
+ *     data: sm.bSmCatalog.Template.Params.Data
  * }}
  * @private
  */
 {template .sectionRecomendations_ kind="html"}
-    {let $content kind="html"}
-        {if $params.data.recommendations}
+    {if $params.data.recommendations}
 
+        {let $content kind="html"}
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                 {param params: [
                     'factory': $params.config.modifier,
                     'type': 'smCatalog',
                     'renderParams': [
-                        'data': [
-                            'items': $params.data.recommendations
-                        ]
+                        'data': $params.data.recommendations
                     ]
                 ] /}
             {/call}
+        {/let}
 
-        {/if}
-    {/let}
-    {call .section_}
-        {param params: [
-            'data': [
-                'content': $content
-            ],
-            'config': [
-                'modifier': 'recommendations'
-            ]
-        ] /}
-    {/call}
+        {call .section_}
+            {param params: [
+                'data': [
+                    'content': $content
+                ],
+                'config': [
+                    'modifier': 'recommendations'
+                ]
+            ] /}
+        {/call}
+
+    {/if}
 {/template}
+
 
 /**
  * Popular entity section

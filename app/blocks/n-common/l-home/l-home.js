@@ -47,6 +47,14 @@ goog.scope(function() {
          * @private
          */
         this.searchPanel_ = null;
+
+
+        /**
+         * Catalog instance
+         * @type {sm.bSmCatalog.SmCatalog}
+         * @private
+         */
+        this.catalog_ = null;
     };
     goog.inherits(sm.lHome.Home, sm.iLayout.LayoutStendhal);
     var Home = sm.lHome.Home;

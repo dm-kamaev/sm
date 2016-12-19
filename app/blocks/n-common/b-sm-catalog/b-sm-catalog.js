@@ -18,7 +18,6 @@ goog.scope(function() {
         sm.bSmCatalog.SmCatalog.base(
             this, 'constructor', view, opt_domHelper
         );
-
     };
     goog.inherits(sm.bSmCatalog.SmCatalog, cl.iControl.Control);
     var Catalog = sm.bSmCatalog.SmCatalog;

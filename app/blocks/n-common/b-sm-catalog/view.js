@@ -1,6 +1,7 @@
 goog.provide('sm.bSmCatalog.View');
 
 goog.require('cl.iControl.View');
+goog.require('sm.bSmHeadedList.View');
 
 
 goog.scope(function() {
@@ -39,7 +40,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-catalog',
-        ITEM: 'b-sm-catalog__catalog-item'
+        ITEM_LIST: sm.bSmHeadedList.View.CssClass.ROOT
     };
 
 
@@ -69,7 +70,7 @@ goog.scope(function() {
     View.prototype.initDom_ = function() {
         this.dom = {
             items: this.getElementsByClass(
-                View.CssClass.ITEM
+                View.CssClass.ITEM_LIST
             )
         };
     };

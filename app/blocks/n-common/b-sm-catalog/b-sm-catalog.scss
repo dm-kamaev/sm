@@ -1,12 +1,11 @@
 @import '../i-media/i-media';
 
-.b-sm-catalog__catalog-item-wrap {
+.b-sm-catalog__list-item-wrap {
     display: inline-block;
 
     box-sizing: border-box;
     width: 33.33%;
     min-width: 145px;
-    margin-bottom: 37px;
     padding-right: 10px;
     padding-left: 10px;
 
@@ -20,26 +19,24 @@
         padding-right: 0;
         padding-left: 20px;
     }
-
-    .b-sm-headed-list__header-title {
-        max-width: 235px;
-    }
 }
 
 
 @include media-xs {
-    .b-sm-catalog__catalog-item-wrap {
+    .b-sm-catalog__list-item-wrap {
         width: 50%;
+        margin-bottom: 37px;
 
         &:last-child {
             padding-left: 0;
+            margin-bottom: 0;
         }
     }
 }
 
 
 @include media-xxs {
-    .b-sm-catalog__catalog-item-wrap {
+    .b-sm-catalog__list-item-wrap {
         width: 100%;
         padding: 0;
 

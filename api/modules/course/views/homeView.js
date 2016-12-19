@@ -150,36 +150,75 @@ view.searchPanel = function() {
  * }>}
  */
 view.recommendations = function(data) {
-    let object = {};
-    let result = [];
+    let recommendations =
+        view.createRecommendationObject(data);
 
-    data.forEach(function(item) {
-        if (object[item.type]) {
-            object[item.type].items.push({
-                id: item.id,
-                content: item.name,
-                url: item.url
-            });
-        } else {
-            object[item.type] = {
-                type: item.type,
-                index: view.getRecommendationIndex(item.type),
-                header: view.getRecommendationData(item.type),
-                items: []
-            };
-            object[item.type].items.push({
-                id: item.id,
-                content: item.name,
-                url: item.url
-            });
+    recommendations =
+        view.createRecommendationArray(recommendations);
+
+    recommendations =
+        view.transformRecommendations(recommendations);
+
+    return recommendations;
+};
+
+
+/**
+ * Create object of recommendations on type
+ * @param {Array<Object>} recommendations
+ * @return {Object}
+ */
+view.createRecommendationObject = function(recommendations) {
+    let result = {};
+    recommendations.forEach(function(item) {
+        if (!result[item.type]) {
+            result[item.type] = view.createRecommendationType(item);
         }
+        result[item.type].items.push({
+            id: item.id,
+            content: item.name,
+            url: item.url
+        });
     });
-
-    for (var key in object) {
-        result[object[key].index] = object[key];
-    }
-
     return result;
+};
+
+
+/**
+ * Create new field in recommendation object with new type
+ * @param {Object} item
+ * @return {Object}
+ */
+view.createRecommendationType = function(item) {
+    return {
+        type: item.type,
+        index: view.getRecommendationIndex(item.type),
+        header: view.getRecommendationHeader(item.type),
+        items: []
+    };
+};
+
+
+/**
+ * Get index of recommendation in array
+ * Using for render priority on page
+ * @param {string} type
+ * @return {number}
+ */
+view.getRecommendationIndex = function(type) {
+    let index;
+    switch (type) {
+    case 'juniorSchool':
+        index = 0;
+        break;
+    case 'middleSchool':
+        index = 1;
+        break;
+    case 'highSchool':
+        index = 2;
+        break;
+    }
+    return index;
 };
 
 
@@ -188,8 +227,8 @@ view.recommendations = function(data) {
  * @param {string} type
  * @return {Object}
  */
-view.getRecommendationData = function(type) {
-    var result = {};
+view.getRecommendationHeader = function(type) {
+    let result = {};
     switch (type) {
     case 'juniorSchool':
         result = {
@@ -227,24 +266,34 @@ view.getRecommendationData = function(type) {
 
 
 /**
- * Get index of recommendation in array
- * @param {string} type
- * @return {number}
+ * Transform object to array
+ * Create array of recommendations on type
+ * @param {Object} recommendation
+ * @return {Array<Object>}
  */
-view.getRecommendationIndex = function(type) {
-    var index;
-    switch (type) {
-    case 'juniorSchool':
-        index = 0;
-        break;
-    case 'middleSchool':
-        index = 1;
-        break;
-    case 'highSchool':
-        index = 2;
-        break;
+view.createRecommendationArray = function(recommendation) {
+    let result = [];
+    for (let key in recommendation) {
+        result[recommendation[key].index] = recommendation[key];
     }
-    return index;
+    return result;
+};
+
+
+/**
+ * Transform array
+ * Delete potentional 'hole' in array
+ * @param {Array<Object>} recommendations
+ * @return {Array<Object>}
+ */
+view.transformRecommendations = function(recommendations) {
+    let result = [];
+    recommendations.forEach(function(item) {
+        if (item) {
+            result.push(item);
+        }
+    });
+    return result;
 };
 
 

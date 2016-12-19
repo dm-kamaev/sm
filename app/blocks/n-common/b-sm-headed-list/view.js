@@ -38,6 +38,7 @@ goog.scope(function() {
      * @const
      */
     View.CssClass = {
+        ROOT: 'b-sm-headed-list',
         ITEM_LIST: 'b-sm-headed-list__item-list'
     };
 

@@ -1,23 +1,17 @@
 {namespace sm.bSmCatalog.Template}
 
 /**
- * @typedef {{
- *     items: Array<{
- *         type: string,
- *         header: {
- *             label: string,
- *             img: {
- *                 url: string,
- *                 altText: string
- *             }
- *         },
- *         items: Array<{
- *             id: number,
- *             content: string,
- *             url: string  
- *         }>
- *     }>
- * }} sm.bSmCatalog.Template.Params.Data
+ * @typedef {Array<{
+ *     type: string,
+ *     header: {
+ *         label: string,
+ *         img: {
+ *             url: string,
+ *             altText: string
+ *         }
+ *     },
+ *     items: Array<sm.bSmLink.Template.Params.Data>
+ * }>} sm.bSmCatalog.Template.Params.Data
  */
 
 
@@ -55,40 +49,36 @@
  * }}
  */
 {template .body}
-<div class="{call .rootClass /}__catalog">
-    {foreach $item in $params.data.items}
-        {call .item}
-            {param params: $item /}
-        {/call}
-    {/foreach}
-</div>
+    <div class="{call .rootClass /}__list">
+        {foreach $item in $params.data}
+            {call .item_}
+                {param params: $item /}
+            {/call}
+        {/foreach}
+    </div>
 {/template}
 
 
 /**
  * @param params {{
  *     type: string,
- *     label: string,
- *     items: Array<{
- *         id: number,
- *         content: string,
- *         url: string  
- *     }>     
+ *     header: {
+ *         label: string,
+ *         img: {
+ *             url: string,
+ *             altText: string
+ *         }
+ *     },
+ *     items: Array<sm.bSmLink.Template.Params.Data>
  * }}
  */
-{template .item}
-    {let $customClasses kind="html"}
-        {call .rootClass /}__catalog-item
-    {/let}
-    <div class="{call .rootClass /}__catalog-item-wrap">
+{template .item_}
+    <div class="{call .rootClass /}__list-item-wrap">
         {call .renderChild}
             {param params: [
                 'type': 'smHeadedList',
                 'renderParams': [
-                    'data': $params,
-                    'config': [
-                        'customClasses': [$customClasses]
-                    ]
+                    'data': $params
                 ]
             ]/}
         {/call}

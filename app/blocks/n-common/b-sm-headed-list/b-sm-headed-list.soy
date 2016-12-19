@@ -2,19 +2,15 @@
 
 /**
  * @typedef {{
- *         type: string,
- *         header: {
- *             label: string,
- *             img: {
- *                 url: string,
- *                 altText: string
- *             }
- *         },
- *         items: Array<{
- *             id: number
- *             content: string,
- *             url: string
- *         }>
+ *     type: string,
+ *     header: {
+ *         label: string,
+ *         img: {
+ *             url: string,
+ *             altText: string
+ *         }
+ *     },
+ *     items: Array<sm.bSmLink.Template.Params.Data>
  * }} sm.bSmHeader.Template.Params.Data
  */
 
@@ -50,8 +46,8 @@
  * @override
  */
 {template .body}
-    {call .header data="all" /}
-    {call .list data="all" /}
+    {call .header_ data="all" /}
+    {call .list_ data="all" /}
 {/template}
 
 
@@ -60,27 +56,10 @@
  *     data: sm.bSmHeader.Template.Params.Data
  * }}
  */
-{template .header}
+{template .header_}
     <div class="{call .rootClass /}__header">
-        {if $params.data.header.img}
-            <div class="{call .rootClass /}__header-img-wrap">
-                {let $altText kind="attributes"}
-                    {if $params.data.header.img.altText}
-                        {sp}alt="{$params.data.header.img.altText}"
-                    {/if}
-                {/let}
-
-                <img class="{call .rootClass/}__header-img"
-                    src="{$params.data.header.img.url}" {$altText}>
-            </div>
-        {/if}
-
-        {if $params.data.header.label}
-            <div class="{call .rootClass /}__header-title">
-                {call soydata.VERY_UNSAFE.ordainSanitizedHtml
-                    data="$params.data.header.label" /}
-            </div>
-        {/if}
+        {call .headerImage_ data="all" /}
+        {call .headerLabel_ data="all" /}
     </div>
 {/template}
 
@@ -90,7 +69,7 @@
  *     data: sm.bSmHeader.Template.Params.Data
  * }}
  */
-{template .list}
+{template .list_}
     {let $customClasses kind="html"}
         {call .rootClass /}__item-list
     {/let}
@@ -112,6 +91,54 @@
             ]
         ]/}
     {/call}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         header: {
+ *             label: string,
+ *             img: {
+ *                 url: string,
+ *                 altText: string
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .headerImage_}
+    {if $params.data.header.img}
+        <div class="{call .rootClass /}__header-img-wrap">
+            {let $altText kind="attributes"}
+                {if $params.data.header.img.altText}
+                    {sp}alt="{$params.data.header.img.altText}"
+                {/if}
+            {/let}
+
+            <img class="{call .rootClass/}__header-img"
+                src="{$params.data.header.img.url}" {$altText}>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         header: {
+ *             label: string
+ *         }
+ *     }
+ * }}
+ */
+{template .headerLabel_}
+    {if $params.data.header.label}
+        <div class="{call .rootClass /}__header-title">
+            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                data="$params.data.header.label" /}
+        </div>
+    {/if}
 {/template}
 
 
