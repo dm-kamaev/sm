@@ -13,6 +13,7 @@ goog.require('sm.bMap.Map');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmHeader.View');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
@@ -120,6 +121,14 @@ sm.lSchool.School = function() {
      * @private
      */
     this.comments_ = null;
+
+
+    /**
+     * Header instance
+     * @type {sm.bSmHeader.SmHeader}
+     * @private
+     */
+    this.header_ = null;
 
 
     /**
@@ -539,6 +548,7 @@ goog.scope(function() {
             .initComments_()
             .initPopularSchools_()
             .initDataBlockFeatures_()
+            .initHeader_()
             .initSubHeader_()
             .initFooter_()
             .initComponents_(DataBlockFoldList, DataBlockFoldList.CssClass.ROOT)
@@ -737,6 +747,28 @@ goog.scope(function() {
             bDataBlockFeatures,
             this
         );
+        return this;
+    };
+
+
+    /**
+     * Init header
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initHeader_ = function() {
+        var header = goog.dom.getElementByClass(
+           sm.bSmHeader.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smHeader',
+            header,
+            this
+        );
+
         return this;
     };
 

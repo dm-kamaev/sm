@@ -42,10 +42,13 @@ let schoolView = {};
  * @param {object} user
  * @param {object} user.data
  * @param {string} user.isCommented
+ * @param {Object} headerParams
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
+schoolView.default = function(
+    schoolInstance, data, user, headerParams, opt_popularSchools
+) {
     addressView.transformSchoolAddress(schoolInstance);
     var addresses = services.department.addressesFilter(
             schoolInstance.addresses
@@ -94,6 +97,7 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
         user: user,
+        header: headerParams,
         subHeader: schoolView.subHeader({
             user: user,
             favoriteEntities: favoriteView.list(data.favorites)

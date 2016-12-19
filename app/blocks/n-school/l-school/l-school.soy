@@ -81,6 +81,7 @@
  *            metro: ?list<string>,
  *            totalScore: ?number
  *        ]>,
+ *        header: sm.bSmHeader.Template.Params,
  *        subHeader: sm.bSmSubheader.Template.Params,
  *        user: ?{
  *            firstName: ?string,
@@ -124,6 +125,7 @@
                 'title': $title,
                 'description': $params?.data.seoDescription,
                 'content': $content,
+                'header': $params.data.header,
                 'subHeader': $params.data.subHeader,
                 'landingScript': '/static/l-school.js',
                 'openGraph': [

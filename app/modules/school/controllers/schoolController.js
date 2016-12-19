@@ -113,6 +113,7 @@ exports.view = async(function(req, res, next) {
                             school.commentGroupId,
                             req.user && req.user.id
                         )) !== 'undefined';
+                let headerParams = headerView.render(config, entityType.SCHOOL);
 
                 user = userView.school(user, isUserCommented);
 
@@ -123,7 +124,8 @@ exports.view = async(function(req, res, next) {
                             data: schoolView.default(
                                 school,
                                 dataFromPromises,
-                                user
+                                user,
+                                headerParams
                             ),
                             config: {
                                 staticVersion: config.lastBuildTimestamp,
@@ -169,7 +171,8 @@ exports.home = async(function(req, res) {
         favorites: [],
         user: user,
         seoLinks: data.seoLinks,
-        authSocialLinks: authSocialLinks
+        authSocialLinks: authSocialLinks,
+        header: headerView.render(config, entityType.SCHOOL)
     });
 
     var html = soy.render('sm.lSchoolHome.Template.base', {
