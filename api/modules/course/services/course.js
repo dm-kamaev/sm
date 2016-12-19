@@ -183,9 +183,11 @@ service.information = async(function(id) {
  * @return {Promise.Array<Object>}
  */
 service.list = async(function(searchParams, opt_params) {
+    let params = opt_params || {};
+
     let searchString = services.courseSearchData.getSearchSql(
         searchParams,
-        opt_params.limit
+        params.limit
     );
 
     let courses = sequelize
