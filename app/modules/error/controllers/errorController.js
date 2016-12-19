@@ -61,7 +61,8 @@ controller.schoolNotFound = async(function(req, res) {
         user: user,
         favorites: data.favorites,
         authSocialLinks: data.authSocialLinks,
-        seoLinks: data.seoLinks
+        seoLinks: data.seoLinks,
+        header: headerView.render(config, entityTypeEnum.SCHOOL)
     });
 
     var html = soy.render('sm.lErrorSchoolNotFound.Template.base', {

@@ -16,6 +16,7 @@ let schoolErrorView = {};
 /**
  * Return template data for layout
  * @param {{
+ *      header: Object,
  *      user: Object,
  *      favoriteEntities: Array<Object>,
  *      seoLinks: Array<Object>
@@ -26,6 +27,7 @@ schoolErrorView.render = function(data) {
     let user = userView.default(data.user),
         favoriteEntities = favoriteView.list(data.favorites);
     return {
+        header: data.header,
         subHeader: schoolErrorView.subHeader({
             favoriteEntities: favoriteEntities,
             user: user

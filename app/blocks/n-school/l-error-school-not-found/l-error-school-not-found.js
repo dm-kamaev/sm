@@ -7,6 +7,7 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bSearchPanel.View');
 goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmHeader.View');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCarrotquest.Carrotquest');
 goog.require('sm.iFactory.FactoryStendhal');
@@ -56,6 +57,13 @@ sm.lErrorSchoolNotFound.ErrorSchoolNotFound = function() {
 
 
     /**
+     * Header instance
+     * @type {sm.bSmHeader.SmHeader}
+     * @private
+     */
+    this.header_ = null;
+
+    /**
      * Sub header instance
      * @type {sm.bSmSubheader.SmSubheader}
      * @private
@@ -94,6 +102,7 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.initParams_()
+            .initHeader_()
             .initSubHeader_()
             .initPopularSchools_()
             .initSearchPanel_()
@@ -203,6 +212,28 @@ goog.scope(function() {
             this.factory_,
             'smFooter',
             footer,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init header
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.initHeader_ = function() {
+        var header = goog.dom.getElementByClass(
+           sm.bSmHeader.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smHeader',
+            header,
             this
         );
 

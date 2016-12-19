@@ -7,6 +7,7 @@
  *            firstName: ?string,
  *            lastName: ?string
  *        },
+ *        header: sm.bSmHeader.Template.Params,
  *        subHeader: sm.bSmSubheader.Template.Params,
  *        authSocialLinks: {
  *            vk: ?string,
@@ -45,6 +46,7 @@
             'data': [
                 'title': '404: Страница не найдена',
                 'content': $content,
+                'header': $params.data.header,
                 'subHeader': $params.data.subHeader,
                 'landingScript': '/static/l-error-school-not-found.js',
                 'footer': $params.data.footer
