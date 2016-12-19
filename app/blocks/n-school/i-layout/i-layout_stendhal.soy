@@ -19,6 +19,7 @@
  *         title: string,
  *         description: ?string,
  *         content: string,
+ *         header: sm.bSmHeader.Template.Params,
  *         subHeader: sm.bSmSubheader.Template.Params,
  *         landingScript: string,
  *         openGraph: ?{
@@ -215,6 +216,7 @@
  */
 {template .content autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__wrapper">
+        {call .mainHeader_ data="all" /}
         {call .subHeader_ data="all" /}
         <div class="{call .rootClass/}__content">
             {$params.data.content}
@@ -223,6 +225,28 @@
     </div>
 {/template}
 
+/**
+ * Main header template
+ * @param params {{
+ *     data: {
+ *         header: sm.bSmHeader.Template.Params.Data,
+ *         config: {
+ *             modifier: string
+ *         }
+ *     }
+ * }}
+ */
+{template .mainHeader_ kind="html"}
+    <div class="{call .rootClass/}__header">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smHeader',
+                'renderParams': $params.data.header
+            ]/}
+        {/call}
+    </div>
+{/template}
 
 /**
  * Subheader template
