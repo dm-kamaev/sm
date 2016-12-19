@@ -33,7 +33,6 @@ goog.scope(function() {
 
     /**
      * @override
-     * @param {Element} element
      */
     Modal.prototype.enterDocument = function() {
         Modal.base(this, 'enterDocument');

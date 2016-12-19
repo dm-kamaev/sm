@@ -15,7 +15,7 @@ goog.require('goog.events');
  */
 sm.gModal.ModalSideMenuView =
     function(opt_params, opt_template, opt_modifier) {
-        cl.gModal.View.base(
+        sm.gModal.ModalSideMenuView.base(
             this, 'constructor', opt_params, opt_template, opt_modifier
         );
 
