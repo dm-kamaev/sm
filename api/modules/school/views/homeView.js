@@ -30,6 +30,7 @@ homeView.render = function(data) {
     let user = userView.default(data.user),
         favoriteEntities = favoriteView.list(data.favorites);
     return {
+        header: data.header,
         subHeader: homeView.subHeader({
             favoriteEntities: favoriteEntities,
             user: user

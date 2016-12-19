@@ -4,6 +4,7 @@
  * School home template
  * @param? params {{
  *     data: {
+ *         header: sm.bSmHeader.Template.Params,
  *         subHeader: sm.bSmSubheader.Template.Params,
  *         authSocialLinks: {
  *             vk: string,
@@ -59,6 +60,7 @@
                 'title': $title,
                 'description': $description,
                 'content': $content,
+                'header': $params.data.header,
                 'subHeader': $params.data.subHeader,
                 'landingScript': '/static/l-school-home.js',
                 'openGraph': [
