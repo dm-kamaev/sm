@@ -3,6 +3,8 @@
  */
 'use strict';
 
+const lodash = require('lodash');
+
 const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('../../course/views/courseCategoryView'),
@@ -152,62 +154,59 @@ view.searchPanel = function() {
  * }>}
  */
 view.recommendations = function(data) {
-    let recommendations =
-        view.createRecommendationObject(data);
+    let types = lodash.uniq(data, item => item.type)
+        .map(item => item.type);
 
-    recommendations =
-        view.createRecommendationArray(recommendations);
+    types = view.setTypesPriority(types);
 
-    recommendations =
-        view.transformRecommendations(recommendations);
-
-    return recommendations;
+    return types.map(type => ({
+        type: type,
+        header: view.getTypeHeader(type),
+        items: view.getTypeItems(data, type)
+    }));
 };
 
 
 /**
- * Create object of recommendations on type
- * @param {Array<Object>} recommendations
- * @return {Object}
+ * Get items on type
+ * @param {Array<Object>} items
+ * @param {string} type
+ * @return {Array<Object>}
  */
-view.createRecommendationObject = function(recommendations) {
-    let result = {};
-    recommendations.forEach(function(item) {
-        if (!result[item.type]) {
-            result[item.type] = view.createRecommendationType(item);
-        }
-        result[item.type].items.push({
+view.getTypeItems = function(items, type) {
+    return lodash.remove(items, item => item.type == type)
+        .map(item => ({
             id: item.id,
             content: item.name,
             url: item.url
-        });
-    });
-    return result;
+        }));
 };
 
 
 /**
- * Create new field in recommendation object with new type
- * @param {Object} item
- * @return {Object}
+ * Set priority of type as index in array
+ * @param {Array<Object>} types
+ * @return {Array<Object>}
  */
-view.createRecommendationType = function(item) {
-    return {
-        type: item.type,
-        index: view.getRecommendationIndex(item.type),
-        header: view.getRecommendationHeader(item.type),
-        items: []
-    };
+view.setTypesPriority = function(types) {
+    let result = [];
+
+    types.forEach(type => {
+        let index = view.getTypeIndex(type);
+        result[index] = type;
+    });
+
+    return lodash.compact(result);
 };
 
 
 /**
- * Get index of recommendation in array
+ * Get index of type in array
  * Using for render priority on page
  * @param {string} type
  * @return {number}
  */
-view.getRecommendationIndex = function(type) {
+view.getTypeIndex = function(type) {
     let index;
     switch (type) {
     case 'juniorSchool':
@@ -229,7 +228,7 @@ view.getRecommendationIndex = function(type) {
  * @param {string} type
  * @return {Object}
  */
-view.getRecommendationHeader = function(type) {
+view.getTypeHeader = function(type) {
     let result = {};
     switch (type) {
     case 'juniorSchool':
@@ -265,38 +264,5 @@ view.getRecommendationHeader = function(type) {
     }
     return result;
 };
-
-
-/**
- * Transform object to array
- * Create array of recommendations on type
- * @param {Object} recommendation
- * @return {Array<Object>}
- */
-view.createRecommendationArray = function(recommendation) {
-    let result = [];
-    for (let key in recommendation) {
-        result[recommendation[key].index] = recommendation[key];
-    }
-    return result;
-};
-
-
-/**
- * Transform array
- * Delete potentional 'hole' in array
- * @param {Array<Object>} recommendations
- * @return {Array<Object>}
- */
-view.transformRecommendations = function(recommendations) {
-    let result = [];
-    recommendations.forEach(function(item) {
-        if (item) {
-            result.push(item);
-        }
-    });
-    return result;
-};
-
 
 module.exports = view;
