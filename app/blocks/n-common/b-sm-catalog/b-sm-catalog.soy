@@ -1,17 +1,9 @@
 {namespace sm.bSmCatalog.Template}
 
 /**
- * @typedef {Array<{
- *     type: string,
- *     header: {
- *         label: string,
- *         img: {
- *             url: string,
- *             altText: string
- *         }
- *     },
- *     items: Array<sm.bSmLink.Template.Params.Data>
- * }>} sm.bSmCatalog.Template.Params.Data
+ * @typedef {{
+ *     list: Array<sm.bSmHeadedList.Template.Params.Data>
+ * }} sm.bSmCatalog.Template.Params.Data
  */
 
 
@@ -43,14 +35,16 @@
 
 
 /**
- * @override
  * @param params {{
- *     data: sm.bSmCatalog.Template.Params.Data
+ *     data: {
+ *         list: sm.bSmCatalog.Template.Params.Data
+ *     }
  * }}
+ * @override
  */
 {template .body}
     <div class="{call .rootClass /}__list">
-        {foreach $item in $params.data}
+        {foreach $item in $params.data.list}
             {call .item_}
                 {param params: $item /}
             {/call}
@@ -60,17 +54,8 @@
 
 
 /**
- * @param params {{
- *     type: string,
- *     header: {
- *         label: string,
- *         img: {
- *             url: string,
- *             altText: string
- *         }
- *     },
- *     items: Array<sm.bSmLink.Template.Params.Data>
- * }}
+ * Item
+ * @param params {sm.bSmHeadedList.Template.Params.Data}
  */
 {template .item_}
     <div class="{call .rootClass /}__list-item-wrap">

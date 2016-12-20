@@ -60,7 +60,9 @@ view.render = function(data) {
             ]
         },
         searchPanel: view.searchPanel(),
-        recommendations: view.recommendations(data.recommendations),
+        recommendations: {
+            list: view.recommendations(data.recommendations)
+        },
         footer: footerView.render()
     };
 };
