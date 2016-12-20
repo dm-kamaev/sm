@@ -65,6 +65,8 @@
 
 .b-sm-subheader__hamburger-menu {
     display: inline-block;
+
+    padding: 30px 10px 10px 25px;
 }
 
 .b-sm-subheader__section_contacts {
@@ -80,8 +82,8 @@
 .b-sm-subheader__section_hamburger-menu {
     position: absolute;
     z-index: 17;
-    top: 8px;
-    left: 25px;
+    top: 0;
+    left: 0;
 
     display: none;
 
@@ -434,8 +436,8 @@
     }
     .b-sm-subheader_entity-type_school {
         .b-sm-subheader__logo-img {
-            margin-top: 4px;
             height: 21px;
+            margin-top: 4px;
         }
     }
     .b-sm-subheader__section_contacts {

@@ -23,10 +23,6 @@
     height: 100%;
 }
 
-.b-sm-header__footer-link {
-    padding-bottom: 20px;
-}
-
 .b-sm-header__body {
     max-width: 1200px;
     margin: 0 auto;
@@ -69,10 +65,6 @@
 
 .b-sm-header__contacts {
     display: inline-block;
-}
-
-.b-sm-header__footer-link {
-    display: block;
 }
 
 @include media-xl {

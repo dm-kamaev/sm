@@ -110,7 +110,6 @@ searchView.render = function(data) {
         ),
         courses = courseView.list(aliasedCourses, data.categories),
         seoParams = data.seoParams || {};
-
     return {
         seo: {
             metaTitle: seoParams.tabTitle,
@@ -125,6 +124,10 @@ searchView.render = function(data) {
             fbClientId: data.fbClientId,
         },
         header: data.header,
+        sideMenu: {
+            menuItems: data.header.data.menuItems,
+            footerItems: footerView.render()
+        },
         subHeader: searchView.subheader({
             listLinks: courseCategoryView.listLinks(
                 data.categories,

@@ -1,0 +1,197 @@
+{namespace sm.bSmSideMenu.Template}
+
+/**
+ * Template for Side menu block
+ *
+ * @param? params {{
+ *     ?data: {
+ *			links: {Array<sm.bSmLink.SmLink>}	
+ *     }
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .sideMenu}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .body}
+    {call .menuContent data="all" /}
+{/template}
+
+/**
+ * menuContent
+ */
+{template .menuContent}
+    
+    <div class="{call .rootClass /}__content">
+        {call .header data="all" /}
+        {call .menu data="all" /}
+        {call .footer data="all" /}
+    </div>
+
+{/template}
+
+
+/**
+ * header
+ */
+{template .header}
+	<div class="{call .rootClass /}__header">
+        {call .closeIcon /}
+	</div>
+{/template}
+
+/**
+ * closeIcon
+ */
+{template .closeIcon}
+    <div class="{call .rootClass /}__close-icon">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon-svg',
+                'renderParams': [
+                    'data': [
+                        'type': 'close-menu'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+
+/**
+ * menu
+ * @param params 
+ */
+{template .menu}
+	<div class="{call .rootClass /}__menu">
+		<ul class="{call .rootClass /}__menu-list">
+			{foreach $link in $params.menuItems}
+				{call .link}
+					{param link: $link/}
+				{/call}
+			{/foreach}
+		</ul>
+	</div>
+{/template}
+
+
+/**
+ * menu
+ * @param params 
+ */
+{template .footer}
+    <div class="{call .rootClass /}__footer">
+        <ul class="{call .rootClass /}__footer-items">
+            {foreach $item in $params.footerItems.contactLinks}
+                {call .footerItem}
+                    {param item: $item /}
+                {/call}
+            {/foreach}
+
+            {call .copyright data="all"/}
+        </ul>
+    </div>
+{/template}
+
+
+/**
+ * copyright
+ * @param params
+ */
+{template .copyright}
+    <li class="{call .rootClass /}__footer-item">
+        <span class="{call .rootClass /}__copyright">
+            {$params.footerItems.copyright}
+        </span>
+    </li>
+{/template}
+
+
+/**
+ * footerLink
+ * @param item
+ */
+{template .footerItem}
+
+    {let $customClasses kind="text"}
+        {call .rootClass /}__footer-link
+    {/let}
+
+    <li class="{call .rootClass /}__footer-item">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'url': $item.url,
+                        'content': $item.content
+                    ],
+                    'config': [
+                        'theme': 'default',
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </li>
+{/template}
+
+
+
+/**
+ * link
+ * @param link {{sm.bSmLink.SmLink}}
+ */
+{template .link}
+
+    {let $customClasses kind="html"}
+        {call .rootClass /}__link
+    {/let}
+
+	<li class="{call .rootClass /}__menu-item">
+		{call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'url': $link.url,
+                        'content': $link.name
+                    ],
+                    'config': [
+                        'size': 'xxxl',
+                        'theme': 'dark',
+                        'customClasses': [$customClasses],
+                        'target': $link.target or '',
+                        'isSelected': $link.isSelected? true: false
+                    ]
+                ]
+            ]/}
+        {/call}
+	</li>    
+{/template}
+
+
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-sm-side-menu
+{/template}
+
+/**
+ * additionalClasses
+ * @override
+ */
+{template .additionalClasses}
+	i-utils__hidden
+{/template}
+
+

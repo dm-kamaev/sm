@@ -17,6 +17,7 @@
  *     },
  *     subHeader: sm.bSmSubHeader.Template.Params,
  *     header: sm.bSmHeader.Template.Params.Data,
+ *     sideMenu: sm.bSmSideMenu.Template.Params
  *     user: {
  *         id: (number|undefined),
  *         firstName: (string|undefined),
@@ -328,6 +329,27 @@
         {call .mainSubheader data="all" /}
         {call .mainContent data="all" /}
         {call .mainFooter data="all" /}
+        {call .sideMenu data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *          header: sm.bSmHeader.Template.Params
+ *     }
+ * }}
+ */
+{template .sideMenu}
+    <div class="{call .rootClass /}__side-menu">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'sideMenu',
+                'renderParams': $params.data.sideMenu
+            ]/}
+        {/call}
     </div>
 {/template}
 

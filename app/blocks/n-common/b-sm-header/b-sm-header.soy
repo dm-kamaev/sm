@@ -8,7 +8,6 @@
  *         type: string,
  *         isSelected: boolean
  *     }>,
- *     footerLinks: Array<sm.bSmLinks.Template.Params.Data>,
  *     contacts: sm.bSmContacts.Template.Params.Data,
  *     helperText: string
  * }} sm.bSmHeader.Template.Params.Data
@@ -53,82 +52,8 @@
 {template .body}
     <div class="{call .rootClass /}__body">
         {call .headerMainMenu data="all" /}
-        {call .headerSideMenu data="all" /}
     </div>
 {/template}
-
-
-/**
- * headerSideMenu
- */
-{template .headerSideMenu}
-    {let $content kind="html"}
-        {call .sectionNavigation data="all" /}
-        {call .sectionFooter data="all" /}
-    {/let}
-
-    <div class="{call .rootClass/}__side-menu">
-        {call .renderChild}
-            {param params: [
-                'type': 'sideMenuModal',
-                'renderParams': [
-                    'data': [
-                        'content': $content
-                    ]
-                ]
-            ]/}
-        {/call}
-    </div>
-{/template}
-
-/**
- * sectionFooter
- * @param params {{
- *     data: sm.bSmHeader.Template.Params.Data
- * }}
- */
-{template .sectionFooter}
-    <div class="{call .rootClass /}__section_footer">
-        {foreach $item in $params.data.footerLinks}
-            {call .footerLink}
-                {param item: $item /}
-            {/call}
-        {/foreach}
-    </div>
-{/template}
-
-
-/**
- * FooterLink
- * @param item {{
- *     name: string,
- *     url: ?string
- * }} 
- */
-{template .footerLink}
-    
-    {let $customClasses kind="html"}
-        {call .rootClass /}__menu-link
-    {/let}
-
-    <div class="{call .rootClass/}__footer-link">
-        {call .renderChild}
-            {param params: [
-                'type': 'smLink',
-                'renderParams': [
-                    'data': $item,
-                    'config': [
-                        'size': 'xl',
-                        'theme': $item.url? 'default': 'black',
-                        'customClasses': [$customClasses]
-                    ]
-                ]
-            ]/}
-        {/call}
-    </div>
-{/template}
-
-
 
 /**
  * @param params {{
@@ -244,7 +169,7 @@
                         'theme': 'dark',
                         'customClasses': [$customClasses],
                         'target': $params.data.target or '',
-                        'isSelected': $params.data.isSelected? true: false
+                        'disableHover': false
                     ]
                 ]
             ]/}

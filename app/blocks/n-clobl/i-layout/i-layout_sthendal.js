@@ -46,6 +46,13 @@ sm.iLayout.LayoutStendhal = function(view, opt_domHelper) {
      * @protected
      */
     this.footer = null;
+
+    /**
+     * Side menu instance
+     * @type {sm.bSmSideMenu.SideMenu}
+     * @protected
+     */
+    this.sideMenu = null;
 };
 goog.inherits(sm.iLayout.LayoutStendhal, cl.iControl.Control);
 
@@ -63,8 +70,17 @@ goog.scope(function() {
         this.initMainHeader();
         this.initSubheader();
         this.initFooter();
+        this.initSideMenu();
     };
 
+    /**
+     * Side menu initialization
+     * @protected
+     */
+    Layout.prototype.initSideMenu = function() {
+        var dom = this.getView().getDom();
+        this.sideMenu = this.decorateChild('sideMenu', dom.sideMenu);
+    };
 
     /**
      * Initializes the main header of the page
@@ -77,7 +93,6 @@ goog.scope(function() {
         );
     };
 
-
     /**
      * Init authorization
      * @protected
@@ -89,7 +104,6 @@ goog.scope(function() {
         authorization.init(params);
     };
 
-
     /**
      * Init subheader instance
      * @protected
@@ -100,7 +114,6 @@ goog.scope(function() {
             this.getView().getDom().subheader
         );
     };
-
 
     /**
      * Init footer instance
@@ -122,15 +135,42 @@ goog.scope(function() {
 
         this.listen(
             sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
-            this.onHamburgerMenuClick
+            this.onHamburgerMenuClick_
+        );
+
+        this.listen(
+            sm.bSmSideMenu.SideMenu.Event.MENU_IS_OPENED,
+            this.sideMenuIsOpenedHandler_
+        );
+
+        this.listen(
+            sm.bSmSideMenu.SideMenu.Event.MENU_IS_CLOSED,
+            this.sideMenuIsClosedHandler_
         );
     };
 
 
     /**
-     * On hamburger menu click
+     * side menu is opened handler
+     * @private
      */
-    Layout.prototype.onHamburgerMenuClick = function() {
-        this.mainHeader.showMenu();
+    Layout.prototype.sideMenuIsOpenedHandler_ = function() {
+        this.getView().addOverflowHidden();
+    };
+
+    /**
+     * side menu is closed handler
+     * @private
+     */
+    Layout.prototype.sideMenuIsClosedHandler_ = function() {
+        this.getView().removeOverflowHidden();
+    };
+
+    /**
+     * On hamburger menu click
+     * @private
+     */
+    Layout.prototype.onHamburgerMenuClick_ = function() {
+        this.sideMenu.showMenu();
     };
 });  // goog.scope

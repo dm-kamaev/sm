@@ -59,6 +59,8 @@ goog.require('sm.bSmScore.View');
 goog.require('sm.bSmScore.ViewBrief');
 goog.require('sm.bSmSearchPanel.SmSearchPanel');
 goog.require('sm.bSmSearchPanel.View');
+goog.require('sm.bSmSideMenu.SideMenu');
+goog.require('sm.bSmSideMenu.View');
 goog.require('sm.bSmStars.SmStars');
 goog.require('sm.bSmStars.View');
 goog.require('sm.bSmSubheader.SmSubheader');
@@ -83,8 +85,6 @@ goog.require('sm.gList.ViewSelect');
 goog.require('sm.gList.ViewStendhal');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
-goog.require('sm.gModal.ModalSideMenu');
-goog.require('sm.gModal.ModalSideMenuView');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.ModalSuccess');
 goog.require('sm.gModal.ViewEnrollment');
@@ -215,10 +215,6 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('favorite-link', {
             control: sm.bFavoriteLink.FavoriteLink,
             view: sm.bFavoriteLink.View
-        })
-        .setControlListItem('sideMenuModal', {
-            control: sm.gModal.ModalSideMenu,
-            view: sm.gModal.ModalSideMenuView
         });
 
     /** Heirs of the clobl blocks */
@@ -339,6 +335,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smHeadedList', {
             control: sm.bSmHeadedList.SmHeadedList,
             view: sm.bSmHeadedList.View
+        })
+        .setControlListItem('sideMenu', {
+            control: sm.bSmSideMenu.SideMenu,
+            view: sm.bSmSideMenu.View
         });
 
     /** l-information blocks **/
