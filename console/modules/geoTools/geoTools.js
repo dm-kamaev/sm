@@ -124,10 +124,8 @@ class GeoTools {
         coords = checkSortOrderCoordinate_(coords);
         const square = this.getPointsSouthEastAndNorthWest(coords, searchRadius);
 
-        const southWest = toDigitObjectCoord_(square.southWest);
-        const northEast = toDigitObjectCoord_(square.northEast);
+        const southWest = square.southWest, northEast = square.northEast;
 
-        // console.log(southWest, checkOrderCoordinate_(southWest));
         const geocode = coords.join(',');
         const bbox =
             southWest.longitude+','+southWest.latitude+
@@ -142,7 +140,7 @@ class GeoTools {
                 bbox,
             }
         })).data;
-        console.log(geocode, ' | ', bbox);
+
         let metros = responceGeo.response.GeoObjectCollection.featureMember;
         metros = metros.map(metro => {
             metro = metro.GeoObject;
@@ -163,17 +161,13 @@ class GeoTools {
      * @return {Number}   1200 (kilometres)
      */
     distanceKm(coord1, coord2) {
-        console.log('INPUT=', coord1, coord2);
         let coordinate1 = Object.assign({}, coord1);
         let coordinate2 = Object.assign({}, coord2);
         coordinate1 = toDigitObjectCoord_(coordinate1);
         coordinate2 = toDigitObjectCoord_(coordinate2);
-        console.log('BEFORE', coordinate1);
-        coordinate1 = checkOrderCoordinate_(coordinate1);
-        console.log('AFTER', coordinate1);
-        coordinate2 = checkOrderCoordinate_(coordinate2);
 
-        console.log('TRANSFORM=', coordinate1, coordinate2);
+        coordinate1 = checkOrderCoordinate_(coordinate1);
+        coordinate2 = checkOrderCoordinate_(coordinate2);
 
         let latitude1 = coordinate1.latitude;
         let longitude1 = coordinate1.longitude;
@@ -188,6 +182,17 @@ class GeoTools {
         return coordinate1.distanceTo(coordinate2, true);
     }
 
+
+    /**
+     * distanceMetres
+     * @param  {Object} coord1 { latitude, longitude }
+     * @param  {Object} coord2 { latitude, longitude }
+     * @return {Number}   1200 (metres)
+     */
+    distanceMetres(coord1, coord2) {
+        let distanceKm = this.distanceKm(coord1, coord2);
+        return (distanceKm.toFixed(3) * 1000).toFixed(0);
+    }
 
     /**
      * Calculate distance in km
@@ -252,7 +257,6 @@ function toDigitObjectCoord_ (coord) {
 
 /**
  * checkOrderCoordinate_ check sort order coordinates in object
- * !!!CALL ONLY IF SORT ORDER WRONG!!!
  * !!!ONLY MOSCOW REGION!!!
  * @param  {Object}
  * { latitude: 55.67864138954658, longitude: 37.439709605830046 }
@@ -260,7 +264,7 @@ function toDigitObjectCoord_ (coord) {
  * { latitude: 37.439709605830046, longitude: 55.67864138954658 }
  */
 function checkOrderCoordinate_ (coord) {
-    if (coord.latitude > coord.longitude) {
+    if (coord.latitude < coord.longitude) {
         return {
             latitude: coord.longitude,
             longitude: coord.latitude
@@ -268,6 +272,7 @@ function checkOrderCoordinate_ (coord) {
     }
     return coord;
 }
+
 
 /**
  * checkSortOrderCoordinate_ check sort order coordinates in array

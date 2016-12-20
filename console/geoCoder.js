@@ -97,15 +97,13 @@ class GeoCoder {
                 addressMetros[addressId] = {};
             }
             if (!addressMetros[addressId][metroId]) {
-                console.log('BEFORE distance', address);
-                let distance = geoTools.distanceKm({
+                let distance = geoTools.distanceMetres({
                     latitude: address.coords[1],
                     longitude: address.coords[0],
                 }, {
                     longitude: metroCoords[0],
                     latitude: metroCoords[1],
                 });
-                distance = (distance.toFixed(3) * 1000).toFixed(0);
 
                 logger.info(
                     'Add metro for address:\n' +
@@ -154,10 +152,6 @@ function getAllAdresses_() {
     return await(Adress.findAll({
         attributes: ['id', 'name', 'coords'],
         order: 'id ASC',
-        // where: {
-        //     id:64
-        //     // id:4610
-        // }
     }));
 }
 
