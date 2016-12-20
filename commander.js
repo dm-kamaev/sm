@@ -35,7 +35,7 @@ require('./console/updateSchoolNames.js').Command;
 require('./console/updateSearch.js').Command;
 require('./console/updateUrls.js').Command;
 require('./console/commentPublicationDate').Command;
-// require('./console/vkapi.js').Command;
+require('./console/vkapi.js').Command;
 require('./console/updateUserData.js').Command;
 require('./console/geoData.js').Command;
 require('./console/seoDataOperator.js').Command;
