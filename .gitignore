@@ -42,3 +42,5 @@ migrate_stderr
 migrate_stdout
 
 **/b-icon_auto-sprite.*
+
+/typings
