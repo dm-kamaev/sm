@@ -1,5 +1,6 @@
 goog.provide('sm.lErrorSchoolNotFound.ErrorSchoolNotFound');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
@@ -72,6 +73,14 @@ sm.lErrorSchoolNotFound.ErrorSchoolNotFound = function() {
 
 
     /**
+     * Side menu instance
+     * @type {sm.bSmSideMenu.SideMenu}
+     * @private
+     */
+    this.sideMenu_ = null;
+
+
+    /**
      * Current factory name
      * @type {string}
      * @private
@@ -82,7 +91,8 @@ goog.inherits(sm.lErrorSchoolNotFound.ErrorSchoolNotFound, goog.ui.Component);
 
 
 goog.scope(function() {
-    var ErrorSchoolNotFound = sm.lErrorSchoolNotFound.ErrorSchoolNotFound;
+    var ErrorSchoolNotFound = sm.lErrorSchoolNotFound.ErrorSchoolNotFound,
+        Utils = cl.iUtils.Utils;
 
 
     /**
@@ -107,7 +117,8 @@ goog.scope(function() {
             .initPopularSchools_()
             .initSearchPanel_()
             .initAuthorization_()
-            .initFooter_();
+            .initFooter_()
+            .initSideMenu_();
     };
 
 
@@ -116,6 +127,111 @@ goog.scope(function() {
      */
     ErrorSchoolNotFound.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
+
+        this.listenSubheader_();
+        this.listenSideMenu_();
+    };
+
+
+    /**
+     * Init side menu listeners
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.listenSubheader_ = function() {
+        this.getHandler().listen(
+            this.subHeader_,
+            sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
+            this.onHamburgerMenuClick_
+        );
+    };
+
+
+    /**
+     * Init side menu listeners
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.listenSideMenu_ = function() {
+        this.getHandler().listen(
+                this.sideMenu_,
+                sm.bSmSideMenu.SideMenu.Event.MENU_IS_OPENED,
+                this.sideMenuIsOpenedHandler_
+            )
+            .listen(
+                this.sideMenu_,
+                sm.bSmSideMenu.SideMenu.Event.MENU_IS_CLOSED,
+                this.sideMenuIsClosedHandler_
+            );
+    };
+
+
+    /**
+     * Subheader hamburger icon click handler
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.onHamburgerMenuClick_ = function() {
+        this.sideMenu_.showMenu();
+    };
+
+
+    /**
+     * Side menu opened event handler
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.sideMenuIsOpenedHandler_ = function() {
+        this.addOverflowHidden_();
+    };
+
+
+    /**
+     * Side menu closed event handler
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.sideMenuIsClosedHandler_ = function() {
+        this.removeOverflowHidden_();
+    };
+
+
+    /**
+     * Add overflow hidden
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.addOverflowHidden_ = function() {
+        goog.dom.classlist.add(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.add(
+            this.getElement(),
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.add(
+            document.body,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+    };
+
+
+    /**
+     * Remove overflow hidden
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.removeOverflowHidden_ = function() {
+        goog.dom.classlist.remove(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.remove(
+            this.getElement(),
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.remove(
+            document.body,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
     };
 
 
@@ -256,6 +372,28 @@ goog.scope(function() {
             this.factory_,
             'smSubheader',
             subHeader,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init side menu
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.initSideMenu_ = function() {
+        var sideMenu = goog.dom.getElementByClass(
+            sm.bSmSideMenu.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.sideMenu_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smSideMenu',
+            sideMenu,
             this
         );
 

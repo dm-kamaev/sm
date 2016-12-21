@@ -6,10 +6,11 @@
 const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
     seoView = require('../../school/views/seoView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView'),
     footerView = require('../../entity/views/footerView');
 
-const Header = require('../../entity/lib/Header'),
-    SubHeader = require('../../school/lib/SchoolSubheader');
+const SubHeader = require('../../school/lib/SchoolSubheader');
 
 let schoolErrorView = {};
 
@@ -27,7 +28,8 @@ schoolErrorView.render = function(data) {
     let user = userView.default(data.user),
         favoriteEntities = favoriteView.list(data.favorites);
     return {
-        header: data.header,
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: schoolErrorView.subHeader({
             favoriteEntities: favoriteEntities,
             user: user
@@ -53,7 +55,6 @@ schoolErrorView.subHeader = function(data) {
 
     subHeader.init({
         isLogoRedirect: true,
-        contacts: Header.CONTACTS,
         isSearchRedirect: true,
         user: data.user,
         favoriteEntities: data.favoriteEntities,
