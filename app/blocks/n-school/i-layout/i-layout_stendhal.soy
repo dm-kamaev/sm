@@ -222,6 +222,7 @@
             {$params.data.content}
         </div>
         {call .footer_ data="all" /}
+        {call .sideMenu_ data="all" /}
     </div>
 {/template}
 
@@ -266,6 +267,31 @@
                 'factory': $params.config.modifier,
                 'type': 'smSubheader',
                 'renderParams': $params.data.subHeader
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Side menu template
+ * @param params {{
+ *     data: {
+ *         sideMenu: sm.bSmSideMenu.Template.Params
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ */
+{template .sideMenu_ kind="html"}
+    <div class="{call .rootClass /}__side-menu">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smSideMenu',
+                'renderParams': [
+                    'data': $params.data.sideMenu
+                ]
             ]/}
         {/call}
     </div>
