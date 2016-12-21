@@ -5,7 +5,11 @@
  *
  * @param? params {{
  *     ?data: {
- *			links: {Array<sm.bSmLink.SmLink>}	
+ *			menuItems: Array<{
+ *              url: string,
+ *              name: string
+ *          }>,
+ *          footerItems: Array<sm.bSmLink.SmLink>	
  *     }
  * }}
  * @constructor
@@ -67,14 +71,14 @@
 
 /**
  * menu
- * @param params 
+ * @param params {sm.bSmSideMenu.Template.Params}
  */
 {template .menu}
 	<div class="{call .rootClass /}__menu">
 		<ul class="{call .rootClass /}__menu-list">
-			{foreach $link in $params.menuItems}
-				{call .link}
-					{param link: $link/}
+			{foreach $item in $params.menuItems}
+				{call .menuItem}
+					{param item: $item/}
 				{/call}
 			{/foreach}
 		</ul>
@@ -84,7 +88,7 @@
 
 /**
  * menu
- * @param params 
+ * @param params {sm.bSmSideMenu.Template.Params}
  */
 {template .footer}
     <div class="{call .rootClass /}__footer">
@@ -103,7 +107,7 @@
 
 /**
  * copyright
- * @param params
+ * @param params {sm.bSmSideMenu.Template.Params}
  */
 {template .copyright}
     <li class="{call .rootClass /}__footer-item">
@@ -116,7 +120,7 @@
 
 /**
  * footerLink
- * @param item
+ * @param item {sm.bSmLink.SmLink}
  */
 {template .footerItem}
 
@@ -129,10 +133,7 @@
             {param params: [
                 'type': 'smLink',
                 'renderParams': [
-                    'data': [
-                        'url': $item.url,
-                        'content': $item.content
-                    ],
+                    'data': $item,
                     'config': [
                         'theme': 'default',
                         'customClasses': [$customClasses]
@@ -144,12 +145,14 @@
 {/template}
 
 
-
 /**
  * link
- * @param link {{sm.bSmLink.SmLink}}
+ * @param item {{
+ *    url: string,
+ *    name: string   
+ * }}
  */
-{template .link}
+{template .menuItem}
 
     {let $customClasses kind="html"}
         {call .rootClass /}__link
@@ -161,22 +164,21 @@
                 'type': 'smLink',
                 'renderParams': [
                     'data': [
-                        'url': $link.url,
-                        'content': $link.name
+                        'url': $item.url,
+                        'content': $item.name
                     ],
                     'config': [
                         'size': 'xxxl',
                         'theme': 'dark',
                         'customClasses': [$customClasses],
-                        'target': $link.target or '',
-                        'isSelected': $link.isSelected? true: false
+                        'target': $item.target or '',
+                        'isSelected': $item.isSelected? true: false
                     ]
                 ]
             ]/}
         {/call}
 	</li>    
 {/template}
-
 
 
 /**
@@ -186,6 +188,7 @@
     b-sm-side-menu
 {/template}
 
+
 /**
  * additionalClasses
  * @override
@@ -193,5 +196,3 @@
 {template .additionalClasses}
 	i-utils__hidden
 {/template}
-
-

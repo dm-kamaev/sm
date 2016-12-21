@@ -53,8 +53,35 @@ goog.scope(function() {
   };
 
   /**
+   * Shows side menu
+   * @public
+   */
+  View.prototype.showMenu = function() {
+    var element = this.getElement();
+    goog.dom.classlist.remove(
+        element,
+        cl.iUtils.Utils.CssClass.HIDDEN
+    );
+    this.dispatchEvent(View.Event.MENU_IS_OPENED);
+  };
+
+  /**
+   * Hides side menu
+   * @public
+   */
+  View.prototype.hideMenu = function() {
+    var element = this.getElement();
+    goog.dom.classlist.add(
+        element,
+        cl.iUtils.Utils.CssClass.HIDDEN
+    );
+    this.dispatchEvent(View.Event.MENU_IS_CLOSED);
+  };
+
+  /**
    * @override
    * @param {Element} element
+   * @protected
    */
   View.prototype.decorateInternal = function(element) {
       View.base(this, 'decorateInternal', element);
@@ -64,6 +91,7 @@ goog.scope(function() {
 
   /**
    * @override
+   * @protected
    */
   View.prototype.enterDocument = function() {
       View.base(this, 'enterDocument');
@@ -107,31 +135,4 @@ goog.scope(function() {
           View.CssClass.FOOTER_LINK
       );
   };
-
-  /**
-   * Shows side menu
-   * @public
-   */
-  View.prototype.showMenu = function() {
-    var element = this.getElement();
-    goog.dom.classlist.remove(
-        element,
-        cl.iUtils.Utils.CssClass.HIDDEN
-    );
-    this.dispatchEvent(View.Event.MENU_IS_OPENED);
-  };
-
-  /**
-   * Hides side menu
-   * @public
-   */
-  View.prototype.hideMenu = function() {
-    var element = this.getElement();
-    goog.dom.classlist.add(
-        element,
-        cl.iUtils.Utils.CssClass.HIDDEN
-    );
-    this.dispatchEvent(View.Event.MENU_IS_CLOSED);
-  };
-
 });  // goog.scope

@@ -1,6 +1,6 @@
 .b-sm-side-menu {
     position: fixed;
-    z-index: 1000;
+    z-index: 19;
     top: 0;
     left: 0;
 
@@ -38,16 +38,21 @@
 }
 
 .b-sm-side-menu__footer {
-    padding: 10px 0 0 25px;
+    padding: 32px 0 0 25px;
 }
 
 .b-sm-side-menu__menu-item {
-    padding-bottom: 20px;
+    padding: 0 0 25px 5px;
+}
+
+.b-sm-side-menu__menu-item:last-child {
+    padding-bottom: 0;
 }
 
 .b-sm-side-menu__footer-item {
-	padding-bottom: 10px;
-	font-size: 12px;
+	padding: 0 0 10px 5px;
+	font-size: 13px;
+    font-weight: 400;
 }
 
 .b-sm-side-menu__copyright {

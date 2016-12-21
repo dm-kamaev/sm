@@ -45,9 +45,25 @@ goog.scope(function() {
       MENU_IS_OPENED: View.Event.MENU_IS_OPENED
   };
 
+  /**
+   * Shows menu
+   * @public
+   */
+  SideMenu.prototype.showMenu = function() {
+      this.getView().showMenu();
+  };
+
+  /**
+   * Hides menu
+   * @public
+   */
+  SideMenu.prototype.hideMenu = function() {
+      this.getView().hideMenu();
+  };
 
   /**
    * @override
+   * @protected
    */
   SideMenu.prototype.enterDocument = function() {
       SideMenu.base(this, 'enterDocument');
@@ -93,21 +109,4 @@ goog.scope(function() {
       this.autoDispatch(View.Event.MENU_IS_CLOSED);
       this.autoDispatch(View.Event.MENU_IS_OPENED);
   };
-
-  /**
-   * Shows menu
-   * @public
-   */
-  SideMenu.prototype.showMenu = function() {
-      this.getView().showMenu();
-  };
-
-  /**
-   * Hides menu
-   * @public
-   */
-  SideMenu.prototype.hideMenu = function() {
-      this.getView().hideMenu();
-  };
-
 });  // goog.scope
