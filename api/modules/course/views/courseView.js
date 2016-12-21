@@ -688,6 +688,7 @@ view.render = function(course) {
         learningOutcome: course.learningOutcome,
         isActive: course.dataValues.isActive,
         embedId: course.embedId,
+        image: course.imageUrl,
         updatedAt: course['updated_at']
     };
 };

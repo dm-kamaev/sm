@@ -527,7 +527,8 @@ service.getGetByNameAndCategoryAlias = async(function(categoryAlias, name) {
  *     about: ?string,
  *     entranceExam: ?string,
  *     learningOutcome: ?string,
- *     leadType: ?string
+ *     leadType: ?string,
+ *     imageUrl: ?string
  * }} data
  * @return {Course}
  */
@@ -555,12 +556,17 @@ service.update = async(function(id, data) {
         data.brandId = brand.id;
     }
 
-    return await(models.Course.update(data, {
+    let course = await(models.Course.findOne({
         where: {
             id: id
-        },
-        individualHooks: true
+        }
     }));
+
+    if (course.imageUrl && data.imageUrl) {
+        services.image.delete(course.imageUrl);
+    }
+
+    return await(course.update(data));
 });
 
 /**

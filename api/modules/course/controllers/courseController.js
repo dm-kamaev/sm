@@ -10,7 +10,8 @@ const courseView = require('../views/courseView'),
     services = require('../../../../app/components/services').all;
 
 const mapViewType = require('../../entity/enums/mapViewType'),
-    entityType = require('../../entity/enums/entityType');
+    entityType = require('../../entity/enums/entityType'),
+    courseImageSize = require('../enums/courseImageSize');
 
 const config = require('../../../../app/config/config.json');
 
@@ -447,7 +448,15 @@ controller.get = async(function(req, res) {
 controller.create = async(function(req, res) {
     let result;
     try {
-        result = await(services.course.create(req.body));
+        let courseData = req.body;
+        if (req.files) {
+            let imageUrls = await(services.image.upload(
+                req.files,
+                [courseImageSize.DEFAULT, courseImageSize.SMALL]
+            ));
+            courseData.imageUrl = imageUrls[0];
+        }
+        result = await(services.course.create(courseData));
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -478,13 +487,20 @@ controller.create = async(function(req, res) {
 controller.update = async(function(req, res) {
     let result;
     try {
-        result = await(services.course.update(req.params.id, req.body));
+        let courseData = req.body;
+        if (req.files) {
+            let imageUrls = await(services.image.upload(
+                req.files,
+                [courseImageSize.DEFAULT, courseImageSize.SMALL]
+            ));
+            courseData.imageUrl = imageUrls[0];
+        }
+        result = await(services.course.update(req.params.id, courseData));
     } catch (error) {
         logger.error(error.message);
         result = error;
     } finally {
-        res.header('Content-Type', 'application/json; charset=utf-8');
-        res.end(JSON.stringify(result));
+        res.send(result);
     }
 });
 
