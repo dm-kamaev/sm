@@ -370,6 +370,7 @@ controller.enrollOnCourse = async(function(req, res) {
  *         "about": "course's about",
  *         "learningOutcome": "course's learning outcome",
  *         "isActive": true,
+ *         "imageUrl": "http://image.www56.lan/i/J/JswbUBk3gN/{width}.jpg",
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }]
  */
@@ -409,7 +410,8 @@ controller.list = async(function(req, res) {
  *         "about": "course's about",
  *         "learningOutcome": "course's learning outcome",
  *         "isActive": true,
- *         "embedId": 'OulwjLUwLXM',
+ *         "embedId": "OulwjLUwLXM",
+ *         "imageUrl": "http://image.www56.lan/i/J/JswbUBk3gN/{width}.jpg",
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }
  */
