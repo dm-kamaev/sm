@@ -336,7 +336,7 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.bSmHeadedList.SmHeadedList,
             view: sm.bSmHeadedList.View
         })
-        .setControlListItem('sideMenu', {
+        .setControlListItem('smSideMenu', {
             control: sm.bSmSideMenu.SideMenu,
             view: sm.bSmSideMenu.View
         });

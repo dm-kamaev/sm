@@ -344,7 +344,7 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bSmHeadedList.Template.headedList
         )
         .setTemplateListItem(
-            'sideMenu',
+            'smSideMenu',
             sm.bSmSideMenu.Template.sideMenu
         );
 

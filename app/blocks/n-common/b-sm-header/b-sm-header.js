@@ -25,43 +25,29 @@ goog.scope(function() {
          * @private
          */
         this.links_ = [];
-
-        /**
-         * Array of footer links
-         * @type {array<sm.bSmLink.SmLink>}
-         * @private
-         */
-        this.footerLinks_ = [];
-
-        /**
-         * Side menu instance (actually it's a modal)
-         * @type {cl.gModal.Modal}
-         * @private
-         */
-        this.sideMenu_ = null;
     };
     goog.inherits(sm.bSmHeader.SmHeader, cl.iControl.Control);
     var Header = sm.bSmHeader.SmHeader;
 
 
     /**
-     * List of Header events
-     * @enum {string}
-     * @const
+     * @override
+     * @public
      */
-    Header.Event = {
+    Header.prototype.enterDocument = function() {
+        Header.base(this, 'enterDocument');
     };
 
 
     /**
      * @override
      * @param {Element} element
+     * @protected
      */
     Header.prototype.decorateInternal = function(element) {
         Header.base(this, 'decorateInternal', element);
 
         this.initLinks_();
-        this.initSideMenu_();
     };
 
 
@@ -73,29 +59,4 @@ goog.scope(function() {
         var links = this.getView().getLinks();
         this.links_ = this.decorateChildren('smLink', links);
     };
-
-    /**
-     * @private
-     */
-    Header.prototype.initSideMenu_ = function() {
-        var dom = this.getView().getDom();
-        this.sideMenu_ =
-            this.decorateChild('sideMenuModal', dom.sideMenu);
-    };
-
-    /**
-     * @override
-     */
-    Header.prototype.enterDocument = function() {
-        Header.base(this, 'enterDocument');
-    };
-
-    /**
-     * Shows or hides the menu
-     * @public
-     */
-    Header.prototype.showMenu = function() {
-        this.sideMenu_.show();
-    };
-
 });  // goog.scope

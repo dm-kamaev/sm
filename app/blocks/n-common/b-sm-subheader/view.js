@@ -63,6 +63,57 @@ goog.scope(function() {
 
 
     /**
+     * Switch view to default mode
+     * @public
+     */
+    View.prototype.switchToDefaultMode = function() {
+        goog.dom.classes.remove(
+            this.getElement(),
+            View.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.add(
+            this.getElement(),
+            View.CssClass.DEFAULT_MODE
+        );
+        goog.dom.classlist.remove(
+            this.dom.searchSection,
+            View.CssClass.SEARCH_SECTION_ON_TOP
+        );
+    };
+
+
+    /**
+     * Switch view to search mode
+     * @public
+     */
+    View.prototype.switchToSearchMode = function() {
+        goog.dom.classes.add(
+            this.getElement(),
+            View.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.remove(
+            this.getElement(),
+            View.CssClass.DEFAULT_MODE
+        );
+        goog.dom.classlist.add(
+            this.dom.searchSection,
+            View.CssClass.SEARCH_SECTION_ON_TOP
+        );
+    };
+
+
+    /**
+     * @override
+     * @public
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.initHamburgerMenuListener_();
+    };
+
+
+    /**
      * @override
      */
     View.prototype.decorateInternal = function(element) {
@@ -76,17 +127,6 @@ goog.scope(function() {
         this.detectAnimationSupportion_();
         this.initHamburgerMenu_();
         this.initSearchSection_();
-    };
-
-
-    /**
-     * @override
-     * @protected
-     */
-    View.prototype.enterDocument = function() {
-        View.base(this, 'enterDocument');
-
-        this.initHamburgerMenuListener_();
     };
 
     /**
@@ -114,49 +154,10 @@ goog.scope(function() {
 
     /**
      * Handler click on root Element
-     * @param {Object} event
      * @private
      */
-    View.prototype.onHamburgerMenuClick_ = function(event) {
+    View.prototype.onHamburgerMenuClick_ = function() {
         this.dispatchEvent(View.Event.HAMBURGER_MENU_CLICK);
-    };
-
-
-    /**
-     * Switch view to default mode
-     */
-    View.prototype.switchToDefaultMode = function() {
-        goog.dom.classes.remove(
-            this.getElement(),
-            View.CssClass.SEARCH_MODE
-        );
-        goog.dom.classes.add(
-            this.getElement(),
-            View.CssClass.DEFAULT_MODE
-        );
-        goog.dom.classlist.remove(
-            this.dom.searchSection,
-            View.CssClass.SEARCH_SECTION_ON_TOP
-        );
-    };
-
-
-    /**
-     * Switch view to search mode
-     */
-    View.prototype.switchToSearchMode = function() {
-        goog.dom.classes.add(
-            this.getElement(),
-            View.CssClass.SEARCH_MODE
-        );
-        goog.dom.classes.remove(
-            this.getElement(),
-            View.CssClass.DEFAULT_MODE
-        );
-        goog.dom.classlist.add(
-            this.dom.searchSection,
-            View.CssClass.SEARCH_SECTION_ON_TOP
-        );
     };
 
 
