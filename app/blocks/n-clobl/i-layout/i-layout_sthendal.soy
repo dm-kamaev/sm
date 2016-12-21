@@ -340,7 +340,7 @@
 /**
  * @param params {{
  *     data: {
- *          header: sm.bSmHeader.Template.Params
+ *          sideMenu: sm.bSmSideMenu.Template.Params.Data
  *     }
  * }}
  */
@@ -349,8 +349,10 @@
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
-                'type': 'sideMenu',
-                'renderParams': $params.data.sideMenu
+                'type': 'smSideMenu',
+                'renderParams': [
+                    'data': $params.data.sideMenu
+                ]
             ]/}
         {/call}
     </div>
