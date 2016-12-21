@@ -16,7 +16,6 @@ goog.require('sm.bSmFooter.View');
 goog.require('sm.bSmHeader.View');
 goog.require('sm.bSmSideMenu.SideMenu');
 goog.require('sm.bSmSubheader.SmSubheader');
-goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iCarrotquest.Carrotquest');
