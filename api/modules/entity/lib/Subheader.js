@@ -1,9 +1,16 @@
+/**
+ * @fileOverview Class for generating subheader params
+ */
 'use strict';
+
+const ContactsGenerator =
+    require('../../../../app/modules/common/lib/ContactsGenerator');
 
 class Subheader {
 
     /**
      * Init params for subheader
+     * @constructor
      */
     constructor() {
         /**
@@ -77,7 +84,6 @@ class Subheader {
      * Initializes class
      * @param {{
      *     isLogoRedirect: (boolean|undefined),
-     *     contacts: (Object<string, string>|string),
      *     listLinks: Array<string>,
      *     isSearchRedirect: (boolean|undefined),
      *     pageAlias: (string|undefined),
@@ -89,7 +95,7 @@ class Subheader {
      */
     init(data) {
         this.setLogo(data.isLogoRedirect);
-        this.setContacts(data.contacts);
+        this.setContacts();
 
         if (data.listLinks) {
             this.setListLinks(data.listLinks);
@@ -134,13 +140,11 @@ class Subheader {
 
     /**
      * Contacts setter
-     * @param {(Object<string, string>|string)} contacts
      * @public
      */
-    setContacts(contacts) {
-        if (contacts) {
-            this.params.data.contacts = contacts;
-        }
+    setContacts() {
+        let contactsGenerator = new ContactsGenerator();
+        this.params.data.contacts = contactsGenerator.contacts;
     }
 
 

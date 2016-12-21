@@ -1,52 +1,21 @@
 'use strict';
-const moment = require('moment');
 const entityTypeEnum = require('../enums/entityType');
 
-const CONTACTS = {
-    phone: '+7 (495) 478-68-24'
-};
-const FOOTER_LINKS = [
-    {
-        content: 'Сотрудничество',
-        url: '#'
-    },
-    {
-        content: 'Пользовательское соглашение',
-        url: '#'
-    },
-    {
-        content: `© Маркет Мела, ${moment().year()}`
-    }
-];
+const Menu = require('../../../../app/modules/common/lib/Menu'),
+    ContactsGenerator =
+        require('../../../../app/modules/common/lib/ContactsGenerator');
 
 class Header {
 
     /**
      * Creates an instance of Header.
+     * @param {{
+     *     entityType: string,
+     *     entityLinks: Object<string, string>
+     * }} data
      * @constructor
      */
     constructor() {
-        /**
-         * current entity type
-         * @string
-         * @private
-         */
-        this.entityType_;
-
-        /**
-         * Links to other entity sites
-         * @type {Object<string, string>}
-         * @private
-         */
-        this.entityLinks_ = {};
-
-        /**
-         * Fotter links
-         * @type {Array<{label: string, url: string}>}
-         * @private
-         */
-        this.footerLinks_ = [];
-
         /**
          * Current header params
          * @type {{
@@ -55,28 +24,32 @@ class Header {
          * }}
          * @private
          */
-        this.params_ = {
-            data: {},
-            config: {}
-        };
+        this.params_ = {};
     }
 
     /**
      * Initializes class
      * @param {{
      *     entityType: string,
-     *     links: Object<string, string>
+     *     config: {
+     *         protocol: string,
+     *         courses: {
+     *             host: string
+     *         },
+     *         schools: {
+     *             host: string
+     *         }
+     *     }
      * }} data
      * @public
      */
-    init(data) {
-        this.setEntityType(data.entityType);
-        this.setEntityLinks(data.entityLinks);
+    generateParams(data) {
+        this.entityType = data.entityType;
 
-        this.setContacts()
+        this.initParams()
+            .setContacts()
             .setHelperText()
-            .setMenuItems()
-            .setFooterLinks();
+            .setMenuItems(data);
     }
 
 
@@ -88,26 +61,31 @@ class Header {
      * }}
      * @public
      */
-    getParams() {
+    get params() {
         return this.params_;
     }
 
     /**
      * Entity type setter
      * @param {string} entityType
-     * @public
+     * @protected
      */
-    setEntityType(entityType) {
+    set entityType(entityType) {
         this.entityType_ = entityType;
     }
 
     /**
-     * Entity links setter
-     * @param {Object<string, string>} entityLinks
-     * @public
+     * Set initial value to params
+     * @return {Header}
+     * @protected
      */
-    setEntityLinks(entityLinks) {
-        this.entityLinks_ = entityLinks;
+    initParams() {
+        this.params_ = {
+            data: {},
+            config: {}
+        };
+
+        return this;
     }
 
     /**
@@ -116,18 +94,8 @@ class Header {
      * @protected
      */
     setContacts() {
-        this.params_.data.contacts = CONTACTS;
-
-        return this;
-    }
-
-    /**
-     * Set footer links
-     * @return {Header}
-     * @protected
-     */
-    setFooterLinks() {
-        this.params_.data.footerLinks = FOOTER_LINKS;
+        let contactsGenerator = new ContactsGenerator();
+        this.params_.data.contacts = contactsGenerator.contacts;
 
         return this;
     }
@@ -154,114 +122,21 @@ class Header {
         return this;
     }
 
-
     /**
      * Set menu items
+     * @param {{
+     *     entityType: string,
+     *     entityLinks: Object<string, string>
+     * }} data
      * @return {Header}
      * @protected
      */
-    setMenuItems() {
-        let possibleEnityTypes = [
-            entityTypeEnum.SCHOOL,
-            entityTypeEnum.COURSE
-        ];
+    setMenuItems(data) {
+        let menu = new Menu(data);
+        this.params_.data.menuItems = menu.params;
 
-        this.params_.data.menuItems =
-            this.generateMenuItems(possibleEnityTypes);
         return this;
-    }
-
-    /**
-     * Generate menu items
-     * @param {Array<string>} entityTypes
-     * @return {Array<{
-     *     name: string,
-     *     url: string,
-     *     type: string,
-     *     isSelected: boolean
-     * }>}
-     * @protected
-     */
-    generateMenuItems(entityTypes) {
-        return entityTypes.map(this.generateMenuItem, this)
-            .concat(this.generateCommonMenuItem());
-    }
-
-    /**
-     * Generate menu item
-     * @param {string} entityType
-     * @return {{
-     *     name: string,
-     *     url: string,
-     *     type: string,
-     *     isSelected: boolean
-     * }}
-     * @protected
-     */
-    generateMenuItem(entityType) {
-        return {
-            name: this.getEntityName(entityType),
-            url: this.getEntityUrl(entityType),
-            type: entityType,
-            isSelected: this.entityType_ == entityType
-        };
-    }
-
-    /**
-     * Generate menu item name
-     * @param {string} entityType
-     * @return {string}
-     * @protected
-     */
-    getEntityName(entityType) {
-        let name;
-
-        switch (entityType) {
-        case entityTypeEnum.SCHOOL:
-            name = 'Школы';
-            break;
-        case entityTypeEnum.COURSE:
-            name = 'Курсы и секции';
-            break;
-        }
-        return name;
-    }
-
-    /**
-     * Generate menu item url
-     * @param {string} entityType
-     * @param {Object<string, string>} hostNames
-     * @return {string}
-     * @protected
-     */
-    getEntityUrl(entityType, hostNames) {
-        return this.entityLinks_[entityType];
-    }
-
-    /**
-     * Generate menu item for mel.fm
-     * @return {{
-     *     name: string,
-     *     url: string,
-     *     target: string
-     * }}
-     * @protected
-     */
-    generateCommonMenuItem() {
-        return {
-            name: 'Мел',
-            url: 'https://mel.fm',
-            target: '_blank'
-        };
     }
 }
 
-/**
- * contacts
- * @type {{
- *     phone: string
- * }}
- * @static
- */
-Header.CONTACTS = CONTACTS;
 module.exports = Header;

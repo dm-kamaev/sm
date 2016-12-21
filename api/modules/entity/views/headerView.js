@@ -1,7 +1,5 @@
 'use strict';
 
-const entityType = require('../enums/entityType');
-
 const Header = require('../lib/Header');
 
 const headerView = {};
@@ -20,34 +18,12 @@ const headerView = {};
 headerView.render = function(config, entityType) {
     let header = new Header();
 
-    header.init({
+    header.generateParams({
         entityType: entityType,
-        entityLinks: headerView.links(config)
+        config: config
     });
 
-    return header.getParams();
-};
-
-
-/**
- * Generate links for header menu
- * @param {{
- *     protocol: string,
- *     courses: {
- *         host: string
- *     },
- *     schools: {
- *         host: string
- *     }
- * }} config
- * @return {Object<string, string>}
- */
-headerView.links = function(config) {
-    let protocol = config.protocol;
-    return {
-        [entityType.SCHOOL]: `${protocol}://${config.schools.host}`,
-        [entityType.COURSE]: `${protocol}://${config.courses.host}`
-    };
+    return header.params;
 };
 
 module.exports = headerView;
