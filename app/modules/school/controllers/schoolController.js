@@ -12,7 +12,6 @@ const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
 const homeView = require('../../../../api/modules/school/views/homeView');
 const seoView = require('../../../../api/modules/school/views/seoView');
-const headerView = require('../../../../api/modules/entity/views/headerView');
 
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
@@ -113,20 +112,20 @@ exports.view = async(function(req, res, next) {
                             school.commentGroupId,
                             req.user && req.user.id
                         )) !== 'undefined';
-                let headerParams = headerView.render(config, entityType.SCHOOL);
 
                 user = userView.school(user, isUserCommented);
+                let templateData = schoolView.default(
+                    school,
+                    dataFromPromises,
+                    user,
+                    config
+                );
 
                 res.header('Content-Type', 'text/html; charset=utf-8');
                 res.end(
                     soy.render('sm.lSchool.Template.school', {
                         params: {
-                            data: schoolView.default(
-                                school,
-                                dataFromPromises,
-                                user,
-                                headerParams
-                            ),
+                            data: templateData,
                             config: {
                                 staticVersion: config.lastBuildTimestamp,
                                 analyticsId: ANALYTICS_ID,
@@ -172,7 +171,8 @@ exports.home = async(function(req, res) {
         user: user,
         seoLinks: data.seoLinks,
         authSocialLinks: authSocialLinks,
-        header: headerView.render(config, entityType.SCHOOL)
+        entityType: entityType.SCHOOL,
+        config: config
     });
 
     var html = soy.render('sm.lSchoolHome.Template.base', {
