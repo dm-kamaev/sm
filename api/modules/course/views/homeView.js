@@ -8,10 +8,11 @@ const lodash = require('lodash');
 const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('../../course/views/courseCategoryView'),
-    footerView = require('../../entity/views/footerView');
+    footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
-const Subheader = require('../lib/CourseSubheader'),
-    Header = require('../../entity/lib/Header');
+const Subheader = require('../lib/CourseSubheader');
 
 const PAGE_ALIAS = 'search';
 
@@ -20,6 +21,7 @@ let view = {};
 
 /**
  * @param {{
+ *     config: Object,
  *     header: Object,
  *     user: Object,
  *     authSocialLinks: Object,
@@ -40,7 +42,8 @@ view.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
-        header: data.header,
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: view.subheader({
             listLinks: courseCategoryView.listLinks(
                 data.categories,
@@ -79,7 +82,6 @@ view.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: false,
-        contacts: Header.CONTACTS,
         listLinks: data.listLinks,
         isSearchRedirect: true,
         user: data.user,

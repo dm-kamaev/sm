@@ -10,7 +10,9 @@ const courseView = require('./courseView'),
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('./courseCategoryView'),
     searchViewEntity = require('../../entity/views/searchView'),
-    footerView = require('../../entity/views/footerView');
+    footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
 const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
@@ -83,6 +85,7 @@ searchView.filterPanel = function(data) {
 
 /**
  * @param {{
+ *     config: Object,
  *     user: Object,
  *     fbClientId: string,
  *     favorites: Array<Object>,
@@ -123,11 +126,8 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
-        header: data.header,
-        sideMenu: {
-            menuItems: data.header.data.menuItems,
-            footerItems: footerView.render()
-        },
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: searchView.subheader({
             listLinks: courseCategoryView.listLinks(
                 data.categories,
@@ -270,7 +270,6 @@ searchView.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: true,
-        contacts: Header.CONTACTS,
         listLinks: data.listLinks,
         isSearchRedirect: data.pageAlias != COMMON_PAGE_ALIAS,
         user: data.user,

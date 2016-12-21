@@ -2,11 +2,12 @@
 
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
-const footerView = require('../../entity/views/footerView');
+const footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
 const CourseSubheader = require('../../course/lib/CourseSubheader'),
-    SchoolSubheader = require('../../school/lib/SchoolSubheader'),
-    Header = require('../../entity/lib/Header');
+    SchoolSubheader = require('../../school/lib/SchoolSubheader');
 
 const entityTypeEnum = require('../../entity/enums/entityType');
 
@@ -15,6 +16,7 @@ let view = {};
 
 /**
  * @param {{
+ *     config: Object,
  *     user: Object,
  *     entityType: string,
  *     authSocialLinks: Object,
@@ -35,7 +37,8 @@ view.render = function(data) {
             user: user,
             entityType: data.entityType
         }),
-        header: data.header,
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
         user: user,
         authSocialLinks: data.authSocialLinks,
         error: {
@@ -59,7 +62,6 @@ view.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: true,
-        contacts: Header.CONTACTS,
         isSearchRedirect: true,
         user: data.user,
         favoriteEntities: data.favoriteEntities,

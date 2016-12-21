@@ -3,18 +3,19 @@
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
-const footerView = require('../../entity/views/footerView');
+const footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
 const courseCategoryView = require('./courseCategoryView');
 
-const Subheader = require('../lib/CourseSubheader'),
-    Header = require('../../entity/lib/Header');
+const Subheader = require('../lib/CourseSubheader');
 
 let view = {};
 
 /**
  * @param {{
- *     header: Object,
+ *     config: Object,
  *     user: Object,
  *     fbClientId: string,
  *     authSocialLinks: Object,
@@ -47,7 +48,8 @@ view.render = function(data) {
             relapImage: data.entityData.relapImgUrl,
             fbClientId: data.fbClientId
         },
-        header: data.header,
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: view.subheader({
             listLinks: courseCategoryView.listLinks(
                 data.categories,
@@ -76,7 +78,6 @@ view.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: true,
-        contacts: Header.CONTACTS,
         listLinks: data.listLinks,
         isSearchRedirect: true,
         user: data.user,

@@ -10,12 +10,13 @@ const egeResultView = require('../../study/views/egeResultView'),
     schoolView = require('./schoolView');
 
 const FilterPanel = require('../lib/SchoolFilterPanel'),
-    Subheader = require('../lib/SchoolSubheader'),
-    Header = require('../../entity/lib/Header');
+    Subheader = require('../lib/SchoolSubheader');
 
 const searchViewEntity = require('../../entity/views/searchView'),
     favoriteView = require('../../favorite/views/favoriteView'),
-    footerView = require('../../entity/views/footerView');
+    footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
 const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
@@ -88,7 +89,8 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/schools_sharing.png',
             fbClientId: data.fbClientId,
         },
-        header: data.header,
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: searchView.subheader({
             favoriteEntities: favoriteView.list(data.favorites),
             user: user
@@ -251,7 +253,6 @@ searchView.subheader = function(data) {
 
     subheader.init({
         isLogoRedirect: true,
-        contacts: Header.CONTACTS,
         isSearchRedirect: false,
         user: data.user,
         favoriteEntities: data.favoriteEntities,
