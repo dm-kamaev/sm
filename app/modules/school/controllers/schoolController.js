@@ -256,7 +256,8 @@ exports.list = async(function(req, res, next) {
                 data.seoLinks,
                 (!requestParams.geoType) ? requestParams.listType : null
             ),
-            header: headerView.render(config, entityType.SCHOOL)
+            entityType: entityType.SCHOOL,
+            config: config
         });
 
         let html = soy.render(

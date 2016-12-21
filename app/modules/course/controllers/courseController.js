@@ -14,6 +14,7 @@ const soy = require('../../../components/soy'),
         '../../../../api/modules/course/views/informationView'
     ),
     headerView = require('../../../../api/modules/entity/views/headerView'),
+    sideMenuView = require('../../../modules/common/views/sideMenuView'),
     entityType = require('../../../../api/modules/entity/enums/entityType.js'),
     filterName = require('../../../../api/modules/course/enums/filterName');
 
@@ -44,14 +45,14 @@ controller.home = async(function(req, res, next) {
         });
 
         let templateData = homeView.render({
-            header: headerView.render(config, entityType.COURSE),
             user: user,
             authSocialLinks: authSocialLinks,
             favorites: data.favorites,
             categories: data.categories,
             categoryAliases: data.categoryAliases,
             recommendations: data.recommendations,
-            entityType: entityType.COURSE
+            entityType: entityType.COURSE,
+            config: config
         });
 
         let html = soy.render(
@@ -102,7 +103,6 @@ controller.commonSearch = async(function(req, res, next) {
             });
 
         let templateData = searchView.render({
-            entityType: entityType.COURSE,
             user: user,
             fbClientId: FB_CLIENT_ID,
             favorites: data.favorites,
@@ -125,7 +125,8 @@ controller.commonSearch = async(function(req, res, next) {
             currentAlias: 'search',
             categories: data.search.categories,
             categoryAliases: aliases.categories,
-            header: headerView.render(config, entityType.COURSE)
+            entityType: entityType.COURSE,
+            config: config
         });
 
         let html = soy.render(
@@ -222,7 +223,7 @@ controller.search = async(function(req, res, next) {
                 categories: data.categories,
                 categoryAliases: aliases.categories,
                 categoryId: categoryInstance.id,
-                header: headerView.render(config, entityType.COURSE)
+                config: config
             });
 
             let html = soy.render(
@@ -314,7 +315,8 @@ controller.information = async(function(req, res, next) {
                     categoryAliases: data.categoryAliases,
                     priceLabelText: 'Гарантия лучшей цены',
                     actionButtonText: 'Хочу этот курс!',
-                    header: headerView.render(config, entityType.COURSE)
+                    entityType: entityType.COURSE,
+                    config: config
                 });
                 let factory = contentExperiment.getFactoryByQuery(req.query);
 

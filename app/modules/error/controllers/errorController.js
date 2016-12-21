@@ -112,8 +112,8 @@ controller.generalError = async(function(
             user: user,
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
-            header: headerView.render(config, entityType),
-            errorText: errorText
+            errorText: errorText,
+            config: config
         });
 
         html = soy.render('sm.lErrorNotFound.Template.errorNotFound', {
