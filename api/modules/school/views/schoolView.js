@@ -294,6 +294,7 @@ schoolView.getListSchool = function(school, opt_sortCriterion) {
             school.totalScore,
             opt_sortCriterion
         ),
+        rating: ratingView.ratingResultView(school.rankDogm),
         metro: addressView.getMetro(school.addresses) || [],
         area: [addressView.getArea(school.addresses)[0]]
     };
