@@ -14,6 +14,14 @@ goog.require('sm.bSmBadge.View');
  */
 sm.bSmBadge.SmBadge = function(view, opt_domHelper) {
     sm.bSmBadge.SmBadge.base(this, 'constructor', view, opt_domHelper);
+
+
+    /**
+     * Link hint
+     * @type {sm.bSmLink.SmLink}
+     * @private
+     */
+    this.linkHint_ = null;
 };
 goog.inherits(sm.bSmBadge.SmBadge, cl.iControl.Control);
 
@@ -55,6 +63,8 @@ goog.scope(function() {
      */
     Badge.prototype.decorateInternal = function(element) {
         Badge.base(this, 'decorateInternal', element);
+
+        this.initLinkHint_();
     };
 
 
@@ -68,11 +78,6 @@ goog.scope(function() {
             View.Event.ITEM_CLICK,
             this.onItemClick_
         );
-
-        this.viewListen(
-            View.Event.HINT_LINK_CLICK,
-            this.onHintLinkClick_
-        );
     };
 
 
@@ -85,15 +90,6 @@ goog.scope(function() {
         if (!goog.isNull(event.data)) {
             this.redirectSearch_(event.data);
         }
-    };
-
-
-    /**
-     * On hint link click
-     * @private
-     */
-    Badge.prototype.onHintLinkClick_ = function() {
-        this.openPageRanking_();
     };
 
 
@@ -126,10 +122,17 @@ goog.scope(function() {
 
 
     /**
-     * Open the page ranking
+     * Init link hint
      * @private
      */
-    Badge.prototype.openPageRanking_ = function() {
-        window.open('http://dogm.mos.ru/rating/');
+    Badge.prototype.initLinkHint_ = function() {
+        var link = this.getView().getDom().linkHint;
+
+        if (link) {
+            this.linkHint_ = this.decorateChild(
+                'smLink',
+                link
+            );
+        }
     };
 });  // goog.scope

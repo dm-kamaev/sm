@@ -55,7 +55,7 @@ goog.scope(function() {
         ACTIVE_STATE: 'b-sm-badge_active',
         ITEM: 'b-sm-badge__item',
         HINT: 'b-sm-badge__hint',
-        HINT_LINK: 'b-sm-badge__hint-link'
+        LINK_HINT: 'b-sm-badge__link-hint'
     };
 
 
@@ -64,8 +64,7 @@ goog.scope(function() {
      * @enum {string}
      */
     View.Event = {
-        ITEM_CLICK: 'item-click',
-        HINT_LINK_CLICK: 'hint-link-click'
+        ITEM_CLICK: 'item-click'
     };
 
 
@@ -162,25 +161,6 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onDocumentClick_
         );
-
-        if (this.dom.hintLink) {
-            this.getHandler().listen(
-                this.dom.hintLink,
-                goog.events.EventType.CLICK,
-                this.onHintLinkClick_
-            );
-        }
-    };
-
-
-    /**
-     * On hint link click
-     * @private
-     */
-    View.prototype.onHintLinkClick_ = function() {
-        this.dispatchEvent({
-            'type': View.Event.HINT_LINK_CLICK
-        });
     };
 
 
@@ -304,8 +284,8 @@ goog.scope(function() {
             hint: this.getElementByClass(
                 View.CssClass.HINT
             ),
-            hintLink: this.getElementByClass(
-                View.CssClass.HINT_LINK
+            linkHint: this.getElementByClass(
+                View.CssClass.LINK_HINT
             )
         };
     };
