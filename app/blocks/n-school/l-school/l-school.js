@@ -14,6 +14,8 @@ goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmFooter.View');
 goog.require('sm.bSmHeader.View');
+goog.require('sm.bSmSideMenu.SideMenu');
+goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
@@ -146,6 +148,13 @@ sm.lSchool.School = function() {
      */
     this.footer_ = null;
 
+    /**
+     * Side menu instance
+     * @type {sm.bSmSideMenu.SideMenu}
+     * @private
+     */
+    this.sideMenu_ = null;
+
 
     /**
      * Current factory name
@@ -167,7 +176,8 @@ goog.scope(function() {
         Comments = sm.lSchool.bComments.Comments,
         DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
-        Authorization = sm.iAuthorization.Authorization;
+        Authorization = sm.iAuthorization.Authorization,
+        Utils = cl.iUtils.Utils;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance(),
         factory = sm.iFactory.FactoryStendhal.getInstance();
@@ -236,6 +246,9 @@ goog.scope(function() {
         this.sendAnalyticsPageview_();
 
         this.listenMap_();
+
+        this.listenSubheader_();
+        this.listenSideMenu_();
     };
 
 
@@ -346,6 +359,36 @@ goog.scope(function() {
 
 
     /**
+     * Init side menu listeners
+     * @private
+     */
+    School.prototype.listenSubheader_ = function() {
+        this.getHandler().listen(
+                this.subHeader_,
+                sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
+                this.onHamburgerMenuClick_
+            );
+    };
+
+    /**
+     * Init side menu listeners
+     * @private
+     */
+    School.prototype.listenSideMenu_ = function() {
+        this.getHandler().listen(
+                this.sideMenu_,
+                sm.bSmSideMenu.SideMenu.Event.MENU_IS_OPENED,
+                this.sideMenuIsOpenedHandler_
+            )
+            .listen(
+                this.sideMenu_,
+                sm.bSmSideMenu.SideMenu.Event.MENU_IS_CLOSED,
+                this.sideMenuIsClosedHandler_
+            );
+    };
+
+
+    /**
      * creates comment url
      * @return {string}
      * @private
@@ -409,6 +452,77 @@ goog.scope(function() {
 
         this.setEcAnalyticsClickMap_(id, name);
         this.sendDataAnalytics_('school map', 'schools click', name);
+    };
+
+
+    /**
+     * Subheader hamburger icon click handler
+     * @private
+     */
+    School.prototype.onHamburgerMenuClick_ = function() {
+        this.sideMenu_.showMenu();
+    };
+
+
+    /**
+     * Side menu opened event handler
+     * @private
+     */
+    School.prototype.sideMenuIsOpenedHandler_ = function() {
+        this.addOverflowHidden_();
+    };
+
+
+    /**
+     * Side menu closed event handler
+     * @private
+     */
+    School.prototype.sideMenuIsClosedHandler_ = function() {
+        this.removeOverflowHidden_();
+    };
+
+
+    /**
+     * Add overflow hidden
+     * @private
+     */
+    School.prototype.addOverflowHidden_ = function() {
+        goog.dom.classlist.add(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.add(
+            this.getElement(),
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.add(
+            document.body,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+    };
+
+
+    /**
+     * Remove overflow hidden
+     * @private
+     */
+    School.prototype.removeOverflowHidden_ = function() {
+        goog.dom.classlist.remove(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.remove(
+            this.getElement(),
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.remove(
+            document.body,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
     };
 
 
@@ -550,6 +664,7 @@ goog.scope(function() {
             .initDataBlockFeatures_()
             .initHeader_()
             .initSubHeader_()
+            .initSideMenu_()
             .initFooter_()
             .initComponents_(DataBlockFoldList, DataBlockFoldList.CssClass.ROOT)
             .initComponents_(DBlockRatings, DBlockRatings.CssClass.ROOT)
@@ -788,6 +903,28 @@ goog.scope(function() {
             this.factory_,
             'smSubheader',
             subHeader,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init side menu
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initSideMenu_ = function() {
+        var sideMenu = goog.dom.getElementByClass(
+            sm.bSmSideMenu.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.sideMenu_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smSideMenu',
+            sideMenu,
             this
         );
 

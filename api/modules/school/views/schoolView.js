@@ -24,10 +24,11 @@ const scoreView = require('../views/scoreView');
 const scoreEntityView = require('../../entity/views/scoreView');
 const seoView = require('./seoView.js');
 const favoriteView = require('../../favorite/views/favoriteView');
-const Header = require('../../entity/lib/Header');
 const SubHeader = require('../lib/SchoolSubheader');
 
-const footerView = require('../../entity/views/footerView');
+const footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
 const commentView = require('../../comment/views/commentView');
 
@@ -42,12 +43,12 @@ let schoolView = {};
  * @param {object} user
  * @param {object} user.data
  * @param {string} user.isCommented
- * @param {Object} headerParams
+ * @param {Object} config
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
 schoolView.default = function(
-    schoolInstance, data, user, headerParams, opt_popularSchools
+    schoolInstance, data, user, config, opt_popularSchools
 ) {
     addressView.transformSchoolAddress(schoolInstance);
     var addresses = services.department.addressesFilter(
@@ -97,7 +98,8 @@ schoolView.default = function(
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
         user: user,
-        header: headerParams,
+        header: headerView.render(config, entityType.SCHOOL),
+        sideMenu: sideMenuView.render(config, entityType.SCHOOL),
         subHeader: schoolView.subHeader({
             user: user,
             favoriteEntities: favoriteView.list(data.favorites)
@@ -125,7 +127,6 @@ schoolView.subHeader = function(data) {
 
     subHeader.init({
         isLogoRedirect: true,
-        contacts: Header.CONTACTS,
         isSearchRedirect: true,
         user: data.user,
         favoriteEntities: data.favoriteEntities,
