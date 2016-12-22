@@ -29,7 +29,9 @@ service.getData = async(function(searchParams, opt_categoryId) {
     let categories = await(services.courseCategory.getAll({isActive: true}));
 
     return await({
-        courses: services.course.list(searchParams, SEARCH_CHUNK_SIZE),
+        courses: services.course.list(searchParams, {
+            limit: SEARCH_CHUNK_SIZE
+        }),
         mapCourses: services.course.listMap(searchParams, SEARCH_CHUNK_SIZE),
         mapPosition: services.map.getPositionParams(searchParams),
         categories: categories,

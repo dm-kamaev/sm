@@ -158,7 +158,7 @@ searchView.render = function(data) {
         resultsList: {
             title: seoParams.listTitle,
             description: seoParams.text && seoParams.text[0] || null,
-            countResults: data.countResults,
+            countResults: searchView.countResults(data.coursesList),
             searchText: data.searchParams.name,
             declensionEntityType: {
                 nom: 'курс',

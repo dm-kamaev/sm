@@ -57,7 +57,6 @@ controller.commonSearch = async(function(req, res, next) {
             fbClientId: FB_CLIENT_ID,
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
-            countResults: searchView.countResults(data.search.courses),
             coursesList: data.search.courses,
             mapCourses: courseView.joinAliases(
                 data.search.mapCourses, aliases.map
@@ -130,21 +129,7 @@ controller.search = async(function(req, res, next) {
                     favorites: services.favorite.getFavoriteEntities(user.id),
                     search: services.search.getData(
                         searchParams, categoryInstance.id
-                    ),
-                    courses: services.course.list(
-                        searchParams, {
-                            limit: 10
-                        }
-                    ),
-                    mapCourses: services.course.listMap(searchParams, 10),
-                    mapPosition: services.map.getPositionParams(searchParams),
-                    filtersData: {
-                        [filterName.TYPE]: services.courseType.getAll()
-                    },
-                    seoParams: services.seoCourseList.getByCategoryId(
-                        categoryInstance.id
-                    ),
-                    categories: services.courseCategory.getAll({isActive: true})
+                    )
                 }),
                 aliases = await({
                     courses: services.course.getAliases(data.search.courses),
@@ -157,7 +142,6 @@ controller.search = async(function(req, res, next) {
                 fbClientId: FB_CLIENT_ID,
                 favorites: data.favorites,
                 authSocialLinks: authSocialLinks,
-                countResults: searchView.countResults(data.search.courses),
                 coursesList: data.search.courses,
                 mapCourses: courseView.joinAliases(
                     data.search.mapCourses, aliases.map
