@@ -81,6 +81,7 @@ app.use(morgan('dev', {
     stream: expressLogStream.warning
 }));
 
+app.use('/schools/api', api.school.router);
 app.use('/courses/api', api.course.router);
 
 app.use(csrf);
@@ -92,7 +93,6 @@ app.use('/courses/', modules.course.router);
 
 app.use('/:subdomain/api', api.mail.router);
 app.use('/:subdomain/api', api.comment.router);
-app.use('/schools/api', api.school.router);
 app.use('/:subdomain/api', api.geo.router);
 app.use('/:subdomain/api', api.feedback.router);
 app.use('/:subdomain/api', api.favorite.router);
