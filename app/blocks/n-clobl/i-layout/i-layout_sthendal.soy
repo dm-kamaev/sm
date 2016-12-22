@@ -318,7 +318,7 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
+    <div class="{call .rootClass/} {call .modifierClasses data="all"/}"
                 {call .attributes data="all"/}>
 
         {call .mainSubheader data="all" /}
@@ -452,14 +452,17 @@
 
 /**
  * Css class modifier of the entity type
+ * and modifier
  * @param params {{
  *     config: {
- *         entityType: string
+ *         entityType: string,
+ *         modifier: string
  *     }
  * }}
  * @protected
  */
-{template .entityModifierClass}
+{template .modifierClasses}
+    {call .rootClass/}_{$params.config.modifier}{sp}
     {call .rootClass/}_entity_{$params.config.entityType}
 {/template}
 
