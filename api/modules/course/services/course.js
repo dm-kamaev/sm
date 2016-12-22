@@ -31,7 +31,8 @@ const informationFields = {
         'entranceExam',
         'learningOutcome',
         'leadType',
-        'embedId'
+        'embedId',
+        'imageUrl'
     ],
     BRAND: ['id', 'name', 'description'],
     TYPE: ['id', 'name'],
