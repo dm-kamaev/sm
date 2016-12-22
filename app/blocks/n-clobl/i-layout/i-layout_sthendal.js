@@ -62,6 +62,7 @@ goog.scope(function() {
 
     /**
      * @override
+     * @protected
      */
     Layout.prototype.decorateInternal = function(element) {
         Layout.base(this, 'decorateInternal', element);
@@ -79,7 +80,7 @@ goog.scope(function() {
      */
     Layout.prototype.initSideMenu = function() {
         var dom = this.getView().getDom();
-        this.sideMenu = this.decorateChild('sideMenu', dom.sideMenu);
+        this.sideMenu = this.decorateChild('smSideMenu', dom.sideMenu);
     };
 
     /**
@@ -129,6 +130,7 @@ goog.scope(function() {
     /**
      * Enter document
      * @override
+     * @public
      */
     Layout.prototype.enterDocument = function() {
         Layout.base(this, 'enterDocument');

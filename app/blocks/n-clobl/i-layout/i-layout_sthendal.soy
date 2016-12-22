@@ -16,8 +16,8 @@
  *         metaDescription: (string|undefined)
  *     },
  *     subHeader: sm.bSmSubHeader.Template.Params,
- *     header: sm.bSmHeader.Template.Params.Data,
- *     sideMenu: sm.bSmSideMenu.Template.Params,
+ *     header: sm.bSmHeader.Template.Params,
+ *     sideMenu: sm.bSmSideMenu.Template.Params.Data,
  *     user: {
  *         id: (number|undefined),
  *         firstName: (string|undefined),
@@ -325,9 +325,12 @@
     <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
                 {call .attributes data="all"/}>
 
-        {call .mainHeader data="all" /}
-        {call .mainSubheader data="all" /}
-        {call .mainContent data="all" /}
+        <div class="{call .rootClass/}__wrapper-content">
+            {call .mainHeader data="all" /}
+            {call .mainSubheader data="all" /}
+            {call .mainContent data="all" /}
+        </div>
+
         {call .mainFooter data="all" /}
         {call .sideMenu data="all" /}
     </div>
@@ -337,7 +340,7 @@
 /**
  * @param params {{
  *     data: {
- *          header: sm.bSmHeader.Template.Params
+ *          sideMenu: sm.bSmSideMenu.Template.Params.Data
  *     }
  * }}
  */
@@ -346,8 +349,10 @@
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
-                'type': 'sideMenu',
-                'renderParams': $params.data.sideMenu
+                'type': 'smSideMenu',
+                'renderParams': [
+                    'data': $params.data.sideMenu
+                ]
             ]/}
         {/call}
     </div>

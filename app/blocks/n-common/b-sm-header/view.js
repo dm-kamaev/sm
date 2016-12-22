@@ -37,17 +37,34 @@ goog.scope(function() {
     /**
      * List of CSS classes
      * @enum {string}
-     * @const
      */
     View.CssClass = {
         ROOT: 'b-sm-header',
         HEADER_LINKS: 'b-sm-header__menu-link'
     };
 
+    /**
+     * @return {Array<Element>}
+     * @public
+     */
+    View.prototype.getLinks = function() {
+        return this.dom.links;
+    };
+
+
+    /**
+     * @override
+     * @public
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+    };
+
 
     /**
      * @override
      * @param {Element} element
+     * @protected
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
@@ -63,24 +80,5 @@ goog.scope(function() {
         this.dom.links = this.getElementsByClass(
             View.CssClass.HEADER_LINKS
         );
-
-        this.dom.sideMenu = this.getElementByClass(
-            sm.gModal.ModalSideMenuView.CssClass.ROOT
-        );
-    };
-
-    /**
-     * @return {Array<Element>}
-     */
-    View.prototype.getLinks = function() {
-        return this.dom.links;
-    };
-
-
-    /**
-     * @override
-     */
-    View.prototype.enterDocument = function() {
-        View.base(this, 'enterDocument');
     };
 });  // goog.scope

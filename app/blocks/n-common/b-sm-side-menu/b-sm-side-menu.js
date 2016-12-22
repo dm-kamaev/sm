@@ -2,6 +2,7 @@ goog.provide('sm.bSmSideMenu.SideMenu');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.ui.Component');
+goog.require('sm.bSmSideMenu.View');
 
 
 goog.scope(function() {

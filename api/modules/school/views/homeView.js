@@ -6,16 +6,19 @@
 const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
     footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView'),
     seoView = require('./seoView');
 
-const Header = require('../../entity/lib/Header'),
-    SubHeader = require('../lib/SchoolSubheader');
+const SubHeader = require('../lib/SchoolSubheader');
 
 let homeView = {};
 
 /**
  * Return template data for layout
  * @param {{
+ *      config: Object,
+ *      entityType: string,
  *      user: Object,
  *      favorites: Array<Object>,
  *      seoLinks: Array<Object>,
@@ -30,7 +33,8 @@ homeView.render = function(data) {
     let user = userView.default(data.user),
         favoriteEntities = favoriteView.list(data.favorites);
     return {
-        header: data.header,
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: homeView.subHeader({
             favoriteEntities: favoriteEntities,
             user: user
@@ -56,7 +60,6 @@ homeView.subHeader = function(data) {
 
     subHeader.init({
         isLogoRedirect: false,
-        contacts: Header.CONTACTS,
         isSearchRedirect: true,
         user: data.user,
         favoriteEntities: data.favoriteEntities,

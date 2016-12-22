@@ -326,7 +326,7 @@
 
 @include media-m {
     .b-search__fader {
-        top: 100px;
+        top: 72px;
     }
 
     .b-search__fader_size_l {
@@ -362,10 +362,6 @@
 }
 
 @include media-xs {
-    .b-search__fader {
-        top: 70px;
-    }
-
     .b-search__fader_size_l {
         top: 109px;
     }

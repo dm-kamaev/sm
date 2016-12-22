@@ -3,7 +3,6 @@
 const soy = require.main.require('./app/components/soy');
 const services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
-const headerView = require('../../../../api/modules/entity/views/headerView');
 
 const entityTypeEnum =
     require('../../../../api/modules/entity/enums/entityType');
@@ -62,8 +61,11 @@ controller.schoolNotFound = async(function(req, res) {
         favorites: data.favorites,
         authSocialLinks: data.authSocialLinks,
         seoLinks: data.seoLinks,
-        header: headerView.render(config, entityTypeEnum.SCHOOL)
+        entityType: entityTypeEnum.SCHOOL,
+        config: config
     });
+
+    console.log(JSON.stringify(templateData.sideMenu, null, 4));
 
     var html = soy.render('sm.lErrorSchoolNotFound.Template.base', {
         params: {

@@ -110,22 +110,7 @@ goog.scope(function() {
 
     /**
      * @override
-     * @protected
-     */
-    Subheader.prototype.decorateInternal = function(element) {
-        Subheader.base(this, 'decorateInternal', element);
-
-        this.initSearch_();
-        this.initAuthorizationLink_();
-        this.initFavorite_();
-        this.initLinks_();
-        this.initListLinks_();
-    };
-
-
-    /**
-     * @override
-     * @protected
+     * @public
      */
     Subheader.prototype.enterDocument = function() {
         Subheader.base(this, 'enterDocument');
@@ -135,15 +120,6 @@ goog.scope(function() {
         this.initHamburgerMenuListener_();
     };
 
-    /**
-     * @private
-     */
-    Subheader.prototype.defaultModeInitedHandler_ = function() {
-        goog.dom.classes.remove(
-            this.getView().getDom().searchSection,
-            View.CssClass.SEARCH_SECTION_ON_TOP
-        );
-    };
 
     /**
      * Add given item to favorites
@@ -154,25 +130,6 @@ goog.scope(function() {
         this.favorite_.addItem(favoriteItem);
     };
 
-
-     /**
-     * Initializes listeners for view
-     * @private
-     */
-    Subheader.prototype.initHamburgerMenuListener_ = function() {
-        this.viewListen(
-            View.Event.HAMBURGER_MENU_CLICK,
-            this.onHamburgerMenuClick_
-        );
-    };
-
-    /**
-     * [onHamburgerMenuClick_ handler]
-     * @private
-     */
-    Subheader.prototype.onHamburgerMenuClick_ = function() {
-        this.dispatchEvent(Subheader.Event.HAMBURGER_MENU_CLICK);
-    };
 
     /**
      * Remove item with given id from favorites
@@ -212,6 +169,41 @@ goog.scope(function() {
      */
     Subheader.prototype.getSearchData = function() {
         return this.search_.getData();
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    Subheader.prototype.decorateInternal = function(element) {
+        Subheader.base(this, 'decorateInternal', element);
+
+        this.initSearch_();
+        this.initAuthorizationLink_();
+        this.initFavorite_();
+        this.initLinks_();
+        this.initListLinks_();
+    };
+
+
+    /**
+     * Initializes listeners for view
+     * @private
+     */
+    Subheader.prototype.initHamburgerMenuListener_ = function() {
+        this.viewListen(
+            View.Event.HAMBURGER_MENU_CLICK,
+            this.onHamburgerMenuClick_
+        );
+    };
+
+    /**
+     * Hamburger icon click handler
+     * @private
+     */
+    Subheader.prototype.onHamburgerMenuClick_ = function() {
+        this.dispatchEvent(Subheader.Event.HAMBURGER_MENU_CLICK);
     };
 
 

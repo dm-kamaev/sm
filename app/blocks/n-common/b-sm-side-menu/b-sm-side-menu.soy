@@ -1,16 +1,23 @@
 {namespace sm.bSmSideMenu.Template}
 
 /**
+ * @typedef {{
+ *     menuItems: Array<{
+ *         url: string,
+ *         name: string
+ *     }>,
+  *     footerItems: {
+ *         contactLinks: Array<sm.bSmLink.Template.Params.Data>,
+ *         copyright: string
+ *     }
+ * }} sm.bSmSideMenu.Template.Params.Data
+ */
+
+/**
  * Template for Side menu block
  *
- * @param? params {{
- *     ?data: {
- *			menuItems: Array<{
- *              url: string,
- *              name: string
- *          }>,
- *          footerItems: Array<sm.bSmLink.SmLink>	
- *     }
+ * @param params {{
+ *     data: sm.bSmSideMenu.Template.Params.Data
  * }}
  * @constructor
  * @extends cl.iControl.Template
@@ -20,6 +27,9 @@
 {/template}
 
 /**
+ * @param params {{
+ *     data: sm.bSmSideMenu.Template.Params.Data
+ * }}
  * @override
  */
 {template .body}
@@ -28,9 +38,12 @@
 
 /**
  * menuContent
+ * @param params {{
+ *     data: sm.bSmSideMenu.Template.Params.Data
+ * }}
  */
 {template .menuContent}
-    
+
     <div class="{call .rootClass /}__content">
         {call .header data="all" /}
         {call .menu data="all" /}
@@ -71,12 +84,19 @@
 
 /**
  * menu
- * @param params {sm.bSmSideMenu.Template.Params}
+ * @param params {{
+ *     data: {
+ *          menuItems: Array<{
+ *              url: string,
+ *              name: string
+ *          }>
+ *     }
+ * }}
  */
 {template .menu}
 	<div class="{call .rootClass /}__menu">
 		<ul class="{call .rootClass /}__menu-list">
-			{foreach $item in $params.menuItems}
+			{foreach $item in $params.data.menuItems}
 				{call .menuItem}
 					{param item: $item/}
 				{/call}
@@ -87,13 +107,19 @@
 
 
 /**
- * menu
- * @param params {sm.bSmSideMenu.Template.Params}
+ * Footer
+ * @param params {{
+ *     data: {
+ *          footerItems: {
+ *              contactLinks: Array<sm.bSmLink.Template.Params.Data>
+ *          }
+ *     }
+ * }}
  */
 {template .footer}
     <div class="{call .rootClass /}__footer">
         <ul class="{call .rootClass /}__footer-items">
-            {foreach $item in $params.footerItems.contactLinks}
+            {foreach $item in $params.data.footerItems.contactLinks}
                 {call .footerItem}
                     {param item: $item /}
                 {/call}
@@ -107,12 +133,18 @@
 
 /**
  * copyright
- * @param params {sm.bSmSideMenu.Template.Params}
+ * @param params {{
+ *     data: {
+ *          footerItems: {
+ *              copyright: string
+ *          }
+ *     }
+ * }}
  */
 {template .copyright}
     <li class="{call .rootClass /}__footer-item">
         <span class="{call .rootClass /}__copyright">
-            {$params.footerItems.copyright}
+            {$params.data.footerItems.copyright}
         </span>
     </li>
 {/template}
@@ -120,7 +152,7 @@
 
 /**
  * footerLink
- * @param item {sm.bSmLink.SmLink}
+ * @param item {sm.bSmLink.Template.Params.Data}
  */
 {template .footerItem}
 
@@ -149,7 +181,7 @@
  * link
  * @param item {{
  *    url: string,
- *    name: string   
+ *    name: string
  * }}
  */
 {template .menuItem}
@@ -177,7 +209,7 @@
                 ]
             ]/}
         {/call}
-	</li>    
+	</li>
 {/template}
 
 
@@ -194,5 +226,5 @@
  * @override
  */
 {template .additionalClasses}
-	i-utils__hidden
+    {cl.iUtils.Utils.CssClass.HIDDEN}
 {/template}
