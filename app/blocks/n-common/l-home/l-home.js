@@ -94,10 +94,12 @@ goog.scope(function() {
     Home.prototype.initSectionRecommendations_ = function() {
         var dom = this.getView().getDom();
 
-        this.catalog_ = this.decorateChild(
-            'smCatalog',
-            dom.catalog
-        );
+        if (dom.catalog) {
+            this.catalog_ = this.decorateChild(
+                'smCatalog',
+                dom.catalog
+            );
+        }
     };
 });  // goog.scope
 
