@@ -257,13 +257,11 @@ controller.information = async(function(req, res, next) {
                     user: user,
                     fbClientId: FB_CLIENT_ID,
                     authSocialLinks: authSocialLinks,
-                    entityData: courseView.page(course, categoryAlias),
-                    map: courseView.pageMap(course, categoryAlias),
+                    course: course,
+                    categoryAlias: categoryAlias,
                     favorites: data.favorites,
                     categories: data.categories,
-                    categoryAliases: data.categoryAliases,
-                    priceLabelText: 'Гарантия лучшей цены',
-                    actionButtonText: 'Хочу этот курс!'
+                    categoryAliases: data.categoryAliases
                 });
                 let factory = contentExperiment.getFactoryByQuery(req.query);
 

@@ -1,39 +1,50 @@
+'use strict';
+
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
+const courseView = require('./courseView');
 
 const courseCategoryView = require('./courseCategoryView');
+
+const courseImageSize = require('../enums/courseImageSize');
 
 /**
  * @param {{
  *     user: Object,
  *     fbClientId: string,
  *     authSocialLinks: Object,
- *     entityData: Object,
- *     map: Object,
  *     favorites: Object,
+ *     course: Object,
+ *     categoryAlias: string,
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
- *     priceLabelText: string,
  *     actionButtonText: string
  * }} data
  * @return {Object}
  */
 exports.render = function(data) {
-    var user = userView.default(data.user);
+    let user = userView.default(data.user),
+        entityData = courseView.page(data.course, data.categoryAlias);
+
+    let imageOpenGraph = entityData.imageUrl.replace(
+        '{width}',
+        courseImageSize.DEFAULT[0]
+    );
 
     return {
         seo: {
-            metaTitle: 'Профориентационный курс ' + data.entityData.name +
+            metaTitle: 'Профориентационный курс ' + entityData.name +
                 ' в Москве: стоимость обучения, отзывы.',
             metaDescription: seoView.formatSeoDescription(
-                data.entityData.description
+                entityData.description
             )
         },
         openGraph: {
-            title: 'Курс ' + data.entityData.name + ' на «Курсах Мела»',
-            description: data.entityData.description,
-            image: '/static/images/n-clobl/i-layout/cources_sharing.png',
+            title: 'Курс ' + entityData.name + ' на «Курсах Мела»',
+            description: entityData.description,
+            image: imageOpenGraph,
+            relapImage: imageOpenGraph,
             fbClientId: data.fbClientId,
         },
         subHeader: {
@@ -63,9 +74,11 @@ exports.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
-        entityData: data.entityData,
-        map: data.map,
-        priceLabelText: data.priceLabelText,
-        actionButtonText: data.actionButtonText
+        entityData: entityData,
+        map: courseView.pageMap(data.course, data.categoryAlias),
+        priceLabelText: 'Гарантия лучшей цены',
+        actionButtonText: data.actionButtonText ?
+            data.actionButtonText :
+            'Хочу этот курс!'
     };
 };
