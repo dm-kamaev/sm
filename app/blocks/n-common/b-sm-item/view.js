@@ -90,7 +90,7 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initDom_();
+        this.initDom();
     };
 
 
@@ -168,13 +168,12 @@ goog.scope(function() {
      * @protected
      */
     View.prototype.initLinkElementsListeners = function() {
-        if (this.dom.nameLink) {
-            this.getHandler().listen(
-                this.dom.nameLink,
-                goog.events.EventType.CLICK,
-                this.onClick
-            );
-        }
+        this.getHandler().listen(
+            this.dom.nameLink,
+            goog.events.EventType.CLICK,
+            this.onClick
+        );
+
         if (this.dom.coverImage) {
             this.getHandler().listen(
                 this.dom.coverImage,
@@ -214,10 +213,10 @@ goog.scope(function() {
 
     /**
      * Initializes dom elements
-     * @private
+     * @protected
      * @return {Object}
      */
-    View.prototype.initDom_ = function() {
+    View.prototype.initDom = function() {
         this.dom = {
             coverImage: this.getElementByClass(
                 View.CssClass.COVER_IMAGE

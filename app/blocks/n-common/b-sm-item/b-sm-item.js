@@ -142,11 +142,6 @@ goog.scope(function() {
     Item.prototype.initNameLink_ = function() {
         var dom = this.getView().getDom();
 
-        if (goog.isDefAndNotNull(dom.nameLink)) {
-            this.nameLink = this.decorateChild(
-                'smLink',
-                dom.nameLink
-            );
-        }
+        this.nameLink = this.decorateChild('smLink', dom.nameLink);
     };
 });  // goog.scope

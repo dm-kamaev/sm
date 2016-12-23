@@ -109,7 +109,7 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initDom_(element);
+        this.initDom(element);
     };
 
 
@@ -143,10 +143,10 @@ goog.scope(function() {
     /**
      * Initializes dom elements
      * @param {Element} element
-     * @private
+     * @protected
      */
-    View.prototype.initDom_ = function(element) {
-        var parentDom = View.base(this, 'initDom_');
+    View.prototype.initDom = function(element) {
+        var parentDom = View.base(this, 'initDom');
 
         this.dom = {
             score: this.getElementByClass(
