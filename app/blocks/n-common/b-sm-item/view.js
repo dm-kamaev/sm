@@ -214,7 +214,6 @@ goog.scope(function() {
     /**
      * Initializes dom elements
      * @protected
-     * @return {Object}
      */
     View.prototype.initDom = function() {
         this.dom = {
@@ -225,6 +224,5 @@ goog.scope(function() {
                 View.CssClass.NAME_LINK
             )
         };
-        return this.dom;
     };
 });  // goog.scope
