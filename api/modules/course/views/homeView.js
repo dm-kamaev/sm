@@ -98,17 +98,17 @@ view.subheader = function(data) {
  * @return {Object}
  */
 view.searchPanel = function() {
-    let searchUrl = '/school?name=';
+    let searchUrl = `/${PAGE_ALIAS}?name=`;
 
     let links = [{
         'content': 'Английский язык',
-        'url': encodeURIComponent(`${searchUrl}Английский язык`)
+        'url': searchUrl + encodeURIComponent('Английский язык')
     }, {
         'content': 'ЦАО',
-        'url': encodeURIComponent(`${searchUrl}ЦАО`)
+        'url': searchUrl + encodeURIComponent('ЦАО')
     }, {
         'content': 'Кутузовская',
-        'url': encodeURIComponent(`${searchUrl}Кутузовская`)
+        'url': searchUrl + encodeURIComponent('Кутузовская')
     }];
 
     return {
@@ -124,7 +124,7 @@ view.searchPanel = function() {
         },
         searchLink: {
             content: 'Расширенный поиск',
-            url: '/search'
+            url: `/${PAGE_ALIAS}`
         }
     };
 };

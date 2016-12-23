@@ -181,7 +181,8 @@
  * @private
  */
 {template .sectionRecomendations_ kind="html"}
-    {if $params.data.recommendations}
+    {if $params.data.recommendations and
+        length($params.data.recommendations) > 0}
 
         {let $content kind="html"}
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
@@ -227,20 +228,23 @@
  * @private
  */
 {template .sectionPopular_ kind="html"}
-    {let $content kind="html"}
-        {if $params}
-        {/if}
-    {/let}
-    {call .section_}
-        {param params: [
-            'data': [
-                'content': $content
-            ],
-            'config': [
-                'modifier': 'popular'
-            ]
-        ] /}
-    {/call}
+    {if $params.data.popularEntities and
+        length($params.data.popularEntities) > 0}
+        {let $content kind="html"}
+            {if $params}
+            {/if}
+        {/let}
+        {call .section_}
+            {param params: [
+                'data': [
+                    'content': $content
+                ],
+                'config': [
+                    'modifier': 'popular'
+                ]
+            ] /}
+        {/call}
+    {/if}
 {/template}
 
 

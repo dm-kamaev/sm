@@ -11,6 +11,7 @@
     background: #fff;
 
     font-family: 'Proxima', Arial, sans-serif;
+
     &:after {
         display: block;
         clear: both;
@@ -42,6 +43,7 @@
     height: 100%;
 
     vertical-align: middle;
+
     &:before {
         display: inline-block;
 
@@ -115,9 +117,11 @@
     height: 50px;
 
     vertical-align: middle;
+
     &.b-sm-subheader__search_visible_l {
         display: inline-block;
     }
+
     &.b-sm-subheader__search_visible_s {
         display: none;
 
@@ -149,6 +153,7 @@
     &.b-sm-subheader__search-link_visible_m {
         display: none;
     }
+
     &.b-sm-subheader__search-link_visible_s {
         display: none;
     }
@@ -185,6 +190,7 @@
     vertical-align: middle;
 
     border-left: 1px solid #e5e5e5;
+
     &:before {
         display: inline-block;
 
@@ -298,9 +304,11 @@
     .b-sm-subheader {
         text-align: left;
     }
+
     .b-sm-subheader__body {
         height: 100px;
     }
+
     .b-sm-subheader__section_search {
         position: absolute;
         top: 0;
@@ -312,6 +320,7 @@
         max-width: none;
         padding: 0;
     }
+
     .b-sm-subheader__section_links {
         position: absolute;
 
@@ -319,17 +328,21 @@
         padding-right: 0;
         padding-left: 314px;
     }
+
     .b-sm-subheader__search {
         &.b-sm-subheader__search_visible_l {
             display: none;
         }
+
         &.b-sm-subheader__search_visible_s {
             display: inline-block;
         }
     }
+
     .b-sm-subheader__wrap {
         margin-top: 12px;
     }
+
     /* header animation polyfill */
     .b-sm-subheader_mode_search.b-sm-subheader_animation_off {
         .b-sm-subheader__section.b-sm-subheader__section_logo,
@@ -337,6 +350,7 @@
             visibility: hidden;
         }
     }
+
     .b-sm-subheader_mode_default.b-sm-subheader_animation_off {
         .b-sm-subheader__section.b-sm-subheader__section_logo,
         .b-sm-subheader__section.b-sm-subheader__section_links {
@@ -344,6 +358,7 @@
         }
     }
     /* end header animation polyfill */
+
     /* header animation */
     .b-sm-subheader_mode_search.b-sm-subheader_animation_on {
         .b-sm-subheader__section.b-sm-subheader__section_logo,
@@ -351,6 +366,7 @@
             animation-name: fadeOut;
         }
     }
+
     .b-sm-subheader_mode_default.b-sm-subheader_animation_on {
         .b-sm-subheader__section.b-sm-subheader__section_logo,
         .b-sm-subheader__section.b-sm-subheader__section_links {
@@ -400,6 +416,7 @@
         &.b-sm-subheader__search-link_visible_m {
             display: none;
         }
+
         &.b-sm-subheader__search-link_visible_s {
             display: inline-block;
         }
@@ -426,6 +443,7 @@
 
         height: 100%;
         margin-right: -7px;
+
         &:before {
             display: inline-block;
 
@@ -440,8 +458,8 @@
     .b-sm-subheader__user-control {
         height: 30px;
         padding-left: 12px;
+
         &.b-sm-subheader__user-control_authorization {
-            // padding-right: 12px;
             padding-right: 0;
         }
     }
@@ -473,9 +491,35 @@
     .b-sm-subheader__section_hamburger-menu {
         display: inline-block;
     }
+
     .b-sm-subheader__section_logo {
         display: block;
 
         text-align: center;
     }
+
+    /* header animation disable polyfill */
+    .b-sm-subheader_mode_search.b-sm-subheader_animation_off {
+        .b-sm-subheader__section.b-sm-subheader__section_logo,
+        .b-sm-subheader__section.b-sm-subheader__section_links {
+            visibility: visible;
+        }
+    }
+    /* end header animation disable polyfill */
+
+    /* header animation */
+    .b-sm-subheader_mode_search.b-sm-subheader_animation_on {
+        .b-sm-subheader__section.b-sm-subheader__section_logo,
+        .b-sm-subheader__section.b-sm-subheader__section_links {
+            animation-name: none;
+        }
+    }
+
+    .b-sm-subheader_mode_default.b-sm-subheader_animation_on {
+        .b-sm-subheader__section.b-sm-subheader__section_logo,
+        .b-sm-subheader__section.b-sm-subheader__section_links {
+            animation-name: none;
+        }
+    }
+    /* header animation end */
 }
