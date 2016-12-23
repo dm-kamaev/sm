@@ -318,7 +318,10 @@
  * @private
  */
 {template .image_ kind="html"}
-    <img class="{call .rootClass/}__image" src="{$params.data.image.imageUrl}">
+    <div class="{call .rootClass/}__image-wrap">
+        <img class="{call .rootClass/}__image"
+            src="{$params.data.image.imageUrl}">
+    </div>
 {/template}
 
 

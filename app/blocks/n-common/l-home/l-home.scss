@@ -27,9 +27,11 @@
 }
 
 .l-home__section_image-l {
-    position: relative;
-
     border-bottom: 1px solid #e5e5e5;
+}
+
+.l-home__section-content_image-l {
+    position: relative;
 }
 
 .l-home__section_image-l {
@@ -37,16 +39,26 @@
     margin-bottom: 0;
 }
 
-.l-home__image {
+.l-home__image-wrap {
     position: absolute;
-    right: 0;
     bottom: -1px;
 
-    box-sizing: border-box;
-    width: 105%;
-    height: auto;
+    width: 60%;
     max-height: 435px;
     padding-left: 450px;
+}
+
+.l-home_entity_course {
+    .l-home__image-wrap {
+        max-width: 680px;
+    }
+}
+
+.l-home__image {
+    width: 100%;
+    height: 100%;
+
+    vertical-align: bottom;
 }
 
 .l-home__image-description {
@@ -55,7 +67,7 @@
 }
 
 .l-home__image-title {
-    margin-bottom: 25px;
+    padding-bottom: 25px;
 
     font: 700 30.01px 'Proxima', sans-serif;
     line-height: 36px;
@@ -118,8 +130,15 @@
         height: 375px;
     }
 
-    .l-home__image {
+    .l-home__image-wrap {
         max-height: 410px;
+        padding-left: 370px;
+    }
+
+    .l-home_entity_course {
+        .l-home__image-wrap {
+            max-width: 640px;
+        }
     }
 
     .l-home__image-description {
@@ -150,12 +169,19 @@
         padding-top: 20px;
     }
 
-    .l-home__image {
+    .l-home__image-wrap {
         left: 0;
+        right: 0;
 
         width: 490px;
         margin: 0 auto;
         padding: 0;
+    }
+
+    .l-home_entity_course {
+        .l-home__image-wrap {
+            width: 490px;
+        }
     }
 
     .l-home__image-items {
@@ -177,15 +203,14 @@
         margin-left: 30px;
     }
 
-    .l-home__image {
-        width: 88%;
-        height: auto;
-        max-height: 225px;
+    .l-home_entity_course {
+        .l-home__image-wrap {
+            width: 60%;
+            min-width: 325px;
+        }
     }
 
     .l-home__image-title {
-        margin-bottom: 25px;
-
         font-size: 20.01px;
         line-height: 24px;
     }
@@ -198,7 +223,7 @@
         height: auto;
 
         border-bottom: none;
-        .l-home__image {
+        .l-home__image-wrap {
             display: none;
         }
     }
@@ -220,8 +245,15 @@
         height: 165px;
     }
 
-    .l-home__image {
+    .l-home__image-wrap {
         height: 160px;
+    }
+
+    .l-home_entity_course {
+        .l-home__image-wrap {
+            width: auto;
+            min-width: auto;
+        }
     }
 
     .l-home__section-content_recommendations {
