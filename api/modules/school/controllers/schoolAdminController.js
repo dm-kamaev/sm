@@ -15,7 +15,7 @@ const commentView = require('../views/commentView.js');
  * Get all comments for school with user data
  * @api {get} /api/school/:schoolId/comment
  * @apiVersion 0.1.0
- * @apiName get all comments
+ * @apiName getAllComments
  * @apiGroup School
  *
  * @apiSuccess {Object[]} comments
@@ -34,7 +34,7 @@ const commentView = require('../views/commentView.js');
  *
  */
 exports.getAllComments = async(function(req, res) {
-    let result, schoolId = req.params.schoolId;
+    let result, schoolId = parseInt(req.params.schoolId, 10);
     try {
         let comments = await(
             services.schoolComment.getAllCommentsWithUser(schoolId)
@@ -44,6 +44,71 @@ exports.getAllComments = async(function(req, res) {
         } else {
             result = commentView.comments(comments);
         }
+    } catch (error) {
+        logger.critical(error);
+        result = error.message;
+    }
+    res.json(result);
+});
+
+
+/**
+ * Edit text comment
+ * @api {put} /api/school/:schoolId/comment/:commentId
+ * @apiVersion 0.1.0
+ * @apiName editTextComment
+ * @apiGroup School
+ *
+ * @apiSuccess {Object[]} comments
+ * {
+        "id": 3147,
+        "created_at": "2016-12-23T09:28:43.403Z",
+        "updated_at": "2016-12-23T10:37:52.552Z",
+        "text": "ОБНОВИЛИ КОММЕНТАРИЙ111",
+        "comment_group_id": 78,
+        "rating_id": 3146,
+        "user_data_id": 3149,
+        "source": "User",
+        "isNoticeSend": false
+    }
+ *
+ *
+ */
+exports.textEdit = async(function(req, res) {
+    let result,
+        schoolId = parseInt(req.params.schoolId, 10),
+        commentId = parseInt(req.params.commentId, 10),
+        text = req.body.text;
+    try {
+        result = await(
+            services.schoolComment.textEdit(schoolId, commentId, text)
+        );
+    } catch (error) {
+        logger.critical(error);
+        result = error.message;
+    }
+    res.json(result);
+});
+
+
+/**
+ * Remove comment
+ * @api {delete} /api/school/:schoolId/comment/:commentId
+ * @apiVersion 0.1.0
+ * @apiName removeComment
+ * @apiGroup School
+ *
+ * @apiSuccess {number} success or failed: 1 || 0
+ *
+ */
+exports.removeComment = async(function(req, res) {
+    let result,
+        schoolId = parseInt(req.params.schoolId, 10),
+        commentId = parseInt(req.params.commentId, 10);
+    try {
+        result = await(
+            services.schoolComment.removeComment(schoolId, commentId)
+        );
     } catch (error) {
         logger.critical(error);
         result = error.message;

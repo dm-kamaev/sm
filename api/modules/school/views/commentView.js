@@ -7,6 +7,7 @@ const commentView = {};
 
 commentView.comment = function(comment) {
     return {
+        id: comment.id,
         text: comment.text,
         author: comment.author,
         socialId: comment.socialId,

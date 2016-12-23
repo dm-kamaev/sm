@@ -33,7 +33,7 @@ let service = {
  * ]
  */
 service.getAllCommentsWithUser = async(function(schoolId) {
-    var res = await(models.School.findOne({
+    let res = await(models.School.findOne({
         attributes: ['commentGroupId'],
         where: {
             id: schoolId
@@ -80,6 +80,7 @@ service.getAllCommentsWithUser = async(function(schoolId) {
             }
         }
         return {
+            id: comment.id,
             text: comment.text,
             author: userData.username || '',
             socialId: socialId || '',
@@ -89,11 +90,95 @@ service.getAllCommentsWithUser = async(function(schoolId) {
             updatedAt: userData['updated_at'] || '',
         };
     });
-    // console.log('+++++++++++++++++++++++++++++++');
-    // console.log(comments);
-    // console.log('length=', comments.length);
-    // console.log('+++++++++++++++++++++++++++++++');
+
     return comments;
 });
+
+
+/**
+ * edit text for comment
+ * @param  {number} schoolId
+ * @param  {string} text
+ * @return {Object}
+ * {
+        "id": 3147,
+        "created_at": "2016-12-23T09:28:43.403Z",
+        "updated_at": "2016-12-23T10:37:52.552Z",
+        "text": "ОБНОВИЛИ КОММЕНТАРИЙ111",
+        "comment_group_id": 78,
+        "rating_id": 3146,
+        "user_data_id": 3149,
+        "source": "User",
+        "isNoticeSend": false
+    }
+ */
+service.textEdit = async(function(schoolId, commentId, text) {
+    let res = {};
+    let searchComment = searchComment_(schoolId, commentId);
+    if (searchComment) {
+        let comment = await(models.Comment.update({
+            text: text,
+        }, {
+            where: {
+                id: searchComment.id
+            },
+            returning: true
+        }));
+        res = (comment) ? comment[1][0] : {};
+    }
+    return res;
+});
+
+
+/**
+ * removeComment
+ * @param  {number} schoolId
+ * @param  {string} text
+ * @return {number} 1 || 0
+ */
+service.removeComment = async(function(schoolId, commentId, text) {
+    let res = 0;
+    let searchComment = searchComment_(schoolId, commentId);
+    if (searchComment) {
+        res = await(models.Comment.destroy({
+            where: {
+                id: searchComment.id
+            },
+        }));
+    }
+    return res;
+});
+
+
+/**
+ * search comment
+ * @param  {number} schoolId
+ * @param  {number} commentId
+ * @return {Object} { id: 3147 }
+ */
+function searchComment_(schoolId, commentId) {
+    let res = await(models.School.findOne({
+        attributes: ['commentGroupId'],
+        where: {
+            id: schoolId
+        },
+        include: {
+            attributes: ['id'],
+            model: models.CommentGroup,
+            as: 'commentGroup',
+            include: {
+                attributes: ['id'],
+                model: models.Comment,
+                as: 'comments',
+                where: {
+                    id: commentId
+                }
+            }
+        },
+    }));
+
+    if (!res || !res.commentGroup) { return null; }
+    return res.commentGroup.comments[0];
+}
 
 module.exports = service;
