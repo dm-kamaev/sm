@@ -181,8 +181,7 @@
  * @private
  */
 {template .sectionRecomendations_ kind="html"}
-    {if $params.data.recommendations and
-        length($params.data.recommendations) > 0}
+    {if $params.data.recommendations}
 
         {let $content kind="html"}
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
