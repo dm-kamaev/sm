@@ -16,7 +16,7 @@ class ContactsGenerator {
          * @private
          */
         this.contacts_ = {
-            phone: '+7 (495) 478-68-24'
+            phone: '+7 (929) 987-56-98'
         };
     }
 
