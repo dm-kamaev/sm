@@ -631,7 +631,7 @@ schoolView.dataLinks = function() {
         {
             name: 'Школа 1234',
             url: searchUrl +
-            encodeURIComponent('школа 1234')
+            encodeURIComponent('школа №1234')
         },
         {
             name: 'Новослободская',
