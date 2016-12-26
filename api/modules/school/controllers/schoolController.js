@@ -631,40 +631,35 @@ exports.popularSpecializedClassType = async(function(req, res) {
 
 
 /**
- * Search over specialized class types sphere by given name or by school id
- * @api {get} api/school/specializedClassType/popular
- * @apiVersion 0.0.0
+ * @api {get} /api/school/types Get all types of school [ lyceum, school ]
+ * @apiVersion 0.1.0
+ * @apiName ShoolTypes
  * @apiGroup School
- * @apiName PopularSpecializedClassType
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     [
- *         {
- *                "label": "Математика",
- *                "value":"1"
- *             },
- *             {
- *                "label": "Занимательная математика",
- *                "value":"2"
- *             }
- *     ]
  *
- * @apiError Error (Error 500)
+ * @apiSuccess {Object[]} types of school
+ [{
+    "id": 1,
+    "name": "Школы и центры образования",
+    "values": ["SCHOOL", "EDUCATION_CENTER"],
+    "alias": "school-or-center"
+ },{
+    "id": 4,
+    "name": "Коррекционные",
+    "values": ["CORRECTIONAL_SCHOOL", "CORRECTIONAL_SCHOOL_INTERNAT"],
+    "alias": "correctional"
+ }]
+ *
  */
 exports.getAllTypes = async(function(req, res) {
     let result;
     try {
-        // var popularSpecializedClassTypes =
-        //     await(services.specializedClasses.getPopularTypes());
-
-        // result =
-        //     specializedClassesView.typeFilters(popularSpecializedClassTypes);
+        result = await(services.school.getAllTypes());
         res.status(200);
     } catch (error) {
         logger.critical(error);
-        res.status(500);
         result = error.message;
-    } finally {
-        res.json(result);
+        res.status(500);
     }
+    res.json(result);
 });
+
