@@ -5,25 +5,17 @@ const lodash = require('lodash');
 
 const areaView = require('../../geo/views/areaView.js');
 const metroView = require('../../geo/views/metroView.js');
-const addressView = require(
-    '../../geo/views/addressView.js');
+const addressView = require('../../geo/views/addressView.js');
 const districtView = require('../../geo/views/districtView');
-const activityView = require(
-    './activityView.js');
-const specializedClassesView = require(
-    './specializedClassesView.js');
-const ratingView = require(
-    './ratingView.js');
-const egeResultView = require(
-    '../../study/views/egeResultView.js');
-const giaResultView = require(
-    '../../study/views/giaResultView.js');
-const olimpResultView = require(
-    '../../study/views/olimpResultView.js');
+const activityView = require('./activityView.js');
+const specializedClassesView = require('./specializedClassesView.js');
+const ratingView = require('./ratingView.js');
+const egeResultView = require('../../study/views/egeResultView.js');
+const giaResultView = require('../../study/views/giaResultView.js');
+const olimpResultView = require('../../study/views/olimpResultView.js');
 const scoreView = require('../views/scoreView');
 const scoreEntityView = require('../../entity/views/scoreView');
 const seoView = require('./seoView.js');
-const favoriteView = require('../../favorite/views/favoriteView');
 const SubHeader = require('../lib/SchoolSubheader');
 
 const footerView = require('../../entity/views/footerView'),
@@ -102,7 +94,7 @@ schoolView.default = function(
         sideMenu: sideMenuView.render(config, entityType.SCHOOL),
         subHeader: schoolView.subHeader({
             user: user,
-            favoriteEntities: favoriteView.list(data.favorites)
+            favoriteEntities: []
         }),
         seoDescription: data.page.description,
         footer: footerView.render(seoView.linksList(data.seoLinks))
