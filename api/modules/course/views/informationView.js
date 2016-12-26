@@ -27,10 +27,12 @@ exports.render = function(data) {
     let user = userView.default(data.user),
         entityData = courseView.page(data.course, data.categoryAlias);
 
-    let imageOpenGraph = entityData.imageUrl.replace(
-        '{width}',
-        courseImageSize.DEFAULT[0]
-    );
+    let imageOpenGraph = entityData.imageUrl ?
+        entityData.imageUrl.replace(
+            '{width}',
+            courseImageSize.DEFAULT[0]
+        ) :
+        null;
 
     return {
         seo: {

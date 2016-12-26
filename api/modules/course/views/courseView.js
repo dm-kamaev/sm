@@ -433,10 +433,11 @@ view.getListCourse = function(course) {
             course.brandAlias,
             course.categoryAlias
         ),
-        imageUrl: course.imageUrl.replace(
+        imageUrl: course.imageUrl ? course.imageUrl.replace(
             '{width}',
             courseImageSize.DEFAULT[1]
-        ),
+        ) :
+        null,
         type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,
