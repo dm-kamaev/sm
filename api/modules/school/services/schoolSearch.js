@@ -6,9 +6,7 @@ const async = require('asyncawait/async'),
 
 const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
-    SchoolSearchQuery = require('../lib/SchoolSearch'),
-    subjectView = require('../../study/views/subjectView'),
-    searchView = require('../views/searchView');
+    SchoolSearchQuery = require('../lib/SchoolSearch');
 
 const entityType = require('../../entity/enums/entityType'),
     schoolSearchType = require('../enums/searchType'),
