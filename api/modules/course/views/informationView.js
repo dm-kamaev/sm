@@ -44,6 +44,7 @@ exports.render = function(data) {
             title: 'Курс ' + entityData.name + ' на «Курсах Мела»',
             description: entityData.description,
             image: imageOpenGraph,
+            relapTag: entityData.category,
             relapImage: imageOpenGraph,
             fbClientId: data.fbClientId,
         },
