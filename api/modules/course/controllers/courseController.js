@@ -439,18 +439,27 @@ controller.get = async(function(req, res) {
  *     {
  *         "brandName": "Maximum",
  *         "type": 2,
- *         "name": "course's name",
- *         "description": "course's description",
- *         "fullDescription": "course's full description",
- *         "learningOutcome": "course's learning outcome",
- *         "about": "course's about",
- *         "embedId": 'OulwjLUwLXM'
+ *         "name": "courses name",
+ *         "description": "courses description",
+ *         "fullDescription": "courses full description",
+ *         "learningOutcome": "courses learning outcome",
+ *         "about": "courses about",
+ *         "embedId": "OulwjLUwLXM"
  *     }
  */
 controller.create = async(function(req, res) {
-    let result;
+    let result, body = req.body || {},
+        courseData = {
+            brandName: body.brandName,
+            type: body.type,
+            name: body.name,
+            description: body.description,
+            fullDescription: body.fullDescription,
+            learningOutcome: body.learningOutcome,
+            about: body.about,
+            embedId: body.embedId,
+        };
     try {
-        let courseData = req.body;
         if (req.files) {
             let imageUrls = await(services.image.upload(
                 req.files,
@@ -460,8 +469,8 @@ controller.create = async(function(req, res) {
         }
         result = await(services.course.create(courseData));
     } catch (error) {
-        logger.error(error.message);
-        result = error;
+        logger.error(error);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
