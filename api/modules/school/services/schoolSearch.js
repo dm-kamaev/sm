@@ -117,90 +117,8 @@ service.getTypeFilterByValue = function(typeFilterValue) {
     });
 };
 
-/**
-<<<<<<< HEAD
- * Get array with ids of school types by array with their aliases
- * @param {Array.<string>} aliases
- * @return {Array.<number>}
- */
-exports.getSchoolTypesByAliases = function(aliases) {
-    var searchParams = {
-        where: {
-            alias: {
-                $in: aliases
-            }
-        },
-        attributes: ['id']
-    };
-
-    return await(models.SchoolTypeFilter.findAll(searchParams));
-};
 
 /**
- * Initialize search params
- * @param {Object} params
- * @param {?string} params.name
- * @param {?Array.<number>} params.classes
- * @param {?Array.<string>} params.schoolType
- * @param {?Array.<string>} params.ege
- * @param {?Array.<string>} params.gia
- * @param {?Array.<string>} params.olimp
- * @param {?number} params.metroId
- * @param {?number} params.areaId
- * @param {?number} params.sortType
- * @param {?number} params.page
- *
- * @return {{
- *     name: string,
- *     schoolType: Array<number>,
- *     classes: Array<number>,
- *     gia: Array<number>,
- *     ege: Array<number>,
- *     olimp: Array<number>,
- *     metroId: ?number,
- *     areaId: ?number,
- *     districtId: ?number,
- *     sortType: ?number,
- *     page: number
- * }}
- */
-exports.initSearchParams = async(function(params) {
-    /** Transform aliases in filters into ids **/
-    var filterTypes = schoolSearchType.toCamelCaseArray();
-    var ids = filterTypes.map(filterType => {
-        var filter = params[filterType];
-        return await(services.schoolSearch.getFilterIds(filter, filterType));
-    });
-    var filters = lodash.zipObject(filterTypes, ids);
-
-    return searchView.params(params, filters);
-});
-
-/**
- * Get id of each parameter in filter by their alias
- * @param {?Array.<string>} searchParams
- * @return {Array.<number>}
- */
-exports.getFilterIds = async(function(filter, type) {
-    var ids = [];
-    if (filter) {
-        if (type == schoolSearchType.camelCaseFields.SCHOOL_TYPE) {
-            var types =
-                await(services.schoolSearch.getSchoolTypesByAliases(filter));
-            ids = searchView.schoolTypeFilterIds(types);
-        } else {
-            var subjects = await(services.subject.getByAliases(filter));
-            ids = subjectView.subjectIds(subjects);
-        }
-    }
-
-    return ids;
-});
-
-
-/**
-=======
->>>>>>> master
  * Get center coordinates for map depending of given search params
  * @param {Object} params
  * @param {number} params.metroId
@@ -211,17 +129,16 @@ exports.getFilterIds = async(function(filter, type) {
  *     type: string
  * }>}
  */
-
-exports.getMapPositionParams = function(params) {
-    let result = {};
+service.getMapPositionParams = function(params) {
+    var result = {};
     if (params.metroId) {
         result = {
             center: services.metro.getCoords(params.metroId),
             type: mapPositionType.METRO
         };
     } else if (params.areaId) {
+        /** Centering on area id **/
         result = {
-            center: services.area.getCenterCoords(params.areaId),
             type: mapPositionType.AREA
         };
     } else if (params.districtId) {
