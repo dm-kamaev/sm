@@ -30,6 +30,7 @@ router.get(
 router.get('/school/:id', schoolController.view);
 // router.get('/school/apitest', schoolController.yapi);
 
+router.get('/school/types', schoolController.getAllTypes);
 
 router.post('/school/createschool', checkToken, schoolController.create);
 router.put(

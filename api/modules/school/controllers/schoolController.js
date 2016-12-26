@@ -628,3 +628,43 @@ exports.popularSpecializedClassType = async(function(req, res) {
         res.end(JSON.stringify(result));
     }
 });
+
+
+/**
+ * Search over specialized class types sphere by given name or by school id
+ * @api {get} api/school/specializedClassType/popular
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName PopularSpecializedClassType
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *         {
+ *                "label": "Математика",
+ *                "value":"1"
+ *             },
+ *             {
+ *                "label": "Занимательная математика",
+ *                "value":"2"
+ *             }
+ *     ]
+ *
+ * @apiError Error (Error 500)
+ */
+exports.getAllTypes = async(function(req, res) {
+    let result;
+    try {
+        // var popularSpecializedClassTypes =
+        //     await(services.specializedClasses.getPopularTypes());
+
+        // result =
+        //     specializedClassesView.typeFilters(popularSpecializedClassTypes);
+        res.status(200);
+    } catch (error) {
+        logger.critical(error);
+        res.status(500);
+        result = error.message;
+    } finally {
+        res.json(result);
+    }
+});
