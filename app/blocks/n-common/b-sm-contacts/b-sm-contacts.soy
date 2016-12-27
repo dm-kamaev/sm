@@ -70,7 +70,7 @@
  */
 {template .phoneNumber kind="html"}
     <div class="{call .rootClass /}__phone-number">
-        {$params.data.phone}
+        <a class="{call .rootClass /}__number" href="tel:{$params.data.phone}" target="__blank">{$params.data.phone}</a>
     </div>
 {/template}
 
