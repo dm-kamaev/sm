@@ -186,9 +186,6 @@ controller.search = async(function(req, res, next) {
                     ),
                     mapCourses: services.course.listMap(searchParams, 10),
                     mapPosition: services.map.getPositionParams(searchParams),
-                    filtersData: {
-                        [filterName.TYPE]: services.courseType.getAll()
-                    },
                     seoParams: services.seoCourseList.getByCategoryId(
                         categoryInstance.id
                     ),
