@@ -15,27 +15,14 @@
         padding-right: 20px;
         padding-left: 0;
     }
+
     &:last-child {
         padding-right: 0;
         padding-left: 20px;
     }
 }
 
-
 @include media-xs {
-    .b-sm-catalog__list-item-wrap {
-        width: 50%;
-        margin-bottom: 37px;
-
-        &:last-child {
-            padding-left: 0;
-            margin-bottom: 0;
-        }
-    }
-}
-
-
-@include media-xxs {
     .b-sm-catalog__list-item-wrap {
         width: 100%;
         padding: 0;
@@ -43,6 +30,7 @@
         &:first-child {
             padding: 0;
         }
+
         &:last-child {
             padding: 0;
         }
