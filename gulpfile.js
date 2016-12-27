@@ -14,6 +14,7 @@ process.stdout.setMaxListeners(MAX_BILD_FILE_AMOUNT);
 const config = require('./config.json');
 const gulpConfig = require('./app/config/base/config.json');
 const production = !!util.env.production;
+const ROOT_DIR = './';
 const BLOCKS_DIR = '/app/blocks';
 const SHARED_STATIC_DIR = '/public/shared/static';
 
@@ -128,6 +129,10 @@ gulp.task('watch', function() {
         [path.join(__dirname, BLOCKS_DIR, '/**/*.js')],
         ['scripts']
     );
+    gulp.watch(
+        [path.join(__dirname, ROOT_DIR, '/**/*.ts')],
+        ['tsCompile']
+    );
     gulp.watch([
         path.join(__dirname, BLOCKS_DIR, '/**/*.scss'),
         path.join(__dirname, BLOCKS_DIR, '/**/*.css')
@@ -184,10 +189,11 @@ gulp.task('backendLint', function() {
 
 const tasks = function(bool) {
     return bool ?
-        ['createTimestamp', 'soy', 'compile', 'sprite', 'images', 'fonts',
-            'styles', 'copySchools', 'copyCourses', 'localConfig'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts', 'styles',
-            'copySchools', 'copyCourses', 'localConfig', 'backendLint'];
+        ['createTimestamp', 'soy', 'compile', 'tsCompile', 'sprite', 'images',
+            'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig'] :
+        ['watch', 'soy', 'scripts', 'tsCompile', 'sprite', 'images', 'fonts',
+            'styles', 'copySchools', 'copyCourses', 'localConfig',
+            'backendLint'];
 };
 
 gulp.task('build', tasks(true));
@@ -200,3 +206,5 @@ gulp.task('compile', ['soy'], gulpTasks.compile);
 
 gulp.task('createTimestamp', gulpTasks.createTimestamp);
 gulp.task('svgSprite', gulpTasks.svgSprite);
+gulp.task('tsCompile', gulpTasks.tsCompile);
+gulp.task('backendBuild', ['watch', 'localConfig', 'tsCompile', 'backendLint']);
