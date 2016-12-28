@@ -43,4 +43,8 @@ migrate_stdout
 
 **/b-icon_auto-sprite.*
 
-/typings
+
+#typings inore
+typings
+
+#builded typescript files ignore

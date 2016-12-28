@@ -10,7 +10,7 @@ exports.all = services;
 exports.initServices = function(dirPath) {
     var localServices = fs
         .readdirSync(dirPath)
-        .filter(file => (file.indexOf('.') && file != 'index.js'))
+        .filter(file => (~file.indexOf('.js') && file != 'index.js'))
         .map(file => require(path.join(dirPath, file)))
         .reduce(function(res, service) {
             res[service.name] = service;
