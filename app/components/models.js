@@ -1,6 +1,5 @@
 var path = require('path'),
     fs = require('fs');
-var colors = require('colors');
 var async = require('asyncawait/async');
 
 
@@ -16,8 +15,9 @@ exports.initAll = function(apiModulesPath) {
         var modulePath = path.join(apiModulesPath, module);
         var moduleFolders = fs.readdirSync(modulePath)
             .filter(file => (file.indexOf('.') && file != 'index.js'));
-        if (moduleFolders.indexOf('models') != -1)
+        if (moduleFolders.indexOf('models') != -1) {
             this.initModels(path.join(modulePath, 'models'));
+        }
     });
     return this.all;
 };
@@ -40,7 +40,7 @@ exports.initModels = function(dirPath) {
 
 
 exports.initAssociations = async(function() {
-    Object.keys(models).forEach(function (name) {
+    Object.keys(models).forEach(function(name) {
         var model = models[name];
         if (model.associate) {
             model.associate(models);

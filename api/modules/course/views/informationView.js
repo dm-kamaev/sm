@@ -1,11 +1,21 @@
+'use strict';
+
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
+const footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
 const courseCategoryView = require('./courseCategoryView');
 
+const Subheader = require('../lib/CourseSubheader');
+
+let view = {};
+
 /**
  * @param {{
+ *     config: Object,
  *     user: Object,
  *     fbClientId: string,
  *     authSocialLinks: Object,
@@ -19,8 +29,8 @@ const courseCategoryView = require('./courseCategoryView');
  * }} data
  * @return {Object}
  */
-exports.render = function(data) {
-    var user = userView.default(data.user);
+view.render = function(data) {
+    let user = userView.default(data.user);
 
     return {
         seo: {
@@ -33,39 +43,49 @@ exports.render = function(data) {
         openGraph: {
             title: 'Курс ' + data.entityData.name + ' на «Курсах Мела»',
             description: data.entityData.description,
-            image: '/static/images/n-clobl/i-layout/cources_sharing.png',
-            fbClientId: data.fbClientId,
+            image: data.entityData.relapImgUrl,
+            relapTag: data.entityData.category,
+            relapImage: data.entityData.relapImgUrl,
+            fbClientId: data.fbClientId
         },
-        subHeader: {
-            logo: {
-                linkUrl: '/',
-                altText: '«Курсы Мела»',
-                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
-            },
-            listLinks: {
-                opener: 'Все курсы',
-                content: {
-                    items: courseCategoryView.listLinks(
-                        data.categories,
-                        data.categoryAliases
-                    )
-                }
-            },
-            search: {
-                placeholder: 'Район, метро, название курса',
-                redirect: true,
-                pageAlias: 'proforientacija'
-            },
-            user: user,
-            favorites: {
-                items: favoriteView.list(data.favorites)
-            }
-        },
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
+        subHeader: view.subheader({
+            listLinks: courseCategoryView.listLinks(
+                data.categories,
+                data.categoryAliases
+            ),
+            favoriteEntities: favoriteView.list(data.favorites),
+            user: user
+        }),
         user: user,
         authSocialLinks: data.authSocialLinks,
         entityData: data.entityData,
         map: data.map,
         priceLabelText: data.priceLabelText,
-        actionButtonText: data.actionButtonText
+        actionButtonText: data.actionButtonText,
+        footer: footerView.render()
     };
 };
+
+
+/**
+ * @param {Object<string, string>} data
+ * @return {Object}
+ */
+view.subheader = function(data) {
+    let subheader = new Subheader();
+
+    subheader.init({
+        isLogoRedirect: true,
+        listLinks: data.listLinks,
+        isSearchRedirect: true,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
+
+    return subheader.getParams();
+};
+
+module.exports = view;

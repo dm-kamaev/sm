@@ -15,10 +15,15 @@
  *         metaTitle: string,
  *         metaDescription: (string|undefined)
  *     },
- *     subHeader: sm.bSmSubHeader.Template.Params.Data,
- *     footer: ({
- *         seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
- *     }|undefined)
+ *     subHeader: sm.bSmSubHeader.Template.Params,
+ *     header: sm.bSmHeader.Template.Params,
+ *     sideMenu: sm.bSmSideMenu.Template.Params.Data,
+ *     user: {
+ *         id: (number|undefined),
+ *         firstName: (string|undefined),
+ *         lastName: (string|undefined)
+ *     },
+ *     footer: sm.bSmFooter.Template.Params.Data
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
@@ -28,7 +33,6 @@
  *     modifier: string,
  *     entityType: string,
  *     page: (string|undefined),
- *     year: (number|undefined),
  *     staticVersion: (string|undefined),
  *     analyticsId: string,
  *     experimentId: string,
@@ -321,9 +325,57 @@
     <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
                 {call .attributes data="all"/}>
 
-        {call .mainSubheader data="all" /}
-        {call .mainContent data="all" /}
+        <div class="{call .rootClass/}__wrapper-content">
+            {call .mainHeader data="all" /}
+            {call .mainSubheader data="all" /}
+            {call .mainContent data="all" /}
+        </div>
+
         {call .mainFooter data="all" /}
+        {call .sideMenu data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *          sideMenu: sm.bSmSideMenu.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .sideMenu}
+    <div class="{call .rootClass /}__side-menu">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smSideMenu',
+                'renderParams': [
+                    'data': $params.data.sideMenu
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Main header template
+ * @param params {{
+ *     data: {
+ *          header: sm.bSmHeader.Template.Params
+ *     }
+ * }}
+ */
+{template .mainHeader kind="html"}
+    <div class="{call .rootClass /}__main-header">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smHeader',
+                'renderParams': $params.data.header
+            ] /}
+        {/call}
     </div>
 {/template}
 
@@ -332,7 +384,7 @@
  * Subheader
  * @param params {{
  *     data: {
- *         subheader: sm.bSmSubheader.Template.Params.Data
+ *         subheader: sm.bSmSubheader.Template.Params
  *     },
  *     config: {
  *         entityType: string,
@@ -347,13 +399,7 @@
             {param params: [
                 'factory': $params.config.modifier,
                 'type': 'smSubheader',
-                'renderParams': [
-                    'data': $params.data.subHeader,
-                    'config': [
-                        'bottomLine': true,
-                        'entityType': $params.config.entityType
-                    ]
-                ]
+                'renderParams': $params.data.subHeader
             ]/}
         {/call}
     </div>
@@ -372,12 +418,9 @@
  * Footer
  * @param params {
  *     data: {
- *         footer: ({
- *             seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
- *         }|undefined)
+ *         footer: sm.bSmFooter.Template.Params.Data
  *     },
  *     config: {
- *         year: number,
  *         modifier: string
  *     }
  * }
@@ -390,25 +433,7 @@
                 'factory': $params.config.modifier,
                 'type': 'smFooter',
                 'renderParams': [
-                    'data': [
-                        'year': $params.config?.year,
-                        'seoLinks': $params.data?.footer?.seoLinks,
-                        'contactLinks': [
-                            [
-                                'content': 'Cвязаться с нами',
-                                'url': 'http://mel.fm/contacts'
-                            ],
-                            [
-                                'content': 'Пользовательское соглашение',
-                                'url': 'http://mel.fm/terms-of-use'
-                            ],
-                            [
-                                'content': 'Стать партнёром',
-                                'url': 'mailto:vs@mel.fm'
-                            ]
-
-                        ]
-                    ]
+                    'data': $params.data.footer
                 ]
             ]/}
         {/call}

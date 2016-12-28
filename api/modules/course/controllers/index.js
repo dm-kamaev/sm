@@ -10,6 +10,7 @@ const courseController = require('./courseController'),
     categoryController = require('./categoryController'),
     typeController = require('./typeController'),
     filterController = require('./filterController'),
+    courseSearchCatalogController = require('./courseSearchCatalogController'),
     csrf = require('../../../../app/middleware/csrf'),
     checkToken = require('../../../../app/middleware/checkToken');
 
@@ -37,6 +38,7 @@ let initCrudRouting = function(route, controller) {
 };
 
 initCrudRouting('/coursebrand', brandController);
+initCrudRouting('/course/search-catalog', courseSearchCatalogController);
 initCrudRouting('/course', courseController);
 initCrudRouting('/coursebrand/:brandId/department', departmentController);
 initCrudRouting('/course/:courseId/option', optionController);

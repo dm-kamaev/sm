@@ -12,14 +12,6 @@ const sequelize = require('../db');
  */
 class MigrationsChecker {
     /**
-     * Useless constructor
-     * @constructor
-     */
-    constructor() {
-
-    }
-
-    /**
      * Checks actuality of project migrations
      */
     check() {
@@ -45,8 +37,7 @@ class MigrationsChecker {
                     type: sequelize.QueryTypes.SELECT
                 })
             );
-        }
-        catch (exception) {
+        } catch (exception) {
 
         }
 

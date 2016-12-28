@@ -3,12 +3,12 @@
 const soy = require.main.require('./app/components/soy');
 const services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
-const userView = require('../../../../api/modules/user/views/user');
-const seoView = require('../../../../api/modules/school/views/seoView');
 
 const entityTypeEnum =
     require('../../../../api/modules/entity/enums/entityType');
-const errorView = require('../../../../api/modules/error/views/errorView');
+const errorView = require('../../../../api/modules/error/views/errorView'),
+    schoolErrorView =
+        require('../../../../api/modules/error/views/schoolErrorView');
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 
@@ -28,27 +28,24 @@ let controller = {};
 controller.schoolNotFound = async(function(req, res) {
     var user = req.user || {};
 
-    var favorites = await(services.favorite.getByUserId(user.id)),
-        favoriteIds = services.favorite.getEntityIdsFiltredByType(
-            favorites,
-            entityTypeEnum.SCHOOL
-        );
-
     var dataPromises = {
         popularSchools: services.school.getRandomPopularSchools(5),
         amountSchools: services.school.getSchoolsCount(),
         authSocialLinks: services.auth.getAuthSocialUrl(),
-        favorites: {
-            items: services.school.getByIdsWithGeoData(favoriteIds),
-            itemUrls: services.page.getAliases(
-                favoriteIds,
-                entityTypeEnum.SCHOOL
-            )
-        },
+        favorites: [],
         seoLinks: services.seoSchoolList.getByTypes()
     };
 
     var data = await(dataPromises);
+
+    let errorText;
+
+    if (/(\/error)$/.test(req.path)) {
+        res.status(500);
+        errorText = 'Что-то пошло не так';
+    } else {
+        res.status(404);
+    }
 
     var popularAliases = await(services.page.getAliases(
         data.popularSchools.map(school => school.id),
@@ -59,23 +56,26 @@ controller.schoolNotFound = async(function(req, res) {
         popularAliases
     );
 
+    let templateData = schoolErrorView.render({
+        user: user,
+        favorites: data.favorites,
+        authSocialLinks: data.authSocialLinks,
+        seoLinks: data.seoLinks,
+        entityType: entityTypeEnum.SCHOOL,
+        config: config
+    });
+
+    console.log(JSON.stringify(templateData.sideMenu, null, 4));
+
     var html = soy.render('sm.lErrorSchoolNotFound.Template.base', {
         params: {
-            data: {
-                authSocialLinks: data.authSocialLinks,
-                user: userView.default(user),
-                favorites: {
-                    schools: schoolView.listCompact(data.favorites)
-                },
-                seoLinks: seoView.linksList(data.seoLinks)
-            },
-            errorText: 'Страница, которую вы искали, не найдена',
+            data: templateData,
+            errorText: errorText || 'Страница, которую вы искали, не найдена',
             popularSchools: schoolView.popular(data.popularSchools),
             dataLinks: schoolView.dataLinks(),
             amountSchools: data.amountSchools,
             config: {
                 staticVersion: config.lastBuildTimestamp,
-                year: new Date().getFullYear(),
                 analyticsId: analyticsId,
                 yandexMetrikaId: yandexMetrikaId,
                 carrotquestId: CARROTQUEST_ID,
@@ -83,13 +83,14 @@ controller.schoolNotFound = async(function(req, res) {
             }
         }
     });
-    res.status(404);
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });
 
 
-controller.notFound = async(function(req, res, next, entityType, subdomain) {
+controller.generalError = async(function(
+    req, res, next, entityType, subdomain
+) {
     let html;
     try {
         let authSocialLinks = services.auth.getAuthSocialUrl(),
@@ -99,11 +100,22 @@ controller.notFound = async(function(req, res, next, entityType, subdomain) {
             favorites: services.favorite.getFavoriteEntities(user.id)
         });
 
+        let errorText;
+
+        if (/(\/error)$/.test(req.path)) {
+            res.status(500);
+            errorText = 'Что-то пошло не так';
+        } else {
+            res.status(404);
+        }
+
         let templateData = errorView.render({
             entityType: entityType,
             user: user,
             favorites: data.favorites,
-            authSocialLinks: authSocialLinks
+            authSocialLinks: authSocialLinks,
+            errorText: errorText,
+            config: config
         });
 
         html = soy.render('sm.lErrorNotFound.Template.errorNotFound', {
@@ -114,7 +126,6 @@ controller.notFound = async(function(req, res, next, entityType, subdomain) {
                     staticVersion: config.lastBuildTimestamp,
                     entityType: entityType,
                     modifier: MODIFIER,
-                    year: new Date().getFullYear(),
                     analyticsId: config[subdomain].analyticsId,
                     yandexMetrikaId: config[subdomain].yandexMetrikaId,
                     carrotquestId: CARROTQUEST_ID,
@@ -124,8 +135,6 @@ controller.notFound = async(function(req, res, next, entityType, subdomain) {
                 }
             }
         });
-
-        res.status(404);
     } catch (error) {
         logger.error(error);
 

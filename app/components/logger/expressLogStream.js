@@ -1,21 +1,31 @@
-var logger = require('./logger').getLogger('express');
-var Stream = require('stream');
+'use strict';
 
-var warningStream = new Stream.Writable({
+const logger = require('./logger').getLogger('express');
+const Stream = require('stream');
+
+let warningStream = new Stream.Writable({
     write: function(chunk, encoding, next) {
         logger.warning(chunk.toString());
         next();
     }
 });
 
-var debugStream = new Stream.Writable({
+let debugStream = new Stream.Writable({
     write: function(chunk, encoding, next) {
         logger.debug(chunk.toString());
         next();
     }
 });
 
+let criticalStream = new Stream.Writable({
+    write: function(chunk, encoding, next) {
+        logger.critical(chunk.toString());
+        next();
+    }
+});
+
 module.exports = {
     warning: warningStream,
-    debug: debugStream
+    debug: debugStream,
+    critical: criticalStream
 };

@@ -1,19 +1,27 @@
 'use strict';
 
 const FilterPanel = require('../lib/CourseFilterPanel'),
-    FormatUtils = require('../../entity/lib/FormatUtils');
+    Header = require('../../entity/lib/Header'),
+    FormatUtils = require('../../entity/lib/FormatUtils'),
+    Subheader = require('../lib/CourseSubheader');
 
 const courseView = require('./courseView'),
     userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('./courseCategoryView'),
-    searchViewEntity = require('../../entity/views/searchView');
+    searchViewEntity = require('../../entity/views/searchView'),
+    footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
 const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
     entityType = require('../../entity/enums/entityType');
 
+const COMMON_PAGE_ALIAS = 'search';
+
 let searchView = {};
+
 
 /**
  * Data for filter panel
@@ -77,6 +85,7 @@ searchView.filterPanel = function(data) {
 
 /**
  * @param {{
+ *     config: Object,
  *     user: Object,
  *     fbClientId: string,
  *     favorites: Array<Object>,
@@ -92,6 +101,7 @@ searchView.filterPanel = function(data) {
  *     currentAlias: string,
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
+ *     header: Object,
  *     categoryId: (number|undefined)
  * }} data
  * @return {Object}
@@ -103,7 +113,6 @@ searchView.render = function(data) {
         ),
         courses = courseView.list(aliasedCourses, data.categories),
         seoParams = data.seoParams || {};
-
     return {
         seo: {
             metaTitle: seoParams.tabTitle,
@@ -117,29 +126,16 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
-        subHeader: {
-            logo: {
-                altText: '«Курсы Мела»',
-                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
-            },
-            search: {
-                placeholder: 'Район, метро, название курса',
-                pageAlias: data.currentAlias
-            },
-            user: user,
-            favorites: {
-                items: favoriteView.list(data.favorites)
-            },
-            listLinks: {
-                opener: 'Все курсы',
-                content: {
-                    items: courseCategoryView.listLinks(
-                        data.categories,
-                        data.categoryAliases
-                    )
-                }
-            }
-        },
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
+        subHeader: searchView.subheader({
+            listLinks: courseCategoryView.listLinks(
+                data.categories,
+                data.categoryAliases
+            ),
+            favoriteEntities: favoriteView.list(data.favorites),
+            user: user
+        }),
         user: user,
         authSocialLinks: data.authSocialLinks,
         map: searchViewEntity.map(data.mapCourses, {
@@ -200,7 +196,8 @@ searchView.render = function(data) {
             enabledFilters: data.enabledFilters,
             searchParams: data.searchParams
         }),
-        searchParams: data.searchParams
+        searchParams: data.searchParams,
+        footer: footerView.render()
     };
 };
 
@@ -245,6 +242,41 @@ searchView.initSearchParams = function(params, opt_categoryId) {
         districtId: params.districtId || null,
         categoryId: formatUtils.transformToArray(categoryId)
     };
+};
+
+/**
+ * @param {string} entityType
+ * @param {Object<string, string>} links
+ * @return {Object}
+ */
+searchView.header = function(entityType, links) {
+    let header = new Header();
+
+    header.init({
+        entityType: entityType,
+        entityLinks: links
+    });
+
+    return header.getParams();
+};
+
+
+/**
+ * @param {Object<string, string>} data
+ * @return {Object}
+ */
+searchView.subheader = function(data) {
+    let subheader = new Subheader();
+
+    subheader.init({
+        isLogoRedirect: true,
+        listLinks: data.listLinks,
+        isSearchRedirect: data.pageAlias != COMMON_PAGE_ALIAS,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
+    return subheader.getParams();
 };
 
 module.exports = searchView;
