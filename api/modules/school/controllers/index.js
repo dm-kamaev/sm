@@ -43,6 +43,11 @@ router.delete(
     checkToken,
     schoolAdminController.removeComment
 );
+// console.log('getComment=', schoolAdminController.getComment);
+router.get(
+    '/school/:schoolId/comment/:commentId',
+    schoolAdminController.getComment
+);
 router.get('/school/:schoolId/comment', schoolAdminController.getAllComments);
 router.post('/school/:id/comment', csrf, schoolController.createComment);
 

@@ -16,8 +16,63 @@ let service = {
 
 
 /**
+ * get comment with user data and rating (score)
+ * @param  {Number} schoolId
+ * @param  {Number} commentId
+ * @return {Object[]}
+ * {
+        "text": "Образование\nНе все едино, но очень многие.\n
+                Учителя\nУчителя очень близки с .",
+        "author": "Вася",
+        "socialId": "32423424",
+        "socialType": "vk",
+        "category": "Scholar",
+        "score": 4.75,
+        "updatedAt": "2016-11-21T09:50:32.184Z"
+    }
+ */
+service.getCommentWithUser = async(function(schoolId, commentId) {
+    let res = await(models.School.findOne({
+        attributes: ['commentGroupId'],
+        where: {
+            id: schoolId
+        },
+        include: {
+            attributes: ['id'],
+            model: models.CommentGroup,
+            as: 'commentGroup',
+            include: {
+                model: models.Comment,
+                as: 'comments',
+                where: {
+                    id: commentId
+                },
+                include: [{
+                    attributes: [
+                        'username', 'userType', 'userId', 'updated_at'
+                    ],
+                    model: models.UserData,
+                    as: 'userData'
+                }, {
+                    attributes: ['total_score'],
+                    model: models.Rating,
+                    as: 'rating',
+                }]
+            }
+        },
+    }));
+
+    if (!res || !res.commentGroup) {
+        return null;
+    }
+
+    let comment = res.commentGroup.comments[0];
+    return buildCommentWithUserData_([comment])[0];
+});
+
+/**
  * get All Comments with user data and rating (score)
- * @param  {[type]} schoolId)
+ * @param  {Number} schoolId
  * @return {Object[]}
  *  [
  *      {
@@ -65,33 +120,7 @@ service.getAllCommentsWithUser = async(function(schoolId) {
     }
 
     let comments = res.commentGroup.comments;
-    comments = comments.map(comment => {
-        let userData = comment.userData || {};
-        let userId = userData.userId,
-            socialId, socialType;
-        if (userId) {
-            var user = await(services.user.getUserById(userId));
-            if (user.vkId) {
-                socialId = user.vkId;
-                socialType = socialTypes.VKONTAKTE;
-            } else if (user.facebookId) {
-                socialId = user.facebookId;
-                socialType = socialTypes.FACEBOOK;
-            }
-        }
-        return {
-            id: comment.id,
-            text: comment.text,
-            author: userData.username || '',
-            socialId: socialId || '',
-            socialType: socialType || '',
-            userType: userData.userType || '',
-            totalScore: comment.rating.dataValues['total_score'],
-            updatedAt: userData['updated_at'] || '',
-        };
-    });
-
-    return comments;
+    return buildCommentWithUserData_(comments);
 });
 
 
@@ -133,10 +162,9 @@ service.textEdit = async(function(schoolId, commentId, text) {
 /**
  * removeComment
  * @param  {number} schoolId
- * @param  {string} text
  * @return {number} 1 || 0
  */
-service.removeComment = async(function(schoolId, commentId, text) {
+service.removeComment = async(function(schoolId, commentId) {
     let res = 0;
     let searchComment = searchComment_(schoolId, commentId);
     if (searchComment) {
@@ -179,6 +207,51 @@ function searchComment_(schoolId, commentId) {
 
     if (!res || !res.commentGroup) { return null; }
     return res.commentGroup.comments[0];
+}
+
+
+/**
+ * buildCommentWithUserData_
+ * @param  {Object[]} comments [{}]
+ * @return {Object[]} [
+ * {
+ *     id,
+       text,
+       author,
+       socialId,
+       socialType,
+       userType,
+       totalScore,
+       updatedAt,
+ *  },
+ * ]
+ */
+function buildCommentWithUserData_(comments) {
+    return comments.map(comment => {
+        let userData = comment.userData || {};
+        let userId = userData.userId,
+            socialId, socialType;
+        if (userId) {
+            var user = await(services.user.getUserById(userId));
+            if (user.vkId) {
+                socialId = user.vkId;
+                socialType = socialTypes.VKONTAKTE;
+            } else if (user.facebookId) {
+                socialId = user.facebookId;
+                socialType = socialTypes.FACEBOOK;
+            }
+        }
+        return {
+            id: comment.id,
+            text: comment.text,
+            author: userData.username || '',
+            socialId: socialId || '',
+            socialType: socialType || '',
+            userType: userData.userType || '',
+            totalScore: comment.rating.dataValues['total_score'],
+            updatedAt: userData['updated_at'] || '',
+        };
+    });
 }
 
 module.exports = service;

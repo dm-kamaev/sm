@@ -1,1 +1,2 @@
 api/modules/user/services/adminUser.js
+api/modules/school/controllers/schoolAdminController.js

@@ -43,7 +43,8 @@ migrate_stdout
 
 **/b-icon_auto-sprite.*
 
-#typings inore
+#typings ignore
 typings
 
 #builded typescript files ignore
+api/modules/school/controllers/schoolAdminController.js

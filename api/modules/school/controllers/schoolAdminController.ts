@@ -4,12 +4,51 @@
 // admin for school
 
 const services = require('../../../../app/components/services').all;
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 
 const commentView = require('../views/commentView.js');
+
+
+/**
+ * Get comment for school with user data
+ * @api {get} /api/school/:schoolId/comment/:commentId
+ * @apiVersion 0.1.0
+ * @apiName getAllComments
+ * @apiGroup School
+ *
+ * @apiSuccess {Object[]} comments
+ * {
+       "text": "Образование\nНе все едино, но очень многие.\n
+                Учителя\nУчителя очень близки с .",
+        "author": "Вася",
+        "socialId": "32423424",
+        "socialType": "vk",
+        "category": "Scholar",
+        "score": 4.75,
+        "updatedAt": "2016-11-21T09:50:32.184Z"
+   }
+ *
+ */
+exports.getComment = async function(req, res) {
+    let result,
+        schoolId: number = parseInt(req.params.schoolId, 10),
+        commentId: number = parseInt(req.params.commentId, 10);
+    try {
+        let comment =
+            await services.schoolComment.getCommentWithUser(schoolId, commentId);
+        if (!comment) {
+            result = {};
+        } else {
+            result = commentView.comment(comment);
+        }
+    } catch (error) {
+        logger.critical(error);
+        result = error.message;
+    }
+    res.json(result);
+};
+
 
 /**
  * Get all comments for school with user data
@@ -33,12 +72,11 @@ const commentView = require('../views/commentView.js');
  * ]
  *
  */
-exports.getAllComments = async(function(req, res) {
+exports.getAllComments = async function(req, res) {
     let result, schoolId = parseInt(req.params.schoolId, 10);
     try {
-        let comments = await(
-            services.schoolComment.getAllCommentsWithUser(schoolId)
-        );
+        let comments = await
+            services.schoolComment.getAllCommentsWithUser(schoolId);
         if (!comments) {
             result = [];
         } else {
@@ -49,7 +87,7 @@ exports.getAllComments = async(function(req, res) {
         result = error.message;
     }
     res.json(result);
-});
+};
 
 
 /**
@@ -74,21 +112,20 @@ exports.getAllComments = async(function(req, res) {
  *
  *
  */
-exports.textEdit = async(function(req, res) {
+exports.textEdit = async function(req, res) {
     let result,
-        schoolId = parseInt(req.params.schoolId, 10),
-        commentId = parseInt(req.params.commentId, 10),
-        text = req.body.text;
+        schoolId: number = parseInt(req.params.schoolId, 10),
+        commentId: number = parseInt(req.params.commentId, 10),
+        text: string = req.body.text;
     try {
-        result = await(
-            services.schoolComment.textEdit(schoolId, commentId, text)
-        );
+        result =
+            await services.schoolComment.textEdit(schoolId, commentId, text);
     } catch (error) {
         logger.critical(error);
         result = error.message;
     }
     res.json(result);
-});
+};
 
 
 /**
@@ -101,17 +138,16 @@ exports.textEdit = async(function(req, res) {
  * @apiSuccess {number} success or failed: 1 || 0
  *
  */
-exports.removeComment = async(function(req, res) {
+exports.removeComment = async function(req, res) {
     let result,
-        schoolId = parseInt(req.params.schoolId, 10),
-        commentId = parseInt(req.params.commentId, 10);
+        schoolId: number = parseInt(req.params.schoolId, 10),
+        commentId: number = parseInt(req.params.commentId, 10);
     try {
-        result = await(
-            services.schoolComment.removeComment(schoolId, commentId)
-        );
+        result =
+            await services.schoolComment.removeComment(schoolId, commentId);
     } catch (error) {
         logger.critical(error);
         result = error.message;
     }
     res.json(result);
-});
+};
