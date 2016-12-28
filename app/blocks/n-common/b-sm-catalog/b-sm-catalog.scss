@@ -25,6 +25,7 @@
 @include media-xs {
     .b-sm-catalog__list-item-wrap {
         width: 100%;
+        margin-bottom: 23px;
         padding: 0;
 
         &:first-child {
@@ -32,6 +33,7 @@
         }
 
         &:last-child {
+            margin-bottom: 0;
             padding: 0;
         }
     }
