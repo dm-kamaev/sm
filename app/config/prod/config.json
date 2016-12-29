@@ -2,8 +2,8 @@
     "port": 3000,
     "environment": "production",
     "protocol": "http",
-    "authApi": "http://mel.fm:49611",
-    "userApi": "http://mel.fm:20348",
+    "authApi": "http://node1.mel.fm:49611",
+    "userApi": "http://node1.mel.fm:20348",
     "redirectUri": "http://mel.fm/authorize",
     "schools": {
         "analyticsId": "UA-34116537-10",
