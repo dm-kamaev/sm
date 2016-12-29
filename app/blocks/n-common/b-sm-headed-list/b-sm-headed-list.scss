@@ -1,3 +1,5 @@
+@import '../i-media/i-media';
+
 .b-sm-headed-list__header {
     padding-bottom: 17px;
 
@@ -6,10 +8,24 @@
     line-height: 24px;
 }
 
+.b-sm-headed-list__list {
+    font-family: 'PT Serif', serif;
+}
+
 .b-sm-headed-list__header-img-wrap {
     padding-bottom: 20px;
 }
 
 .b-sm-headed-list__header-title {
     max-width: 235px;
+
+    font-family: 'Proxima', Arial, sans-serif;
+    font-weight: 800;
+}
+
+@include media-xs {
+    .b-sm-headed-list__header-title {
+        width: 100%;
+        max-width: none;
+    }
 }

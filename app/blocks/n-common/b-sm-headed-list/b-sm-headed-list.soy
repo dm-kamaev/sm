@@ -72,27 +72,29 @@
  * }}
  */
 {template .list_}
-    {let $customClasses kind="html"}
-        {call .rootClass /}__item-list
-    {/let}
-    {call .renderChild}
-        {param params: [
-            'type': 'smItemList',
-            'renderParams': [
-                'data': [
-                    'items': $params?.data?.items,
-                    'itemType': 'smLink',
-                    'itemConfig': [
-                        'size': 'xxl',
-                        'theme': 'interval'
+    <div class="{call .rootClass /}__list">
+        {let $customClasses kind="html"}
+            {call .rootClass /}__item-list
+        {/let}
+        {call .renderChild}
+            {param params: [
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': [
+                        'items': $params?.data?.items,
+                        'itemType': 'smLink',
+                        'itemConfig': [
+                            'size': 'xxl',
+                            'theme': 'interval'
+                        ]
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
                     ]
-                ],
-                'config': [
-                    'customClasses': [$customClasses]
                 ]
-            ]
-        ]/}
-    {/call}
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 
