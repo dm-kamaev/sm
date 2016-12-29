@@ -4,12 +4,9 @@
 // admin for school
 
 import schoolCommentService from '../services/schoolComment';
-// const async = require('asyncawait/async'),
-//     await = require('asyncawait/await');
-// const services = require('../../../../app/components/services').all;
+import commentView from '../views/commentView';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
-const commentView = require('../views/commentView.js');
 
 
 /**
@@ -140,16 +137,16 @@ exports.textEdit = async function(req, res) {
  * @apiSuccess {number} success or failed: 1 || 0
  *
  */
-// exports.removeComment = async function(req, res) {
-//     let result,
-//         schoolId: number = parseInt(req.params.schoolId, 10),
-//         commentId: number = parseInt(req.params.commentId, 10);
-//     try {
-//         result =
-//             await services.schoolComment.removeComment(schoolId, commentId);
-//     } catch (error) {
-//         logger.critical(error);
-//         result = error.message;
-//     }
-//     res.json(result);
-// };
+exports.removeComment = async function(req, res) {
+    let result,
+        schoolId: number = parseInt(req.params.schoolId, 10),
+        commentId: number = parseInt(req.params.commentId, 10);
+    try {
+        result =
+            await schoolCommentService.removeComment(schoolId, commentId);
+    } catch (error) {
+        logger.critical(error);
+        result = error.message;
+    }
+    res.json(result);
+};

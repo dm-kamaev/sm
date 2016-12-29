@@ -1,2 +1,4 @@
 api/modules/user/services/adminUser.js
 api/modules/school/controllers/schoolAdminController.js
+api/modules/school/services/schoolComment.js
+api/modules/school/views/commentView.js

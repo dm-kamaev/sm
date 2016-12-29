@@ -33,16 +33,16 @@ router.get('/school/:id', schoolController.view);
 
 
 router.post('/school/createschool', checkToken, schoolController.create);
-// router.put(
-//     '/school/:schoolId/comment/:commentId',
-//     checkToken,
-//     schoolAdminController.textEdit
-// );
-// router.delete(
-//     '/school/:schoolId/comment/:commentId',
-//     checkToken,
-//     schoolAdminController.removeComment
-// );
+router.put(
+    '/school/:schoolId/comment/:commentId',
+    checkToken,
+    schoolAdminController.textEdit
+);
+router.delete(
+    '/school/:schoolId/comment/:commentId',
+    checkToken,
+    schoolAdminController.removeComment
+);
 
 router.get(
     '/school/:schoolId/comment/:commentId',
