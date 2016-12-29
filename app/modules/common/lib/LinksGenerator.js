@@ -86,7 +86,7 @@ class LinksGenerator {
      */
     generateExternalLinks() {
         return {
-            [MEL_LINK_NAME]: 'https://mel.fm'
+            [MEL_LINK_NAME]: 'http://mel.fm'
         };
     }
 }
