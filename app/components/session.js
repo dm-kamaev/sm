@@ -1,19 +1,15 @@
-"use strict";
+'use strict';
 
 const Session = require('express-session');
-const SequelizeStore = require('connect-session-sequelize')(Session.Store);
 const uid = require('uid-safe').sync;
-const express = require('express');
-const os = require('os');
 const RedisStore = require('connect-redis')(Session);
-
-const db = require('./db');
+const config = require('../config/config.json');
 
 const SECRET = 'schoolsnotfm';
 
 module.exports = Session({
     cookie: {
-        domain: '.'+os.hostname(),
+        domain: getDomain(),
         httpOnly: false,
         maxAge: 1000 * 60 * 60 * 24 * 30
     },
@@ -22,10 +18,21 @@ module.exports = Session({
     resave: false,
     saveUninitialized: true,
     store: new RedisStore({
-      host: '127.0.0.1',
-      port: 6379
+        host: '127.0.0.1',
+        port: 6379
     }),
     genid: function(req) {
         return req.body.sessionId || uid(24);
     }
 });
+
+
+/**
+ * getDomain second level for cross domain cookies
+ * @return {string} '.www61.lan'
+ */
+function getDomain() {
+    const host = config.schools.host;
+    const match = host.match(/(\.\S+\.\S+)$/);
+    return match[1];
+}
