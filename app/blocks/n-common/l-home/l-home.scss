@@ -1,0 +1,262 @@
+@import '../i-media/i-media';
+
+/** content **/
+.l-home__body {
+    margin: 0 auto 60px;
+
+    color: #000;
+
+    font-family: Arial, sans-serif;
+}
+
+.l-home__section {
+    width: 100%;
+}
+
+.l-home__section-content {
+    width: 1200px;
+    min-width: 255px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.l-home__section_image-s {
+    position: relative;
+
+    display: none;
+}
+
+.l-home__section_image-l {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.l-home__section-content_image-l {
+    position: relative;
+}
+
+.l-home__section_image-l {
+    height: 400px;
+    margin-bottom: 0;
+}
+
+.l-home__image-wrap {
+    position: absolute;
+    bottom: -1px;
+
+    width: 60%;
+    max-height: 435px;
+    padding-left: 450px;
+}
+
+.l-home_entity_course {
+    .l-home__image-wrap {
+        max-width: 680px;
+    }
+}
+
+.l-home__image {
+    width: 100%;
+    height: 100%;
+
+    vertical-align: bottom;
+}
+
+.l-home__image-description {
+    width: 400px;
+    padding-top: 65px;
+}
+
+.l-home__image-title {
+    padding-bottom: 25px;
+
+    font: 700 30.01px 'Proxima', sans-serif;
+    line-height: 36px;
+}
+
+.l-home__image-items {
+    width: 330px;
+
+    font: 16px 'PT Serif', serif;
+    line-height: 22px;
+}
+
+.l-home__image-item {
+    position: relative;
+
+    margin-bottom: 10px;
+}
+
+.l-home__image-item-dash {
+    position: absolute;
+}
+
+.l-home__image-item-text {
+    box-sizing: border-box;
+    padding-left: 20px;
+}
+
+.l-home__section_search {
+    height: 155px;
+}
+
+.l-home__search-panel {
+    height: 100%;
+}
+
+.l-home__section-content_recommendations {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 42px;
+}
+
+.l-home_entity_course {
+    .l-home__section_image-l,
+    .l-home__section_image-s,
+    .l-home__section_search {
+        background-color: #fbf4e9;
+    }
+}
+/** content end **/
+
+
+@include media-xl {
+    .l-home__section-content {
+        width: auto;
+        margin-right: 40px;
+        margin-left: 40px;
+    }
+
+    .l-home__section_image-l {
+        height: 375px;
+    }
+
+    .l-home__image-wrap {
+        max-height: 410px;
+        padding-left: 370px;
+    }
+
+    .l-home_entity_course {
+        .l-home__image-wrap {
+            max-width: 640px;
+        }
+    }
+
+    .l-home__image-description {
+        padding-top: 30px;
+    }
+
+    .l-home__section-content_recommendations {
+        width: auto;
+        margin-right: 40px;
+        margin-left: 40px;
+    }
+}
+
+
+@include media-l {
+    .l-home__section-content_recommendations {
+        padding-top: 50px;
+    }
+}
+
+
+@include media-m {
+    .l-home__section_image-l {
+        height: 415px;
+    }
+
+    .l-home__image-description {
+        padding-top: 20px;
+    }
+
+    .l-home__image-wrap {
+        left: 0;
+        right: 0;
+
+        width: 490px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .l-home_entity_course {
+        .l-home__image-wrap {
+            width: 490px;
+        }
+    }
+
+    .l-home__image-items {
+        display: none;
+    }
+}
+
+
+@include media-s {
+    .l-home__section-content_recommendations {
+        padding-top: 68px;
+    }
+}
+
+
+@include media-xs {
+    .l-home__section-content {
+        margin-right: 30px;
+        margin-left: 30px;
+    }
+
+    .l-home_entity_course {
+        .l-home__image-wrap {
+            width: 60%;
+            min-width: 325px;
+        }
+    }
+
+    .l-home__image-title {
+        font-size: 20.01px;
+        line-height: 24px;
+    }
+
+    .l-home__image-description {
+        width: 100%;
+    }
+
+    .l-home__section_image-l {
+        height: auto;
+
+        border-bottom: none;
+        .l-home__image-wrap {
+            display: none;
+        }
+    }
+
+    .l-home__section_search {
+        height: 80px;
+    }
+
+    .l-home__section_image-s {
+        display: block;
+
+        height: 230px;
+    }
+}
+
+
+@include media-xxs {
+    .l-home__section_image-s {
+        height: 165px;
+    }
+
+    .l-home__image-wrap {
+        height: 160px;
+    }
+
+    .l-home_entity_course {
+        .l-home__image-wrap {
+            width: auto;
+            min-width: auto;
+        }
+    }
+
+    .l-home__section-content_recommendations {
+        padding-top: 23px;
+    }
+}

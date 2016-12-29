@@ -5,7 +5,6 @@
  *     modifier: (string|undefined),
  *     page: (string|undefined),
  *     staticVersion: (string|undefined),
- *     year: (number|undefined),
  *     analyticsId: string,
  *     yandexMetrikaId: number,
  *     carrotquestId: string,
@@ -20,7 +19,9 @@
  *         title: string,
  *         description: ?string,
  *         content: string,
- *         header: {sm.bHeader.Template.Params.Data},
+ *         header: sm.bSmHeader.Template.Params,
+ *         subHeader: sm.bSmSubheader.Template.Params,
+ *         sideMenu: sm.bSmSideMenu.Template.Params.Data,
  *         landingScript: string,
  *         openGraph: ?{
  *             url: ?string,
@@ -35,10 +36,7 @@
  *             imageWidth: ?string,
  *             imageHeight: ?string
  *         },
- *         seoLinks: Array<{
- *             name: string,
- *             url: string
- *         }>
+ *         footer: sm.bSmFooter.Template.Params.Data
  *     },
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
@@ -219,25 +217,83 @@
  */
 {template .content autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__wrapper">
-        {call .header_ data="all" /}
+        {call .mainHeader_ data="all" /}
+        {call .subHeader_ data="all" /}
         <div class="{call .rootClass/}__content">
             {$params.data.content}
         </div>
         {call .footer_ data="all" /}
+        {call .sideMenu_ data="all" /}
     </div>
 {/template}
 
+/**
+ * Main header template
+ * @param params {{
+ *     data: {
+ *         header: sm.bSmHeader.Template.Params.Data,
+ *         config: {
+ *             modifier: string
+ *         }
+ *     }
+ * }}
+ */
+{template .mainHeader_ kind="html"}
+    <div class="{call .rootClass/}__header">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smHeader',
+                'renderParams': $params.data.header
+            ]/}
+        {/call}
+    </div>
+{/template}
 
 /**
- * @param? params {?}
+ * Subheader template
+ * @param params {{
+ *     data: {
+ *         subHeader: sm.bSmSubheader.Template.Params
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
  */
-{template .header_ autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}__header">
-        {call sm.bHeader.Template.base}
+{template .subHeader_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__sub-header">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'data': $params.data.header,
-                'config': $params.config
-            ] /}
+                'factory': $params.config.modifier,
+                'type': 'smSubheader',
+                'renderParams': $params.data.subHeader
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Side menu template
+ * @param params {{
+ *     data: {
+ *         sideMenu: sm.bSmSideMenu.Template.Params
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ */
+{template .sideMenu_ kind="html"}
+    <div class="{call .rootClass /}__side-menu">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smSideMenu',
+                'renderParams': [
+                    'data': $params.data.sideMenu
+                ]
+            ]/}
         {/call}
     </div>
 {/template}
@@ -245,35 +301,23 @@
 
 /**
  * Footer
- * @param? params {
+ * @param params {{
  *     data: {
- *         seoLinks: Array<{
- *             name: string,
- *             url: string
- *         }>
+ *         footer: sm.bSmFooter.Template.Params.Data
  *     },
- *     config: ?{
- *         year: ?number
+ *     config: {
+ *         modifier: string
  *     }
- * }
+ * }}
  */
 {template .footer_ autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__footer">
-        {call sm.lSchool.bFooter.Template.base}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'data': [
-                    'year': $params?.config?.year,
-                    'links': [
-                        [
-                            'name': 'Сотрудничество',
-                            'url': 'http://mel.fm/contacts'
-                        ],
-                        [
-                            'name': 'Пользовательское соглашение',
-                            'url': 'http://mel.fm/terms-of-use'
-                        ]
-                    ],
-                    'seoLinks': $params.data?.seoLinks
+                'factory': $params.config.modifier,
+                'type': 'smFooter',
+                'renderParams': [
+                    'data': $params.data.footer
                 ]
             ]/}
         {/call}

@@ -1,18 +1,12 @@
 @import "../i-media/i-media";
 
 .l-search__body {
-    margin: auto;
+    margin: 0 auto 60px;
 
     font-family: Arial, sans-serif;
 }
 
 /** layout **/
-.l-search__footer {
-    margin: 60px auto 0;
-
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
 .l-search__section {
     margin-bottom: 60px;
 
@@ -200,10 +194,6 @@
 }
 
 @include media-xs {
-    .l-search__footer {
-        padding: 0;
-    }
-
     .l-search__section {
         &.l-search__section_map {
             display: none;

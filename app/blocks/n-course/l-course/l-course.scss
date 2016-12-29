@@ -1,21 +1,12 @@
 @import "../../n-common/i-media/i-media";
 
 .l-course__body {
-    margin: auto;
+    margin: 0 auto 60px;
 
     color: #000;
 
     font-family: Arial, sans-serif;
 }
-
-/** layout **/
-.l-course__footer {
-    margin: 60px auto 0;
-
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-/** layout end **/
-
 
 /** Section data **/
 .l-course__section_data {

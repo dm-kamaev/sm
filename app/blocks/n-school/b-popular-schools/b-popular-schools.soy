@@ -23,17 +23,18 @@
     {let $analyticsAction: [
         'analyticsAction': $params?.config?.analyticsAction
     ] /}
+
     <div class="b-popular-schools"
-         data-params="{call goog.json.serialize data="$analyticsAction" /}">
+        data-params="{call goog.json.serialize data="$analyticsAction" /}">
+
         <div class="b-popular-schools__title">популярные школы</div>
         {foreach $school in $params?.popularSchools}
             {let $dataParams: [
                 'id': $school.id,
                 'schoolName': $school.name
             ] /}
-            <a class="b-popular-schools__school-link{sp}
-                      {$params?.config?.popularSchool?.customClasses ?: ''}"
-               href="/school/{$school.alias}">
+            <div class="b-popular-schools__school-wrap{sp}
+                      {$params?.config?.popularSchool?.customClasses ?: ''}">
                 <div class="b-popular-schools__school
                         {if isLast($school)}{sp}b-popular-schools__school_last{/if}"
                      data-params="{call goog.json.serialize data="$dataParams" /}">
@@ -48,7 +49,10 @@
                         {/call}
                     </div>
                     <div class="b-popular-schools__school-information">
-                        <div class="b-popular-schools__school-name">{$school.name}</div>
+                        <a class="b-popular-schools__school-name"
+                            href="/school/{$school.alias}">
+                            {$school.name}
+                        </a>
                         {if $school.description}
                             <div class="b-popular-schools__school-description">{$school.description}</div>
                         {/if}
@@ -80,7 +84,7 @@
                         {/if}
                     </div>
                 </div>
-            </a>
+            </div>
         {/foreach}
     </div>
 {/template}

@@ -1,11 +1,14 @@
 goog.provide('sm.lErrorSchoolNotFound.ErrorSchoolNotFound');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bSearchPanel.View');
+goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmHeader.View');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCarrotquest.Carrotquest');
 goog.require('sm.iFactory.FactoryStendhal');
@@ -44,13 +47,52 @@ sm.lErrorSchoolNotFound.ErrorSchoolNotFound = function() {
      * @private
      */
     this.popularSchools_ = null;
+
+
+    /**
+     * Footer instance
+     * @type {sm.bSmFooter.SmFooter}
+     * @private
+     */
+    this.footer_ = null;
+
+
+    /**
+     * Header instance
+     * @type {sm.bSmHeader.SmHeader}
+     * @private
+     */
+    this.header_ = null;
+
+    /**
+     * Sub header instance
+     * @type {sm.bSmSubheader.SmSubheader}
+     * @private
+     */
+    this.subHeader_ = null;
+
+
+    /**
+     * Side menu instance
+     * @type {sm.bSmSideMenu.SideMenu}
+     * @private
+     */
+    this.sideMenu_ = null;
+
+
+    /**
+     * Current factory name
+     * @type {string}
+     * @private
+     */
+    this.factory_ = 'stendhal';
 };
 goog.inherits(sm.lErrorSchoolNotFound.ErrorSchoolNotFound, goog.ui.Component);
 
 
 goog.scope(function() {
     var ErrorSchoolNotFound = sm.lErrorSchoolNotFound.ErrorSchoolNotFound,
-        PopularSchools = sm.bPopularSchools.PopularSchools;
+        Utils = cl.iUtils.Utils;
 
 
     /**
@@ -58,7 +100,7 @@ goog.scope(function() {
      * @enum {string}
      */
     ErrorSchoolNotFound.CssClass = {
-        ROOT: 'l-error-not-found'
+        ROOT: 'l-error-school-not-found'
     };
 
 
@@ -70,9 +112,13 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.initParams_()
+            .initHeader_()
+            .initSubHeader_()
             .initPopularSchools_()
             .initSearchPanel_()
-            .initAuthorization_();
+            .initAuthorization_()
+            .initFooter_()
+            .initSideMenu_();
     };
 
 
@@ -81,6 +127,111 @@ goog.scope(function() {
      */
     ErrorSchoolNotFound.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
+
+        this.listenSubheader_();
+        this.listenSideMenu_();
+    };
+
+
+    /**
+     * Init side menu listeners
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.listenSubheader_ = function() {
+        this.getHandler().listen(
+            this.subHeader_,
+            sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
+            this.onHamburgerMenuClick_
+        );
+    };
+
+
+    /**
+     * Init side menu listeners
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.listenSideMenu_ = function() {
+        this.getHandler().listen(
+                this.sideMenu_,
+                sm.bSmSideMenu.SideMenu.Event.MENU_IS_OPENED,
+                this.sideMenuIsOpenedHandler_
+            )
+            .listen(
+                this.sideMenu_,
+                sm.bSmSideMenu.SideMenu.Event.MENU_IS_CLOSED,
+                this.sideMenuIsClosedHandler_
+            );
+    };
+
+
+    /**
+     * Subheader hamburger icon click handler
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.onHamburgerMenuClick_ = function() {
+        this.sideMenu_.showMenu();
+    };
+
+
+    /**
+     * Side menu opened event handler
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.sideMenuIsOpenedHandler_ = function() {
+        this.addOverflowHidden_();
+    };
+
+
+    /**
+     * Side menu closed event handler
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.sideMenuIsClosedHandler_ = function() {
+        this.removeOverflowHidden_();
+    };
+
+
+    /**
+     * Add overflow hidden
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.addOverflowHidden_ = function() {
+        goog.dom.classlist.add(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.add(
+            this.getElement(),
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.add(
+            document.body,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+    };
+
+
+    /**
+     * Remove overflow hidden
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.removeOverflowHidden_ = function() {
+        goog.dom.classlist.remove(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.remove(
+            this.getElement(),
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+
+        goog.dom.classlist.remove(
+            document.body,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
     };
 
 
@@ -100,7 +251,7 @@ goog.scope(function() {
                 fb: dataParams['authSocialLinks']['fb'],
                 vk: dataParams['authSocialLinks']['vk']
             },
-            factoryType: 'stendhal'
+            factoryType: this.factory_
         };
 
         return this;
@@ -157,6 +308,94 @@ goog.scope(function() {
                 bSearchPanel,
                 this
             );
+
+        return this;
+    };
+
+
+    /**
+     * Init footer
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.initFooter_ = function() {
+        var footer = goog.dom.getElementByClass(
+            sm.bSmFooter.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.footer_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smFooter',
+            footer,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init header
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.initHeader_ = function() {
+        var header = goog.dom.getElementByClass(
+           sm.bSmHeader.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smHeader',
+            header,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init sub header
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.initSubHeader_ = function() {
+        var subHeader = goog.dom.getElementByClass(
+            sm.bSmSubheader.SmSubheader.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smSubheader',
+            subHeader,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init side menu
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
+     * @private
+     */
+    ErrorSchoolNotFound.prototype.initSideMenu_ = function() {
+        var sideMenu = goog.dom.getElementByClass(
+            sm.bSmSideMenu.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.sideMenu_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smSideMenu',
+            sideMenu,
+            this
+        );
 
         return this;
     };
