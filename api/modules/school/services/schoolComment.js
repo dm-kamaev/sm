@@ -1,20 +1,23 @@
 'use strict';
-
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments)).next());
+    });
+};
 // author: dm-kamaev
 // work with comment
-
-const async = require('asyncawait/async'),
-    await = require('asyncawait/await');
-
-const models = require('../../../../app/components/models').all,
-    services = require('../../../../app/components/services').all,
-    socialTypes = require('../enums/socialType.js');
-
+// const async = require('asyncawait/async'),
+//     await = require('asyncawait/await');
+const models = require('../../../../app/components/models').all;
+//     services = require('../../../../app/components/services').all,
+const userServices = require('../../user/services/user.js');
+const socialTypes = require('../enums/socialType.js');
 let service = {
     name: 'schoolComment'
 };
-
-
 /**
  * get comment with user data and rating (score)
  * @param  {Number} schoolId
@@ -31,45 +34,45 @@ let service = {
         "updatedAt": "2016-11-21T09:50:32.184Z"
     }
  */
-service.getCommentWithUser = async(function(schoolId, commentId) {
-    let res = await(models.School.findOne({
-        attributes: ['commentGroupId'],
-        where: {
-            id: schoolId
-        },
-        include: {
-            attributes: ['id'],
-            model: models.CommentGroup,
-            as: 'commentGroup',
-            include: {
-                model: models.Comment,
-                as: 'comments',
+service.getCommentWithUser =
+    function (schoolId, commentId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let res = yield models.School.findOne({
+                attributes: ['commentGroupId'],
                 where: {
-                    id: commentId
+                    id: schoolId
                 },
-                include: [{
-                    attributes: [
-                        'username', 'userType', 'userId', 'updated_at'
-                    ],
-                    model: models.UserData,
-                    as: 'userData'
-                }, {
-                    attributes: ['total_score'],
-                    model: models.Rating,
-                    as: 'rating',
-                }]
+                include: {
+                    attributes: ['id'],
+                    model: models.CommentGroup,
+                    as: 'commentGroup',
+                    include: {
+                        model: models.Comment,
+                        as: 'comments',
+                        where: {
+                            id: commentId
+                        },
+                        include: [{
+                                attributes: [
+                                    'username', 'userType', 'userId', 'updated_at'
+                                ],
+                                model: models.UserData,
+                                as: 'userData'
+                            }, {
+                                attributes: ['total_score'],
+                                model: models.Rating,
+                                as: 'rating',
+                            }]
+                    }
+                },
+            });
+            if (!res || !res.commentGroup) {
+                return null;
             }
-        },
-    }));
-
-    if (!res || !res.commentGroup) {
-        return null;
-    }
-
-    let comment = res.commentGroup.comments[0];
-    return buildCommentWithUserData_([comment])[0];
-});
-
+            let comment = res.commentGroup.comments[0];
+            return yield buildCommentWithUserData_([comment])[0];
+        });
+    };
 /**
  * get All Comments with user data and rating (score)
  * @param  {Number} schoolId
@@ -87,43 +90,42 @@ service.getCommentWithUser = async(function(schoolId, commentId) {
         },
  * ]
  */
-service.getAllCommentsWithUser = async(function(schoolId) {
-    let res = await(models.School.findOne({
-        attributes: ['commentGroupId'],
-        where: {
-            id: schoolId
-        },
-        include: {
-            attributes: ['id'],
-            model: models.CommentGroup,
-            as: 'commentGroup',
-            include: {
-                model: models.Comment,
-                as: 'comments',
-                include: [{
-                    attributes: [
-                        'username', 'userType', 'userId', 'updated_at'
-                    ],
-                    model: models.UserData,
-                    as: 'userData'
-                }, {
-                    attributes: ['total_score'],
-                    model: models.Rating,
-                    as: 'rating',
-                }]
+service.getAllCommentsWithUser =
+    function (schoolId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let res = yield models.School.findOne({
+                attributes: ['commentGroupId'],
+                where: {
+                    id: schoolId
+                },
+                include: {
+                    attributes: ['id'],
+                    model: models.CommentGroup,
+                    as: 'commentGroup',
+                    include: {
+                        model: models.Comment,
+                        as: 'comments',
+                        include: [{
+                                attributes: [
+                                    'username', 'userType', 'userId', 'updated_at'
+                                ],
+                                model: models.UserData,
+                                as: 'userData'
+                            }, {
+                                attributes: ['total_score'],
+                                model: models.Rating,
+                                as: 'rating',
+                            }]
+                    }
+                },
+            });
+            if (!res || !res.commentGroup) {
+                return null;
             }
-        },
-    }));
-
-    if (!res || !res.commentGroup) {
-        return null;
-    }
-
-    let comments = res.commentGroup.comments;
-    return buildCommentWithUserData_(comments);
-});
-
-
+            let comments = res.commentGroup.comments;
+            return yield buildCommentWithUserData_(comments);
+        });
+    };
 /**
  * edit text for comment
  * @param  {number} schoolId
@@ -141,43 +143,41 @@ service.getAllCommentsWithUser = async(function(schoolId) {
         "isNoticeSend": false
     }
  */
-service.textEdit = async(function(schoolId, commentId, text) {
-    let res = {};
-    let searchComment = searchComment_(schoolId, commentId);
-    if (searchComment) {
-        let comment = await(models.Comment.update({
-            text: text,
-        }, {
-            where: {
-                id: searchComment.id
-            },
-            returning: true
-        }));
-        res = (comment) ? comment[1][0] : {};
-    }
-    return res;
-});
-
-
+service.textEdit = function (schoolId, commentId, text) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let res = {};
+        let searchComment = searchComment_(schoolId, commentId);
+        if (searchComment) {
+            let comment = yield models.Comment.update({
+                text: text,
+            }, {
+                where: {
+                    id: searchComment.id
+                },
+                returning: true
+            });
+            res = (comment) ? comment[1][0] : {};
+        }
+        return res;
+    });
+};
 /**
  * removeComment
  * @param  {number} schoolId
  * @return {number} 1 || 0
  */
-service.removeComment = async(function(schoolId, commentId) {
-    let res = 0;
-    let searchComment = searchComment_(schoolId, commentId);
-    if (searchComment) {
-        res = await(models.Comment.destroy({
-            where: {
-                id: searchComment.id
-            },
-        }));
-    }
-    return res;
-});
-
-
+// service.removeComment = async(function(schoolId, commentId) {
+//     let res = 0;
+//     let searchComment = searchComment_(schoolId, commentId);
+//     if (searchComment) {
+//         res = await(models.Comment.destroy({
+//             where: {
+//                 id: searchComment.id
+//             },
+//         }));
+//     }
+//     return res;
+// });
 /**
  * search comment
  * @param  {number} schoolId
@@ -185,36 +185,37 @@ service.removeComment = async(function(schoolId, commentId) {
  * @return {Object} { id: 3147 }
  */
 function searchComment_(schoolId, commentId) {
-    let res = await(models.School.findOne({
-        attributes: ['commentGroupId'],
-        where: {
-            id: schoolId
-        },
-        include: {
-            attributes: ['id'],
-            model: models.CommentGroup,
-            as: 'commentGroup',
+    return __awaiter(this, void 0, void 0, function* () {
+        let res = yield models.School.findOne({
+            attributes: ['commentGroupId'],
+            where: {
+                id: schoolId
+            },
             include: {
                 attributes: ['id'],
-                model: models.Comment,
-                as: 'comments',
-                where: {
-                    id: commentId
+                model: models.CommentGroup,
+                as: 'commentGroup',
+                include: {
+                    attributes: ['id'],
+                    model: models.Comment,
+                    as: 'comments',
+                    where: {
+                        id: commentId
+                    }
                 }
-            }
-        },
-    }));
-
-    if (!res || !res.commentGroup) { return null; }
-    return res.commentGroup.comments[0];
+            },
+        });
+        if (!res || !res.commentGroup) {
+            return null;
+        }
+        return res.commentGroup.comments[0];
+    });
 }
-
-
 /**
  * buildCommentWithUserData_
  * @param  {Object[]} comments [{}]
- * @return {Object[]} [
- * {
+ * @return {Object[]}
+ * [{
  *     id,
        text,
        author,
@@ -223,20 +224,19 @@ function searchComment_(schoolId, commentId) {
        userType,
        totalScore,
        updatedAt,
- *  },
- * ]
+ *  },]
  */
 function buildCommentWithUserData_(comments) {
     return comments.map(comment => {
         let userData = comment.userData || {};
-        let userId = userData.userId,
-            socialId, socialType;
+        let userId = userData.userId, socialId, socialType;
         if (userId) {
-            var user = await(services.user.getUserById(userId));
+            let user = yield userServices.getUserById(userId);
             if (user.vkId) {
                 socialId = user.vkId;
                 socialType = socialTypes.VKONTAKTE;
-            } else if (user.facebookId) {
+            }
+            else if (user.facebookId) {
                 socialId = user.facebookId;
                 socialType = socialTypes.FACEBOOK;
             }
@@ -253,5 +253,5 @@ function buildCommentWithUserData_(comments) {
         };
     });
 }
-
-module.exports = service;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = service;

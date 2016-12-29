@@ -3,10 +3,12 @@
 // author: dm-kamaev
 // admin for school
 
-const services = require('../../../../app/components/services').all;
+import schoolCommentService from '../services/schoolComment';
+// const async = require('asyncawait/async'),
+//     await = require('asyncawait/await');
+// const services = require('../../../../app/components/services').all;
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
-
 const commentView = require('../views/commentView.js');
 
 
@@ -36,7 +38,7 @@ exports.getComment = async function(req, res) {
         commentId: number = parseInt(req.params.commentId, 10);
     try {
         let comment =
-            await services.schoolComment.getCommentWithUser(schoolId, commentId);
+            await schoolCommentService.getCommentWithUser(schoolId, commentId);
         if (!comment) {
             result = {};
         } else {
@@ -73,10 +75,10 @@ exports.getComment = async function(req, res) {
  *
  */
 exports.getAllComments = async function(req, res) {
-    let result, schoolId = parseInt(req.params.schoolId, 10);
+    let result, schoolId:number = parseInt(req.params.schoolId, 10);
     try {
         let comments = await
-            services.schoolComment.getAllCommentsWithUser(schoolId);
+            schoolCommentService.getAllCommentsWithUser(schoolId);
         if (!comments) {
             result = [];
         } else {
@@ -119,7 +121,7 @@ exports.textEdit = async function(req, res) {
         text: string = req.body.text;
     try {
         result =
-            await services.schoolComment.textEdit(schoolId, commentId, text);
+            await schoolCommentService.textEdit(schoolId, commentId, text);
     } catch (error) {
         logger.critical(error);
         result = error.message;
@@ -138,16 +140,16 @@ exports.textEdit = async function(req, res) {
  * @apiSuccess {number} success or failed: 1 || 0
  *
  */
-exports.removeComment = async function(req, res) {
-    let result,
-        schoolId: number = parseInt(req.params.schoolId, 10),
-        commentId: number = parseInt(req.params.commentId, 10);
-    try {
-        result =
-            await services.schoolComment.removeComment(schoolId, commentId);
-    } catch (error) {
-        logger.critical(error);
-        result = error.message;
-    }
-    res.json(result);
-};
+// exports.removeComment = async function(req, res) {
+//     let result,
+//         schoolId: number = parseInt(req.params.schoolId, 10),
+//         commentId: number = parseInt(req.params.commentId, 10);
+//     try {
+//         result =
+//             await services.schoolComment.removeComment(schoolId, commentId);
+//     } catch (error) {
+//         logger.critical(error);
+//         result = error.message;
+//     }
+//     res.json(result);
+// };
