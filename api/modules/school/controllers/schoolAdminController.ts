@@ -16,8 +16,16 @@ const logger =
  * @apiName getAllComments
  * @apiGroup School
  *
- * @apiSuccess {Object[]} comments
+ * @apiSuccess {Object}   comments
+ * @apiSuccess {Number}   comments.id
+ * @apiSuccess {String}   courses.text
+ * @apiSuccess {String}   courses.socialId
+ * @apiSuccess {String}   courses.socialType
+ * @apiSuccess {String}   courses.category
+ * @apiSuccess {Number}   courses.score
+ * @apiSuccess {String}   courses.updatedAt
  * {
+ *     "id": 613,
        "text": "Образование\nНе все едино, но очень многие.\n
                 Учителя\nУчителя очень близки с .",
         "author": "Вася",
@@ -57,8 +65,16 @@ exports.getComment = async function(req, res) {
  * @apiGroup School
  *
  * @apiSuccess {Object[]} comments
+ * @apiSuccess {Number}   comments.id
+ * @apiSuccess {String}   courses.text
+ * @apiSuccess {String}   courses.socialId
+ * @apiSuccess {String}   courses.socialType
+ * @apiSuccess {String}   courses.category
+ * @apiSuccess {Number}   courses.score
+ * @apiSuccess {String}   courses.updatedAt
  *  [
  *      {
+            "id": 613,
             "text": "Образование\nНе все едино, но очень многие.\n
                      Учителя\nУчителя очень близки с .",
             "author": "Вася",
@@ -96,7 +112,16 @@ exports.getAllComments = async function(req, res) {
  * @apiName editTextComment
  * @apiGroup School
  *
- * @apiSuccess {Object[]} comments
+ * @apiSuccess {Object}   comments
+ * @apiSuccess {Number}   comments.id
+ * @apiSuccess {Number}   comments.comment_group_id
+ * @apiSuccess {Number}   comments.rating_id
+ * @apiSuccess {Number}   comments.user_data_id
+ * @apiSuccess {String}   courses.text
+ * @apiSuccess {String}   courses.source
+ * @apiSuccess {Boolean}  courses.isNoticeSend
+ * @apiSuccess {String}   courses.updatedAt
+ * @apiSuccess {String}   courses.created_at
  * {
         "id": 3147,
         "created_at": "2016-12-23T09:28:43.403Z",
@@ -134,7 +159,7 @@ exports.textEdit = async function(req, res) {
  * @apiName removeComment
  * @apiGroup School
  *
- * @apiSuccess {number} success or failed: 1 || 0
+ * @apiSuccess {Number} success or failed: 1 || 0
  *
  */
 exports.removeComment = async function(req, res) {

@@ -5,7 +5,7 @@
 
 const commentView:any = {};
 
-interface IcommentInput {
+type InputComment = {
     id: number,
     text: string,
     author: string,
@@ -16,7 +16,7 @@ interface IcommentInput {
     updatedAt: string,
 }
 
-interface IcommentOut {
+interface OutComment {
     id: number,
     text: string,
     author: string,
@@ -27,7 +27,7 @@ interface IcommentOut {
     updatedAt: string,
 }
 
-commentView.comment = function(comment:IcommentInput):IcommentOut {
+commentView.comment = function(comment:InputComment):OutComment {
     return {
         id: comment.id,
         text: comment.text,
@@ -41,7 +41,7 @@ commentView.comment = function(comment:IcommentInput):IcommentOut {
 };
 
 
-commentView.comments = function(comments:IcommentInput[]):IcommentOut[] {
+commentView.comments = function(comments:InputComment[]):OutComment[] {
     return comments.map(comment => commentView.comment(comment));
 };
 
