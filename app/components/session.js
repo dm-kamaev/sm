@@ -2,6 +2,7 @@
 
 const Session = require('express-session');
 const uid = require('uid-safe').sync;
+
 const RedisStore = require('connect-redis')(Session);
 const config = require('../config/config.json');
 

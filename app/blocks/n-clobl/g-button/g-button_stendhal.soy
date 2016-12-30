@@ -1,6 +1,29 @@
 {namespace sm.gButton.TemplateStendhal}
 
 /**
+ * typedef {{
+ *     content: ?string
+ * }}
+ * sm.gButton.TemplateStendhal.Params.Data
+ */
+
+
+/**
+ * typedef {{
+ *     theme: ('dark'|'thin'|undefined),
+ *     isDisabled: (boolean|undefined),
+ *     size: ('s'|'m'|undefined),
+ *     disableHover: (boolean|undefined)
+ * }}
+ * sm.gButton.TemplateStendhal.Params.Config
+ */
+
+
+/**
+ * @param params {{
+ *     data: sm.gButton.TemplateStendhal.Params.Data,
+ *     config: sm.gButton.TemplateStendhal.Params.Config
+ * }}
  * @constructor
  * @extends cl.gButton.Template
  */
@@ -10,19 +33,25 @@
 
 
 /**
- * @override
  * @param params {
  *     config: {
- *         size: (string|undefined),
- *         isDisabled: (bool|undefined)
+ *         size: ('s'|'m'|undefined),
+ *         isDisabled: (boolean|undefined),
+ *         disableHover: (boolean|undefined)
  *     }
  * }
+ * @override
  */
 {template .additionalClasses}
     {if $params?.config?.isDisabled}
         {call .rootClass /}_disabled
     {/if}
+
     {if $params?.config?.size}
-        {call .rootClass /}_size_{$params.config.size}
+        {sp}{call .rootClass /}_size_{$params.config.size}
+    {/if}
+
+    {if not $params?.config?.disableHover}
+        {sp}{call .rootClass /}_hoverable
     {/if}
 {/template}

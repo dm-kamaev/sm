@@ -23,6 +23,8 @@ goog.require('sm.bSmBadge.SmBadge');
 goog.require('sm.bSmBadge.View');
 goog.require('sm.bSmBalloon.SmBalloon');
 goog.require('sm.bSmBalloon.View');
+goog.require('sm.bSmCatalog.SmCatalog');
+goog.require('sm.bSmCatalog.View');
 goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.bSmCheckbox.View');
 goog.require('sm.bSmCollapsedText.SmCollapsedText');
@@ -33,6 +35,10 @@ goog.require('sm.bSmFavorite.SmFavorite');
 goog.require('sm.bSmFavorite.View');
 goog.require('sm.bSmFooter.SmFooter');
 goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmHeadedList.SmHeadedList');
+goog.require('sm.bSmHeadedList.View');
+goog.require('sm.bSmHeader.SmHeader');
+goog.require('sm.bSmHeader.View');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.View');
@@ -51,6 +57,10 @@ goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.SmScoreBrief');
 goog.require('sm.bSmScore.View');
 goog.require('sm.bSmScore.ViewBrief');
+goog.require('sm.bSmSearchPanel.SmSearchPanel');
+goog.require('sm.bSmSearchPanel.View');
+goog.require('sm.bSmSideMenu.SideMenu');
+goog.require('sm.bSmSideMenu.View');
 goog.require('sm.bSmStars.SmStars');
 goog.require('sm.bSmStars.View');
 goog.require('sm.bSmSubheader.SmSubheader');
@@ -309,6 +319,26 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smExpander', {
             control: sm.bSmExpander.SmExpander,
             view: sm.bSmExpander.View
+        })
+        .setControlListItem('smHeader', {
+            control: sm.bSmHeader.SmHeader,
+            view: sm.bSmHeader.View
+        })
+        .setControlListItem('smSearchPanel', {
+            control: sm.bSmSearchPanel.SmSearchPanel,
+            view: sm.bSmSearchPanel.View
+        })
+        .setControlListItem('smCatalog', {
+            control: sm.bSmCatalog.SmCatalog,
+            view: sm.bSmCatalog.View
+        })
+        .setControlListItem('smHeadedList', {
+            control: sm.bSmHeadedList.SmHeadedList,
+            view: sm.bSmHeadedList.View
+        })
+        .setControlListItem('smSideMenu', {
+            control: sm.bSmSideMenu.SideMenu,
+            view: sm.bSmSideMenu.View
         });
 
     /** l-information blocks **/

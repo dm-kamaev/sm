@@ -1,0 +1,288 @@
+{namespace sm.bSmSearchPanel.Template}
+
+
+/**
+ * @typedef {{
+ *     title: (string|undefined),
+ *     search: {
+ *         placeholder: (string|undefined),
+ *         pageAlias: string
+ *     },
+ *     links: Array<sm.bSmLink.Template.Params.Data>,
+ *     button: {
+ *         textL: (string|undefined),
+ *         textS: (string|undefined)
+ *     },
+ *     searchLink: sm.bSmLink.Template.Params.Data
+ * }} sm.bSmSearchPanel.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     entityType: string,
+ *     stylizationModifier: string,
+ *     customClasses: ?Array<string>
+ * }} sm.bSmSearchPanel.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmSearchPanel.Template.Params.Data,
+ *     config: sm.bSmSearchPanel.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .searchPanel}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmSearchPanel.Template.Params.Data,
+ *     config: sm.bSmSearchPanel.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .sectionHeader_ data="all" /}
+    {call .sectionSearch_ data="all" /}
+    {call .sectionButton_ data="all" /}
+{/template}
+
+
+/**
+ * Section header
+ * @param params {{
+ *     data: {
+ *         title: (string|undefined)
+ *     }
+ * }}
+ */
+{template .sectionHeader_}
+    {if $params.data.title}
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_header">
+            <div class="{call .rootClass/}__title">
+                {$params.data.title}
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Section search
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: (string|undefined),
+ *             pageAlias: string
+ *         },
+ *         links: Array<sm.bSmLink.Template.Params.Data>,
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ */
+{template .sectionSearch_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_search">
+        {call .search_ data="all" /}
+
+        {call .links_}
+            {param params: [
+                'data': $params.data.links,
+                'config': [
+                    'modifier': 'search'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section button
+ * @param params {{
+ *     data: {
+ *         button: {
+ *             textL: (string|undefined),
+ *             textS: (string|undefined)
+ *         },
+ *         searchLink: sm.bSmLink.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .sectionButton_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_button">
+        {call .button_ data="all" /}
+
+        {call .links_}
+            {param params: [
+                'data': [$params.data.searchLink],
+                'config': [
+                    'modifier': 'button'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Search
+ * @param params {{
+ *      data: {
+ *         search: {
+ *             placeholder: (string|undefined),
+ *             pageAlias: string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ */
+{template .search_}
+    <div class="{call .rootClass/}__search">
+        {call sm.bSearch.Template.base}
+            {param params: [
+                'placeholder': $params.data.search.placeholder,
+                'theme': 'main',
+                'redirect': true,
+                'pageAlias': $params.data.search.pageAlias,
+                'config': [
+                    'entityType': $params.config.entityType
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section button
+ * @param params {{
+ *     data: {
+ *         button: {
+ *             textL: (string|undefined),
+ *             textS: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .button_}
+    <div class="{call .rootClass/}__button">
+        {let $content kind="html"}
+            <div class="{call .rootClass/}__button-text{sp}
+                        {call .rootClass/}__button-text_l">
+                {$params.data.button.textL}
+            </div>
+
+            <div class="{call .rootClass/}__button-text{sp}
+                        {call .rootClass/}__button-text_s">
+                {$params.data.button.textS}
+            </div>
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $content
+                    ],
+                    'config': [
+                        'disableHover': true,
+                        'theme': 'dark',
+                        'size': 'm'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Links
+ * @param params {{
+ *     data: Array<sm.bSmLink.Template.Params.Data>,
+ *     config: {
+ *         modifier: (string|undefined)
+ *     }
+ * }}
+ */
+{template .links_}
+    {let $classes kind="html"}
+        {call .rootClass/}__links
+
+        {if $params?.config?.modifier}
+            {sp}{call .rootClass/}__links_{$params.config.modifier}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {foreach $link in $params.data}
+            {call .link_}
+                {param params: [
+                    'data': $link,
+                    'config': [
+                        'modifier': $params.config.modifier
+                    ]
+                ]/}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Link
+ * @param params {{
+ *     data: sm.bSmLink.Template.Params.Data,
+ *     config: {
+ *         modifier: (string|undefined)
+ *     }
+ * }}
+ */
+{template .link_}
+    {let $classes kind="html"}
+        {call .rootClass/}__link
+
+        {if $params?.config?.modifier}
+            {sp}{call .rootClass/}__link_{$params.config.modifier}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'size': 'm'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-search-panel
+{/template}

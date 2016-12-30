@@ -1,8 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var schoolController = require('./schoolController');
+'use strict';
 
-var checkToken = require('../../../../app/middleware/checkToken');
+const express = require('express');
+const router = express.Router();
+const schoolController = require('./schoolController');
+const csrf = require('../../../../app/middleware/csrf');
+const checkToken = require('../../../../app/middleware/checkToken');
 
 router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);
@@ -25,11 +27,10 @@ router.get(
 );
 router.get('/school/:id', schoolController.view);
 // router.get('/school/apitest', schoolController.yapi);
-// router.get('/school/search', schoolController.search);
 
 
 router.post('/school/createschool', checkToken, schoolController.create);
-router.post('/school/:id/comment', schoolController.createComment);
+router.post('/school/:id/comment', csrf, schoolController.createComment);
 
 router.put('/school/:id', checkToken, schoolController.update);
 

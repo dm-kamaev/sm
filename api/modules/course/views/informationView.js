@@ -3,14 +3,23 @@
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
-const courseView = require('./courseView');
 
-const courseCategoryView = require('./courseCategoryView');
+const courseView = require('./courseView'),
+    courseCategoryView = require('./courseCategoryView');
+
+const footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+
+const Subheader = require('../lib/CourseSubheader');
 
 const courseImageSize = require('../enums/courseImageSize');
 
+let view = {};
+
 /**
  * @param {{
+ *     config: Object,
  *     user: Object,
  *     fbClientId: string,
  *     authSocialLinks: Object,
@@ -23,7 +32,7 @@ const courseImageSize = require('../enums/courseImageSize');
  * }} data
  * @return {Object}
  */
-exports.render = function(data) {
+view.render = function(data) {
     let user = userView.default(data.user),
         entityData = courseView.page(data.course, data.categoryAlias);
 
@@ -50,31 +59,16 @@ exports.render = function(data) {
             relapImage: imageOpenGraph,
             fbClientId: data.fbClientId,
         },
-        subHeader: {
-            logo: {
-                linkUrl: '/',
-                altText: '«Курсы Мела»',
-                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
-            },
-            listLinks: {
-                opener: 'Все курсы',
-                content: {
-                    items: courseCategoryView.listLinks(
-                        data.categories,
-                        data.categoryAliases
-                    )
-                }
-            },
-            search: {
-                placeholder: 'Район, метро, название курса',
-                redirect: true,
-                pageAlias: 'proforientacija'
-            },
-            user: user,
-            favorites: {
-                items: favoriteView.list(data.favorites)
-            }
-        },
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
+        subHeader: view.subheader({
+            listLinks: courseCategoryView.listLinks(
+                data.categories,
+                data.categoryAliases
+            ),
+            favoriteEntities: favoriteView.list(data.favorites),
+            user: user
+        }),
         user: user,
         authSocialLinks: data.authSocialLinks,
         entityData: entityData,
@@ -82,6 +76,29 @@ exports.render = function(data) {
         priceLabelText: 'Гарантия лучшей цены',
         actionButtonText: data.actionButtonText ?
             data.actionButtonText :
-            'Хочу этот курс!'
+            'Хочу этот курс!',
+        footer: footerView.render()
     };
 };
+
+
+/**
+ * @param {Object<string, string>} data
+ * @return {Object}
+ */
+view.subheader = function(data) {
+    let subheader = new Subheader();
+
+    subheader.init({
+        isLogoRedirect: true,
+        listLinks: data.listLinks,
+        isSearchRedirect: true,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
+
+    return subheader.getParams();
+};
+
+module.exports = view;

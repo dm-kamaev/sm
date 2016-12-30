@@ -1,3 +1,5 @@
+'use strict';
+
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var sequelizeInclude = require('../../../components/sequelizeInclude');
@@ -6,6 +8,8 @@ var services = require('../../../../app/components/services').all;
 var geoTools = require('../../../../console/modules/geoTools/geoTools');
 var logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
+
+const SEARCH_RADIUS = 3; // killometrs, search radius for metro
 
 exports.name = 'address';
 
@@ -30,15 +34,16 @@ exports.getTest = async(() => {
  * @return {Address}
  */
 exports.addAddress = async(function(entityId, entityType, data) {
-    var addressBD = await(services.address.getAddress({
+    let addressBD = await(services.address.getAddress({
         name: data.name,
         entityType: entityType
     }));
-    var address;
+
+    let address;
 
     if (addressBD) {
-        logger.info('Address:' + data.name);
-        logger.info(
+        logger.critical('Address:' + data.name);
+        logger.critical(
             'is already binded to ' + entityType +
             ' with id:' + addressBD.school_id
         );
@@ -52,15 +57,16 @@ exports.addAddress = async(function(entityId, entityType, data) {
                 true
             ));
         }
+
         data.areaId = data.areaId || await(services.area.create({
             name: await(geoTools.getArea(data.coords)) // area name from coords
         }))[0].id; // area id
 
         address = await(models.Address.create(data));
 
-        var metros = await(geoTools.getMetros(data.coords, 3));
-        await(this.setMetro(address, metros));
+        let metros = await(geoTools.getMetros(data.coords, SEARCH_RADIUS));
 
+        await(this.setMetro(address, metros));
         await(this.setDistance(address));
     }
     return address;
@@ -169,6 +175,7 @@ exports.setMetro = async(function(address, metroArr) {
                 name: metro.name
             }
         }));
+
         if (ourMetro) {
             await(address.addMetroStation(ourMetro));
         } else {
@@ -294,25 +301,41 @@ exports.getAllWithSearchData = async(function() {
     });
 });
 
+
 /**
- * @param {Address} address
- * @return {Array<AddressMetro>}
+ * setDistance
+ * @param  {Object} address
+ * {
+ *   id: 4631,
+ *   name: 'улица Новый Арбат, 24',
+ *   entityId: null,
+ *   entityType: null,
+ *   coords: [ 37.587614, 55.753083 ],
+ *   areaId: 84,
+ *   updated_at: Wed Dec 07 2016 11:09:03 GMT+0300 (MSK),
+ *   created_at: Wed Dec 07 2016 11:09:03 GMT+0300 (MSK),
+ *   isSchool: null
+ * }
+ * @return {Object[]}  [ { id, address_id, metro_id, } ]
  */
 exports.setDistance = async(function(address) {
-    var addressMetros = await(models.AddressMetro.findAll({
+    let addressMetros = await(models.AddressMetro.findAll({
         where: {
             addressId: address.id,
         }
     }));
 
     return addressMetros.map(addressMetro => {
-        var metroCoords = await(services.metro.getCoords(addressMetro.metroId))
-            .reverse();
-        return await(addressMetro.update({
-            distance: (
-                geoTools.distance(address.coords, metroCoords)
-                    .toFixed(3) * 1000
-            ).toFixed(0)
-        }));
+        let metroCoords = await(services.metro.getCoords(addressMetro.metroId));
+        let distance = geoTools.distanceKm({
+            latitude: address.coords[1],
+            longitude: address.coords[0],
+        }, {
+            latitude: metroCoords[0],
+            longitude: metroCoords[1],
+        });
+        // metres
+        distance = (distance.toFixed(3) * 1000).toFixed(0);
+        return await(addressMetro.update({ distance }));
     });
 });

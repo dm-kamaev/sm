@@ -8,6 +8,7 @@ const passport = require('passport');
 const csrf = require('./app/middleware/csrf');
 const session = require('./app/components/session');
 const configurePassport = require('./app/components/configurePassport');
+const logger = require('./app/components/logger/logger');
 const soy = require('./node_modules/clobl/soy').setOptions({
     templateFactory: [
         path.join(
@@ -28,6 +29,17 @@ const soy = require('./node_modules/clobl/soy').setOptions({
         __dirname,
         'node_modules/closure-templates'
     )
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    let promiseString = typeof promise == 'object' ?
+        JSON.stringify(promise) :
+        promise;
+    logger
+        .getLogger('app')
+        .critical(
+            `Unhandled Rejection at: Promise ${promiseString} reason: ${reason}`
+        );
 });
 
 const criticalErrorHandler = require('./app/middleware/criticalErrorHandler');
@@ -63,6 +75,7 @@ app.use(bodyParser.json());
 app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
+configurePassport();
 
 if (config.environment == 'development') {
     app.use('/doc', modules.doc.router);
@@ -77,12 +90,18 @@ app.use(morgan('dev', {
     stream: expressLogStream.debug
 }));
 app.use(morgan('dev', {
-    skip: (req, res) => res.statusCode < 400,
+    skip: (req, res) => res.statusCode < 400 || res.statusCode >= 500,
     stream: expressLogStream.warning
 }));
+app.use(morgan('dev', {
+    skip: (req, res) => res.statusCode < 500,
+    stream: expressLogStream.critical
+}));
+
 
 app.use('/courses/api', api.course.router);
-
+app.use('/schools/api', api.school.router);
+// generate token in cookies, all request not GET
 app.use(csrf);
 
 app.use('/:subdomain/', api.user.router);
@@ -92,7 +111,6 @@ app.use('/courses/', modules.course.router);
 
 app.use('/:subdomain/api', api.mail.router);
 app.use('/:subdomain/api', api.comment.router);
-app.use('/schools/api', api.school.router);
 app.use('/:subdomain/api', api.geo.router);
 app.use('/:subdomain/api', api.feedback.router);
 app.use('/:subdomain/api', api.favorite.router);
@@ -112,10 +130,7 @@ async(function() {
             });
         }
     );
-
-    configurePassport();
 })();
 
-app.use(criticalErrorHandler);
-
 app.use(notFoundErrorHandler);
+app.use(criticalErrorHandler);

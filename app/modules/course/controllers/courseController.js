@@ -9,13 +9,12 @@ const soy = require('../../../components/soy'),
         require('../../../components/contentExperiment/contentExperiment'),
     courseView = require('../../../../api/modules/course/views/courseView'),
     searchView = require('../../../../api/modules/course/views/searchView'),
+    homeView = require('../../../../api/modules/course/views/homeView'),
     informationView = require(
         '../../../../api/modules/course/views/informationView'
     ),
     entityType = require('../../../../api/modules/entity/enums/entityType.js'),
     filterName = require('../../../../api/modules/course/enums/filterName');
-
-const PageNotFoundError = require('../../error/lib/PageNotFoundError');
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 
@@ -31,7 +30,57 @@ const ANALYTICS_ID = config.courses.analyticsId,
 let controller = {};
 
 controller.home = async(function(req, res, next) {
-    res.redirect('/search');
+    try {
+        let authSocialLinks = services.auth.getAuthSocialUrl(),
+            user = req.user || {};
+        let factory = contentExperiment.getFactoryByQuery(req.query);
+
+        let data = await({
+            favorites: services.favorite.getFavoriteEntities(user.id),
+            categories: services.courseCategory.getAll({isActive: true}),
+            categoryAliases: services.courseCategory.getAliases(),
+            recommendations: services.courseSearchCatalog.getAll()
+        });
+
+        let templateData = homeView.render({
+            user: user,
+            authSocialLinks: authSocialLinks,
+            favorites: data.favorites,
+            categories: data.categories,
+            categoryAliases: data.categoryAliases,
+            recommendations: data.recommendations,
+            entityType: entityType.COURSE,
+            config: config
+        });
+
+        let html = soy.render(
+            'sm.lHome.Template.home', {
+                params: {
+                    data: templateData,
+                    config: {
+                        entityType: entityType.COURSE,
+                        page: 'home',
+                        modifier: factory,
+                        staticVersion: config.lastBuildTimestamp,
+                        analyticsId: ANALYTICS_ID,
+                        experimentId: EXPERIMENT_ID,
+                        yandexMetrikaId: YANDEX_METRIKA_ID,
+                        carrotquestId: CARROTQUEST_ID,
+                        csrf: req.csrfToken(),
+                        domain: DOMAIN,
+                        fbClientId: FB_CLIENT_ID
+                    }
+                }
+            });
+
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(html);
+    } catch (error) {
+        logger.error(error);
+
+        res.status(error.code || 500);
+        next(error);
+    }
 });
 
 controller.commonSearch = async(function(req, res, next) {
@@ -52,7 +101,6 @@ controller.commonSearch = async(function(req, res, next) {
             });
 
         let templateData = searchView.render({
-            entityType: entityType.COURSE,
             user: user,
             fbClientId: FB_CLIENT_ID,
             favorites: data.favorites,
@@ -73,7 +121,9 @@ controller.commonSearch = async(function(req, res, next) {
             seoParams: data.search.seoParams,
             currentAlias: 'search',
             categories: data.search.categories,
-            categoryAliases: aliases.categories
+            categoryAliases: aliases.categories,
+            entityType: entityType.COURSE,
+            config: config
         });
 
         let html = soy.render(
@@ -85,15 +135,13 @@ controller.commonSearch = async(function(req, res, next) {
                         page: 'search',
                         modifier: factory,
                         staticVersion: config.lastBuildTimestamp,
-                        year: new Date().getFullYear(),
                         analyticsId: ANALYTICS_ID,
                         experimentId: EXPERIMENT_ID,
                         yandexMetrikaId: YANDEX_METRIKA_ID,
                         carrotquestId: CARROTQUEST_ID,
                         csrf: req.csrfToken(),
                         domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID,
-                        type: entityType.COURSE
+                        fbClientId: FB_CLIENT_ID
                     }
                 }
             }
@@ -116,7 +164,7 @@ controller.search = async(function(req, res, next) {
                 services.courseCategory.getByAlias(categoryName)
             );
         if (!categoryInstance) {
-            throw new PageNotFoundError();
+            return next();
         } else {
             let authSocialLinks = services.auth.getAuthSocialUrl(),
                 user = req.user || {},
@@ -138,6 +186,7 @@ controller.search = async(function(req, res, next) {
                 });
 
             let templateData = searchView.render({
+                entityType: entityType.COURSE,
                 user: user,
                 fbClientId: FB_CLIENT_ID,
                 favorites: data.favorites,
@@ -151,11 +200,12 @@ controller.search = async(function(req, res, next) {
                 filtersData: data.search.filtersData,
                 enabledFilters: categoryInstance.filters,
                 aliases: aliases.courses,
-                seoParams: data.search.seoParams,
-                currentAlias: categoryName,
-                categories: data.search.categories,
+                seoParams: data.seoParams,
+                currentCategory: categoryName,
+                categories: data.categories,
                 categoryAliases: aliases.categories,
-                categoryId: categoryInstance.id
+                categoryId: categoryInstance.id,
+                config: config
             });
 
             let html = soy.render(
@@ -167,7 +217,6 @@ controller.search = async(function(req, res, next) {
                             page: 'search',
                             modifier: factory,
                             staticVersion: config.lastBuildTimestamp,
-                            year: new Date().getFullYear(),
                             analyticsId: ANALYTICS_ID,
                             experimentId: EXPERIMENT_ID,
                             yandexMetrikaId: YANDEX_METRIKA_ID,
@@ -212,7 +261,7 @@ controller.information = async(function(req, res, next) {
                 )
             });
         if (!page.course || !page.brand || !page.category) {
-            throw new PageNotFoundError();
+            return next();
         } else {
             let courseInstance = await(services.urls.getEntityByUrl(
                     alias, entityType.COURSE
@@ -222,7 +271,7 @@ controller.information = async(function(req, res, next) {
                 course.brandId != page.brand.id ||
                 course.courseType.categoryId != page.category.id
             ) {
-                throw new PageNotFoundError();
+                return next();
             } else {
                 let authSocialLinks = services.auth.getAuthSocialUrl(),
                     user = req.user || {};
@@ -245,7 +294,9 @@ controller.information = async(function(req, res, next) {
                     categoryAlias: categoryAlias,
                     favorites: data.favorites,
                     categories: data.categories,
-                    categoryAliases: data.categoryAliases
+                    categoryAliases: data.categoryAliases,
+                    entityType: entityType.COURSE,
+                    config: config
                 });
                 let factory = contentExperiment.getFactoryByQuery(req.query);
 
@@ -258,7 +309,6 @@ controller.information = async(function(req, res, next) {
                                 page: entityType.COURSE,
                                 modifier: factory,
                                 staticVersion: config.lastBuildTimestamp,
-                                year: new Date().getFullYear(),
                                 analyticsId: ANALYTICS_ID,
                                 experimentId: EXPERIMENT_ID,
                                 yandexMetrikaId: YANDEX_METRIKA_ID,
