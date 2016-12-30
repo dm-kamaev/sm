@@ -58,7 +58,7 @@ goog.scope(function() {
      * @enum {string}
      */
     View.Event = {
-        HAMBURGER_MENU_CLICK: goog.events.EventType.CLICK
+        HAMBURGER_MENU_CLICK: goog.events.getUniqueId('menu-click')
     };
 
 
@@ -146,7 +146,7 @@ goog.scope(function() {
     View.prototype.initHamburgerMenuListener_ = function() {
         this.getHandler().listen(
             this.dom.hamburgerMenu,
-            View.Event.HAMBURGER_MENU_CLICK,
+            goog.events.EventType.CLICK,
             this.onHamburgerMenuClick_
         );
     };

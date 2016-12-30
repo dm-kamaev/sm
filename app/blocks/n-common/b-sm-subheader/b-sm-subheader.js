@@ -5,6 +5,7 @@ goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
 goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bSearch.Search');
+goog.require('sm.bSmSubheader.SearchSubmitEvent');
 goog.require('sm.bSmSubheader.View');
 
 
@@ -78,6 +79,8 @@ goog.scope(function() {
         View = sm.bSmSubheader.View,
         Search = sm.bSearch.Search;
 
+    var SearchSubmitEvent = sm.bSmSubheader.SearchSubmitEvent;
+
 
     /**
      * Subheader modes
@@ -103,7 +106,7 @@ goog.scope(function() {
      * @enum {string}
      */
     Subheader.Event = {
-        'SEARCH_SUBMIT': goog.events.getUniqueId('search_submit'),
+        'SEARCH_SUBMIT': SearchSubmitEvent.Type,
         'HAMBURGER_MENU_CLICK': goog.events.getUniqueId('hamburger_click')
     };
 
@@ -258,10 +261,14 @@ goog.scope(function() {
 
 
     /**
+     * Search submit event handler
+     * @param {goog.events.Event} event
      * @private
      */
-    Subheader.prototype.onSubmit_ = function() {
-        this.dispatchEvent(Subheader.Event.SEARCH_SUBMIT);
+    Subheader.prototype.onSubmit_ = function(event) {
+        var searchInstance = event.target,
+            searchSubmitEvent = new SearchSubmitEvent(searchInstance.getData());
+        this.dispatchEvent(searchSubmitEvent);
 
         this.minifiedSearch_.reset();
         this.search_.reset();
