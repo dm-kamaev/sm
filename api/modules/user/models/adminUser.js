@@ -17,12 +17,12 @@ let AdminUser = db.define('AdminUser', {
     accessAttributes: {
         type: DataType.JSONB,
     },
-    'created_at': {
-        allowNull: false,
+    createdAt: {
+        field: 'created_at',
         type: DataType.DATE
     },
-    'updated_at': {
-        allowNull: false,
+    updatedAt: {
+        field: 'updated_at',
         type: DataType.DATE
     },
 }, {
