@@ -1,0 +1,70 @@
+{namespace sm.gModal.TemplateSideMenu}
+
+/**
+ * Modal template
+ * @param? params {{
+ *     data: {
+ *         content: ?string
+ *     }
+ * }}
+ * @extends cl.gModal.Template
+ * @constructor
+ * @doc
+ */
+{template .modalSideMenu}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Content
+ * @override
+ */
+{template .content}
+    {call .header_/}
+    {call .menu_ data="all"/}
+{/template}
+
+/**
+ * header
+ */
+{template .header_}
+    <div class="{call .rootClass/}__header">
+        <div class="{call .rootClass /}__close-icon">
+            {call .renderChild}
+                {param params: [
+                    'type': 'icon-svg',
+                    'renderParams': [
+                        'data': [
+                            'type': 'close-menu'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+/**
+ * Modal template
+ * @param? params {{
+ *     data: {
+ *         content: ?string
+ *     }
+ * }}
+ * @extends cl.gModal.Template
+ * @constructor
+ * @doc
+ */
+{template .menu_}
+    <div class="{call .rootClass /}__menu">
+        {$params?.data?.content ?: ''}
+    </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .rootClass}
+    g-modal-side-menu
+{/template}

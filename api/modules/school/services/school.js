@@ -8,6 +8,10 @@ const colors = require('colors'),
 const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
     entityType = require('../../entity/enums/entityType');
+const School = models.School;
+
+const SchoolNotFoundError =
+    require('../controllers/errors/SchoolNotFoundError.js');
 
 const sequelize = require('../../../../app/components/db'),
     redis = require('../../../../app/components/redis'),
@@ -22,14 +26,6 @@ let service = {
     name: 'school'
 };
 
-class SchoolNotFoundError extends Error {
-    /**
-     * @param {number} id
-     */
-    constructor(id) {
-        super('Cant find school with id = ' + id);
-    }
-}
 
 /**
  * Create school
@@ -108,30 +104,45 @@ service.create = function(data) {
  * Update school data
  * @param {Object} schoolId
  * @param {{
- *     name: string,
- *     abbreviation: string,
- *     fullName: string,
- *     schoolType: enum.school.school_type,
- *     director: string,
- *     phones?: string[],
- *     site?: string,
- *     educationInterval: number[]
+ *   "description": "
+ *        Многопрофильная школа с развитой системой
+ *        профориентации и «университетскими субботами»
+ *  ",
+ *   "features": [
+ *       "В лицее нет традиционных классов: ученики делятся на группы в
+ *        зависимости от
+ *        выбранного ими учебного плана
+ *       ",
+ *      "В расписании предусмотрены факультетские дни,
+ *       которые лицеисты проводят на профильных факультетах НИУ ВШЭ
+ *      "
+ *   ]
  * }} data
- * @return {Object} School model instance
  */
 service.update = async(function(schoolId, data) {
     CsvConverter.cureQuotes(data);
+    return await(School.update(data, {
+        where: {
+            id: schoolId
+        }
+    }));
+});
 
-    var school = await(
-        models.School.findOne({
-            where: {id: schoolId}
-        })
-    );
 
-    if (!school) {
-        throw new SchoolNotFoundError(schoolId);
-    }
-    return await(school.update(data));
+/**
+ * checkExist check exist school
+ * @param  {[int]} schoolId
+ * @return {Object} School model instance
+ */
+service.checkExist = async(function(schoolId) {
+    let school = await(School.findOne({
+        where: {
+            id: schoolId
+        }
+    }));
+
+    if (!school) { throw new SchoolNotFoundError(schoolId); }
+    return school;
 });
 
 

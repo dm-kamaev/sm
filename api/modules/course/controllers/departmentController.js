@@ -116,7 +116,7 @@ controller.create = async(function(req, res) {
 });
 
 /**
- * @api {put} /coursebrand/:id Update department
+ * @api {put} /coursebrand/:brandId/department/:id Update department
  * @apiVersion 1.0.0
  * @apiGroup CourseDepartment
  * @apiName updateCourseDepartment
@@ -132,8 +132,9 @@ controller.create = async(function(req, res) {
 controller.update = async(function(req, res) {
     let result;
     try {
+        let departmentId = parseInt(req.params.id, 10);
         result = await(services.courseDepartment.update(
-            req.params.id, req.body
+            departmentId, req.body
         ));
     } catch (error) {
         logger.error(error);

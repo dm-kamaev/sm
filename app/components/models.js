@@ -23,8 +23,6 @@ exports.initModels = function(dirPath) {
     return localModels;
 };
 
-
-
 exports.initAssociations = async(function() {
     Object.keys(models).forEach(function(name) {
         var model = models[name];

@@ -87,6 +87,11 @@
 @include media-xs {
     .b-authorization-link {
         position: static;
+
+        .b-authorization-link__hint {
+            top: 165px;
+        }
     }
+
 }
 

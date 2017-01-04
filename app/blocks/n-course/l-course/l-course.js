@@ -196,11 +196,13 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.initMapListeners_ = function() {
-        this.getHandler().listen(
-            this.map_,
-            Map.Event.BALLOON_OPEN,
-            this.onBalloonOpen_
-        );
+        if (this.map_) {
+            this.getHandler().listen(
+                this.map_,
+                Map.Event.BALLOON_OPEN,
+                this.onBalloonOpen_
+            );
+        }
     };
 
 
