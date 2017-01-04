@@ -6,7 +6,7 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 
 import AdminUserAlreadyExistError from './errors/AdminUserAlreadyExists';
 import AdminUserNotFoundError from './errors/AdminUserNotFound';
-import WrongAccessAttributesError from './errors/WrongAttributes';
+import WrongAccessAttributesError from './errors/WrongAccessAttributes';
 
 import adminUserService from '../services/adminUser';
 
