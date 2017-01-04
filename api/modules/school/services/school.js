@@ -704,7 +704,7 @@ service.findBySite = async(function(site) {
  * @param {number} id
  * @return {Object}
  */
-service.viewOne = function(id) {
+service.viewOne = async(function(id) {
     var school = await(models.School.findOne({
         where: {id: id}
     }));
@@ -728,7 +728,7 @@ service.viewOne = function(id) {
     school.addresses = result.addresses;
 
     return school;
-};
+});
 
 
 /**
