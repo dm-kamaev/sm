@@ -1,1 +1,11 @@
+api/components/interface.js
+
 api/modules/user/services/adminUser.js
+api/modules/user/services/exceptions/AdminUserAlreadyExists.js
+api/modules/user/services/exceptions/AdminUserNotFound.js
+api/modules/user/services/exceptions/WrongAccessAttributes.js
+
+api/modules/user/controllers/adminUserController.js
+api/modules/user/controllers/errors/AdminUserAlreadyExists.js
+api/modules/user/controllers/errors/AdminUserNotFound.js
+api/modules/user/controllers/errors/WrongAccessAttributes.js
