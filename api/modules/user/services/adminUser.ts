@@ -37,7 +37,6 @@ class Service {
         return await AdminUserModel.findAll();
     }
 
-
     public async create(data: AdminUserData): Promise<ActiveRecord> {
         let user = await this.getByUserId_(data.userId);
 
@@ -89,8 +88,7 @@ class Service {
         return AdminUserModel.findOne({
             where: {
                 userId: userId
-            },
-            raw: true
+            }
         });
     }
 

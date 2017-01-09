@@ -12,10 +12,14 @@ const adminUserController = new AdminUserController();
 var authorizationController = require('./authorizationController');
 
 router.get('/adminuser', adminUserController.actionList);
-router.get('/adminuser/:id', adminUserController.actionGet);
+router.get('/adminuser/:adminUserId', adminUserController.actionGet);
 router.post('/adminuser', checkToken, adminUserController.actionCreate);
-router.put('/adminuser/:id', checkToken, adminUserController.actionUpdate);
-router.delete('/adminuser/:id', checkToken, adminUserController.actionDelete);
+router.put(
+    '/adminuser/:adminUserId', checkToken, adminUserController.actionUpdate
+);
+router.delete(
+    '/adminuser/:adminUserId', checkToken, adminUserController.actionDelete
+);
 
 router.get('/unauthorize', authorizationController.unauthorize);
 router.get('/authorize/:type', authorizationController.authorize);

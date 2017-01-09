@@ -24,7 +24,7 @@ class WrongAccessAttributes extends Exception {
 
     set name(name: string) {
         this.name_ = name;
-    };
+    }
 }
 
 export default WrongAccessAttributes;

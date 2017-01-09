@@ -21,7 +21,7 @@ class AdminUserAlreadyExists extends Exception {
 
     set name(name: string) {
         this.name_ = name;
-    };
+    }
 
     get adminUserId(): number {
         return this.adminUserId_;
