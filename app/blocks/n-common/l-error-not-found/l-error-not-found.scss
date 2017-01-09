@@ -14,7 +14,7 @@
 .l-error-not-found__body {
     width: 1200px;
     min-width: 255px;
-    margin: 0 auto;
+    margin: 0 auto 60px;
 
     color: #000;
 
@@ -24,10 +24,6 @@
 .l-error-not-found__footer {
     position: relative;
     bottom: 0;
-
-    margin: 60px auto 0;
-
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 /** layout end **/
 

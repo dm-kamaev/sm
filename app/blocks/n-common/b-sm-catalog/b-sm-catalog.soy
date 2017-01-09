@@ -1,0 +1,79 @@
+{namespace sm.bSmCatalog.Template}
+
+/**
+ * @typedef {{
+ *     list: Array<sm.bSmHeadedList.Template.Params.Data>
+ * }} sm.bSmCatalog.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ * }} sm.bSmCatalog.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.bSmCatalog.Template.Params.Data,
+ *     config: sm.bSmCatalog.Template.Params.Config
+ * }} sm.bSmCatalog.Template.Params
+ */
+
+
+/**
+ * Template for Header block
+ * @param params {{
+ *     data: sm.bSmCatalog.Template.Params.Data
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .catalog}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         list: sm.bSmCatalog.Template.Params.Data
+ *     }
+ * }}
+ * @override
+ */
+{template .body}
+    <div class="{call .rootClass /}__list">
+        {foreach $item in $params.data.list}
+            {call .item_}
+                {param params: $item /}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Item
+ * @param params {sm.bSmHeadedList.Template.Params.Data}
+ */
+{template .item_}
+    <div class="{call .rootClass /}__list-item-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'smHeadedList',
+                'renderParams': [
+                    'data': $params
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-sm-catalog
+{/template}

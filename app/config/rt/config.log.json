@@ -1,0 +1,25 @@
+{
+    "formatters": {
+        "simple": {
+            "format": "\n%(levelname)s %(message)s",
+            "colorize": true
+        }
+    },
+    "handlers": {
+        "terminal": {
+            "formatter": "simple",
+            "class": "intel/handlers/console"
+        }
+    },
+    "loggers": {
+        "app": {
+            "handlers": ["terminal"]
+        },
+        "express": {
+            "handlers": ["terminal"]
+        },
+        "sequelize": {
+            "handlers": ["terminal"]
+        }
+    }
+}

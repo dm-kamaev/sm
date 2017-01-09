@@ -96,6 +96,7 @@
   },
   "dependencies": {
     "express": "^4.13.3",
+    "geopoint": "^1.0.1",
     "glob": "^5.0.15",
     "gulp-debug": "^3.0.0",
     "q": "^1.4.1",

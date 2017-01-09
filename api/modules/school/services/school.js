@@ -121,7 +121,7 @@ service.create = function(data) {
  */
 service.update = async(function(schoolId, data) {
     CsvConverter.cureQuotes(data);
-    await(School.update(data, {
+    return await(School.update(data, {
         where: {
             id: schoolId
         }

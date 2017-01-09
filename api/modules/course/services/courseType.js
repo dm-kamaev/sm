@@ -27,6 +27,10 @@ service.create = async(function(data) {
     }))[0];
 });
 
+/**
+ * Return all course types by category id
+ * @return {Array<Object>}
+ */
 service.getAll = async(function() {
     let query = squel.select()
         .from('course_type')

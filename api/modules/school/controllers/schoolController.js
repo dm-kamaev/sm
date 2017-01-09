@@ -11,6 +11,9 @@ const schoolView = require('../views/schoolView'),
     specializedClassesView = require('../views/specializedClassesView'),
     activityView = require('../views/activityView');
 
+const SchoolNotFoundError =
+     require('../controllers/errors/SchoolNotFoundError.js');
+
 const searchViewEntity = require('../../entity/views/searchView');
 
 const mapViewType = require('../../entity/enums/mapViewType'),
@@ -100,12 +103,11 @@ exports.update = async(function(req, res) {
 
     try {
         await(services.school.checkExist(schoolId));
-        await(services.school.update(schoolId, data));
+        result = await(services.school.update(schoolId, data));
     } catch (err) {
         result = handlerErr_(err);
     } finally {
-        res.header('Content-Type', 'application/json; charset=utf-8');
-        res.end(JSON.stringify(result));
+        res.json(result);
     }
 });
 

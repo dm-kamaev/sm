@@ -8,7 +8,7 @@
  *         altText: ?string,
  *         linkUrl: ?string
  *     },
- *     listLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined),
+ *     listLinks: (sm.gDropdown.TemplateListLinks.Params.Data|undefined),
  *     links: ({
  *         nameL: string,
  *         nameM: string,
@@ -29,13 +29,21 @@
  */
 
 
- /**
+/**
  * @typedef {{
  *     entityType: string,
  *     bottomLine: ?boolean,
  *     theme: (string|undefined),
  *     stylizationModifier: string
  * }} sm.bSmSubheader.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.bSmSubheader.Template.Params.Data,
+ *     config: sm.bSmSubheader.Template.Params.Config
+ * }} sm.bSmSubheader.Template.Params
  */
 
 
@@ -62,7 +70,9 @@
  */
 {template .body}
     <div class="{call .rootClass/}__body">
+        {call .sectionHamburgerMenu_ /}
         {call .sectionLogo_ data="all" /}
+        {call .sectionContacts_ data="all" /}
         {call .sectionLinks_ data="all" /}
         {call .sectionSearch_ data="all" /}
     </div>
@@ -91,10 +101,88 @@
 
 
 /**
+ * Section Contacts
+ * @param params {{
+ *     data: {
+ *         contacts: {
+ *             phone: string
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionContacts_}
+    <div class="{call .rootClass/}__section
+                {sp}{call .rootClass/}__section_contacts
+                {sp}i-animate">
+        {call .contacts_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * sectionHamburgerMenu_
+ */
+{template .sectionHamburgerMenu_}
+    <div class="{call .rootClass /}__section
+                {sp}{call .rootClass /}__section_hamburger-menu">
+        {call .hamburgerMenu_ /}
+    </div>
+{/template}
+
+
+/**
+ * hamburgerMenu_
+ */
+{template .hamburgerMenu_}
+    <div class="{call .rootClass /}__hamburger-menu">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon-svg',
+                'renderParams': [
+                    'data': [
+                        'type': 'hamburger-menu'
+                    ],
+                    'config': [
+                        'customClasses': ''
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+
+/**
+ * Contacts template
+ * @param params {{
+ *     data: {
+ *         contacts: sm.bSmContacts.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .contacts_ kind="html"}
+    <div class="{call .rootClass /}__contacts">
+        {call .renderChild}
+            {param params: [
+                'type': 'smContacts',
+                'renderParams': [
+                    'data': $params.data.contacts,
+                    'config': [
+                        'size': 'xl'
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
  * Section links
  * @param params {{
  *     data: {
- *         listLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined),
+ *         listLinks: (sm.gDropdown.TemplateListLinks.Params.Data|undefined),
  *         links: ({
  *             nameL: string,
  *             nameM: string,
@@ -145,7 +233,7 @@
  * Search links
  * @param params {{
  *     data: {
- *         listLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined),
+ *         listLinks: (sm.gDropdown.TemplateListLinks.Params.Data|undefined),
  *         links: ({
  *             nameL: string,
  *             nameM: string,
@@ -223,7 +311,7 @@
  * List of links to search
  * @param params {{
  *     data: {
- *         listLinks: Array<sm.bSmLink.Template.Params.Data>
+ *         listLinks: sm.gDropdown.TemplateListLinks.Params.Data
  *     }
  * }}
  */
@@ -351,7 +439,7 @@
     {/let}
 
     <div class="{call .rootClass/}__logo i-animate">
-        <a class="{call .rootClass/}__link" {$href}>
+        <a class="{call .rootClass/}__logo-link" {$href}>
             {call .logoImg_ data="all"/}
         </a>
     </div>

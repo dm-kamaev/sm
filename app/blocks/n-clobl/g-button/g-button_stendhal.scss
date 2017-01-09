@@ -1,4 +1,4 @@
-.g-button.g-button_stendhal {
+.g-button_stendhal {
     box-sizing: border-box;
     width: 100%;
     height: 53px;
@@ -25,18 +25,21 @@
     }
 }
 
-.g-button.g-button_dark-theme {
+.g-button_dark-theme {
     color: #000;
     border: 4px solid #000;
 
     &:hover {
-        color: #e62424;
-        border: 4px solid #e62424;
         background-color: transparent;
     }
 }
 
-.g-button.g-button_thin-theme {
+.g-button_dark-theme.g-button_hoverable:hover {
+    color: #e62424;
+    border-color: #e62424;
+}
+
+.g-button_thin-theme {
     padding: 14px 0 15px 0;
 
     color: #000;
@@ -49,14 +52,21 @@
     }
 }
 
-.g-button.g-button_size_s {
+.g-button_size_s {
     height: 47px;
     padding: 7px;
 
     font-size: 15px;
 }
 
-.g-button_stendhal.g-button_disabled {
+.g-button_size_m {
+    height: 47px;
+    padding: 9px;
+
+    font-size: 16px;
+}
+
+.g-button_disabled {
     cursor: default;
 
     opacity: 0.5;

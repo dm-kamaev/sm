@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const schoolController = require('./schoolController');
+
 const schoolAdminController = require('./schoolAdminController.js');
 
 const checkToken = require('../../../../app/middleware/checkToken');
@@ -33,6 +34,7 @@ router.get('/school/:id', schoolController.view);
 
 
 router.post('/school/createschool', checkToken, schoolController.create);
+
 router.put(
     '/school/:schoolId/comment/:commentId',
     checkToken,
@@ -50,7 +52,6 @@ router.get(
 );
 router.get('/school/:schoolId/comment', schoolAdminController.getAllComments);
 router.post('/school/:id/comment', csrf, schoolController.createComment);
-
 
 router.put('/school/:id', checkToken, schoolController.update);
 
