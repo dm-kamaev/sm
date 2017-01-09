@@ -5,24 +5,22 @@ const lodash = require('lodash');
 
 const areaView = require('../../geo/views/areaView.js');
 const metroView = require('../../geo/views/metroView.js');
-const addressView = require(
-    '../../geo/views/addressView.js');
+const addressView = require('../../geo/views/addressView.js');
 const districtView = require('../../geo/views/districtView');
-const activityView = require(
-    './activityView.js');
-const specializedClassesView = require(
-    './specializedClassesView.js');
-const ratingView = require(
-    './ratingView.js');
-const egeResultView = require(
-    '../../study/views/egeResultView.js');
-const giaResultView = require(
-    '../../study/views/giaResultView.js');
-const olimpResultView = require(
-    '../../study/views/olimpResultView.js');
+const activityView = require('./activityView.js');
+const specializedClassesView = require('./specializedClassesView.js');
+const ratingView = require('./ratingView.js');
+const egeResultView = require('../../study/views/egeResultView.js');
+const giaResultView = require('../../study/views/giaResultView.js');
+const olimpResultView = require('../../study/views/olimpResultView.js');
 const scoreView = require('../views/scoreView');
 const scoreEntityView = require('../../entity/views/scoreView');
 const seoView = require('./seoView.js');
+const SubHeader = require('../lib/SchoolSubheader');
+
+const footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
 const commentView = require('../../comment/views/commentView');
 
@@ -37,10 +35,13 @@ let schoolView = {};
  * @param {object} user
  * @param {object} user.data
  * @param {string} user.isCommented
+ * @param {Object} config
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
+schoolView.default = function(
+    schoolInstance, data, user, config, opt_popularSchools
+) {
     addressView.transformSchoolAddress(schoolInstance);
     var addresses = services.department.addressesFilter(
             schoolInstance.addresses
@@ -88,19 +89,43 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         authSocialLinks: data.authSocialLinks,
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
-        isFavorite: schoolView.isFavorite(schoolInstance, data.favorites.items),
         user: user,
-        favorites: {
-            schools: schoolView.listCompact(data.favorites)
-        },
+        header: headerView.render(config, entityType.SCHOOL),
+        sideMenu: sideMenuView.render(config, entityType.SCHOOL),
+        subHeader: schoolView.subHeader({
+            user: user,
+            favoriteEntities: []
+        }),
         seoDescription: data.page.description,
-        seoLinks: seoView.linksList(data.seoLinks)
+        footer: footerView.render(seoView.linksList(data.seoLinks))
     };
     if (data.popularSchools) {
         result.popularSchools = this.popular(data.popularSchools);
     }
 
     return result;
+};
+
+/**
+ * Sub header params init
+ * @param {{
+ *      user: Object,
+ *      favoriteEntities: Array<Object>
+ * }} data
+ * @return {Object}
+ */
+schoolView.subHeader = function(data) {
+    let subHeader = new SubHeader();
+
+    subHeader.init({
+        isLogoRedirect: true,
+        isSearchRedirect: true,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
+
+    return subHeader.getParams();
 };
 
 

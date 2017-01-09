@@ -20,7 +20,8 @@
  *     target: (string|undefined),
  *     disableHover: boolean,
  *     size: ('s'|'m'|'l'|'xl'),
- *     theme: ('attention'|'light'|'block'|'dark'|'default'|undefined)
+ *     theme: ('attention'|'light'|'block'|'dark'|'default'|undefined),
+ *     isSelected: boolean
  * }} sm.bSmLink.Template.Params.Config
  */
 
@@ -29,7 +30,8 @@
  * Link template
  * @param params {{
  *     data: sm.bSmLink.Template.Params.Data,
- *     config: sm.bSmLink.Template.Params.Config
+ *     config: sm.bSmLink.Template.Params.Config,
+ *     isSelected: boolean
  * }}
  * @extends cl.iControl.Template
  * @constructor
@@ -122,7 +124,10 @@
  */
 {template .additionalClasses kind="html"}
     {if $params?.config.size}
-        {call .rootClass /}_size_{$params?.config.size}
+        {sp}{call .rootClass /}_size_{$params?.config.size}
+    {/if}
+    {if $params?.config.isSelected}
+        {sp}{call .rootClass /}_selected
     {/if}
 {/template}
 

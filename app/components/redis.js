@@ -5,12 +5,15 @@ const redis = require('redis'),
     await = require('asyncawait/await');
 
 class Redis {
+    /**
+     * @constructor
+     */
     constructor() {
         /**
          * @private
          * @type {Object}
          */
-        var client_ = null;
+        this.client_ = null;
 
         this.promisify_();
     }

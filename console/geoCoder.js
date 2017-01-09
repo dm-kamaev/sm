@@ -230,4 +230,3 @@ function getMetros_(coords, searchRadius) {
         }, 1000);
     });
 }
-

@@ -9,7 +9,8 @@ class StartupControl {
     /**
      * Class constructor
      * @param {Object.<string, boolean>} [opt_options]
-     * @param {boolean} [opt_options.checkMigrations=false] Check migrations actuality
+     * @param {boolean} [opt_options.checkMigrations=false] Check migrations
+     *                                                      actuality
      * @constructor
      */
     constructor(opt_options) {
@@ -28,8 +29,7 @@ class StartupControl {
                     currentCheck();
                 });
                 resolve();
-            }
-            catch (exception) {
+            } catch (exception) {
                 reject(exception);
             }
         });
@@ -49,7 +49,8 @@ class StartupControl {
     /**
      * Generate list of startup check-functions
      * @param {Object.<string, boolean>} [opt_options]
-     * @param {boolean} [opt_options.checkMigrations=false] Check migrations actuality
+     * @param {boolean} [opt_options.checkMigrations=false] Check migrations
+     *                                                      actuality
      * @return {Array<function>} - Array of checks to execute
      * @private
      */

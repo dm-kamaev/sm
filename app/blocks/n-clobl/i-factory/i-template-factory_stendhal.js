@@ -13,12 +13,16 @@ goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBalloon.Template');
+goog.require('sm.bSmCatalog.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
+goog.require('sm.bSmContacts.Template');
 goog.require('sm.bSmEmbed.Template');
 goog.require('sm.bSmExpander.Template');
 goog.require('sm.bSmFavorite.Template');
 goog.require('sm.bSmFooter.Template');
+goog.require('sm.bSmHeadedList.Template');
+goog.require('sm.bSmHeader.Template');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItemList.Template');
@@ -29,6 +33,8 @@ goog.require('sm.bSmMark.Template');
 goog.require('sm.bSmRadioButton.Template');
 goog.require('sm.bSmScore.Template');
 goog.require('sm.bSmScore.TemplateBrief');
+goog.require('sm.bSmSearchPanel.Template');
+goog.require('sm.bSmSideMenu.Template');
 goog.require('sm.bSmStars.Template');
 goog.require('sm.bSmSubheader.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
@@ -316,6 +322,30 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smEmbed',
             sm.bSmEmbed.Template.embed
+        )
+        .setTemplateListItem(
+            'smContacts',
+            sm.bSmContacts.Template.contacts
+        )
+        .setTemplateListItem(
+            'smHeader',
+            sm.bSmHeader.Template.header
+        )
+        .setTemplateListItem(
+            'smSearchPanel',
+            sm.bSmSearchPanel.Template.searchPanel
+        )
+        .setTemplateListItem(
+            'smCatalog',
+            sm.bSmCatalog.Template.catalog
+        )
+        .setTemplateListItem(
+            'smHeadedList',
+            sm.bSmHeadedList.Template.headedList
+        )
+        .setTemplateListItem(
+            'smSideMenu',
+            sm.bSmSideMenu.Template.sideMenu
         );
 
     /** l-information blocks **/

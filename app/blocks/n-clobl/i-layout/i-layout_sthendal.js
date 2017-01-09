@@ -25,6 +25,12 @@ goog.require('sm.iMetrika.Metrika');
 sm.iLayout.LayoutStendhal = function(view, opt_domHelper) {
     sm.iLayout.LayoutStendhal.base(this, 'constructor', view, opt_domHelper);
 
+    /**
+     * Main header instance
+     * @type {sm.bSmHeader.SmHeader}
+     * @protected
+     */
+    this.mainHeader = null;
 
     /**
      * Subheader instance
@@ -40,25 +46,53 @@ sm.iLayout.LayoutStendhal = function(view, opt_domHelper) {
      * @protected
      */
     this.footer = null;
+
+    /**
+     * Side menu instance
+     * @type {sm.bSmSideMenu.SideMenu}
+     * @protected
+     */
+    this.sideMenu = null;
 };
 goog.inherits(sm.iLayout.LayoutStendhal, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Layout = sm.iLayout.LayoutStendhal,
-        View = sm.iLayout.ViewStendhal;
+    var Layout = sm.iLayout.LayoutStendhal;
 
     /**
      * @override
+     * @protected
      */
     Layout.prototype.decorateInternal = function(element) {
         Layout.base(this, 'decorateInternal', element);
 
         this.initAuthorization();
+        this.initMainHeader();
         this.initSubheader();
         this.initFooter();
+        this.initSideMenu();
     };
 
+    /**
+     * Side menu initialization
+     * @protected
+     */
+    Layout.prototype.initSideMenu = function() {
+        var dom = this.getView().getDom();
+        this.sideMenu = this.decorateChild('smSideMenu', dom.sideMenu);
+    };
+
+    /**
+     * Initializes the main header of the page
+     * @protected
+     */
+    Layout.prototype.initMainHeader = function() {
+        this.mainHeader = this.decorateChild(
+            'smHeader',
+            this.getView().getDom().mainHeader
+        );
+    };
 
     /**
      * Init authorization
@@ -71,29 +105,74 @@ goog.scope(function() {
         authorization.init(params);
     };
 
-
     /**
      * Init subheader instance
      * @protected
      */
     Layout.prototype.initSubheader = function() {
-        var that = this;
         this.subheader = this.decorateChild(
             'smSubheader',
             this.getView().getDom().subheader
         );
     };
 
-
     /**
      * Init footer instance
      * @protected
      */
     Layout.prototype.initFooter = function() {
-        var that = this;
         this.footer = this.decorateChild(
             'smFooter',
             this.getView().getDom().footer
         );
+    };
+
+    /**
+     * Enter document
+     * @override
+     * @public
+     */
+    Layout.prototype.enterDocument = function() {
+        Layout.base(this, 'enterDocument');
+
+        this.listen(
+            sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
+            this.onHamburgerMenuClick_
+        );
+
+        this.listen(
+            sm.bSmSideMenu.SideMenu.Event.MENU_IS_OPENED,
+            this.sideMenuIsOpenedHandler_
+        );
+
+        this.listen(
+            sm.bSmSideMenu.SideMenu.Event.MENU_IS_CLOSED,
+            this.sideMenuIsClosedHandler_
+        );
+    };
+
+
+    /**
+     * side menu is opened handler
+     * @private
+     */
+    Layout.prototype.sideMenuIsOpenedHandler_ = function() {
+        this.getView().addOverflowHidden();
+    };
+
+    /**
+     * side menu is closed handler
+     * @private
+     */
+    Layout.prototype.sideMenuIsClosedHandler_ = function() {
+        this.getView().removeOverflowHidden();
+    };
+
+    /**
+     * On hamburger menu click
+     * @private
+     */
+    Layout.prototype.onHamburgerMenuClick_ = function() {
+        this.sideMenu.showMenu();
     };
 });  // goog.scope
