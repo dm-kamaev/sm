@@ -14,7 +14,7 @@ module.exports = Session({
         httpOnly: false,
         maxAge: 1000 * 60 * 60 * 24 * 30
     },
-    name: 'connect.sid',
+    name: 'connect.sid.v1',
     secret: SECRET,
     resave: false,
     saveUninitialized: true,
