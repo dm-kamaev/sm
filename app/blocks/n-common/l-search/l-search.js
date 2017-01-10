@@ -341,13 +341,12 @@ goog.scope(function() {
 
     /**
      * Header submit handler
-     * @param {Object} event
+     * @param {sm.bSmSubheader.SearchSubmitEvent} event
      * @private
      */
     Search.prototype.onHeaderSearchSubmit_ = function(event) {
-        var searchText = this.subheader.getSearchData();
-
-        this.setSearchFieldText_(searchText);
+        var searchData = event.getSearchData();
+        this.setSearchFieldText_(searchData);
         this.makeNewSearch_();
     };
 
