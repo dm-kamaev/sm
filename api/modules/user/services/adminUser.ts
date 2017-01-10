@@ -1,5 +1,5 @@
 /**
- * @fileoverview Service for operations with adminUser model
+ * @fileOverview Service for operations with adminUser model
  */
 const AdminUserModel = require('../models/adminUser'),
     schoolService = require('../../school/services/school'),
@@ -33,10 +33,16 @@ class Service {
         return this.name_;
     }
 
+    /**
+     * Get all users
+     */
     public async getAll(): Promise<Array<ActiveRecord>> {
         return await AdminUserModel.findAll();
     }
 
+    /**
+     * Create user
+     */
     public async create(data: AdminUserData): Promise<ActiveRecord> {
         let user = await this.getByUserId_(data.userId);
 
@@ -44,12 +50,15 @@ class Service {
             throw new AdminUserAlreadyExists(data.userId);
         }
 
-        await this.checkAccessAttributes_(data.accessAttributes);
+        await this.checkAccessAttributes(data.accessAttributes);
 
         let adminUserData = this.normalizeAccessAttributes_(data);
         return await AdminUserModel.create(adminUserData);
     }
 
+    /**
+     * Get user by id
+     */
     public async getByUserId(userId: number): Promise<ActiveRecord> {
         let result = await this.getByUserId_(userId);
 
@@ -60,13 +69,16 @@ class Service {
         return result;
     }
 
+    /**
+     * Update user
+     */
     public async update(
         userId: number, data: AdminUserData
     ): Promise<ActiveRecord> {
         let adminUser = await this.getByUserId(userId),
             adminUserData = this.normalizeAccessAttributes_(data);
 
-        await this.checkAccessAttributes_(data.accessAttributes);
+        await this.checkAccessAttributes(data.accessAttributes);
 
         adminUser.update({
             accessAttributes: adminUserData.accessAttributes
@@ -75,6 +87,9 @@ class Service {
         return adminUser;
     }
 
+    /**
+     * Delete user
+     */
     public async deleteUser(userId: number) {
         let user = await this.getByUserId(userId);
 
@@ -82,20 +97,11 @@ class Service {
     }
 
     /**
-     * Silently get admin user from database
-     */
-    private async getByUserId_(userId: number): Promise<ActiveRecord> {
-        return AdminUserModel.findOne({
-            where: {
-                userId: userId
-            }
-        });
-    }
-
-    /**
      * Check if entity with given attribute id exists in db
      */
-    private async checkAccessAttributes_(attributes: AccessAttributes) {
+    public async checkAccessAttributes(
+        attributes: AccessAttributes
+    ): Promise<boolean> {
         let schoolId = attributes.schoolId,
             brandId = attributes.brandId;
 
@@ -104,7 +110,7 @@ class Service {
 
         let school = {};
         if (schoolId) {
-            school = await schoolService.viewOne(schoolId);
+            school = await schoolService.getById(schoolId);
 
             if (!school) {
                 throw new WrongAccessAttributes(
@@ -119,10 +125,23 @@ class Service {
 
             if (!brand) {
                 throw new WrongAccessAttributes(
-                    schoolId, SCHOOL_ID_ENTITY_TYPE
+                    schoolId, BRAND_ID_ENTITY_TYPE
                 );
             }
         }
+
+        return !!school || !!brand;
+    }
+
+    /**
+     * Silently get admin user from database
+     */
+    private async getByUserId_(userId: number): Promise<ActiveRecord> {
+        return AdminUserModel.findOne({
+            where: {
+                userId: userId
+            }
+        });
     }
 
     /**
@@ -131,8 +150,7 @@ class Service {
     private normalizeAccessAttributes_(
         data: AdminUserData
     ): AdminUserData {
-        let result = Object.assign({}, data),
-            isSuperUser = data.accessAttributes.isSuperUser;
+        let isSuperUser = data.accessAttributes.isSuperUser;
 
         data.accessAttributes.isSuperUser = isSuperUser ? true : undefined;
 
