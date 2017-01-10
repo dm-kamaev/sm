@@ -133,7 +133,7 @@ goog.scope(function() {
 
     /**
      * Focus event handler
-     * @param {Object} event
+     * @param {goog.events.BrowserEvent} event
      * @protected
      * @override
      */
@@ -211,9 +211,11 @@ goog.scope(function() {
      * @private
      */
     View.prototype.getChar_ = function(event) {
-        var result = null;
+        var result = null,
+            browserEvent = event.getBrowserEvent(),
+            keyCode = browserEvent.keyCode || browserEvent.which;
 
-        if (event.keyCode > View.SPECIAL_SYBOL_CODE) {
+        if (keyCode > View.SPECIAL_SYBOL_CODE) {
             result = String.fromCharCode(event.charCode);
         }
 

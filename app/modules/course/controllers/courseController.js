@@ -202,7 +202,7 @@ controller.search = async(function(req, res, next) {
                 aliases: aliases.courses,
                 seoParams: data.seoParams,
                 currentCategory: categoryName,
-                categories: data.categories,
+                categories: data.search.categories,
                 categoryAliases: aliases.categories,
                 categoryId: categoryInstance.id,
                 config: config
