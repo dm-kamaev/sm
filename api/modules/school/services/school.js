@@ -730,6 +730,20 @@ service.viewOne = async(function(id) {
     return school;
 });
 
+/**
+ * Get school by id
+ * @param {number} id
+ * @return {models.School}
+ * @public
+ */
+service.getById = async(function(id) {
+    return models.School.findOne({
+        where: {
+            id: id
+        },
+        raw: true
+    });
+});
 
 /**
  * @param {number} schoolId
