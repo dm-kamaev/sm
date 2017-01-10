@@ -6,12 +6,13 @@
  *         url: string,
  *         name: string
  *     }>,
-  *     footerItems: {
+ *     footerItems: {
  *         contactLinks: Array<sm.bSmLink.Template.Params.Data>,
  *         copyright: string
  *     }
  * }} sm.bSmSideMenu.Template.Params.Data
  */
+
 
 /**
  * Template for Side menu block
@@ -26,6 +27,7 @@
     {call .init data="all" /}
 {/template}
 
+
 /**
  * @param params {{
  *     data: sm.bSmSideMenu.Template.Params.Data
@@ -36,6 +38,7 @@
     {call .menuContent data="all" /}
 {/template}
 
+
 /**
  * menuContent
  * @param params {{
@@ -43,13 +46,11 @@
  * }}
  */
 {template .menuContent}
-
     <div class="{call .rootClass /}__content">
         {call .header data="all" /}
         {call .menu data="all" /}
         {call .footer data="all" /}
     </div>
-
 {/template}
 
 
@@ -57,10 +58,11 @@
  * header
  */
 {template .header}
-	<div class="{call .rootClass /}__header">
+    <div class="{call .rootClass /}__header">
         {call .closeIcon /}
-	</div>
+    </div>
 {/template}
+
 
 /**
  * closeIcon
@@ -81,7 +83,6 @@
 {/template}
 
 
-
 /**
  * menu
  * @param params {{
@@ -94,15 +95,15 @@
  * }}
  */
 {template .menu}
-	<div class="{call .rootClass /}__menu">
-		<ul class="{call .rootClass /}__menu-list">
-			{foreach $item in $params.data.menuItems}
-				{call .menuItem}
-					{param item: $item/}
-				{/call}
-			{/foreach}
-		</ul>
-	</div>
+    <div class="{call .rootClass /}__menu">
+        <ul class="{call .rootClass /}__menu-list">
+            {foreach $item in $params.data.menuItems}
+                {call .menuItem}
+                    {param item: $item/}
+                {/call}
+            {/foreach}
+        </ul>
+    </div>
 {/template}
 
 
@@ -190,8 +191,8 @@
         {call .rootClass /}__link
     {/let}
 
-	<li class="{call .rootClass /}__menu-item">
-		{call .renderChild}
+    <li class="{call .rootClass /}__menu-item">
+        {call .renderChild}
             {param params: [
                 'type': 'smLink',
                 'renderParams': [
@@ -209,7 +210,7 @@
                 ]
             ]/}
         {/call}
-	</li>
+    </li>
 {/template}
 
 
