@@ -1,7 +1,4 @@
-interface LegacyController {
-    new(): LegacyController
-};
-
+import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import AdminUserAlreadyExistError from './errors/AdminUserAlreadyExists';
@@ -11,11 +8,12 @@ import WrongAccessAttributesError from './errors/WrongAccessAttributes';
 import adminUserService from '../services/adminUser';
 
 class AdminUserController extends Controller{
-    public errors: Object;
-
     constructor() {
         super();
 
+        /**
+         * Possible errors
+         */
         this.errors = {
             AdminUserAlreadyExistsException: AdminUserAlreadyExistError,
             AdminUserNotFoundException: AdminUserNotFoundError,
@@ -26,7 +24,7 @@ class AdminUserController extends Controller{
     /**
      * @apiDefine AdminUserNotFoundError
      * @apiError (404) AdminUserNotFound Admin user not found
-     * @apiErrorExample {json} Error-Responce:
+     * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 404 Not Found
      *      {
      *           "code": "AdminUserNotFound",
@@ -37,7 +35,7 @@ class AdminUserController extends Controller{
     /**
      * @apiDefine AdminUserAlreadyExistsError
      * @apiError (403) AdminUserAlreadyExists Admin user already exists
-     * @apiErrorExample {json} Error-Responce:
+     * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 409 Conflict
      *      {
      *           "code": "AdminUserAlreadyExists",
@@ -48,7 +46,7 @@ class AdminUserController extends Controller{
     /**
      * @apiDefine WrongAttributesError
      * @apiError (404) WrongAttributes Entity in access attributes not exists
-     * @apiErrorExample {json} Error-Responce:
+     * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 400 BAd Request
      *      {
      *           "code": "WrongAttributes",
@@ -62,14 +60,20 @@ class AdminUserController extends Controller{
      * @apiName getAdminUsers
      * @apiGroup AdminUser
      *
-     * @apiSuccess {Object[]} adminUsers                             Array of finded administrative users
-     * @apiSuccess {Number}   adminUsers.userId                      Id of user in administrative console db
-     * @apiSuccess {Object}   adminUsers.accessAttributes            Access attributes of user
-     * @apiSuccess {Number}   adminUsers.accessAttributes.schoolId   Id of school which user can edit
-     * @apiSuccess {Number}   adminUsers.accessAttributes.brandId    Id of course brand which user can edit
-     * @apiSuccess {Boolean}  adminUser.accessAttributes.isSuperUser Is user is super user
+     * @apiSuccess {Object[]} adminUsers
+     *     Array of finded administrative users
+     * @apiSuccess {Number}   adminUsers.userId
+     *     Id of user in administrative console db
+     * @apiSuccess {Object}   adminUsers.accessAttributes
+     *     Access attributes of user
+     * @apiSuccess {Number}   adminUsers.accessAttributes.schoolId
+     *     Id of school which user can edit
+     * @apiSuccess {Number}   adminUsers.accessAttributes.brandId
+     *     Id of course brand which user can edit
+     * @apiSuccess {Boolean}  adminUser.accessAttributes.isSuperUser
+     *     Is user is super user
      *
-     * @apiSuccessExample {json} Success-Responce:
+     * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     [{
      *         "userId": 10,
@@ -91,14 +95,20 @@ class AdminUserController extends Controller{
      * @apiName getAdminUser
      * @apiGroup AdminUser
      *
-     * @apiSuccess {Object}  adminUser                              Array of finded administrative users
-     * @apiSuccess {Number}  adminUser.userId                       Id of user in administrative console db
-     * @apiSuccess {Object}  adminUser.accessAttributes             Access attributes of user
-     * @apiSuccess {Number}  adminUser.accessAttributes.schoolId    Id of school which user can edit
-     * @apiSuccess {Number}  adminUser.accessAttributes.brandId     Id of course brand which user can edit
-     * @apiSuccess {Boolean} adminUser.accessAttributes.isSuperUser Is user is super user
+     * @apiSuccess {Object}  adminUser
+     *     Array of finded administrative users
+     * @apiSuccess {Number}  adminUser.userId
+     *     Id of user in administrative console db
+     * @apiSuccess {Object}  adminUser.accessAttributes
+     *     Access attributes of user
+     * @apiSuccess {Number}  adminUser.accessAttributes.schoolId
+     *     Id of school which user can edit
+     * @apiSuccess {Number}  adminUser.accessAttributes.brandId
+     *     Id of course brand which user can edit
+     * @apiSuccess {Boolean} adminUser.accessAttributes.isSuperUser
+     *     Is user is super user
      *
-     * @apiSuccessExample {json} Success-Responce:
+     * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     {
      *         "userId": 10,
@@ -121,11 +131,16 @@ class AdminUserController extends Controller{
      * @apiName createAdminUser
      * @apiGroup AdminUser
      *
-     * @apiParam {Number}  userId                       User id from administration console database
-     * @apiParam {Object}  accessAttributes             Access attributes of user
-     * @apiParam {Number}  accessAttributes.schoolId    Id of school which user can edit
-     * @apiParam {Number}  accessAttributes.brandId     Id of course brand which user can edit
-     * @apiParam {Boolean} accessAttributes.isSuperUser Is user is super user
+     * @apiParam {Number}  userId
+     *     User id from administration console database
+     * @apiParam {Object}  accessAttributes
+     *     Access attributes of user
+     * @apiParam {Number}  accessAttributes.schoolId
+     *     Id of school which user can edit
+     * @apiParam {Number}  accessAttributes.brandId
+     *     Id of course brand which user can edit
+     * @apiParam {Boolean} accessAttributes.isSuperUser
+     *     Is user is super user
      *
      * @apiParamExample {json} Request-Example:
      *     {
@@ -137,12 +152,18 @@ class AdminUserController extends Controller{
      *         }
      *     }
      *
-     * @apiSuccess {Object}  adminUser                              Array of finded administrative users
-     * @apiSuccess {Number}  adminUser.userId                       Id of user in administrative console db
-     * @apiSuccess {Object}  adminUser.accessAttributes             Access attributes of user
-     * @apiSuccess {Number}  adminUser.accessAttributes.schoolId    Id of school which user can edit
-     * @apiSuccess {Number}  adminUser.accessAttributes.brandId     Id of course brand which user can edit
-     * @apiSuccess {Boolean} adminUser.accessAttributes.isSuperUser Is user is super user
+     * @apiSuccess {Object}  adminUser
+     *     Array of finded administrative users
+     * @apiSuccess {Number}  adminUser.userId
+     *     Id of user in administrative console db
+     * @apiSuccess {Object}  adminUser.accessAttributes
+     *     Access attributes of user
+     * @apiSuccess {Number}  adminUser.accessAttributes.schoolId
+     *     Id of school which user can edit
+     * @apiSuccess {Number}  adminUser.accessAttributes.brandId
+     *     Id of course brand which user can edit
+     * @apiSuccess {Boolean} adminUser.accessAttributes.isSuperUser
+     *     Is user is super user
      *
      * @apiUse AdminUserAlreadyExistsError
      * @apiUse WrongAttributesError
@@ -160,11 +181,16 @@ class AdminUserController extends Controller{
      * @apiName updateAdminUser
      * @apiGroup AdminUser
      *
-     * @apiParam {Number}  userId                       User id from administration console database
-     * @apiParam {Object}  accessAttributes             Access attributes of user
-     * @apiParam {Number}  accessAttributes.schoolId    Id of school which user can edit
-     * @apiParam {Number}  accessAttributes.brandId     Id of course brand which user can edit
-     * @apiParam {Boolean} accessAttributes.isSuperUser Is user is super user
+     * @apiParam {Number}  userId
+     *     User id from administration console database
+     * @apiParam {Object}  accessAttributes
+     *     Access attributes of user
+     * @apiParam {Number}  accessAttributes.schoolId
+     *     Id of school which user can edit
+     * @apiParam {Number}  accessAttributes.brandId
+     *     Id of course brand which user can edit
+     * @apiParam {Boolean} accessAttributes.isSuperUser
+     *     Is user is super user
      *
      * @apiParamExample {json} Request-Example:
      *     {
@@ -176,7 +202,7 @@ class AdminUserController extends Controller{
      *         }
      *     }
      *
-     * @apiSuccessExample {json} Success-Responce:
+     * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 204 OK
      *
      * @apiUse AdminUserAlreadyExistsError
@@ -193,7 +219,7 @@ class AdminUserController extends Controller{
      * @apiName deleteAdminUser
      * @apiGroup AdminUser
      *
-     * @apiSuccessExample {json} Success-Responce:
+     * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 204 OK
      *
      * @apiUse AdminUserNotFoundError
