@@ -78,6 +78,7 @@
     <div class="{call .rootClass/}__section {call .rootClass/}__section_content">
         {call .nameField_/}
         {call .phoneField_/}
+        {call .emailField_/}
         {call .commentField_/}
     </div>
 {/template}
@@ -195,6 +196,37 @@
                 'renderParams': [
                     'config': [
                         'theme': 'light',
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Field to enter email
+ */
+{template .emailField_}
+    <div class="{call .rootClass/}__field {call .rootClass/}__field_email">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__email-input
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'input',
+                'renderParams': [
+                    'data': [
+                        'placeholder': 'e-mail',
+                        'maxLength': 50,
+                        'name': 'email',
+                        'type': 'text'
+                    ],
+                    'config': [
+                        'theme': 'light',
+                        'validations': ['email', 'notEmpty'],
                         'customClasses': [$customClasses]
                     ]
                 ]

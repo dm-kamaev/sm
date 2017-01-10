@@ -533,6 +533,7 @@ view.letterData = function(data) {
  *     applicationId: number,
  *     name: string,
  *     phone: string,
+ *     email: string,
  *     link: string,
  *     comment: ?string,
  *     department: Object
@@ -558,6 +559,7 @@ view.letterContent = function(data) {
     result += `<br>Ссылка: ${data.link}`;
     result += `<br>Имя: ${data.name}`;
     result += `<br>Телефон: ${data.phone}`;
+    result += `<br>e-mail: ${data.email}`;
     result += comment;
     result += option;
     result += '</div>';
