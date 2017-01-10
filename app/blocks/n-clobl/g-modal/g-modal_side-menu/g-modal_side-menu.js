@@ -1,6 +1,7 @@
 goog.provide('sm.gModal.ModalSideMenu');
 
-goog.require('sm.gModal.ModalSideMenuView');
+goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.ViewSideMenu');
 
 
 
@@ -10,18 +11,33 @@ goog.require('sm.gModal.ModalSideMenuView');
  * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
- * @extends {cl.gModal.Modal}
+ * @extends {sm.gModal.ModalStendhal}
  */
 sm.gModal.ModalSideMenu = function(view, opt_params, opt_domHelper) {
     sm.gModal.ModalSideMenu.base(
         this, 'constructor', view, opt_params, opt_domHelper);
+
+    /**
+     * Instances of menu links
+     * @type {Array<sm.bSmLink.SmLink>}
+     * @private
+     */
+    this.menuLinks_ = null;
+
+
+    /**
+     * Instances of footer links
+     * @type {Array<sm.bSmLink.SmLink>}
+     * @private
+     */
+    this.footerLinks_ = null;
 };
-goog.inherits(sm.gModal.ModalSideMenu, cl.gModal.Modal);
+goog.inherits(sm.gModal.ModalSideMenu, sm.gModal.ModalStendhal);
 
 
 goog.scope(function() {
     var Modal = sm.gModal.ModalSideMenu,
-        View = sm.gModal.ModalSideMenuView;
+        View = sm.gModal.ViewSideMenu;
 
     /**
      * @override
@@ -29,17 +45,32 @@ goog.scope(function() {
      */
     Modal.prototype.decorateInternal = function(element) {
         Modal.base(this, 'decorateInternal', element);
+
+        this.initMenuLinks_();
+        this.initFooterLinks_();
     };
 
-    /**
-     * @override
-     */
-    Modal.prototype.enterDocument = function() {
-        Modal.base(this, 'enterDocument');
 
-        this.viewListen(
-            View.Event.CLOSE,
-            this.hide
+    /**
+     * Menu links initialization
+     * @private
+     */
+    Modal.prototype.initMenuLinks_ = function() {
+        this.menuLinks_ = this.decorateChildren(
+            'smLink',
+            this.getView().getDom().menuLinks
+        );
+    };
+
+
+    /**
+     * Footer links initialization
+     * @private
+     */
+    Modal.prototype.initFooterLinks_ = function() {
+        this.footerLinks_ = this.decorateChildren(
+            'smLink',
+            this.getView().getDom().footerLinks
         );
     };
 });  // goog.scope
