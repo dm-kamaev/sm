@@ -2,7 +2,6 @@ goog.provide('sm.bSmHeader.View');
 
 goog.require('cl.iControl.View');
 goog.require('sm.bSmLink.View');
-goog.require('sm.gModal.ModalSideMenuView');
 
 
 goog.scope(function() {

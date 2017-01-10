@@ -49,7 +49,7 @@ sm.iLayout.LayoutStendhal = function(view, opt_domHelper) {
 
     /**
      * Side menu instance
-     * @type {sm.bSmSideMenu.SideMenu}
+     * @type {sm.gModal.ModalSideMenu}
      * @protected
      */
     this.sideMenu = null;
@@ -79,8 +79,10 @@ goog.scope(function() {
      * @protected
      */
     Layout.prototype.initSideMenu = function() {
-        var dom = this.getView().getDom();
-        this.sideMenu = this.decorateChild('smSideMenu', dom.sideMenu);
+        this.sideMenu = this.decorateChild(
+            'side-menu',
+            this.getView().getDom().sideMenu
+        );
     };
 
     /**
@@ -139,40 +141,14 @@ goog.scope(function() {
             sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
             this.onHamburgerMenuClick_
         );
-
-        this.listen(
-            sm.bSmSideMenu.SideMenu.Event.MENU_IS_OPENED,
-            this.sideMenuIsOpenedHandler_
-        );
-
-        this.listen(
-            sm.bSmSideMenu.SideMenu.Event.MENU_IS_CLOSED,
-            this.sideMenuIsClosedHandler_
-        );
     };
 
-
-    /**
-     * side menu is opened handler
-     * @private
-     */
-    Layout.prototype.sideMenuIsOpenedHandler_ = function() {
-        this.getView().addOverflowHidden();
-    };
-
-    /**
-     * side menu is closed handler
-     * @private
-     */
-    Layout.prototype.sideMenuIsClosedHandler_ = function() {
-        this.getView().removeOverflowHidden();
-    };
 
     /**
      * On hamburger menu click
      * @private
      */
     Layout.prototype.onHamburgerMenuClick_ = function() {
-        this.sideMenu.showMenu();
+        this.sideMenu.show();
     };
 });  // goog.scope
