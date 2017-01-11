@@ -3,7 +3,8 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-const squel = require('squel').useFlavour('postgres');
+const squel = require('squel').useFlavour('postgres'),
+    lodash = require('lodash');
 
 const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
@@ -124,6 +125,26 @@ service.deleteAlias = async(function(courseBrand) {
         courseBrand.id,
         entityType.COURSE_BRAND
     ));
+});
+
+/**
+ * Get course brand by attributes
+ * @param {{
+ *     name: string
+ * }} attributes
+ * @return {Array<models.CourseBrand>}
+ */
+service.getByAttributes = async(function(attributes) {
+    let conditions = {};
+    if (!lodash.isEmpty(attributes)) {
+        conditions.name = attributes.name;
+    }
+
+    return models.CourseBrand.findAll({
+        attributes: ['id', 'name'],
+        where: conditions,
+        raw: true
+    });
 });
 
 module.exports = service;
