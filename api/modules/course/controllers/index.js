@@ -25,6 +25,8 @@ router.post('/course/enrollment', csrf, courseController.enrollOnCourse);
 
 router.get('/coursefilter', filterController.list);
 
+router.get('/coursebrand/search', checkToken, brandController.search);
+
 /**
  * @param {string} route
  * @param {Object} controller
