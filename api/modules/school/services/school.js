@@ -879,6 +879,26 @@ service.list = async(function(opt_params, opt_config) {
 });
 
 /**
+ * Search over schools by given attributes
+ * @param {{
+ *     name: string
+ * }} attributes
+ * @return {models.School}
+ */
+service.getByAttributes = async(function(attributes) {
+    let conditions = {};
+    if (!lodash.isEmpty(attributes)) {
+        conditions.name = attributes.name;
+    }
+
+    return models.School.findAll({
+        attributes: ['id', 'name'],
+        where: conditions,
+        raw: true
+    });
+});
+
+/**
  * @param {Array<number>} ids
  * @return {promise<array<object>>}
  */
