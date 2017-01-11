@@ -47,6 +47,7 @@ sm.iLayout.LayoutStendhal = function(view, opt_domHelper) {
      */
     this.footer = null;
 
+
     /**
      * Side menu instance
      * @type {sm.gModal.ModalSideMenu}

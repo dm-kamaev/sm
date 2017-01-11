@@ -39,6 +39,18 @@ goog.scope(function() {
     var Modal = sm.gModal.ModalSideMenu,
         View = sm.gModal.ViewSideMenu;
 
+
+    /**
+     * Events enum
+     * @enum {string}
+     * @const
+     */
+    Modal.Event = {
+        SHOW: sm.gModal.ModalStendhal.Event.SHOW,
+        HIDE: sm.gModal.ModalStendhal.Event.HIDE
+    };
+
+
     /**
      * @override
      * @param {Element} element

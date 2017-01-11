@@ -295,11 +295,11 @@
     }
 
     .l-course__section_fixed {
-        display: block;
-
         position: fixed;
         z-index: 5;
         bottom: 0;
+
+        display: block;
     }
 
     .l-course__footer {
