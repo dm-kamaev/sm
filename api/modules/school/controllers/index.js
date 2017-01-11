@@ -25,6 +25,9 @@ router.get(
     '/school/specializedClassType/popular',
     schoolController.popularSpecializedClassType
 );
+
+router.get('/school/adminsearch', checkToken, schoolController.adminSearch);
+
 router.get('/school/:id', schoolController.view);
 // router.get('/school/apitest', schoolController.yapi);
 
@@ -35,5 +38,6 @@ router.post('/school/:id/comment', csrf, schoolController.createComment);
 router.put('/school/:id', checkToken, schoolController.update);
 
 router.delete('/school/:id', checkToken, schoolController.delete);
+
 
 module.exports = router;

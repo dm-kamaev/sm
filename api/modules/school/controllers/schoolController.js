@@ -130,7 +130,6 @@ exports.delete = async(function(req, res) {
     }
 });
 
-
 /**
  * @api {get} api/school Get school list
  * @apiVersion 0.0.0
@@ -148,6 +147,45 @@ exports.list = async(function(req, res) {
         result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {get} api/school/adminsearch Search over schools
+ * This api must be replaced by suggest api for market-admin
+ * @apiVersion 0.1.0
+ * @apiName Get schools by params
+ * @apiGroup School
+ *
+ * @apiParam {String} name name of school
+ *
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "name": "Школа №59"
+ *     }
+ *
+ * @apiSuccess {Object[]} schools      found schools
+ * @apiSuccess {Number}   schools.id   id of school
+ * @apiSuccess {String}   schools.name name of school
+ *
+ * @apiSuccessExample {json} Response-Example:
+ *     HTTP/1.1
+ *     [{
+ *        "id": 10,
+ *        "name": "Школа №59"
+ *     }]
+ */
+exports.adminSearch = async(function(req, res) {
+    let result;
+    try {
+        let attributes = req.query;
+        result = await(services.school.getByAttributes(attributes));
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
