@@ -4,10 +4,14 @@ const express = require('express');
 const router = express.Router();
 const schoolController = require('./schoolController');
 
-const schoolAdminController = require('./schoolAdminController.js');
+const SchoolAdminController =
+    require('./schoolAdminController.js').SchoolAdminController;
+const schoolAdminController = new SchoolAdminController();
+
 const CommentAdminController =
     require('./commentAdminController.js').CommentAdminController;
 const commentAdminController = new CommentAdminController();
+
 
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
@@ -33,7 +37,7 @@ router.get(
     '/school/specializedClassType/popular',
     schoolController.popularSpecializedClassType
 );
-router.get('/school/info', schoolAdminController.getAllSchoolInfo);
+
 router.get('/school/:id', schoolController.view);
 // router.get('/school/apitest', schoolController.yapi);
 
@@ -60,18 +64,15 @@ router.delete(
 );
 
 
-
-router.post('/school', checkToken, schoolAdminController.create);
-router.put('/school/:schoolId', checkToken, schoolAdminController.update);
-router.delete('/school/:schoolId', checkToken, schoolAdminController.delete);
-
-router.put(
-    '/school/:schoolId/link/:linkId',
+router.get('/admin/school', schoolAdminController.actionGetAllSchool);
+router.post('/admin/school', checkToken, schoolAdminController.actionCreate);
+router.put('/admin/school/:schoolId', checkToken, schoolAdminController.actionUpdate);
+router.delete(
+    '/admin/school/:schoolId',
     checkToken,
-    schoolAdminController.updateLink
+    schoolAdminController.actionDelete
 );
 
-// router.put('/school/:id', checkToken, schoolController.update);
 // router.delete('/school/:id', checkToken, schoolController.delete);
 
 
