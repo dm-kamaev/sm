@@ -50,3 +50,6 @@ typings
 api/modules/school/controllers/schoolAdminController.js
 api/modules/school/services/schoolComment.js
 api/modules/school/views/commentView.js
+api/modules/school/services/schoolAdminService.js
+api/modules/school/controllers/errors/SchoolNotExistTypeError.js
+api/modules/school/controllers/errors/SchoolLinkNotExistError.js
