@@ -65,6 +65,7 @@ service.getCenterPosition = async(function(positionType, opt_geoObjectId) {
     var positionGetters = {
         [mapPositionType.METRO]: services.metro.getCoords,
         [mapPositionType.DISTRICT]: services.district.getCenterCoords,
+        [mapPositionType.AREA]: services.area.getCenterCoords,
         [mapPositionType.CITY_CENTER]: services.city.getCenterCoords
     };
 

@@ -27,9 +27,7 @@
  * @constructor
  */
 {template .openGraph autoescape="strict" kind="html"}
-    {call .ogMeta_ data="all" /}
-    {call .fbMeta_ data="all" /}
-    {call .twitterMeta_ data="all" /}
+    {call cl.gOpenGraph.Template.openGraph data="all"/}
 {/template}
 
 

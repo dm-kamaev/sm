@@ -1,7 +1,7 @@
-goog.provide('sm.gModal.ModalSideMenuView');
+goog.provide('sm.gModal.ViewSideMenu');
 
-goog.require('cl.gModal.View');
 goog.require('goog.events');
+goog.require('sm.gModal.ViewStendhal');
 
 
 
@@ -11,11 +11,11 @@ goog.require('goog.events');
  * @param {Function=} opt_template
  * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.gModal.View}
+ * @extends {sm.gModal.ViewStendhal}
  */
-sm.gModal.ModalSideMenuView =
+sm.gModal.ViewSideMenu =
     function(opt_params, opt_template, opt_modifier) {
-        sm.gModal.ModalSideMenuView.base(
+        sm.gModal.ViewSideMenu.base(
             this, 'constructor', opt_params, opt_template, opt_modifier
         );
 
@@ -26,58 +26,45 @@ sm.gModal.ModalSideMenuView =
          */
         this.dom = {};
     };
-goog.inherits(sm.gModal.ModalSideMenuView, cl.gModal.View);
+goog.inherits(sm.gModal.ViewSideMenu, sm.gModal.ViewStendhal);
 
 
 goog.scope(function() {
-    var View = sm.gModal.ModalSideMenuView;
+    var View = sm.gModal.ViewSideMenu;
 
     /**
      * Css Class
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'g-modal-side-menu',
-        CLOSE_ICON: 'g-modal-side-menu__close-icon'
+        ROOT: 'g-modal_side-menu',
+        MENU_LINK: 'g-modal__menu-link',
+        FOOTER_LINK: 'g-modal__footer-link'
     };
 
-    /**
-     * Event
-     * @enum
-     */
-    View.Event = {
-        CLOSE: goog.events.getUniqueId('closeSideMenu')
-    };
 
     /**
-     * @override
      * @param {Element} element
+     * @override
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.dom.closeIcon = this.getElementByClass(
-            View.CssClass.CLOSE_ICON
-        );
+        this.initDom_();
     };
 
-    /**
-     * @override
-     */
-    View.prototype.enterDocument = function() {
-        View.base(this, 'enterDocument');
 
-        this.getHandler().listen(
-            this.dom.closeIcon,
-            goog.events.EventType.CLICK,
-            this.onCloseIconClick
+    /**
+     * Dom elements initialization
+     * @private
+     */
+    View.prototype.initDom_ = function() {
+        this.dom.menuLinks = this.getElementsByClass(
+            View.CssClass.MENU_LINK
         );
-    };
 
-    /**
-     * On close icon click
-     */
-    View.prototype.onCloseIconClick = function() {
-        this.dispatchEvent(View.Event.CLOSE);
+        this.dom.footerLinks = this.getElementsByClass(
+            View.CssClass.FOOTER_LINK
+        );
     };
 });  // goog.scope

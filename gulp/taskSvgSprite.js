@@ -20,6 +20,7 @@ module.exports = function() {
             preview: false,
             selector: '%f',
             common: 'g-icon_svg',
+            layout: 'diagonal',
             cssFile: 'svg-sprite.scss',
             svgPath: gulpConfig.lastBuildTimestamp ?
                 '/static/images/g-icon_auto-svg-sprite.svg' + '?' +
@@ -31,13 +32,13 @@ module.exports = function() {
             padding: 5
         }));
 
-    streamSprite
+    let streamSvg = streamSprite
         .pipe(gulpFilter('**/*.svg'))
-        .pipe(gulp.dest(
-            path.join(__dirname, '../', Path.SHARED_STATIC_DIR)
-        ));
+        .pipe(gulp.dest(path.join(__dirname, '../', Path.SHARED_STATIC_DIR)));
 
-    streamSprite
+    let streamScss = streamSprite
         .pipe(gulpFilter('**/*.scss'))
         .pipe(gulp.dest(path.join(__dirname, '../build')));
+
+    return Promise.all([streamSvg, streamScss]);
 };

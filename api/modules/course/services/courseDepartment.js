@@ -164,4 +164,68 @@ service.delete = async(function(id) {
     await(department.destroy());
 });
 
+
+/**
+ * get department by brandId and address, skip select department
+ * @param  {number} brandId
+ * @param  {number} departmentId
+ * @param  {string} addressName "улица Новый Арбат, 24"
+ * @return {Object}
+ */
+service.isExistDepartmentWithOutCurrent = async(function(
+    brandId,
+    departmentId,
+    addressName
+) {
+    let res = false;
+    let address = await(models.Address.findOne({
+        attributes: [ 'id' ],
+        where: {
+            name: addressName,
+        },
+        include: {
+            attributes: [ 'brandId', 'name' ],
+            model: models.CourseDepartment,
+            as: 'courseDepartments',
+            where: {
+                id: {
+                    $ne: departmentId
+                },
+                brandId
+            }
+        }
+    }));
+    if (address && address.courseDepartments) { res = true; }
+    return res;
+});
+
+
+/**
+ * is exist department for brand by address
+ * @param  {number} brandId
+ * @param  {string} addressName "улица Новый Арбат, 24"
+ * @return {boolean}
+ */
+service.isExistDepartment = async(function(brandId, addressName) {
+    let res = false;
+    let address = await(models.Address.findOne({
+        attributes: [ 'id' ],
+        where: {
+            name: addressName,
+        },
+        include: [{
+            attributes: [ 'brandId', 'name' ],
+            model: models.CourseDepartment,
+            as: 'courseDepartments',
+            where: {
+                brandId
+            }
+        }]
+    }));
+
+    if (address && address.courseDepartments) { res = true; }
+
+    return res;
+});
+
 module.exports = service;

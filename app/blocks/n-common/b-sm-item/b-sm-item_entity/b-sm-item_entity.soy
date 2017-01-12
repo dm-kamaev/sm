@@ -158,31 +158,6 @@
 
 
 /**
- * Item name
- * @param params {{
- *     data: {
- *         name: {
- *             light: string,
- *             bold: ?string
- *         }
- *     }
- * }}
- * @override
- */
-{template .name}
-    <div class="{call .rootClass/}__name">
-        {$params.data.name.light}
-
-        {if $params.data.name?.bold}
-            <span class="{call .rootClass/}__name-bold">
-                {$params.data.name.bold}
-            </span>
-        {/if}
-    </div>
-{/template}
-
-
-/**
  * Cost
  * @param params {{
  *     data: {

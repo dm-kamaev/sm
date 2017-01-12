@@ -34,7 +34,6 @@ goog.require('sm.bSmRadioButton.Template');
 goog.require('sm.bSmScore.Template');
 goog.require('sm.bSmScore.TemplateBrief');
 goog.require('sm.bSmSearchPanel.Template');
-goog.require('sm.bSmSideMenu.Template');
 goog.require('sm.bSmStars.Template');
 goog.require('sm.bSmSubheader.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
@@ -55,6 +54,7 @@ goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gList.TemplateStendhal');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
+goog.require('sm.gModal.TemplateSideMenu');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gModal.TemplateSuccess');
 goog.require('sm.gTab.TemplateCatalog');
@@ -240,6 +240,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'dropdown-list-links',
             sm.gDropdown.TemplateListLinks.dropdown
+        )
+        .setTemplateListItem(
+            'side-menu',
+            sm.gModal.TemplateSideMenu.modal
         );
 
     /** Global blocks an their heirs **/
@@ -342,10 +346,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smHeadedList',
             sm.bSmHeadedList.Template.headedList
-        )
-        .setTemplateListItem(
-            'smSideMenu',
-            sm.bSmSideMenu.Template.sideMenu
         );
 
     /** l-information blocks **/

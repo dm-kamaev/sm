@@ -14,6 +14,13 @@ goog.require('sm.bSmItem.View');
  */
 sm.bSmItem.SmItem = function(view, opt_domHelper) {
     sm.bSmItem.SmItem.base(this, 'constructor', view, opt_domHelper);
+
+    /**
+     * Link Instance
+     * @type {sm.bSmLink.SmLink}
+     * @protected
+     */
+    this.nameLink = null;
 };
 goog.inherits(sm.bSmItem.SmItem, cl.iControl.Control);
 
@@ -41,6 +48,18 @@ goog.scope(function() {
      */
     Item.Event = {
         CLICK: View.Event.CLICK
+    };
+
+
+    /**
+     * @param {Element} element
+     * @protected
+     * @override
+     */
+    Item.prototype.decorateInternal = function(element) {
+        Item.base(this, 'decorateInternal', element);
+
+        this.initNameLink_();
     };
 
 
@@ -113,5 +132,16 @@ goog.scope(function() {
      */
     Item.prototype.initViewListeners = function() {
         this.autoDispatch(View.Event.CLICK);
+    };
+
+
+    /**
+     * Initializes name link instance
+     * @private
+     */
+    Item.prototype.initNameLink_ = function() {
+        var dom = this.getView().getDom();
+
+        this.nameLink = this.decorateChild('smLink', dom.nameLink);
     };
 });  // goog.scope

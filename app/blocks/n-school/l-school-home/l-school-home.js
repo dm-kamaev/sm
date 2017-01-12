@@ -10,8 +10,8 @@ goog.require('goog.ui.Component');
 goog.require('sm.bSearchPanel.View');
 goog.require('sm.bSmFooter.View');
 goog.require('sm.bSmHeader.View');
-goog.require('sm.bSmSideMenu.SideMenu');
 goog.require('sm.bSmSubheader.SmSubheader');
+goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCarrotquest.Carrotquest');
 goog.require('sm.iFactory.FactoryStendhal');
@@ -71,7 +71,7 @@ sm.lSchoolHome.SchoolHome = function() {
 
     /**
      * Side menu instance
-     * @type {sm.bSmSideMenu.SideMenu}
+     * @type {sm.gModal.ModalSideMenu}
      * @private
      */
     this.sideMenu_ = null;
@@ -138,7 +138,6 @@ goog.scope(function() {
         this.sendAnalyticsPageview_();
 
         this.listenSubheader_();
-        this.listenSideMenu_();
     };
 
 
@@ -183,91 +182,11 @@ goog.scope(function() {
 
 
     /**
-     * Init side menu listeners
-     * @private
-     */
-    SchoolHome.prototype.listenSideMenu_ = function() {
-        this.getHandler().listen(
-                this.sideMenu_,
-                sm.bSmSideMenu.SideMenu.Event.MENU_IS_OPENED,
-                this.sideMenuIsOpenedHandler_
-            )
-            .listen(
-                this.sideMenu_,
-                sm.bSmSideMenu.SideMenu.Event.MENU_IS_CLOSED,
-                this.sideMenuIsClosedHandler_
-            );
-    };
-
-
-    /**
      * Subheader hamburger icon click handler
      * @private
      */
     SchoolHome.prototype.onHamburgerMenuClick_ = function() {
-        this.sideMenu_.showMenu();
-    };
-
-
-    /**
-     * Side menu opened event handler
-     * @private
-     */
-    SchoolHome.prototype.sideMenuIsOpenedHandler_ = function() {
-        this.addOverflowHidden_();
-    };
-
-
-    /**
-     * Side menu closed event handler
-     * @private
-     */
-    SchoolHome.prototype.sideMenuIsClosedHandler_ = function() {
-        this.removeOverflowHidden_();
-    };
-
-
-    /**
-     * Add overflow hidden
-     * @private
-     */
-    SchoolHome.prototype.addOverflowHidden_ = function() {
-        goog.dom.classlist.add(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-
-        goog.dom.classlist.add(
-            this.getElement(),
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-
-        goog.dom.classlist.add(
-            document.body,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-    };
-
-
-    /**
-     * Remove overflow hidden
-     * @private
-     */
-    SchoolHome.prototype.removeOverflowHidden_ = function() {
-        goog.dom.classlist.remove(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-
-        goog.dom.classlist.remove(
-            this.getElement(),
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-
-        goog.dom.classlist.remove(
-            document.body,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
+        this.sideMenu_.show();
     };
 
 
@@ -399,13 +318,13 @@ goog.scope(function() {
      */
     SchoolHome.prototype.initSideMenu_ = function() {
         var sideMenu = goog.dom.getElementByClass(
-            sm.bSmSideMenu.View.CssClass.ROOT,
+            sm.gModal.ViewSideMenu.CssClass.ROOT,
             goog.dom.getDocument()
         );
 
         this.sideMenu_ = cl.iFactory.FactoryManager.getInstance().decorate(
             this.factory_,
-            'smSideMenu',
+            'side-menu',
             sideMenu,
             this
         );

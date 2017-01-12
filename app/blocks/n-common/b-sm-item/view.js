@@ -67,7 +67,9 @@ goog.scope(function() {
      * @const
      */
     View.CssClass = {
-        ROOT: 'b-sm-item'
+        ROOT: 'b-sm-item',
+        COVER_IMAGE: 'b-sm-item__cover-image',
+        NAME_LINK: 'b-sm-item__link-name'
     };
 
 
@@ -78,6 +80,17 @@ goog.scope(function() {
      */
     View.Event = {
         CLICK: goog.events.getUniqueId('click')
+    };
+
+
+    /**
+     * @param {Element} element
+     * @override
+     */
+    View.prototype.decorateInternal = function(element) {
+        View.base(this, 'decorateInternal', element);
+
+        this.initDom();
     };
 
 
@@ -146,7 +159,7 @@ goog.scope(function() {
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
 
-        this.initRootElementListeners();
+        this.initLinkElementsListeners();
     };
 
 
@@ -154,12 +167,20 @@ goog.scope(function() {
      * Initializes listeners for root Element
      * @protected
      */
-    View.prototype.initRootElementListeners = function() {
+    View.prototype.initLinkElementsListeners = function() {
         this.getHandler().listen(
-            this.getElement(),
+            this.dom.nameLink,
             goog.events.EventType.CLICK,
             this.onClick
         );
+
+        if (this.dom.coverImage) {
+            this.getHandler().listen(
+                this.dom.coverImage,
+                goog.events.EventType.CLICK,
+                this.onClick
+            );
+        }
     };
 
 
@@ -186,6 +207,22 @@ goog.scope(function() {
             id: rawParams['id'],
             name: rawParams['name'],
             category: rawParams['category']
+        };
+    };
+
+
+    /**
+     * Initializes dom elements
+     * @protected
+     */
+    View.prototype.initDom = function() {
+        this.dom = {
+            coverImage: this.getElementByClass(
+                View.CssClass.COVER_IMAGE
+            ),
+            nameLink: this.getElementByClass(
+                View.CssClass.NAME_LINK
+            )
         };
     };
 });  // goog.scope
