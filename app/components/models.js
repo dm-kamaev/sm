@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path'),
     fs = require('fs');
 var async = require('asyncawait/async');
@@ -9,12 +11,13 @@ var models = {};
 exports.all = models;
 
 exports.initModels = function(dirPath) {
-    var localModels = fs
+    let localModels = fs
         .readdirSync(dirPath)
         .filter(file => (~file.indexOf('.js') && file != 'index.js'))
         .map(file => require(path.join(dirPath, file)))
         .reduce(function(res, model) {
-            res[model.name] = model;
+            let SequelizeModel = model.default || model;
+            res[SequelizeModel.name] = SequelizeModel;
             return res;
         }, {});
 
