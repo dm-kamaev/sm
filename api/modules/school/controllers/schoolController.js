@@ -19,9 +19,6 @@ const searchViewEntity = require('../../entity/views/searchView');
 const mapViewType = require('../../entity/enums/mapViewType'),
     entityType = require('../../entity/enums/entityType');
 
-const SchoolNotFoundError =
-     require('../controllers/errors/SchoolNotFoundError.js');
-
 /**
  * @api {post} api/school/createschool Creates school
  * @apiVersion 0.0.0
