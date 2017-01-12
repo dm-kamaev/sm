@@ -712,9 +712,9 @@
       "resolved": "https://registry.npmjs.org/caniuse-api/-/caniuse-api-1.5.2.tgz"
     },
     "caniuse-db": {
-      "version": "1.0.30000604",
+      "version": "1.0.30000607",
       "from": "caniuse-db@>=1.0.30000604 <2.0.0",
-      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000604.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000607.tgz"
     },
     "caseless": {
       "version": "0.11.0",
@@ -807,8 +807,8 @@
     },
     "clobl": {
       "version": "1.0.0",
-      "from": "git+ssh://git@github.com/c7s/clobl.git#3bc6c2642344f709f3d12602971279c9b51f088a",
-      "resolved": "git+ssh://git@github.com/c7s/clobl.git#3bc6c2642344f709f3d12602971279c9b51f088a",
+      "from": "git+ssh://git@github.com/c7s/clobl.git#release-20170112-BP-2032",
+      "resolved": "git+ssh://git@github.com/c7s/clobl.git#72a1ee1c7484e116912bf07c2c6a71d154a2e4eb",
       "dependencies": {
         "glob": {
           "version": "6.0.4",
@@ -1444,8 +1444,8 @@
     },
     "deployment": {
       "version": "1.0.0",
-      "from": "git+ssh://git@github.com/c7s/deployment.git#c3765629a8d7943832b74765c7a32d76ec70c791",
-      "resolved": "git+ssh://git@github.com/c7s/deployment.git#c3765629a8d7943832b74765c7a32d76ec70c791"
+      "from": "git+ssh://git@github.com/c7s/deployment.git#release-20161228-BP-1997",
+      "resolved": "git+ssh://git@github.com/c7s/deployment.git#224ef88873a366d848129041c26f4936dae9f7c5"
     },
     "deprecated": {
       "version": "0.0.1",
@@ -4721,7 +4721,7 @@
     },
     "nodules": {
       "version": "1.0.0",
-      "from": "git+ssh://git@github.com/c7s/nodules.git#ed3b023b18a5f0550a27587ccbd2bf955b4a7389",
+      "from": "git+ssh://git@github.com/c7s/nodules.git#release-20161227-SV-810",
       "resolved": "git+ssh://git@github.com/c7s/nodules.git#ed3b023b18a5f0550a27587ccbd2bf955b4a7389",
       "dependencies": {
         "asyncawait": {
@@ -5267,9 +5267,9 @@
       "resolved": "https://registry.npmjs.org/pngjs-nozlib/-/pngjs-nozlib-1.0.0.tgz"
     },
     "postcss": {
-      "version": "5.2.9",
+      "version": "5.2.10",
       "from": "postcss@>=5.0.4 <6.0.0",
-      "resolved": "https://registry.npmjs.org/postcss/-/postcss-5.2.9.tgz",
+      "resolved": "https://registry.npmjs.org/postcss/-/postcss-5.2.10.tgz",
       "dependencies": {
         "supports-color": {
           "version": "3.1.2",
@@ -5381,9 +5381,9 @@
       "resolved": "https://registry.npmjs.org/postcss-normalize-url/-/postcss-normalize-url-3.0.8.tgz"
     },
     "postcss-ordered-values": {
-      "version": "2.2.2",
+      "version": "2.2.3",
       "from": "postcss-ordered-values@>=2.1.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/postcss-ordered-values/-/postcss-ordered-values-2.2.2.tgz"
+      "resolved": "https://registry.npmjs.org/postcss-ordered-values/-/postcss-ordered-values-2.2.3.tgz"
     },
     "postcss-reduce-idents": {
       "version": "2.4.0",
@@ -6097,9 +6097,9 @@
       "resolved": "https://registry.npmjs.org/simple-is/-/simple-is-0.2.0.tgz"
     },
     "sitemap": {
-      "version": "1.8.2",
+      "version": "1.9.0",
       "from": "sitemap@>=1.6.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/sitemap/-/sitemap-1.8.2.tgz",
+      "resolved": "https://registry.npmjs.org/sitemap/-/sitemap-1.9.0.tgz",
       "dependencies": {
         "underscore": {
           "version": "1.8.3",
