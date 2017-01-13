@@ -28,6 +28,9 @@ class CommentAdminController extends Controller {
      * @apiName getAllComments
      * @apiGroup School
      *
+     * @apiParam {Number} schoolId schoolId
+     * @apiParam {Number} commentId commentId
+     *
      * @apiSuccess {Object}   comment
      * @apiSuccess {Number}   comment.id
      * @apiSuccess {String}   comment.text
@@ -71,6 +74,8 @@ class CommentAdminController extends Controller {
      * @apiVersion 0.1.0
      * @apiName getAllComments
      * @apiGroup School
+     *
+     * @apiParam {Number} schoolId schoolId
      *
      * @apiSuccess {Object[]} comments
      * @apiSuccess {Number}   comments.id
@@ -116,6 +121,9 @@ class CommentAdminController extends Controller {
      * @apiVersion 0.1.0
      * @apiName editTextComment
      * @apiGroup School
+     *
+     * @apiParam {Number} schoolId schoolId
+     * @apiParam {Number} commentId commentId
      *
      * @apiParamExample {json} Request-Example:
      * {
@@ -166,7 +174,8 @@ class CommentAdminController extends Controller {
      * @apiVersion 0.1.0
      * @apiName removeComment
      * @apiGroup School
-     *
+     * @apiParam {Number} schoolId schoolId
+     * @apiParam {Number} commentId commentId
      * @apiSuccessExample {Number} Success-Response:
      * 1
      */
