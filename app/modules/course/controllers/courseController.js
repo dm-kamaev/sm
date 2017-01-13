@@ -200,7 +200,7 @@ controller.search = async(function(req, res, next) {
                 filtersData: data.search.filtersData,
                 enabledFilters: categoryInstance.filters,
                 aliases: aliases.courses,
-                seoParams: data.seoParams,
+                seoParams: data.search.seoParams,
                 currentCategory: categoryName,
                 categories: data.search.categories,
                 categoryAliases: aliases.categories,
