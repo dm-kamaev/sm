@@ -63,7 +63,6 @@ router.delete(
     commentAdminController.actionRemoveComment
 );
 
-
 router.get('/admin/school', schoolAdminController.actionGetAllSchool);
 router.post('/admin/school', checkToken, schoolAdminController.actionCreate);
 router.put('/admin/school/:schoolId', checkToken, schoolAdminController.actionUpdate);

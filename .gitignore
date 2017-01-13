@@ -55,4 +55,3 @@ api/modules/school/controllers/errors/SchoolNotExistTypeError.js
 api/modules/school/controllers/errors/SchoolLinkNotExistError.js
 api/modules/school/controllers/commentAdminController.js
 api/components/interface.js
-

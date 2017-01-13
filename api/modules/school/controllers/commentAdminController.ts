@@ -77,6 +77,7 @@ class CommentAdminController extends Controller {
      *
      * @apiParam {Number} schoolId schoolId
      *
+
      * @apiSuccess {Object[]} comments
      * @apiSuccess {Number}   comments.id
      * @apiSuccess {String}   comments.text
@@ -176,6 +177,7 @@ class CommentAdminController extends Controller {
      * @apiGroup School
      * @apiParam {Number} schoolId schoolId
      * @apiParam {Number} commentId commentId
+     *
      * @apiSuccessExample {Number} Success-Response:
      * 1
      */
