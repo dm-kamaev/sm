@@ -5,17 +5,14 @@ const Exception: ServiceException =
 
 class WrongAccessAttributes extends Exception {
     private name_: string;
-    private entityId_: number;
-    private entityType_: string;
+    private entityName_: string;
 
-    constructor(entityId: number, entityType: string) {
-        super(`Entity with ${entityType} = ${entityId} is not exists`);
+    constructor(entityName: string) {
+        super(`Entity with name = ${entityName} is not found`);
 
         this.name_ = 'WrongAccessAttributesException';
 
-        this.entityId_ = entityId;
-
-        this.entityType_ = entityType;
+        this.entityName_ = entityName;
     }
 
     get name(): string {
