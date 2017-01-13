@@ -10,7 +10,8 @@ const courseView = require('../views/courseView'),
     services = require('../../../../app/components/services').all;
 
 const mapViewType = require('../../entity/enums/mapViewType'),
-    entityType = require('../../entity/enums/entityType');
+    entityType = require('../../entity/enums/entityType'),
+    courseImageSize = require('../enums/courseImageSize');
 
 const config = require('../../../../app/config/config.json');
 
@@ -369,6 +370,7 @@ controller.enrollOnCourse = async(function(req, res) {
  *         "about": "course's about",
  *         "learningOutcome": "course's learning outcome",
  *         "isActive": true,
+ *         "imageUrl": "http://image.www56.lan/i/J/JswbUBk3gN/{width}.jpg",
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }]
  */
@@ -408,7 +410,8 @@ controller.list = async(function(req, res) {
  *         "about": "course's about",
  *         "learningOutcome": "course's learning outcome",
  *         "isActive": true,
- *         "embedId": 'OulwjLUwLXM',
+ *         "embedId": "OulwjLUwLXM",
+ *         "imageUrl": "http://image.www56.lan/i/J/JswbUBk3gN/{width}.jpg",
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }
  */
@@ -436,21 +439,38 @@ controller.get = async(function(req, res) {
  *     {
  *         "brandName": "Maximum",
  *         "type": 2,
- *         "name": "course's name",
- *         "description": "course's description",
- *         "fullDescription": "course's full description",
- *         "learningOutcome": "course's learning outcome",
- *         "about": "course's about",
- *         "embedId": 'OulwjLUwLXM'
+ *         "name": "courses name",
+ *         "description": "courses description",
+ *         "fullDescription": "courses full description",
+ *         "learningOutcome": "courses learning outcome",
+ *         "about": "courses about",
+ *         "embedId": "OulwjLUwLXM"
  *     }
  */
 controller.create = async(function(req, res) {
-    let result;
+    let result, body = req.body || {},
+        courseData = {
+            brandName: body.brandName,
+            type: body.type,
+            name: body.name,
+            description: body.description,
+            fullDescription: body.fullDescription,
+            learningOutcome: body.learningOutcome,
+            about: body.about,
+            embedId: body.embedId,
+        };
     try {
-        result = await(services.course.create(req.body));
+        if (req.files) {
+            let imageUrls = await(services.image.upload(
+                req.files,
+                [courseImageSize.DEFAULT, courseImageSize.SMALL]
+            ));
+            courseData.imageUrl = imageUrls[0];
+        }
+        result = await(services.course.create(courseData));
     } catch (error) {
-        logger.error(error.message);
-        result = error;
+        logger.error(error);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -478,13 +498,20 @@ controller.create = async(function(req, res) {
 controller.update = async(function(req, res) {
     let result;
     try {
-        result = await(services.course.update(req.params.id, req.body));
+        let courseData = req.body;
+        if (req.files) {
+            let imageUrls = await(services.image.upload(
+                req.files,
+                [courseImageSize.DEFAULT, courseImageSize.SMALL]
+            ));
+            courseData.imageUrl = imageUrls[0];
+        }
+        result = await(services.course.update(req.params.id, courseData));
     } catch (error) {
         logger.error(error.message);
         result = error;
     } finally {
-        res.header('Content-Type', 'application/json; charset=utf-8');
-        res.end(JSON.stringify(result));
+        res.send(result);
     }
 });
 

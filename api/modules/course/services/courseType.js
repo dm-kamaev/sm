@@ -38,7 +38,6 @@ service.getAll = async(function() {
         .field('course_type.name')
         .field('course_category.id', 'categoryId')
         .field('course_category.name', 'categoryName')
-        .field('true', 'isActive')
         .field('course_type.updated_at', 'updatedAt')
         .left_join(
             'course_category',

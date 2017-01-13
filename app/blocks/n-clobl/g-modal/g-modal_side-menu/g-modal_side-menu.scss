@@ -1,49 +1,70 @@
 @import "../../../n-common/i-media/i-media";
 
-.g-modal-side-menu {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
+.g-modal_stendhal.g-modal_side-menu {
+    text-align: left;
 
-    overflow: auto;
+    .g-modal__content {
+        width: 100%;
+        max-width: 100%;
+        min-height: 100%;
+    }
 
-    width: 100%;
-    height: 100%;
+    .g-modal__header {
+        height: 72px;
+
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .g-modal__close-button {
+        position: static;
+
+        display: inline-block;
+
+        padding: 20px;
+        margin: 8px 5px;
+    }
+
+    .g-modal__menu {
+        padding: 30px 0 0 25px;
+
+        font-weight: 600;
+    }
+
+    .g-modal__footer {
+        padding: 32px 0 0 25px;
+    }
+
+    .g-modal__menu-item {
+        padding: 0 0 25px 5px;
+
+        &:last-child {
+            padding-bottom: 0;
+        }
+    }
+
+    .g-modal__footer-item {
+        padding: 0 0 10px 5px;
+
+        font-size: 13px;
+        font-weight: 400;
+    }
+
+    .g-modal__copyright {
+        color: #000;
+    }
 }
-.g-modal-side-menu__content {
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    left: 0;
 
-    display: inline-block;
-    overflow: auto;
-
-    width: 100%;
-    height: 100%;
-
-    background-color: #fff;
+@include media-s {
+    .g-modal_stendhal.g-modal_side-menu {
+        .g-modal__content {
+            max-width: 100%;
+        }
+    }
 }
 
-.g-modal-side-menu__close-icon {
-    display: inline-block;
-
-    padding: 10px 0 10px 25px;
-}
-
-.g-modal-side-menu__header {
-    padding: 16px 0;
-
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.g-modal-side-menu__menu {
-    padding: 25px;
-}
 
 @include media-xs {
-    .g-modal-side-menu {
-        display: block;
+    .g-modal_stendhal.g-modal_side-menu {
+        padding: 0;
     }
 }

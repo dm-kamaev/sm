@@ -109,7 +109,7 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initDom_(element);
+        this.initDom(element);
     };
 
 
@@ -118,8 +118,6 @@ goog.scope(function() {
      */
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
-
-        this.initDomElementsListeners_();
     };
 
 
@@ -143,59 +141,16 @@ goog.scope(function() {
 
 
     /**
-     * Initializes listeners for dom elements
-     * @private
-     */
-    View.prototype.initDomElementsListeners_ = function() {
-        this.getHandler().listen(
-            this.dom.detailsSection,
-            goog.events.EventType.CLICK,
-            this.onDetailsSectionClick_
-        );
-
-        this.getHandler().listen(
-            this.dom.scoreWrap,
-            goog.events.EventType.CLICK,
-            this.onScoreWrapClick_
-        );
-    };
-
-
-    /**
-     * Click on details section
-     * @param {goog.events.Event} event
-     * @private
-     */
-    View.prototype.onDetailsSectionClick_ = function(event) {
-        event.preventDefault();
-    };
-
-
-    /**
-     * Click on score wrap
-     * @param {goog.events.Event} event
-     * @private
-     */
-    View.prototype.onScoreWrapClick_ = function(event) {
-        event.preventDefault();
-    };
-
-
-    /**
      * Initializes dom elements
-     * @param {Element} element
-     * @private
+     * @protected
+     * @override
      */
-    View.prototype.initDom_ = function(element) {
-        this.dom = {
-            scoreWrap: this.getElementByClass(
-                View.CssClass.SCORE_WRAP
-            ),
+    View.prototype.initDom = function() {
+        View.base(this, 'initDom');
+
+        goog.object.extend(this.dom, {
             score: this.getElementByClass(
                 sm.bSmScore.ViewBrief.CssClass.ROOT
-            ),
-            detailsSection: this.getElementByClass(
-                View.CssClass.DETAILS_SECTION
             ),
             badges: this.getElementsByClass(
                 sm.bSmBadge.View.CssClass.ROOT
@@ -206,6 +161,6 @@ goog.scope(function() {
             costSizeL: this.getElementByClass(
                 View.CssClass.COST_SIZE_L
             )
-        };
+        });
     };
 });  // goog.scope
