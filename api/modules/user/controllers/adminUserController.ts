@@ -62,7 +62,7 @@ class AdminUserController extends Controller{
      * @apiGroup AdminUser
      *
      * @apiSuccess {Object[]} adminUsers
-     *     Array of finded administrative users
+     *     Array of found administrative users
      * @apiSuccess {Number}   adminUsers.userId
      *     Id of user in administrative console db
      * @apiSuccess {Object}   adminUsers.accessAttributes
@@ -79,8 +79,8 @@ class AdminUserController extends Controller{
      *     [{
      *         "userId": 10,
      *         "accessAttributes": {
-     *             "schoolName": 25,
-     *             "brandName": 17,
+     *             "schoolName": "Школа №1034",
+     *             "brandName": "Alibra",
      *             "isSuperUser": false
      *         }
      *     }]
@@ -110,10 +110,10 @@ class AdminUserController extends Controller{
      *     Id of user in administrative console db
      * @apiSuccess {Object}  adminUser.accessAttributes
      *     Access attributes of user
-     * @apiSuccess {Number}  adminUser.accessAttributes.schoolId
-     *     Id of school which user can edit
-     * @apiSuccess {Number}  adminUser.accessAttributes.brandId
-     *     Id of course brand which user can edit
+     * @apiSuccess {String}  adminUser.accessAttributes.schoolName
+     *     Name of school which user can edit
+     * @apiSuccess {String}  adminUser.accessAttributes.brandName
+     *     Name of course brand which user can edit
      * @apiSuccess {Boolean} adminUser.accessAttributes.isSuperUser
      *     Is user is super user
      *
@@ -122,8 +122,8 @@ class AdminUserController extends Controller{
      *     {
      *         "userId": 10,
      *         "accessAttributes": {
-     *             "schoolId": 25,
-     *             "brandId": 17,
+     *             "schoolName": "Школа №1034",
+     *             "brandName": "Alibra",
      *             "isSuperUser": false
      *         }
      *     }
@@ -151,10 +151,10 @@ class AdminUserController extends Controller{
      *     User id from administration console database
      * @apiParam {Object}  accessAttributes
      *     Access attributes of user
-     * @apiParam {Number}  accessAttributes.schoolId
-     *     Id of school which user can edit
-     * @apiParam {Number}  accessAttributes.brandId
-     *     Id of course brand which user can edit
+     * @apiParam {String}  accessAttributes.schoolName
+     *     Name of school which user can edit
+     * @apiParam {String}  accessAttributes.brandName
+     *     Name of course brand which user can edit
      * @apiParam {Boolean} accessAttributes.isSuperUser
      *     Is user is super user
      *
@@ -162,8 +162,8 @@ class AdminUserController extends Controller{
      *     {
      *         "userId": 1,
      *         "accessAttributes": {
-     *             "schoolName": 25,
-     *             "brandName": 17,
+     *             "schoolName": "Школа №1034",
+     *             "brandName": "Alibra",
      *             "isSuperUser": false
      *         }
      *     }
@@ -174,12 +174,23 @@ class AdminUserController extends Controller{
      *     Id of user in administrative console db
      * @apiSuccess {Object}  adminUser.accessAttributes
      *     Access attributes of user
-     * @apiSuccess {Number}  adminUser.accessAttributes.schoolId
-     *     Id of school which user can edit
-     * @apiSuccess {Number}  adminUser.accessAttributes.brandId
-     *     Id of course brand which user can edit
+     * @apiSuccess {String}  adminUser.accessAttributes.schoolName
+     *     Name of school which user can edit
+     * @apiSuccess {String}  adminUser.accessAttributes.brandName
+     *     Name of course brand which user can edit
      * @apiSuccess {Boolean} adminUser.accessAttributes.isSuperUser
      *     Is user is super user
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         "userId": 10,
+     *         "accessAttributes": {
+     *             "schoolName": "Школа №1034",
+     *             "brandName": "Alibra",
+     *             "isSuperUser": false
+     *         }
+     *     }
      *
      * @apiUse AdminUserAlreadyExistsError
      * @apiUse WrongAttributesError
@@ -201,10 +212,10 @@ class AdminUserController extends Controller{
      *     User id from administration console database
      * @apiParam {Object}  accessAttributes
      *     Access attributes of user
-     * @apiParam {Number}  accessAttributes.schoolId
-     *     Id of school which user can edit
-     * @apiParam {Number}  accessAttributes.brandId
-     *     Id of course brand which user can edit
+     * @apiParam {String}  accessAttributes.schoolName
+     *     Name of school which user can edit
+     * @apiParam {String}  accessAttributes.brandName
+     *     Name of course brand which user can edit
      * @apiParam {Boolean} accessAttributes.isSuperUser
      *     Is user is super user
      *
