@@ -14,6 +14,7 @@ module.exports = function(err, req, res, next) {
     } else {
         logger.debug(err);
         res.status(err.status);
-        res.end(err.message);
+        res.send(err.message);
+        res.end();
     }
 };

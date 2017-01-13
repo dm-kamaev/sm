@@ -8,7 +8,7 @@ const models = require('../../../../app/components/models').all;
 const CsvConverter =
     require('../../../../console/modules/modelArchiver/CsvConverter');
 const schoolType = require('../enums/schoolType.js');
-import SchoolNotExistTypeError from '../controllers/errors/SchoolNotExistTypeError';
+import SchoolNotExistType from './exceptions/SchoolNotExistType';
 
 let service: any = {
     name: 'schoolAdminService'
@@ -32,9 +32,10 @@ type someSchoolData = {
 service.create = async function(schoolData: someSchoolData): Promise <any> | null {
     CsvConverter.cureQuotes(schoolData);
 
+    // console.log('CREATE', schoolData);
     let type: string = schoolData.schoolType;
     if (!schoolType.getPropByValue(type)) {
-        throw new SchoolNotExistTypeError(type);
+        throw new SchoolNotExistType(type);
     }
 
     return await models.School.create({
@@ -59,7 +60,7 @@ service.update = async function(schoolId: number, schoolData: any): Promise <any
 
     let type: string = schoolData.schoolType || '';
     if (type && !schoolType.getPropByValue(type)) {
-        throw new SchoolNotExistTypeError(type);
+        throw new SchoolNotExistType(type);
     }
 
     let res = await models.School.update(schoolData, {
