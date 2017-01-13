@@ -899,10 +899,10 @@ service.getByAttributes = async(function(attributes) {
 });
 
 /**
- * @param {Array<number>} ids
- * @return {promise<array<object>>}
+ * @param  {Array<number>} ids
+ * @return {Promise<Array<Object>>}
  */
-service.searchByIds = function(ids) {
+service.getByIds = function(ids) {
     return ids.length ?
         models.School.findAll({
             attributes: [

@@ -22,7 +22,7 @@ let service = {
  * }} data
  * @return {CourseBrand}
  */
-service.create = async(function(data) {
+service.findOrCreate = async(function(data) {
     let courseBrand = await(
         models.CourseBrand.findOrCreate({
             where: {

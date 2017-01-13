@@ -14,8 +14,8 @@ const scoreView = require('../../entity/views/scoreView'),
     costView = require('../views/costView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType'),
-    groupSizeTraining = require('../enums/groupSizeTraining');
-
+    groupSizeTraining = require('../enums/groupSizeTraining'),
+    courseImageSize = require('../enums/courseImageSize');
 
 let view = {};
 
@@ -51,6 +51,7 @@ view.page = function(course, categoryAlias) {
             lodash.camelCase(course.courseType.category.priceType)
         ),
         videoId: course.embedId,
+        imageUrl: course.imageUrl,
         online: this.onlineStatus(generalOptions)
     };
 };
@@ -432,7 +433,11 @@ view.getListCourse = function(course) {
             course.brandAlias,
             course.categoryAlias
         ),
-        imageUrl: course.imageUrl,
+        imageUrl: course.imageUrl ? course.imageUrl.replace(
+            '{width}',
+            courseImageSize.DEFAULT[1]
+        ) :
+        null,
         type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,
@@ -457,7 +462,7 @@ view.getListCourse = function(course) {
             id: course.areaId,
             name: course.areaName
         }] : [],
-        category: 'proforientacija'
+        category: course.categoryAlias
     };
 };
 
@@ -467,8 +472,8 @@ view.getListCourse = function(course) {
  * @return {Object}
  */
 view.joinListCourse = function(existingCourse, newCourse) {
-    if (newCourse.optionCost < existingCourse.cost) {
-        existingCourse.cost = newCourse.optionCost;
+    if (newCourse.optionCost < existingCourse.cost.value) {
+        existingCourse.cost.value = newCourse.optionCost;
     }
 
     if (existingCourse.online.type === 'only' && !newCourse.optionOnline ||
@@ -688,6 +693,7 @@ view.render = function(course) {
         learningOutcome: course.learningOutcome,
         isActive: course.dataValues.isActive,
         embedId: course.embedId,
+        image: course.imageUrl,
         updatedAt: course['updated_at']
     };
 };

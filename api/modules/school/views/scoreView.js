@@ -14,8 +14,8 @@ scoreView.school = function(score) {
             'Атмосфера',
             'Инфраструктура'
         ],
-        scoreSections = this.sections(sectionNames, score);
-    return this.isNotEmpty(scoreSections) ? scoreSections : false;
+        scoreSections = scoreView.sections(sectionNames, score);
+    return scoreView.isNotEmpty(scoreSections) ? scoreSections : false;
 };
 
 /**
@@ -41,9 +41,9 @@ scoreView.comment = function(score, totalScore) {
             'Инфраструктура'
         ],
         sectionValues = [totalScore].concat(score),
-        sections = this.sections(sectionNames, sectionValues);
+        sections = scoreView.sections(sectionNames, sectionValues);
 
-    return this.minimized(sections);
+    return scoreView.minimized(sections);
 };
 
 /**
@@ -71,8 +71,8 @@ scoreView.results = function(score, totalScore, opt_sortCriterion) {
             'Инфраструктура'
         ],
         sectionValues = [totalScore].concat(score),
-        sections = this.sections(sectionNames, sectionValues);
-    return this.minimized(sections, sortCriterion);
+        sections = scoreView.sections(sectionNames, sectionValues);
+    return scoreView.minimized(sections, sortCriterion);
 };
 
 /**
@@ -131,7 +131,7 @@ scoreView.sections = function(sectionNames, nullableSectionValues) {
  * }>}
  */
 scoreView.sectionsNotEmpty = function(score) {
-    var scoreSections = this.sections(score);
+    var scoreSections = scoreView.sections(score);
 
     return scoreSections.filter(item => item.value);
 };

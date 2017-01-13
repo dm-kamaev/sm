@@ -20,14 +20,18 @@ let sideMenuView = {
  * }} config
  * @param {string} entityType
  * @return {{
- *     menuItems: Array<Object>,
- *     footerItems: Array<Object>
+ *     content: {
+ *         menuItems: Array<Object>,
+ *         footerItems: Array<Object>
+ *     }
  * }}
  */
 sideMenuView.render = function(config, entityType) {
     return {
-        menuItems: sideMenuView.menuItems(config, entityType),
-        footerItems: footerView.render()
+        content: {
+            menuItems: sideMenuView.menuItems(config, entityType),
+            footerItems: footerView.render()
+        }
     };
 };
 

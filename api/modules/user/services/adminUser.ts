@@ -178,7 +178,7 @@ class Service {
             uniqueBrandIds = lodash.uniq(brandsIds);
 
         return {
-            schools: await schoolService.searchByIds(uniqueSchoolsIds),
+            schools: await schoolService.getByIds(uniqueSchoolsIds),
             brands: await courseBrandService.getByIds(uniqueBrandIds)
         }
     }

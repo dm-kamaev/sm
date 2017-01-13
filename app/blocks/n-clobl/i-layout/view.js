@@ -77,7 +77,7 @@ goog.scope(function() {
                 sm.bSmFooter.View.CssClass.ROOT
             ),
             sideMenu: this.getElementByClass(
-                sm.bSmSideMenu.View.CssClass.ROOT
+                sm.gModal.ViewSideMenu.CssClass.ROOT
             )
         };
     };
@@ -134,47 +134,6 @@ goog.scope(function() {
         };
     };
 
-    /**
-     * Hides overflow
-     * @public
-     */
-    View.prototype.addOverflowHidden = function() {
-        goog.dom.classlist.add(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-
-        goog.dom.classlist.add(
-            this.getElement(),
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-
-        goog.dom.classlist.add(
-            document.body,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-    };
-
-    /**
-     * Hides overflow
-     * @public
-     */
-    View.prototype.removeOverflowHidden = function() {
-        goog.dom.classlist.remove(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-
-        goog.dom.classlist.remove(
-            this.getElement(),
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-
-        goog.dom.classlist.remove(
-            document.body,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
-    };
 
     /**
      * Init stylization

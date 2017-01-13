@@ -59,8 +59,6 @@ goog.require('sm.bSmScore.View');
 goog.require('sm.bSmScore.ViewBrief');
 goog.require('sm.bSmSearchPanel.SmSearchPanel');
 goog.require('sm.bSmSearchPanel.View');
-goog.require('sm.bSmSideMenu.SideMenu');
-goog.require('sm.bSmSideMenu.View');
 goog.require('sm.bSmStars.SmStars');
 goog.require('sm.bSmStars.View');
 goog.require('sm.bSmSubheader.SmSubheader');
@@ -85,10 +83,12 @@ goog.require('sm.gList.ViewSelect');
 goog.require('sm.gList.ViewStendhal');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
+goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.ModalSuccess');
 goog.require('sm.gModal.ViewEnrollment');
 goog.require('sm.gModal.ViewFeedback');
+goog.require('sm.gModal.ViewSideMenu');
 goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gModal.ViewSuccess');
 goog.require('sm.gTextarea.TextareaStendhal');
@@ -245,6 +245,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('dropdown-list-links', {
             control: sm.gDropdown.DropdownListLinks,
             view: sm.gDropdown.ViewListLinks
+        })
+        .setControlListItem('side-menu', {
+            control: sm.gModal.ModalSideMenu,
+            view: sm.gModal.ViewSideMenu
         });
 
     /** Common blocks and their heirs **/
@@ -335,10 +339,6 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smHeadedList', {
             control: sm.bSmHeadedList.SmHeadedList,
             view: sm.bSmHeadedList.View
-        })
-        .setControlListItem('smSideMenu', {
-            control: sm.bSmSideMenu.SideMenu,
-            view: sm.bSmSideMenu.View
         });
 
     /** l-information blocks **/

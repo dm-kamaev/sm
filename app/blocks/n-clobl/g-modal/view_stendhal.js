@@ -4,6 +4,7 @@ goog.require('cl.gModal.View');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.labs.userAgent.device');
+goog.require('goog.style');
 
 
 
@@ -77,6 +78,49 @@ goog.scope(function() {
             false,
             this
         );
+
+        this.getHandler().listen(
+            goog.dom.getWindow(),
+            goog.events.EventType.RESIZE,
+            this.onViewportResize_
+        );
+    };
+
+
+    /**
+     * Show modal
+     * @override
+     * @public
+     */
+    View.prototype.show = function() {
+        View.base(this, 'show');
+
+        this.reduseHeightBody_();
+    };
+
+
+    /**
+     * Hide modal
+     * @override
+     * @public
+     */
+    View.prototype.hide = function() {
+        View.base(this, 'hide');
+
+        this.restoreHeightBody_();
+    };
+
+
+    /**
+     * Return true if modal is showed, else return false
+     * @return {boolean}
+     * @public
+     */
+    View.prototype.isShowed = function() {
+        return !goog.dom.classlist.contains(
+            this.getElement(),
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
     };
 
 
@@ -126,5 +170,36 @@ goog.scope(function() {
      */
     View.prototype.onCloserClick_ = function() {
         this.dispatchEvent(View.Event.CLOSE);
+    };
+
+
+    /**
+     * Viewport Resize handler
+     * @private
+     */
+    View.prototype.onViewportResize_ = function() {
+        if (this.isShowed()) {
+            this.reduseHeightBody_();
+        }
+    };
+
+
+    /**
+     * Reduse height body (used to remove scroll of page)
+     * @private
+     */
+    View.prototype.reduseHeightBody_ = function() {
+        var height = goog.dom.getViewportSize().height;
+        goog.style.setHeight(goog.dom.getDocument().body, height);
+    };
+
+
+    /**
+     * Restore height body
+     * @private
+     */
+    View.prototype.restoreHeightBody_ = function() {
+        var height = null;
+        goog.style.setHeight(goog.dom.getDocument().body, height);
     };
 });  // goog.scope

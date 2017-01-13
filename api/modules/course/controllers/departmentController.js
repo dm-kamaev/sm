@@ -7,6 +7,8 @@ const services = require('../../../../app/components/services').all,
     departmentView = require('../views/courseDepartmentView'),
     AddressNotFound = require('./errors/AddressNotFound');
 
+const DepartmentExist = require('./errors/DepartmentExist.js');
+
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
@@ -94,24 +96,43 @@ controller.get = async(function(req, res) {
  * }
  */
 controller.create = async(function(req, res) {
-    let result;
-    try {
-        result = await(services.courseDepartment.findOrCreate(
-            req.params.brandId,
-            req.body
-        ));
-    } catch (error) {
-        logger.error(error);
-        if (~error.message.indexOf(req.body.address)) {
+    let result,
+        brandId = req.params.brandId,
+        address = req.body.address;
+
+    let handlerErr_ = function(error) {
+        let result;
+        if (~error.message.indexOf(address)) {
+            logger.error(error);
             let addressNotFound = new AddressNotFound(error.message);
             result = addressNotFound.response;
             res.status(addressNotFound.status);
+        } else if (error instanceof DepartmentExist) {
+            logger.error(JSON.stringify(error.response));
+            res.status(error.status);
+            result = error.response;
         } else {
+            logger.error(error);
+            res.status(500);
             result = error.message;
         }
+        return result;
+    };
+
+    try {
+        const isExistDepartment = await(
+            services.courseDepartment.isExistDepartment(brandId, address)
+        );
+        if (isExistDepartment) { throw new DepartmentExist(brandId, address); }
+
+        result = await(services.courseDepartment.create(
+            brandId,
+            req.body
+        ));
+    } catch (error) {
+        result = handlerErr_(error);
     } finally {
-        res.header('Content-Type', 'application/json; charset=utf-8');
-        res.end(JSON.stringify(result));
+        res.json(result);
     }
 });
 
@@ -130,25 +151,47 @@ controller.create = async(function(req, res) {
  * }
  */
 controller.update = async(function(req, res) {
-    let result;
-    try {
-        let departmentId = parseInt(req.params.id, 10);
-        result = await(services.courseDepartment.update(
-            departmentId, req.body
-        ));
-    } catch (error) {
-        logger.error(error);
-        if (~error.message.indexOf(req.body.address)) {
+    let result,
+        body = req.body,
+        brandId = req.params.brandId,
+        departmentId = req.params.id,
+        address = (body.address) ? body.address.trim() : '';
+
+    let handlerErr_ = function(error) {
+        let result;
+        if (~error.message.indexOf(address)) {
+            logger.error(error);
             let addressNotFound = new AddressNotFound(error.message);
             result = addressNotFound.response;
             res.status(addressNotFound.status);
+        } else if (error instanceof DepartmentExist) {
+            logger.error(JSON.stringify(error.response));
+            res.status(error.status);
+            result = error.response;
         } else {
+            logger.error(error);
+            res.status(500);
             result = error.message;
         }
-    } finally {
-        res.header('Content-Type', 'application/json; charset=utf-8');
-        res.end(JSON.stringify(result));
+        return result;
+    };
+
+    try {
+        const isExistDepartment = await(
+            services.courseDepartment.isExistDepartmentWithOutCurrent(
+                brandId,
+                departmentId,
+                address
+            )
+        );
+        if (isExistDepartment) { throw new DepartmentExist(brandId, address); }
+        result = await(services.courseDepartment.update(
+            departmentId, body
+        ));
+    } catch (error) {
+        result = handlerErr_(error);
     }
+    res.json(result);
 });
 
 /**

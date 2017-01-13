@@ -83,7 +83,7 @@
  *        ]>,
  *        header: sm.bSmHeader.Template.Params,
  *        sideMenu: sm.bSmSideMenu.Template.Params,
- *        sideMenu: sm.bSmSideMenu.Template.Params.Data,
+ *        sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
  *        subHeader: sm.bSmSubheader.Template.Params,
  *        user: ?{
  *            firstName: ?string,
@@ -889,6 +889,7 @@
  * Comments block
  * @param params {{
  *     data: {
+ *         schoolName: string,
  *         comments: Array.<{sm.lSchool.bComment.Template.Params}>,
  *         user: ?{
  *             isCommented: boolean
@@ -901,6 +902,7 @@
     <div class="l-school__section l-school__section_comments">
         {call sm.lSchool.bComments.Template.base}
             {param params: [
+                'schoolName': $params.data.schoolName,
                 'comments': $params.data.comments,
                 'isCommented': $params.data?.user?.isCommented
             ] /}
