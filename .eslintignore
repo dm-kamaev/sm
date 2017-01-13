@@ -1,11 +1,17 @@
 api/components/interface.js
 
+api/modules/user/lib/type.js
+api/modules/user/models/adminUser.js
 api/modules/user/services/adminUser.js
 api/modules/user/services/exceptions/AdminUserAlreadyExists.js
 api/modules/user/services/exceptions/AdminUserNotFound.js
 api/modules/user/services/exceptions/WrongAccessAttributes.js
-
 api/modules/user/controllers/adminUserController.js
 api/modules/user/controllers/errors/AdminUserAlreadyExists.js
 api/modules/user/controllers/errors/AdminUserNotFound.js
 api/modules/user/controllers/errors/WrongAccessAttributes.js
+api/modules/user/views/adminUserView.js
+
+api/modules/school/models/school.js
+
+api/modules/course/models/courseBrand.js
