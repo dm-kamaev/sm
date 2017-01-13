@@ -90,6 +90,22 @@ service.getById = async(function(id) {
 });
 
 /**
+ * Get brands by given array of id
+ * @param {Array<number>} ids
+ * @return {Array<models.CourseBrand>}
+ */
+service.getByIds = async(function(ids) {
+    return models.CourseBrand.findAll({
+        where: {
+            id: {
+                $in: ids
+            }
+        },
+        raw: true
+    });
+});
+
+/**
  * @param  {number} id
  * @param  {{
  *     name: string,
