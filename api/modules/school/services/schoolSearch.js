@@ -61,7 +61,7 @@ service.suggestSearch = async(function(searchString) {
     ]));
 
     return await({
-        schools: services.school.searchByIds(
+        schools: services.school.getByIds(
             resultIds[entityType.SCHOOL] || []
         ),
         areas: services.area.getByIds(resultIds[entityType.AREA] || []),
@@ -114,6 +114,7 @@ service.getTypeFilterByValue = function(typeFilterValue) {
         }
     });
 };
+
 
 /**
  * Get center coordinates for map depending of given search params

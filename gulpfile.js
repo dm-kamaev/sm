@@ -76,7 +76,7 @@ gulp.task('soy', function() {
     return gulpHelper.soy.build([]);
 });
 
-gulp.task('styles', ['sprite', 'svgSprite'], function() {
+gulp.task('styles', ['svgSprite', 'sprite'], function() {
     return gulpHelper.css.build({
         outputFiles: [{
             src: [
@@ -196,10 +196,11 @@ gulp.task('backendLint', function() {
 
 const tasks = function(bool) {
     return bool ?
-        ['createTimestamp', 'soy', 'compile', 'sprite', 'images', 'fonts',
-            'styles', 'copySchools', 'copyCourses', 'localConfig'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts', 'styles',
-            'copySchools', 'copyCourses', 'localConfig', 'backendLint'];
+        ['createTimestamp', 'soy', 'compile', 'svgSprite', 'sprite', 'images',
+        'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig'] :
+        ['watch', 'soy', 'scripts', 'svgSprite', 'sprite', 'images',
+        'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig',
+        'backendLint'];
 };
 
 gulp.task('build', tasks(true));

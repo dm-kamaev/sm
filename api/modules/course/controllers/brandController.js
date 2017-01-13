@@ -83,10 +83,10 @@ controller.get = async(function(req, res) {
 controller.create = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseBrand.create(req.body));
+        result = await(services.courseBrand.findOrCreate(req.body));
     } catch (error) {
-        logger.error(error.message);
-        result = error;
+        logger.error(error);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));

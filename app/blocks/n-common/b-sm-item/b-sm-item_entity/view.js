@@ -109,7 +109,7 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initDom_(element);
+        this.initDom(element);
     };
 
 
@@ -142,13 +142,13 @@ goog.scope(function() {
 
     /**
      * Initializes dom elements
-     * @param {Element} element
-     * @private
+     * @protected
+     * @override
      */
-    View.prototype.initDom_ = function(element) {
-        var parentDom = View.base(this, 'initDom_');
+    View.prototype.initDom = function() {
+        View.base(this, 'initDom');
 
-        this.dom = {
+        goog.object.extend(this.dom, {
             score: this.getElementByClass(
                 sm.bSmScore.ViewBrief.CssClass.ROOT
             ),
@@ -161,8 +161,6 @@ goog.scope(function() {
             costSizeL: this.getElementByClass(
                 View.CssClass.COST_SIZE_L
             )
-        };
-
-        goog.object.extend(this.dom, parentDom);
+        });
     };
 });  // goog.scope

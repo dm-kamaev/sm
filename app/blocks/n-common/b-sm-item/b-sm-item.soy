@@ -121,10 +121,8 @@
     {/let}
 
     <div class="{$classes}">
-        {if $params.config.theme == 'minimal'}
-            {call .sectionLink data="all" /}
-        {else}
-            {call .sectionHeader data="all" /}
+        {call .sectionHeader data="all" /}
+        {if $params.config.theme != 'minimal'}
             {call .sectionDescription data="all" /}
             {call .sectionDetails data="all" /}
         {/if}
@@ -183,70 +181,14 @@
  * Header
  * @param params {{
  *     data: {
- *         id: number,
- *         name: {
- *             light: string,
- *             bold: ?string
- *         },
- *         category: string,
- *         url: string
- *     }
- * }}
- * @protected
- */
-{template .sectionLink}
-    <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_link">
-        {let $name kind="html"}
-            {$params.data.name.light}
-
-            {if $params.data.name?.bold}
-                {$params.data.name.bold}
-            {/if}
-        {/let}
-
-        {let $url kind="html"}
-            {if $params.data.url}
-                {$params.data.url}
-            {else}
-                /{$params.data.alias}
-            {/if}
-        {/let}
-
-        {let $customClasses kind="html"}
-            {call .rootClass/}__link-name
-        {/let}
-
-        {call .renderChild}
-            {param params: [
-                'type': 'smLink',
-                'renderParams': [
-                    'data': [
-                        'id': $params.data.id,
-                        'content': $name,
-                        'url': $url
-                    ],
-                    'config': [
-                        'customClasses': [$customClasses],
-                        'size': 'l'
-                    ]
-                ]
-            ]/}
-        {/call}
-    </div>
-{/template}
-
-
-
-/**
- * Header
- * @param params {{
- *     data: {
  *         name: {
  *             light: string,
  *             bold: ?string
  *         },
  *         score: ?number
+ *     },
+ *     config: {
+ *         theme: string
  *     }
  * }}
  * @protected
@@ -255,7 +197,9 @@
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_header">
         {call .name data="all" /}
-        {call .estimates data="all" /}
+        {if $params.config.theme != 'minimal'}
+            {call .estimates data="all" /}
+        {/if}
     </div>
 {/template}
 
@@ -317,6 +261,9 @@
  *             light: string,
  *             bold: ?string
  *         }
+ *     },
+ *     config: {
+ *         theme: string
  *     }
  * }}
  * @protected
@@ -343,6 +290,22 @@
             {call .rootClass/}__link-name
         {/let}
 
+        {let $size kind="html"}
+            {if $params.config.theme == 'minimal'}
+                l
+            {else}
+                7xl
+            {/if}
+        {/let}
+
+        {let $theme kind="html"}
+            {if $params.config.theme == 'minimal'}
+                default
+            {else}
+                dark
+            {/if}
+        {/let}
+
         {call .renderChild}
             {param params: [
                 'type': 'smLink',
@@ -354,8 +317,8 @@
                     ],
                     'config': [
                         'customClasses': [$customClasses],
-                        'theme': 'dark',
-                        'size': '7xl'
+                        'theme': $theme,
+                        'size': $size
                     ]
                 ]
             ]/}

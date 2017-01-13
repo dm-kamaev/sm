@@ -21,7 +21,7 @@
  *         content: string,
  *         header: sm.bSmHeader.Template.Params,
  *         subHeader: sm.bSmSubheader.Template.Params,
- *         sideMenu: sm.bSmSideMenu.Template.Params.Data,
+ *         sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
  *         landingScript: string,
  *         openGraph: ?{
  *             url: ?string,
@@ -289,7 +289,7 @@
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
-                'type': 'smSideMenu',
+                'type': 'side-menu',
                 'renderParams': [
                     'data': $params.data.sideMenu
                 ]

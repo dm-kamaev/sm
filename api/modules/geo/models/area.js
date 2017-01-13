@@ -6,6 +6,10 @@ var Area = db.define('Area', {
     districtId: {
         type: DataType.INTEGER,
         field: 'district_id'
+    },
+    centerCoords: {
+        type: DataType.ARRAY(DataType.FLOAT),
+        field: 'center_coords'
     }
 }, {
     underscored: true,

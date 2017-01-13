@@ -17,7 +17,7 @@
  *     },
  *     subHeader: sm.bSmSubHeader.Template.Params,
  *     header: sm.bSmHeader.Template.Params,
- *     sideMenu: sm.bSmSideMenu.Template.Params.Data,
+ *     sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
  *     user: {
  *         id: (number|undefined),
  *         firstName: (string|undefined),
@@ -340,7 +340,7 @@
 /**
  * @param params {{
  *     data: {
- *          sideMenu: sm.bSmSideMenu.Template.Params.Data
+ *          sideMenu: sm.gModal.TemplateSideMenu.Params.Data
  *     }
  * }}
  */
@@ -349,7 +349,7 @@
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
-                'type': 'smSideMenu',
+                'type': 'side-menu',
                 'renderParams': [
                     'data': $params.data.sideMenu
                 ]

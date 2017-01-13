@@ -3,13 +3,17 @@
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
+
+const courseView = require('./courseView'),
+    courseCategoryView = require('./courseCategoryView');
+
 const footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
     sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
-const courseCategoryView = require('./courseCategoryView');
-
 const Subheader = require('../lib/CourseSubheader');
+
+const courseImageSize = require('../enums/courseImageSize');
 
 let view = {};
 
@@ -19,34 +23,41 @@ let view = {};
  *     user: Object,
  *     fbClientId: string,
  *     authSocialLinks: Object,
- *     entityData: Object,
- *     map: Object,
  *     favorites: Object,
+ *     course: Object,
+ *     categoryAlias: string,
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
- *     priceLabelText: string,
  *     actionButtonText: string
  * }} data
  * @return {Object}
  */
 view.render = function(data) {
-    let user = userView.default(data.user);
+    let user = userView.default(data.user),
+        entityData = courseView.page(data.course, data.categoryAlias);
+
+    let imageOpenGraph = entityData.imageUrl ?
+        entityData.imageUrl.replace(
+            '{width}',
+            courseImageSize.DEFAULT[0]
+        ) :
+        null;
 
     return {
         seo: {
-            metaTitle: 'Профориентационный курс ' + data.entityData.name +
+            metaTitle: 'Профориентационный курс ' + entityData.name +
                 ' в Москве: стоимость обучения, отзывы.',
             metaDescription: seoView.formatSeoDescription(
-                data.entityData.description
+                entityData.description
             )
         },
         openGraph: {
-            title: 'Курс ' + data.entityData.name + ' на «Курсах Мела»',
-            description: data.entityData.description,
-            image: data.entityData.relapImgUrl,
-            relapTag: data.entityData.category,
-            relapImage: data.entityData.relapImgUrl,
-            fbClientId: data.fbClientId
+            title: 'Курс ' + entityData.name + ' на «Курсах Мела»',
+            description: entityData.description,
+            image: imageOpenGraph,
+            relapTag: entityData.category,
+            relapImage: imageOpenGraph,
+            fbClientId: data.fbClientId,
         },
         header: headerView.render(data.config, data.entityType),
         sideMenu: sideMenuView.render(data.config, data.entityType),
@@ -60,10 +71,12 @@ view.render = function(data) {
         }),
         user: user,
         authSocialLinks: data.authSocialLinks,
-        entityData: data.entityData,
-        map: data.map,
-        priceLabelText: data.priceLabelText,
-        actionButtonText: data.actionButtonText,
+        entityData: entityData,
+        map: courseView.pageMap(data.course, data.categoryAlias),
+        priceLabelText: 'Гарантия лучшей цены',
+        actionButtonText: data.actionButtonText ?
+            data.actionButtonText :
+            'Хочу этот курс!',
         footer: footerView.render()
     };
 };

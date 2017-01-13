@@ -59,13 +59,15 @@
  * }}
  */
 {template .input_}
-    <input type="checkbox"
-        class="{call .rootClass/}__input"
-        id="{$params.data?.id ?: $params.data.value}"
-        name="{$params.data.name ?: ''}"
-        value="{$params.data.value}"
-        {$params.data?.isChecked ? 'checked' : ''}
-    />
+    <div class="{call .rootClass/}__input-wrap">
+        <input type="checkbox"
+            class="{call .rootClass/}__input"
+            id="{$params.data?.id ?: $params.data.value}"
+            name="{$params.data.name ?: ''}"
+            value="{$params.data.value}"
+            {$params.data?.isChecked ? 'checked' : ''}
+        />
+    </div>
 {/template}
 
 

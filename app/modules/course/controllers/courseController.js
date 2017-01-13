@@ -107,7 +107,6 @@ controller.commonSearch = async(function(req, res, next) {
             fbClientId: FB_CLIENT_ID,
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
-            countResults: searchView.countResults(data.search.courses),
             coursesList: data.search.courses,
             mapCourses: courseView.joinAliases(
                 data.search.mapCourses, aliases.map
@@ -182,18 +181,7 @@ controller.search = async(function(req, res, next) {
                     favorites: services.favorite.getFavoriteEntities(user.id),
                     search: services.search.getData(
                         searchParams, categoryInstance.id
-                    ),
-                    courses: services.course.list(
-                        searchParams, {
-                            limit: 10
-                        }
-                    ),
-                    mapCourses: services.course.listMap(searchParams, 10),
-                    mapPosition: services.map.getPositionParams(searchParams),
-                    seoParams: services.seoCourseList.getByCategoryId(
-                        categoryInstance.id
-                    ),
-                    categories: services.courseCategory.getAll({isActive: true})
+                    )
                 }),
                 aliases = await({
                     courses: services.course.getAliases(data.search.courses),
@@ -207,7 +195,6 @@ controller.search = async(function(req, res, next) {
                 fbClientId: FB_CLIENT_ID,
                 favorites: data.favorites,
                 authSocialLinks: authSocialLinks,
-                countResults: searchView.countResults(data.search.courses),
                 coursesList: data.search.courses,
                 mapCourses: courseView.joinAliases(
                     data.search.mapCourses, aliases.map
@@ -217,9 +204,9 @@ controller.search = async(function(req, res, next) {
                 filtersData: data.search.filtersData,
                 enabledFilters: categoryInstance.filters,
                 aliases: aliases.courses,
-                seoParams: data.seoParams,
+                seoParams: data.search.seoParams,
                 currentCategory: categoryName,
-                categories: data.categories,
+                categories: data.search.categories,
                 categoryAliases: aliases.categories,
                 categoryId: categoryInstance.id,
                 config: config
@@ -307,13 +294,11 @@ controller.information = async(function(req, res, next) {
                     user: user,
                     fbClientId: FB_CLIENT_ID,
                     authSocialLinks: authSocialLinks,
-                    entityData: courseView.page(course, categoryAlias),
-                    map: courseView.pageMap(course, categoryAlias),
+                    course: course,
+                    categoryAlias: categoryAlias,
                     favorites: data.favorites,
                     categories: data.categories,
                     categoryAliases: data.categoryAliases,
-                    priceLabelText: 'Гарантия лучшей цены',
-                    actionButtonText: 'Хочу этот курс!',
                     entityType: entityType.COURSE,
                     config: config
                 });
