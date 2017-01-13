@@ -5,3 +5,5 @@ api/modules/school/views/commentView.js
 api/modules/school/services/schoolAdminService.js
 api/modules/school/controllers/errors/SchoolNotExistTypeError.js
 api/modules/school/controllers/errors/SchoolLinkNotExistError.js
+api/modules/school/controllers/commentAdminController.js
+api/components/interface.js

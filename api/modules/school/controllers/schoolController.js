@@ -67,7 +67,7 @@ exports.create = async(function(req, res) {
  * @api {put} api/school/:id/ Update school
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName Update
+ * @apiName updateSchool
  * @apiParamExample {json} Request-Example:
  * {
  *   "description": "
@@ -84,6 +84,76 @@ exports.create = async(function(req, res) {
  * }
  * @apiError (Error 404) SchoolNotFoundError
  * @apiSuccessExample {json}
+ * {
+        "id": 49,
+        "name": "Лицей № 1553 им. Вернадского",
+        "abbreviation": "ГБОУ лицей № 1553 им. В. И. Вернадского",
+        "fullName": "Государственное бюджетное образовательное учреждение города
+                     Москвы лицей № 1553 имени В.И. Вернадского",
+        "schoolType": "Лицей",
+        "director": "Калачихина Ольга Данииловна",
+        "phones": ["(495) 959-77-38"],
+        "site": "lycu1553.mskobr.ru",
+        "govermentKey": 104,
+        "cityId": 2,
+        "educationInterval": [5, 6, 7, 8, 9, 10, 11],
+        "specializedClasses": [
+            [10, 9],
+            [10, 23],
+            [10, 1],
+            [10, 18]
+        ],
+        "features": [
+            "Сотрудничает с РАН и РАО, МГУ и МПГУ",
+            "Изучение польского, шведского, испанского
+             и французского языков",
+             "Прием в седьмой класс – по результатам обучения
+             на вечернем отделении",
+             "Абитуриент продолжает учиться в своей школе, при этом
+             посещает занятия на вечернем отделии лицея два раза в
+             неделю с февраля по май",
+             "На весенних каникулах проводится выездная учеба
+             вечернего отделения
+             на южный берег Крыма",
+             "Абитуриенты лицея могут принимать участие во
+             всех его мероприятиях",
+             "Летняя исследовательская экспедиция на
+             Белое море",
+             "Ежегодные Юношеские чтения им. Вернадского"
+        ],
+        "extendedDayCost": "нет",
+        "dressCode": false,
+        "links": [
+            [
+                "Лицей на сайте Департамента образования Москвы",
+                "lycu1553.mskobr.ru"
+            ],
+            [
+              "Лицей №1553",
+              "1553.ru"
+            ]
+        ],
+        "description": "Многопрофильный лицей с курсами
+                        по экспериментальной физике
+                        и робототехнике и традицией
+                        исследовательских экспедиций",
+        "boarding": false,
+        "popularity": null,
+        "score": [
+            4.71428571428571, 4.71428571428571,
+            4.85714285714286, 4.78571428571429
+        ],
+        "totalScore": 4.76785714285714,
+        "rank": 1,
+        "rankDogm": 156,
+        "scoreCount": [14, 14, 14, 14],
+        "reviewCount": 14,
+        "commentGroupId": 78,
+        "created_at": "2016-11-21T09:46:53.740Z",
+        "updated_at": "2016-11-21T09:52:57.715Z",
+        "comment_group_id": 78,
+        "city_id": 2
+  }
  */
 exports.update = async(function(req, res) {
     let result = {}, schoolId = req.params.id, data = req.body;
@@ -661,4 +731,3 @@ exports.getAllTypes = async(function(req, res) {
     }
     res.json(result);
 });
-

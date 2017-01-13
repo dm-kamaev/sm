@@ -1,12 +1,19 @@
 'use strict';
 
 const logger = require('../components/logger/logger').getLogger('app');
+const ApiError = require('nodules/controller/ControllerError');
 
 module.exports = function(err, req, res, next) {
-    logger.critical(err);
-    if (/(\/error)$/.test(req.path)) {
-        res.status(500).end('Internal Server Error');
+    if (!(err instanceof ApiError)) {
+        logger.critical(err);
+        if (/(\/error)$/.test(req.path)) {
+            res.status(500).end('Internal Server Error');
+        } else {
+            res.redirect('/error');
+        }
     } else {
-        res.redirect('/error');
+        logger.debug(err);
+        res.status(err.status);
+        res.end(err.message);
     }
 };

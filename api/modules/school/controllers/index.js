@@ -5,6 +5,9 @@ const router = express.Router();
 const schoolController = require('./schoolController');
 
 const schoolAdminController = require('./schoolAdminController.js');
+const CommentAdminController =
+    require('./commentAdminController.js').CommentAdminController;
+const commentAdminController = new CommentAdminController();
 
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
@@ -36,22 +39,27 @@ router.get('/school/:id', schoolController.view);
 
 
 router.post('/school/:id/comment', csrf, schoolController.createComment);
+
+router.get(
+    '/school/:schoolId/comment/:commentId',
+    commentAdminController.actionGetComment
+);
+router.get(
+    '/school/:schoolId/comment',
+    commentAdminController.actionGetAllComments
+);
 router.put(
     '/school/:schoolId/comment/:commentId',
     checkToken,
-    schoolAdminController.textEdit
+    commentAdminController.actionUpdateText
 );
 router.delete(
     '/school/:schoolId/comment/:commentId',
     checkToken,
-    schoolAdminController.removeComment
+    commentAdminController.actionRemoveComment
 );
 
-router.get(
-    '/school/:schoolId/comment/:commentId',
-    schoolAdminController.getComment
-);
-router.get('/school/:schoolId/comment', schoolAdminController.getAllComments);
+
 
 router.post('/school', checkToken, schoolAdminController.create);
 router.put('/school/:schoolId', checkToken, schoolAdminController.update);
@@ -65,5 +73,6 @@ router.put(
 
 // router.put('/school/:id', checkToken, schoolController.update);
 // router.delete('/school/:id', checkToken, schoolController.delete);
+
 
 module.exports = router;

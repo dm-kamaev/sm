@@ -22,8 +22,8 @@ interface IgetCommentWithUser {
 }
 
 // get comment with user data and rating (score)
-service.getCommentWithUser =
-    async function(schoolId:number, commentId: number):Promise<IgetCommentWithUser> | null {
+service.getCommentWithUser = async function(
+    schoolId:number, commentId: number):Promise<IgetCommentWithUser> | null {
     let res = await models.School.findOne({
         attributes: ['commentGroupId'],
         where: {
@@ -115,7 +115,8 @@ service.getAllCommentsWithUser =
         "isNoticeSend": false
     }
  */
-service.textEdit= async function(schoolId:number, commentId:number, text:string):Promise<any> {
+service.textEdit= async function(
+    schoolId:number, commentId:number, text:string):Promise<any> {
     let res: any = {};
     let searchComment: any = await searchComment_(schoolId, commentId);
     if (searchComment) {
@@ -133,7 +134,8 @@ service.textEdit= async function(schoolId:number, commentId:number, text:string)
 };
 
 
-service.removeComment = async function(schoolId:number, commentId: number):Promise<number> {
+service.removeComment = async function(
+    schoolId:number, commentId: number):Promise<number> {
     let res: number = 0;
     let searchComment = await searchComment_(schoolId, commentId);
     if (searchComment) {
