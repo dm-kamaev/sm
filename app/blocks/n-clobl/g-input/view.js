@@ -39,7 +39,8 @@ goog.scope(function() {
     View.Event = {
         ENTER_PRESS: goog.events.getUniqueId('enter-press'),
         INPUT: cl.gInput.View.Event.INPUT,
-        FOCUS: cl.gInput.View.Event.FOCUS
+        FOCUS: cl.gInput.View.Event.FOCUS,
+        OUTSIDE_CLICK: goog.events.getUniqueId('outside-click')
     };
 
 
@@ -62,6 +63,10 @@ goog.scope(function() {
             this.dom.input,
             goog.events.EventType.KEYPRESS,
             this.onKeyPress
+        ).listen(
+            goog.dom.getDocument(),
+            goog.events.EventType.CLICK,
+            this.onDocumentClick_
         );
     };
 
@@ -74,6 +79,24 @@ goog.scope(function() {
     View.prototype.onKeyPress = function(event) {
         if (event.keyCode == goog.events.KeyCodes.ENTER) {
             this.dispatchEvent(View.Event.ENTER_PRESS);
+        }
+    };
+
+
+    /**
+     * Document click handler
+     * @param {goog.events.Event} event
+     * @private
+     */
+    View.prototype.onDocumentClick_ = function(event) {
+        var isContaints = goog.dom.contains(
+            this.getElement(),
+            event.target
+        );
+
+        if (!isContaints) {
+            this.dispatchEvent(View.Event.OUTSIDE_CLICK);
+            this.blur();
         }
     };
 });  // goog.scope

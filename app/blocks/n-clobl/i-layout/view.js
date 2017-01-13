@@ -3,6 +3,7 @@ goog.provide('sm.iLayout.ViewStendhal');
 goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
+goog.require('sm.bSmHeader.View');
 
 
 
@@ -23,6 +24,7 @@ goog.inherits(sm.iLayout.ViewStendhal, cl.iControl.View);
 
 goog.scope(function() {
     var View = sm.iLayout.ViewStendhal;
+    var Utils = cl.iUtils.Utils;
 
 
     /**
@@ -65,11 +67,17 @@ goog.scope(function() {
      */
     View.prototype.initDom = function() {
         this.dom = {
+            mainHeader: this.getElementByClass(
+                sm.bSmHeader.View.CssClass.ROOT
+            ),
             subheader: this.getElementByClass(
                 sm.bSmSubheader.View.CssClass.ROOT
             ),
             footer: this.getElementByClass(
                 sm.bSmFooter.View.CssClass.ROOT
+            ),
+            sideMenu: this.getElementByClass(
+                sm.gModal.ViewSideMenu.CssClass.ROOT
             )
         };
     };

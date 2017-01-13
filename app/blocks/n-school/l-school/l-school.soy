@@ -2,8 +2,8 @@
 
 /**
  * Defaul school view
- * @param params {
- *    data: [
+ * @param params {{
+ *    data: {
  *        id: number,
  *        schoolName: string,
  *        schoolType: string,
@@ -73,7 +73,6 @@
  *        ]>,
  *        totalScore: number,
  *        reviewCount: number,
- *        isFavorite: bool,
  *        popularSchools: ?list<[
  *            id: ?number,
  *            alias: ?string,
@@ -82,12 +81,15 @@
  *            metro: ?list<string>,
  *            totalScore: ?number
  *        ]>,
+ *        header: sm.bSmHeader.Template.Params,
+ *        sideMenu: sm.bSmSideMenu.Template.Params,
+ *        sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
+ *        subHeader: sm.bSmSubheader.Template.Params,
  *        user: ?{
  *            firstName: ?string,
  *            lastName: ?string,
  *            isCommented: boolean
  *        },
- *        favorites: sm.bSchoolListPaged.Template.Params.Data
  *        authSocialLinks: [
  *            vk: ?string,
  *            fb: ?string
@@ -98,15 +100,11 @@
  *            gia: ?object,
  *            olymp: ?object
  *        },
- *        seoLinks: Array<{
- *             name: string,
- *             url: string
- *        }>
- *     ],
+ *        footer: sm.bSmFooter.Template.Params.Data
+ *     },
  *     searchText: ?string,
  *     config: ?{
  *         staticVersion: ?string,
- *         year: ?number,
  *         yandexMetrikaId: ?number,
  *         carrotquestId: string,
  *         analyticsId: ?string,
@@ -114,7 +112,7 @@
  *         domain: ?string,
  *         fbClientId: ?number
  *     }
- * }
+ * }}
  */
 {template .school autoescape="strict" kind="html"}
     {let $title: $params.data?.schoolName +
@@ -129,14 +127,9 @@
                 'title': $title,
                 'description': $params?.data.seoDescription,
                 'content': $content,
-                'header': [
-                    'searchText': $params.searchText,
-                    'url': '/',
-                    'searchRedirect': true,
-                    'bottomLine': true,
-                    'user': $params.data?.user,
-                    'favorites': $params?.data?.favorites
-                ],
+                'header': $params.data.header,
+                'subHeader': $params.data.subHeader,
+                'sideMenu': $params.data.sideMenu,
                 'landingScript': '/static/l-school.js',
                 'openGraph': [
                     'title': $title,
@@ -146,13 +139,12 @@
                         '/static/images/n-school/i-layout/schools-share.png',
                     'fbClientId': $params?.config?.fbClientId
                 ],
-                'seoLinks': $params.data?.seoLinks
+                'footer': $params.data.footer
             ],
             'config': [
                 'modifier': 'stendhal',
                 'page': 'school',
                 'staticVersion': $params.config?.staticVersion,
-                'year':  $params.config?.year,
                 'analyticsId': $params.config?.analyticsId,
                 'yandexMetrikaId': $params.config?.yandexMetrikaId,
                 'carrotquestId': $params.config?.carrotquestId,
@@ -224,9 +216,11 @@
 
 /**
  * School name + school description
- * @param? params {{
+ * @param params {{
  *    data: {
- *        isFavorite: boolean
+ *        schoolName: string,
+ *        metroStations: Array<string>,
+ *        schoolDescr: string
  *    }
  * }}
  */
@@ -234,17 +228,6 @@
     <div class="l-school__section l-school__section_description">
         <div class="l-school__title">
             {call .name_ data="all" /}
-
-            {call .favoriteLink_}
-                {param params: [
-                    'data': [
-                        'isFavorite': $params.data?.isFavorite
-                    ],
-                    'config': [
-                        'modifier': 'l'
-                    ]
-                ]/}
-            {/call}
         </div>
 
         {call .metro_ data="all" /}
@@ -268,47 +251,9 @@
 
 
 /**
- * favorite Link
  * @param? params {
  *      data: {
- *          isFavorite: boolean
- *      },
- *      config: {
- *          modifier: ?string
- *     }
- * }
- */
-{template .favoriteLink_ kind="html" private="true"}
-    {let $classes kind="html"}
-        l-school__link
-        {sp}l-school__link_favorite
-        {if $params?.config?.modifier}
-            {sp}l-school__link_{$params?.config?.modifier}
-        {/if}
-    {/let}
-    <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'favorite-link',
-                'renderParams': [
-                    'data': [
-                        'isFavorite': $params.data?.isFavorite
-                    ],
-                    'config': [
-                        'theme': 'full'
-                    ]
-                ]
-            ]/}
-        {/call}
-     </div>
-{/template}
-
-
-/**
- * @param? params {
- *      data: {
- *          metroStations: ?list<string>
+ *          metroStations: Array<string>
  *      }
  * }
  */
@@ -439,17 +384,6 @@
             {call .resultsEgeGiaAnchor_ /}
         {/if}
     </div>
-
-    {call .favoriteLink_}
-        {param params: [
-            'data': [
-                'isFavorite': $params.data?.isFavorite
-            ],
-            'config': [
-                'modifier': 's'
-            ]
-        ]/}
-    {/call}
 
     <div class="l-school__link l-school__link_inaccuracy">
         {call sm.bLink.Template.base}
@@ -955,6 +889,7 @@
  * Comments block
  * @param params {{
  *     data: {
+ *         schoolName: string,
  *         comments: Array.<{sm.lSchool.bComment.Template.Params}>,
  *         user: ?{
  *             isCommented: boolean
@@ -967,6 +902,7 @@
     <div class="l-school__section l-school__section_comments">
         {call sm.lSchool.bComments.Template.base}
             {param params: [
+                'schoolName': $params.data.schoolName,
                 'comments': $params.data.comments,
                 'isCommented': $params.data?.user?.isCommented
             ] /}

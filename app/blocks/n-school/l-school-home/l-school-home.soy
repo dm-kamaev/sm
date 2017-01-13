@@ -2,17 +2,21 @@
 
 /**
  * School home template
- * @param? params {
+ * @param? params {{
  *     data: {
- *        user: ?{
- *            firstName: ?string,
- *            lastName: ?string
- *        },
- *        authSocialLinks: {
- *            vk: ?string,
- *            fb: ?string
- *        },
- *        favorites: sm.bSchoolListPaged.Template.Params.Data
+ *         header: sm.bSmHeader.Template.Params,
+ *         sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
+ *         subHeader: sm.bSmSubheader.Template.Params,
+ *         authSocialLinks: {
+ *             vk: string,
+ *             fb: string
+ *         },
+ *         user: {
+ *             id: (number|undefined),
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         },
+ *         footer: sm.bSmFooter.Template.Params.Data
  *     },
  *     images: ?list<string>,
  *     popularSchools: ?list<[
@@ -28,10 +32,6 @@
  *         url: ?string
  *     ]>,
  *     amountSchools: ?number,
- *     seoLinks: Array<{
- *         name: string,
- *         url: string
- *     }>,
  *     config: {
  *         analyticsId: ?string,
  *         yandexMetrikaId: ?number,
@@ -39,7 +39,7 @@
  *         domain: ?string,
  *         fbClientId: ?number
  *     }
- * }
+ * }}
  */
 {template .base autoescape="strict" kind="html"}
     {let $title kind="text"}
@@ -61,11 +61,9 @@
                 'title': $title,
                 'description': $description,
                 'content': $content,
-                'header': [
-                    'searchRedirect': true,
-                    'user': $params.data?.user,
-                    'favorites': $params?.data?.favorites
-                ],
+                'header': $params.data.header,
+                'sideMenu': $params.data.sideMenu,
+                'subHeader': $params.data.subHeader,
                 'landingScript': '/static/l-school-home.js',
                 'openGraph': [
                     'title': 'Школы «Мела»',
@@ -75,13 +73,12 @@
                         '/static/images/n-school/i-layout/schools-share.png',
                     'fbClientId': $params?.config?.fbClientId
                 ],
-                'seoLinks': $params.data?.seoLinks
+                'footer': $params.data.footer
             ],
             'config': [
                 'modifier': 'stendhal',
                 'page': 'school-home',
                 'staticVersion': $params.config?.staticVersion,
-                'year':  $params.config?.year,
                 'analyticsId': $params.config?.analyticsId,
                 'yandexMetrikaId': $params.config?.yandexMetrikaId,
                 'carrotquestId': $params.config?.carrotquestId,
@@ -95,12 +92,8 @@
  * @param? params {?}
  */
 {template .layoutContent_ autoescape="strict" kind="html"}
-    {let $data: [
-        'isUserAuthorized': $params?.data?.user ? true : false,
-        'authSocialLinks': $params.data?.authSocialLinks
-    ] /}
     <div class="l-school-home"
-         data-params="{call goog.json.serialize data="$data" /}">
+         data-params="{call .dataParams data="all" /}">
 
         <div class="l-school-home__body">
             {call .header_ /}
@@ -116,6 +109,20 @@
 
         {call .informationLinks_ data="all" /}
     </div>
+{/template}
+
+/**
+ * Create data params string
+ * @param params {{
+ *     data: {}
+ * }}
+ */
+{template .dataParams kind="html"}
+    {let $data: [
+        'isUserAuthorized': $params?.data?.user ? true : false,
+        'authSocialLinks': $params.data?.authSocialLinks
+    ] /}
+    {call goog.json.serialize data="$data" /}
 {/template}
 
 /**
@@ -153,8 +160,10 @@
                 </ul>
             </div>
 
-            <img class="l-school-home__image l-school-home__image_main"{sp}
-                 src="/static/images/n-school/l-school-home/cover.svg">
+            <div class="l-school-home__image-wrap l-school-home__image-wrap_main">
+                <img class="l-school-home__image"{sp}
+                    src="/static/images/n-school/l-school-home/cover.svg">
+            </div>
         </div>
     </div>
 {/template}
@@ -192,8 +201,10 @@
  * Cloned header image template
  */
 {template .headerImgClone_ kind="html" private="true"}
-    <img class="l-school-home__image l-school-home__image_clone"
-         src="/static/images/n-school/l-school-home/cover.svg">
+    <div class="l-school-home__image-wrap l-school-home__image-wrap_clone">
+        <img class="l-school-home__image"
+            src="/static/images/n-school/l-school-home/cover.svg">
+    </div>
 {/template}
 
 /**

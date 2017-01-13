@@ -10,12 +10,11 @@ const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
+const homeView = require('../../../../api/modules/school/views/homeView');
 const seoView = require('../../../../api/modules/school/views/seoView');
 
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
-
-const PageNotFoundError = require('../../error/lib/PageNotFoundError');
 
 const config = require('../../../config').config;
 
@@ -57,26 +56,20 @@ exports.view = async(function(req, res, next) {
             ));
 
         if (!page) {
-            throw new PageNotFoundError();
+            return next();
         } else if (!page.entityId) {
-            next();
+            return next();
         } else {
             var schoolInstance = await(services.urls.getEntityByUrl(
                 alias,
                 entityType.SCHOOL
             ));
             if (!schoolInstance) {
-                throw new PageNotFoundError();
+                return next();
             } else if (alias != schoolInstance.alias) {
                 res.redirect(schoolInstance.alias);
             } else {
                 var user = req.user || {};
-
-                var favorites = await(services.favorite.getByUserId(user.id)),
-                    favoriteIds = services.favorite.getEntityIdsFiltredByType(
-                        favorites,
-                        entityType.SCHOOL
-                    );
 
                 var promises = {
                     ege: services.egeResult.getAllBySchoolId(
@@ -98,15 +91,7 @@ exports.view = async(function(req, res, next) {
                     authSocialLinks: services.auth.getAuthSocialUrl(),
                     popularSchools:
                         services.school.getRandomPopularSchools(6),
-                    favorites: {
-                        items: services.school.getByIdsWithGeoData(
-                            favoriteIds
-                        ),
-                        itemUrls: services.page.getAliases(
-                            favoriteIds,
-                            entityType.SCHOOL
-                        )
-                    },
+                    favorites: [],
                     seoLinks: services.seoSchoolList.getByTypes()
                 };
                 var dataFromPromises = await(promises);
@@ -129,19 +114,20 @@ exports.view = async(function(req, res, next) {
                         )) !== 'undefined';
 
                 user = userView.school(user, isUserCommented);
+                let templateData = schoolView.default(
+                    school,
+                    dataFromPromises,
+                    user,
+                    config
+                );
 
                 res.header('Content-Type', 'text/html; charset=utf-8');
                 res.end(
                     soy.render('sm.lSchool.Template.school', {
                         params: {
-                            data: schoolView.default(
-                                school,
-                                dataFromPromises,
-                                user
-                            ),
+                            data: templateData,
                             config: {
                                 staticVersion: config.lastBuildTimestamp,
-                                year: new Date().getFullYear(),
                                 analyticsId: ANALYTICS_ID,
                                 yandexMetrikaId: YANDEX_METRIKA_ID,
                                 carrotquestId: CARROTQUEST_ID,
@@ -162,23 +148,12 @@ exports.view = async(function(req, res, next) {
 exports.home = async(function(req, res) {
     var user = req.user || {};
 
-    var favorites = await(services.favorite.getByUserId(user.id)),
-        favoriteIds = services.favorite.getEntityIdsFiltredByType(
-            favorites,
-            entityType.SCHOOL
-        );
+    let authSocialLinks = services.auth.getAuthSocialUrl();
 
     var dataPromises = {
             popularSchools: services.school.getRandomPopularSchools(3),
             amountSchools: services.school.getSchoolsCount(),
             authSocialLinks: services.auth.getAuthSocialUrl(),
-            favorites: {
-                items: services.school.getByIdsWithGeoData(favoriteIds),
-                itemUrls: services.page.getAliases(
-                    favoriteIds,
-                    entityType.SCHOOL
-                )
-            },
             seoLinks: services.seoSchoolList.getByTypes()
         },
         data = await(dataPromises);
@@ -191,22 +166,23 @@ exports.home = async(function(req, res) {
     data.popularSchools =
         schoolView.joinAliases(data.popularSchools, schoolAliases);
 
+    let templateData = homeView.render({
+        favorites: [],
+        user: user,
+        seoLinks: data.seoLinks,
+        authSocialLinks: authSocialLinks,
+        entityType: entityType.SCHOOL,
+        config: config
+    });
+
     var html = soy.render('sm.lSchoolHome.Template.base', {
         params: {
-            data: {
-                authSocialLinks: data.authSocialLinks,
-                user: userView.default(user),
-                favorites: {
-                    schools: schoolView.listCompact(data.favorites)
-                },
-                seoLinks: seoView.linksList(data.seoLinks)
-            },
+            data: templateData,
             popularSchools: schoolView.popular(data.popularSchools),
             dataLinks: schoolView.dataLinks(),
             amountSchools: data.amountSchools,
             config: {
                 staticVersion: config.lastBuildTimestamp,
-                year: new Date().getFullYear(),
                 analyticsId: ANALYTICS_ID,
                 yandexMetrikaId: YANDEX_METRIKA_ID,
                 carrotquestId: CARROTQUEST_ID,
@@ -233,7 +209,7 @@ exports.list = async(function(req, res, next) {
                 requestParams
             ));
             if (!seoData.listParams) {
-                throw new PageNotFoundError();
+                return next();
             }
 
             let storedParams = JSON.parse(seoData.listParams.searchParameters);
@@ -279,7 +255,9 @@ exports.list = async(function(req, res, next) {
             seoLinks: seoView.linksList(
                 data.seoLinks,
                 (!requestParams.geoType) ? requestParams.listType : null
-            )
+            ),
+            entityType: entityType.SCHOOL,
+            config: config
         });
 
         let html = soy.render(
@@ -291,7 +269,6 @@ exports.list = async(function(req, res, next) {
                         page: 'search',
                         modifier: MODIFIER,
                         staticVersion: config.lastBuildTimestamp,
-                        year: new Date().getFullYear(),
                         analyticsId: ANALYTICS_ID,
                         yandexMetrikaId: YANDEX_METRIKA_ID,
                         carrotquestId: CARROTQUEST_ID,
@@ -354,7 +331,6 @@ exports.catalog = async(function(req, res, next) {
                 config: {
                     modifier: 'stendhal',
                     staticVersion: config.lastBuildTimestamp,
-                    year: new Date().getFullYear(),
                     analyticsId: ANALYTICS_ID,
                     yandexMetrikaId: YANDEX_METRIKA_ID,
                     carrotquestId: CARROTQUEST_ID,

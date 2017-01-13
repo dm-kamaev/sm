@@ -1,3 +1,7 @@
+'use strict';
+
+const async = require('asyncawait/async');
+const await = require('asyncawait/await');
 const gulp = require('gulp');
 const path = require('path');
 const concat = require('gulp-concat');
@@ -6,6 +10,9 @@ const babel = require('gulp-babel');
 const apidoc = require('gulp-apidoc');
 const exec = require('child_process').exec;
 const eslint = require('gulp-eslint');
+const minimist = require('minimist');
+
+const migrationWrapper = require('./app/components/migrationWrapper');
 
 const MAX_BILD_FILE_AMOUNT = 20;
 
@@ -49,12 +56,15 @@ gulp.task('lint', function() {
     });
 });
 
-gulp.task('migrate', function() {
-    return gulpHelper.migrate.build({
-        src: path.join(__dirname, 'api/**/migrations/*.js')
-    });
-});
+gulp.task('migrate', async(function() {
+    await(migrationWrapper.migrate());
+}));
 
+gulp.task('rollback', async(function() {
+    let params = minimist(process.argv.slice(2)),
+        count = parseInt(params.count) || 1;
+    await(migrationWrapper.rollback(count));
+}));
 
 gulp.task('appES5', function() {
     return gulp.src('app.js')
@@ -67,7 +77,7 @@ gulp.task('soy', function() {
     return gulpHelper.soy.build([]);
 });
 
-gulp.task('styles', ['sprite', 'svgSprite'], function() {
+gulp.task('styles', ['svgSprite', 'sprite'], function() {
     return gulpHelper.css.build({
         outputFiles: [{
             src: [
@@ -172,6 +182,8 @@ gulp.task('backendLint', function() {
     return gulp.src([
         'api/**/*.js',
         'app/modules/**/*.js',
+        'app/components/**/*.js',
+        'app/middleware/**/*.js',
         '!app/modules/doc/**',
         'gulp/*.js',
         './*.js'])
@@ -189,11 +201,12 @@ gulp.task('backendLint', function() {
 
 const tasks = function(bool) {
     return bool ?
-        ['createTimestamp', 'soy', 'compile', 'tsCompile', 'sprite', 'images',
-            'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig'] :
-        ['watch', 'soy', 'scripts', 'tsCompile', 'sprite', 'images', 'fonts',
-            'styles', 'copySchools', 'copyCourses', 'localConfig',
-            'backendLint'];
+        ['createTimestamp', 'soy', 'compile', 'tsCompile', 'svgSprite',
+            'sprite', 'images', 'fonts', 'styles', 'copySchools', 'copyCourses',
+            'localConfig'] :
+        ['watch', 'soy', 'scripts', 'tsCompile', 'svgSprite', 'sprite',
+            'images', 'fonts', 'styles', 'copySchools', 'copyCourses',
+            'localConfig', 'backendLint'];
 };
 
 gulp.task('build', tasks(true));

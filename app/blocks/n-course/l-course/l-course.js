@@ -33,6 +33,14 @@ goog.scope(function() {
 
 
         /**
+         * Side menu instance
+         * @type {sm.gModal.ModalSideMenu}
+         * @protected
+         */
+        this.sideMenu = null;
+
+
+        /**
          * Instances score
          * @type {Array<sm.bSmScore.SmScoreBrief>}
          * @private
@@ -133,6 +141,7 @@ goog.scope(function() {
         this.initDepartmentListListeners_();
         this.initModalsListeners_();
         this.initMapListeners_();
+        this.initSideMenuListeners_();
 
         this.analyticsSender_.sendPageview();
     };
@@ -196,11 +205,50 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.initMapListeners_ = function() {
+        if (this.map_) {
+            this.getHandler().listen(
+                this.map_,
+                Map.Event.BALLOON_OPEN,
+                this.onBalloonOpen_
+            );
+        }
+    };
+
+
+    /**
+     * Initializes listeners for side menu
+     * @private
+     */
+    Course.prototype.initSideMenuListeners_ = function() {
         this.getHandler().listen(
-            this.map_,
-            Map.Event.BALLOON_OPEN,
-            this.onBalloonOpen_
+            this.sideMenu,
+            sm.gModal.ModalSideMenu.Event.SHOW,
+            this.onSideMenuShow_
         );
+
+        this.getHandler().listen(
+            this.sideMenu,
+            sm.gModal.ModalSideMenu.Event.HIDE,
+            this.onSideMenuHide_
+        );
+    };
+
+
+    /**
+     * On side menu show
+     * @private
+     */
+    Course.prototype.onSideMenuShow_ = function() {
+        this.getView().hideSectionFixed();
+    };
+
+
+    /**
+     * On side menu hide
+     * @private
+     */
+    Course.prototype.onSideMenuHide_ = function() {
+        this.getView().showSectionFixed();
     };
 
 

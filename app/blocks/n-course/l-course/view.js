@@ -1,5 +1,6 @@
 goog.provide('sm.lCourse.View');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
 goog.require('goog.style');
 goog.require('sm.bSmCollapsedText.View');
@@ -81,6 +82,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'l-course',
+        SECTION_FIXED: 'l-course__section_fixed',
         SECTION_DATA: 'l-course__section_data',
         STICKY_DATA: 'l-course__data_sticky',
         DATA_FIXED: 'l-course__data_position_fixed',
@@ -90,8 +92,8 @@ goog.scope(function() {
 
 
     /**
-     *
      * @param {Element} element
+     * @override
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
@@ -108,6 +110,30 @@ goog.scope(function() {
         View.base(this, 'enterDocument');
 
         this.initDocumentListeners_();
+    };
+
+
+    /**
+     * Show section fixed
+     * @public
+     */
+    View.prototype.showSectionFixed = function() {
+        goog.dom.classlist.remove(
+            this.dom.sectionFixed,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * Hide section fixed
+     * @public
+     */
+    View.prototype.hideSectionFixed = function() {
+        goog.dom.classlist.add(
+            this.dom.sectionFixed,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
     };
 
 
@@ -247,6 +273,9 @@ goog.scope(function() {
                 ),
                 map: this.getElementByClass(
                     sm.bSmMap.View.CssClass.ROOT
+                ),
+                sectionFixed: this.getElementByClass(
+                    View.CssClass.SECTION_FIXED
                 ),
                 userInteractions: this.getElementsByClass(
                     sm.lCourse.bUserInteraction.View.CssClass.ROOT

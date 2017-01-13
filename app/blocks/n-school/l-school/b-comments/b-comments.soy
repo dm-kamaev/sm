@@ -1,9 +1,10 @@
-{namespace sm.lSchool.bComments.Template autoescape="strict"}
+{namespace sm.lSchool.bComments.Template}
 
 /**
  * @typedef {Object} sm.lSchool.bComments.Template.Params
  * @property Array.<{sm.lSchool.bComment.Template.Params}> comments
  * @property {boolean} isCommented
+ * @property {string} schoolName
  */
 
 /**
@@ -25,7 +26,7 @@
  * @param params {Array.<{sm.lSchool.bComment.Template.Params>}>}
  */
 {template .comments_ autoescape="strict" kind="html"}
-    {call .header_ /}
+    {call .header_ data="all" /}
 
     <div class="b-comments__comments">
         {foreach $comment in $params.comments}
@@ -38,12 +39,15 @@
 
 /**
  * Content header
+ * @param params {{
+ *     schoolName: string
+ * }}
  */
 {template .header_ autoescape="strict" kind="html"}
     <div class="b-comments__header">
-        <h3 class="b-comments__header-text">
-            Комментарии пользователей
-        </h3>
+        <h2 class="b-comments__header-text">
+            {$params.schoolName} – Отзывы
+        </h2>
     </div>
 {/template}
 

@@ -27,6 +27,10 @@ service.create = async(function(data) {
     }))[0];
 });
 
+/**
+ * Return all course types by category id
+ * @return {Array<Object>}
+ */
 service.getAll = async(function() {
     let query = squel.select()
         .from('course_type')
@@ -34,7 +38,6 @@ service.getAll = async(function() {
         .field('course_type.name')
         .field('course_category.id', 'categoryId')
         .field('course_category.name', 'categoryName')
-        .field('true', 'isActive')
         .field('course_type.updated_at', 'updatedAt')
         .left_join(
             'course_category',

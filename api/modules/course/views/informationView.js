@@ -1,71 +1,104 @@
+'use strict';
+
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
 
-const courseCategoryView = require('./courseCategoryView');
+const courseView = require('./courseView'),
+    courseCategoryView = require('./courseCategoryView');
+
+const footerView = require('../../entity/views/footerView'),
+    headerView = require('../../entity/views/headerView'),
+    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+
+const Subheader = require('../lib/CourseSubheader');
+
+const courseImageSize = require('../enums/courseImageSize');
+
+let view = {};
 
 /**
  * @param {{
+ *     config: Object,
  *     user: Object,
  *     fbClientId: string,
  *     authSocialLinks: Object,
- *     entityData: Object,
- *     map: Object,
  *     favorites: Object,
+ *     course: Object,
+ *     categoryAlias: string,
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
- *     priceLabelText: string,
  *     actionButtonText: string
  * }} data
  * @return {Object}
  */
-exports.render = function(data) {
-    var user = userView.default(data.user);
+view.render = function(data) {
+    let user = userView.default(data.user),
+        entityData = courseView.page(data.course, data.categoryAlias);
+
+    let imageOpenGraph = entityData.imageUrl ?
+        entityData.imageUrl.replace(
+            '{width}',
+            courseImageSize.DEFAULT[0]
+        ) :
+        null;
 
     return {
         seo: {
-            metaTitle: 'Профориентационный курс ' + data.entityData.name +
+            metaTitle: 'Профориентационный курс ' + entityData.name +
                 ' в Москве: стоимость обучения, отзывы.',
             metaDescription: seoView.formatSeoDescription(
-                data.entityData.description
+                entityData.description
             )
         },
         openGraph: {
-            title: 'Курс ' + data.entityData.name + ' на «Курсах Мела»',
-            description: data.entityData.description,
-            image: '/static/images/n-clobl/i-layout/cources_sharing.png',
+            title: 'Курс ' + entityData.name + ' на «Курсах Мела»',
+            description: entityData.description,
+            image: imageOpenGraph,
+            relapTag: entityData.category,
+            relapImage: imageOpenGraph,
             fbClientId: data.fbClientId,
         },
-        subHeader: {
-            logo: {
-                linkUrl: '/',
-                altText: '«Курсы Мела»',
-                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
-            },
-            listLinks: {
-                opener: 'Все курсы',
-                content: {
-                    items: courseCategoryView.listLinks(
-                        data.categories,
-                        data.categoryAliases
-                    )
-                }
-            },
-            search: {
-                placeholder: 'Район, метро, название курса',
-                redirect: true,
-                pageAlias: 'proforientacija'
-            },
-            user: user,
-            favorites: {
-                items: favoriteView.list(data.favorites)
-            }
-        },
+        header: headerView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render(data.config, data.entityType),
+        subHeader: view.subheader({
+            listLinks: courseCategoryView.listLinks(
+                data.categories,
+                data.categoryAliases
+            ),
+            favoriteEntities: favoriteView.list(data.favorites),
+            user: user
+        }),
         user: user,
         authSocialLinks: data.authSocialLinks,
-        entityData: data.entityData,
-        map: data.map,
-        priceLabelText: data.priceLabelText,
-        actionButtonText: data.actionButtonText
+        entityData: entityData,
+        map: courseView.pageMap(data.course, data.categoryAlias),
+        priceLabelText: 'Гарантия лучшей цены',
+        actionButtonText: data.actionButtonText ?
+            data.actionButtonText :
+            'Хочу этот курс!',
+        footer: footerView.render()
     };
 };
+
+
+/**
+ * @param {Object<string, string>} data
+ * @return {Object}
+ */
+view.subheader = function(data) {
+    let subheader = new Subheader();
+
+    subheader.init({
+        isLogoRedirect: true,
+        listLinks: data.listLinks,
+        isSearchRedirect: true,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
+
+    return subheader.getParams();
+};
+
+module.exports = view;

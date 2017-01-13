@@ -13,7 +13,7 @@ require('./console/department.js').Command;
 require('./console/departmentStageToGrades.js').Command;
 require('./console/dump.js').Command;
 require('./console/egeData.js').Command;
-require('./console/geocord.js').Command;
+require('./console/geoCoder.js').Command;
 require('./console/getActs.js').Command;
 require('./console/execUpdater.js').Command;
 require('./console/isAddressIsSchool.js').Command;
@@ -42,6 +42,7 @@ require('./console/seoDataOperator.js').Command;
 require('./console/specializedClassesOperator').Command;
 require('./console/activityOperator').Command;
 require('./console/updateAnalytics').Command;
+require('./console/getCoordsForArea').Command;
 
 /*
  * The line below initializes the interface on `node ./commander

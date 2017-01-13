@@ -1,8 +1,6 @@
 @import "../i-media/i-media";
 
 .b-sm-checkbox {
-    position: relative;
-
     display: inline-block;
 
     box-sizing: border-box;
@@ -11,10 +9,9 @@
 }
 
 .b-sm-checkbox__label {
-    display: inline-block;
+    display: block;
 
-    margin: 0 9px;
-    padding-left: 13px;
+    padding-left: 22px;
 
     cursor: pointer;
     vertical-align: middle;
@@ -22,17 +19,27 @@
     line-height: 21px;
 }
 
+.b-sm-checkbox__input-wrap {
+    float: left;
+
+    height: 21px;
+
+    line-height: 18px;
+}
+
 .b-sm-checkbox__input {
-    position: absolute;
-    top: 10px;
-    left: 0;
+    vertical-align: middle;
+    display: inline-block;
 
     margin: 0;
+    padding: 0;
 
     cursor: pointer;
 }
 
 .b-sm-checkbox_narrow-theme {
+    position: relative;
+
     min-height: 56px;
     padding: 10px 0;
 
@@ -41,9 +48,14 @@
         padding-left: 0;
     }
 
-    .b-sm-checkbox__input {
+    .b-sm-checkbox__input-wrap {
+        position: absolute;
         top: 35px;
         left: 2px;
+
+        height: auto;
+
+        line-height: normal;
     }
 }
 
@@ -56,7 +68,7 @@
         padding-left: 0;
     }
 
-    .b-sm-checkbox__input {
+    .b-sm-checkbox__input-wrap {
         display: none;
     }
 }

@@ -6,15 +6,10 @@
     width: 100%;
     height: auto;
     padding: 14px 0 12px 0;
-
     cursor: pointer;
     text-decoration: none;
 
     color: #000;
-
-    &:hover .b-sm-item__link-name {
-        color: #ff0000;
-    }
 }
 
 .b-sm-item__section {

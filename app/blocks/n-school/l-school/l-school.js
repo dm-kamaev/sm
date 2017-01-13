@@ -1,14 +1,21 @@
+/**
+ * @fileoverview School information layout control
+ */
 goog.provide('sm.lSchool.School');
 
+goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bDataBlock.DataBlockFeatures');
-goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bMap.Map');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
+goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmHeader.View');
+goog.require('sm.bSmSubheader.SmSubheader');
+goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iCarrotquest.Carrotquest');
@@ -118,11 +125,42 @@ sm.lSchool.School = function() {
 
 
     /**
-     * Favorite Links instances
-     * @type {sm.bFavoriteLink.FavoriteLink}
+     * Header instance
+     * @type {sm.bSmHeader.SmHeader}
      * @private
      */
-    this.favoriteLinks_ = [];
+    this.header_ = null;
+
+
+    /**
+     * Subheader instance
+     * @type {sm.bSmSubheader.SmSubheader}
+     * @private
+     */
+    this.subHeader_ = null;
+
+
+    /**
+     * Footer instance
+     * @type {sm.bSmFooter.SmFooter}
+     * @private
+     */
+    this.footer_ = null;
+
+    /**
+     * Side menu instance
+     * @type {sm.gModal.ModalSideMenu}
+     * @private
+     */
+    this.sideMenu_ = null;
+
+
+    /**
+     * Current factory name
+     * @type {string}
+     * @private
+     */
+    this.factory_ = 'stendhal';
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -137,8 +175,8 @@ goog.scope(function() {
         Comments = sm.lSchool.bComments.Comments,
         DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
-        Header = sm.bHeader.Header,
-        Authorization = sm.iAuthorization.Authorization;
+        Authorization = sm.iAuthorization.Authorization,
+        Utils = cl.iUtils.Utils;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance(),
         factory = sm.iFactory.FactoryStendhal.getInstance();
@@ -203,12 +241,12 @@ goog.scope(function() {
 
         this.listenFeedbackLinks_();
 
-        this.listenFavoriteLinks_();
-
         this.incrementViews_();
         this.sendAnalyticsPageview_();
 
         this.listenMap_();
+
+        this.listenSubheader_();
     };
 
 
@@ -228,7 +266,7 @@ goog.scope(function() {
                 fb: dataParams['authSocialLinks']['fb'],
                 vk: dataParams['authSocialLinks']['vk']
             },
-            factoryType: 'stendhal'
+            factoryType: this.factory_
         };
 
         this.params_ = {
@@ -298,33 +336,6 @@ goog.scope(function() {
 
 
     /**
-     * listen to favorite links
-     * @private
-     */
-    School.prototype.listenFavoriteLinks_ = function() {
-        var handler = this.getHandler();
-
-        for (var i = 0, favoriteLink;
-             favoriteLink = this.favoriteLinks_[i];
-             i++) {
-            handler.listen(
-                favoriteLink,
-                sm.bFavoriteLink.FavoriteLink.Event.SET_FAVORITE_STATE,
-                this.onAddFavoriteClick_
-            ).listen(
-                favoriteLink,
-                sm.bFavoriteLink.FavoriteLink.Event.SET_NOT_FAVORITE_STATE,
-                this.onRemoveFavoriteClick_
-            ).listen(
-                favoriteLink,
-                sm.bFavoriteLink.FavoriteLink.Event.FAVORITE_ADDED,
-                this.onAddFavorite_
-            );
-        }
-    };
-
-
-    /**
      * listens map
      * @private
      */
@@ -342,6 +353,19 @@ goog.scope(function() {
             Map.Event.ITEM_NAME_CLICK,
             this.onMapItemNameClick_
         );
+    };
+
+
+    /**
+     * Init side menu listeners
+     * @private
+     */
+    School.prototype.listenSubheader_ = function() {
+        this.getHandler().listen(
+                this.subHeader_,
+                sm.bSmSubheader.SmSubheader.Event.HAMBURGER_MENU_CLICK,
+                this.onHamburgerMenuClick_
+            );
     };
 
 
@@ -413,59 +437,11 @@ goog.scope(function() {
 
 
     /**
-     * Add Favorite Click
-     * @param {goog.events.Event} event
+     * Subheader hamburger icon click handler
      * @private
      */
-    School.prototype.onAddFavoriteClick_ = function(event) {
-        var favoriteInstance = event.target;
-        this.setEcAnalyticsAdd_();
-        this.sendDataAnalytics_('favorite', 'details add');
-        this.setFavoriteState_(true);
-        this.sendAddToFavorites_(favoriteInstance);
-    };
-
-
-    /**
-     * Remove Favorite Click
-     * @param {goog.events.Event} event
-     * @private
-     */
-    School.prototype.onRemoveFavoriteClick_ = function(event) {
-        var favoriteInstance = event.target;
-        this.setEcAnalyticsRemove_();
-        this.sendDataAnalytics_('favorite', 'details delete');
-        this.setFavoriteState_(false);
-        this.sendRemoveFromFavorites_(favoriteInstance);
-        Header.getInstance().removeFavorite(this.params_.id);
-    };
-
-
-    /**
-     * @param {sm.bFavoriteLink.Event.FavoriteAdded} event
-     * @private
-     */
-    School.prototype.onAddFavorite_ = function(event) {
-        var addedItem = event.data;
-        Header.getInstance().addFavorite(addedItem);
-    };
-
-
-    /**
-     * Sets EC analytics to add school from favorites
-     * @private
-     */
-    School.prototype.setEcAnalyticsAdd_ = function() {
-        Analytics.addProduct(this.getDataEc_(), 'School Details');
-    };
-
-
-    /**
-     * Sets EC analytics to remove school from favorites
-     * @private
-     */
-    School.prototype.setEcAnalyticsRemove_ = function() {
-        Analytics.removeProduct(this.getDataEc_(), 'School Details');
+    School.prototype.onHamburgerMenuClick_ = function() {
+        this.sideMenu_.show();
     };
 
 
@@ -544,39 +520,6 @@ goog.scope(function() {
     };
 
 
-    /**
-     * Send data about adding to favorites
-     * @param {sm.bFavoriteLink.FavoriteLink} favoriteInstance
-     * @private
-     */
-    School.prototype.sendAddToFavorites_ = function(favoriteInstance) {
-        favoriteInstance.sendData(this.params_.id, 'add');
-    };
-
-
-    /**
-     * Send data about removing from favorites
-     * @param {sm.bFavoriteLink.FavoriteLink} favoriteInstance
-     * @private
-     */
-    School.prototype.sendRemoveFromFavorites_ = function(favoriteInstance) {
-        favoriteInstance.sendData(this.params_.id, 'remove');
-    };
-
-
-    /**
-     * Set added to favorite or removed from favorite state for school
-     * @param {boolean} isFavorite
-     * @private
-     */
-    School.prototype.setFavoriteState_ = function(isFavorite) {
-        goog.array.forEach(this.favoriteLinks_, function(favoriteLink) {
-            isFavorite ?
-                favoriteLink.addFavorite() :
-                favoriteLink.removeFavorite();
-        });
-    };
-
 
     /**
      * show Modal for comments
@@ -635,10 +578,13 @@ goog.scope(function() {
             .initModalInaccuracy_()
             .initMap_()
             .initBouton_()
-            .initFavoriteLinks_()
             .initComments_()
             .initPopularSchools_()
             .initDataBlockFeatures_()
+            .initHeader_()
+            .initSubHeader_()
+            .initSideMenu_()
+            .initFooter_()
             .initComponents_(DataBlockFoldList, DataBlockFoldList.CssClass.ROOT)
             .initComponents_(DBlockRatings, DBlockRatings.CssClass.ROOT)
             .initComponents_(Search, Search.CssClass.ROOT)
@@ -822,31 +768,6 @@ goog.scope(function() {
 
 
     /**
-     * Initialization Favorite Links
-     * @return {sm.lSchool.School}
-     * @private
-     */
-    School.prototype.initFavoriteLinks_ = function() {
-
-        var favoriteLinks = this.getElementsByClass(
-            sm.bFavoriteLink.View.CssClass.ROOT
-        );
-
-        for (var i = 0; i < favoriteLinks.length; i++) {
-            var instance = factory.decorate(
-                'favorite-link',
-                favoriteLinks[i],
-                this
-            );
-
-            this.favoriteLinks_.push(instance);
-        }
-
-        return this;
-    };
-
-
-    /**
      * Initialization Data Block Features
      * @return {sm.lSchool.School}
      * @private
@@ -860,6 +781,94 @@ goog.scope(function() {
             bDataBlockFeatures,
             this
         );
+        return this;
+    };
+
+
+    /**
+     * Init header
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initHeader_ = function() {
+        var header = goog.dom.getElementByClass(
+           sm.bSmHeader.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smHeader',
+            header,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init sub header
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initSubHeader_ = function() {
+        var subHeader = goog.dom.getElementByClass(
+            sm.bSmSubheader.SmSubheader.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smSubheader',
+            subHeader,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init side menu
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initSideMenu_ = function() {
+        var sideMenu = goog.dom.getElementByClass(
+            sm.gModal.ViewSideMenu.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.sideMenu_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'side-menu',
+            sideMenu,
+            this
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init footer
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initFooter_ = function() {
+        var footer = goog.dom.getElementByClass(
+            sm.bSmFooter.View.CssClass.ROOT,
+            goog.dom.getDocument()
+        );
+
+        this.footer_ = cl.iFactory.FactoryManager.getInstance().decorate(
+            this.factory_,
+            'smFooter',
+            footer,
+            this
+        );
+
         return this;
     };
 });  // goog.scope

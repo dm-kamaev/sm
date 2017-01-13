@@ -10,7 +10,7 @@
 .b-sm-link_hoverable:hover {
     cursor: pointer;
 
-    color: #ff0000;
+    color: #f00;
 }
 
 /** Possible sizes */
@@ -32,7 +32,16 @@
 
 .b-sm-link_size_xxl {
     font-size: 16px;
-    line-height: 22px;
+    line-height: 20px;
+}
+
+.b-sm-link_size_xxxl {
+    font-size: 17px;
+}
+
+.b-sm-link_size_7xl {
+    font-size: 21px;
+    line-height: 26px;
 }
 /** Possible sizes end */
 
@@ -46,11 +55,15 @@
 }
 
 .b-sm-link_attention-theme {
-    color: #ff0000;
+    color: #f00;
 }
 
 .b-sm-link_dark-theme {
     color: #000;
+
+    &.b-sm-link_selected {
+        color: #f00;
+    }
 }
 
 .b-sm-link_block-theme {
@@ -60,5 +73,11 @@
     color: #356fc4;
 
     line-height: inherit;
+}
+
+.b-sm-link_interval-theme {
+    margin-bottom: 14px;
+
+    color: #356fc4;
 }
 /** Themes end */

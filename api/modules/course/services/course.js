@@ -31,7 +31,8 @@ const informationFields = {
         'entranceExam',
         'learningOutcome',
         'leadType',
-        'embedId'
+        'embedId',
+        'imageUrl'
     ],
     BRAND: ['id', 'name', 'description'],
     TYPE: ['id', 'name'],
@@ -100,7 +101,7 @@ const informationFields = {
  * @return {Course}
  */
 service.fullCreate = async(function(data) {
-    let brand = await(services.courseBrand.create(data.brand)),
+    let brand = await(services.courseBrand.findOrCreate(data.brand)),
         category = await(services.courseCategory.findOrCreate(data.category)),
         type = await(services.courseType.create({
             categoryId: category.id,
@@ -183,9 +184,11 @@ service.information = async(function(id) {
  * @return {Promise.Array<Object>}
  */
 service.list = async(function(searchParams, opt_params) {
+    let params = opt_params || {};
+
     let searchString = services.courseSearchData.getSearchSql(
         searchParams,
-        opt_params.limit
+        params.limit
     );
 
     let courses = sequelize
@@ -525,13 +528,16 @@ service.getGetByNameAndCategoryAlias = async(function(categoryAlias, name) {
  *     about: ?string,
  *     entranceExam: ?string,
  *     learningOutcome: ?string,
- *     leadType: ?string
+ *     leadType: ?string,
+ *     imageUrl: ?string
  * }} data
  * @return {Course}
  */
 service.create = async(function(data) {
     if (!data.brandId) {
-        let brand = await(services.courseBrand.create({name: data.brandName}));
+        let brand = await(services.courseBrand.findOrCreate({
+            name: data.brandName
+        }));
         data.brandId = brand.id;
     }
 
@@ -545,16 +551,23 @@ service.create = async(function(data) {
  */
 service.update = async(function(id, data) {
     if (!data.brandId) {
-        let brand = await(services.courseBrand.create({name: data.brandName}));
+        let brand = await(services.courseBrand.findOrCreate({
+            name: data.brandName
+        }));
         data.brandId = brand.id;
     }
 
-    return await(models.Course.update(data, {
+    let course = await(models.Course.findOne({
         where: {
             id: id
-        },
-        individualHooks: true
+        }
     }));
+
+    if (course.imageUrl && data.imageUrl) {
+        services.image.delete(course.imageUrl);
+    }
+
+    return await(course.update(data));
 });
 
 /**
