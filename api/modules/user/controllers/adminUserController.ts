@@ -6,6 +6,7 @@ import AdminUserNotFoundError from './errors/AdminUserNotFound';
 import WrongAccessAttributesError from './errors/WrongAccessAttributes';
 
 import adminUserService from '../services/adminUser';
+import adminUserView from '../views/adminUserView';
 
 class AdminUserController extends Controller{
     constructor() {
@@ -78,15 +79,23 @@ class AdminUserController extends Controller{
      *     [{
      *         "userId": 10,
      *         "accessAttributes": {
-     *             "schoolId": 25,
-     *             "brandId": 17,
+     *             "schoolName": 25,
+     *             "brandName": 17,
      *             "isSuperUser": false
      *         }
      *     }]
      *
      */
     async actionList(actionContext) {
-        return await adminUserService.getAll();
+        let adminUsers = await adminUserService.getAll(),
+            accessAttributesInstances =
+                await adminUserService.getInstancesByAttributes(adminUsers);
+
+        return adminUserView.renderList({
+            adminUsers: adminUsers,
+            schools: accessAttributesInstances.schools,
+            brands: accessAttributesInstances.brands
+        });
     }
 
     /**
@@ -122,7 +131,14 @@ class AdminUserController extends Controller{
      * @apiUse AdminUserNotFoundError
      */
     async actionGet(actionContext, adminUserId) {
-        return await adminUserService.getByUserId(adminUserId);
+        let adminUser = await adminUserService.getByUserId(adminUserId),
+            accessAttributesInstances =
+                await adminUserService.getInstancesByAttributes(adminUser);
+        return adminUserView.render({
+            adminUser: adminUser,
+            brand: accessAttributesInstances.brand,
+            school: accessAttributesInstances.school
+        });
     }
 
     /**
@@ -146,14 +162,14 @@ class AdminUserController extends Controller{
      *     {
      *         "userId": 1,
      *         "accessAttributes": {
-     *             "schoolId": 25,
-     *             "brandId": 17,
+     *             "schoolName": 25,
+     *             "brandName": 17,
      *             "isSuperUser": false
      *         }
      *     }
      *
      * @apiSuccess {Object}  adminUser
-     *     Array of finded administrative users
+     *     Array of found administrative users
      * @apiSuccess {Number}  adminUser.userId
      *     Id of user in administrative console db
      * @apiSuccess {Object}  adminUser.accessAttributes
@@ -196,8 +212,8 @@ class AdminUserController extends Controller{
      *     {
      *         "userId": 1,
      *         "accessAttributes": {
-     *             "schoolId": 25,
-     *             "brandId": 17,
+     *             "schoolName": 25,
+     *             "brandName": 17,
      *             "isSuperUser": false
      *         }
      *     }
