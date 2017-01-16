@@ -14,7 +14,8 @@ if (config.environment != 'production') {
     options.logging = logger.debug.bind(logger);
     options.benchmark = true;
 }
-
+options.timezone = "+03:00";
+console.log(options);
 module.exports = new Sequelize(
     dbConfig.database,
     dbConfig.username,
