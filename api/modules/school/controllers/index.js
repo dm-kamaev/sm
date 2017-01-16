@@ -76,7 +76,4 @@ router.delete(
     schoolAdminController.actionDelete
 );
 
-// router.delete('/school/:id', checkToken, schoolController.delete);
-
-
 module.exports = router;

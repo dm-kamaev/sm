@@ -75,12 +75,27 @@ service.update = async function(
 
 
 service.remove = async function(schoolId: number): Promise <any> {
-    return await models.School.destroy({
+    var res: any = await models.School.destroy({
         where: {
             id: schoolId
         },
         returning: true
     });
+
+    let howRemove: { where: { entityId: number, entityType: string }};
+    howRemove = {
+        where: {
+            entityId: schoolId,
+            entityType: 'school'
+        },
+    };
+
+    await models.Page.destroy(howRemove);
+    // remove school from search
+    await models.TextSearchData.destroy(howRemove);
+    await models.AliasBacklog.destroy(howRemove);
+
+    return res;
 };
 
 
