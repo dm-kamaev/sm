@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path'),
     fs = require('fs');
 
@@ -13,7 +15,8 @@ exports.initServices = function(dirPath) {
         .filter(file => (~file.indexOf('.js') && file != 'index.js'))
         .map(file => require(path.join(dirPath, file)))
         .reduce(function(res, service) {
-            res[service.name] = service;
+            let serviceInstance = service.default || service;
+            res[serviceInstance.name] = serviceInstance;
             return res;
         }, {});
 

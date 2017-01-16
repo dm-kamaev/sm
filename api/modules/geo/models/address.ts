@@ -3,7 +3,25 @@ var DataType = require('sequelize');
 var db = require('../../../../app/components/db'),
     entityTypes = require('../../entity/enums/entityType');
 
-var Address = db.define('Address', {
+import * as Sequelize from 'sequelize/v3';
+
+interface AddressAttribute {
+    id?: number,
+    entityId?: number,
+    entityType?: string,
+    areaId?: number,
+    name?: string,
+    coords?: Array<number>,
+    isSchool?: boolean
+}
+
+export interface AddressInstance
+    extends Sequelize.Instance<AddressAttribute>, AddressAttribute {}
+
+interface AddressModel
+    extends Sequelize.Model<AddressInstance, AddressAttribute> {}
+
+let Address: AddressModel = db.define('Address', {
     entityId: {
         type: DataType.INTEGER,
         field: 'entity_id'
@@ -30,31 +48,31 @@ var Address = db.define('Address', {
     tableName: 'address',
     classMethods: {
         associate: function(models) {
-            Address.belongsTo(models.School, {
+            this.belongsTo(models.School, {
                 foreignKey: 'entity_id'
             });
-            Address.belongsToMany(models.Metro, {
+            this.belongsToMany(models.Metro, {
                 as: 'metroStations',
                 through: 'address_metro',
                 foreignKey: 'address_id'
             });
-            Address.hasMany(models.AddressMetro, {
+            this.hasMany(models.AddressMetro, {
                 as: 'addressMetroes',
                 foreignKey: 'address_id'
             });
-            Address.hasMany(models.Department, {
+            this.hasMany(models.Department, {
                 as: 'departments',
                 foreignKey: 'address_id'
             });
-            Address.belongsTo(models.Area, {
+            this.belongsTo(models.Area, {
                 as: 'area',
                 foreignKey: 'area_id'
             });
-            Address.hasMany(models.CourseDepartment, {
+            this.hasMany(models.CourseDepartment, {
                 as: 'courseDepartments',
                 foreignKey: 'address_id'
             });
-            Address.hasMany(models.AddressSearchData, {
+            this.hasMany(models.AddressSearchData, {
                 as: 'searchData',
                 foreignKey: 'address_id',
                 onDelete: 'cascade'
@@ -63,4 +81,4 @@ var Address = db.define('Address', {
     }
 });
 
-module.exports = Address;
+export default Address;

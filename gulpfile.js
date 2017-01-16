@@ -14,9 +14,9 @@ const minimist = require('minimist');
 
 const migrationWrapper = require('./app/components/migrationWrapper');
 
-const MAX_BILD_FILE_AMOUNT = 20;
+const MAX_BUILD_FILE_AMOUNT = 20;
 
-process.stdout.setMaxListeners(MAX_BILD_FILE_AMOUNT);
+process.stdout.setMaxListeners(MAX_BUILD_FILE_AMOUNT);
 
 const config = require('./config.json');
 const gulpConfig = require('./app/config/base/config.json');

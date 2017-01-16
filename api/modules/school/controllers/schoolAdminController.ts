@@ -207,6 +207,6 @@ class SchoolAdminController extends Controller {
     async actionGetAllSchool() {
         return await schoolAdminService.getAllSchool();
     }
-
 }
-export { SchoolAdminController };
+
+export {SchoolAdminController};

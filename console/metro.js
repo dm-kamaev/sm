@@ -34,7 +34,7 @@ var start = async(() => {
             if (err)
                 console.log(err);
     }));
-    // var test = await(services.address.getTest());
+
     var addresses = await(services.address.getAllWithMetro());
     console.log('\nPatience, my friend');
     // addresses = addresses.slice(0, 1);

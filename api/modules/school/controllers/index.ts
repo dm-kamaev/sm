@@ -1,21 +1,18 @@
-'use strict';
-
 const express = require('express');
 const router = express.Router();
 const schoolController = require('./schoolController');
 
-const SchoolAdminController =
-    require('./schoolAdminController.js').SchoolAdminController;
+import {SchoolAdminController} from './schoolAdminController';
 const schoolAdminController = new SchoolAdminController();
 
-const CommentAdminController =
-    require('./commentAdminController.js').CommentAdminController;
+import {CommentAdminController} from './commentAdminController';
 const commentAdminController = new CommentAdminController();
 
+import {DepartmentAdminController} from './departmentAdminController';
+const departmentAdminController = new DepartmentAdminController();
 
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
-
 
 router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);
@@ -63,10 +60,10 @@ router.delete(
     commentAdminController.actionRemoveComment
 );
 
-
 router.get('/admin/school', schoolAdminController.actionGetAllSchool);
 router.post('/admin/school', checkToken, schoolAdminController.actionCreate);
-router.put('/admin/school/:schoolId',
+router.put(
+    '/admin/school/:schoolId',
     checkToken,
     schoolAdminController.actionUpdate
 );
@@ -76,4 +73,18 @@ router.delete(
     schoolAdminController.actionDelete
 );
 
-module.exports = router;
+/* CRUD school department for admin panel */
+
+router.get(
+    '/school/:schoolId/department',
+    departmentAdminController.actionList
+);
+
+router.get(
+    '/school/:schoolId/department/:departmentId',
+    departmentAdminController.actionGet
+);
+
+/* */
+
+export default router;
