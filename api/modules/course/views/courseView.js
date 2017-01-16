@@ -35,6 +35,9 @@ view.page = function(course, categoryAlias) {
         id: course.id,
         name: course.name,
         category: categoryAlias,
+        categoryName: course.courseType && course.courseType.category ?
+            course.courseType.category.name :
+            '',
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
