@@ -11,8 +11,6 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 import schoolCommentService from '../services/schoolComment';
 import commentView from '../views/commentView';
 import schoolAdminService from '../services/schoolAdminService';
-import SchoolNotExistTypeError from './errors/SchoolNotExistTypeError';
-import SchoolLinkNotExistError from './errors/SchoolLinkNotExistError';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 
@@ -43,15 +41,15 @@ class CommentAdminController extends Controller {
      * HTTP/1.1 200 OK
      * {
      *     "id": 613,
-           "text": "Образование\nНе все едино, но очень многие.\n
-                    Учителя\nУчителя очень близки с .",
-            "author": "Вася",
-            "socialId": "32423424",
-            "socialType": "vk",
-            "category": "Scholar",
-            "score": 4.75,
-            "updatedAt": "2016-11-21T09:50:32.184Z"
-       }
+     *     "text": "Образование\nНе все едино, но очень многие.\n
+     *              Учителя\nУчителя очень близки с .",
+     *      "author": "Вася",
+     *      "socialId": "32423424",
+     *      "socialType": "vk",
+     *      "category": "Scholar",
+     *      "score": 4.75,
+     *      "updatedAt": "2016-11-21T09:50:32.184Z"
+     * }
      *
      */
     async actionGetComment(ctx, schoolId: string, commentId: string) {
@@ -90,16 +88,16 @@ class CommentAdminController extends Controller {
      * HTTP/1.1 200 OK
      *  [
      *      {
-                "id": 613,
-                "text": "Образование\nНе все едино, но очень многие.\n
-                         Учителя\nУчителя очень близки с .",
-                "author": "Вася",
-                "socialId": "32423424",
-                "socialType": "vk",
-                "category": "Scholar",
-                "score": 4.75,
-                "updatedAt": "2016-11-21T09:50:32.184Z"
-            },
+     *          "id": 613,
+     *          "text": "Образование\nНе все едино, но очень многие.\n
+     *                    Учителя\nУчителя очень близки с .",
+     *          "author": "Вася",
+     *          "socialId": "32423424",
+     *          "socialType": "vk",
+     *          "category": "Scholar",
+     *          "score": 4.75,
+     *          "updatedAt": "2016-11-21T09:50:32.184Z"
+     *      },
      * ]
      *
      */
@@ -144,16 +142,16 @@ class CommentAdminController extends Controller {
      * @apiSuccessExample {json} Success-Response:
      * HTTP/1.1 200 OK
      * {
-            "id": 3147,
-            "created_at": "2016-12-23T09:28:43.403Z",
-            "updated_at": "2016-12-23T10:37:52.552Z",
-            "text": "ОБНОВИЛИ КОММЕНТАРИЙ111",
-            "comment_group_id": 78,
-            "rating_id": 3146,
-            "user_data_id": 3149,
-            "source": "User",
-            "isNoticeSend": false
-        }
+     *      "id": 3147,
+     *      "created_at": "2016-12-23T09:28:43.403Z",
+     *      "updated_at": "2016-12-23T10:37:52.552Z",
+     *      "text": "ОБНОВИЛИ КОММЕНТАРИЙ111",
+     *      "comment_group_id": 78,
+     *      "rating_id": 3146,
+     *      "user_data_id": 3149,
+     *      "source": "User",
+     *      "isNoticeSend": false
+     *   }
      *
      *
      */

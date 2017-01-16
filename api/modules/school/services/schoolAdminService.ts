@@ -32,7 +32,6 @@ type someSchoolData = {
 service.create = async function(schoolData: someSchoolData): Promise <any> | null {
     CsvConverter.cureQuotes(schoolData);
 
-    // console.log('CREATE', schoolData);
     let type: string = schoolData.schoolType;
     if (!schoolType.getPropByValue(type)) {
         throw new SchoolNotExistType(type);
@@ -83,35 +82,6 @@ service.remove = async function(schoolId: number): Promise <any> {
 };
 
 
-type somelinkData = {
-    name: string,
-    url: string,
-};
-service.updateLink = async function (
-    schoolId: number,
-    linkId: number,
-    linkData: somelinkData
-    ): Promise <any> {
-    // console.log(schoolId, linkId, linkData);
-    return await sequelize.query(
-        `UPDATE school SET
-            links[:linkId][1] = :name,
-            links[:linkId][2] = :url
-         WHERE id=:schoolId RETURNING *
-         `, {
-            replacements: {
-                schoolId,
-                linkId,
-                name: linkData.name,
-                url: linkData.url
-            },
-            type: sequelize.QueryTypes.SELECT
-        }
-    );
-}
-
-
-
 type someSchoolInfo = {
     id: number,
     name: string,
@@ -122,7 +92,7 @@ type someSchoolInfo = {
     districtName: string,
     updatedAt: string,
 };
-service.getAllSchoolInfo = async function(): Promise <someSchoolInfo[]> {
+service.getAllSchool = async function(): Promise <someSchoolInfo[]> {
     let res: any = await models.School.findAll({
         attributes: [
             'id', 'name', 'schoolType', 'totalScore', 'updated_at'
@@ -167,7 +137,6 @@ service.getAllSchoolInfo = async function(): Promise <someSchoolInfo[]> {
         if (school.commentGroup && school.commentGroup.comments) {
             numberComments = school.commentGroup.comments.length;
         }
-
         return {
             id: school.id,
             name: school.name,
