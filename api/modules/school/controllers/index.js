@@ -66,7 +66,10 @@ router.delete(
 
 router.get('/admin/school', schoolAdminController.actionGetAllSchool);
 router.post('/admin/school', checkToken, schoolAdminController.actionCreate);
-router.put('/admin/school/:schoolId', checkToken, schoolAdminController.actionUpdate);
+router.put('/admin/school/:schoolId',
+    checkToken,
+    schoolAdminController.actionUpdate
+);
 router.delete(
     '/admin/school/:schoolId',
     checkToken,

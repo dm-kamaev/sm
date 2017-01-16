@@ -11,9 +11,6 @@ const schoolView = require('../views/schoolView'),
     specializedClassesView = require('../views/specializedClassesView'),
     activityView = require('../views/activityView');
 
-const SchoolNotFoundError =
-     require('../controllers/errors/SchoolNotFoundError.js');
-
 const searchViewEntity = require('../../entity/views/searchView');
 
 const mapViewType = require('../../entity/enums/mapViewType'),

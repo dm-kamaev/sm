@@ -29,7 +29,8 @@ type someSchoolData = {
     links: string[][],
 };
 
-service.create = async function(schoolData: someSchoolData): Promise <any> | null {
+service.create = async function(
+    schoolData: someSchoolData): Promise <any> | null {
     CsvConverter.cureQuotes(schoolData);
 
     let type: string = schoolData.schoolType;
@@ -54,7 +55,8 @@ service.create = async function(schoolData: someSchoolData): Promise <any> | nul
 };
 
 
-service.update = async function(schoolId: number, schoolData: any): Promise <any> | null {
+service.update = async function(
+    schoolId: number, schoolData: any): Promise <any> | null {
     CsvConverter.cureQuotes(schoolData);
 
     let type: string = schoolData.schoolType || '';
