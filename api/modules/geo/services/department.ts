@@ -76,9 +76,29 @@ class DepartmentService {
      * }} data
      * @return {Object} instance of Department model
      */
-    public async update(departmentId, data) {
+    public async update(
+        departmentId:number,
+        data: DepartmentAttribute,
+        addressData?: {
+            schoolId: number,
+            address: string
+        }
+    ): Promise<DepartmentAdmin> {
         var instance = await this.getById(departmentId);
-        return await instance.update(data);
+        if (addressData.address) {
+            try {
+                let address = await addressService.addAddress(
+                    addressData.schoolId,
+                    entityType.SCHOOL, {
+                        name: addressData.address
+                    }
+                );
+                data.addressId = address.id;
+            } catch (error) {
+                throw new AddressDoesNotExist(addressData.address);
+            }
+        }
+        return instance.update(data);
     }
 
     /**

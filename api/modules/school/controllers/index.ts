@@ -73,23 +73,17 @@ router.delete(
     schoolAdminController.actionDelete
 );
 
-/* CRUD school department for admin panel */
+let initCrudRouting = function(route: string, controller: any): void {
+    router.post(route, checkToken, controller.actionCreate);
+    router.get(route, controller.actionList);
+    router.get(`${route}/:id`, controller.actionGet);
+    router.put(`${route}/:id`, checkToken, controller.actionUpdate);
+    router.delete(`${route}/:id`, checkToken, controller.actionDelete);
+};
 
-router.get(
+initCrudRouting(
     '/admin/school/:schoolId/department',
-    departmentAdminController.actionList
+    departmentAdminController
 );
-
-router.get(
-    '/admin/school/:schoolId/department/:departmentId',
-    departmentAdminController.actionGet
-);
-
-router.post(
-    '/admin/school/:schoolId/department',
-    departmentAdminController.actionCreate
-);
-
-/* */
 
 export default router;
