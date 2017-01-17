@@ -3,37 +3,35 @@
 const logger = require('../components/logger/logger').getLogger('app');
 const ApiError = require('nodules/controller/ControllerError');
 
-module.exports = function(err, req, res, next) {
+module.exports = function(error, request, response, next) {
     let result;
-    logger.critical(err);
-    if (err instanceof ApiError) {
-        res.status(err.status);
+    if (error instanceof ApiError) {
+        logger.debug(error);
+        response.status(error.status);
         result = [{
-            code: err.code,
-            message: err.message
+            code: error.code,
+            message: error.message
         }];
-        res.send(result);
-        res.end();
-    } else if (/^Sequelize/.test(err.name)) {
-        logger.critical(JSON.stringify(err, null, 2));
-        res.status(422);
+        response.send(result);
+    } else if (/^Sequelize/.test(error.name)) {
+        logger.critical(JSON.stringify(error, null, 2));
+        response.status(422);
         result = [{
             code: 'ValidationError',
-            validationErrors: err.errors
+            validationErrors: error.errors
         }];
-        res.send(result);
-        res.end();
+        response.send(result);
     } else {
-        if (/(\/error)$/.test(req.path)) {
-            res.status(500);
+        logger.critical(error);
+        if (/(\/error)$/.test(request.path)) {
+            response.status(500);
             result = [{
                 code: 'InternalServerError',
-                message: err.message
+                message: error.message
             }];
-            res.send(result);
-            res.end();
+            response.send(result);
         } else {
-            res.redirect('/error');
+            response.redirect('/error');
         }
     }
 };

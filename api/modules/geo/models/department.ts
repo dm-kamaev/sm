@@ -3,7 +3,7 @@ const db = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
-interface DepartmentAttribute {
+export interface DepartmentAttribute {
     id?: number,
     name?: string,
     addressId?: number,

@@ -5,7 +5,7 @@ import {LegacyController} from '../../../components/interface';
 
 import SchoolNotFoundError from './errors/SchoolNotFound';
 import DepartmentNotFoundError from './errors/DepartmentNotFound';
-
+import AddressDoesNotExistError from './errors/AddressDoesNotExist';
 
 const Controller: LegacyController = require('nodules/controller').Controller;
 
@@ -17,7 +17,8 @@ class DepartmentAdminController extends Controller {
 
         this.errors = {
             SchoolNotFoundException: SchoolNotFoundError,
-            DepartmentNotFoundException: DepartmentNotFoundError
+            DepartmentNotFoundException: DepartmentNotFoundError,
+            AddressDoesNotExistException: AddressDoesNotExistError
         };
     }
 
@@ -65,6 +66,31 @@ class DepartmentAdminController extends Controller {
     ) {
         let department = await departmentService.getById(departmentId);
         return departmentView.adminRender(department);
+    }
+
+    /**
+     * @api {post} /api/school/:schoolId/department/:id Create department
+     * @apiVersion 1.0.0
+     * @apiName createDepartment
+     * @apiGroup School Department
+     *
+     * @apiParam {Number} schoolId School's id.
+     *
+     * @apiParam {String}   name              Name.
+     * @apiParam {Number[]} educationalGrades Studying classes.
+     * @apiParam {String}   addressName       Address' name.
+     *
+     * @apiError (404) SchoolNotFound      School with schoolId not found.
+     * @apiError (422) AddressDoesNotExist Specified address does not exist.
+     */
+    async actionCreate(actionContext: any, schoolId: number) {
+        let body = actionContext.request.body;
+        await departmentService.addDepartment(
+            schoolId,
+            body.addressName,
+            body
+        );
+        actionContext.response.status(201);
     }
 }
 

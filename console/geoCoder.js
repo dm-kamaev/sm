@@ -8,7 +8,7 @@ const commander = require('commander');
 const Metro = require('../api/modules/geo/models/metro.js');
 const Adress = require('../api/modules/geo/models/address.js');
 const AdressMetro = require('../api/modules/geo/models/addressMetro.js');
-const geoTools = require('./modules/geoTools/geoTools.js');
+const geoTools = require('./modules/geoTools/geoTools.js').default;
 const logger = require('../app/components/logger/logger.js').getLogger('app');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
@@ -224,4 +224,3 @@ function getMetros_(coords, searchRadius) {
         }, 1000);
     });
 }
-

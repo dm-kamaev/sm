@@ -85,6 +85,11 @@ router.get(
     departmentAdminController.actionGet
 );
 
+router.post(
+    '/school/:schoolId/department',
+    departmentAdminController.actionCreate
+);
+
 /* */
 
 export default router;

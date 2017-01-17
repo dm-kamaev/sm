@@ -7,7 +7,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 var services = require.main.require('./app/components/services').all;
-var geoTools = require('./modules/geoTools/geoTools');
+var geoTools = require('./modules/geoTools/geoTools').default;
 //var modules = require.main.require('./api/modules');
 
 

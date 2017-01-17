@@ -7,12 +7,16 @@ const services = require('../../../../app/components/services').all;
 const entityType = require('../../entity/enums/entityType');
 
 import addressService from './address';
-import {DepartmentInstance} from '../models/department';
+import {
+    DepartmentInstance,
+    DepartmentAttribute
+} from '../models/department';
 import DepartmentModel from '../models/department';
 import {AddressInstance} from '../models/address';
 import {DepartmentAdmin} from '../interfaces/DepartmentAdmin';
 
 import DepartmentNotFound from './exceptions/DepartmentNotFound';
+import AddressDoesNotExist from './exceptions/AddressDoesNotExist';
 
 class DepartmentService {
     readonly name: string = 'department';
@@ -27,21 +31,39 @@ class DepartmentService {
      * }} data
      * @return {Object} instance of Department model
      */
-    public async addDepartment(schoolId, addressId, data) {
-        var addresses = await services.school.getAddresses(schoolId);
-        var address = addresses.find(address => {
-            var result = false;
-            if (address.id === addressId) {
-                result = true;
+    public async addDepartment(
+        schoolId: number,
+        address: number | string,
+        data: DepartmentAttribute
+    ): Promise<DepartmentInstance> {
+        await services.school.checkExist(schoolId);
+        let departmentAddress;
+        if (typeof address === 'number') {
+            let addresses = await services.school.getAddresses(schoolId);
+            departmentAddress = addresses.find(address =>
+                address.id == address
+            );
+        } else {
+            let addressData = {
+                name: address
+            };
+            try {
+                departmentAddress = await addressService.addAddress(
+                    schoolId,
+                    entityType.SCHOOL, {
+                        name: address
+                    }
+                );
+            } catch (error) {
+                throw new AddressDoesNotExist(address);
             }
-            return result;
-        });
-        return await models.Department.create(data)
-            .then(instance => {
-                address.addDepartment(instance);
+        }
+
+        return DepartmentModel
+            .create(data)
+            .then(async instance => {
+                await departmentAddress.addDepartment(instance);
                 return instance;
-            }).catch(err => {
-                console.log(err);
             });
     }
 
@@ -161,21 +183,6 @@ class DepartmentService {
         }
 
         return addresses;
-    }
-
-
-    /**
-     * Add list of address id dy department instancefrom
-     */
-    // TODO delete this methods (used in ?)
-    public async addAddressList(departmentId, addressIdList) {
-        addressIdList.forEach(async function(addressId) {
-            var params = {
-                addressId: addressId,
-                departmentId: departmentId
-            };
-            await models.Department_address.create(params);
-        });
     }
 
     public async getBySchoolId(

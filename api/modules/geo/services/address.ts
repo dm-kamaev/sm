@@ -3,10 +3,10 @@ var await = require('asyncawait/await');
 var sequelizeInclude = require('../../../components/sequelizeInclude');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
-var geoTools = require('../../../../console/modules/geoTools/geoTools');
 var logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
+import geoTools from '../../../../console/modules/geoTools/geoTools';
 import {AddressInstance} from '../models/address';
 import AddressModel from '../models/address';
 
@@ -34,8 +34,8 @@ class AddressService {
         let address;
 
         if (addressBD) {
-            logger.critical('Address:' + data.name);
-            logger.critical(
+            logger.debug('Address:' + data.name);
+            logger.debug(
                 'is already binded to ' + entityType +
                 ' with id:' + addressBD.school_id
             );
@@ -50,10 +50,13 @@ class AddressService {
                 );
             }
 
-            data.areaId = data.areaId || await services.area.create({
-                name: await(geoTools.getArea(data.coords))
-                    // area name from coords
-            })[0].id; // area id
+            if (!data.areaId) {
+                let areas = await services.area.create({
+                    name: await geoTools.getArea(data.coords)
+                        // area name from coords
+                });
+                data.areaId = areas[0].id;
+            }
 
             address = await models.Address.create(data);
 
