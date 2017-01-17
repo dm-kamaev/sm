@@ -76,17 +76,17 @@ router.delete(
 /* CRUD school department for admin panel */
 
 router.get(
-    '/school/:schoolId/department',
+    '/admin/school/:schoolId/department',
     departmentAdminController.actionList
 );
 
 router.get(
-    '/school/:schoolId/department/:departmentId',
+    '/admin/school/:schoolId/department/:departmentId',
     departmentAdminController.actionGet
 );
 
 router.post(
-    '/school/:schoolId/department',
+    '/admin/school/:schoolId/department',
     departmentAdminController.actionCreate
 );
 
