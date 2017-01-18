@@ -6,9 +6,13 @@ var services = require('../../../../app/components/services').all;
 var logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
+const entityTypes = require('../../entity/enums/entityType');
+
 import geoTools from '../../../../console/modules/geoTools/geoTools';
 import {AddressInstance} from '../models/address';
 import AddressModel from '../models/address';
+
+import AddressIsNotUnique from './exceptions/AddressIsNotUnique';
 
 const SEARCH_RADIUS = 3; // killometrs, search radius for metro
 
@@ -39,6 +43,10 @@ class AddressService {
                 'is already binded to ' + entityType +
                 ' with id:' + addressBD.school_id
             );
+            if (entityType == entityTypes.SCHOOL &&
+                entityId != addressBD.entityId) {
+                throw new AddressIsNotUnique(addressBD.name);
+            }
             address = addressBD;
         } else {
             data.entityId = entityId;
@@ -338,6 +346,24 @@ class AddressService {
                 entityId: entityId,
                 entityType: entityType
             }
+        });
+    }
+
+    public async updateIsSchool(addressId: number): Promise<void> {
+        let address = await AddressModel.findOne({
+            where: {id: addressId}
+        });
+        let addressDepartments = await address.getDepartments();
+
+        let overallEducationalGrades: Array<number> = addressDepartments.reduce(
+            (previous, current) => previous.concat(current.educationalGrades),
+            []
+        );
+
+        address.update({
+            isSchool: addressDepartments.length ?
+                overallEducationalGrades.some(grade => grade != 0) :
+                true
         });
     }
 }

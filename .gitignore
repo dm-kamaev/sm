@@ -53,12 +53,14 @@ api/modules/geo/interfaces/DepartmentAdmin.js
 api/modules/geo/models/address.js
 api/modules/geo/models/department.js
 api/modules/geo/services/exceptions/AddressDoesNotExist.js
+api/modules/geo/services/exceptions/AddressIsNotUnique.js
 api/modules/geo/services/exceptions/DepartmentNotFound.js
 api/modules/geo/services/address.js
 api/modules/geo/services/department.js
 api/modules/geo/views/departmentView.js
 
 api/modules/school/controllers/errors/AddressDoesNotExist.js
+api/modules/school/controllers/errors/AddressIsNotUnique.js
 api/modules/school/controllers/errors/DepartmentNotFound.js
 api/modules/school/controllers/errors/SchoolNotExistTypeError.js
 api/modules/school/controllers/errors/SchoolNotFound.js

@@ -4,6 +4,7 @@ var db = require('../../../../app/components/db'),
     entityTypes = require('../../entity/enums/entityType');
 
 import * as Sequelize from 'sequelize/v3';
+import {DepartmentAttribute} from './department';
 
 interface AddressAttribute {
     id?: number,
@@ -16,7 +17,9 @@ interface AddressAttribute {
 }
 
 export interface AddressInstance
-    extends Sequelize.Instance<AddressAttribute>, AddressAttribute {}
+    extends Sequelize.Instance<AddressAttribute>, AddressAttribute {
+    getDepartments: Sequelize.HasManyGetAssociationsMixin<DepartmentAttribute>;
+}
 
 interface AddressModel
     extends Sequelize.Model<AddressInstance, AddressAttribute> {}

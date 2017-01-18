@@ -6,6 +6,7 @@ import {LegacyController} from '../../../components/interface';
 import SchoolNotFoundError from './errors/SchoolNotFound';
 import DepartmentNotFoundError from './errors/DepartmentNotFound';
 import AddressDoesNotExistError from './errors/AddressDoesNotExist';
+import AddressIsNotUniqueError from './errors/AddressIsNotUnique';
 
 const Controller: LegacyController = require('nodules/controller').Controller;
 
@@ -18,7 +19,8 @@ class DepartmentAdminController extends Controller {
         this.errors = {
             SchoolNotFoundException: SchoolNotFoundError,
             DepartmentNotFoundException: DepartmentNotFoundError,
-            AddressDoesNotExistException: AddressDoesNotExistError
+            AddressDoesNotExistException: AddressDoesNotExistError,
+            AddressIsNotUniqueException: AddressIsNotUniqueError
         };
     }
 
@@ -91,12 +93,12 @@ class DepartmentAdminController extends Controller {
      */
     async actionCreate(actionContext: any, schoolId: number) {
         let body = actionContext.request.body;
-        await departmentService.addDepartment(
+        actionContext.status = 201;
+        return await departmentService.addDepartment(
             schoolId,
             body.addressName,
             body
         );
-        actionContext.status = 201;
     }
 
     /**

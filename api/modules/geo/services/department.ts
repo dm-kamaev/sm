@@ -4,6 +4,8 @@ const await = require('asyncawait/await');
 const models = require('../../../../app/components/models').all;
 const services = require('../../../../app/components/services').all;
 
+const Exception = require('nodules/controller/ServiceException');
+
 const entityType = require('../../entity/enums/entityType');
 
 import addressService from './address';
@@ -55,9 +57,15 @@ class DepartmentService {
                     }
                 );
             } catch (error) {
-                throw new AddressDoesNotExist(address);
+                if (error instanceof Exception) {
+                    throw error;
+                } else {
+                    throw new AddressDoesNotExist(address);
+                }
             }
         }
+
+        addressService.updateIsSchool(departmentAddress.id);
 
         return DepartmentModel
             .create(data)
@@ -98,6 +106,7 @@ class DepartmentService {
                 throw new AddressDoesNotExist(addressData.address);
             }
         }
+        addressService.updateIsSchool(data.addressId);
         return instance.update(data);
     }
 
@@ -107,6 +116,7 @@ class DepartmentService {
      */
     public async delete(departmentId) {
         var instance = await this.getById(departmentId);
+        addressService.updateIsSchool(instance.addressId);
         instance.destroy();
     }
 
@@ -131,19 +141,9 @@ class DepartmentService {
         return await models.Department.findAll({where: data});
     }
 
-    /**
-     * Get one data from table by data
-     * @param {{
-     *     educationalGrades: ?string,
-     *     name: ?string
-     * }} data
-     * @return {Object} instance of Department model
-     */
-    public async getOneByData(data) {
-        return await models.Department.findOne({where: data});
-    }
-
     public async getById(departmentId: number): Promise<DepartmentAdmin> {
+        await addressService.updateIsSchool(departmentId);
+
         let department: DepartmentAdmin = await DepartmentModel.findOne({
             where: {
                 id: departmentId
@@ -162,13 +162,25 @@ class DepartmentService {
     }
 
     /**
+     * Get one data from table by data
+     * @param {{
+     *     educationalGrades: ?string,
+     *     name: ?string
+     * }} data
+     * @return {Object} instance of Department model
+     */
+    public async getOneByData(data) {
+        return models.Department.findOne({where: data});
+    }
+
+    /**
      * Get address id dy department instance
      * @param {number} departmentId
      * @return {Object} instances of Address model
      */
     public async getAddresses(departmentId) {
-        var instance = exports.getOneBydata({id: departmentId});
-        return await instance.getAddress();
+        var instance = await this.getOneByData({id: departmentId});
+        return instance.getAddress();
     }
 
     /**
