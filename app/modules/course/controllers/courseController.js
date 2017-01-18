@@ -285,7 +285,10 @@ controller.information = async(function(req, res, next) {
                     categories: services.courseCategory.getAll({
                         isActive: true
                     }),
-                    categoryAliases: services.courseCategory.getAliases()
+                    categoryAliases: services.courseCategory.getAliases(),
+                    seoParams: services.seoCourseList.getPageMeta(
+                        page.category.entityId
+                    )
                 });
 
                 course.categories = data.categories;
@@ -299,6 +302,7 @@ controller.information = async(function(req, res, next) {
                     favorites: data.favorites,
                     categories: data.categories,
                     categoryAliases: data.categoryAliases,
+                    seoParams: data.seoParams,
                     entityType: entityType.COURSE,
                     config: config
                 });
