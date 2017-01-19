@@ -171,6 +171,7 @@ var getExtendedDayCost = function(cost) {
     switch (cost) {
     case 'нет':
     case '-':
+    case '':
     case null:
         break;
 
@@ -271,15 +272,18 @@ var getContacts = function(addresses, opt_phones) {
 
 /**
  * translates director name to right output format
- * @param {string} name
- * @return {string}
+ * @param {?string} name
+ * @return {?string}
  */
 var getDirectorName = function(name) {
-    var nameWords = [],
-        result = '';
-    name = name.trim();
-    nameWords = name.split(' ');
-    result = nameWords[1] + ' ' + nameWords[2] + ' ' + nameWords[0];
+    var result = '';
+    if (name) {
+        var nameWords = [];
+
+        name = name.trim();
+        nameWords = name.split(' ');
+        result = nameWords[1] + ' ' + nameWords[2] + ' ' + nameWords[0];
+    }
     return result;
 };
 
