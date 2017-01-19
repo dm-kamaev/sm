@@ -82,46 +82,6 @@ goog.scope(function() {
 
 
     /**
-     * On item click
-     * @param {Object} event
-     * @private
-     */
-    Badge.prototype.onItemClick_ = function(event) {
-        if (!goog.isNull(event.data)) {
-            this.redirectSearch_(event.data);
-        }
-    };
-
-
-    /**
-     * Redirect on page Search
-     * @param {{
-     *     id: number,
-     *     name: string
-     * }} data
-     * @private
-     */
-    Badge.prototype.redirectSearch_ = function(data) {
-        document.location.href = this.buildRedirectHref_(data);
-    };
-
-
-    /**
-     * Build redirect href for search redirect
-     * @param {{
-     *     id: number,
-     *     name: string
-     * }} data
-     * @return {string}
-     * @private
-     */
-    Badge.prototype.buildRedirectHref_ = function(data) {
-        return document.location.pathname + '?' +
-            goog.uri.utils.buildQueryDataFromMap(data);
-    };
-
-
-    /**
      * Init link hint
      * @private
      */

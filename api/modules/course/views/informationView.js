@@ -51,7 +51,7 @@ view.render = function(data) {
     return {
         seo: {
             metaTitle: `${pagePrefixTabTitle} ${entityData.name} в Москве: ` +
-                `стоимость обучения, отзывы.`,
+                'стоимость обучения, отзывы.',
             metaDescription: seoView.formatSeoDescription(
                 entityData.description
             )
