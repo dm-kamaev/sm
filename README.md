@@ -14,12 +14,12 @@
 5. Создание базы данных:
     * Запускаем psql под пользователем postgres:  
     `$ sudo -u postgres psql`
-    * Создаем базу данных 'quiz-api':  
-    `postgres=# CREATE DATABASE "quiz-api";`
+    * Создаем базу данных 'school_market':  
+    `postgres=# CREATE DATABASE "school_market";`
     * Создаем пользователя 'gorod':  
     `postgres=# CREATE USER gorod WITH PASSWORD '123qwe';`
     * Назначаем ему права:  
-    `postgres=# GRANT ALL PRIVILEGES ON DATABASE "quiz-api" TO gorod;`
+    `postgres=# GRANT ALL PRIVILEGES ON DATABASE "school_market" TO gorod;`
     * Выходим:  
     `postgres=# \q`
     * Выполнение самих миграций:
@@ -36,12 +36,12 @@
 
 ## Type Script ##
 Для работы с Type Script требуется установить тайпинги
-(`./node_modules/.bin/typings install`).
+(`./node_modules/.bin/typings install`).  
 Чтобы скомпилировать ts файлы в js требуется просто запустить
 `./node_modules/.bin/gulp`,
 либо для разработки только бекенда можно запустить таск,
 который собирает только бекенд:
-`./node_modules/.bin/gulp backendBuild`.
+`./node_modules/.bin/gulp backendBuild`.  
 В обоих тасках есть вотчеры, которые перекомпилируют ts по сохранению.
 
 ## Управление скриптами через CLI ##
