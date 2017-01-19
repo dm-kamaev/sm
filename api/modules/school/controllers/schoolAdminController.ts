@@ -5,7 +5,7 @@
 
 const util = require('util');
 
-import { LegacyController } from '../../../components/interface';
+import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import schoolCommentService from '../services/schoolComment';
@@ -234,6 +234,18 @@ class SchoolAdminController extends Controller {
      */
     async actionGet(actionContext: any, id: number) {
         return schoolAdminService.getById(id);
+    }
+
+    /**
+     * @api {get} /api/admin/schooltype
+     * @apiVersion 1.0.0
+     * @apiName getSchoolTypes
+     * @apiGroup School Admin
+     *
+     * @apiSuccess {String[]} - Response body.
+     */
+    actionGetSchoolTypes(actionContext: any) {
+        return schoolAdminService.getSchoolTypes();
     }
 }
 

@@ -179,4 +179,8 @@ service.getById = async function(id: number): Promise<SchoolInstance> {
     });
 };
 
+service.getSchoolTypes = function(): Array<String> {
+    return schoolType.toArray();
+};
+
 export default service;

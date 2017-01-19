@@ -74,6 +74,8 @@ router.delete(
     schoolAdminController.actionDelete
 );
 
+router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
+
 let initCrudRouting = function(route: string, controller: any): void {
     router.post(route, checkToken, controller.actionCreate);
     router.get(route, controller.actionList);
