@@ -131,7 +131,7 @@
 
 
 /**
- * Container for items
+ * Item
  * @param params {{
  *     data: {
  *         id: (number|undefined),
@@ -145,15 +145,16 @@
  * @override
  */
 {template .item_}
-    <div class="{call .rootClass/}__item"
-        {call .itemDataParams_ data="all" /}>
-        {$params.data.name}
-    </div>
+    {if $params.config.searchType and $params.config.searchType != 'rating'}
+        {call .itemLink_ data="all" /}
+    {else}
+        {call .itemText_ data="all" /}
+    {/if}
 {/template}
 
 
 /**
- * Item Data Params
+ * Item - link
  * @param params {{
  *     data: {
  *         id: (number|undefined),
@@ -166,15 +167,38 @@
  * }}
  * @override
  */
-{template .itemDataParams_ kind="attributes"}
-    data-params="
-        {call cl.iUtils.Utils.stringify}
-            {param json: quoteKeysIfJs([
-                'id': $params.data.id ?: '',
-                'name': $params?.config?.searchByName ? $params.data.name : '',
-                'type': $params?.config?.searchType ?: ''
-            ])/}
-        {/call}"
+{template .itemLink_}
+    {let $name kind="html"}
+        {call cl.iUtils.Utils.encodeURIComponent}
+            {param uri: $params.data.name/}
+        {/call}
+    {/let}
+
+    {let $uri: '?' + $params.config.searchType + '=' + $params.data.id +
+        ($params.config.searchByName ? '&name=' + $name : '')/}
+
+    <a class="{call .rootClass/}__item {call .rootClass/}__item_link"
+        href="{call cl.iUtils.Utils.ordainSanitizedUri}
+                {param uri: $uri/}
+              {/call}">
+        {$params.data.name}
+    </a>
+{/template}
+
+
+/**
+ * Item with text data
+ * @param params {{
+ *     data: {
+ *         name: string
+ *     }
+ * }}
+ * @private
+ */
+{template .itemText_}
+    <div class="{call .rootClass/}__item {call .rootClass/}__item_text">
+        {$params.data.name}
+    </div>
 {/template}
 
 
