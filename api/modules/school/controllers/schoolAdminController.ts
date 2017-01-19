@@ -207,6 +207,34 @@ class SchoolAdminController extends Controller {
     async actionGetAllSchool() {
         return await schoolAdminService.getAllSchool();
     }
+
+    /**
+     * @api {get} /api/admin/school/:id
+     * @apiVersion 1.0.0
+     * @apiName getSchool
+     * @apiGroup School Admin
+     *
+     * @apiParam {Number} id School's id.
+     *
+     * @apiSuccess {String}   name            Name.
+     * @apiSuccess {String}   fullName        Full name.
+     * @apiSuccess {String}   abbreviation    Short name.
+     * @apiSuccess {String}   description     Desctiption.
+     * @apiSuccess {String[]} features        Features.
+     * @apiSuccess {String}   schoolType      Type of school.
+     * @apiSuccess {Boolean}  dressCode       Dress code.
+     * @apiSuccess {String}   extendedDayCost Cost of extended day.
+     * @apiSuccess {Number}   rankDogm        Place in mos.obr's rating.
+     * @apiSuccess {Array}    links           Array of arrays.
+     * @apiSuccess {Array}    links.-         Array of two strings.
+     * @apiSuccess {String}   links.-.0       Name of link.
+     * @apiSuccess {String}   links.-.1       Link itself.
+     * @apiSuccess {String[]} phones          Array of phones.
+     * @apiSuccess {String}   director        Director's name.
+     */
+    async actionGet(actionContext: any, id: number) {
+        return schoolAdminService.getById(id);
+    }
 }
 
 export {SchoolAdminController};

@@ -8,6 +8,10 @@ const models = require('../../../../app/components/models').all;
 const CsvConverter =
     require('../../../../console/modules/modelArchiver/CsvConverter');
 const schoolType = require('../enums/schoolType.js');
+
+import SchoolModel from '../models/school';
+import {SchoolInstance} from '../models/school';
+
 import SchoolNotExistType from './exceptions/SchoolNotExistType';
 
 let service: any = {
@@ -102,7 +106,7 @@ service.remove = async function(schoolId: number): Promise <any> {
 type someSchoolInfo = {
     id: number,
     name: string,
-    type: string,
+    schoolType: string,
     numberComments: number,
     totalScore: number,
     areaName: string,
@@ -157,7 +161,7 @@ service.getAllSchool = async function(): Promise <someSchoolInfo[]> {
         return {
             id: school.id,
             name: school.name,
-            type: school.schoolType,
+            schoolType: school.schoolType,
             numberComments,
             totalScore: Number((school.totalScore).toFixed(1)),
             areaName,
@@ -167,6 +171,12 @@ service.getAllSchool = async function(): Promise <someSchoolInfo[]> {
     });
 
     return schools;
+};
+
+service.getById = async function(id: number): Promise<SchoolInstance> {
+    return SchoolModel.findOne({
+        where: {id: id}
+    });
 };
 
 export default service;
