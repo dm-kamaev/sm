@@ -3,6 +3,7 @@
 
 lib_dir=node_modules/deployment
 gulp="./node_modules/.bin/gulp"
+typings="./node_modules/.bin/typings"
 
 scriptpath=$(dirname $0)
 cd $scriptpath/../
@@ -13,6 +14,8 @@ if [ ! -d node_modules/ ]; then
 else
     npm update
 fi
+
+$typings install
 
 $gulp backendLint
 $gulp build --env $env
