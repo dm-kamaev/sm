@@ -17,6 +17,15 @@ const util = require('util');
 // turn off logging for sequelize
 AdressMetro.sequelize.options.logging = false;
 
+commander
+    .command('geoCoder')
+    .description('update number metro for every address via yandex api')
+    .action(async(() => {
+        new GeoCoder().start();
+    }));
+exports.Command;
+
+
 class GeoCoder {
     /**
      * start update metros and distance
@@ -74,7 +83,6 @@ class GeoCoder {
             let name = metro.name;
             if (!this.metros[name]) { // new metro station
                 let coords = metro.coords;
-                logger.info(`New metro station: "${name}" "${coords}"`);
                 metro = await(Metro.create({ name, coords }));
                 this.metros[name] = { id: metro.id, coords };
             }
@@ -108,13 +116,6 @@ class GeoCoder {
                     latitude: metroCoords[1],
                 });
 
-                logger.info(
-                    'Add metro for address:\n' +
-                    'address="' + JSON.stringify(address) + '"\n' +
-                    'metro="' + JSON.stringify(metro) + '"\n' +
-                    'distance= "' + distance + ' meters"'
-                );
-
                 await(AdressMetro.create({
                     addressId,
                     metroId,
@@ -124,16 +125,6 @@ class GeoCoder {
         });
     }
 }
-
-
-commander
-    .command('geoCoder')
-    .description('update number metro for every address via yandex api')
-    .action(async(() => {
-        new GeoCoder().start();
-    }));
-exports.Command;
-
 
 
 /**
