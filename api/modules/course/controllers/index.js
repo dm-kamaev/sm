@@ -15,9 +15,9 @@ const courseController = require('./courseController'),
     checkToken = require('../../../../app/middleware/checkToken'),
     fileHandler = require('../../../../app/middleware/fileHandler');
 
-/*const BrandActionChecker =
+/* const BrandActionChecker =
     require('../../../../app/middleware/ActionChecker/BrandActionChecker');
-const checkAction = BrandActionChecker.middleware;*/
+const checkAction = BrandActionChecker.middleware; */
 
 router.get('/course/search', courseController.search);
 router.get('/course/search/map', courseController.searchMap);

@@ -6,9 +6,9 @@ const schoolController = require('./schoolController');
 const csrf = require('../../../../app/middleware/csrf');
 const checkToken = require('../../../../app/middleware/checkToken');
 
-const SchoolActionChecker =
+/* const SchoolActionChecker =
     require('../../../../app/middleware/ActionChecker/SchoolActionChecker');
-/* const checkAction = SchoolActionChecker.middleware; */
+const checkAction = SchoolActionChecker.middleware; */
 
 router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);
