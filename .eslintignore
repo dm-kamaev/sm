@@ -10,6 +10,7 @@ api/modules/geo/services/address.js
 api/modules/geo/services/department.js
 api/modules/geo/views/departmentView.js
 
+api/modules/school/interfaces/SchoolAdmin.js
 api/modules/school/controllers/errors/AddressDoesNotExist.js
 api/modules/school/controllers/errors/AddressIsNotUnique.js
 api/modules/school/controllers/errors/DepartmentNotFound.js

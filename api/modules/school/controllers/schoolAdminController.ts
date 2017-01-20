@@ -25,7 +25,7 @@ class SchoolAdminController extends Controller {
 
     /**
      * create school
-     * @api {post} /admin/api/school
+     * @api {post} /api/admin/school
      * @apiVersion 0.1.0
      * @apiName createSchool
      * @apiGroup School
@@ -56,6 +56,9 @@ class SchoolAdminController extends Controller {
      *  "phones": ["(495) 223-32-23", "(499)322-23-33"],
      *  "govermentKey": 100,
      *  "totalScore": 4,
+     *  "description": "Многопрофильная школа с
+     *                  развитой системой профориентации и
+     *                  «университетскими субботами»",
      *  "features": [
      *          "В лицее нет традиционных классов: ученики делятся на группы в
      *           зависимости от выбранного ими учебного плана",
@@ -87,7 +90,7 @@ class SchoolAdminController extends Controller {
 
     /**
      * update school
-     * @api {put} /admin/api/school/:schoolId
+     * @api {put} /api/admin/school/:schoolId
      * @apiVersion 0.1.0
      * @apiName updateSchool
      * @apiGroup SchoolAdmin
@@ -125,6 +128,9 @@ class SchoolAdminController extends Controller {
      *   "phones": ["(495) 223-32-23", "(499)322-23-33"],
      *   "govermentKey": 100,
      *   "totalScore": 4,
+     *   "description": "Многопрофильная школа с
+     *                  развитой системой профориентации и
+     *                  «университетскими субботами»",
      *   "features": [
      *         "В лицее нет традиционных классов: ученики делятся на группы в
      *          зависимости от выбранного ими учебного плана",
@@ -158,7 +164,7 @@ class SchoolAdminController extends Controller {
 
     /**
      * remove school
-     * @api {delete} /admin/api/school/:schoolId
+     * @api {delete} /api/admin/school/:schoolId
      * @apiVersion 0.1.0
      * @apiName removeSchool
      * @apiGroup SchoolAdmin
@@ -177,7 +183,7 @@ class SchoolAdminController extends Controller {
 
     /**
      * get school info
-     * @api {get} /admin/api/school
+     * @api {get} /api/admin/school
      * @apiVersion 0.1.0
      * @apiName getAllSchool
      * @apiGroup SchoolAdmin
@@ -235,6 +241,7 @@ class SchoolAdminController extends Controller {
     async actionGet(actionContext: any, id: number) {
         return schoolAdminService.getById(id);
     }
+
 
     /**
      * @api {get} /api/admin/schooltype
