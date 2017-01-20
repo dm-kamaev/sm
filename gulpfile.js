@@ -9,7 +9,6 @@ const util = require('gulp-util');
 const babel = require('gulp-babel');
 const apidoc = require('gulp-apidoc');
 const exec = require('child_process').exec;
-const eslint = require('gulp-eslint');
 const minimist = require('minimist');
 
 const migrationWrapper = require('./app/components/migrationWrapper');
@@ -178,35 +177,17 @@ gulp.task('localConfig', function() {
     });
 });
 
-gulp.task('backendLint', function() {
-    return gulp.src([
-        'api/**/*.js',
-        'app/modules/**/*.js',
-        'app/components/**/*.js',
-        'app/middleware/**/*.js',
-        '!app/modules/doc/**',
-        'gulp/*.js',
-        './*.js'])
-        .pipe(eslint({
-            config: path.join(__dirname, 'node_modules/nodules/.eslintrc')
-        }))
-        .pipe(eslint.format())
-        .pipe(eslint.results(result => {
-            if (result.errorCount) {
-                throw new Error('Error count: ' + result.errorCount +
-                    '. Linter check failed!');
-            }
-        }));
-});
+gulp.task('backendLint', gulpTasks.backendLint);
 
 const tasks = function(bool) {
-    return bool ?
-        ['createTimestamp', 'soy', 'compile', 'tsCompile', 'svgSprite',
-            'sprite', 'images', 'fonts', 'styles', 'copySchools', 'copyCourses',
-            'localConfig'] :
-        ['watch', 'soy', 'scripts', 'tsCompile', 'svgSprite', 'sprite',
-            'images', 'fonts', 'styles', 'copySchools', 'copyCourses',
-            'localConfig', 'backendLint'];
+    return bool ? [
+        'createTimestamp', 'soy', 'compile', 'tsCompile', 'svgSprite', 'sprite',
+        'images', 'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig'
+    ] : [
+        'watch', 'soy', 'scripts', 'tsCompile', 'svgSprite', 'sprite', 'images',
+        'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig',
+        'backendLint'
+    ];
 };
 
 gulp.task('build', tasks(true));

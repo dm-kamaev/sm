@@ -47,3 +47,5 @@ migrate_stdout
 typings
 
 #builded typescript files ignore
+
+gulp/taskBackendLint.js

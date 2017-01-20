@@ -49,7 +49,6 @@
     "gulp-babel": "^5.2.1",
     "gulp-concat": "^2.6.0",
     "gulp-cssnano": "^2.0.0",
-    "gulp-eslint": "^2.0.0",
     "gulp-filter": "^3.0.1",
     "gulp-foreach": "^0.1.0",
     "gulp-gjslint": "0.1.5",
@@ -90,7 +89,6 @@
     "tar.gz": "^1.0.2",
     "tipograph": "^0.3.3",
     "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
-    "typescript": "~2.0.3",
     "uid-safe": "^2.1.0",
     "xlsx-to-json": "^0.2.4"
   },
@@ -102,6 +100,7 @@
     "multer": "^1.2.1",
     "q": "^1.4.1",
     "reset.css": "^2.0.2",
+    "typescript": "^2.1.5",
     "typings": "~1.3.3"
   }
 }
