@@ -56,9 +56,10 @@ class GeoCoder {
                 logger.info(`${++i} from ${len}`);
                 logger.info('+++++++++++++++++++');
             } catch (error) {
-                logger.info(`AddressId="${address.id}";`, `AddressName="${address.name}"`);
-                logger.info('Found metros= '+JSON.stringify(foundMetros, null, 2));
+                logger.critical('Error:');
                 logger.critical(error);
+                logger.critical(`AddressId="${address.id}";`, `AddressName="${address.name}"`);
+                logger.critical('Found metros= '+JSON.stringify(foundMetros, null, 2));
             }
         });
     }
@@ -222,11 +223,11 @@ function getMetros_(coords, searchRadius) {
         setTimeout(function() {
             async(() => {
                 try {
-                  resolve(geoTools.getMetros(coords, searchRadius));
+                    resolve(geoTools.getMetros(coords, searchRadius));
                 } catch (error) {
-                  reject(error);
+                    reject(error);
                 }
             })();
-        }, 1000);
+        }, 400);
     });
 }
