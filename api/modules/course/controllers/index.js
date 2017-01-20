@@ -15,6 +15,10 @@ const courseController = require('./courseController'),
     checkToken = require('../../../../app/middleware/checkToken'),
     fileHandler = require('../../../../app/middleware/fileHandler');
 
+/*const BrandActionChecker =
+    require('../../../../app/middleware/ActionChecker/BrandActionChecker');
+const checkAction = BrandActionChecker.middleware;*/
+
 router.get('/course/search', courseController.search);
 router.get('/course/search/map', courseController.searchMap);
 router.get('/course/search/suggest', courseController.suggestSearch);
@@ -40,8 +44,19 @@ let initCrudRouting = function(route, controller) {
     router.post(`${route}`, checkToken, fileStorage, controller.create);
     router.get(`${route}`, controller.list);
     router.get(`${route}/:id`, controller.get);
-    router.put(`${route}/:id`, checkToken, fileStorage, controller.update);
-    router.delete(`${route}/:id`, checkToken, controller.delete);
+    router.put(
+        `${route}/:id`,
+        checkToken,
+        /* checkAction, */
+        fileStorage,
+        controller.update
+    );
+    router.delete(
+        `${route}/:id`,
+        checkToken,
+        /* checkAction, */
+        controller.delete
+    );
 };
 
 initCrudRouting('/coursebrand', brandController);

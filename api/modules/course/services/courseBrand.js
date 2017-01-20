@@ -3,8 +3,10 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-const squel = require('squel').useFlavour('postgres'),
+const Squel = require('squel'),
     lodash = require('lodash');
+
+const squel = Squel.useFlavour('postgres');
 
 const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,

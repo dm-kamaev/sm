@@ -6,6 +6,10 @@ const schoolController = require('./schoolController');
 const csrf = require('../../../../app/middleware/csrf');
 const checkToken = require('../../../../app/middleware/checkToken');
 
+const SchoolActionChecker =
+    require('../../../../app/middleware/ActionChecker/SchoolActionChecker');
+/* const checkAction = SchoolActionChecker.middleware; */
+
 router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);
 router.get('/school/search/map', schoolController.searchMap);
@@ -35,9 +39,13 @@ router.get('/school/:id', schoolController.view);
 router.post('/school/createschool', checkToken, schoolController.create);
 router.post('/school/:id/comment', csrf, schoolController.createComment);
 
-router.put('/school/:id', checkToken, schoolController.update);
+router.put(
+    '/school/:id', checkToken, /* checkAction, */ schoolController.update
+);
 
-router.delete('/school/:id', checkToken, schoolController.delete);
+router.delete(
+    '/school/:id', checkToken, /* checkAction, */ schoolController.delete
+);
 
 
 module.exports = router;
