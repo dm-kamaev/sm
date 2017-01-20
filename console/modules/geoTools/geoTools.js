@@ -51,10 +51,10 @@ class GeoTools {
 
     /**
      * getPointsSouthEastAndNorthWest
-     * @param  {Object[]} coords [ 37.587614, 55.753083 ]
+     * @param  {Object[]} coords [37.587614, 55.753083]
      * @param  {Number}   radius 3
      * @return {Object}
-     * { southWest: { latitude, longitude }, northEast: { latitude, longitude } }
+     * {southWest: {latitude, longitude}, northEast: {latitude, longitude}}
      */
     getPointsSouthEastAndNorthWest(coords, radius) {
         const latitude = coords[1], longitude = coords[0];
@@ -69,7 +69,7 @@ class GeoTools {
                 longitude: southWest.longitude(),
             },
             northEast: {
-                latitude:  northEast.latitude(),
+                latitude: northEast.latitude(),
                 longitude: northEast.longitude(),
             },
         };
@@ -122,15 +122,16 @@ class GeoTools {
     getMetros(coords, searchRadius) {
         coords = toDigitArrayCoord_(coords);
         coords = checkSortOrderCoordinate_(coords);
-        const square = this.getPointsSouthEastAndNorthWest(coords, searchRadius);
+        const square =
+            this.getPointsSouthEastAndNorthWest(coords, searchRadius);
 
         const southWest = square.southWest, northEast = square.northEast;
 
         const geocode = coords.join(',');
         const bbox =
-            southWest.longitude+','+southWest.latitude+
-            '~'+
-            northEast.longitude+','+northEast.latitude;
+            southWest.longitude + ',' + southWest.latitude +
+            '~' +
+            northEast.longitude + ',' + northEast.latitude;
 
         const responceGeo = await(axios.get(GEOCODER, {
             params: {
@@ -178,7 +179,7 @@ class GeoTools {
         coordinate1 = new GeoPoint(latitude1, longitude1);
         coordinate2 = new GeoPoint(latitude2, longitude2);
 
-        //kilometers
+        // kilometers
         return coordinate1.distanceTo(coordinate2, true);
     }
 
@@ -235,17 +236,16 @@ module.exports = new GeoTools();
  * @param  {Object} coord { latitude, longitude }
  * @return {Object}       { latitude, longitude }
  */
-function toDigitObjectCoord_ (coord) {
+function toDigitObjectCoord_(coord) {
     let latitude = parseFloat(coord.latitude);
     let longitude = parseFloat(coord.longitude);
 
     if (isNaN(latitude) || isNaN(longitude)) {
         let error =
-        'Original coord: ' + JSON.stringify(coord) + '\n'+
+        'Original coord: ' + JSON.stringify(coord) + '\n' +
         'After parseFloat: ' + JSON.stringify({ latitude, longitude });
         logger.critical(error);
         throw new Error(error).stack;
-
     }
 
     return {
@@ -258,12 +258,12 @@ function toDigitObjectCoord_ (coord) {
 /**
  * checkOrderCoordinate_ check sort order coordinates in object
  * !!!ONLY MOSCOW REGION!!!
- * @param  {Object}
- * { latitude: 55.67864138954658, longitude: 37.439709605830046 }
+ * @param  {Object} coord
+ * {latitude: 55.67864138954658, longitude: 37.439709605830046}
  * @return {Object}
- * { latitude: 37.439709605830046, longitude: 55.67864138954658 }
+ * {latitude: 37.439709605830046, longitude: 55.67864138954658}
  */
-function checkOrderCoordinate_ (coord) {
+function checkOrderCoordinate_(coord) {
     if (coord.latitude < coord.longitude) {
         return {
             latitude: coord.longitude,
@@ -277,12 +277,12 @@ function checkOrderCoordinate_ (coord) {
 /**
  * checkSortOrderCoordinate_ check sort order coordinates in array
  * !!!ONLY MOSCOW REGION!!!
- * @param  {Object[]}
- * [ 55.67864138954658, 37.439709605830046 ]
+ * @param  {Object[]} coord
+ * [55.67864138954658, 37.439709605830046]
  * @return {Object[]}
- * [ 37.439709605830046, 55.67864138954658 ]
+ * [37.439709605830046, 55.67864138954658]
  */
-function checkSortOrderCoordinate_ (coord) {
+function checkSortOrderCoordinate_(coord) {
     let coordinates = Object.assign([], coord);
     if (coordinates[0] > coordinates[1]) {
         coordinates.reverse();
@@ -296,13 +296,13 @@ function checkSortOrderCoordinate_ (coord) {
  * @param  {Object} coord [ latitude, longitude ]
  * @return {Object}       [ latitude, longitude ]
  */
-function toDigitArrayCoord_ (coord) {
+function toDigitArrayCoord_(coord) {
     let latitude = parseFloat(coord[0]);
     let longitude = parseFloat(coord[1]);
 
     if (isNaN(latitude) || isNaN(longitude)) {
         let error =
-        'Original coord: ' + JSON.stringify(coord) + '\n'+
+        'Original coord: ' + JSON.stringify(coord) + '\n' +
         'After parseFloat: ' + JSON.stringify([ latitude, longitude ]);
         logger.critical(error);
         throw new Error(error).stack;

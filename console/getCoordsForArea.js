@@ -70,7 +70,7 @@ class GetCoordsForArea {
             areasCoords.push({
                 id: area.id,
                 name: area.name,
-                center_coords: arrayToStr_(point)
+                'center_coords': arrayToStr_(point)
             });
         });
     }

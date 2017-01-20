@@ -12,7 +12,6 @@ const geoTools = require('./modules/geoTools/geoTools.js');
 const logger = require('../app/components/logger/logger.js').getLogger('app');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
-const util = require('util');
 
 // turn off logging for sequelize
 AdressMetro.sequelize.options.logging = false;
@@ -49,8 +48,12 @@ class GeoCoder {
                 foundMetros = await(
                     getMetros_(address.coords, this.searchRadius)
                 );
-                logger.info(`AddressId="${address.id}";`, `AddressName="${address.name}"`);
-                logger.info('Found metros= '+JSON.stringify(foundMetros, null, 2));
+                logger.info(
+                    `AddressId="${address.id}";`,
+                    `AddressName="${address.name}"`
+                );
+                logger.info('Found metros= ' +
+                    JSON.stringify(foundMetros, null, 2));
                 this.addedMetroStation(foundMetros);
                 this.addedMetrosForAdress(address, foundMetros);
                 logger.info(`${++i} from ${len}`);
@@ -224,4 +227,3 @@ function getMetros_(coords, searchRadius) {
         }, 1000);
     });
 }
-

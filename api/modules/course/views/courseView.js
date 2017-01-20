@@ -367,29 +367,28 @@ view.getAddresses = function(courseOptions) {
  * }}
  */
 view.getMapItem = function(course) {
-    return course.addressId ?
-        {
-            addressId: course.addressId,
-            coordinates: geoView.coordinatesDefault(
-                course.addressCoords),
-            score: course.totalScore,
-            title: {
-                id: course.brandId,
-                text: course.brand,
-                url: null
-            },
-            header: {
-                title: course.brand
-            },
-            content: {
-                title: 'Курсы',
-                items: [this.mapCourse(course)]
-            },
-            footer: {
-                title: course.addressName
-            }
-        } :
-        null;
+    return course.addressId ? {
+        addressId: course.addressId,
+        coordinates: geoView.coordinatesDefault(
+            course.addressCoords),
+        score: course.totalScore,
+        title: {
+            id: course.brandId,
+            text: course.brand,
+            url: null
+        },
+        header: {
+            title: course.brand
+        },
+        content: {
+            title: 'Курсы',
+            items: [this.mapCourse(course)]
+        },
+        footer: {
+            title: course.addressName
+        }
+    } :
+    null;
 };
 
 

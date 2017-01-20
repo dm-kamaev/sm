@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var commander = require('commander');
 var async = require('asyncawait/async');
@@ -6,14 +6,15 @@ var await = require('asyncawait/await');
 var imap = require('imap-simple');
 var http = require('http');
 var querystring = require('querystring');
-var mimelib = require("mimelib");
 
-var services = require('../app/components/services').all;
 var config = require('../app/config').config;
 
 const TOKEN = 'a71b-2d1-123f';
 
 class ParseMail {
+    /**
+     * @constructor
+     */
     constructor() {
         /**
          * Imap connector instance
@@ -26,7 +27,6 @@ class ParseMail {
      * Main function
      */
     process() {
-
         var mailConfig = {
             imap: {
                 user: config.deleteMailbox.email,
@@ -43,7 +43,7 @@ class ParseMail {
             var letters = await(this.getLetters_());
             var processedLettersIds = this.processLetters_(letters);
             this.deleteLetters_(processedLettersIds);
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         } finally {
             this.imapConnection_.end();
@@ -79,6 +79,8 @@ class ParseMail {
     /**
      * Get letter body
      * @private
+     * @param  {Object} letter
+     * @return {string}
      */
     getLetterBody_(letter) {
         /** Get letter parts from letter header **/
@@ -93,8 +95,9 @@ class ParseMail {
     }
 
     /**
-     * @param {array<object>} letters
      * @private
+     * @param  {array<object>} letters
+     * @return {Array<Object>}
      */
     processLetters_(letters) {
         var processedLetters = [];
@@ -117,7 +120,6 @@ class ParseMail {
     }
 
     /**
-     * @param {object} connection
      * @param {array<number>} letterIds - letter's ids
      * @private
      */

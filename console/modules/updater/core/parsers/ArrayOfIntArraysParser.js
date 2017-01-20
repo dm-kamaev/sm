@@ -3,7 +3,7 @@
 const BaseListParser = require('./BaseListParser');
 
 class ArrayOfIntArraysParser extends BaseListParser {
-    
+
     /**
      * @param  {string}         pattern
      *
