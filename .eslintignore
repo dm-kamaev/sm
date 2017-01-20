@@ -15,3 +15,8 @@ api/modules/user/views/adminUserView.js
 api/modules/school/models/school.js
 
 api/modules/course/models/courseBrand.js
+
+app/middleware/ActionChecker/ActionChecker.js
+app/middleware/ActionChecker/BrandActionChecker.js
+app/middleware/ActionChecker/SchoolActionChecker.js
+app/middleware/ActionChecker/SuperUserActionChecker.js
