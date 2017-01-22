@@ -192,11 +192,18 @@
 
         {call .renderChild}
             {param params: [
-                'type': 'phone-input',
+                'type': 'input',
                 'renderParams': [
+                    'data': [
+                        'placeholder': 'Телефон',
+                        'maxLength': 11,
+                        'name': 'phone',
+                        'type': 'text'
+                    ],
                     'config': [
                         'theme': 'light',
-                        'customClasses': [$customClasses]
+                        'customClasses': [$customClasses],
+                        'validations': ['digits', 'notEmpty']
                     ]
                 ]
             ]/}

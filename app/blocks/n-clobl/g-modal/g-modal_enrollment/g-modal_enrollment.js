@@ -37,7 +37,7 @@ goog.scope(function() {
 
         /**
          * Instance input phone
-         * @type {sm.gInput.InputPhone}
+         * @type {sm.gInput.InputSthendal}
          * @private
          */
         this.phoneField_ = null;
@@ -383,7 +383,7 @@ goog.scope(function() {
         );
 
         this.phoneField_ = this.decorateChild(
-            'phone-input',
+            'input',
             this.getView().getDom().phoneField
         );
 
