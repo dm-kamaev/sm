@@ -34,7 +34,7 @@ class RatingParser {
      */
     makeRequest_() {
         var promise = new Promise((resolve, reject) => {
-            request(this.path_, function (error, response, body) {
+            request(this.path_, function(error, response, body) {
                 if (!error && response.statusCode == 200) {
                     resolve(body);
                 } else {
@@ -79,10 +79,10 @@ class RatingParser {
                 rankDogm: rating.trim(),
                 name: name
                     .trim()
-                    .replace(/\s+/g,' '),
+                    .replace(/\s+/g, ' '),
                 site: site && site
-                    .replace(/http:\/\//,'')
-                    .replace(/\//,'')
+                    .replace(/http:\/\//, '')
+                    .replace(/\//, '')
             };
         } else {
             return null;

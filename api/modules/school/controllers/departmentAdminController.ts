@@ -42,8 +42,8 @@ class DepartmentAdminController extends Controller {
      *
      * @apiError (404) SchoolNotFound School with schoolId not found.
      */
-    async actionList(actionContext: any, schoolId: number) {
-        let departments = await departmentService.getBySchoolId(schoolId);
+    public async actionList(actionContext: any, schoolId: number) {
+        const departments = await departmentService.getBySchoolId(schoolId);
         return departmentView.adminRenderList(departments);
     }
 
@@ -65,10 +65,10 @@ class DepartmentAdminController extends Controller {
      *
      * @apiError (404) DepartmentNotFound Department with given Id not found.
      */
-    async actionGet(
+    public async actionGet(
         actionContext: any, schoolId: number, id: number
     ) {
-        let department = await departmentService.getById(id);
+        const department = await departmentService.getById(id);
         return departmentView.adminRender(department);
     }
 
@@ -91,8 +91,8 @@ class DepartmentAdminController extends Controller {
      * @apiError (404) SchoolNotFound      School with schoolId not found.
      * @apiError (422) AddressDoesNotExist Specified address does not exist.
      */
-    async actionCreate(actionContext: any, schoolId: number) {
-        let body = actionContext.request.body;
+    public async actionCreate(actionContext: any, schoolId: number) {
+        const body = actionContext.request.body;
         actionContext.status = 201;
         return await departmentService.addDepartment(
             schoolId,
@@ -121,10 +121,10 @@ class DepartmentAdminController extends Controller {
      * @apiError (404) DepartmentNotFound Department with given Id not found.
      * @apiError (422) AddressDoesNotExist Specified address does not exist.
      */
-    async actionUpdate(
+    public async actionUpdate(
         actionContext: any, schoolId: number, id: number
     ) {
-        let body = actionContext.request.body;
+        const body = actionContext.request.body;
         await departmentService.update(
             id,
             body, {
@@ -150,7 +150,7 @@ class DepartmentAdminController extends Controller {
      *
      * @apiError (404) DepartmentNotFound Department with given Id not found.
      */
-    async actionDelete(
+    public async actionDelete(
         actionContext: any, schoolId: number, id: number
     ) {
         await departmentService.delete(id);

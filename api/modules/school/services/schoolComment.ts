@@ -7,24 +7,24 @@ const models = require('../../../../app/components/models').all;
 const userServices = require('../../user/services/user.js');
 const socialTypes = require('../enums/socialType.js');
 
-let service: any = {
+const service: any = {
     name: 'schoolComment'
 };
 
 interface IgetCommentWithUser {
-    text: string, //"text": "Образование\nНе все едино, но очень многие.\n
-    author: string, // "author": "Вася",
-    socialId: string, // "socialId": "32423424",
-    socialType: string, // "socialType": "vk",
-    category: string, // "category": "Scholar",
-    score: number,   // "score": 4.75,
-    updatedAt: string // "updatedAt": "2016-11-21T09:50:32.184Z"
+    text: string; //"text": "Образование\nНе все едино, но очень многие.\n
+    author: string; // "author": "Вася",
+    socialId: string; // "socialId": "32423424",
+    socialType: string; // "socialType": "vk",
+    category: string; // "category": "Scholar",
+    score: number;   // "score": 4.75,
+    updatedAt: string; // "updatedAt": "2016-11-21T09:50:32.184Z"
 }
 
 // get comment with user data and rating (score)
 service.getCommentWithUser = async function(
-    schoolId:number, commentId: number):Promise<IgetCommentWithUser> | null {
-    let res = await models.School.findOne({
+    schoolId: number, commentId: number): Promise<IgetCommentWithUser> | null {
+    const res = await models.School.findOne({
         attributes: ['commentGroupId'],
         where: {
             id: schoolId
@@ -58,14 +58,14 @@ service.getCommentWithUser = async function(
         return null;
     }
 
-    let comment = res.commentGroup.comments[0];
+    const comment = res.commentGroup.comments[0];
     return buildCommentWithUserData_([comment])[0];
 };
 
 
 service.getAllCommentsWithUser =
-    async function(schoolId:number):Promise<IgetCommentWithUser[]> | null  {
-    let res = await models.School.findOne({
+    async function(schoolId: number): Promise<IgetCommentWithUser[]> | null  {
+    const res = await models.School.findOne({
         attributes: ['commentGroupId'],
         where: {
             id: schoolId
@@ -96,7 +96,7 @@ service.getAllCommentsWithUser =
         return null;
     }
 
-    let comments = res.commentGroup.comments;
+    const comments = res.commentGroup.comments;
     return buildCommentWithUserData_(comments);
 };
 
@@ -115,12 +115,12 @@ service.getAllCommentsWithUser =
         "isNoticeSend": false
     }
  */
-service.textEdit= async function(
-    schoolId:number, commentId:number, text:string):Promise<any> {
+service.textEdit = async function(
+    schoolId: number, commentId: number, text: string): Promise<any> {
     let res: any = {};
-    let searchComment: any = await searchComment_(schoolId, commentId);
+    const searchComment: any = await searchComment_(schoolId, commentId);
     if (searchComment) {
-        let comment = await models.Comment.update({
+        const comment = await models.Comment.update({
             text: text,
         }, {
             where: {
@@ -135,9 +135,9 @@ service.textEdit= async function(
 
 
 service.removeComment = async function(
-    schoolId:number, commentId: number):Promise<number> {
+    schoolId: number, commentId: number): Promise<number> {
     let res: number = 0;
-    let searchComment = await searchComment_(schoolId, commentId);
+    const searchComment = await searchComment_(schoolId, commentId);
     if (searchComment) {
         res = await(models.Comment.destroy({
             where: {
@@ -153,8 +153,10 @@ service.removeComment = async function(
  * search comment
  * @return {Object} { id: 3147 }
  */
-async function searchComment_(schoolId:number, commentId:number):Promise<any> {
-    let res = await models.School.findOne({
+async function searchComment_(
+    schoolId: number, commentId: number
+): Promise<any> {
+    const res = await models.School.findOne({
         attributes: ['commentGroupId'],
         where: {
             id: schoolId
@@ -178,14 +180,14 @@ async function searchComment_(schoolId:number, commentId:number):Promise<any> {
     return res.commentGroup.comments[0];
 }
 
-
-function buildCommentWithUserData_(comments):Promise<IgetCommentWithUser[]> {
+function buildCommentWithUserData_(comments): Promise<IgetCommentWithUser[]> {
     return comments.map(comment => {
-        let userData = comment.userData || {};
-        let userId = userData.userId,
-            socialId, socialType;
+        const userData = comment.userData || {};
+        const userId = userData.userId;
+        let socialId,
+            socialType;
         if (userId) {
-            let user = userServices.getUserById(userId);
+            const user = userServices.getUserById(userId);
             if (user.vkId) {
                 socialId = user.vkId;
                 socialType = socialTypes.VKONTAKTE;

@@ -1,9 +1,9 @@
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var sequelizeInclude = require('../../../components/sequelizeInclude');
-var models = require('../../../../app/components/models').all;
-var services = require('../../../../app/components/services').all;
-var logger = require('../../../../app/components/logger/logger')
+const async = require('asyncawait/async');
+const await = require('asyncawait/await');
+const sequelizeInclude = require('../../../components/sequelizeInclude');
+const models = require('../../../../app/components/models').all;
+const services = require('../../../../app/components/services').all;
+const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
 const entityTypes = require('../../entity/enums/entityType');
@@ -17,7 +17,7 @@ import AddressIsNotUnique from './exceptions/AddressIsNotUnique';
 const SEARCH_RADIUS = 3; // killometrs, search radius for metro
 
 class AddressService {
-    readonly name: string = 'address';
+    public readonly name: string = 'address';
 
     /**
      * Added new address
@@ -29,8 +29,8 @@ class AddressService {
      * }} data
      * @return {Address}
      */
-    async addAddress(entityId, entityType, data) {
-        let addressBD = await services.address.getAddress({
+    public async addAddress(entityId, entityType, data) {
+        const addressBD = await services.address.getAddress({
             name: data.name,
             entityType: entityType
         });
@@ -43,8 +43,8 @@ class AddressService {
                 'is already binded to ' + entityType +
                 ' with id:' + addressBD.school_id
             );
-            if (entityType == entityTypes.SCHOOL &&
-                entityId != addressBD.entityId) {
+            if (entityType === entityTypes.SCHOOL &&
+                entityId !== addressBD.entityId) {
                 throw new AddressIsNotUnique(addressBD.name);
             }
             address = addressBD;
@@ -59,7 +59,7 @@ class AddressService {
             }
 
             if (!data.areaId) {
-                let areas = await services.area.create({
+                const areas = await services.area.create({
                     name: await geoTools.getArea(data.coords)
                         // area name from coords
                 });
@@ -68,7 +68,7 @@ class AddressService {
 
             address = await models.Address.create(data);
 
-            let metros = await geoTools.getMetros(data.coords, SEARCH_RADIUS);
+            const metros = await geoTools.getMetros(data.coords, SEARCH_RADIUS);
 
             await this.setMetro(address, metros);
             await this.setDistance(address);
@@ -86,7 +86,7 @@ class AddressService {
      * }} data
      */
     public async update(addressId, data) {
-        var address = await services.address.getAddress({id: addressId});
+        const address = await services.address.getAddress({id: addressId});
         return await address.update(data);
     }
 
@@ -112,7 +112,7 @@ class AddressService {
     }
 
     public async getAddress(params) {
-        var includeParams = {
+        const includeParams = {
             departments: true
         };
         return await models.Address.findOne({
@@ -147,7 +147,7 @@ class AddressService {
      */
     public getMetro(address) {
         if (Array.isArray(address)) {
-            var metro = {};
+            const metro = {};
             address.forEach(adr => {
                 adr.metroStations.forEach(m => {
                     metro[m.id] = m.name.replace('метро ', '');
@@ -166,7 +166,7 @@ class AddressService {
 
     public async setMetro(address, metroArr) {
         metroArr.forEach(async metro => {
-            var ourMetro = await models.Metro.findOne({
+            const ourMetro = await models.Metro.findOne({
                 where: {
                     name: metro.name
                 }
@@ -189,12 +189,12 @@ class AddressService {
      * @param {String} address
      */
     public async setArea(area, address) {
-        var areaInstance = await models.Area.findOne({
+        const areaInstance = await models.Area.findOne({
             where: {
                 name: area
             }
         });
-        var addressInstance = await models.Address.findAll({
+        const addressInstance = await models.Address.findAll({
             where: {
                 name: address
             }
@@ -218,7 +218,7 @@ class AddressService {
         entityType,
         params
     ) {
-        var addressParams = {
+        const addressParams = {
             include: [{
                 model: models.Department,
                 as: 'departments'
@@ -315,14 +315,14 @@ class AddressService {
      * @return {Object[]}  [ { id, address_id, metro_id, } ]
      */
     public async setDistance(address) {
-        let addressMetros = await models.AddressMetro.findAll({
+        const addressMetros = await models.AddressMetro.findAll({
             where: {
                 addressId: address.id,
             }
         });
 
         return addressMetros.map(async addressMetro => {
-            let metroCoords = await services.metro.getCoords(
+            const metroCoords = await services.metro.getCoords(
                 addressMetro.metroId
             );
             let distance = geoTools.distanceKm({
@@ -350,19 +350,22 @@ class AddressService {
     }
 
     public async updateIsSchool(addressId: number): Promise<void> {
-        let address = await AddressModel.findOne({
+        const address = await AddressModel.findOne({
             where: {id: addressId}
         });
-        let addressDepartments = await address.getDepartments();
+        const addressDepartments = await address.getDepartments();
 
-        let overallEducationalGrades: Array<number> = addressDepartments.reduce(
-            (previous, current) => previous.concat(current.educationalGrades),
-            []
-        );
+        const overallEducationalGrades: Array<number> =
+            addressDepartments.reduce(
+                (previous, current) => previous.concat(
+                    current.educationalGrades
+                ),
+                []
+            );
 
         address.update({
             isSchool: addressDepartments.length ?
-                overallEducationalGrades.some(grade => grade != 0) :
+                overallEducationalGrades.some(grade => grade !== 0) :
                 true
         });
     }

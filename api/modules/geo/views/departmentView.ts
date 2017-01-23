@@ -44,8 +44,8 @@ class DepartmentView {
      * @return {array<object>}
      */
     public classes(educationalGrades) {
-        var stage,
-            elementary = educationalGrades.some(
+        let stage;
+        const elementary = educationalGrades.some(
                 grade => grade >= 1 && grade <= 4
             ),
             middle = educationalGrades.some(grade => grade >= 5 && grade <= 9),

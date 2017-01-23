@@ -82,8 +82,8 @@ class SchoolAdminController extends Controller {
      *}
      *
      */
-    async actionCreate(ctx) {
-        let result, schoolData = ctx.request.body;
+    public async actionCreate(ctx) {
+        const schoolData = ctx.request.body;
         return await schoolAdminService.create(schoolData);
     }
 
@@ -153,8 +153,8 @@ class SchoolAdminController extends Controller {
      * }
      *
      */
-    async actionUpdate (ctx, schoolId: string) {
-        let schoolData = ctx.request.body;
+    public async actionUpdate (ctx, schoolId: string) {
+        const schoolData = ctx.request.body;
         return await schoolAdminService.update(
             parseInt(schoolId, 10),
             schoolData
@@ -174,7 +174,7 @@ class SchoolAdminController extends Controller {
      * @apiSuccessExample {Number} Example response:
      * 1
      */
-    async actionDelete(ctx, schoolId: string) {
+    public async actionDelete(ctx, schoolId: string) {
         return await schoolAdminService.remove(
             parseInt(schoolId, 10)
         );
@@ -210,7 +210,7 @@ class SchoolAdminController extends Controller {
      * }]
      *
      */
-    async actionGetAllSchool() {
+    public async actionGetAllSchool() {
         return await schoolAdminService.getAllSchool();
     }
 
@@ -276,7 +276,7 @@ class SchoolAdminController extends Controller {
      *
      *}
      */
-    async actionGet(actionContext: any, id: number) {
+    public async actionGet(actionContext: any, id: number) {
         return schoolAdminService.getById(id);
     }
 
@@ -300,7 +300,7 @@ class SchoolAdminController extends Controller {
      *       "Коррекционная школа-интернат"
      *   ]
      */
-    actionGetSchoolTypes(actionContext: any) {
+    public actionGetSchoolTypes(actionContext: any) {
         return schoolAdminService.getSchoolTypes();
     }
 }

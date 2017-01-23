@@ -4,7 +4,7 @@ const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
 export default class DepartmentNotFound extends Exception {
-    readonly name: string;
+    public readonly name: string;
 
     constructor(departmentId: number) {
         super(`Department with id = ${departmentId} not found`);

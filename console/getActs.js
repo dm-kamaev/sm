@@ -4,7 +4,7 @@ var await = require('asyncawait/await');
 var http = require('http');
 var services = require.main.require('./app/components/services').all;
 const fs = require('fs');
-var mkdirp = require("mkdirp");
+var mkdirp = require('mkdirp');
 
 const HOST = 'api.data.mos.ru';
 const REPORT_PATH = './console/reports/';
@@ -12,7 +12,7 @@ const MODULES = './console/modules/activities/';
 
 var insertActs = async(function() {
     await(services.school.deleteActivities());
-    console.time("Matching");
+    console.time('Matching');
 
     mkdirp(REPORT_PATH, function(err) {
         if (err) {
@@ -34,10 +34,14 @@ var insertActs = async(function() {
     console.log('Our schools matched: ' + Object.keys(foundSchools).length);
 
     ourNotFoundSchools = notFoundSchools(schools, foundSchools);
-    fs.writeFileSync(REPORT_PATH + 'notFoundOurSchools.json', JSON.stringify(ourNotFoundSchools));
-    console.log('Schools\' count haven\'t been found: ' + ourNotFoundSchools.length);
+    fs.writeFileSync(
+        REPORT_PATH + 'notFoundOurSchools.json',
+        JSON.stringify(ourNotFoundSchools)
+    );
+    console.log('Schools\' count haven\'t been found: ' +
+        ourNotFoundSchools.length);
 
-    console.timeEnd("Matching");
+    console.timeEnd('Matching');
 });
 
 var openActivitiesFile = function(fileName) {
@@ -47,12 +51,11 @@ var openActivitiesFile = function(fileName) {
         fs.statSync(filePath).isFile();
         console.log('Loading activities from ' + filePath);
         acts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    } catch(err) {
+    } catch (err) {
         console.log(filePath + ' not found, downloading activities...');
         acts = downloadActivities(fileName);
-    } finally {
-        return acts;
     }
+    return acts;
 };
 
 var createParsedSchools = function(schools) {
@@ -63,7 +66,9 @@ var createParsedSchools = function(schools) {
             .match(/\d+/g),
             schoolNumber = parsedSchoolNumber ? parsedSchoolNumber[0] : NaN,
             parsedSchoolName = schools[i].fullName.match(/(?!.*[«]).+(?=[»])/g),
-            schoolName = parsedSchoolName ? parsedSchoolName[0].toLowerCase() : null;
+            schoolName = parsedSchoolName ?
+                parsedSchoolName[0].toLowerCase() :
+                null;
         parsedSchools.push({
             'number': schoolNumber,
             'name': schoolName,
@@ -106,9 +111,13 @@ var fillActsDB = function(schools, activities) {
         activity = activities[i];
         var ourSetSchools = {};
         if (!isStrangeActivity(activity)) {
-            ourSetSchools = findActivityMatches(schools, activities[i], extraMatches);
+            ourSetSchools = findActivityMatches(
+                schools,
+                activities[i],
+                extraMatches
+            );
         }
-    ourSchools = mergeObjects(ourSchools, ourSetSchools);
+        ourSchools = mergeObjects(ourSchools, ourSetSchools);
         console.log('Act\'s processing: ' + i);
         console.log('Our schools found: ' + Object.keys(ourSchools).length);
     }
@@ -146,12 +155,12 @@ var notFoundSchools = function(allSchools, findedSchools) {
 var request = function(options) {
     var request = new Promise(function(resolve) {
         var rqq = http.request(options);
-        rqq.on('response', function (response) {
+        rqq.on('response', function(response) {
             var data = '';
-            response.on('data', function (chunk) {
+            response.on('data', function(chunk) {
                 data += chunk;
             });
-            response.on('end', function () {
+            response.on('end', function() {
                 resolve(JSON.parse(data));
             });
         }).end();
@@ -219,17 +228,21 @@ var getExtraMatches = function(fileName) {
         fs.statSync(MODULES + fileName).isFile();
         console.log('Loading extra matches from ' + MODULES + fileName);
         extraActs = JSON.parse(fs.readFileSync(MODULES + fileName, 'utf8'));
-    } catch(err) {
+    } catch (err) {
         console.log(MODULES + fileName + ' not found');
-    } finally {
-        return extraActs;
     }
+    return extraActs;
 };
 
-var mergeObjects = function (obj1,obj2) {
+var mergeObjects = function(obj1, obj2) {
     var obj3 = {};
-    for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
-    for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+    var attrname;
+    for (attrname in obj1) {
+        obj3[attrname] = obj1[attrname];
+    }
+    for (attrname in obj2) {
+        obj3[attrname] = obj2[attrname];
+    }
     return obj3;
 };
 
@@ -249,19 +262,19 @@ var findMatch = function(school, activity) {
 
 var addActivity = function(activity, school) {
     services.school.createActivity(
-    {
-        schoolId: school.id,
-        direction: activity.info.napravlen,
-        profile: activity.info.profil,
-        type: activity.info.tipe_zanyat,
-        name: activity.info.name_grupp
-    });
+        {
+            schoolId: school.id,
+            direction: activity.info.napravlen,
+            profile: activity.info.profil,
+            type: activity.info.tipe_zanyat,
+            name: activity.info.name_grupp
+        });
 };
 
 var getAllActivities = async(function() {
     var actCount = await(countActs()),
         activities = [];
-    for(var top = 250, skip = 0; skip <= actCount; skip += 250) {
+    for (var top = 250, skip = 0; skip <= actCount; skip += 250) {
         console.log('Current set: ' + skip);
         var actsSet = await(getActivitiesSet({
             top: top,
@@ -287,8 +300,7 @@ var activitiesCorrection = async(function(activities, skip) {
 
         if (i == 5) {
             delete activities[index];
-        }
-        else {
+        } else {
             activities[index] = activity;
         }
     });

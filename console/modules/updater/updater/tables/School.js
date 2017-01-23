@@ -1,23 +1,13 @@
 'use strict';
 
-const async = require('asyncawait/async');
 const await = require('asyncawait/await');
-
 const lodash = require('lodash');
 
-const squel = require('squel');
-
-const converter = require('../../core/converter');
-
 const BaseSchool = require('../../core/tables/BaseSchool');
-
 var models = require('../../../../../app/components/models').all;
-
-var db = require('../../../../../app/components/db');
-
 var services = require('../../../../../app/components/services').all;
 
-var SCHOOL_COLUMNS = [ 
+var SCHOOL_COLUMNS = [
     'fullName',
     'name',
     'links',
@@ -32,15 +22,10 @@ var SCHOOL_COLUMNS = [
     'director',
 ];
 
-var ADDRESS_COLUMNS = [
-    'area',
-    'address',
-    'department',
-    'district',
-    'educationalGrades',
-];
-
 class School extends BaseSchool {
+    /**
+     * Update
+     */
     update() {
         this.concatColumnsData();
         this.loadSchool();
@@ -50,6 +35,9 @@ class School extends BaseSchool {
         }
     }
 
+    /**
+     * Load School
+     */
     loadSchool() {
         var schoolName = '';
         if (this.columns['old_name']) {
@@ -77,12 +65,15 @@ class School extends BaseSchool {
                 }],
             }
         }));
-        if(!school) {
+        if (!school) {
             throw new Error(schoolName);
         }
         this.model = school;
     }
 
+    /**
+     * Concat columns data
+     */
     concatColumnsData() {
         var columnsNames = Object
             .keys(this.columns)
@@ -103,6 +94,9 @@ class School extends BaseSchool {
         return (this.model && true);
     }
 
+    /**
+     * Update school
+     */
     updateSchool() {
         var queryParams = {};
         SCHOOL_COLUMNS.forEach(
@@ -116,6 +110,9 @@ class School extends BaseSchool {
         this.model = await(this.model.update(queryParams));
     }
 
+    /**
+     * Update address
+     */
     updateAddresses() {
         var schoolId = this.model.id;
         var addresses = this.collectAddresses();
@@ -130,13 +127,16 @@ class School extends BaseSchool {
             });
         });
     }
-    
+
+    /**
+     * @param {Object} params
+     */
     updateAddress(params) {
         var addressInstance =
             this.findAddressByName(params.address);
         if (!addressInstance) {
             addressInstance =
-                await(this.createAddress(params.schoolId, params))
+                await(this.createAddress(params.schoolId, params));
         }
         addressInstance = this.clearAddressDepartments(
             addressInstance,
@@ -151,11 +151,10 @@ class School extends BaseSchool {
             });
         }
     }
-    
+
     /**
-     * @param  {Address}        addressInstance
-     * @param  {object[]}       departments
-     * 
+     * @param  {Address}  address
+     * @param  {object[]} departments
      * @return {Address}
      */
     clearAddressDepartments(address, departments) {
@@ -178,7 +177,7 @@ class School extends BaseSchool {
             }).filter(model => model);
         return address;
     }
-    
+
     /**
      * @param  {Address}        addressInstance
      * @param  {object}         departmentData
@@ -186,17 +185,15 @@ class School extends BaseSchool {
      * @return {Department}
      */
     updateDepartment(addressInstance, departmentData) {
-        var area = addressInstance.area;
-        var district = area.district;
         var departmentInstance = this.findAddressDepartment(
             addressInstance,
             departmentData.department
         );
         var data = {
-            educational_grades: departmentData.educational_grades,
+            'educational_grades': departmentData['educational_grades'],
         };
         if (!departmentInstance) {
-            data.name  = departmentData.department;
+            data.name = departmentData.department;
             departmentInstance = await(
                 services.department.addDepartment(
                     addressInstance.schoolId,
@@ -226,11 +223,10 @@ class School extends BaseSchool {
         }
         return finded;
     }
-    
+
     /**
      * @param  {Address}        address
      * @param  {string}         departmentName
-     *
      * @return {Department}
      */
     findAddressDepartment(address, departmentName) {
@@ -242,6 +238,7 @@ class School extends BaseSchool {
 
     /**
      * @param  {int}            schoolId
+     * @param  {Object}         params
      * @param  {object}         params.address
      * @param  {object[]}       params.departments
      *
@@ -302,14 +299,15 @@ class School extends BaseSchool {
         if (this.columns.district) {
             result.district = this.columns.district[index];
         }
-        if (this.columns.educational_grades) {
-            result.educationalGrades = 
+        if (this.columns['educational_grades']) {
+            result.educationalGrades =
                 this.columns.educationalGrades[index];
         }
         return result;
     }
 
     /**
+     * @param  {Object}         params
      * @param  {int}            params.schoolId
      * @param  {string}         params.addressName
      *

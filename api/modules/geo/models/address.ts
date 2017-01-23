@@ -1,19 +1,19 @@
-var DataType = require('sequelize');
+const DataType = require('sequelize');
 
-var db = require('../../../../app/components/db'),
+const db = require('../../../../app/components/db'),
     entityTypes = require('../../entity/enums/entityType');
 
 import * as Sequelize from 'sequelize/v3';
 import {DepartmentAttribute} from './department';
 
 interface AddressAttribute {
-    id?: number,
-    entityId?: number,
-    entityType?: string,
-    areaId?: number,
-    name?: string,
-    coords?: Array<number>,
-    isSchool?: boolean
+    id?: number;
+    entityId?: number;
+    entityType?: string;
+    areaId?: number;
+    name?: string;
+    coords?: Array<number>;
+    isSchool?: boolean;
 }
 
 export interface AddressInstance
@@ -24,7 +24,7 @@ export interface AddressInstance
 interface AddressModel
     extends Sequelize.Model<AddressInstance, AddressAttribute> {}
 
-let Address: AddressModel = db.define('Address', {
+const Address: AddressModel = db.define('Address', {
     entityId: {
         type: DataType.INTEGER,
         field: 'entity_id'

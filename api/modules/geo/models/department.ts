@@ -4,11 +4,11 @@ const db = require('../../../../app/components/db');
 import * as Sequelize from 'sequelize/v3';
 
 export interface DepartmentAttribute {
-    id?: number,
-    name?: string,
-    addressId?: number,
-    educationalGrades?: Array<number>,
-    updatedAt?: Date
+    id?: number;
+    name?: string;
+    addressId?: number;
+    educationalGrades?: Array<number>;
+    updatedAt?: Date;
 }
 
 export interface DepartmentInstance
@@ -17,7 +17,7 @@ export interface DepartmentInstance
 interface DepartmentModel
     extends Sequelize.Model<DepartmentInstance, DepartmentAttribute> {}
 
-let Department: DepartmentModel = db.define('Department', {
+const Department: DepartmentModel = db.define('Department', {
     name: DataType.STRING,
     addressId: {
         type: DataType.INTEGER,

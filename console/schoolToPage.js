@@ -1,21 +1,18 @@
 'use strict';
 
 const async = require('asyncawait/async'),
-      await = require('asyncawait/await'),
-      commander = require('commander'),
-      fs = require('fs'),
-      path = require('path');
+    await = require('asyncawait/await'),
+    commander = require('commander'),
+    path = require('path');
 
 const services = require('../app/components/services').all,
-      entityType = require('../api/modules/entity/enums/entityType'),
-      CsvConverter = require('./modules/modelArchiver/CsvConverter'),
-      Archiver = require('./modules/modelArchiver/Archiver');
+    entityType = require('../api/modules/entity/enums/entityType'),
+    CsvConverter = require('./modules/modelArchiver/CsvConverter'),
+    Archiver = require('./modules/modelArchiver/Archiver');
 
 const CSV_DELIMITER = '|';
 
 class SchoolToPage {
-    constructor() {}
-
     /**
      * Create archived csv with page data got from schools
      */

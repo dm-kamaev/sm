@@ -48,10 +48,10 @@ class GeoTools {
 
     /**
      * getPointsSouthEastAndNorthWest
-     * @param  {Object[]} coords [ 37.587614, 55.753083 ]
+     * @param  {Object[]} coords [37.587614, 55.753083]
      * @param  {Number}   radius 3
      * @return {Object}
-     * { southWest: { latitude, longitude }, northEast: { latitude, longitude } }
+     * {southWest: {latitude, longitude}, northEast: {latitude, longitude}}
      */
     public getPointsSouthEastAndNorthWest(coords, radius) {
         const latitude = coords[1], longitude = coords[0];
@@ -66,7 +66,7 @@ class GeoTools {
                 longitude: southWest.longitude(),
             },
             northEast: {
-                latitude:  northEast.latitude(),
+                latitude: northEast.latitude(),
                 longitude: northEast.longitude(),
             },
         };
@@ -77,7 +77,7 @@ class GeoTools {
      * @return {string}
      */
     public async getArea(coords) {
-        var response = await axios.get(GEOCODER, {
+        const response = await axios.get(GEOCODER, {
                 params: {
                     geocode: coords.join(','),
                     kind: 'district',
@@ -95,8 +95,8 @@ class GeoTools {
                         !~name.indexOf('микрорайон') &&
                         !~name.indexOf('квартал')
                         // but neither 'микрорайон' or 'квартал'
-                ),
-            area;
+                );
+        let area;
 
         if (areas.length > 1) {
             throw new Error('Found more than one area: ' + areas);
@@ -151,7 +151,7 @@ class GeoTools {
                 coords: metro.Point.pos.split(' ')
             };
         });
-        let metrosUniq = lodash.uniq(metros, 'name');
+        const metrosUniq = lodash.uniq(metros, 'name');
         return metrosUniq;
     }
 
@@ -171,16 +171,16 @@ class GeoTools {
         coordinate1 = this.checkOrderCoordinate_(coordinate1);
         coordinate2 = this.checkOrderCoordinate_(coordinate2);
 
-        let latitude1 = coordinate1.latitude;
-        let longitude1 = coordinate1.longitude;
+        const latitude1 = coordinate1.latitude;
+        const longitude1 = coordinate1.longitude;
 
-        let latitude2 = coordinate2.latitude;
-        let longitude2 = coordinate2.longitude;
+        const latitude2 = coordinate2.latitude;
+        const longitude2 = coordinate2.longitude;
 
         coordinate1 = new GeoPoint(latitude1, longitude1);
         coordinate2 = new GeoPoint(latitude2, longitude2);
 
-        //kilometers
+        // kilometers
         return coordinate1.distanceTo(coordinate2, true);
     }
 
@@ -192,7 +192,7 @@ class GeoTools {
      * @return {Number}   1200 (metres)
      */
     public distanceMetres(coord1, coord2) {
-        let distanceKm = this.distanceKm(coord1, coord2);
+        const distanceKm = this.distanceKm(coord1, coord2);
         return (distanceKm.toFixed(3) * 1000).toFixed(0);
     }
 
@@ -203,16 +203,16 @@ class GeoTools {
      * @return {number}
      */
     public distance(coords1, coords2) {
-        var lat1 = this.toRad(coords1[0]);
-        var lat2 = this.toRad(coords2[0]);
-        var lon1 = this.toRad(coords1[1]);
-        var lon2 = this.toRad(coords2[1]);
+        const lat1 = this.toRad(coords1[0]);
+        const lat2 = this.toRad(coords2[0]);
+        const lon1 = this.toRad(coords1[1]);
+        const lon2 = this.toRad(coords2[1]);
 
-        var sinLat = Math.sin((lat1 - lat2) / 2);
-        var sinLon = Math.sin((lon1 - lon2) / 2);
-        var cos = Math.cos(lat1) * Math.cos(lat2);
+        const sinLat = Math.sin((lat1 - lat2) / 2);
+        const sinLon = Math.sin((lon1 - lon2) / 2);
+        const cos = Math.cos(lat1) * Math.cos(lat2);
 
-        var arg = sinLat * sinLat +
+        const arg = sinLat * sinLat +
                 sinLon * sinLon * cos;
 
         return 2 * GeoTools.R * Math.atan2(Math.sqrt(arg), Math.sqrt(1 - arg));
@@ -234,16 +234,15 @@ class GeoTools {
      * @return {Object}       { latitude, longitude }
      */
     private toDigitObjectCoord_(coord) {
-        let latitude = parseFloat(coord.latitude);
-        let longitude = parseFloat(coord.longitude);
+        const latitude = parseFloat(coord.latitude);
+        const longitude = parseFloat(coord.longitude);
 
         if (isNaN(latitude) || isNaN(longitude)) {
-            let error =
-            'Original coord: ' + JSON.stringify(coord) + '\n'+
-            'After parseFloat: ' + JSON.stringify({ latitude, longitude });
+            const error =
+                'Original coord: ' + JSON.stringify(coord) + '\n' +
+                'After parseFloat: ' + JSON.stringify({ latitude, longitude });
             logger.critical(error);
             throw new Error(error).stack;
-
         }
 
         return {
@@ -279,7 +278,7 @@ class GeoTools {
      * [ 37.439709605830046, 55.67864138954658 ]
      */
     private checkSortOrderCoordinate_(coord) {
-        let coordinates = Object.assign([], coord);
+        const coordinates = Object.assign([], coord);
         if (coordinates[0] > coordinates[1]) {
             coordinates.reverse();
         }
@@ -292,18 +291,16 @@ class GeoTools {
      * @return {Object}       [ latitude, longitude ]
      */
     private toDigitArrayCoord_(coord) {
-        let latitude = parseFloat(coord[0]);
-        let longitude = parseFloat(coord[1]);
+        const latitude = parseFloat(coord[0]);
+        const longitude = parseFloat(coord[1]);
 
         if (isNaN(latitude) || isNaN(longitude)) {
-            let error =
-            'Original coord: ' + JSON.stringify(coord) + '\n'+
-            'After parseFloat: ' + JSON.stringify([ latitude, longitude ]);
+            const error =
+                'Original coord: ' + JSON.stringify(coord) + '\n' +
+                'After parseFloat: ' + JSON.stringify([ latitude, longitude ]);
             logger.critical(error);
             throw new Error(error).stack;
         }
-
-        return [latitude, longitude];
     }
 }
 

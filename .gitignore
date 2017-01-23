@@ -80,3 +80,5 @@ api/modules/school/services/schoolComment.js
 api/modules/school/views/commentView.js
 
 console/modules/geoTools/geoTools.js
+
+gulp/taskBackendLint.js

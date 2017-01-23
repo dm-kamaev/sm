@@ -8,20 +8,6 @@ var models = {};
 
 exports.all = models;
 
-exports.initAll = function(apiModulesPath) {
-    var modules = fs.readdirSync(apiModulesPath)
-        .filter(file => (file.indexOf('.') && file != 'index.js'));
-    modules.forEach(module => {
-        var modulePath = path.join(apiModulesPath, module);
-        var moduleFolders = fs.readdirSync(modulePath)
-            .filter(file => (file.indexOf('.') && file != 'index.js'));
-        if (moduleFolders.indexOf('models') != -1) {
-            this.initModels(path.join(modulePath, 'models'));
-        }
-    });
-    return this.all;
-};
-
 exports.initModels = function(dirPath) {
     var localModels = fs
         .readdirSync(dirPath)

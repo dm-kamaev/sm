@@ -24,14 +24,14 @@ import {
 
 
 class SchoolAdminService {
-    readonly name: string = 'schoolAdminService';
+    public readonly name: string = 'schoolAdminService';
 
     public async create(
         schoolData: SomeSchoolData
     ): Promise<SchoolInstance> {
         CsvConverter.cureQuotes(schoolData);
 
-        let type: string = schoolData.schoolType;
+        const type: string = schoolData.schoolType;
         if (!schoolType.getPropByValue(type)) {
             throw new SchoolNotExistType(type);
         }
@@ -59,23 +59,23 @@ class SchoolAdminService {
     ): Promise<SchoolInstance> {
         CsvConverter.cureQuotes(schoolData);
 
-        let type: string = schoolData.schoolType || '';
+        const type: string = schoolData.schoolType || '';
         if (type && !schoolType.getPropByValue(type)) {
             throw new SchoolNotExistType(type);
         }
 
-        let res = await models.School.update(schoolData, {
+        const res = await models.School.update(schoolData, {
             where: {
                 id: schoolId
             },
             returning: true
         });
         return (res) ? res[1][0] : null;
-    };
+    }
 
 
     public async remove(schoolId: number): Promise<SchoolInstance> {
-        var res: any = await models.School.destroy({
+        const res: any = await models.School.destroy({
             where: {
                 id: schoolId
             },
@@ -100,7 +100,7 @@ class SchoolAdminService {
 
 
     public async getAllSchool(): Promise<any> {
-        let schools: any = await models.School.findAll({
+        const schools: any = await models.School.findAll({
             attributes: [
                 'id', 'name', 'schoolType', 'totalScore', 'updated_at'
             ],
@@ -115,10 +115,22 @@ class SchoolAdminService {
             }
         });
 
-        let schoolsInfo = schools.map(this.getSchoolInfo);
+        const schoolsInfo = schools.map(this.getSchoolInfo);
         return Promise.all<SomeSchoolInfo[]>(schoolsInfo);
-    };
+    }
 
+    public async getById(id: number): Promise<SchoolInstance> {
+        return SchoolModel.findOne({
+            where: {
+                id
+            }
+        });
+    }
+
+
+    public getSchoolTypes(): Array<String> {
+        return schoolType.toArray();
+    }
 
     private async getSchoolInfo (
         school: any
@@ -128,7 +140,7 @@ class SchoolAdminService {
             numberComments = school.commentGroup.comments.length;
         }
 
-        let address: AddressInstance = await AddressModel.findOne({
+        const address: AddressInstance = await AddressModel.findOne({
             attributes: ['area_id'],
             where: {
                 entityId: school.id,
@@ -138,7 +150,7 @@ class SchoolAdminService {
         let areaName: string = '',
             districtName: string = '';
         if (address) {
-            let area: any = await models.Area.findOne({
+            const area: any = await models.Area.findOne({
                 attributes: ['name', 'districtId'],
                 where: {
                     id: address['area_id']
@@ -164,19 +176,6 @@ class SchoolAdminService {
             districtName,
             updatedAt: school.updated_at,
         };
-    }
-
-    public async getById(id: number): Promise<SchoolInstance> {
-        return SchoolModel.findOne({
-            where: {
-                id
-            }
-        });
-    }
-
-
-    public getSchoolTypes(): Array<String> {
-        return schoolType.toArray();
     }
 };
 export default new SchoolAdminService();

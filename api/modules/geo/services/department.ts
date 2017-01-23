@@ -21,7 +21,7 @@ import DepartmentNotFound from './exceptions/DepartmentNotFound';
 import AddressDoesNotExist from './exceptions/AddressDoesNotExist';
 
 class DepartmentService {
-    readonly name: string = 'department';
+    public readonly name: string = 'department';
 
     /**
      * Add new department
@@ -41,12 +41,12 @@ class DepartmentService {
         await services.school.checkExist(schoolId);
         let departmentAddress;
         if (typeof address === 'number') {
-            let addresses = await services.school.getAddresses(schoolId);
+            const addresses = await services.school.getAddresses(schoolId);
             departmentAddress = addresses.find(address =>
-                address.id == address
+                address.id === address
             );
         } else {
-            let addressData = {
+            const addressData = {
                 name: address
             };
             try {
@@ -85,17 +85,17 @@ class DepartmentService {
      * @return {Object} instance of Department model
      */
     public async update(
-        departmentId:number,
+        departmentId: number,
         data: DepartmentAttribute,
         addressData?: {
             schoolId: number,
             address: string
         }
     ): Promise<DepartmentAdmin> {
-        var instance = await this.getById(departmentId);
+        const instance = await this.getById(departmentId);
         if (addressData.address) {
             try {
-                let address = await addressService.addAddress(
+                const address = await addressService.addAddress(
                     addressData.schoolId,
                     entityType.SCHOOL, {
                         name: addressData.address
@@ -115,7 +115,7 @@ class DepartmentService {
      * @param {number} departmentId
      */
     public async delete(departmentId) {
-        var instance = await this.getById(departmentId);
+        const instance = await this.getById(departmentId);
         addressService.updateIsSchool(instance.addressId);
         instance.destroy();
     }
@@ -144,7 +144,7 @@ class DepartmentService {
     public async getById(departmentId: number): Promise<DepartmentAdmin> {
         await addressService.updateIsSchool(departmentId);
 
-        let department: DepartmentAdmin = await DepartmentModel.findOne({
+        const department: DepartmentAdmin = await DepartmentModel.findOne({
             where: {
                 id: departmentId
             }
@@ -154,7 +154,7 @@ class DepartmentService {
             throw new DepartmentNotFound(departmentId);
         }
 
-        let address = await addressService.getById(department.addressId);
+        const address = await addressService.getById(department.addressId);
 
         department.addressName = address.name;
 
@@ -179,7 +179,7 @@ class DepartmentService {
      * @return {Object} instances of Address model
      */
     public async getAddresses(departmentId) {
-        var instance = await this.getOneByData({id: departmentId});
+        const instance = await this.getOneByData({id: departmentId});
         return instance.getAddress();
     }
 
@@ -189,10 +189,10 @@ class DepartmentService {
      * @return {Array} Array of filter addresses instance
      */
     public addressesFilter(addressList) {
-        var addressesWithoutStage = [];
-        var addressesWithNeededStages = addressList
+        const addressesWithoutStage = [];
+        const addressesWithNeededStages = addressList
             .filter(address => {
-                var res = false;
+                let res = false;
                 if (address.departments.length > 0) {
                     address.departments.forEach(department => {
                         if (department.educationalGrades &&
@@ -207,7 +207,7 @@ class DepartmentService {
                 return res;
             });
 
-        var addresses;
+        let addresses;
         if (addressesWithNeededStages.length > 0) {
             addresses = addressesWithNeededStages;
         } else {
@@ -222,12 +222,12 @@ class DepartmentService {
     ): Promise<Array<DepartmentAdmin>> {
         await services.school.checkExist(schoolId);
 
-        let schoolAddreses = await addressService.getAllByEntity(
+        const schoolAddreses = await addressService.getAllByEntity(
             schoolId,
             entityType.SCHOOL
         );
 
-        let departments = await DepartmentModel.findAll({
+        const departments = await DepartmentModel.findAll({
             where: {
                 addressId: {
                     $in: schoolAddreses.map(address => address.id)

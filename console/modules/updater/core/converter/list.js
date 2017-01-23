@@ -1,6 +1,6 @@
 var escapeWithDoubleQuotes = function(value) {
     return '"' + value + '"';
-}
+};
 
 module.exports = function(values) {
     var result = '{';
@@ -17,4 +17,4 @@ module.exports = function(values) {
     );
     result += '}';
     return result;
-}
+};

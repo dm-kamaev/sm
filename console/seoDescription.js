@@ -1,14 +1,16 @@
-'use strict'
+'use strict';
 const async = require('asyncawait/async'),
-      await = require('asyncawait/await'),
-      commander = require('commander'),
-      Converter = require('csvtojson').Converter;
+    await = require('asyncawait/await'),
+    commander = require('commander'),
+    Converter = require('csvtojson').Converter;
 
 const services = require.main.require('./app/components/services').all;
 
 class SchoolSeoDescription {
-    constructor() {}
-
+    /**
+     * @param  {string}  file
+     * @return {Promise}
+     */
     getFromFile(file) {
         return new Promise(function(resolve, reject) {
             var converter = new Converter({});
@@ -21,10 +23,14 @@ class SchoolSeoDescription {
         });
     }
 
+    /**
+     * @param {number} schoolId
+     * @param {string} seoDescription
+     */
     update(schoolId, seoDescription) {
         services.school.update(schoolId, {
             seoDescription: seoDescription
-        })
+        });
     }
 }
 
@@ -36,7 +42,7 @@ var getSeoDescriptions = async(function(file) {
     seoDescriptions.forEach(seoDescription => {
         schoolSeoDescription.update(
             seoDescription.id,
-            seoDescription.seoDescription)
+            seoDescription.seoDescription);
     });
 });
 

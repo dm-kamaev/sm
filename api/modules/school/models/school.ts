@@ -1,4 +1,4 @@
-var DataType = require('sequelize'),
+const DataType = require('sequelize'),
     db = require('../../../../app/components/db'),
     urlService = require('../../entity/services/urls');
 const schoolType = require('../enums/schoolType');
@@ -6,32 +6,32 @@ const schoolType = require('../enums/schoolType');
 import * as Sequelize from 'sequelize/v3';
 
 interface SchoolAttribute {
-    id?: number,
-    name?: string,
-    abbreviation?: string,
-    fullName?: string,
-    schoolType?: string,
-    director?: string,
-    phones?: Array<string>,
-    site?: string,
-    govermentKey?: number,
-    cityId?: number,
-    educationInterval?: Array<number>,
-    specializedClasses?: Array<string>,
-    features?: Array<string>,
-    extendedDayCost?: string,
-    dressCode?: boolean,
-    links?: Array<[string, string]>,
-    description?: string,
-    boarding?: boolean,
-    popularity?: number,
-    score?: Array<number>,
-    totalScore?: number,
-    rank?: number,
-    rankDogm?: number,
-    scoreCount?: Array<number>,
-    reviewCount?: number,
-    commentGroupId?: number
+    id?: number;
+    name?: string;
+    abbreviation?: string;
+    fullName?: string;
+    schoolType?: string;
+    director?: string;
+    phones?: Array<string>;
+    site?: string;
+    govermentKey?: number;
+    cityId?: number;
+    educationInterval?: Array<number>;
+    specializedClasses?: Array<string>;
+    features?: Array<string>;
+    extendedDayCost?: string;
+    dressCode?: boolean;
+    links?: Array<[string, string]>;
+    description?: string;
+    boarding?: boolean;
+    popularity?: number;
+    score?: Array<number>;
+    totalScore?: number;
+    rank?: number;
+    rankDogm?: number;
+    scoreCount?: Array<number>;
+    reviewCount?: number;
+    commentGroupId?: number;
 }
 
 export interface SchoolInstance
@@ -40,7 +40,7 @@ export interface SchoolInstance
 interface SchoolModel
     extends Sequelize.Model<SchoolInstance, SchoolAttribute> {}
 
-var School: SchoolModel = db.define('School', {
+const School: SchoolModel = db.define('School', {
     id: {
         field: 'id',
         type: DataType.INTEGER,

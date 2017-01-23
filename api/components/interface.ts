@@ -11,5 +11,5 @@ export interface ControllerError {
 
 export interface LegacyController {
     errors: Object;
-    new(): LegacyController
+    new(): LegacyController;
 };

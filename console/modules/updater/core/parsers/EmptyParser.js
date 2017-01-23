@@ -1,6 +1,10 @@
 'use strict';
 
 class EmptyParser {
+    /**
+     * @constructor
+     * @param {Object} rawData
+     */
     constructor(rawData) {
         this.rawData_ = rawData;
         this.columnName = '';
