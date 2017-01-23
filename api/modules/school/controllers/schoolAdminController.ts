@@ -68,7 +68,7 @@ class SchoolAdminController extends Controller {
      *   ],
      *   "dressCode": true,
      *   "extendedDayCost": "3000 руб./мес.",
-     *   links: [
+     *   "links": [
      *       [
      *           "Гимназия на сайте Департамента образования Москвы",
      *           "1811.mskobr.ru"
@@ -237,6 +237,44 @@ class SchoolAdminController extends Controller {
      * @apiSuccess {String}   links.-.1       Link itself.
      * @apiSuccess {String[]} phones          Array of phones.
      * @apiSuccess {String}   director        Director's name.
+     *
+     *
+     * @apiSuccessExample {json} Example response:
+     *{
+     *  "name": "Школа №14",
+     *  "abbreviation": "ГБОУ СОШ № 14",
+     *  "fullName": "Государственное
+     *               бюджетное образовательное учреждение города Москвы
+     *               средняя общеобразовательная школа № 14",
+     *  "schoolType": "Школа",
+     *  "director": "Любимов Олег Вадимович",
+     *  "phones": ["(495) 223-32-23", "(499)322-23-33"],
+     *  "govermentKey": 100,
+     *  "totalScore": 4,
+     *  "description": "Многопрофильная школа с
+     *                  развитой системой профориентации и
+     *                  «университетскими субботами»",
+     *  "features": [
+     *          "В лицее нет традиционных классов: ученики делятся на группы в
+     *           зависимости от выбранного ими учебного плана",
+     *          "В расписании предусмотрены факультетские дни, которые лицеисты
+     *           проводят на
+     *           профильных факультетах НИУ ВШЭ*"
+     *   ],
+     *   "dressCode": true,
+     *   "extendedDayCost": "3000 руб./мес.",
+     *   "links": [
+     *       [
+     *           "Гимназия на сайте Департамента образования Москвы",
+     *           "1811.mskobr.ru"
+     *       ],
+     *       [
+     *           " Сообщество гимназии Вконтакте",
+     *           "vk.com/club86036747"
+     *       ],
+     *   ]
+     *
+     *}
      */
     async actionGet(actionContext: any, id: number) {
         return schoolAdminService.getById(id);
@@ -249,7 +287,18 @@ class SchoolAdminController extends Controller {
      * @apiName getSchoolTypes
      * @apiGroup School Admin
      *
-     * @apiSuccess {String[]} - Response body.
+     * @apiSuccess {String[]} - school types.
+     * @apiSuccessExample {json} Example response:
+     *   [
+     *       "Школа",
+     *       "Лицей",
+     *       "Гимназия",
+     *       "Центр образования",
+     *       "Кадетская школа",
+     *       "Кадетская школа-интернат",
+     *       "Коррекционная школа",
+     *       "Коррекционная школа-интернат"
+     *   ]
      */
     actionGetSchoolTypes(actionContext: any) {
         return schoolAdminService.getSchoolTypes();
