@@ -4,6 +4,7 @@ goog.require('cl.iUtils.Utils');
 goog.require('goog.dom');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
+goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bSearch.Template');
@@ -372,10 +373,7 @@ goog.scope(function() {
             this.getElement(),
             Search.CssClass.DEFAULT_MODE
         );
-        goog.dom.classlist.add(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
+
         this.suggest_.focus();
         this.disableScroll_();
     };
@@ -394,10 +392,7 @@ goog.scope(function() {
             this.getElement(),
             Search.CssClass.DEFAULT_MODE
         );
-        goog.dom.classlist.remove(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
+
         this.enableScroll_();
     };
 
@@ -410,6 +405,11 @@ goog.scope(function() {
         document.ontouchmove = function(event) {
             event.preventDefault();
         };
+
+        goog.dom.classlist.add(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
     };
 
 
@@ -421,6 +421,11 @@ goog.scope(function() {
         document.ontouchmove = function() {
             return true;
         };
+
+        goog.dom.classlist.remove(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
     };
 
 
@@ -465,6 +470,7 @@ goog.scope(function() {
 
         this.initSuggestListeners_();
         this.initElementsListeners_();
+        this.initDocumentListeners_();
 
         var that = this;
 
@@ -590,25 +596,6 @@ goog.scope(function() {
 
 
     /**
-     * On list show
-     * @private
-     */
-    Search.prototype.onListShow_ = function() {
-        this.enableScroll_();
-    };
-
-
-    /**
-     * On list hide
-     * @private
-     */
-    Search.prototype.onListHide_ = function() {
-        goog.dom.getWindow().scrollTo(0, 0);
-        this.disableScroll_();
-    };
-
-
-    /**
      * Init elements listeners
      * @private
      */
@@ -638,6 +625,23 @@ goog.scope(function() {
                 this.elements_.searchButton,
                 goog.events.EventType.CLICK,
                 this.onSubmit_
+            );
+        }
+    };
+
+
+    /**
+     * Init document listeners
+     * @private
+     */
+    Search.prototype.initDocumentListeners_ = function() {
+        var handler = this.getHandler();
+
+        if (this.type_ === Search.Type.FOLDABLE) {
+            handler.listen(
+                goog.dom.getDocument(),
+                goog.events.EventType.SCROLL,
+                this.onDocumentScroll_
             );
         }
     };
@@ -768,6 +772,42 @@ goog.scope(function() {
                 root
             )
         };
+    };
+
+
+     /**
+     * On document scroll
+     * @private
+     */
+    Search.prototype.onDocumentScroll_ = function() {
+        var suggest = this.elements_.suggest,
+            scrollY = goog.dom.getPageScroll().y;
+
+        var suggestTop = suggest ? goog.style.getBounds(suggest).top : null,
+            top = (scrollY > suggestTop) ? 0 : 'auto';
+
+        goog.style.setPosition(this.elements_.fader, null, top);
+    };
+
+
+    /**
+     * On list show
+     * @private
+     */
+    Search.prototype.onListShow_ = function() {
+        this.enableScroll_();
+    };
+
+
+    /**
+     * On list hide
+     * @private
+     */
+    Search.prototype.onListHide_ = function() {
+        goog.style.setPosition(this.elements_.fader, null, 'auto');
+        goog.dom.getWindow().scrollTo(0, 0);
+
+        this.disableScroll_();
     };
 
 
