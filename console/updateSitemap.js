@@ -10,10 +10,10 @@ const entityType = require('../api/modules/entity/enums/entityType');
 
 let start = async(function() {
     let schoolSitemapUpdater = await(new SitemapUpdater(entityType.SCHOOL));
-        schoolSitemapUpdater.update();
+    schoolSitemapUpdater.update();
 
     let courseSitemapUpdater = await(new SitemapUpdater(entityType.COURSE));
-        courseSitemapUpdater.update();
+    courseSitemapUpdater.update();
 });
 
 commander

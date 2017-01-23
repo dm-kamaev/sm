@@ -1,7 +1,6 @@
 'use strict';
 
 var commander = require('commander');
-var fs = require('fs');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var geoTools = require('./modules/geoTools/geoTools');
@@ -9,10 +8,11 @@ var services = require.main.require('./app/components/services').all;
 var models = require.main.require('./app/components/models').all;
 
 class ClosestMetro {
-    constructor() {}
-
+    /**
+     * Start
+     */
     start() {
-        var res = await (services.address.getAllWithMetro()),
+        var res = await(services.address.getAllWithMetro()),
             coords;
 
         res.forEach(address => {
@@ -32,7 +32,7 @@ class ClosestMetro {
                         address.dataValues.coords,
                         coords
                     ).toFixed(3) * 1000).toFixed(0)
-                })
+                });
             });
         });
     }
@@ -41,12 +41,12 @@ class ClosestMetro {
 var start = async(() => {
     var closestMetro = new ClosestMetro();
 
-    await(closestMetro.start())
+    await(closestMetro.start());
 });
 
 // Settings for accessing this script using cli
 commander
     .command('closest-metro')
     .description('Adds distance to address_metro table')
-    .action(()=> start());
+    .action(() => start());
 exports.Command;

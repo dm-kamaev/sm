@@ -23,8 +23,8 @@ class AdminUserView {
 
     }
 
-    render(data: RenderData): ApiAdminUser {
-        let school = data.school,
+    public render(data: RenderData): ApiAdminUser {
+        const school = data.school,
             brand = data.brand;
         return {
             userId: data.adminUser.userId,
@@ -36,12 +36,12 @@ class AdminUserView {
         };
     }
 
-    renderList(data: RenderListData): Array<ApiAdminUser> {
-        let brands = data.brands,
+    public renderList(data: RenderListData): Array<ApiAdminUser> {
+        const brands = data.brands,
             schools = data.schools;
 
         return data.adminUsers.map((adminUser) => {
-            let accessAttributes = adminUser.accessAttributes,
+            const accessAttributes = adminUser.accessAttributes,
                 brand = brands.find(
                     brandItem => brandItem.id === accessAttributes.brandId
                 ),

@@ -44,13 +44,13 @@ class Service {
      * Create user
      */
     public async create(data: ApiAdminUser): Promise<AdminUserInstance> {
-        let user = await this.getByUserId_(data.userId);
+        const user = await this.getByUserId_(data.userId);
 
         if (user) {
             throw new AdminUserAlreadyExists(data.userId);
         }
 
-        let adminUserAccessAttributes = await this.normalizeAccessAttributes_(
+        const adminUserAccessAttributes = await this.normalizeAccessAttributes_(
             data.accessAttributes
         );
         return await AdminUserModel.create({
@@ -63,7 +63,7 @@ class Service {
      * Get user by id
      */
     public async getByUserId(userId: number): Promise<AdminUserInstance> {
-        let result = await this.getByUserId_(userId);
+        const result = await this.getByUserId_(userId);
 
         if (!result) {
             throw new AdminUserNotFound(userId);
@@ -78,7 +78,7 @@ class Service {
     public async update(
         userId: number, data: ApiAdminUser
     ): Promise<AdminUserInstance> {
-        let adminUser = await this.getByUserId(userId),
+        const adminUser = await this.getByUserId(userId),
             adminUserAccessAttributes = await this.normalizeAccessAttributes_(
                 data.accessAttributes
             );
@@ -94,20 +94,9 @@ class Service {
      * Delete user
      */
     public async deleteUser(userId: number) {
-        let user = await this.getByUserId(userId);
+        const user = await this.getByUserId(userId);
 
         await user.destroy();
-    }
-
-    /**
-     * Silently get admin user from database
-     */
-    private async getByUserId_(userId: number): Promise<AdminUserInstance> {
-        return AdminUserModel.findOne({
-            where: {
-                userId: userId
-            }
-        });
     }
 
     public async getInstancesByAttributes(
@@ -129,6 +118,17 @@ class Service {
     }
 
     /**
+    * Silently get admin user from database
+    */
+    private async getByUserId_(userId: number): Promise<AdminUserInstance> {
+        return AdminUserModel.findOne({
+            where: {
+                userId: userId
+            }
+        });
+    }
+
+    /**
      * Normalize access attributes by delete isSuperUser field is necessary
      */
     private async normalizeAccessAttributes_(
@@ -144,10 +144,10 @@ class Service {
     private async getInstancesByUserAttributes_(
         user: AdminUserInstance
     ): Promise<AccessAttributesInstances> {
-        let schoolId = user.accessAttributes.schoolId,
-            brandId = user.accessAttributes.brandId,
-            school,
-            brand;
+        const schoolId = user.accessAttributes.schoolId;
+        const brandId = user.accessAttributes.brandId;
+        let school;
+        let brand;
 
         if (schoolId) {
             school = await schoolService.viewOne(schoolId);
@@ -166,7 +166,7 @@ class Service {
     private async getInstancesByUsersAttributes_(
         users: Array<AdminUserInstance>
     ): Promise<AccessAttributesInstancesArrays> {
-        let schoolsIds = [],
+        const schoolsIds = [],
             brandsIds = [];
 
         users.forEach(user => {
@@ -174,13 +174,13 @@ class Service {
             brandsIds.push(user.accessAttributes.brandId);
         });
 
-        let uniqueSchoolsIds = lodash.uniq(schoolsIds),
+        const uniqueSchoolsIds = lodash.uniq(schoolsIds),
             uniqueBrandIds = lodash.uniq(brandsIds);
 
         return {
             schools: await schoolService.getByIds(uniqueSchoolsIds),
             brands: await courseBrandService.getByIds(uniqueBrandIds)
-        }
+        };
     }
 
     private async getSchoolId_(schoolName: string): Promise<number> {

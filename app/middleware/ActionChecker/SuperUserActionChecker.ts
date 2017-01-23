@@ -21,5 +21,5 @@ class SuperUserActionChecker extends ActionChecker {
 }
 export default SuperUserActionChecker;
 
-let middleware = createMiddlewareFunction(SuperUserActionChecker);
+const middleware = createMiddlewareFunction(SuperUserActionChecker);
 export {middleware};

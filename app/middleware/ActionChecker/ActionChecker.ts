@@ -8,12 +8,12 @@ const adminConfig = require('../../config/admin.json');
 const userHeaderName = adminConfig.headers.user.name;
 
 abstract class ActionChecker {
-    async check(request: any, response: any, next: any) {
-        let userId = this.getUserId(request),
+    public async check(request: any, response: any, next: any) {
+        const userId = this.getUserId(request),
             accessAttributes = await this.getUserAccessAttributes(userId),
             restrictedId = this.getRestrictedAttributeId(request);
 
-        if(this.isPossibleAction(accessAttributes, restrictedId)) {
+        if (this.isPossibleAction(accessAttributes, restrictedId)) {
             next();
         } else {
             response.status(403).end();
@@ -27,7 +27,7 @@ abstract class ActionChecker {
     protected async getUserAccessAttributes(
         userId: number
     ): Promise<AccessAttributes> {
-        let user = await adminUserService.getByUserId(userId);
+        const user = await adminUserService.getByUserId(userId);
 
         return user.accessAttributes;
     }
@@ -41,11 +41,11 @@ abstract class ActionChecker {
 
 export {ActionChecker};
 
-let createMiddlewareFunction =
+const createMiddlewareFunction =
     function<T extends ActionChecker>(
         ActionChecker: {new(): ActionChecker}
     ) {
-        let actionCheckerInstance = new ActionChecker();
+        const actionCheckerInstance = new ActionChecker();
 
         return (request, response, next) => {
             actionCheckerInstance.check(request, response, next);

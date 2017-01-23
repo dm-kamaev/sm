@@ -1,19 +1,19 @@
 'use strict';
 
 var await = require('asyncawait/await');
-var fs = require('fs');
 var squel = require('squel').useFlavour('postgres');
 var Archiver = require('../modelArchiver/Archiver');
 
 var SqlHelper = require('../sqlHelper/SqlHelper.js');
 var models = require('../../../app/components/models').all;
 var sequelize = require('../../../app/components/db');
-var services = require('../../../app/components/services').all;
 
 const FILE_PATH = './api/modules/comment/migrations/Comments.tar.gz';
 
 module.exports = class PollComments {
-
+    /**
+     * @constructor
+     */
     constructor() {
         var date = new Date(),
             formattedDate = date.toJSON();
@@ -29,13 +29,13 @@ module.exports = class PollComments {
      * @public
      */
     resetData() {
-        var resetColumns = 'UPDATE school \
-            SET score=NULL, \
-            comment_group_id=NULL, \
-            total_score=0, \
-            score_count=NULL, \
-            review_count=NULL \
-            WHERE comment_group_id <> 0;';
+        var resetColumns = `UPDATE school
+            SET score=NULL,
+            comment_group_id=NULL,
+            total_score=0,
+            score_count=NULL,
+            review_count=NULL
+            WHERE comment_group_id <> 0;`;
         await(SqlHelper.resetTable(models.Comment.tableName));
         await(SqlHelper.resetTable(models.Rating.tableName));
         await(sequelize.query(
@@ -85,7 +85,8 @@ module.exports = class PollComments {
 
     /**
      * @param {number} schoolId
-     * @param {Object}
+     * @param {Object} comment
+     * @return {Object}
      */
     addReview(schoolId, comment) {
         if (!comment.text && !comment.score) {
@@ -131,6 +132,7 @@ module.exports = class PollComments {
     /**
      * @private
      * @param {number} schoolId
+     * @return {Object}
      */
     getSchool_(schoolId) {
         var findSchoolQuery = squel.select()
@@ -146,6 +148,7 @@ module.exports = class PollComments {
     /**
      * @private
      * @param {Object} data
+     * @return {Object}
      */
     createUserData_(data) {
         var insertUserDataQuery = squel.insert()
@@ -168,7 +171,7 @@ module.exports = class PollComments {
     /**
      * @private
      * @param {Object} schoolId
-     * @param {Object} comment
+     * @param {Object} data
      * @return {Object}
      */
     createRating_(schoolId, data) {
@@ -208,6 +211,7 @@ module.exports = class PollComments {
 
     /**
      * @private
+     * @return {Object}
      */
     createCommentGroup_() {
         var createCommentGroupQuery = squel.insert()
@@ -260,6 +264,7 @@ module.exports = class PollComments {
     /**
      * @private
      * @param {Array} array
+     * @return {string}
      */
     arrayToPgArray_(array) {
         return '{' + array.toString() + '}';
@@ -285,4 +290,4 @@ module.exports = class PollComments {
             type: sequelize.QueryTypes.INSERT
         }));
     }
-}
+};

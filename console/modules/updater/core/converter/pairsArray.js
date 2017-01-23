@@ -17,4 +17,4 @@ module.exports = function(values) {
     result += values.join(', ');
     result += '}';
     return result;
-}
+};

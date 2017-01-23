@@ -7,9 +7,9 @@ const db = require('../../../../app/components/db'),
 import * as Sequelize from 'sequelize/v3';
 
 export interface CourseBrandAttribute {
-    id?: number,
-    name: string,
-    description?: string
+    id?: number;
+    name: string;
+    description?: string;
 }
 
 export interface CourseBrandInstance
@@ -17,7 +17,7 @@ export interface CourseBrandInstance
 export interface CourseBrandModel
     extends Sequelize.Model<CourseBrandInstance, CourseBrandAttribute> {}
 
-let CourseBrand: CourseBrandModel = db.define('CourseBrand', {
+const CourseBrand: CourseBrandModel = db.define('CourseBrand', {
     id: {
         type: DataType.INTEGER,
         allowNull: false,

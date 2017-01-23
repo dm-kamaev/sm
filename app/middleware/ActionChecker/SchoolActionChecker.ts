@@ -24,5 +24,5 @@ class SchoolActionChecker extends ActionChecker {
 
 export default SchoolActionChecker;
 
-let middleware = createMiddlewareFunction(SchoolActionChecker);
+const middleware = createMiddlewareFunction(SchoolActionChecker);
 export {middleware};

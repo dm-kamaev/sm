@@ -8,7 +8,7 @@ import WrongAccessAttributesError from './errors/WrongAccessAttributes';
 import adminUserService from '../services/adminUser';
 import adminUserView from '../views/adminUserView';
 
-class AdminUserController extends Controller{
+class AdminUserController extends Controller {
     constructor() {
         super();
 
@@ -86,8 +86,8 @@ class AdminUserController extends Controller{
      *     }]
      *
      */
-    async actionList(actionContext) {
-        let adminUsers = await adminUserService.getAll(),
+    public async actionList(actionContext) {
+        const adminUsers = await adminUserService.getAll(),
             accessAttributesInstances =
                 await adminUserService.getInstancesByAttributes(adminUsers);
 
@@ -130,8 +130,8 @@ class AdminUserController extends Controller{
      *
      * @apiUse AdminUserNotFoundError
      */
-    async actionGet(actionContext, adminUserId) {
-        let adminUser = await adminUserService.getByUserId(adminUserId),
+    public async actionGet(actionContext, adminUserId) {
+        const adminUser = await adminUserService.getByUserId(adminUserId),
             accessAttributesInstances =
                 await adminUserService.getInstancesByAttributes(adminUser);
         return adminUserView.render({
@@ -195,9 +195,9 @@ class AdminUserController extends Controller{
      * @apiUse AdminUserAlreadyExistsError
      * @apiUse WrongAttributesError
      */
-    async actionCreate(actionContext) {
-        let userData = actionContext.data;
-        let adminUser = await adminUserService.create(userData);
+    public async actionCreate(actionContext) {
+        const userData = actionContext.data;
+        const adminUser = await adminUserService.create(userData);
 
         return adminUser.toJSON();
     }
@@ -235,8 +235,8 @@ class AdminUserController extends Controller{
      * @apiUse AdminUserAlreadyExistsError
      * @apiUse WrongAttributesError
      */
-    async actionUpdate(actionContext, adminUserId) {
-        let userData = actionContext.data;
+    public async actionUpdate(actionContext, adminUserId) {
+        const userData = actionContext.data;
         await adminUserService.update(adminUserId, userData);
     }
 
@@ -251,7 +251,7 @@ class AdminUserController extends Controller{
      *
      * @apiUse AdminUserNotFoundError
      */
-    async actionDelete(actionContext, adminUserId) {
+    public async actionDelete(actionContext, adminUserId) {
         await adminUserService.deleteUser(adminUserId);
     }
 }

@@ -24,5 +24,5 @@ class BrandActionChecker extends ActionChecker {
 
 export default BrandActionChecker;
 
-let middleware = createMiddlewareFunction(BrandActionChecker);
+const middleware = createMiddlewareFunction(BrandActionChecker);
 export {middleware};

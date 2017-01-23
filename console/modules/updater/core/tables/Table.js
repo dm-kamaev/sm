@@ -8,7 +8,7 @@ class Table {
      * @param  {object}         parsingMap
      */
     constructor(data, parsingMap) {
-        if(!data || !parsingMap) {
+        if (!data || !parsingMap) {
             throw new Error('Invalid school constrictor params!');
         }
         this.rawData_ = data;
@@ -22,7 +22,7 @@ class Table {
     get name() {
         return 'table';
     }
-    
+
     /**
      * @return {object[]}
      */
@@ -35,17 +35,17 @@ class Table {
                 if (hasData) {
                     var Parser = this.map_[key].parser;
                     var columnName = this.map_[key].columnName;
-                    var additionalHandler = 
+                    var additionalHandler =
                         this.map_[key].additionalHandler;
                     if (!Parser) {
                         throw new Error(
-                            'Can not parse column \'' + key + 
+                            'Can not parse column \'' + key +
                             '\'. Parser is unknown.'
                         );
                     }
                     var parser = new Parser(data);
                     parser.columnName = columnName;
-                    data = parser.parse()
+                    data = parser.parse();
                     if (additionalHandler) {
                         data = additionalHandler(data);
                     }
@@ -78,6 +78,7 @@ class Table {
     }
 
     /**
+     * @param  {string} columnName
      * @return {bool}
      */
     isColumnExists(columnName) {

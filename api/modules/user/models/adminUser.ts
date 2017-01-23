@@ -1,5 +1,5 @@
-let DataType = require('sequelize');
-let db = require('../../../../app/components/db');
+const DataType = require('sequelize');
+const db = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
@@ -10,11 +10,11 @@ export type AccessAttributes = {
 };
 
 export interface AdminUserAttribute {
-    id?: number,
-    userId: number,
-    accessAttributes?: AccessAttributes,
-    createdAt?: Date,
-    updatedAt?: Date
+    id?: number;
+    userId: number;
+    accessAttributes?: AccessAttributes;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface AdminUserInstance
@@ -23,7 +23,7 @@ export interface AdminUserInstance
 export interface AdminUserModel
     extends Sequelize.Model<AdminUserInstance, AdminUserAttribute> {}
 
-let AdminUser: AdminUserModel = db.define('AdminUser', {
+const AdminUser: AdminUserModel = db.define('AdminUser', {
     id: {
         autoIncrement: true,
         primaryKey: true,

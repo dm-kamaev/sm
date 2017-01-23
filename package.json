@@ -25,6 +25,7 @@
     "bluebird": "^3.4.1",
     "body-parser": "~1.13.2",
     "cheerio": "^0.19.0",
+    "clobl": "git+ssh://git@github.com:c7s/clobl.git#dev",
     "closure": "^1.0.3",
     "closure-templates": "^20141017.0.1",
     "colors": "^1.1.2",
@@ -48,7 +49,6 @@
     "gulp-babel": "^5.2.1",
     "gulp-concat": "^2.6.0",
     "gulp-cssnano": "^2.0.0",
-    "gulp-eslint": "^2.0.0",
     "gulp-filter": "^3.0.1",
     "gulp-foreach": "^0.1.0",
     "gulp-gjslint": "0.1.5",
@@ -89,18 +89,17 @@
     "tar.gz": "^1.0.2",
     "tipograph": "^0.3.3",
     "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
-    "typescript": "~2.0.3",
     "uid-safe": "^2.1.0",
     "xlsx-to-json": "^0.2.4"
   },
   "dependencies": {
-    "clobl": "git+ssh://git@github.com/c7s/clobl.git#release-20170112-BP-2032",
     "express": "^4.13.3",
     "geopoint": "^1.0.1",
     "glob": "^5.0.15",
     "multer": "^1.2.1",
     "q": "^1.4.1",
     "reset.css": "^2.0.2",
+    "typescript": "^2.1.5",
     "typings": "~1.3.3"
   }
 }

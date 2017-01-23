@@ -1,9 +1,7 @@
 const fs = require('fs');
-const https = require('https');
 const colors = require('colors');
 const async = require('asyncawait/async');
 const exec = require('child_process').exec;
-const await = require('asyncawait/await');
 
 var Common = function() {};
 
@@ -37,8 +35,9 @@ Common.fileExists = function(filePath) {
  */
 Common.checkFunctions = function(instanse) {
     for (var prop in instanse) {
-        if (typeof instanse[prop] === 'function')
+        if (typeof instanse[prop] === 'function') {
             console.log(colors.magenta(prop));
+        }
     }
 };
 
@@ -49,14 +48,14 @@ Common.checkFunctions = function(instanse) {
 Common.checkDir = function(path) {
     try {
         fs.statSync(path);
-    } catch (e) { //TODO: only if ENOENT
+    } catch (e) { // TODO: only if ENOENT
         fs.mkdirSync(path);
     }
 };
 
 /**
  * @param {Object} json
- * @param {String} path
+ * @param {string} path
  */
 Common.saveJson = (json, path) => {
     var js = JSON.stringify(json);
@@ -67,16 +66,16 @@ Common.saveJson = (json, path) => {
  * @param {string} execString - command to run in terminal
  * @return {promise}
  */
-Common.execAsync = async(function (execString) {
-    var doExec = new Promise( function(resolve, reject) {
-        exec(execString, {maxBuffer: 1024 * 500},  
-            function (error, stdout) {
+Common.execAsync = async(function(execString) {
+    var doExec = new Promise(function(resolve, reject) {
+        exec(execString, {maxBuffer: 1024 * 500},
+            function(error, stdout) {
                 console.log(stdout);
                 if (error) {
                     console.log(error);
                     reject(error);
                 } else {
-                    resolve({success:true});
+                    resolve({success: true});
                 }
             });
     });
@@ -87,7 +86,7 @@ Common.execAsync = async(function (execString) {
  * @param {string} path
  * @return {object}
  */
-Common.loadJson = function (path) { 
+Common.loadJson = function(path) {
     if (!Common.fileExists(path)) {
         console.log('File ' + colors.yellow(path) +
             ' is not found and will be created now');

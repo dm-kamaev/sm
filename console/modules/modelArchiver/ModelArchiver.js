@@ -32,8 +32,9 @@ class ModelArchiver {
                 exclude: ['created_at', 'updated_at']
             }
         };
-        if (opt_attributes)
+        if (opt_attributes) {
             this.options.attributes = opt_attributes;
+        }
         this.initialLogiing_ = sequelize.options.logging;
         sequelize.options.logging = false;
         this.model_ = model;
@@ -50,7 +51,7 @@ class ModelArchiver {
     save() {
         var instances = await(this.model_.findAll(this.options));
         var converter = new CsvConverter(JSON.stringify(instances));
-        var csv = await (converter.toCsv());
+        var csv = await(converter.toCsv());
         await(this.archiver_.compress(csv));
         this.dispatch_();
     }
@@ -58,7 +59,8 @@ class ModelArchiver {
 
     /**
      * @param {Object} [opt_options] - loading options
-     * @param {boolean} [opt_options.bulkInsert=false] - quick insert without update
+     * @param {boolean} [opt_options.bulkInsert=false] - quick insert
+     *                                                 without update
      * @public
      */
     load(opt_options) {
@@ -76,7 +78,8 @@ class ModelArchiver {
      * @private
      * @param {array<object>} data
      * @param {Object} [opt_options] - loading options
-     * @param {boolean} [opt_options.bulkInsert=false] - quick insert without update
+     * @param {boolean} [opt_options.bulkInsert=false] - quick insert
+     *                                                 without update
      */
     loadData_(data, opt_options) {
         var options = opt_options || {};
@@ -90,7 +93,7 @@ class ModelArchiver {
             this.bulkInsertLoad_(data) :
             this.upsertLoad_(data);
 
-        await (SqlHelper.actualizeSequence(this.model_.tableName));
+        await(SqlHelper.actualizeSequence(this.model_.tableName));
     }
 
 
@@ -123,7 +126,7 @@ class ModelArchiver {
         for (var i = 0; i < data.length; i += chunkSize) {
             chunks.push(data.slice(i, i + chunkSize));
         }
-        await (chunks.forEach(chunk => {
+        await(chunks.forEach(chunk => {
             await(this.model_.bulkCreate(chunk));
         }));
     };

@@ -3,17 +3,15 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     commander = require('commander'),
-    lodash = require('lodash'),
-    path = require('path');
+    lodash = require('lodash');
 
 const services = require('../app/components/services').all,
-    models = require('../app/components/models').all,
-    Archiver = require('./modules/modelArchiver/Archiver'),
-    CsvConverter = require('./modules/modelArchiver/CsvConverter');
-
-const CSV_DELIMITER = '|';
+    models = require('../app/components/models').all;
 
 class DepartmentStageToGrades {
+    /**
+     * @constructor
+     */
     constructor() {
         /**
          * @private
@@ -32,7 +30,6 @@ class DepartmentStageToGrades {
      * Create archived csv with page data got from schools
      */
     process() {
-        var departments = await(services.department.getAll());
         var schoolsWithDepartments = await(services.school.listInstances()),
             preparedDepartments = this.findNecessary_(schoolsWithDepartments);
 

@@ -1,5 +1,5 @@
 'use strict';
-const csv2json = require('csvtojson').Converter;
+const Csv2json = require('csvtojson').Converter;
 const json2csv = require('json2csv');
 const await = require('asyncawait/await');
 const replace = require('tipograph').Replace;
@@ -11,7 +11,7 @@ const CSV_DELIMITER = '|';
 class CsvConverter {
     /**
      * @public
-     * @param {string}
+     * @param {string} str
      * @return {string}
      * Thank you javascript for userfull string functions
      */
@@ -26,8 +26,7 @@ class CsvConverter {
     }
 
     /**
-     * @param
-     * @param {object}
+     * @param {object} JSON
      * used to fix double quotes
      */
     static cureQuotes(JSON) {
@@ -43,8 +42,7 @@ class CsvConverter {
                     } else {
                         newValue = Object.assign({}, oldValue);
                     }
-                    if (newValue)
-                        this.cureQuotes(newValue);
+                    if (newValue) { this.cureQuotes(newValue); }
                 } else if (typeof oldValue == 'string') {
                     newValue = this.beautyfySybmols(oldValue);
                 } else {
@@ -78,7 +76,7 @@ class CsvConverter {
 
     /**
      * @public
-     * @param {string||object} input - JSON or CSV
+     * @param {string|object} input - JSON or CSV
      */
     constructor(input) {
         this.input_ = input;
@@ -148,8 +146,7 @@ class CsvConverter {
         lodash.forIn(unstableJSON, (value, key) => {
             if (value == 'null') {
                 unstableJSON[key] = null;
-            }
-            else if (lodash.isPlainObject(value)) {
+            } else if (lodash.isPlainObject(value)) {
                 this.stabilizeJSON_(value);
             }
         });
@@ -166,7 +163,7 @@ class CsvConverter {
      */
     jsonPromise_(csv, params) {
         return new Promise(function(resolve, reject) {
-            var converter = new csv2json(params);
+            var converter = new Csv2json(params);
             converter.fromString(csv, function(err, result) {
                 if (err) {
                     reject(err);
@@ -183,13 +180,14 @@ class CsvConverter {
      * @return {Promise<string>}
      */
     csvPromise_(json, opt_delimiter) {
-        return new Promise (function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             json2csv({
                 data: json,
                 del: opt_delimiter || ','
             }, function(err, csv) {
-                if (err)
+                if (err) {
                     reject(err);
+                }
                 resolve(csv);
             });
         });
