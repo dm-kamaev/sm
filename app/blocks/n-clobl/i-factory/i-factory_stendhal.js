@@ -64,6 +64,7 @@ goog.require('sm.bSmStars.View');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
+goog.require('sm.gButton.ViewStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.gDropdown.DropdownSelectLegacy');
@@ -218,7 +219,10 @@ sm.iFactory.FactoryStendhal = function() {
         });
 
     /** Heirs of the clobl blocks */
-    this.setControlListItem('phone-input', {
+    this.setControlListItem('button', {
+            view: sm.gButton.ViewStendhal
+        })
+        .setControlListItem('phone-input', {
             control: sm.gInput.InputPhone,
             view: sm.gInput.ViewPhone
         })
