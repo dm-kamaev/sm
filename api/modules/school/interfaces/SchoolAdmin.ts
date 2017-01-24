@@ -6,13 +6,13 @@ export interface SomeSchoolData {
     director: string;
     phones: string[];
     govermentKey: number;
-    totalScore: number;
+    rankDogm: number;
     description: string;
     features: string[];
     dressCode: boolean;
     extendedDayCost: string;
     links: string[][];
-}
+};
 
 export interface SomeOptionalSchoolData {
     name?: string;
@@ -22,21 +22,32 @@ export interface SomeOptionalSchoolData {
     director?: string;
     phones?: string[];
     govermentKey?: number;
-    totalScore?: number;
+    rankDogm?: number;
     description?: string;
     features?: string[];
     dressCode?: boolean;
     extendedDayCost?: string;
     links?: string[][];
-}
+};
 
 export interface SomeSchoolInfo {
     id: number;
     name: string;
     schoolType: string;
     numberComments: number;
-    totalScore: number;
+    rankDogm: number;
     areaName: string;
     districtName: string;
     updatedAt: string;
-}
+};
+
+export interface SomeSchoolInfo {
+    id: number;
+    name: string;
+    schoolType: string;
+    numberComments: number;
+    rankDogm: number;
+    areaName: string;
+    districtName: string;
+    updatedAt: string;
+};

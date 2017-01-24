@@ -55,7 +55,7 @@ class SchoolAdminController extends Controller {
      *  "director": "Любимов Олег Вадимович",
      *  "phones": ["(495) 223-32-23", "(499)322-23-33"],
      *  "govermentKey": 100,
-     *  "totalScore": 4,
+     *  "rankDogm": 4,
      *  "description": "Многопрофильная школа с
      *                  развитой системой профориентации и
      *                  «университетскими субботами»",
@@ -127,7 +127,7 @@ class SchoolAdminController extends Controller {
      *   "director": "Любимов Олег Вадимович",
      *   "phones": ["(495) 223-32-23", "(499)322-23-33"],
      *   "govermentKey": 100,
-     *   "totalScore": 4,
+     *   "rankDogm": 4,
      *   "description": "Многопрофильная школа с
      *                  развитой системой профориентации и
      *                  «университетскими субботами»",
@@ -203,7 +203,7 @@ class SchoolAdminController extends Controller {
      *    "name": "Лицей № 1502 при МЭИ",
      *    "type": "Лицей",
      *    "numberComments": 19,
-     *    "totalScore": 4.6,
+     *    "rankDogm": 4.6,
      *    "areaName": "Преображенское",
      *    "districtName": "ВАО",
      *    "updatedAt": "2016-11-21T09:52:57.749Z"
@@ -250,7 +250,7 @@ class SchoolAdminController extends Controller {
      *  "director": "Любимов Олег Вадимович",
      *  "phones": ["(495) 223-32-23", "(499)322-23-33"],
      *  "govermentKey": 100,
-     *  "totalScore": 4,
+     *  "rankDogm": 4,
      *  "description": "Многопрофильная школа с
      *                  развитой системой профориентации и
      *                  «университетскими субботами»",

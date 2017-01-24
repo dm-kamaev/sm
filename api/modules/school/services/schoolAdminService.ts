@@ -44,7 +44,7 @@ class SchoolAdminService {
             director: schoolData.director,
             phones: schoolData.phones,
             govermentKey: schoolData.govermentKey,
-            totalScore: schoolData.totalScore,
+            rankDogm: schoolData.rankDogm,
             description: schoolData.description,
             features: schoolData.features,
             dressCode: schoolData.dressCode,
@@ -102,7 +102,7 @@ class SchoolAdminService {
     public async getAllSchool(): Promise<any> {
         const schools: any = await models.School.findAll({
             attributes: [
-                'id', 'name', 'schoolType', 'totalScore', 'updated_at'
+                'id', 'name', 'schoolType', 'rankDogm', 'updated_at'
             ],
             include: {
                 attributes: ['id'],
@@ -166,12 +166,16 @@ class SchoolAdminService {
                 districtName = area.district.name;
             }
         }
+        let rankDogm: number = 0;
+        if (school.rankDogm) {
+            rankDogm = Number((school.rankDogm).toFixed(1));
+        }
         return {
             id: school.id,
             name: school.name,
             schoolType: school.schoolType,
             numberComments,
-            totalScore: Number((school.totalScore).toFixed(1)),
+            rankDogm,
             areaName,
             districtName,
             updatedAt: school.updated_at,
