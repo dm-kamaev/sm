@@ -17,9 +17,9 @@ import {AddressInstance} from '../../geo/models/address';
 import SchoolNotExistType from './exceptions/SchoolNotExistType';
 
 import {
-    SomeSchoolData,
-    SomeOptionalSchoolData,
-    SomeSchoolInfo
+    SchoolDataForCreate,
+    SchoolDataForUpdate,
+    SchoolDataForView
 } from '../interfaces/SchoolAdmin';
 
 
@@ -27,7 +27,7 @@ class SchoolAdminService {
     public readonly name: string = 'schoolAdminService';
 
     public async create(
-        schoolData: SomeSchoolData
+        schoolData: SchoolDataForCreate
     ): Promise<SchoolInstance> {
         CsvConverter.cureQuotes(schoolData);
 
@@ -55,7 +55,7 @@ class SchoolAdminService {
 
     public async update(
         schoolId: number,
-        schoolData: SomeOptionalSchoolData
+        schoolData: SchoolDataForUpdate
     ): Promise<SchoolInstance> {
         CsvConverter.cureQuotes(schoolData);
 
@@ -116,7 +116,7 @@ class SchoolAdminService {
         });
 
         const schoolsInfo = schools.map(this.getSchoolInfo);
-        return Promise.all<SomeSchoolInfo[]>(schoolsInfo);
+        return Promise.all<SchoolDataForView[]>(schoolsInfo);
     }
 
     public async getById(id: number): Promise<SchoolInstance> {
@@ -134,7 +134,7 @@ class SchoolAdminService {
 
     private async getSchoolInfo (
         school: any
-    ): Promise<SomeSchoolInfo> {
+    ): Promise<SchoolDataForView> {
         let numberComments: number = 0;
         if (school.commentGroup && school.commentGroup.comments) {
             numberComments = school.commentGroup.comments.length;

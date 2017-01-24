@@ -1,4 +1,4 @@
-export interface SomeSchoolData {
+export interface SchoolDataForCreate {
     name: string;
     abbreviation: string;
     fullName: string;
@@ -14,7 +14,7 @@ export interface SomeSchoolData {
     links: string[][];
 };
 
-export interface SomeOptionalSchoolData {
+export interface SchoolDataForUpdate {
     name?: string;
     abbreviation?: string;
     fullName?: string;
@@ -30,18 +30,7 @@ export interface SomeOptionalSchoolData {
     links?: string[][];
 };
 
-export interface SomeSchoolInfo {
-    id: number;
-    name: string;
-    schoolType: string;
-    numberComments: number;
-    rankDogm: number;
-    areaName: string;
-    districtName: string;
-    updatedAt: string;
-};
-
-export interface SomeSchoolInfo {
+export interface SchoolDataForView {
     id: number;
     name: string;
     schoolType: string;

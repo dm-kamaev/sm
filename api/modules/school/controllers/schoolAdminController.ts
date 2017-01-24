@@ -27,11 +27,11 @@ class SchoolAdminController extends Controller {
      * create school
      * @api {post} /api/admin/school
      * @apiVersion 0.1.0
-     * @apiName createSchool
+     * @apiName CreateSchool
      * @apiGroup School
      *
      * @apiSuccess {Object}   school
-     * @apiSuccess {String}   school.name           school name
+     * @apiSuccess {String}   school.name          school name
      * @apiSuccess {String}   school.abbreviation  reduction school name
      * @apiSuccess {String}   school.fullName      full name school name
      * @apiSuccess {String}   school.schoolType    type
@@ -41,45 +41,47 @@ class SchoolAdminController extends Controller {
      * @apiSuccess {Object[]} school.features      list features
      * @apiSuccess {Boolean}  school.dressCode     exist dressCode
      * @apiSuccess {Object[][]} school.links    site/facebook/vk
-     *     @apiSuccess {String} school.links[0] name "Гимназия на сайте Департамента образования Москвы"
+     *     @apiSuccess {String} school.links[0] name
+     *         "Гимназия на сайте Департамента образования Москвы"
      *     @apiSuccess {String} school.links[1] link "vk.com/club86036747"
 
      * @apiSuccessExample {json} Example response:
-     *{
-     *  "name": "Школа №14",
-     *  "abbreviation": "ГБОУ СОШ № 14",
-     *  "fullName": "Государственное
-     *               бюджетное образовательное учреждение города Москвы
-     *               средняя общеобразовательная школа № 14",
-     *  "schoolType": "Школа",
-     *  "director": "Любимов Олег Вадимович",
-     *  "phones": ["(495) 223-32-23", "(499)322-23-33"],
-     *  "govermentKey": 100,
-     *  "rankDogm": 4,
-     *  "description": "Многопрофильная школа с
-     *                  развитой системой профориентации и
-     *                  «университетскими субботами»",
-     *  "features": [
-     *          "В лицее нет традиционных классов: ученики делятся на группы в
-     *           зависимости от выбранного ими учебного плана",
-     *          "В расписании предусмотрены факультетские дни, которые лицеисты
-     *           проводят на
-     *           профильных факультетах НИУ ВШЭ*"
-     *   ],
-     *   "dressCode": true,
-     *   "extendedDayCost": "3000 руб./мес.",
-     *   "links": [
-     *       [
-     *           "Гимназия на сайте Департамента образования Москвы",
-     *           "1811.mskobr.ru"
-     *       ],
-     *       [
-     *           " Сообщество гимназии Вконтакте",
-     *           "vk.com/club86036747"
-     *       ],
-     *   ]
-     *
-     *}
+     *    {
+     *        "name": "Школа №14",
+     *        "abbreviation": "ГБОУ СОШ № 14",
+     *        "fullName": "Государственное
+     *             бюджетное образовательное учреждение города Москвы
+     *             средняя общеобразовательная школа № 14",
+     *        "schoolType": "Школа",
+     *        "director": "Любимов Олег Вадимович",
+     *        "phones": ["(495) 223-32-23", "(499)322-23-33"],
+     *        "govermentKey": 100,
+     *        "rankDogm": 4,
+     *        "description": "Многопрофильная школа с
+     *            развитой системой профориентации и
+     *            «университетскими субботами»",
+     *        "features": [
+     *            "В лицее нет традиционных классов: ученики делятся на группы
+     *             в
+     *             зависимости от выбранного ими учебного плана",
+     *            "В расписании предусмотрены факультетские дни,
+     *            которые лицеисты
+     *            проводят на
+     *            профильных факультетах НИУ ВШЭ*"
+     *        ],
+     *        "dressCode": true,
+     *        "extendedDayCost": "3000 руб./мес.",
+     *        "links": [
+     *            [
+     *                "Гимназия на сайте Департамента образования Москвы",
+     *                "1811.mskobr.ru"
+     *            ],
+     *            [
+     *                " Сообщество гимназии Вконтакте",
+     *                "vk.com/club86036747"
+     *            ],
+     *        ]
+     *    }
      *
      */
     public async actionCreate(ctx) {
@@ -92,7 +94,7 @@ class SchoolAdminController extends Controller {
      * update school
      * @api {put} /api/admin/school/:schoolId
      * @apiVersion 0.1.0
-     * @apiName updateSchool
+     * @apiName UpdateSchool
      * @apiGroup SchoolAdmin
      *
      * @apiParam {Number} schoolId schoolId
@@ -103,7 +105,7 @@ class SchoolAdminController extends Controller {
      * }
      *
      * @apiSuccess {Object}   school
-     * @apiSuccess {String}   school.name           school name
+     * @apiSuccess {String}   school.name          school name
      * @apiSuccess {String}   school.abbreviation  reduction school name
      * @apiSuccess {String}   school.fullName      full name school name
      * @apiSuccess {String}   school.schoolType    type
@@ -113,44 +115,47 @@ class SchoolAdminController extends Controller {
      * @apiSuccess {Object[]} school.features      list features
      * @apiSuccess {Boolean}  school.dressCode     exist dressCode
      * @apiSuccess {Object[][]} school.links       site/facebook/vk
-     *     @apiSuccess {String} school.links[0]    name "Гимназия на сайте Департамента образования Москвы"
+     *     @apiSuccess {String} school.links[0]    name
+     *         "Гимназия на сайте Департамента образования Москвы"
      *     @apiSuccess {String} school.links[1]    link "vk.com/club86036747"
 
      * @apiSuccessExample {json} Example response:
-     * {
-     *   "name": "Школа №14",
-     *   "abbreviation": "ГБОУ СОШ № 14",
-     *   "fullName": "Государственное
-     *                бюджетное образовательное учреждение города Москвы
-     *                средняя общеобразовательная школа № 14",
-     *   "schoolType": "Школа",
-     *   "director": "Любимов Олег Вадимович",
-     *   "phones": ["(495) 223-32-23", "(499)322-23-33"],
-     *   "govermentKey": 100,
-     *   "rankDogm": 4,
-     *   "description": "Многопрофильная школа с
-     *                  развитой системой профориентации и
-     *                  «университетскими субботами»",
-     *   "features": [
-     *         "В лицее нет традиционных классов: ученики делятся на группы в
-     *          зависимости от выбранного ими учебного плана",
-     *         "В расписании предусмотрены факультетские дни, которые лицеисты
-     *          проводят на
-     *          профильных факультетах НИУ ВШЭ*"
-     *   ],
-     *   "dressCode": true,
-     *   "extendedDayCost": "3000 руб./мес.",
-     *   "links": [
-     *       [
-     *           "Гимназия на сайте Департамента образования Москвы",
-     *           "1811.mskobr.ru"
-     *       ],
-     *       [
-     *           " Сообщество гимназии Вконтакте",
-     *           "vk.com/club86036747"
-     *      ],
-     *   ]
-     * }
+     *    {
+     *        "name": "Школа №14",
+     *        "abbreviation": "ГБОУ СОШ № 14",
+     *        "fullName": "Государственное
+     *             бюджетное образовательное учреждение города Москвы
+     *             средняя общеобразовательная школа № 14",
+     *        "schoolType": "Школа",
+     *        "director": "Любимов Олег Вадимович",
+     *        "phones": ["(495) 223-32-23", "(499)322-23-33"],
+     *        "govermentKey": 100,
+     *        "rankDogm": 4,
+     *        "description": "Многопрофильная школа с
+     *            развитой системой профориентации и
+     *            «университетскими субботами»",
+     *        "features": [
+     *            "В лицее нет традиционных классов: ученики делятся
+     *            на группы в
+     *             зависимости от выбранного ими учебного плана",
+     *            "В расписании предусмотрены факультетские дни,
+     *            которые лицеисты
+     *            проводят на
+     *            профильных факультетах НИУ ВШЭ*"
+     *        ],
+     *        "dressCode": true,
+     *        "extendedDayCost": "3000 руб./мес.",
+     *        "links": [
+     *            [
+     *                "Гимназия на сайте Департамента образования Москвы",
+     *                "1811.mskobr.ru"
+     *            ],
+     *            [
+     *                " Сообщество гимназии Вконтакте",
+     *                "vk.com/club86036747"
+     *            ],
+     *        ]
+     *    }
      *
      */
     public async actionUpdate (ctx, schoolId: string) {
@@ -166,7 +171,7 @@ class SchoolAdminController extends Controller {
      * remove school
      * @api {delete} /api/admin/school/:schoolId
      * @apiVersion 0.1.0
-     * @apiName removeSchool
+     * @apiName RemoveSchool
      * @apiGroup SchoolAdmin
      *
      * @apiParam {Number} schoolId schoolId
@@ -185,7 +190,7 @@ class SchoolAdminController extends Controller {
      * get school info
      * @api {get} /api/admin/school
      * @apiVersion 0.1.0
-     * @apiName getAllSchool
+     * @apiName GetAllSchool
      * @apiGroup SchoolAdmin
      *
      * @apiSuccess {Object[]} school
@@ -198,16 +203,16 @@ class SchoolAdminController extends Controller {
      * @apiSuccess {Number}   school.districtName  distriсt name
      * @apiSuccess {Object[]} school.updatedAt
      * @apiSuccessExample {json} Example response:
-     * [{
-     *    "id": 649,
-     *    "name": "Лицей № 1502 при МЭИ",
-     *    "type": "Лицей",
-     *    "numberComments": 19,
-     *    "rankDogm": 4.6,
-     *    "areaName": "Преображенское",
-     *    "districtName": "ВАО",
-     *    "updatedAt": "2016-11-21T09:52:57.749Z"
-     * }]
+     *    [{
+     *        "id": 649,
+     *        "name": "Лицей № 1502 при МЭИ",
+     *        "type": "Лицей",
+     *        "numberComments": 19,
+     *        "rankDogm": 4.6,
+     *        "areaName": "Преображенское",
+     *        "districtName": "ВАО",
+     *        "updatedAt": "2016-11-21T09:52:57.749Z"
+     *    }]
      *
      */
     public async actionGetAllSchool() {
@@ -217,7 +222,7 @@ class SchoolAdminController extends Controller {
     /**
      * @api {get} /api/admin/school/:id
      * @apiVersion 1.0.0
-     * @apiName getSchool
+     * @apiName GetSchool
      * @apiGroup School Admin
      *
      * @apiParam {Number} id School's id.
@@ -240,41 +245,42 @@ class SchoolAdminController extends Controller {
      *
      *
      * @apiSuccessExample {json} Example response:
-     *{
-     *  "name": "Школа №14",
-     *  "abbreviation": "ГБОУ СОШ № 14",
-     *  "fullName": "Государственное
-     *               бюджетное образовательное учреждение города Москвы
-     *               средняя общеобразовательная школа № 14",
-     *  "schoolType": "Школа",
-     *  "director": "Любимов Олег Вадимович",
-     *  "phones": ["(495) 223-32-23", "(499)322-23-33"],
-     *  "govermentKey": 100,
-     *  "rankDogm": 4,
-     *  "description": "Многопрофильная школа с
-     *                  развитой системой профориентации и
-     *                  «университетскими субботами»",
-     *  "features": [
-     *          "В лицее нет традиционных классов: ученики делятся на группы в
-     *           зависимости от выбранного ими учебного плана",
-     *          "В расписании предусмотрены факультетские дни, которые лицеисты
-     *           проводят на
-     *           профильных факультетах НИУ ВШЭ*"
-     *   ],
-     *   "dressCode": true,
-     *   "extendedDayCost": "3000 руб./мес.",
-     *   "links": [
-     *       [
-     *           "Гимназия на сайте Департамента образования Москвы",
-     *           "1811.mskobr.ru"
-     *       ],
-     *       [
-     *           " Сообщество гимназии Вконтакте",
-     *           "vk.com/club86036747"
-     *       ],
-     *   ]
-     *
-     *}
+     *    {
+     *        "name": "Школа №14",
+     *        "abbreviation": "ГБОУ СОШ № 14",
+     *        "fullName": "Государственное
+     *             бюджетное образовательное учреждение города Москвы
+     *             средняя общеобразовательная школа № 14",
+     *        "schoolType": "Школа",
+     *        "director": "Любимов Олег Вадимович",
+     *        "phones": ["(495) 223-32-23", "(499)322-23-33"],
+     *        "govermentKey": 100,
+     *        "rankDogm": 4,
+     *        "description": "Многопрофильная школа с
+     *            развитой системой профориентации и
+     *            «университетскими субботами»",
+     *        "features": [
+     *            "В лицее нет традиционных классов: ученики делятся
+     *             на группы в
+     *             зависимости от выбранного ими учебного плана",
+     *            "В расписании предусмотрены факультетские дни,
+     *            которые лицеисты
+     *            проводят на
+     *            профильных факультетах НИУ ВШЭ*"
+     *        ],
+     *        "dressCode": true,
+     *        "extendedDayCost": "3000 руб./мес.",
+     *        "links": [
+     *            [
+     *                "Гимназия на сайте Департамента образования Москвы",
+     *                "1811.mskobr.ru"
+     *            ],
+     *            [
+     *                " Сообщество гимназии Вконтакте",
+     *                "vk.com/club86036747"
+     *            ],
+     *        ]
+     *    }
      */
     public async actionGet(actionContext: any, id: number) {
         return schoolAdminService.getById(id);
@@ -284,21 +290,21 @@ class SchoolAdminController extends Controller {
     /**
      * @api {get} /api/admin/schooltype
      * @apiVersion 1.0.0
-     * @apiName getSchoolTypes
+     * @apiName GetSchoolTypes
      * @apiGroup School Admin
      *
      * @apiSuccess {String[]} - school types.
      * @apiSuccessExample {json} Example response:
-     *   [
-     *       "Школа",
-     *       "Лицей",
-     *       "Гимназия",
-     *       "Центр образования",
-     *       "Кадетская школа",
-     *       "Кадетская школа-интернат",
-     *       "Коррекционная школа",
-     *       "Коррекционная школа-интернат"
-     *   ]
+     *    [
+     *        "Школа",
+     *        "Лицей",
+     *        "Гимназия",
+     *        "Центр образования",
+     *        "Кадетская школа",
+     *        "Кадетская школа-интернат",
+     *        "Коррекционная школа",
+     *        "Коррекционная школа-интернат"
+     *    ]
      */
     public actionGetSchoolTypes(actionContext: any) {
         return schoolAdminService.getSchoolTypes();
