@@ -9,12 +9,12 @@ const CsvConverter =
     require('../../../../console/modules/modelArchiver/CsvConverter');
 const schoolType = require('../enums/schoolType.js');
 
-import SchoolModel from '../models/school';
+import {Model as SchoolModel} from '../models/school';
 import {SchoolInstance} from '../models/school';
-import AddressModel from '../../geo/models/address';
+import {Model as AddressModel} from '../../geo/models/address';
 import {AddressInstance} from '../../geo/models/address';
 
-import SchoolNotExistType from './exceptions/SchoolNotExistType';
+import {SchoolNotExistType} from './exceptions/SchoolNotExistType';
 
 import {
     SchoolDataForCreate,
@@ -132,7 +132,7 @@ class SchoolAdminService {
         return schoolType.toArray();
     }
 
-    private async getSchoolInfo (
+    private async getSchoolInfo(
         school: any
     ): Promise<SchoolDataForView> {
         let numberComments: number = 0;
@@ -182,4 +182,5 @@ class SchoolAdminService {
         };
     }
 };
-export default new SchoolAdminService();
+
+export const service = new SchoolAdminService();

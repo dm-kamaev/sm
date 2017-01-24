@@ -22,7 +22,7 @@ const execParams: Lint.ExecutionParams = {
 };
 const executor = new Lint.LintExecutor(lintParams, execParams);
 
-export default function() {
+export const backendLint = function() {
     return executor
         .addEslintLinter()
         .addTslintLinter()

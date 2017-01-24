@@ -17,7 +17,7 @@ export interface DepartmentInstance
 interface DepartmentModel
     extends Sequelize.Model<DepartmentInstance, DepartmentAttribute> {}
 
-const Department: DepartmentModel = db.define('Department', {
+const Model: DepartmentModel = db.define('Department', {
     name: DataType.STRING,
     addressId: {
         type: DataType.INTEGER,
@@ -44,4 +44,4 @@ const Department: DepartmentModel = db.define('Department', {
     }
 });
 
-export default Department;
+export {Model};

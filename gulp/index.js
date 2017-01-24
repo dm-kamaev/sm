@@ -6,6 +6,6 @@ module.exports = function(gulpHelper) {
         scripts: require('./taskScripts')(gulpHelper),
         svgSprite: require('./taskSvgSprite'),
         tsCompile: require('./taskTsCompile'),
-        backendLint: require('./taskBackendLint').default
+        backendLint: require('./taskBackendLint').backendLint
     };
 };

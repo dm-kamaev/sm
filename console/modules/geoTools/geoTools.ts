@@ -304,4 +304,4 @@ class GeoTools {
     }
 }
 
-export default new GeoTools();
+export const geoTools = new GeoTools();

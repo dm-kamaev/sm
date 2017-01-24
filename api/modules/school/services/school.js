@@ -13,7 +13,7 @@ const School = models.School;
 const SchoolNotFoundError =
     require('../controllers/errors/SchoolNotFoundError.js');
 
-const SchoolNotFound = require('./exceptions/SchoolNotFound').default;
+const SchoolNotFound = require('./exceptions/SchoolNotFound').SchoolNotFound;
 
 const sequelize = require('../../../../app/components/db'),
     redis = require('../../../../app/components/redis'),

@@ -1,12 +1,15 @@
-import departmentService from '../../geo/services/department';
-import departmentView from '../../geo/views/departmentView';
+import {service as departmentService} from '../../geo/services/department';
+import {departmentView} from '../../geo/views/departmentView';
 
 import {LegacyController} from '../../../components/interface';
 
-import SchoolNotFoundError from './errors/SchoolNotFound';
-import DepartmentNotFoundError from './errors/DepartmentNotFound';
-import AddressDoesNotExistError from './errors/AddressDoesNotExist';
-import AddressIsNotUniqueError from './errors/AddressIsNotUnique';
+import {SchoolNotFound as SchoolNotFoundError} from './errors/SchoolNotFound';
+import {DepartmentNotFound as DepartmentNotFoundError}
+    from './errors/DepartmentNotFound';
+import {AddressDoesNotExist as AddressDoesNotExistError}
+    from './errors/AddressDoesNotExist';
+import {AddressIsNotUnique as AddressIsNotUniqueError}
+    from './errors/AddressIsNotUnique';
 
 const Controller: LegacyController = require('nodules/controller').Controller;
 

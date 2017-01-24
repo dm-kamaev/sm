@@ -8,9 +8,9 @@ const util = require('util');
 import { LegacyController } from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
-import schoolCommentService from '../services/schoolComment';
-import commentView from '../views/commentView';
-import schoolAdminService from '../services/schoolAdminService';
+import {service as schoolCommentService} from '../services/schoolComment';
+import {commentView} from '../views/commentView';
+import {service as schoolAdminService} from '../services/schoolAdminService';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 

@@ -89,4 +89,4 @@ initCrudRouting(
     departmentAdminController
 );
 
-export default router;
+export {router};

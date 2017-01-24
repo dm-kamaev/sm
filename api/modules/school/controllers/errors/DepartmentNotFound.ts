@@ -3,7 +3,7 @@ import {ControllerError} from '../../../../components/interface';
 
 const Error: ControllerError = require('nodules/controller/ControllerError');
 
-export default class DepartmentNotFound extends Error {
+export class DepartmentNotFound extends Error {
     public code: String;
     public status: Number;
     public message: String;

@@ -209,4 +209,4 @@ function buildCommentWithUserData_(comments): Promise<IgetCommentWithUser[]> {
     });
 }
 
-export default service;
+export {service};

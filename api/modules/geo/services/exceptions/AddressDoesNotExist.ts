@@ -3,7 +3,7 @@ import {ServiceException} from '../../../../components/interface';
 const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
-export default class AddressDoesNotExist extends Exception {
+export class AddressDoesNotExist extends Exception {
     public readonly name: string;
 
     constructor(addressName: string) {

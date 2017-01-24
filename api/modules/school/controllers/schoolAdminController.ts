@@ -8,10 +8,11 @@ const util = require('util');
 import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
-import schoolCommentService from '../services/schoolComment';
-import commentView from '../views/commentView';
-import schoolAdminService from '../services/schoolAdminService';
-import SchoolNotExistTypeError from './errors/SchoolNotExistTypeError';
+import {service as schoolCommentService} from '../services/schoolComment';
+import {commentView} from '../views/commentView';
+import {service as schoolAdminService} from '../services/schoolAdminService';
+import {SchoolNotExistType as SchoolNotExistTypeError}
+    from './errors/SchoolNotExistTypeError';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 
@@ -157,7 +158,7 @@ class SchoolAdminController extends Controller {
      *    }
      *
      */
-    public async actionUpdate (ctx, schoolId: string) {
+    public async actionUpdate(ctx, schoolId: string) {
         const schoolData = ctx.request.body;
         return await schoolAdminService.update(
             parseInt(schoolId, 10),

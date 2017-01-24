@@ -8,17 +8,17 @@ const Exception = require('nodules/controller/ServiceException');
 
 const entityType = require('../../entity/enums/entityType');
 
-import addressService from './address';
+import {service as addressService} from './address';
 import {
     DepartmentInstance,
-    DepartmentAttribute
+    DepartmentAttribute,
+    Model as DepartmentModel
 } from '../models/department';
-import DepartmentModel from '../models/department';
 import {AddressInstance} from '../models/address';
 import {DepartmentAdmin} from '../interfaces/DepartmentAdmin';
 
-import DepartmentNotFound from './exceptions/DepartmentNotFound';
-import AddressDoesNotExist from './exceptions/AddressDoesNotExist';
+import {DepartmentNotFound} from './exceptions/DepartmentNotFound';
+import {AddressDoesNotExist} from './exceptions/AddressDoesNotExist';
 
 class DepartmentService {
     public readonly name: string = 'department';
@@ -196,7 +196,8 @@ class DepartmentService {
                 if (address.departments.length > 0) {
                     address.departments.forEach(department => {
                         if (department.educationalGrades &&
-                            department.educationalGrades.some(grade => grade > 0)
+                            department.educationalGrades.some(
+                                grade => grade > 0)
                         ) {
                             res = true;
                         }
@@ -245,4 +246,4 @@ class DepartmentService {
     }
 }
 
-export default new DepartmentService();
+export const service = new DepartmentService();

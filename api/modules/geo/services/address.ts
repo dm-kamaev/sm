@@ -8,11 +8,11 @@ const logger = require('../../../../app/components/logger/logger')
 
 const entityTypes = require('../../entity/enums/entityType');
 
-import geoTools from '../../../../console/modules/geoTools/geoTools';
+import {geoTools} from '../../../../console/modules/geoTools/geoTools';
 import {AddressInstance} from '../models/address';
-import AddressModel from '../models/address';
+import {Model as AddressModel} from '../models/address';
 
-import AddressIsNotUnique from './exceptions/AddressIsNotUnique';
+import {AddressIsNotUnique} from './exceptions/AddressIsNotUnique';
 
 const SEARCH_RADIUS = 3; // killometrs, search radius for metro
 
@@ -44,7 +44,7 @@ class AddressService {
                 ' with id:' + addressBD.school_id
             );
             if (entityType === entityTypes.SCHOOL &&
-                entityId !== addressBD.entityId) {
+                Number(entityId) !== addressBD.entityId) {
                 throw new AddressIsNotUnique(addressBD.name);
             }
             address = addressBD;
@@ -371,4 +371,4 @@ class AddressService {
     }
 }
 
-export default new AddressService();
+export const service = new AddressService();

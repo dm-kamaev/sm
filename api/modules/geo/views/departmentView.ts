@@ -88,4 +88,4 @@ class DepartmentView {
     }
 }
 
-export default new DepartmentView();
+export const departmentView = new DepartmentView();

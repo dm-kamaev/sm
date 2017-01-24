@@ -7,7 +7,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 var services = require.main.require('./app/components/services').all;
-var geoTools = require('./modules/geoTools/geoTools').default;
+var geoTools = require('./modules/geoTools/geoTools').geoTools;
 // var modules = require.main.require('./api/modules');
 
 const PATH_TO_ERROR_FILE = 'metrolog.txt';
