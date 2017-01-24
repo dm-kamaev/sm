@@ -99,9 +99,11 @@
  * }}
  */
 {template .errorInformation_}
-    <div class="{call .rootClass/}__error-information">
-        {call .errorImg_/}
-        {call .errorText_ data="all"/}
+    <div class="{call .rootClass/}__wrapper-error-information">
+        <div class="{call .rootClass/}__error-information i-utils__clearfix">
+            {call .errorImg_/}
+            {call .errorText_ data="all"/}
+        </div>
     </div>
 {/template}
 

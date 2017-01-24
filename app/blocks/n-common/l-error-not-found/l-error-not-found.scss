@@ -11,7 +11,7 @@
     min-height: 100%;
 }
 
-.l-error-not-found__body {
+.l-error-not-found__section {
     width: 1200px;
     min-width: 255px;
     margin: 0 auto 60px;
@@ -29,10 +29,27 @@
 
 
 /** section content **/
-.l-error-not-found__error-information {
-    position: relative;
-
+.l-error-not-found__wrapper-error-information {
+    height: 280px;
     margin-top: 60px;
+
+    text-align: center;
+
+    &:before {
+        display: inline-block;
+
+        height: 100%;
+
+        content: '';
+        vertical-align: middle;
+    }
+}
+
+.l-error-not-found__error-information {
+    display: inline-block;
+
+    vertical-align: middle;
+    text-align: left;
 }
 
 .l-error-not-found__error-text {
@@ -49,28 +66,42 @@
 
 .l-error-not-found__error-img {
     display: inline-block;
+
     width: 93px;
     height: 93px;
+
     vertical-align: middle;
 }
 
 @include media-xl {
-    .l-error-not-found__body {
+    .l-error-not-found__section {
         box-sizing: border-box;
         width: auto;
         padding: 0 40px;
     }
 }
 
+@include media-m {
+    .l-error-not-found__wrapper-error-information {
+        height: 180px;
+    }
+}
+
 @include media-s {
+    .l-error-not-found__wrapper-error-information {
+        height: auto;
+    }
+
     .l-error-not-found__error-img {
-        position: absolute;
+        float: left;
+
+        display: block;
     }
 
     .l-error-not-found__error-text {
-        padding-left: 120px;
+        display: block;
 
-        vertical-align: top;
+        padding-left: 120px;
     }
 }
 
@@ -81,7 +112,7 @@
         padding-bottom: 235px;
     }
 
-    .l-error-not-found__body {
+    .l-error-not-found__section {
         padding: 0 30px;
     }
 
@@ -92,11 +123,11 @@
 
 @include media-xxs {
     .l-error-not-found__error-img {
-        position: static;
+        float: none;
     }
 
     .l-error-not-found__error-text {
         margin-top: 20px;
-        padding-left: 0;
+        padding-left: 0px;
     }
 }
