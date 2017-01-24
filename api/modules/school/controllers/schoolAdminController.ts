@@ -24,11 +24,10 @@ class SchoolAdminController extends Controller {
     }
 
     /**
-     * create school
-     * @api {post} /api/admin/school
+     * @api {post} /api/admin/school Create school
      * @apiVersion 0.1.0
      * @apiName CreateSchool
-     * @apiGroup School
+     * @apiGroup School Admin
      *
      * @apiSuccess {Object}   school
      * @apiSuccess {String}   school.name          school name
@@ -41,9 +40,9 @@ class SchoolAdminController extends Controller {
      * @apiSuccess {Object[]} school.features      list features
      * @apiSuccess {Boolean}  school.dressCode     exist dressCode
      * @apiSuccess {Object[][]} school.links    site/facebook/vk
-     *     @apiSuccess {String} school.links[0] name
-     *         "Гимназия на сайте Департамента образования Москвы"
-     *     @apiSuccess {String} school.links[1] link "vk.com/club86036747"
+     * @apiSuccess {String}   school.links.[0] name
+     *      "Гимназия на сайте Департамента образования Москвы"
+     * @apiSuccess {String} school.links.[1] link "vk.com/club86036747"
 
      * @apiSuccessExample {json} Example response:
      *    {
@@ -91,11 +90,10 @@ class SchoolAdminController extends Controller {
 
 
     /**
-     * update school
-     * @api {put} /api/admin/school/:schoolId
+     * @api {put} /api/admin/school/:schoolId Update school
      * @apiVersion 0.1.0
      * @apiName UpdateSchool
-     * @apiGroup SchoolAdmin
+     * @apiGroup School Admin
      *
      * @apiParam {Number} schoolId schoolId
      * @apiParamExample {json} Request-Example:
@@ -115,9 +113,10 @@ class SchoolAdminController extends Controller {
      * @apiSuccess {Object[]} school.features      list features
      * @apiSuccess {Boolean}  school.dressCode     exist dressCode
      * @apiSuccess {Object[][]} school.links       site/facebook/vk
-     *     @apiSuccess {String} school.links[0]    name
-     *         "Гимназия на сайте Департамента образования Москвы"
-     *     @apiSuccess {String} school.links[1]    link "vk.com/club86036747"
+     * @apiSuccess {Object[][]} school.links       site/facebook/vk
+     * @apiSuccess {String}     school.links.[0]       name
+     *     "Гимназия на сайте Департамента образования Москвы"
+     * @apiSuccess {String} school.links.[1] link "vk.com/club86036747"
 
      * @apiSuccessExample {json} Example response:
      *    {
@@ -168,11 +167,10 @@ class SchoolAdminController extends Controller {
 
 
     /**
-     * remove school
-     * @api {delete} /api/admin/school/:schoolId
+     * @api {delete} /api/admin/school/:schoolId Remove school
      * @apiVersion 0.1.0
      * @apiName RemoveSchool
-     * @apiGroup SchoolAdmin
+     * @apiGroup School Admin
      *
      * @apiParam {Number} schoolId schoolId
      *
@@ -187,11 +185,10 @@ class SchoolAdminController extends Controller {
 
 
     /**
-     * get school info
-     * @api {get} /api/admin/school
+     * @api {get} /api/admin/school Get info for all schools
      * @apiVersion 0.1.0
-     * @apiName GetAllSchool
-     * @apiGroup SchoolAdmin
+     * @apiName GetAllSchoolInfo
+     * @apiGroup School Admin
      *
      * @apiSuccess {Object[]} school
      * @apiSuccess {Number}   school.id    school number
@@ -219,10 +216,11 @@ class SchoolAdminController extends Controller {
         return await schoolAdminService.getAllSchool();
     }
 
+
     /**
-     * @api {get} /api/admin/school/:id
+     * @api {get} /api/admin/school/:id Get info for current schools
      * @apiVersion 1.0.0
-     * @apiName GetSchool
+     * @apiName GetSchoolInfo
      * @apiGroup School Admin
      *
      * @apiParam {Number} id School's id.
@@ -288,7 +286,7 @@ class SchoolAdminController extends Controller {
 
 
     /**
-     * @api {get} /api/admin/schooltype
+     * @api {get} /api/admin/schooltype Get all school types
      * @apiVersion 1.0.0
      * @apiName GetSchoolTypes
      * @apiGroup School Admin
