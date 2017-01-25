@@ -105,7 +105,7 @@ class DepartmentService {
                 throw new AddressDoesNotExist(addressData.address);
             }
         }
-        let updatedInstance = await instance.update(data);
+        const updatedInstance = await instance.update(data);
         addressService.updateIsSchool(data.addressId);
         return updatedInstance;
     }
