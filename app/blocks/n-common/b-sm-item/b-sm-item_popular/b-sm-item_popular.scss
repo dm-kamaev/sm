@@ -1,0 +1,27 @@
+.b-sm-item_popular {
+    cursor: default;
+
+    width: 180px;
+
+    .b-sm-item__section-group_cover {
+        margin-bottom: 25px;
+    }
+
+    .b-sm-item__section_header {
+        font-family: 'PT Serif', serif;
+    }
+
+    .b-sm-item__name {
+        font-weight: 800;
+    }
+
+    .b-sm-item__section_description {
+        margin-top: 12px;
+
+        font: 13px/18px Arial, sans-serif;
+    }
+
+    .b-sm-item__section_details {
+        margin-top: 15px;
+    }
+}

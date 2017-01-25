@@ -1,0 +1,216 @@
+{namespace sm.bSmItem.TemplatePopular}
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmItem.Template.Params.Data,
+ *     config: sm.bSmItem.Template.Params.Config
+ * }}
+ * @extends sm.bSmItem.Template
+ * @constructor
+ */
+{template .item}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         score: ?number
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .sectionCover}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_cover">
+        {call .score data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Template estimated parameters
+ * @protected
+ */
+{template .estimates}
+    <div class="{call .rootClass/}__estimates{sp}
+                {cl.iUtils.Utils.CssClass.HIDDEN}">
+    </div>
+{/template}
+
+
+/**
+ * Item name
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         alias: string
+ *     },
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .name}
+    <div class="{call .rootClass/}__name">
+        {let $name kind="html"}
+            {$params.data.name.light}
+
+            {if $params.data.name?.bold}
+                {$params.data.name.bold}
+            {/if}
+        {/let}
+
+        {let $url kind="html"}
+            /{$params.data.alias}
+        {/let}
+
+        {let $customClasses kind="html"}
+            {call .rootClass/}__link-name
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'id': $params.data.id,
+                        'content': $name,
+                        'url': $url
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': 'dark',
+                        'size': 'xxl'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Score
+ * @param params {{
+ *     data: {
+ *         score: ?number
+ *     }
+ * }}
+ * @protected
+ */
+{template .score}
+    <div class="{call .rootClass/}__score">
+        {call .renderChild}
+            {param params: [
+                'type': 'smMark',
+                'renderParams': [
+                    'data': [
+                        'value': $params.data.score
+                    ],
+                    'config': [
+                        'theme': 'ring'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Metro badge
+ * @param params {{
+ *     data: {
+ *         metro: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .metro}
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_metro">
+        {call .renderChild}
+            {param params: [
+                'type': 'smBadge',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.metro,
+                    ],
+                    'config': [
+                        'iconName': 'metro',
+                        'iconType': 'svg',
+                        'isNotActive': true,
+                        'theme': 'inline',
+                        'entityType': $params.data.type
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Area badge
+ * @param params {{
+ *     data: {
+ *         area: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .area}
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_area">
+        {call .renderChild}
+            {param params: [
+                'type': 'smBadge',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.area,
+                    ],
+                    'config': [
+                        'iconName': 'location',
+                        'isNotActive': true,
+                        'theme': 'inline',
+                        'entityType': $params.data.type
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     data: {
+ *         type: string
+ *     },
+ *     config: {
+ *         enableCover: (boolean|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {call .super_additionalClasses data="all"/}{sp}
+
+    {call .rootClass/}_popular
+{/template}

@@ -25,6 +25,7 @@ goog.require('sm.bSmHeadedList.Template');
 goog.require('sm.bSmHeader.Template');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.TemplateEntity');
+goog.require('sm.bSmItem.TemplatePopular');
 goog.require('sm.bSmItemList.Template');
 goog.require('sm.bSmLink.Template');
 goog.require('sm.bSmListPaged.Template');
@@ -260,16 +261,20 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bSmItem.Template.item
         )
         .setTemplateListItem(
+            'smItemEntity',
+            sm.bSmItem.TemplateEntity.item
+        )
+        .setTemplateListItem(
+            'smItemPopular',
+            sm.bSmItem.TemplatePopular.item
+        )
+        .setTemplateListItem(
             'smScore',
             sm.bSmScore.Template.score
         )
         .setTemplateListItem(
             'smScoreBrief',
             sm.bSmScore.TemplateBrief.score
-        )
-        .setTemplateListItem(
-            'smItemEntity',
-            sm.bSmItem.TemplateEntity.item
         )
         .setTemplateListItem(
             'smItemList',

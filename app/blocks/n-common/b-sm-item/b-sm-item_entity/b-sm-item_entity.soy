@@ -449,8 +449,7 @@
  *         type: string
  *     },
  *     config: {
- *         enableCover: (boolean|undefined),
- *         stylizationModifier: string
+ *         enableCover: (boolean|undefined)
  *     }
  * }}
  * @override
@@ -458,6 +457,5 @@
 {template .additionalClasses}
     {call .super_additionalClasses data="all"/}{sp}
 
-    {call .rootClass/}_entity{sp}
-    {call .rootClass/}_type_{$params.data.type}
+    {call .rootClass/}_entity
 {/template}

@@ -383,6 +383,7 @@
  * Location
  * @param params {{
  *     data: {
+ *         type: string,
  *         metro: ?Array<{
  *             id: number,
  *             name: string
@@ -397,9 +398,9 @@
  */
 {template .location}
     {if $params.data?.metro and length($params.data?.metro)}
-        {call .metro_ data="all" /}
+        {call .metro data="all" /}
     {elseif $params.data?.area and length($params.data?.area)}
-        {call .area_ data="all" /}
+        {call .area data="all" /}
     {/if}
 {/template}
 
@@ -408,14 +409,16 @@
  * Metro badge
  * @param params {{
  *     data: {
+ *         type: string,
  *         metro: ?Array<{
  *             id: number,
  *             name: string
  *         }>
  *     }
  * }}
+ * @protected
  */
-{template .metro_}
+{template .metro}
     <div class="{call .rootClass/}__badge {call .rootClass/}__badge_metro">
         {call .renderChild}
             {param params: [
@@ -442,14 +445,16 @@
  * Area badge
  * @param params {{
  *     data: {
+ *         type: string,
  *         area: ?Array<{
  *             id: number,
  *             name: string
  *         }>
  *     }
  * }}
+ * @protected
  */
-{template .area_}
+{template .area}
     <div class="{call .rootClass/}__badge {call .rootClass/}__badge_area">
         {call .renderChild}
             {param params: [
@@ -474,16 +479,19 @@
 /**
  * Css classes
  * @param params {{
+ *     data: {
+ *         type: string
+ *     },
  *     config: {
- *         enableCover: (boolean|undefined),
- *         stylizationModifier: string
+ *         enableCover: (boolean|undefined)
  *     }
  * }}
  * @override
  */
 {template .additionalClasses}
-    {if $params?.config?.enableCover or
-        $params.config.stylizationModifier == 'experimental'}
+    {call .rootClass/}_type_{$params.data.type}{sp}
+
+    {if $params?.config?.enableCover}
         {call .rootClass/}_cover_enable
     {/if}
 {/template}
@@ -528,13 +536,4 @@
                 'category': $params.data.category
             ]) /}
         {/call}"
-{/template}
-
-
-/**
- * Tag name
- * @override
- */
-{template .tag}
-    div
 {/template}
