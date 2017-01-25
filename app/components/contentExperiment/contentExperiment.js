@@ -50,4 +50,22 @@ experiment.getFactoryByVersion = function(version) {
     return result;
 };
 
+
+/**
+ * Return search template name by factory name
+ * @param {string} factory
+ * @return {strict}
+ */
+experiment.getSearchTemplateName = function(factory) {
+    let result;
+
+    if (factory == factoryName.EXPERIMENTAL) {
+        result = 'sm.lSearch.TemplateExperimental.search';
+    } else {
+        result = 'sm.lSearch.Template.search';
+    }
+
+    return result;
+};
+
 module.exports = experiment;

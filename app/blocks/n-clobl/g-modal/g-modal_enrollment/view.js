@@ -35,6 +35,7 @@ goog.scope(function() {
         SECTION_ERROR: 'g-modal__section_error',
         NAME_INPUT: 'g-modal__name-input',
         PHONE_INPUT: 'g-modal__phone-input',
+        EMAIL_INPUT: 'g-modal__email-input',
         COMMENT_TEXTAREA: 'g-modal__comment-textarea'
     };
 
@@ -106,6 +107,10 @@ goog.scope(function() {
 
         this.dom.phoneField = this.getElementByClass(
             View.CssClass.PHONE_INPUT
+        );
+
+        this.dom.emailField = this.getElementByClass(
+            View.CssClass.EMAIL_INPUT
         );
 
         this.dom.commentField = this.getElementByClass(
