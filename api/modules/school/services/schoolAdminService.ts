@@ -19,7 +19,8 @@ import {SchoolNotExistType} from './exceptions/SchoolNotExistType';
 import {
     SchoolDataForCreate,
     SchoolDataForUpdate,
-    SchoolDataForView
+    SchoolDataForView,
+    SchoolAddresses
 } from '../interfaces/SchoolAdmin';
 
 
@@ -99,7 +100,7 @@ class SchoolAdminService {
     }
 
 
-    public async getAllSchool(): Promise<any> {
+    public async getAllSchool(): Promise<SchoolDataForView[]> {
         const schools: any = await models.School.findAll({
             attributes: [
                 'id', 'name', 'schoolType', 'rankDogm', 'updated_at'
@@ -115,8 +116,7 @@ class SchoolAdminService {
             }
         });
 
-        const schoolsInfo = schools.map(this.getSchoolInfo);
-        return Promise.all<SchoolDataForView[]>(schoolsInfo);
+        return this.getSchoolInfo(schools);
     }
 
     public async getById(id: number): Promise<SchoolInstance> {
@@ -132,54 +132,78 @@ class SchoolAdminService {
         return schoolType.toArray();
     }
 
-    private async getSchoolInfo(
-        school: any
-    ): Promise<SchoolDataForView> {
-        let numberComments: number = 0;
-        if (school.commentGroup && school.commentGroup.comments) {
-            numberComments = school.commentGroup.comments.length;
-        }
-
-        const address: AddressInstance = await AddressModel.findOne({
-            attributes: ['area_id'],
+    private async getSchoolInfo(schools): Promise<SchoolDataForView[]> {
+        const schoolIds: number[] = schools.map(school => school.id);
+        const addresses: any = await models.Address.findAll({
+            attributes: ['entityId', 'area_id'],
             where: {
-                entityId: school.id,
+                entityId: {
+                    $in: schoolIds
+                },
                 entityType: 'school'
             },
-        });
-        let areaName: string = '',
-            districtName: string = '';
-        if (address) {
-            const area: any = await models.Area.findOne({
+            include: {
                 attributes: ['name', 'districtId'],
-                where: {
-                    id: address['area_id']
-                },
+                model: models.Area,
+                as: 'area',
                 include: {
                     attributes: ['name'],
                     model: models.District,
                     as: 'district',
                 }
-            });
+            }
+        });
+        const hashSchoolAddress: SchoolAddresses =
+            this.buildHashAddress(addresses);
+
+        const res = schools.map(school => {
+            const schoolId: number = school.id;
+            let numberComments: number = 0;
+            if (school.commentGroup && school.commentGroup.comments) {
+                numberComments = school.commentGroup.comments.length;
+            }
+            let rankDogm: number = 0;
+            if (school.rankDogm) {
+                rankDogm = Number((school.rankDogm).toFixed(1));
+            }
+            let areaName: string = '';
+            let districtName: string = '';
+            let schoolAddress: { areaName: string, districtName: string };
+            schoolAddress = hashSchoolAddress[schoolId];
+            if (schoolAddress) {
+                areaName = schoolAddress.areaName;
+                districtName = schoolAddress.districtName;
+            }
+            return {
+                id: schoolId,
+                name: school.name,
+                schoolType: school.schoolType,
+                numberComments,
+                rankDogm,
+                areaName,
+                districtName,
+                updatedAt: school.updated_at,
+            };
+        });
+        return res;
+    }
+
+    private buildHashAddress(addresses): SchoolAddresses {
+        const hashSchoolAddress: SchoolAddresses = {};
+        addresses.forEach(address => {
+            const area = address.area, district = area.district;
+            let areaName: string = '';
+            let districtName: string = '';
             if (area && area.district) {
                 areaName = area.name;
                 districtName = area.district.name;
             }
-        }
-        let rankDogm: number = 0;
-        if (school.rankDogm) {
-            rankDogm = Number((school.rankDogm).toFixed(1));
-        }
-        return {
-            id: school.id,
-            name: school.name,
-            schoolType: school.schoolType,
-            numberComments,
-            rankDogm,
-            areaName,
-            districtName,
-            updatedAt: school.updated_at,
-        };
+            hashSchoolAddress[address.entityId] = {
+                areaName,
+                districtName
+            };
+        });
+        return hashSchoolAddress;
     }
 };
 
