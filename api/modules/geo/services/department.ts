@@ -65,12 +65,11 @@ class DepartmentService {
             }
         }
 
-        addressService.updateIsSchool(departmentAddress.id);
-
         return DepartmentModel
             .create(data)
             .then(async instance => {
                 await departmentAddress.addDepartment(instance);
+                addressService.updateIsSchool(departmentAddress.id);
                 return instance;
             });
     }
@@ -106,8 +105,9 @@ class DepartmentService {
                 throw new AddressDoesNotExist(addressData.address);
             }
         }
+        let updatedInstance = await instance.update(data);
         addressService.updateIsSchool(data.addressId);
-        return instance.update(data);
+        return updatedInstance;
     }
 
     /**
@@ -116,8 +116,8 @@ class DepartmentService {
      */
     public async delete(departmentId) {
         const instance = await this.getById(departmentId);
-        addressService.updateIsSchool(instance.addressId);
         instance.destroy();
+        addressService.updateIsSchool(instance.addressId);
     }
 
     /**
@@ -142,8 +142,6 @@ class DepartmentService {
     }
 
     public async getById(departmentId: number): Promise<DepartmentAdmin> {
-        await addressService.updateIsSchool(departmentId);
-
         const department: DepartmentAdmin = await DepartmentModel.findOne({
             where: {
                 id: departmentId

@@ -301,6 +301,8 @@ class GeoTools {
             logger.critical(error);
             throw new Error(error).stack;
         }
+
+        return [latitude, longitude];
     }
 }
 
