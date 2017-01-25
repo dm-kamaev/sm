@@ -8,10 +8,11 @@ const scoreView = require('../../entity/views/scoreView'),
     areaView = require('../../geo/views/areaView'),
     districtView = require('../../geo/views/districtView'),
     addressView = require('../../geo/views/addressView'),
-    FormatUtils = require('../../entity/lib/FormatUtils'),
-    CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
     pageView = require('../../entity/views/pageView'),
     costView = require('../views/costView');
+
+const FormatUtils = require('../../entity/lib/FormatUtils'),
+    CourseOptionsTransformer = require('../lib/CourseOptionsTransformer');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType'),
     groupSizeTraining = require('../enums/groupSizeTraining'),
@@ -584,11 +585,12 @@ view.formatFeature = function(feature) {
 
 
 /*
- * Used for item of list favorites
+ * Used for item
  * @param {{
- *     entity: models.Course,
- *     type: string,
- *     url: models.Page
+ *     entity: models.Course
+ *     alias: models.Page,
+ *     brandAlias: ?models.Page,
+ *     categoryAlias: Object
  * }} data
  * @return {{
  *     id: number,
@@ -611,14 +613,12 @@ view.formatFeature = function(feature) {
  * }}
  */
 view.item = function(data) {
-    var course = data.entity,
-        type = data.type;
-
-    var addresses = this.getAddresses(course.courseOptions);
+    let course = data.entity,
+        addresses = this.getAddresses(course.courseOptions);
 
     return {
         id: course.id,
-        type: type,
+        type: entityType.COURSE,
         name: {light: course.name},
         score: course.totalScore,
         metro: addressView.nearestMetro(addresses),
@@ -628,7 +628,7 @@ view.item = function(data) {
             data.brandAlias.alias,
             data.categoryAlias.alias
         ),
-        category: 'proforientacija'
+        category: course.category
     };
 };
 

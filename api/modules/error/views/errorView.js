@@ -6,6 +6,8 @@ const footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
     sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
 
+const popularView = require('../../../../app/modules/common/views/popularView');
+
 const CourseSubheader = require('../../course/lib/CourseSubheader'),
     SchoolSubheader = require('../../school/lib/SchoolSubheader');
 
@@ -21,6 +23,8 @@ let view = {};
  *     entityType: string,
  *     authSocialLinks: Object,
  *     favorites: Object,
+ *     popularEntities: Array<(models.School|models.Course)>,
+ *     aliasesPopular: Array<models.Page>,
  *     errorText: string
  * }} data
  * @return {Object}
@@ -44,6 +48,14 @@ view.render = function(data) {
         error: {
             text: data.errorText || 'Страница, которую вы искали, не найдена'
         },
+        popular: data.popularEntities ?
+            popularView.render({
+                header: '',
+                entities: data.popularEntities,
+                aliases: data.aliasesPopular,
+                entityType: data.entityType
+            }) :
+            null,
         footer: footerView.render()
     };
 };

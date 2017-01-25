@@ -787,11 +787,10 @@ schoolView.uniqueIds = function(schools) {
 
 
 /**
- * Used for item of list favorites
+ * Used for item
  * @param {{
  *     entity: models.School,
- *     type: string,
- *     url: models.Page
+ *     alias: models.Page
  * }} data
  * @return {{
  *     id: number,
@@ -809,23 +808,21 @@ schoolView.uniqueIds = function(schools) {
  *     area: ?Array<{
  *         id: number,
  *         name: string
- *     }>,
- *     category: string
+ *     }>
  * }}
  */
 schoolView.item = function(data) {
-    var entity = data.entity,
-        type = data.type,
-        url = data.alias;
+    let entity = data.entity,
+        page = data.alias || {};
 
     return {
         id: entity.id,
-        type: type,
+        type: entityType.SCHOOL,
         name: {light: entity.name},
         score: entity.totalScore,
         metro: addressView.nearestMetro(entity.addresses),
         area: addressView.getArea(entity.addresses),
-        alias: entityType.SCHOOL + '/' + url.alias
+        alias: entityType.SCHOOL + '/' + page.alias
     };
 };
 
