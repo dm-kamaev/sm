@@ -4,6 +4,9 @@ const soy = require.main.require('./app/components/soy');
 const services = require('../../../../app/components/services').all;
 const logger = require('../../../components/logger/logger').getLogger('app');
 
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await');
+
 const contentExperiment =
         require('../../../components/contentExperiment/contentExperiment');
 
@@ -14,8 +17,9 @@ const config = require('../../../config').config;
 const FB_CLIENT_ID = config.facebookClientId,
     CARROTQUEST_ID = config.carrotquestId;
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
+const entityTypeEnum =
+        require('../../../../api/modules/entity/enums/entityType');
+
 
 let controller = {};
 
@@ -30,8 +34,17 @@ controller.generalError = async(function(
         let factory = contentExperiment.getFactoryByQuery(req.query);
 
         let data = await({
-            favorites: services.favorite.getFavoriteEntities(user.id)
+            favorites: services.favorite.getFavoriteEntities(user.id),
+            popularEntities: entityType == entityTypeEnum.SCHOOL ?
+                services.school.getRandomPopularSchools(5) : []
         });
+
+        let aliasesPopular = data.popularEntities ?
+            await(services.page.getAliases(
+                data.popularEntities.map(entity => entity.id),
+                entityType
+            )) :
+            null;
 
         let errorText;
 
@@ -46,6 +59,8 @@ controller.generalError = async(function(
             entityType: entityType,
             user: user,
             favorites: data.favorites,
+            popularEntities: data.popularEntities,
+            aliasesPopular: aliasesPopular,
             authSocialLinks: authSocialLinks,
             errorText: errorText,
             config: config
