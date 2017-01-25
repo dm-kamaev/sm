@@ -17,7 +17,7 @@ interface SchoolAttribute {
     govermentKey?: number;
     cityId?: number;
     educationInterval?: Array<number>;
-    specializedClasses?: Array<string>;
+    specializedClasses?: Array<number[]>;
     features?: Array<string>;
     extendedDayCost?: string;
     dressCode?: boolean;
@@ -85,7 +85,7 @@ const School: SchoolModel = db.define('School', {
     },
     specializedClasses: {
         field: 'specialized_classes',
-        type: DataType.ARRAY(DataType.STRING)
+        type: DataType.ARRAY(DataType.INTEGER)
     },
     features: {
         field: 'features',

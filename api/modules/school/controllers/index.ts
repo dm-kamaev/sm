@@ -11,6 +11,9 @@ const commentAdminController = new CommentAdminController();
 import {DepartmentAdminController} from './departmentAdminController';
 const departmentAdminController = new DepartmentAdminController();
 
+import {ProfileAdminController} from './profileAdminController';
+const profileAdminController = new ProfileAdminController();
+
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
 
@@ -88,5 +91,17 @@ initCrudRouting(
     '/admin/school/:schoolId/department',
     departmentAdminController
 );
+
+router.get(
+    '/admin/school/:schoolId/profile',
+    profileAdminController.actionList
+);
+router.get(
+    '/admin/school/:schoolId/profile/:profileId',
+    profileAdminController.actionGet
+);
+router.get('/admin/schoolclasses', profileAdminController.actionListClasses);
+// router.get('/admin/school/schoolclasses', profileAdminController.actionListClasses);
+// router.get('/admin/schoolprofiles', schoolAdminController.actionGetSchoolTypes);
 
 export default router;
