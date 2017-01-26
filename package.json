@@ -93,7 +93,7 @@
   },
   "dependencies": {
     "clobl": "git+ssh://git@github.com/c7s/clobl.git#dev",
-    "eslint": "^3.14.0",
+    "eslint": "^2.13.1",
     "express": "^4.13.3",
     "geopoint": "^1.0.1",
     "glob": "^5.0.15",
