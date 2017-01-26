@@ -11,7 +11,8 @@
  *     error: {
  *         text: string
  *     },
- *     subHeader: sm.bSmSubheader.Template.Params.Data
+ *     subHeader: sm.bSmSubheader.Template.Params.Data,
+ *     popular: sm.bSmHeadedList.Template.Params.Data
  * }} sm.lErrorNotFound.Template.Params.Data
  */
 
@@ -55,7 +56,8 @@
  *     data: {
  *         error: {
  *             text: string
- *         }
+ *         },
+ *         popular: sm.bSmHeadedList.Template.Params.Data
  *     }
  * }}
  * @override
@@ -64,7 +66,7 @@
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionContent_ data="all" /}
-        // {call .sectionPopular_ data="all" /}
+        {call .sectionPopular_ data="all" /}
     </div>
 {/template}
 
@@ -86,6 +88,42 @@
         {call .errorInformation_ data="all" /}
     </div>
 {/template}
+
+
+/**
+ * Section with popular entities
+ * @param params {{
+ *     data: {
+ *         popular: sm.bSmHeadedList.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .sectionPopular_}
+    {if $params.data.popular}
+        {let $customClasses kind="html"}
+            {call .rootClass/}__popular
+        {/let}
+
+        <div class="{call .rootClass/}__section
+            {sp}{call .rootClass/}__section_popular">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smHeadedList',
+                    'renderParams': [
+                        'data': $params.data.popular,
+                        'config': [
+                            'enableCover': true,
+                            'theme': 'inline',
+                            'customClasses': $customClasses
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
 
 
 /**
