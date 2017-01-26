@@ -79,29 +79,32 @@ router.delete(
 
 router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
 
-const initCrudRouting = function(route: string, controller: any): void {
+const initCrudRouting = function(
+    route: string,
+    controller: any,
+    entityId?: string
+) {
+    entityId = entityId || ':id';
     router.post(route, checkToken, controller.actionCreate);
     router.get(route, controller.actionList);
-    router.get(`${route}/:id`, controller.actionGet);
-    router.put(`${route}/:id`, checkToken, controller.actionUpdate);
-    router.delete(`${route}/:id`, checkToken, controller.actionDelete);
+    router.get(`${route}/${entityId}`, controller.actionGet);
+    router.put(`${route}/${entityId}`, checkToken, controller.actionUpdate);
+    router.delete(`${route}/${entityId}`, checkToken, controller.actionDelete);
 };
 
 initCrudRouting(
     '/admin/school/:schoolId/department',
-    departmentAdminController
+    departmentAdminController,
+
 );
 
-router.get(
+initCrudRouting(
     '/admin/school/:schoolId/profile',
-    profileAdminController.actionList
+    profileAdminController,
+    ':profileNumber'
 );
-router.get(
-    '/admin/school/:schoolId/profile/:profileId',
-    profileAdminController.actionGet
-);
+
 router.get('/admin/schoolclasses', profileAdminController.actionListClasses);
-// router.get('/admin/school/schoolclasses', profileAdminController.actionListClasses);
-// router.get('/admin/schoolprofiles', schoolAdminController.actionGetSchoolTypes);
+router.get('/admin/schoolprofiles', profileAdminController.actionListProfiles);
 
 export default router;

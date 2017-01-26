@@ -40,10 +40,10 @@ class ProfileAdminService {
 
     public async getById(
         schoolId: number,
-        profileId: number
+        profileNumber: number
     ): Promise<ProfileGetList | {}> {
         let list: ProfileGetList[] = await this.getList(schoolId)
-        return list[profileId - 1] || {};
+        return list[profileNumber - 1] || {};
     }
 
 
@@ -63,6 +63,108 @@ class ProfileAdminService {
         ];
     }
 
+    public async getListProfiles(): Promise<SpecializedClassTypeInstance> {
+        return await SpecializedClassTypeModel.findAll({
+            attributes: [ 'id', 'name' ]
+        });
+    }
+
+    public async create(
+        schoolId: number,
+        profileData: { classNumber: number, profileId: number }
+    ): Promise<number[][]> {
+        const school: SchoolInstance = await this.getSchoolInstance(schoolId);
+        let specializedClasses: number[][] = [];
+        if (school.specializedClasses) {
+            specializedClasses = school.specializedClasses;
+            specializedClasses.push([
+                profileData.classNumber,
+                profileData.profileId
+            ]);
+        } else {
+            specializedClasses = [[
+                profileData.classNumber,
+                profileData.profileId
+            ]];
+        }
+
+        const res = await this.updateSchoolSpecializedClass(
+            schoolId,
+            specializedClasses
+        );
+        return res ? res[1][0].specializedClasses : null;
+    }
+
+
+    public async update(
+        schoolId: number,
+        profileNumber: number,
+        profileData: { classNumber: number, profileId: number }
+    ): Promise<number[][]> {
+        const school: SchoolInstance = await this.getSchoolInstance(schoolId);
+        let specializedClasses: number[][] = [];
+        if (school.specializedClasses) {
+            specializedClasses = school.specializedClasses;
+            const id: number = profileNumber - 1;
+            if (specializedClasses[id]) {
+                specializedClasses[id] = [
+                    profileData.classNumber,
+                    profileData.profileId
+                ];
+            }
+        }
+        const res = await this.updateSchoolSpecializedClass(
+            schoolId,
+            specializedClasses
+        );
+        return res ? res[1][0].specializedClasses : null;
+    }
+
+
+    public async delete(
+        schoolId: number,
+        profileNumber: number
+    ): Promise<number[][]> {
+        const school: SchoolInstance = await this.getSchoolInstance(schoolId);
+        let specializedClasses: number[][] = [];
+        if (school.specializedClasses) {
+            specializedClasses = school.specializedClasses;
+            const id: number = profileNumber - 1;
+            const skipProfileClass = (specializedClass, i): boolean => {
+                let res: boolean = true;
+                if (i === id) {
+                    res = false;
+                }
+                return res;
+            };
+            specializedClasses = specializedClasses.filter(skipProfileClass);
+        }
+        const res = await this.updateSchoolSpecializedClass(
+            schoolId,
+            specializedClasses
+        );
+        return res ? res[1][0].specializedClasses : null;
+    }
+
+
+
+
+
+    private async updateSchoolSpecializedClass (
+        schoolId: number,
+        specializedClasses: number[][]
+    ): Promise<[number, SchoolInstance[]]> {
+        return await SchoolModel.update({
+            specializedClasses
+        }, {
+            where: {
+                id: schoolId
+            },
+            returning: true
+        });
+    }
+
+
     private async getSchoolInstance(schoolId: number): Promise<SchoolInstance> {
         return await SchoolModel.findOne({
             where: {
@@ -70,6 +172,8 @@ class ProfileAdminService {
             }
         });
     }
+
+
     private async getListProfileClasses(
         specializedClasses
     ): Promise<ProfileGetList[]> {
