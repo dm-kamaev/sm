@@ -28,14 +28,6 @@ sm.bSmItem.SmItemEntity = function(view, opt_domHelper) {
 
 
     /**
-     * Badges instances
-     * @type {Array<sm.bSmBadge.SmBadge>}
-     * @private
-     */
-    this.badges_ = [];
-
-
-    /**
      * Favorite Link Instance
      * @type {sm.bFavoriteLink.FavoriteLink}
      * @private
@@ -90,7 +82,6 @@ goog.scope(function() {
         Item.base(this, 'decorateInternal', element);
 
         this.initScore_();
-        this.initBadges_();
         this.initFavoriteLink_();
     };
 
@@ -223,25 +214,6 @@ goog.scope(function() {
             'smScoreBrief',
             this.getView().getDom().score
         );
-    };
-
-
-    /**
-     * Initializes badges instances
-     * @private
-     */
-    Item.prototype.initBadges_ = function() {
-        var badges = this.getView().getDom().badges,
-            instance;
-
-        for (var i = 0; i < badges.length; i++) {
-            instance = this.decorateChild(
-                'smBadge',
-                badges[i]
-            );
-
-            this.badges_.push(instance);
-        }
     };
 
 

@@ -1,7 +1,16 @@
+@import "../../i-media/i-media";
+
 .b-sm-item_compact {
+    padding: 0;
+
     cursor: default;
 
-    width: 180px;
+    &:after {
+        display: block;
+        clear: both;
+
+        content: '';
+    }
 
     .b-sm-item__section-group_cover {
         margin-bottom: 25px;
@@ -23,5 +32,18 @@
 
     .b-sm-item__section_details {
         margin-top: 15px;
+    }
+}
+
+
+@include media-xs {
+    .b-sm-item_compact {
+        .b-sm-item__section-group_cover {
+            float: left;
+        }
+
+        .b-sm-item__section-group_info {
+            padding-left: 90px;
+        }
     }
 }
