@@ -20,9 +20,25 @@ let popularView = {
  * @return {Object}
  */
 popularView.render = function(data) {
+    let labels = {
+        [entityTypeEnum.SCHOOL]: 'Популярные школы',
+        [entityTypeEnum.COOURE]: 'Популярные курсы'
+    };
+
+    let items = popularView.list(data);
+
     return {
-        header: data.header,
-        items: popularView.list(data)
+        header: {
+            label: labels[data.entityType]
+        },
+        list: {
+            countItemsPerPage: items.length,
+            items: items,
+            itemType: 'smItemCompact',
+            itemConfig: {
+                enableCover: true
+            }
+        },
     };
 };
 
@@ -42,6 +58,7 @@ popularView.render = function(data) {
  *         light: string,
  *         bold: ?string
  *     },
+ *     description: ?string,
  *     alias: string,
  *     score: number,
  *     metro: ?Array<{

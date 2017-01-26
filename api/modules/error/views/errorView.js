@@ -50,7 +50,6 @@ view.render = function(data) {
         },
         popular: data.popularEntities ?
             popularView.render({
-                header: '',
                 entities: data.popularEntities,
                 aliases: data.aliasesPopular,
                 entityType: data.entityType

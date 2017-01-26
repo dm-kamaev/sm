@@ -596,9 +596,9 @@ view.formatFeature = function(feature) {
  *     id: number,
  *     type: string,
  *     name: {
- *         light: string,
- *         bold: ?string
+ *         light: string
  *     },
+ *     description: ?string,
  *     alias: string,
  *     score: number,
  *     metro: ?Array<{
@@ -620,6 +620,7 @@ view.item = function(data) {
         id: course.id,
         type: entityType.COURSE,
         name: {light: course.name},
+        description: course.description,
         score: course.totalScore,
         metro: addressView.nearestMetro(addresses),
         area: [addressView.getArea(addresses)[0]],

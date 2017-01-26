@@ -799,6 +799,7 @@ schoolView.uniqueIds = function(schools) {
  *         light: string,
  *         bold: ?string
  *     },
+ *     description: ?string,
  *     alias: string,
  *     score: number,
  *     metro: ?Array<{
@@ -819,6 +820,7 @@ schoolView.item = function(data) {
         id: entity.id,
         type: entityType.SCHOOL,
         name: {light: entity.name},
+        description: entity.description || '',
         score: entity.totalScore,
         metro: addressView.nearestMetro(entity.addresses),
         area: addressView.getArea(entity.addresses),

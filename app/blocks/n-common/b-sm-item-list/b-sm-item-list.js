@@ -35,6 +35,7 @@ sm.bSmItemList.SmItemList = function(view, opt_domHelper) {
      * Item instances
      * @type {(sm.bSmItem.SmItem|
      *     sm.bSmItem.SmItemEntity|
+     *     sm.bSmItem.SmItemCompact|
      *     sm.bSmLink.SmLink|
      *     sm.lCourse.bDepartment.Department)}
      * @private
@@ -68,7 +69,9 @@ goog.scope(function() {
      * @typedef {(
      *     sm.bSmItem.SmItem.RenderParams|
      *     sm.bSmItem.SmItemEntity.RenderParams|
-     *     sm.bSmLink.SmLink.RenderParams)}
+     *     sm.bSmLink.SmLink.RenderParams|
+     *     sm.lCourse.bDepartment.Department.RenderParams
+     * )}
      */
     ItemList.Item;
 
@@ -90,6 +93,7 @@ goog.scope(function() {
     ItemList.ItemType = {
         ITEM: 'smItem',
         ITEM_ENTITY: 'smItemEntity',
+        ITEM_COMPACT: 'smItemCompact',
         LINK: 'smLink',
         DEPARTMENT: 'lCourse-department'
     };
@@ -490,6 +494,8 @@ goog.scope(function() {
             sm.bSmItem.SmItem.Event;
         ItemEvent[ItemList.ItemType.ITEM_ENTITY] =
             sm.bSmItem.SmItemEntity.Event;
+        ItemEvent[ItemList.ItemType.ITEM_COMPACT] =
+            sm.bSmItem.SmItem.Event;
         ItemEvent[ItemList.ItemType.LINK] =
             sm.bSmLink.SmLink.Event;
         ItemEvent[ItemList.ItemType.DEPARTMENT] =
@@ -510,6 +516,8 @@ goog.scope(function() {
                 sm.bSmItem.SmItem.getRenderParams;
             transformators[ItemList.ItemType.ITEM_ENTITY] =
                 sm.bSmItem.SmItemEntity.getRenderParams;
+            transformators[ItemList.ItemType.ITEM_COMPACT] =
+                sm.bSmItem.SmItem.getRenderParams;
             transformators[ItemList.ItemType.LINK] =
                 sm.bSmLink.SmLink.getRenderParams;
             transformators[ItemList.ItemType.DEPARTMENT] =
