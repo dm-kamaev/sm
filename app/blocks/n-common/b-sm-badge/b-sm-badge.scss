@@ -71,10 +71,14 @@
 
 .b-sm-badge_inline-theme {
     .b-sm-badge__items {
+        display: inline;
+
         padding-left: 0;
     }
 
     .b-sm-badge__item:first-child {
+        display: inline;
+
         padding-left: 8px;
     }
 }

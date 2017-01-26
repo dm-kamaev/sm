@@ -465,20 +465,12 @@ goog.scope(function() {
     ItemList.prototype.initItems_ = function() {
         this.getView().initItems();
 
-        var items = this.getView().getDom().items,
-            type = this.params.itemType,
-            instance;
-
         this.items_ = [];
 
-        for (var i = 0; i < items.length; i++) {
-            instance = this.decorateChild(
-                type,
-                items[i]
-            );
-
-            this.items_.push(instance);
-        }
+        this.items_ = this.decorateChildren(
+            this.params.itemType,
+            this.getView().getDom().items
+        );
     };
 
 
@@ -495,7 +487,7 @@ goog.scope(function() {
         ItemEvent[ItemList.ItemType.ITEM_ENTITY] =
             sm.bSmItem.SmItemEntity.Event;
         ItemEvent[ItemList.ItemType.ITEM_COMPACT] =
-            sm.bSmItem.SmItem.Event;
+            sm.bSmItem.SmItemCompact.Event;
         ItemEvent[ItemList.ItemType.LINK] =
             sm.bSmLink.SmLink.Event;
         ItemEvent[ItemList.ItemType.DEPARTMENT] =
@@ -517,7 +509,7 @@ goog.scope(function() {
             transformators[ItemList.ItemType.ITEM_ENTITY] =
                 sm.bSmItem.SmItemEntity.getRenderParams;
             transformators[ItemList.ItemType.ITEM_COMPACT] =
-                sm.bSmItem.SmItem.getRenderParams;
+                sm.bSmItem.SmItemCompact.getRenderParams;
             transformators[ItemList.ItemType.LINK] =
                 sm.bSmLink.SmLink.getRenderParams;
             transformators[ItemList.ItemType.DEPARTMENT] =
