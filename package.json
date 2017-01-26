@@ -36,7 +36,7 @@
     "csurf": "^1.8.3",
     "csvtojson": "^0.5.0",
     "decompress": "^3.0.0",
-    "deployment": "git+ssh://git@github.com:c7s/deployment.git#release-20161228-BP-1997",
+    "deployment": "git+ssh://git@github.com:c7s/deployment.git#dev",
     "ejs": "^2.3.4",
     "express-session": "^1.13.0",
     "fs-extra": "^0.26.3",
@@ -68,7 +68,7 @@
     "multi-geocoder": "^0.1.4",
     "node-sass": "^3.3.3",
     "node-xlsx": "^0.7.2",
-    "nodules": "git+ssh://git@github.com:c7s/nodules.git#release-20161227-SV-810",
+    "nodules": "git+ssh://git@github.com:c7s/nodules.git#dev",
     "passport": "^0.3.2",
     "pg": "^4.4.2",
     "pg-hstore": "^2.3.2",
@@ -92,7 +92,7 @@
     "xlsx-to-json": "^0.2.4"
   },
   "dependencies": {
-    "clobl": "git+ssh://git@github.com/c7s/clobl.git#release-20170112-BP-2032",
+    "clobl": "git+ssh://git@github.com/c7s/clobl.git#dev",
     "express": "^4.13.3",
     "geopoint": "^1.0.1",
     "glob": "^5.0.15",
