@@ -16,4 +16,5 @@ const SpecializedClassType = db.define('SpecializedClassType', {
     underscored: true,
     tableName: 'specialized_class_type'
 });
-exports.Model = SpecializedClassType;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = SpecializedClassType;

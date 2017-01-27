@@ -40,4 +40,4 @@ const SpecializedClassType = db.define(
     }
 );
 
-export { SpecializedClassType as Model };
+export default SpecializedClassType;
