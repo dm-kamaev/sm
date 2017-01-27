@@ -16,8 +16,8 @@ else
     npm update
 fi
 
-$tsc
 $typings install
+$tsc
 
 $gulp backendLint
 $gulp build --env $env
