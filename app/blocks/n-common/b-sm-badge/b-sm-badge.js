@@ -17,6 +17,14 @@ sm.bSmBadge.SmBadge = function(view, opt_domHelper) {
 
 
     /**
+     * Items - links instance
+     * @type {Array<sm.bSmLink.SmLink>}
+     * @private
+     */
+    this.items_ = [];
+
+
+    /**
      * Link hint
      * @type {sm.bSmLink.SmLink}
      * @private
@@ -29,16 +37,6 @@ goog.inherits(sm.bSmBadge.SmBadge, cl.iControl.Control);
 goog.scope(function() {
     var Badge = sm.bSmBadge.SmBadge,
         View = sm.bSmBadge.View;
-
-
-    /**
-     * Possible antity types
-     * @enum {string}
-     */
-    Badge.EntityType = {
-        SCHOOL: 'school',
-        COURSE: 'course'
-    };
 
 
     /**
@@ -64,19 +62,19 @@ goog.scope(function() {
     Badge.prototype.decorateInternal = function(element) {
         Badge.base(this, 'decorateInternal', element);
 
+        this.initItems_();
         this.initLinkHint_();
     };
 
 
     /**
-     * @override
+     * Init items
+     * @private
      */
-    Badge.prototype.enterDocument = function() {
-        Badge.base(this, 'enterDocument');
-
-        this.viewListen(
-            View.Event.ITEM_CLICK,
-            this.onItemClick_
+    Badge.prototype.initItems_ = function() {
+        this.items_ = this.decorateChildren(
+            'smLink',
+            this.getView().getDom().items
         );
     };
 
