@@ -29,6 +29,7 @@ deployment-config.json
 .csscomb*
 .tags*
 jsconfig.json
+tslint.json
 
 /app/config/local/
 /app/config/*.json
@@ -60,6 +61,7 @@ api/modules/geo/services/department.js
 api/modules/geo/views/departmentView.js
 
 api/modules/school/interfaces/SchoolAdmin.js
+api/modules/school/interfaces/ProfileAdmin.js
 api/modules/school/controllers/errors/AddressDoesNotExist.js
 api/modules/school/controllers/errors/AddressIsNotUnique.js
 api/modules/school/controllers/errors/DepartmentNotFound.js
@@ -72,6 +74,7 @@ api/modules/school/controllers/schoolAdminController.js
 api/modules/school/controllers/profileAdminController.js
 
 api/modules/school/models/school.js
+api/modules/school/models/specializedClassType.js
 
 api/modules/school/services/exceptions/SchoolNotExistType.js
 api/modules/school/services/exceptions/SchoolNotFound.js

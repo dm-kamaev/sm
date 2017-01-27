@@ -8,17 +8,14 @@ const util = require('util');
 import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
-import profileAdminService from '../services/profileAdminService';
-// import SchoolNotExistTypeError from './errors/SchoolNotExistTypeError';
+import {profileAdminService} from '../services/profileAdminService';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 
 class ProfileAdminController extends Controller {
     constructor() {
         super();
-        this.errors = {
-            // SchoolNotExistTypeError,
-        };
+        this.errors = {};
     }
 
 
@@ -30,27 +27,27 @@ class ProfileAdminController extends Controller {
      *
      * @apiParam {Number} schoolId School's id.
      *
-     * @apiSuccess {Object[]} profiles   Array of object.
-     * @apiSuccess {String}   profiles.id      Id.
-     * @apiSuccess {String}   profiles.class   class's name.
-     * @apiSuccess {String}   profiles.profile profile school.
+     * @apiSuccess {Object[]} profiles               Array of object.
+     * @apiSuccess {String}   profiles.id            Id.
+     * @apiSuccess {String}   profiles.classNumber   Class's number.
+     * @apiSuccess {String}   profiles.profile       Profile school.
      *
      * @apiSuccessExample {json} Example response:
      *    [{
      *        "id": 1,
-     *        "class": 10,
+     *        "classNumber": 10,
      *        "profile": "Химико-биологический"
      *    }, {
      *        "id": 2,
-     *        "class": 10,
+     *        "classNumber": 10,
      *        "profile": "Биолого-географический"
      *    }, {
      *        "id": 3,
-     *        "class": 10,
+     *        "classNumber": 10,
      *        "profile": "Социально-гуманитарный"
      *    }, {
      *        "id": 4,
-     *        "class": 10,
+     *        "classNumber": 10,
      *        "profile": "Филологический"
      *    }]
      */
@@ -69,15 +66,15 @@ class ProfileAdminController extends Controller {
      * @apiParam {Number} schoolId  School's id.
      * @apiParam {Number} profileNumber Profile's id.
      *
-     * @apiSuccess {Object}   profile         object.
-     * @apiSuccess {String}   profile.id      Id.
-     * @apiSuccess {String}   profile.class   class's name.
-     * @apiSuccess {String}   profile.profile profile school.
+     * @apiSuccess {Object}   profile               Profile
+     * @apiSuccess {String}   profile.id            Id
+     * @apiSuccess {String}   profile.classNumber   Class Number.
+     * @apiSuccess {String}   profile.profile       Profile school.
      *
      * @apiSuccessExample {json} Example response:
      *    {
      *        "id": 1,
-     *        "class": 10,
+     *        "classNumber": 10,
      *        "profile": "Химико-биологический"
      *    }
      */
@@ -90,24 +87,30 @@ class ProfileAdminController extends Controller {
 
     /**
     * @api {post} /api/admin/school/:schoolId/profile
-    * Create school profile
+    * Create school profile class
     * @apiVersion 1.0.0
     * @apiName createSchoolProfileClass
     * @apiGroup School Profile Admin
     *
-    * @apiParam {Number} schoolId  School's id.
-    * @apiParam {Number} profileNumber Profile's id.
+    * @apiParamExample {json} Request-Example:
+    *   {
+    *       "classNumber": 5,
+    *       "profileId":  10
+    *   }
     *
-    * @apiSuccess {Object}   school object.
-    * @apiSuccess {Number[][]} school.specializedClasses  array of array number.
-    * @apiSuccess {Number[]}   school.specializedClass    array of number.
-    * @apiSuccess {Number} .-.0   class number
-    * @apiSuccess {Number} .-.1   profile Id
+    * @apiParam {Number} schoolId  School's id.
+    *
+    * @apiSuccess {Number[][]} specializedClasses  array of array number.
+    * @apiSuccess {Number[]}   specializedClass    array of number.
+    * @apiSuccess {Number}     .-.0                class number
+    * @apiSuccess {Number}     .-.1                profile Id
     *
     * @apiSuccessExample {json} Example response:
-    *    {
-    *        "specializedClasses": [ [10, 1], [11, 2] ],
-    *    }
+    *    [
+    *        [ 10, 1 ],
+    *        [ 11, 2 ]
+    *    ]
+    *
     */
     public async actionCreate(ctx: any, schoolId: string) {
         const profileData: { classNumber: number, profileId: number }
@@ -119,6 +122,34 @@ class ProfileAdminController extends Controller {
     }
 
 
+    /**
+    * @api {put} /api/admin/school/:schoolId/profile/:profileNumber
+    * Update school profile class
+    * @apiVersion 1.0.0
+    * @apiName updateSchoolProfileClass
+    * @apiGroup School Profile Admin
+    *
+    * @apiParamExample {json} Request-Example:
+    *   {
+    *       "classNumber": 5,
+    *       "profileId":  10
+    *   }
+    *
+    * @apiParam {Number} schoolId  School's id.
+    * @apiParam {Number} profileNumber  profile class number.
+    *
+    * @apiSuccess {Number[][]} specializedClasses  array of array number.
+    * @apiSuccess {Number[]}   specializedClass    array of number.
+    * @apiSuccess {Number}     .-.0                class number
+    * @apiSuccess {Number}     .-.1                profile Id
+    *
+    * @apiSuccessExample {json} Example response:
+    *    [
+    *        [ 10, 1 ],
+    *        [ 11, 2 ]
+    *    ]
+    *
+    */
     public async actionUpdate(
         ctx: any,
         schoolId: string,
@@ -133,7 +164,22 @@ class ProfileAdminController extends Controller {
         );
     }
 
-
+    /**
+    * @api {delete} /api/admin/school/:schoolId/profile/:profileNumber
+    * Delete school profile class
+    * @apiVersion 1.0.0
+    * @apiName deleteSchoolProfileClass
+    * @apiGroup School Profile Admin
+    *
+    * @apiParam {Number} schoolId  School's id.
+    * @apiParam {Number} profileNumber  profile class number.
+    *
+    * @apiSuccess {Number} result delete
+    *
+    * @apiSuccessExample {json} Example response:
+    *     1
+    *
+    */
     public async actionDelete(
         ctx: any,
         schoolId: string,
@@ -144,6 +190,7 @@ class ProfileAdminController extends Controller {
             parseInt(profileNumber, 10),
         );
     }
+
 
      /**
      * @api {get} /api/admin/schoolclasses

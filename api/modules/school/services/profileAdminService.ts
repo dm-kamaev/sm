@@ -7,32 +7,26 @@ const sequelize = require('../../../../app/components/db.js');
 
 import SchoolModel from '../models/school';
 import {SchoolInstance} from '../models/school';
-import SpecializedClassTypeModel from '../models/specializedClassType';
+import {Model as SpecializedClassTypeModel}
+    from '../models/specializedClassType';
 import {SpecializedClassTypeInstance} from '../models/specializedClassType';
 
-// import SchoolNotExistType from './exceptions/SchoolNotExistType';
+import {
+    ProfileGetList,
+    ProfileData,
+} from '../interfaces/ProfileAdmin';
 
-// import {
-//     SchoolDataForCreate,
-//     SchoolDataForUpdate,
-//     SchoolDataForView
-// } from '../interfaces/SchoolAdmin';
 
-interface ProfileGetList {
-    id:number;
-    class:number;
-    profile: string;
-}
 class ProfileAdminService {
     public readonly name: string = 'profileAdminService';
 
     public async getList(schoolId: number ): Promise<ProfileGetList[]> {
-        const school: SchoolInstance = await this.getSchoolInstance(schoolId);
+        const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
         let res: ProfileGetList[];
-        let specializedClasses: number[][] | null = school.specializedClasses;
+        const specializedClasses: number[][] | null = school.specializedClasses;
         if (specializedClasses) {
             res =
-                await this.getListProfileClasses(specializedClasses);
+                await this.getListProfileClasses_(specializedClasses);
         }
         return Promise.all(res);
     }
@@ -42,7 +36,7 @@ class ProfileAdminService {
         schoolId: number,
         profileNumber: number
     ): Promise<ProfileGetList | {}> {
-        let list: ProfileGetList[] = await this.getList(schoolId)
+        const list: ProfileGetList[] = await this.getList(schoolId);
         return list[profileNumber - 1] || {};
     }
 
@@ -71,9 +65,9 @@ class ProfileAdminService {
 
     public async create(
         schoolId: number,
-        profileData: { classNumber: number, profileId: number }
+        profileData: ProfileData
     ): Promise<number[][]> {
-        const school: SchoolInstance = await this.getSchoolInstance(schoolId);
+        const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
         let specializedClasses: number[][] = [];
         if (school.specializedClasses) {
             specializedClasses = school.specializedClasses;
@@ -88,7 +82,7 @@ class ProfileAdminService {
             ]];
         }
 
-        const res = await this.updateSchoolSpecializedClass(
+        const res = await this.updateSchoolSpecializedClass_(
             schoolId,
             specializedClasses
         );
@@ -99,9 +93,9 @@ class ProfileAdminService {
     public async update(
         schoolId: number,
         profileNumber: number,
-        profileData: { classNumber: number, profileId: number }
+        profileData: ProfileData
     ): Promise<number[][]> {
-        const school: SchoolInstance = await this.getSchoolInstance(schoolId);
+        const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
         let specializedClasses: number[][] = [];
         if (school.specializedClasses) {
             specializedClasses = school.specializedClasses;
@@ -113,7 +107,7 @@ class ProfileAdminService {
                 ];
             }
         }
-        const res = await this.updateSchoolSpecializedClass(
+        const res = await this.updateSchoolSpecializedClass_(
             schoolId,
             specializedClasses
         );
@@ -124,8 +118,9 @@ class ProfileAdminService {
     public async delete(
         schoolId: number,
         profileNumber: number
-    ): Promise<number[][]> {
-        const school: SchoolInstance = await this.getSchoolInstance(schoolId);
+    ): Promise<number> {
+        let responce: number = 0;
+        const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
         let specializedClasses: number[][] = [];
         if (school.specializedClasses) {
             specializedClasses = school.specializedClasses;
@@ -133,24 +128,25 @@ class ProfileAdminService {
             const skipProfileClass = (specializedClass, i): boolean => {
                 let res: boolean = true;
                 if (i === id) {
+                    responce = 1;
                     res = false;
                 }
                 return res;
             };
             specializedClasses = specializedClasses.filter(skipProfileClass);
         }
-        const res = await this.updateSchoolSpecializedClass(
+        await this.updateSchoolSpecializedClass_(
             schoolId,
             specializedClasses
         );
-        return res ? res[1][0].specializedClasses : null;
+        return responce;
     }
 
 
 
 
 
-    private async updateSchoolSpecializedClass (
+    private async updateSchoolSpecializedClass_(
         schoolId: number,
         specializedClasses: number[][]
     ): Promise<[number, SchoolInstance[]]> {
@@ -165,7 +161,9 @@ class ProfileAdminService {
     }
 
 
-    private async getSchoolInstance(schoolId: number): Promise<SchoolInstance> {
+    private async getSchoolInstance_(
+        schoolId: number
+    ): Promise<SchoolInstance> {
         return await SchoolModel.findOne({
             where: {
                 id: schoolId
@@ -174,21 +172,22 @@ class ProfileAdminService {
     }
 
 
-    private async getListProfileClasses(
+    private async getListProfileClasses_(
         specializedClasses
     ): Promise<ProfileGetList[]> {
-        return specializedClasses.map(async (specializedClass, i) => {
-            let specializedClassId: number = specializedClass[1];
-            let specializedClassName: string = await this.getSpecializedClassName(specializedClassId);
+        return specializedClasses.map(async(specializedClass, i) => {
+            const specializedClassId: number = specializedClass[1];
+            const specializedClassName: string =
+                await this.getSpecializedClassName_(specializedClassId);
             return {
                 id: i + 1,
-                class: specializedClass[0],
+                classNumber: specializedClass[0],
                 profile: specializedClassName
             };
         });
     }
 
-    private async getSpecializedClassName(
+    private async getSpecializedClassName_(
         specializedClassId: number
     ): Promise<string> {
         let specializedClassInstance: SpecializedClassTypeInstance | null;
@@ -204,4 +203,5 @@ class ProfileAdminService {
         return name;
     }
 };
-export default new ProfileAdminService();
+const profileAdminService = new ProfileAdminService();
+export {profileAdminService};

@@ -196,7 +196,9 @@ class DepartmentService {
                 if (address.departments.length > 0) {
                     address.departments.forEach(department => {
                         if (department.educationalGrades &&
-                            department.educationalGrades.some(grade => grade > 0)
+                            department.educationalGrades.some(grade =>
+                                grade > 0
+                            )
                         ) {
                             res = true;
                         }

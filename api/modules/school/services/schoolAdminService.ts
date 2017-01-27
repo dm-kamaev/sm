@@ -132,7 +132,7 @@ class SchoolAdminService {
         return schoolType.toArray();
     }
 
-    private async getSchoolInfo (
+    private async getSchoolInfo(
         school: any
     ): Promise<SchoolDataForView> {
         let numberComments: number = 0;
