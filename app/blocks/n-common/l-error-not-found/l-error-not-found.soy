@@ -12,7 +12,11 @@
  *         text: string
  *     },
  *     subHeader: sm.bSmSubheader.Template.Params.Data,
- *     popular: sm.bSmHeadedList.Template.Params.Data
+ *     popular: ({
+ *         header: string,
+ *         list: sm.bSmItemList.Template.Params.Data,
+ *         catalog: sm.bSmItem.TemplateCompact.Params.Data
+ *     }|undefined)
  * }} sm.lErrorNotFound.Template.Params.Data
  */
 
@@ -57,7 +61,11 @@
  *         error: {
  *             text: string
  *         },
- *         popular: sm.bSmHeadedList.Template.Params.Data
+ *         popular: ({
+ *             header: string,
+ *             list: sm.bSmItemList.Template.Params.Data,
+ *             catalog: sm.bSmItem.TemplateCompact.Params.Data
+ *         }|undefined)
  *     }
  * }}
  * @override
@@ -94,36 +102,111 @@
  * Section with popular entities
  * @param params {{
  *     data: {
- *         popular: sm.bSmHeadedList.Template.Params.Data
+ *         popular: ({
+ *             header: string,
+ *             popular: sm.bSmItemList.Template.Params.Data,
+ *             catalog: sm.bSmItem.TemplateCompact.Params.Data
+ *         }|undefined)
  *     }
  * }}
  */
 {template .sectionPopular_}
     {if $params.data.popular}
-        {let $customClasses kind="html"}
-            {call .rootClass/}__popular
-        {/let}
-
         <div class="{call .rootClass/}__section
-            {sp}{call .rootClass/}__section_popular">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smHeadedList',
-                    'renderParams': [
-                        'data': $params.data.popular,
-                        'config': [
-                            'enableCover': true,
-                            'theme': 'inline',
-                            'customClasses': $customClasses
-                        ]
-                    ]
-                ]/}
-            {/call}
+                {sp}{call .rootClass/}__section_popular">
+            {call .headerPopular_ data="all" /}
+            {call .popular_ data="all" /}
+            {call .catalog_ data="all" /}
         </div>
     {/if}
 {/template}
 
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         popular: ({
+ *             header: string,
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .headerPopular_}
+    <div class="{call .rootClass/}__section-header{sp}
+                {call .rootClass/}__section-header_popular">
+        {$params.data.popular.header}
+    </div>
+{/template}
+
+
+/**
+ * Popular entities
+ * @param params {{
+ *     data: {
+ *         popular: ({
+ *             list: sm.bSmItemList.Template.Params.Data,
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .popular_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__popular-list
+    {/let}
+
+    <div class="{call .rootClass/}__popular">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': $params.data.popular.list,
+                    'config': [
+                        'enableCover': true,
+                        'theme': 'inline',
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Catalog
+ * @param params {{
+ *     data: {
+ *         popular: ({
+ *             catalog: sm.bSmItem.TemplateCompact.Params.Data
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .catalog_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__catalog-item
+    {/let}
+
+    <div class="{call .rootClass/}__catalog">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smItemCompact',
+                'renderParams': [
+                    'data': $params.data.popular.catalog,
+                    'config': [
+                        'theme': 'inline',
+                        'enableCover': true,
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
 
 
 /**

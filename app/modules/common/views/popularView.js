@@ -15,12 +15,13 @@ let popularView = {
  *     header: string,
  *     entities: Array<(models.School|models.Course)>,
  *     aliases: Array<models.Page>,
+ *     numberEntities: number,
  *     entityType: string
  * }} data
  * @return {Object}
  */
 popularView.render = function(data) {
-    let labels = {
+    let headers = {
         [entityTypeEnum.SCHOOL]: 'Популярные школы',
         [entityTypeEnum.COOURE]: 'Популярные курсы'
     };
@@ -28,9 +29,7 @@ popularView.render = function(data) {
     let items = popularView.list(data);
 
     return {
-        header: {
-            label: labels[data.entityType]
-        },
+        header: headers[data.entityType],
         list: {
             countItemsPerPage: items.length,
             items: items,
@@ -39,6 +38,7 @@ popularView.render = function(data) {
                 enableCover: true
             }
         },
+        catalog: popularView.catalog(data.entityType, data.numberEntities)
     };
 };
 
@@ -85,6 +85,37 @@ popularView.list = function(data) {
             alias: data.aliases.find(page => page.entityId == entityData.id)
         });
     });
+};
+
+
+/**
+ * @param {string} entityType
+ * @param {number} numberEntities
+ * @return {Object}
+ */
+popularView.catalog = function(entityType, numberEntities) {
+    let entityViews = {
+        [entityTypeEnum.COURSE]: courseView,
+        [entityTypeEnum.SCHOOL]: schoolView
+    };
+
+    let declensionEntity =
+        entityViews[entityType].declensionEntity(numberEntities);
+
+    return {
+        name: {
+            light: 'Каталог'
+        },
+        type: 'catalog',
+        imageUrl: '/static/images/n-school/images/catalog.svg',
+        description: 'Мы&nbsp;составили полный каталог школ Москвы&nbsp;' +
+            '&mdash; в&nbsp;нём сейчас',
+        descriptionLink: {
+            content: `${numberEntities} ${declensionEntity}`,
+            url: '/'
+        },
+        url: '/'
+    };
 };
 
 module.exports = popularView;

@@ -21,6 +21,35 @@
     font-family: Arial, sans-serif;
 }
 
+.l-error-not-found__section-header {
+    padding-bottom: 22px;
+
+    text-transform: uppercase;
+
+    font: 800 16px 'Proxima', Arial, sans-serif;
+    letter-spacing: 0.8px;
+}
+
+.l-error-not-found__popular {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 83.33%;
+    padding-right: 15px;
+
+    vertical-align: top;
+}
+
+.l-error-not-found__catalog {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 16.66%;
+    padding-left: 15px;
+
+    vertical-align: top;
+}
+
 .l-error-not-found__footer {
     position: relative;
     bottom: 0;
@@ -81,6 +110,16 @@
     }
 }
 
+@include media-l {
+    .l-error-not-found__popular {
+        width: 100%;
+    }
+
+    .l-error-not-found__catalog {
+        display: none;
+    }
+}
+
 @include media-m {
     .l-error-not-found__wrapper-error-information {
         height: 180px;
@@ -90,6 +129,16 @@
 @include media-s {
     .l-error-not-found__wrapper-error-information {
         height: auto;
+    }
+
+    .l-error-not-found__popular {
+        width: 66.66%;
+    }
+
+    .l-error-not-found__catalog {
+        display: inline-block;
+
+        width: 33.33%
     }
 
     .l-error-not-found__error-img {
@@ -114,6 +163,17 @@
 
     .l-error-not-found__section {
         padding: 0 30px;
+    }
+
+    .l-error-not-found__popular {
+        width: 100%;
+        margin-bottom: 30px;
+        padding-right: 0;
+    }
+
+    .l-error-not-found__catalog {
+        width: 100%;
+        padding-left: 0;
     }
 
     .l-error-not-found__footer {

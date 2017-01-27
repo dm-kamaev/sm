@@ -26,11 +26,18 @@ goog.scope(function() {
 
         /**
          * HeadedList Instance
-         * @type {?sm.bSmHeadedList.SmHeadedList}
+         * @type {?sm.bSmItemList.SmItemList}
          * @private
          */
         this.popular_ = null;
 
+
+        /**
+         * ItemCompact Instance
+         * @type {?sm.bSmItem.SmItemCompact}
+         * @private
+         */
+        this.catalog_ = null;
     };
     goog.inherits(sm.lErrorNotFound.ErrorNotFound, sm.iLayout.LayoutStendhal);
     var ErrorNotFound = sm.lErrorNotFound.ErrorNotFound;
@@ -44,21 +51,28 @@ goog.scope(function() {
     ErrorNotFound.prototype.decorateInternal = function(element) {
         ErrorNotFound.base(this, 'decorateInternal', element);
 
-        this.initPopular_();
+        this.initSectionPopular_();
     };
 
 
     /**
-     * Init list of popular entities
+     * Init popular
      * @private
      */
-    ErrorNotFound.prototype.initPopular_ = function() {
-        var popular = this.getView().getDom().popular;
+    ErrorNotFound.prototype.initSectionPopular_ = function() {
+        var dom = this.getView().getDom();
 
-        if (popular) {
+        if (dom.popular) {
             this.popular_ = this.decorateChild(
-                'smHeadedList',
-                popular
+                'smItemList',
+                dom.popular
+            );
+        }
+
+        if (dom.catalog) {
+            this.catalog_ = this.decorateChild(
+                'smItemCompact',
+                dom.catalog
             );
         }
     };

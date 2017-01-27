@@ -17,7 +17,7 @@
 
 /**
  * @typedef {{
- *     theme: ('inline'|undefined)
+ *     theme: (string|undefined)
  * }} sm.bSmHeadedList.Template.Params.Config
  */
 
@@ -87,8 +87,7 @@
                 'renderParams': [
                     'data': $params.data.list,
                     'config': [
-                        'customClasses': [$customClasses],
-                        'theme': $params.config.theme
+                        'customClasses': [$customClasses]
                     ]
                 ]
             ]/}

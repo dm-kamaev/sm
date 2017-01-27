@@ -29,7 +29,8 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'l-error-not-found',
-        POPULAR: 'l-error-not-found__popular'
+        POPULAR: 'l-error-not-found__popular-list',
+        CATALOG: 'l-error-not-found__catalog-item'
     };
 
 
@@ -46,6 +47,9 @@ goog.scope(function() {
             {
                 popular: this.getElementByClass(
                     View.CssClass.POPULAR
+                ),
+                catalog: this.getElementByClass(
+                    View.CssClass.CATALOG
                 )
             }
         );

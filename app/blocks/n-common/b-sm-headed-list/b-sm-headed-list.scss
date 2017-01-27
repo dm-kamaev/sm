@@ -23,19 +23,6 @@
     font-weight: 800;
 }
 
-.b-sm-headed-list_inline-theme {
-    .b-sm-headed-list__header{
-        padding-bottom: 22px;
-
-        font-size: 16px;
-        letter-spacing: 0.8px;
-    }
-
-    .b-sm-headed-list__header-title {
-        text-transform: uppercase;
-    }
-}
-
 @include media-xs {
     .b-sm-headed-list__header-title {
         width: 100%;

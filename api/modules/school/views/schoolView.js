@@ -830,7 +830,7 @@ schoolView.item = function(data) {
 
 
 /**
- * @param {nuber} number
+ * @param {nuber} amount
  * @return {string}
  */
 schoolView.declensionEntity = function(amount) {
