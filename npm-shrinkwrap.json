@@ -862,7 +862,7 @@
     "clobl": {
       "version": "1.0.0",
       "from": "git+ssh://git@github.com/c7s/clobl.git#dev",
-      "resolved": "git+ssh://git@github.com/c7s/clobl.git#437036f6b819c1479f6e04fcb9da51cc09792ffc",
+      "resolved": "git+ssh://git@github.com/c7s/clobl.git#2cea2bf09c3165aabbe3ab53bedca80f7bedd54f",
       "dependencies": {
         "glob": {
           "version": "6.0.4",
