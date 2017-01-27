@@ -11,6 +11,9 @@ const popularView = require('../../../../app/modules/common/views/popularView');
 const CourseSubheader = require('../../course/lib/CourseSubheader'),
     SchoolSubheader = require('../../school/lib/SchoolSubheader');
 
+const schoolView = require('../../school/views/schoolView'),
+    courseView = require('../../course/views/courseView');
+
 const entityTypeEnum = require('../../entity/enums/entityType');
 
 let view = {};
@@ -24,6 +27,7 @@ let view = {};
  *     authSocialLinks: Object,
  *     favorites: Object,
  *     popularEntities: Array<(models.School|models.Course)>,
+ *     numberEntities: number,
  *     aliasesPopular: Array<models.Page>,
  *     errorText: string
  * }} data
@@ -55,6 +59,9 @@ view.render = function(data) {
                 entityType: data.entityType
             }) :
             null,
+        catalog: data.popularEntities ?
+            view.catalog(data.entityType, data.numberEntities) :
+            null,
         footer: footerView.render()
     };
 };
@@ -79,6 +86,37 @@ view.subheader = function(data) {
         isBottomLine: true
     });
     return subheader.getParams();
+};
+
+
+/**
+ * @params {string} entityType
+ * @param {number} number
+ * @return {Object}
+ */
+view.catalog = function(entityType, numberEntities) {
+    let entityViews = {
+        [entityTypeEnum.COURSE]: courseView,
+        [entityTypeEnum.SCHOOL]: schoolView
+    };
+
+    let declensionEntity =
+        entityViews[entityType].declensionEntity(numberEntities);
+
+    return {
+        name: {
+            light: 'Каталог'
+        },
+        type: 'catalog',
+        imageUrl: '/static/images/n-school/images/catalog.svg',
+        description: 'Мы&nbsp;составили полный каталог школ Москвы&nbsp;' +
+            '&mdash; в&nbsp;нём сейчас',
+        descriptionLink: {
+            content: `${numberEntities} ${declensionEntity}`,
+            url: '/'
+        },
+        url: '/'
+    };
 };
 
 

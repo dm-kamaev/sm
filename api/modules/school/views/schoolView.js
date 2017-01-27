@@ -828,4 +828,33 @@ schoolView.item = function(data) {
     };
 };
 
+
+/**
+ * @param {nuber} number
+ * @return {string}
+ */
+schoolView.declensionEntity = function(amount) {
+    let declensions = {
+        nom: 'школа',
+        gen: 'школы',
+        plu: 'школ'
+    };
+
+    let number = Math.abs(amount),
+        word = '';
+
+    if (number.toString().indexOf('.') > -1) {
+        word = declensions.gen;
+    } else {
+        word = number % 10 == 1 && number % 100 != 11 ?
+            declensions.nom :
+            number % 10 >= 2 && number % 10 <= 4 &&
+            (number % 100 < 10 || number % 100 >= 20) ?
+                declensions.gen :
+                declensions.plu;
+    }
+
+    return word;
+};
+
 module.exports = schoolView;

@@ -36,7 +36,9 @@ controller.generalError = async(function(
         let data = await({
             favorites: services.favorite.getFavoriteEntities(user.id),
             popularEntities: entityType == entityTypeEnum.SCHOOL ?
-                services.school.getRandomPopularSchools(5) : null
+                services.school.getRandomPopularSchools(5) : null,
+            numberEntities: entityType == entityTypeEnum.SCHOOL ?
+                services.school.getSchoolsCount() : null,
         });
 
         let aliasesPopular = data.popularEntities ?
@@ -60,6 +62,7 @@ controller.generalError = async(function(
             user: user,
             favorites: data.favorites,
             popularEntities: data.popularEntities,
+            numberEntities: data.numberEntities,
             aliasesPopular: aliasesPopular,
             authSocialLinks: authSocialLinks,
             errorText: errorText,
