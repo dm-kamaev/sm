@@ -7,7 +7,7 @@ module.exports = function(gulpHelper) {
             outputFiles: scriptsHelper.getEntryPoints(),
             compile: true,
             compilerFlags: {
-                warning_level: 'QUIET'
+                'warning_level': 'QUIET'
             },
             dest: Path.SHARED_STATIC_DIR
         });
