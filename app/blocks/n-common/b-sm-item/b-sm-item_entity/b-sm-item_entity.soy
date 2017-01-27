@@ -105,7 +105,7 @@
     {/let}
 
     <div class="{$classes}">
-        {call .description_ data="all" /}
+        {call .description data="all" /}
 
         {call .brand_ data="all" /}
 
@@ -252,23 +252,6 @@
             ]/}
         {/call}
     </div>
-{/template}
-
-
-/**
- * Description
- * @param params {{
- *     data: {
- *         description: (string|undefined)
- *     }
- * }}
- */
-{template .description_}
-    {if $params.data?.description}
-        <div class="{call .rootClass/}__description">
-            {$params.data.description}
-        </div>
-    {/if}
 {/template}
 
 

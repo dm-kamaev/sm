@@ -14,6 +14,13 @@ goog.require('sm.bSmItem.ViewCompact');
  */
 sm.bSmItem.SmItemCompact = function(view, opt_domHelper) {
     sm.bSmItem.SmItemCompact.base(this, 'constructor', view, opt_domHelper);
+
+    /**
+     * Link Instance
+     * @type {?sm.bSmLink.SmLink}
+     * @private
+     */
+    this.descriptionLink_ = null;
 };
 goog.inherits(sm.bSmItem.SmItemCompact, sm.bSmItem.SmItem);
 
@@ -45,5 +52,33 @@ goog.scope(function() {
      */
     Item.Event = {
         CLICK: sm.bSmItem.SmItem.Event.CLICK
+    };
+
+
+    /**
+     * @param {Element} element
+     * @protected
+     * @override
+     */
+    Item.prototype.decorateInternal = function(element) {
+        Item.base(this, 'decorateInternal', element);
+
+        this.initDescriptionLink_();
+    };
+
+
+    /**
+     * Initializes description link instance
+     * @private
+     */
+    Item.prototype.initDescriptionLink_ = function() {
+        var link = this.getView().getDom().descriptionLink;
+
+        if (link) {
+            this.descriptionLink_ = this.decorateChild(
+                'smLink',
+                link
+            );
+        }
     };
 });  // goog.scope

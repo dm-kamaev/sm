@@ -142,6 +142,27 @@
  * @protected
  */
 {template .sectionCover}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_cover">
+        {call .image data="all"/}
+    </div>
+{/template}
+
+
+/**
+ * Image item
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: (string|undefined)
+ *         },
+ *         imageUrl: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .image}
     {let $imageUrl kind="html"}
         {if $params.data.imageUrl}
             {$params.data.imageUrl}
@@ -165,9 +186,7 @@
         {/if}
     {/let}
 
-    <a class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_cover"
-        href="{$url}">
+    <a class="{call .rootClass/}__cover-link" href="{$url}">
 
         <img class="{call .rootClass/}__cover-image"
             src="{$imageUrl}"
@@ -224,7 +243,7 @@
     {/let}
 
     <div class="{$classes}">
-        {$params.data?.description ?: ''}
+        {call .description data="all" /}
     </div>
 {/template}
 
@@ -324,6 +343,24 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: (string|undefined)
+ *     }
+ * }}
+ */
+{template .description}
+    {if $params.data?.description}
+        <div class="{call .rootClass/}__description">
+            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                data="$params.data.description" /}
+        </div>
+    {/if}
 {/template}
 
 

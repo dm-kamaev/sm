@@ -35,6 +35,22 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'b-sm-item_compact'
+        ROOT: 'b-sm-item_compact',
+        DESCRIPTION_LINK: 'b-sm-item__link-description'
+    };
+
+    /**
+     * Initializes dom elements
+     * @protected
+     * @override
+     */
+    View.prototype.initDom = function() {
+        View.base(this, 'initDom');
+
+        goog.object.extend(this.dom, {
+            descriptionLink: this.getElementByClass(
+                View.CssClass.DESCRIPTION_LINK
+            )
+        });
     };
 });  // goog.scope
