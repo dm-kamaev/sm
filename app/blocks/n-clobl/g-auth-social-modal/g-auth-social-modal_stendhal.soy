@@ -7,10 +7,18 @@
  * }
  * @extends cl.gAuthSocialModal.Template
  * @constructor
+ * @factory sm.iNewFactory.FactoryStendhal
  * @doc
  */
 {template .authSocialModal}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    auth-social-modal
 {/template}
 
 /**

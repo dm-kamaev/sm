@@ -19,10 +19,18 @@
  *     data: sm.lCourse.bDepartment.Template.Params.Data
  * }}
  * @constructor
+ * @factory sm.iNewFactory.FactoryStendhal
  * @extends cl.iControl.Template
  */
 {template .address}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lCourse-department
 {/template}
 
 

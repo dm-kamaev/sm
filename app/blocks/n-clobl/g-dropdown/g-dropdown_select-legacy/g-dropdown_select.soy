@@ -39,11 +39,19 @@
  *     config: sm.gDropdown.TemplateSelectLegacy.Params.Config
  * }}
  * @extends cl.gDropdown.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .dropdown}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    dropdown-select-legacy
 {/template}
 
 /**

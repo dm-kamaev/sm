@@ -27,10 +27,18 @@
  *     data: sm.bSmCatalog.Template.Params.Data
  * }}
  * @constructor
+ * @factory sm.iNewFactory.FactoryStendhal
  * @extends cl.iControl.Template
  */
 {template .catalog}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smCatalog
 {/template}
 
 

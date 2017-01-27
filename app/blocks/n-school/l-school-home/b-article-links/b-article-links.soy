@@ -3,10 +3,18 @@
 /**
  * Constructor
  * @extends cl.iControl.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .articleLinks kind="html"}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    article-links
 {/template}
 
 /**

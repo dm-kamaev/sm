@@ -38,10 +38,18 @@
  *     config: (sm.bSmItemList.Template.Params.Config|undefined)
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .itemList}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smItemList
 {/template}
 
 

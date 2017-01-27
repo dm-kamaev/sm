@@ -30,11 +30,19 @@
  *     data: sm.lInformation.bFeedbackBoard.Template.Params.Data
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .feedbackBoard autoescape="strict" kind="html"}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lInformation-feedbackBoard
 {/template}
 
 

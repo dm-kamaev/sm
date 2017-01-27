@@ -14,10 +14,18 @@
  * Constructor
  * @param params sm.lSchool.bFoldList.Template.Params
  * @extends cl.iControl.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .foldList}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    fold-list
 {/template}
 
 

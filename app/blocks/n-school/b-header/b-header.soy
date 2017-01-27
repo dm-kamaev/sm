@@ -23,6 +23,7 @@
  *     data: ?sm.bHeader.Template.Params.Data,
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
+ * @factory sm.iNewFactory.FactoryStendhal
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header
@@ -49,6 +50,13 @@
             </div>
         </div>
     </div>
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    header
 {/template}
 
 

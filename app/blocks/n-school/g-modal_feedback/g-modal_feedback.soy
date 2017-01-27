@@ -12,11 +12,19 @@
  *     }
  * }}
  * @extends sm.gModal.TemplateStendhal
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .modal}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    feedback-modal
 {/template}
 
 /**

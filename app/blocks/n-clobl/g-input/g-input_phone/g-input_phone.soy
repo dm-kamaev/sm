@@ -19,6 +19,7 @@
  * @constructor
  * @override
  * @extends sm.gInput.TemplateStendhal
+ * @factory sm.iNewFactory.FactoryStendhal
  */
 {template .input}
     {let $data: augmentMap(
@@ -40,6 +41,13 @@
             'config': $config
         ] /}
     {/call}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    digit-input
 {/template}
 
 

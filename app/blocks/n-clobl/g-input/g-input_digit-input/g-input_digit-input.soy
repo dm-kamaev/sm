@@ -12,10 +12,18 @@
  * }}
  * @doc
  * @extends cl.gInput.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .input}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    digit-input
 {/template}
 
 /**

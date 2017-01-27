@@ -42,10 +42,18 @@
  *     config: sm.bSmItem.Template.Params.Config
  * }}
  * @extends sm.bSmItem.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .item}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smItemEntity
 {/template}
 
 

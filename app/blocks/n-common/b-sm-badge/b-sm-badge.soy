@@ -36,10 +36,18 @@
  *     config: sm.bSmBadge.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .badge}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smBadge
 {/template}
 
 

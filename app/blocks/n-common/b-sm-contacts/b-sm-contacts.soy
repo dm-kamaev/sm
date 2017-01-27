@@ -13,9 +13,17 @@
  * }}
  * @constructor
  * @extends cl.iControl.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  */
 {template .contacts}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smContacts
 {/template}
 
 /**

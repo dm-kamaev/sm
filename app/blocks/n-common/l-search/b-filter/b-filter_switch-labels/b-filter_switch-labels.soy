@@ -13,10 +13,18 @@
  * Constructor
  * @param params {sm.lSearch.bFilter.TemplateSwitchLabels.Params}
  * @extends sm.lSearch.bFilter.TemplateSwitch
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .filter}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch-filterSwitchLabels
 {/template}
 
 

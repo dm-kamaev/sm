@@ -29,10 +29,18 @@
  *     config: sm.bSmCollapsedText.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .collapsedText}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smCollapsedText
 {/template}
 
 

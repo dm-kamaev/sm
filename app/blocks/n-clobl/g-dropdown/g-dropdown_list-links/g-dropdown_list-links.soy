@@ -29,10 +29,18 @@
  * }}
  * @extends sm.gDropdown.TemplateSelect
  * @constructor
+ * @factory sm.iNewFactory.FactoryStendhal
  * @doc
  */
 {template .dropdown}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    dropdown-list-links
 {/template}
 
 

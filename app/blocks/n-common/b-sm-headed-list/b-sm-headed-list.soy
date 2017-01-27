@@ -35,10 +35,18 @@
  *     data: sm.bSmHeader.Template.Params.Data
  * }}
  * @constructor
+ * @factory sm.iNewFactory.FactoryStendhal
  * @extends cl.iControl.Template
  */
 {template .headedList}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smHeadedList
 {/template}
 
 

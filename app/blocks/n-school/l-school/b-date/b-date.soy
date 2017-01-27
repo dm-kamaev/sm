@@ -18,10 +18,18 @@
  * date template
  * @param params {sm.lSchool.bDate.Template.Params}
  * @extends cl.iControl.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .date kind="html"}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    date
 {/template}
 
 /**

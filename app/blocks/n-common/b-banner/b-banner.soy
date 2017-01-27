@@ -11,10 +11,18 @@
  *     config: ?sm.iLayout.Template.Params.Config
  * }
  * @extends cl.iControl.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  */
 {template .banner}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    banner
 {/template}
 
 /**

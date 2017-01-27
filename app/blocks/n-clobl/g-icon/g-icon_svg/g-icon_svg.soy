@@ -5,11 +5,19 @@
  * Icon template
  * @param params {cl.gIcon.TemplateStendhal.Params}
  * @extends sm.gIcon.TemplateStendhal
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .icon}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    icon-svg
 {/template}
 
 

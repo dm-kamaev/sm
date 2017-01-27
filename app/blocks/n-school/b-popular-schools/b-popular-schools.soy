@@ -18,6 +18,7 @@
  *         analyticsAction: ?string
  *     }
  * }
+ * @factory sm.iNewFactory.FactoryStendhal
  */
 {template .base autoescape="strict" kind="html"}
     {let $analyticsAction: [
@@ -87,4 +88,12 @@
             </div>
         {/foreach}
     </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    popular-schools
 {/template}

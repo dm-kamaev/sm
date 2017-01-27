@@ -14,11 +14,19 @@
  *     }
  * }
  * @extends cl.gAuthSocial.Template
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .authSocial}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    auth-social
 {/template}
 
 /**
