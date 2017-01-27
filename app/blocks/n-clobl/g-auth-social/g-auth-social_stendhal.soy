@@ -31,22 +31,14 @@
 
 /**
  * Before template
- * @param params {
- *     config: {
- *         stylizationModifier: ?string
- *     }
- * }
  */
 {template .before}
     <h3 class="{call .rootClass/}__title">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.stylizationModifier,
-                'type': 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': 'mel-logo'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'icon' /}
+            {param renderParams: [
+                'data': [
+                    'type': 'mel-logo'
                 ]
             ]/}
         {/call}

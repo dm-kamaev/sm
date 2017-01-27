@@ -60,17 +60,14 @@
         {call .rootClass/}__catalog
     {/let}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'icon-svg',
-            'renderParams': [
-                'data': [
-                    'type': 'catalog'
-                ],
-                'config': [
-                    'customClasses': [$customClasses]
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'icon-svg' /}
+        {param renderParams: [
+            'data': [
+                'type': 'catalog'
+            ],
+            'config': [
+                'customClasses': [$customClasses]
             ]
         ]/}
     {/call}

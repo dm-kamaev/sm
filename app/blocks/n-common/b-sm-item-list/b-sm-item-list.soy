@@ -178,14 +178,11 @@
     ) /}
 
     <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params?.config?.stylizationModifier,
-                'type': $params.config.type,
-                'renderParams': [
-                    'data': $params.data.item,
-                    'config': $itemConfig
-                ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: $params.config.type /}
+            {param renderParams: [
+                'data': $params.data.item,
+                'config': $itemConfig
             ]/}
         {/call}
     </div>

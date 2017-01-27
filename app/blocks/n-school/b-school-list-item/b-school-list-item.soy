@@ -198,17 +198,14 @@
     {/let}
 
     <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'favorite-link',
-                'renderParams': [
-                    'data': [
-                        'isFavorite': $params.isFavorite
-                    ],
-                    'config': [
-                        'theme': 'light'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'favorite-link' /}
+            {param renderParams: [
+                'data': [
+                    'isFavorite': $params.isFavorite
+                ],
+                'config': [
+                    'theme': 'light'
                 ]
             ]/}
         {/call}

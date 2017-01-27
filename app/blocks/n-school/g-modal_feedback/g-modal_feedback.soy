@@ -131,26 +131,18 @@
 
 /**
   * Submit button template
-  * @param? params {{
-  *     config: {
-  *        type: string
-  *     }
-  * }}
   */
 {template .submitButton_}
     <div class="{call .rootClass/}__section{sp}
         {call .rootClass/}__section_submit">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params?.config?.stylizationModifier,
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': 'Отправить'
-                    ],
-                    'config': [
-                        'theme': 'sienna'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'button' /}
+            {param renderParams: [
+                'data': [
+                    'content': 'Отправить'
+                ],
+                'config': [
+                    'theme': 'sienna'
                 ]
             ]/}
         {/call}
@@ -191,29 +183,21 @@
 
 /**
  * Name input template
- * @param? params {{
- *     config: {
- *        stylizationModifier: string
- *     }
- * }}
  */
 {template .nameInput_}
      <div class="{call .rootClass/}__input-field{sp}
          {call .rootClass/}__input-field_name">
          <div class="{call .rootClass/}__control-name">Ваше имя</div>
          <div class="{call .rootClass/}__control">
-             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                 {param params: [
-                     'factory': $params.config.stylizationModifier,
-                     'type': 'input',
-                     'renderParams': [
-                         'data': [
-                             'placeholder': 'Ваше имя',
-                             'name': 'name'
-                         ],
-                         'config': [
-                             'validations': ['notEmpty']
-                         ]
+             {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                 {param type: 'input' /}
+                 {param renderParams: [
+                     'data': [
+                         'placeholder': 'Ваше имя',
+                         'name': 'name'
+                     ],
+                     'config': [
+                         'validations': ['notEmpty']
                      ]
                  ]/}
              {/call}
@@ -223,29 +207,21 @@
 
 /**
  * Email input template
- * @param? params {{
- *     config: {
- *        stylizationModifier: string
- *     }
- * }}
  */
 {template .emailInput_}
     <div class="{call .rootClass/}__input-field{sp}
                 {call .rootClass/}__input-field_email">
         <div class="{call .rootClass/}__control-name">Ваш e-mail</div>
         <div class="{call .rootClass/}__control">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params?.config?.stylizationModifier,
-                    'type': 'input',
-                    'renderParams': [
-                        'data': [
-                            'placeholder': 'Ваш e-mail',
-                            'name': 'email'
-                        ],
-                        'config': [
-                            'validations':  ['email', 'notEmpty']
-                        ]
+            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'input' /}
+                {param renderParams: [
+                    'data': [
+                        'placeholder': 'Ваш e-mail',
+                        'name': 'email'
+                    ],
+                    'config': [
+                        'validations':  ['email', 'notEmpty']
                     ]
                 ]/}
             {/call}
@@ -257,8 +233,7 @@
  * Dropdown field template
  * @param? params {{
  *     config: {
- *        type: string,
- *        stylizationModifier: string
+ *        type: string
  *     }
  * }}
  */
@@ -286,24 +261,21 @@
                 {call .rootClass/}__input-field_theme">
         <div class="{call .rootClass/}__control-name">Выберите тему</div>
         <div class="{call .rootClass/}__control">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params?.config?.stylizationModifier,
-                    'type': 'dropdown-select-legacy',
-                    'renderParams': [
-                        'data': [
-                            'listItems': $params.config.type  == 'mistake'  ?
-                            $themes.mistake :
-                            $themes.opinion,
-                            'defaultOpenerText': 'Выберите тему'
-                        ],
-                        'config': [
-                            'iconSprite': 'opener-arrow',
-                            'textSize': 'small',
-                            'iconOffset': 'small',
-                            'indent': 'small',
-                            'usePlaceholder': true
-                        ]
+            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'dropdown-select-legacy' /}
+                {param renderParams: [
+                    'data': [
+                        'listItems': $params.config.type  == 'mistake'  ?
+                        $themes.mistake :
+                        $themes.opinion,
+                        'defaultOpenerText': 'Выберите тему'
+                    ],
+                    'config': [
+                        'iconSprite': 'opener-arrow',
+                        'textSize': 'small',
+                        'iconOffset': 'small',
+                        'indent': 'small',
+                        'usePlaceholder': true
                     ]
                 ]/}
             {/call}
@@ -313,30 +285,22 @@
 
 /**
  * Textarea template
- * @param? params {{
- *     config: {
- *        stylizationModifier: ?string
- *     }
- * }}
  */
 {template .textArea_}
     <div class="{call .rootClass/}__input-field{sp}
                 {call .rootClass/}__input-field_text">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params?.config?.stylizationModifier,
-                'type': 'textarea',
-                'renderParams': [
-                    'data': [
-                        'placeholder': 'Сообщение',
-                        'name': 'text',
-                        'maxLength': 750
-                    ],
-                    'config': [
-                        'autoHeight': true,
-                        'showCounter': true,
-                        'minHeight': 'small'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'textarea' /}
+            {param renderParams: [
+                'data': [
+                    'placeholder': 'Сообщение',
+                    'name': 'text',
+                    'maxLength': 750
+                ],
+                'config': [
+                    'autoHeight': true,
+                    'showCounter': true,
+                    'minHeight': 'small'
                 ]
             ]/}
         {/call}

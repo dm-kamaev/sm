@@ -68,16 +68,13 @@
     {/let}
 
     <div class="{call .rootClass/}__article {call .rootClass/}__article_first">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'article-link',
-                'renderParams': [
-                    'articleUrl': $articleUrl,
-                    'imgUrl': $imgUrl,
-                    'title': $articleTitle,
-                    'subtitle': $articleSubtitle
-                ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'article-link' /}
+            {param renderParams: [
+                'articleUrl': $articleUrl,
+                'imgUrl': $imgUrl,
+                'title': $articleTitle,
+                'subtitle': $articleSubtitle
             ]/}
         {/call}
     </div>
@@ -105,16 +102,13 @@
     {/let}
 
     <div class="{call .rootClass/}__article {call .rootClass/}__article_second">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'article-link',
-                'renderParams': [
-                    'articleUrl': $articleUrl,
-                    'imgUrl': $imgUrl,
-                    'title': $articleTitle,
-                    'subtitle': $articleSubtitle
-                ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'article-link' /}
+            {param renderParams: [
+                'articleUrl': $articleUrl,
+                'imgUrl': $imgUrl,
+                'title': $articleTitle,
+                'subtitle': $articleSubtitle
             ]/}
         {/call}
     </div>

@@ -184,13 +184,10 @@
     {if $params.data.recommendations}
 
         {let $content kind="html"}
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smCatalog',
-                    'renderParams': [
-                        'data': $params.data.recommendations
-                    ]
+            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'smCatalog' /}
+                {param renderParams: [
+                    'data': $params.data.recommendations
                 ] /}
             {/call}
         {/let}
@@ -290,15 +287,12 @@
  */
 {template .searchPanel_ kind="html"}
     <div class="{call .rootClass/}__search-panel">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smSearchPanel',
-                'renderParams': [
-                    'data': $params.data.searchPanel,
-                    'config': [
-                        'entityType': $params.config.entityType
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'smSearchPanel' /}
+            {param renderParams: [
+                'data': $params.data.searchPanel,
+                'config': [
+                    'entityType': $params.config.entityType
                 ]
             ] /}
         {/call}

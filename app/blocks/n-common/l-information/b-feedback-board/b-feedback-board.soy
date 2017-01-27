@@ -200,20 +200,18 @@
     {/let}
 
     <div class="{call .rootClass/}__list-filter">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'type': 'dropdown-select-legacy',
-                'renderParams': [
-                    'data': [
-                        'defaultOpenerText': 'Не выбран',
-                        'listItems': $params.data.filter.items,
-                        'selectedItemId': 1
-                    ],
-                    'config': [
-                        'iconSprite': 'opener-arrow',
-                        'customClasses': [$customClasses],
-                        'textSize': 'medium'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'dropdown-select-legacy' /}
+            {param renderParams: [
+                'data': [
+                    'defaultOpenerText': 'Не выбран',
+                    'listItems': $params.data.filter.items,
+                    'selectedItemId': 1
+                ],
+                'config': [
+                    'iconSprite': 'opener-arrow',
+                    'customClasses': [$customClasses],
+                    'textSize': 'medium'
                 ]
             ]/}
         {/call}
@@ -354,16 +352,14 @@
     {/let}
 
     <div class="{call .rootClass/}__button">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': 'хочу этот курс!'
-                    ],
-                    'config': [
-                        'customClasses': [$customClasses]
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'button' /}
+            {param renderParams: [
+                'data': [
+                    'content': 'хочу этот курс!'
+                ],
+                'config': [
+                    'customClasses': [$customClasses]
                 ]
             ]/}
         {/call}
@@ -387,17 +383,15 @@
     {/let}
 
     <div class="{call .rootClass/}__button">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': 'оставить отзыв'
-                    ],
-                    'config': [
-                        'customClasses': [$customClasses],
-                        'isDisabled': $params?.data?.user?.isCommented
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'button' /}
+            {param renderParams: [
+                'data': [
+                    'content': 'оставить отзыв'
+                ],
+                'config': [
+                    'customClasses': [$customClasses],
+                    'isDisabled': $params?.data?.user?.isCommented
                 ]
             ]/}
         {/call}

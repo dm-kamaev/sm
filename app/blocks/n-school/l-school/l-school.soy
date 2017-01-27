@@ -450,16 +450,13 @@
 {template .modalInaccuracy_ private="true"}
     {let $csrf: $params?.config?.csrf /}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'feedback-modal',
-            'renderParams': [
-                'config': [
-                    'type': 'mistake',
-                    'url': '/api/user-feedback',
-                    'csrf': $csrf
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'feedback-modal' /}
+        {param renderParams: [
+            'config': [
+                'type': 'mistake',
+                'url': '/api/user-feedback',
+                'csrf': $csrf
             ]
         ]/}
     {/call}

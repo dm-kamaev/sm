@@ -173,13 +173,10 @@
  */
 {template .sectionCatalog_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_catalog">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'tab-catalog',
-                'renderParams': [
-                    'data': $params.data.catalog
-                ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'tab-catalog' /}
+            {param renderParams: [
+                'data': $params.data.catalog
             ] /}
         {/call}
     </div>

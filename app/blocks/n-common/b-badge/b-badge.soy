@@ -90,14 +90,11 @@
  */
 {template .icon_ private="true"}
     <div class="b-badge__icon">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': $params.display == 'metro' ? 'icon-svg' : 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': $params.display ?: 'test'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: $params.display == 'metro' ? 'icon-svg' : 'icon' /}
+            {param renderParams: [
+                'data': [
+                    'type': $params.display ?: 'test'
                 ]
             ]/}
         {/call}
@@ -163,14 +160,11 @@
             <div class="b-badge__hint-href">
                 Подробнее
                 <div class="b-badge__hint-href-icon">
-                    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                        {param params: [
-                            'factory': 'stendhal',
-                            'type': 'icon',
-                            'renderParams': [
-                                'data': [
-                                    'type': 'window-href'
-                                ]
+                    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                        {param type: 'icon' /}
+                        {param renderParams: [
+                            'data': [
+                                'type': 'window-href'
                             ]
                         ]/}
                     {/call}
@@ -178,15 +172,12 @@
             </div>
         </div>
     {/let}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'hint',
-            'renderParams': [
-                'data': $hintData,
-                'config': [
-                    'align': 'left'
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'hint' /}
+        {param renderParams: [
+            'data': $hintData,
+            'config': [
+                'align': 'left'
             ]
         ]/}
     {/call}

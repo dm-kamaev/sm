@@ -93,26 +93,22 @@
  *     },
  *     config: {
  *         isNotDefaultStatus: (boolean),
- *         viewType: (string|undefined),
- *         stylizationModifier: string
+ *         viewType: (string|undefined)
  *     }
  * }}
  * @public
  */
 {template .option}
     <div class="{call .rootClass/}__option">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.stylizationModifier,
-                'type': 'smRadioButton',
-                'renderParams': [
-                    'data': $params.data,
-                    'config': [
-                        'theme': 'label',
-                        'isUncheckable': true,
-                        'isNotDefaultStatus': $params.config.isNotDefaultStatus,
-                        'viewType': $params.config.viewType
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'smRadioButton' /}
+            {param renderParams: [
+                'data': $params.data,
+                'config': [
+                    'theme': 'label',
+                    'isUncheckable': true,
+                    'isNotDefaultStatus': $params.config.isNotDefaultStatus,
+                    'viewType': $params.config.viewType
                 ]
             ]/}
         {/call}

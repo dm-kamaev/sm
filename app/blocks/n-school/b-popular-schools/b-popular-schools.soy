@@ -59,17 +59,14 @@
                         {/if}
                         {if length($school?.metro) > 0}
                             <div class="b-popular-schools__metro">
-                                {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                                    {param params: [
-                                        'factory': 'stendhal',
-                                        'type': 'icon-svg',
-                                        'renderParams': [
-                                            'data': [
-                                                'type': 'metro'
-                                            ],
-                                            'config': [
-                                                'customClasses': ['b-popular-schools__metro-icon']
-                                            ]
+                                {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                                    {param type: 'icon-svg' /}
+                                    {param renderParams: [
+                                        'data': [
+                                            'type': 'metro'
+                                        ],
+                                        'config': [
+                                            'customClasses': ['b-popular-schools__metro-icon']
                                         ]
                                     ]/}
                                 {/call}

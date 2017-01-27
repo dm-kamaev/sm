@@ -180,17 +180,14 @@
  * Search suggest metro icon
  */
 {template .itemIconMetro_ private="true" autoescape="strict" kind="html"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'icon-svg',
-            'renderParams': [
-                'data': [
-                    'type': 'metro'
-                ],
-                'config': [
-                    'customClasses': ['b-search__item-icon']
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'icon-svg' /}
+        {param renderParams: [
+            'data': [
+                'type': 'metro'
+            ],
+            'config': [
+                'customClasses': ['b-search__item-icon']
             ]
         ]/}
     {/call}
@@ -201,17 +198,14 @@
  * Search suggest area icon
  */
 {template .itemIconLocation_ private="true" autoescape="strict" kind="html"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'icon',
-            'renderParams': [
-                'data': [
-                    'type': 'location'
-                ],
-                'config': [
-                    'customClasses': ['b-search__item-icon']
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'icon' /}
+        {param renderParams: [
+            'data': [
+                'type': 'location'
+            ],
+            'config': [
+                'customClasses': ['b-search__item-icon']
             ]
         ]/}
     {/call}
@@ -222,14 +216,11 @@
  */
 {template .clearButton_ kind="html"}
     <div class="b-search__control b-search__control_clear i-animate">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'icon-svg',
-                'renderParams': [
-                    'data': [
-                        'type': 'cross'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'icon-svg' /}
+            {param renderParams: [
+                'data': [
+                    'type': 'cross'
                 ]
             ]/}
         {/call}
@@ -243,17 +234,14 @@
     <div class="b-search__open-button-holder
                 i-animate">
         <div class="b-search__control b-search__control_search i-animate">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': 'stendhal',
-                    'type': 'icon-svg',
-                    'renderParams': [
-                        'data': [
-                            'type': 'search'
-                        ],
-                        'config': [
-                            'size': 'xs'
-                        ]
+            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'icon-svg' /}
+                {param renderParams: [
+                    'data': [
+                        'type': 'search'
+                    ],
+                    'config': [
+                        'size': 'xs'
                     ]
                 ]/}
             {/call}

@@ -145,14 +145,11 @@
  * }}
  */
 {template .listSchools_ kind="html" private="true"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'school-list-paged',
-            'renderParams': [
-                'data': [
-                    'schools': $params?.data?.schools
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'school-list-paged' /}
+        {param renderParams: [
+            'data': [
+                'schools': $params?.data?.schools
             ]
         ]/}
     {/call}

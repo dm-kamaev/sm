@@ -133,15 +133,12 @@
  */
 {template .search_ autoescape="strict" kind="html"}
     <div class="l-error-school-not-found__search">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'search-panel',
-                'renderParams': [
-                    'dataLinks' : $params.dataLinks,
-                    'config': [
-                        'theme': 'two-columns'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'search-panel' /}
+            {param renderParams: [
+                'dataLinks' : $params.dataLinks,
+                'config': [
+                    'theme': 'two-columns'
                 ]
             ]/}
         {/call}
@@ -213,18 +210,15 @@
  */
 {template .informationSchools_ autoescape="strict" kind="html" private="true"}
     <div class="l-error-school-not-found__information-schools">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'school-catalog',
-                'renderParams': [
-                    'text': 'Мы\u00A0составили полный каталог школ Москвы\u00A0—
-                            в\u00A0нём\u00A0сейчас',
-                    'amount': $params.amountSchools,
-                    'dataLink': [
-                        'name': 'Все школы',
-                        'url': '/school'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'school-catalog' /}
+            {param renderParams: [
+                'text': 'Мы\u00A0составили полный каталог школ Москвы\u00A0—
+                        в\u00A0нём\u00A0сейчас',
+                'amount': $params.amountSchools,
+                'dataLink': [
+                    'name': 'Все школы',
+                    'url': '/school'
                 ]
             ]/}
         {/call}

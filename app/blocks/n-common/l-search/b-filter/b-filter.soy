@@ -211,8 +211,7 @@
  *     config: {
  *         hidden: (boolean|undefined),
  *         hidable: (boolean|undefined),
- *         theme: (string|undefined),
- *         stylizationModifier: string
+ *         theme: (string|undefined)
  *     }
  * }}
  * @public
@@ -231,15 +230,12 @@
     {/let}
 
     <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.stylizationModifier,
-                'type': 'smCheckbox',
-                'renderParams': [
-                    'data': $params.data,
-                    'config': [
-                        'theme': $params.config?.theme
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'smCheckbox' /}
+            {param renderParams: [
+                'data': $params.data,
+                'config': [
+                    'theme': $params.config?.theme
                 ]
             ]/}
         {/call}
@@ -417,16 +413,13 @@
         </div>
     {/let}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'hint',
-            'renderParams': [
-                'data': $tooltipData,
-                'config': [
-                    'align': 'arrow',
-                    'customClasses': [$customClasses]
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'hint' /}
+        {param renderParams: [
+            'data': $tooltipData,
+            'config': [
+                'align': 'arrow',
+                'customClasses': [$customClasses]
             ]
         ]/}
     {/call}

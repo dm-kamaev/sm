@@ -52,14 +52,11 @@
  * ]]
  */
 {template .content autoescape="strict" kind="html"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'fold-list',
-            'renderParams': [
-                'data' : $params.content,
-                'config': $params.config
-            ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'fold-list' /}
+        {param renderParams: [
+            'data' : $params.content,
+            'config': $params.config
         ]/}
     {/call}
 {/template}

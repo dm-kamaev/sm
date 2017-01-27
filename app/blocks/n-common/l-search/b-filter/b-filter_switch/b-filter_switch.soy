@@ -40,8 +40,7 @@
  *     },
  *     config: {
  *         hidden: (boolean|undefined),
- *         hidable: (boolean|undefined),
- *         stylizationModifier: string
+ *         hidable: (boolean|undefined)
  *     }
  * }}
  * @public
@@ -60,13 +59,10 @@
     {/let}
 
     <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.stylizationModifier,
-                'type': 'smRadioButton',
-                'renderParams': [
-                    'data': $params.data
-                ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'smRadioButton' /}
+            {param renderParams: [
+                'data': $params.data
             ]/}
         {/call}
     </div>

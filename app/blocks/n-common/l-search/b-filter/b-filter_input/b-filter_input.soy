@@ -205,15 +205,12 @@
  */
 {template .input_}
     <div class="{call .rootClass/}__input">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.stylizationModifier,
-                'type': 'input',
-                'renderParams': [
-                    'data': $params.data,
-                    'config': [
-                        'theme': 'light'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'input' /}
+            {param renderParams: [
+                'data': $params.data,
+                'config': [
+                    'theme': 'light'
                 ]
             ]/}
         {/call}

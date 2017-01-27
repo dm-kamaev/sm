@@ -88,14 +88,11 @@
     </div>
     {if $params?.config?.iconSprite}
         <div class="{call .rootClass/}__opener-arrow">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.stylizationModifier,
-                    'type': 'icon',
-                    'renderParams': [
-                        'data': [
-                            'type': $params?.config?.iconSprite
-                        ]
+            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'icon' /}
+                {param renderParams: [
+                    'data': [
+                        'type': $params?.config?.iconSprite
                     ]
                 ]/}
             {/call}

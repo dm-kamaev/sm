@@ -40,8 +40,7 @@
  *     },
  *     config: {
  *         hidden: (boolean|undefined),
- *         theme: (string|undefined),
- *         stylizationModifier: string
+ *         theme: (string|undefined)
  *     }
  * }}
  * @override
@@ -56,18 +55,15 @@
     {/let}
 
     <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.stylizationModifier,
-                'type': 'lSearch-label',
-                'renderParams': [
-                    'data': [
-                        'id': $params.data.id + '-selected',
-                        'name': $params.data.name,
-                        'label': $params.data.label,
-                        'value': $params.data.value,
-                        'isChecked': $params.data.isChecked
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'lSearch-label' /}
+            {param renderParams: [
+                'data': [
+                    'id': $params.data.id + '-selected',
+                    'name': $params.data.name,
+                    'label': $params.data.label,
+                    'value': $params.data.value,
+                    'isChecked': $params.data.isChecked
                 ]
             ]/}
         {/call}

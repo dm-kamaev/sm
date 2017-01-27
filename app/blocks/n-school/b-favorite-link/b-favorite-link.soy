@@ -61,20 +61,17 @@
         {/if}
     {/let}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'icon-svg',
-            'renderParams': [
-                'data': [
-                    'type': $params.data?.isFavorite ?
-                        'favorite_red' :
-                        'favorite'
-                ],
-                'config': [
-                    'customClasses': [$customClasses],
-                    'size': $iconSize ?: ''
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'icon-svg' /}
+        {param renderParams: [
+            'data': [
+                'type': $params.data?.isFavorite ?
+                    'favorite_red' :
+                    'favorite'
+            ],
+            'config': [
+                'customClasses': [$customClasses],
+                'size': $iconSize ?: ''
             ]
         ]/}
     {/call}

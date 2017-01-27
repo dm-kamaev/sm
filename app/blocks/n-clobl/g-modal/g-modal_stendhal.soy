@@ -44,7 +44,7 @@
 /**
  * @param params {
  *     config: {
- *         stylizationModifier: string
+ *         size: string
  *     }
  * }
  */
@@ -59,35 +59,25 @@
 {/template}
 
 /**
- * @param params {
- *     config: {
- *         stylizationModifier: string
- *     }
- * }
+ *
  */
 {template .defaultIcons}
     <div class="{call .rootClass/}__close-icon">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params?.config?.stylizationModifier,
-                'type': 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': 'close-dialog'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'icon' /}
+            {param renderParams: [
+                'data': [
+                    'type': 'close-dialog'
                 ]
             ]/}
         {/call}
     </div>
     <div class="{call .rootClass/}__close-icon-hover">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params?.config?.stylizationModifier,
-                'type': 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': 'close-dialog-hovered'
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'icon' /}
+            {param renderParams: [
+                'data': [
+                    'type': 'close-dialog-hovered'
                 ]
             ]/}
         {/call}
@@ -95,21 +85,14 @@
 {/template}
 
 /**
- * @param params {
- *     config: {
- *         stylizationModifier: string
- *     }
- * }
+ * Zzzz
  */
 {template .smallIcon}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': $params?.config?.stylizationModifier,
-            'type': 'icon',
-            'renderParams': [
-                'data': [
-                    'type': 'light-grey-close'
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'icon' /}
+        {param renderParams: [
+            'data': [
+                'type': 'light-grey-close'
             ]
         ]/}
     {/call}

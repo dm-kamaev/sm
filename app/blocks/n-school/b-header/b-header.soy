@@ -79,17 +79,14 @@
  */
 {template .linkSearch_ private="true" autoescape="strict" kind="html"}
     <a class="b-header__search-link" href="/school">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'icon-svg',
-                'renderParams': [
-                    'data': [
-                        'type': 'list'
-                    ],
-                    'config': [
-                        'customClasses': ['b-header__search-link-icon']
-                    ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'icon-svg' /}
+            {param renderParams: [
+                'data': [
+                    'type': 'list'
+                ],
+                'config': [
+                    'customClasses': ['b-header__search-link-icon']
                 ]
             ]/}
         {/call}
@@ -138,14 +135,11 @@
 {template .linkAuthorization_ kind="html" private="true"}
     <div class="b-header__user-control b-header__user-control_authorization">
         <div class="b-header__authorization-content">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': 'stendhal',
-                    'type': 'authorization-link',
-                    'renderParams': [
-                        'data': [
-                            'user': $params?.data?.user
-                        ]
+            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'authorization-link' /}
+                {param renderParams: [
+                    'data': [
+                        'user': $params?.data?.user
                     ]
                 ]/}
             {/call}
@@ -165,15 +159,12 @@
 {template .favorite_ kind="html" private="true"}
     <div class="b-header__user-control b-header__user-control_favorite">
         <div class="b-header__favorite-content">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': 'stendhal',
-                    'type': 'favorite',
-                    'renderParams': [
-                        'data': $params.data?.favorites,
-                        'config': [
-                            'isUserAuthorized': $params.data?.user ? true : false
-                        ]
+            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'favorite' /}
+                {param renderParams: [
+                    'data': $params.data?.favorites,
+                    'config': [
+                        'isUserAuthorized': $params.data?.user ? true : false
                     ]
                 ]/}
             {/call}
@@ -270,17 +261,14 @@
             Мы&nbsp;помогли вам выбрать&nbsp;школу?
         {/let}
 
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'banner',
-                'renderParams': [
-                    'data': [
-                        'textXl': $textXl,
-                        'textS': $textS
-                    ],
-                    'config': $params?.config
-                ]
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'banner' /}
+            {param renderParams: [
+                'data': [
+                    'textXl': $textXl,
+                    'textS': $textS
+                ],
+                'config': $params?.config
             ]/}
         {/call}
     </div>

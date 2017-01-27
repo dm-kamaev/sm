@@ -26,9 +26,6 @@
  * @param params {
  *     data: {
  *         content: ?string
- *     },
- *     config: {
- *         stylizationModifier: string
  *     }
  * }
  */
@@ -37,17 +34,14 @@
         {call .modalType/}
     {/let}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': $params.config.stylizationModifier,
-            'type': $type,
-            'renderParams': [
-                'data': [
-                    'content': $params.data.content,
-                ],
-                'config': [
-                    'size': 's'
-                ]
+    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: $type /}
+        {param renderParams: [
+            'data': [
+                'content': $params.data.content,
+            ],
+            'config': [
+                'size': 's'
             ]
         ]/}
     {/call}
