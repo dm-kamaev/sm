@@ -6,6 +6,9 @@ module.exports = function(gulpHelper) {
         return gulpHelper.js.build({
             outputFiles: scriptsHelper.getEntryPoints(),
             compile: true,
+            compilerFlags: {
+                warning_level: 'QUIET'
+            },
             dest: Path.SHARED_STATIC_DIR
         });
     };
