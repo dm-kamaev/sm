@@ -44,7 +44,7 @@ controller.generalError = async(function(req, res, next, entityType) {
 
         if (/(\/error)$/.test(req.path)) {
             res.status(500);
-            errorText = 'Что-то пошло не так';
+            errorText = 'Что-то пошло не&nbsp;так';
         } else {
             res.status(404);
         }
