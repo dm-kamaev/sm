@@ -7,31 +7,23 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-const contentExperiment =
-        require('../../../components/contentExperiment/contentExperiment');
-
-const errorView = require('../../../../api/modules/error/views/errorView');
-
-const config = require('../../../config').config;
-
-const FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId;
+const errorView = require('../../../../api/modules/error/views/errorView'),
+    configView = require('../../common/views/configView');
 
 const entityTypeEnum =
         require('../../../../api/modules/entity/enums/entityType');
+const pageName = require('../../common/enums/pageName');
 
+const config = require('../../../config').config;
 
 let controller = {};
 
-controller.generalError = async(function(
-    req, res, next, entityType, subdomain
-) {
+controller.generalError = async(function(req, res, next, entityType) {
     let html;
+
     try {
         let authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {};
-
-        let factory = contentExperiment.getFactoryByQuery(req.query);
 
         let data = await({
             favorites: services.favorite.getFavoriteEntities(user.id),
@@ -69,22 +61,18 @@ controller.generalError = async(function(
             config: config
         });
 
+        let templateConfig = configView.render({
+            entityType: entityType,
+            pageName: pageName.ERROR_NOT_FOUND,
+            query: req.query,
+            csrf: req.csrfToken(),
+            config: config
+        });
+
         html = soy.render('sm.lErrorNotFound.Template.errorNotFound', {
             params: {
                 data: templateData,
-                config: {
-                    page: 'error-not-found',
-                    staticVersion: config.lastBuildTimestamp,
-                    entityType: entityType,
-                    modifier: factory,
-                    analyticsId: config[subdomain].analyticsId,
-                    experimentId: config[subdomain].experimentId,
-                    yandexMetrikaId: config[subdomain].yandexMetrikaId,
-                    carrotquestId: CARROTQUEST_ID,
-                    csrf: req.csrfToken(),
-                    fbClientId: FB_CLIENT_ID,
-                    domain: config[subdomain].host
-                }
+                config: templateConfig
             }
         });
     } catch (error) {
