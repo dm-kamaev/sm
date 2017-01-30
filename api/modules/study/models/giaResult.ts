@@ -1,5 +1,19 @@
-"use strict";
-const DataType = require('sequelize'), db = require('../../../../app/components/db');
+const DataType = require('sequelize'),
+    db = require('../../../../app/components/db');
+
+import * as Sequelize from 'sequelize/v3';
+
+interface GiaResultAttribute {
+    count: number;
+    subjectId: number;
+    schoolId: number;
+    result: number;
+}
+
+export interface GiaResultInstance
+    extends Sequelize.Instance<GiaResultAttribute>,
+            GiaResultAttribute {}
+
 const GiaResult = db.define('GiaResult', {
     count: {
         type: DataType.INTEGER,
@@ -21,7 +35,7 @@ const GiaResult = db.define('GiaResult', {
     underscored: true,
     tableName: 'gia_result',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             GiaResult.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });
@@ -32,5 +46,5 @@ const GiaResult = db.define('GiaResult', {
         }
     }
 });
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = GiaResult;
+
+export default GiaResult;

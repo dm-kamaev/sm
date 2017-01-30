@@ -14,6 +14,10 @@ const departmentAdminController = new DepartmentAdminController();
 import {ProfileAdminController} from './profileAdminController';
 const profileAdminController = new ProfileAdminController();
 
+import {GiaAdminController} from './giaAdminController';
+const giaAdminController = new GiaAdminController();
+
+
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
 
@@ -106,5 +110,11 @@ initCrudRouting(
 
 router.get('/admin/schoolclasses', profileAdminController.actionListClasses);
 router.get('/admin/schoolprofiles', profileAdminController.actionListProfiles);
+
+initCrudRouting(
+    '/admin/school/:schoolId/gia',
+    giaAdminController,
+    ':giaId'
+);
 
 export default router;

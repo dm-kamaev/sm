@@ -73,6 +73,7 @@ api/modules/school/controllers/departmentAdminController.js
 api/modules/school/controllers/index.js
 api/modules/school/controllers/schoolAdminController.js
 api/modules/school/controllers/profileAdminController.js
+api/modules/school/controllers/giaAdminController.js
 
 api/modules/school/models/school.js
 api/modules/school/models/specializedClassType.js
@@ -83,10 +84,14 @@ api/modules/school/services/exceptions/SchoolProfileNameIsShorter.js
 api/modules/school/services/schoolAdminService.js
 api/modules/school/services/schoolComment.js
 api/modules/school/services/profileAdminService.js
+api/modules/school/services/giaAdminService.js
 
 api/modules/school/models/specializedClassType.js
 
 api/modules/school/views/commentView.js
+
+api/modules/study/models/giaResult.js
+api/modules/study/models/subject.js
 
 app/components/host/host.js
 

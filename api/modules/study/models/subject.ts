@@ -1,5 +1,18 @@
-"use strict";
-const DataType = require('sequelize'), db = require('../../../../app/components/db');
+const DataType = require('sequelize'),
+    db = require('../../../../app/components/db');
+
+import * as Sequelize from 'sequelize/v3';
+
+interface SubjectAttribute {
+    name: string;
+    displayName: string;
+    alias: string;
+}
+
+export interface SubjectInstance
+    extends Sequelize.Instance<SubjectAttribute>,
+            SubjectAttribute {}
+
 const Subject = db.define('Subject', {
     name: {
         type: DataType.STRING,
@@ -16,7 +29,7 @@ const Subject = db.define('Subject', {
     underscored: true,
     tableName: 'subject',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             Subject.hasMany(models.GiaResult, {
                 as: 'giaResult', foreignKey: 'subject_id'
             });
@@ -30,7 +43,8 @@ const Subject = db.define('Subject', {
                 as: 'cityResult', foreignKey: 'subject_id'
             });
         }
+
     }
 });
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Subject;
+
+export default Subject;

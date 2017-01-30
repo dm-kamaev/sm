@@ -1,7 +1,7 @@
 'use strict';
 
 // author: dm-kamaev
-// service admin for school
+// service profile admin for school
 
 const sequelize = require('../../../../app/components/db.js');
 
