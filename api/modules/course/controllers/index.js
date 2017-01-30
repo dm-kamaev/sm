@@ -15,9 +15,11 @@ const courseController = require('./courseController'),
     checkToken = require('../../../../app/middleware/checkToken'),
     fileHandler = require('../../../../app/middleware/fileHandler');
 
-/* const BrandActionChecker =
+const brandIdExtractor = require('./middleware/brandIdExtractor');
+
+const BrandActionChecker =
     require('../../../../app/middleware/ActionChecker/BrandActionChecker');
-const checkAction = BrandActionChecker.middleware; */
+const checkAction = BrandActionChecker.middleware;
 
 router.get('/course/search', courseController.search);
 router.get('/course/search/map', courseController.searchMap);
@@ -36,33 +38,50 @@ const fileStorage = fileHandler.any();
 
 
 /**
- * @param {string}  route
- * @param {Object}  controller
- * @param {Object=} opt_middleware
+ * @param {string}    route
+ * @param {Object}    controller
+ * @param {Function=} opt_idExtractor
  */
-let initCrudRouting = function(route, controller) {
-    router.post(`${route}`, checkToken, fileStorage, controller.create);
+let initCrudRouting = function(route, controller, opt_idExtractor) {
+    const idExtractor = opt_idExtractor || function(request, response, next) {
+        next();
+    };
+    router.post(
+        `${route}`,
+        idExtractor,
+        checkToken,
+        fileStorage,
+        checkAction,
+        controller.create
+    );
     router.get(`${route}`, controller.list);
     router.get(`${route}/:id`, controller.get);
     router.put(
         `${route}/:id`,
+        idExtractor,
         checkToken,
-        /* checkAction, */
         fileStorage,
+        checkAction,
         controller.update
     );
     router.delete(
         `${route}/:id`,
         checkToken,
-        /* checkAction, */
+        checkAction,
         controller.delete
     );
 };
 
-initCrudRouting('/coursebrand', brandController);
+initCrudRouting(
+    '/coursebrand', brandController, brandIdExtractor.brandExtractor
+);
 initCrudRouting('/course/search-catalog', courseSearchCatalogController);
 initCrudRouting('/course', courseController);
-initCrudRouting('/coursebrand/:brandId/department', departmentController);
+initCrudRouting(
+    '/coursebrand/:brandId/department',
+    departmentController,
+    brandIdExtractor.departmentExtractor
+);
 initCrudRouting('/course/:courseId/option', optionController);
 initCrudRouting('/coursecategory', categoryController);
 initCrudRouting('/coursetype', typeController);

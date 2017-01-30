@@ -8,7 +8,7 @@ import * as Sequelize from 'sequelize/v3';
 
 export interface CourseBrandAttribute {
     id?: number;
-    name: string;
+    name?: string;
     description?: string;
 }
 
@@ -22,7 +22,8 @@ const CourseBrand: CourseBrandModel = db.define('CourseBrand', {
         type: DataType.INTEGER,
         allowNull: false,
         unique: true,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     name: {
         type: DataType.STRING,

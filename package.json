@@ -93,6 +93,7 @@
     "xlsx-to-json": "^0.2.4"
   },
   "dependencies": {
+    "eslint": "^3.14.0",
     "express": "^4.13.3",
     "geopoint": "^1.0.1",
     "glob": "^5.0.15",

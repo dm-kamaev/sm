@@ -15,9 +15,7 @@ const checkAction = superUserActionChecker.middleware;
 var authorizationController = require('./authorizationController');
 
 router.get('/adminuser', checkAction, adminUserController.actionList);
-router.get(
-    '/adminuser/:adminUserId', adminUserController.actionGet
-);
+router.get('/adminuser/:adminUserId', adminUserController.actionGet);
 router.post(
     '/adminuser', checkToken, checkAction, adminUserController.actionCreate
 );

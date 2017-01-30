@@ -50,6 +50,7 @@ typings
 #builded typescript files ignore
 api/components/interface.js
 
+api/modules/course/controllers/middleware/**/*.js
 api/modules/course/models/courseBrand.js
 
 api/modules/school/models/school.js

@@ -25,16 +25,24 @@ let service = {
  * @return {CourseBrand}
  */
 service.findOrCreate = async(function(data) {
-    let courseBrand = await(
-        models.CourseBrand.findOrCreate({
-            where: {
-                name: data.name
-            }
-        })
-    )[0]; // findOrCreate returns array where zero element is instance
-    return await(courseBrand.update({
-        description: data.description
+    let courseBrand = await(models.CourseBrand.find({
+        where: {
+            name: data.name
+        }
     }));
+
+    if (!courseBrand) {
+        courseBrand = await(models.CourseBrand.create({
+            name: data.name,
+            description: data.description
+        }));
+    } else {
+        await(courseBrand.update({
+            description: data.description
+        }));
+    }
+
+    return courseBrand;
 });
 
 /**
