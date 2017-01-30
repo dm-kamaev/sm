@@ -6,8 +6,6 @@ const contentExperiment =
 const entityTypeEnum =
         require('../../../../api/modules/entity/enums/entityType');
 
-const config = require('../../../config').config;
-
 let configView = {
 };
 
@@ -18,7 +16,8 @@ let configView = {
  *     entityType: string,
  *     pageName: string,
  *     query: Object,
- *     csrf: string
+ *     csrf: string,
+ *     config: Object
  * }} params
  * @return {{
  *     modifier: string,
@@ -40,7 +39,8 @@ configView.render = function(params) {
         [entityTypeEnum.COURSE]: 'courses'
     };
 
-    let subdomain = subdomains[params.entityType];
+    let subdomain = subdomains[params.entityType],
+        config = params.config;
 
     return {
         modifier: contentExperiment.getFactoryByQuery(params.query),
