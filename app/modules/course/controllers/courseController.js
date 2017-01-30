@@ -4,15 +4,17 @@ const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
 const soy = require('../../../components/soy'),
-    services = require('../../../components/services').all,
-    contentExperiment =
-        require('../../../components/contentExperiment/contentExperiment'),
-    courseView = require('../../../../api/modules/course/views/courseView'),
+    services = require('../../../components/services').all;
+
+const courseView = require('../../../../api/modules/course/views/courseView'),
     searchView = require('../../../../api/modules/course/views/searchView'),
     homeView = require('../../../../api/modules/course/views/homeView'),
     informationView = require(
         '../../../../api/modules/course/views/informationView'
     ),
+    configView = require('../../common/views/configView');
+
+const pageName = require('../../common/enums/pageName'),
     entityType = require('../../../../api/modules/entity/enums/entityType.js'),
     filterName = require('../../../../api/modules/course/enums/filterName');
 
@@ -20,12 +22,7 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 
 const config = require('../../../config').config;
 
-const ANALYTICS_ID = config.courses.analyticsId,
-    YANDEX_METRIKA_ID = config.courses.yandexMetrikaId,
-    DOMAIN = config.courses.host,
-    FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId,
-    EXPERIMENT_ID = config.courses.experimentId;
+const FB_CLIENT_ID = config.facebookClientId;
 
 let controller = {};
 
@@ -33,7 +30,6 @@ controller.home = async(function(req, res, next) {
     try {
         let authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {};
-        let factory = contentExperiment.getFactoryByQuery(req.query);
 
         let data = await({
             favorites: services.favorite.getFavoriteEntities(user.id),
@@ -53,23 +49,19 @@ controller.home = async(function(req, res, next) {
             config: config
         });
 
+        let templateConfig = configView.render({
+            entityType: entityType.COURSE,
+            pageName: pageName.HOME,
+            query: req.query,
+            csrf: req.csrfToken(),
+            config: config
+        });
+
         let html = soy.render(
             'sm.lHome.Template.home', {
                 params: {
                     data: templateData,
-                    config: {
-                        entityType: entityType.COURSE,
-                        page: 'home',
-                        modifier: factory,
-                        staticVersion: config.lastBuildTimestamp,
-                        analyticsId: ANALYTICS_ID,
-                        experimentId: EXPERIMENT_ID,
-                        yandexMetrikaId: YANDEX_METRIKA_ID,
-                        carrotquestId: CARROTQUEST_ID,
-                        csrf: req.csrfToken(),
-                        domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID
-                    }
+                    config: templateConfig
                 }
             });
 
@@ -89,7 +81,6 @@ controller.commonSearch = async(function(req, res, next) {
             user = req.user || {},
             searchParams = searchView.initSearchParams(req.query);
 
-        let factory = contentExperiment.getFactoryByQuery(req.query);
         let data = await({
                 favorites: services.favorite.getFavoriteEntities(user.id),
                 search: services.search.getData(searchParams, null)
@@ -126,23 +117,19 @@ controller.commonSearch = async(function(req, res, next) {
             config: config
         });
 
+        let templateConfig = configView.render({
+            entityType: entityType.COURSE,
+            pageName: pageName.SEARCH,
+            query: req.query,
+            csrf: req.csrfToken(),
+            config: config
+        });
+
         let html = soy.render(
             'sm.lSearch.Template.search', {
                 params: {
                     data: templateData,
-                    config: {
-                        entityType: entityType.COURSE,
-                        page: 'search',
-                        modifier: factory,
-                        staticVersion: config.lastBuildTimestamp,
-                        analyticsId: ANALYTICS_ID,
-                        experimentId: EXPERIMENT_ID,
-                        yandexMetrikaId: YANDEX_METRIKA_ID,
-                        carrotquestId: CARROTQUEST_ID,
-                        csrf: req.csrfToken(),
-                        domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID
-                    }
+                    config: templateConfig
                 }
             }
         );
@@ -172,7 +159,6 @@ controller.search = async(function(req, res, next) {
                     req.query, categoryInstance.id
                 );
 
-            let factory = contentExperiment.getFactoryByQuery(req.query);
             let data = await({
                     favorites: services.favorite.getFavoriteEntities(user.id),
                     search: services.search.getData(
@@ -208,23 +194,19 @@ controller.search = async(function(req, res, next) {
                 config: config
             });
 
+            let templateConfig = configView.render({
+                entityType: entityType.COURSE,
+                pageName: pageName.SEARCH,
+                query: req.query,
+                csrf: req.csrfToken(),
+                config: config
+            });
+
             let html = soy.render(
                 'sm.lSearch.Template.search', {
                     params: {
                         data: templateData,
-                        config: {
-                            entityType: entityType.COURSE,
-                            page: 'search',
-                            modifier: factory,
-                            staticVersion: config.lastBuildTimestamp,
-                            analyticsId: ANALYTICS_ID,
-                            experimentId: EXPERIMENT_ID,
-                            yandexMetrikaId: YANDEX_METRIKA_ID,
-                            carrotquestId: CARROTQUEST_ID,
-                            csrf: req.csrfToken(),
-                            domain: DOMAIN,
-                            fbClientId: FB_CLIENT_ID
-                        }
+                        config: templateConfig
                     }
                 }
             );
@@ -298,25 +280,20 @@ controller.information = async(function(req, res, next) {
                     entityType: entityType.COURSE,
                     config: config
                 });
-                let factory = contentExperiment.getFactoryByQuery(req.query);
+
+                let templateConfig = configView.render({
+                    entityType: entityType.COURSE,
+                    pageName: pageName.INFORMATION,
+                    query: req.query,
+                    csrf: req.csrfToken(),
+                    config: config
+                });
 
                 let html = soy.render(
                     'sm.lCourse.Template.course', {
                         params: {
                             data: templateData,
-                            config: {
-                                entityType: entityType.COURSE,
-                                page: entityType.COURSE,
-                                modifier: factory,
-                                staticVersion: config.lastBuildTimestamp,
-                                analyticsId: ANALYTICS_ID,
-                                experimentId: EXPERIMENT_ID,
-                                yandexMetrikaId: YANDEX_METRIKA_ID,
-                                carrotquestId: CARROTQUEST_ID,
-                                csrf: req.csrfToken(),
-                                domain: DOMAIN,
-                                fbClientId: FB_CLIENT_ID
-                            }
+                            config: templateConfig
                         }
                     }
                 );
