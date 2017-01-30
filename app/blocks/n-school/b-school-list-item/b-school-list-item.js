@@ -1,6 +1,5 @@
 goog.provide('sm.bSchoolListItem.SchoolListItem');
 
-goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom.dataset');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
@@ -8,6 +7,7 @@ goog.require('sm.bBadge.Badge');
 goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bSchoolListItem.Event.FavoriteRemoved');
 goog.require('sm.bScore.ScoreMinimized');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -91,7 +91,6 @@ goog.scope(function() {
     var ListItem = sm.bSchoolListItem.SchoolListItem,
         ScoreMinimized = sm.bScore.ScoreMinimized,
         Badge = sm.bBadge.Badge,
-        FactoryManager = cl.iFactory.FactoryManager,
         FavoriteLink = sm.bFavoriteLink.FavoriteLink;
 
     var Event = sm.bSchoolListItem.Event;
@@ -431,9 +430,8 @@ goog.scope(function() {
             element
         );
 
-        this.favoriteLink_ = FactoryManager.getInstance().decorate(
-            'stendhal',
-            'favorite-link',
+        this.favoriteLink_ = sm.iNewFactory.FactoryStendhal.INSTANCE.decorate(
+            sm.bFavoriteLink.FavoriteLink.NAME,
             favoriteLink,
             this
         );

@@ -22,7 +22,7 @@ goog.inherits(sm.gInput.DigitInput, sm.gInput.InputStendhal);
 
 goog.scope(function() {
     var DigitInput = sm.gInput.DigitInput,
-        View = sm.gInput.DigitInputTemplate;
+        View = sm.gInput.DigitInputView;
 
     /**
      * Name of this element in factory

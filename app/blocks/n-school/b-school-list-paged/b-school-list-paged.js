@@ -41,8 +41,7 @@ goog.inherits(sm.bSchoolListPaged.SchoolListPaged, cl.iControl.Control);
 goog.scope(function() {
      var SchoolListPaged = sm.bSchoolListPaged.SchoolListPaged,
          View = sm.bSchoolListPaged.View,
-         SchoolListItem = sm.bSchoolListItem.SchoolListItem,
-         FactoryManager = cl.iFactory.FactoryManager;
+         SchoolListItem = sm.bSchoolListItem.SchoolListItem;
 
     /**
      * Name of this element in factory

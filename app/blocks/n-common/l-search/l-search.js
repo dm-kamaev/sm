@@ -14,14 +14,14 @@ goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal');
-goog.require('sm.lSearch.View');
+goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
 goog.require('sm.lSearch.Template');
+goog.require('sm.lSearch.View');
 goog.require('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('sm.lSearch.bSearchResults.SearchResults');
 goog.require('sm.lSearch.iAnalyticsSender.AnalyticsSender');
 goog.require('sm.lSearch.iSearchService.SearchService');
 goog.require('sm.lSearch.iUrlUpdater.UrlUpdater');
-goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
 
 
 goog.scope(function() {

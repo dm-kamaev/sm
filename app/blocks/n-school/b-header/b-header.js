@@ -77,7 +77,7 @@ goog.scope(function() {
         View = sm.bHeader.View,
         Search = sm.bSearch.Search,
         AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
-        FactoryManager = cl.iFactory.FactoryManager;
+        Factory = sm.iNewFactory.FactoryStendhal.INSTANCE;
 
     /**
      * Name of this element in factory
@@ -117,9 +117,8 @@ goog.scope(function() {
         var rootElement = goog.dom.getElementByClass(View.CssClass.ROOT);
 
         if (rootElement && !Header.instance_) {
-            Header.instance_ = FactoryManager.getInstance().decorate(
-                'stendhal',
-                'header',
+            Header.instance_ = Factory.decorate(
+                Header.NAME,
                 rootElement
             );
         }

@@ -38,16 +38,15 @@ goog.inherits(sm.gModal.ModalStendhal, cl.gModal.Modal);
 
 goog.scope(function() {
     var Modal = sm.gModal.ModalStendhal,
-        View = sm.gModal.ViewStendhal;
-
-    var factoryManager = cl.iFactory.FactoryManager.getInstance();
+        View = sm.gModal.ViewStendhal,
+        Factory = sm.iNewFactory.FactoryStendhal.INSTANCE;
 
     /**
      * Name of this element in factory
      */
     Modal.NAME = sm.gModal.TemplateStendhal.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Modal.NAME, {
+    Factory.register(Modal.NAME, {
         control: Modal,
         view: View
     });
@@ -70,9 +69,8 @@ goog.scope(function() {
      * @return {sm.gModal.ModalStendhal}
      */
     Modal.render = function(opt_params, opt_selfDestroy) {
-        var instance = factoryManager.render(
-            'stendhal',
-            'modal',
+        var instance = Factory.render(
+            Modal.NAME,
             document,
             opt_params
         );
@@ -113,7 +111,7 @@ goog.scope(function() {
      */
     Modal.prototype.renderContent = function(templateType, templateParams) {
 
-        return factoryManager.render(
+        return Factory.render(
             this.getView().getStylization(),
             templateType,
             this.getView().getDom().content,

@@ -4,6 +4,7 @@ goog.require('cl.gDropdown.Dropdown');
 goog.require('cl.gList.List');
 goog.require('sm.gDropdown.TemplateSelectLegacy');
 goog.require('sm.gDropdown.ViewSelectLegacy');
+goog.require('sm.gList.List.Select');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -43,9 +44,9 @@ goog.scope(function() {
     /**
      * Name of this element in factory
      */
-    DropdownSelect.NAME = gDropdown.TemplateSelectLegacy.NAME();
+    DropdownSelect.NAME = sm.gDropdown.TemplateSelectLegacy.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Dropdown.NAME, {
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(DropdownSelect.NAME, {
         control: DropdownSelect,
         view: sm.gDropdown.ViewSelectLegacy
     });
@@ -66,10 +67,9 @@ goog.scope(function() {
     DropdownSelect.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var factoryManager = cl.iFactory.FactoryManager.getInstance();
-        this.listInstance_ = factoryManager.decorate(
-            this.getView().getStylization(),
-            'list-select',
+        var Factory = sm.iNewFactory.FactoryStendhal.INSTANCE;
+        this.listInstance_ = Factory.decorate(
+            sm.gList.List.Select.NAME,
             this.getView().getDom().selectList,
             this
         );

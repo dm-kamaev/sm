@@ -6,7 +6,6 @@ goog.require('goog.dom');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iCarrotquest.Carrotquest');
-goog.require('sm.iFactory.FactoryExperimental');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iFactory.TemplateFactoryExperimental');
 goog.require('sm.iFactory.TemplateFactoryStendhal');

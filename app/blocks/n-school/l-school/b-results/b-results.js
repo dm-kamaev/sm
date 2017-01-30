@@ -3,7 +3,9 @@ goog.provide('sm.lSchool.bResults.Results');
 goog.require('cl.gTab.View');
 goog.require('goog.ui.Component');
 goog.require('sm.bDiagram.Diagram');
-goog.require('sm.iFactory.FactoryStendhal');
+goog.require('sm.gDropdown.DropdownSelectLegacy');
+goog.require('sm.gTab.TemplateStendhal');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSchool.bResults.Template');
 
 
@@ -54,7 +56,7 @@ goog.inherits(sm.lSchool.bResults.Results, goog.ui.Component);
 
 goog.scope(function() {
     var Results = sm.lSchool.bResults.Results,
-        Factory = sm.iFactory.FactoryStendhal,
+        Factory = sm.iNewFactory.FactoryStendhal.INSTANCE,
         TabView = cl.gTab.View,
         DropdownView = cl.gDropdown.View,
         DropdownSelect = sm.gDropdown.DropdownSelectLegacy,
@@ -141,12 +143,15 @@ goog.scope(function() {
     Results.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var factory = Factory.getInstance(),
-            contentElements = this.getElementsByClass(Results.CssClass.CONTENT),
+        var contentElements = this.getElementsByClass(Results.CssClass.CONTENT),
             tabElement = this.getElementByClass(TabView.CssClass.ROOT),
             diagramElements = this.getElementsByClass(Diagram.CssClass.ROOT);
 
-        this.tab_ = factory.decorate('tab', tabElement, this);
+        this.tab_ = Factory.decorate(
+            sm.gTab.TemplateStendhal.NAME(),
+            tabElement,
+            this
+        );
 
         this.initContents_(contentElements);
 
@@ -295,7 +300,6 @@ goog.scope(function() {
      */
     Results.prototype.initContents_ = function(contentElements) {
         var domHelper = this.getDomHelper(),
-            factory = Factory.getInstance(),
             dropdownElement,
             innerContentElements;
 
@@ -313,8 +317,8 @@ goog.scope(function() {
                 );
 
                 this.contents_.push({
-                    dropdown: factory.decorate(
-                        'dropdown-select-legacy',
+                    dropdown: Factory.decorate(
+                        sm.gDropdown.DropdownSelectLegacy.NAME,
                         dropdownElement,
                         this
                     ),
