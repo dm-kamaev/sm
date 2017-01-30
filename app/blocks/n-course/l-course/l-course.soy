@@ -51,13 +51,19 @@
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
+ * @factory sm.iNewFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .course autoescape="strict" kind="html"}
     {call .document data="all" /}
 {/template}
-
+/**
+ * @override
+ */
+{template .NAME}
+    LCourse
+{/template}
 
 /**
  * Add layout script to page

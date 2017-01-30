@@ -4,6 +4,8 @@
 goog.provide('sm.lErrorNotFound.ErrorNotFound');
 
 goog.require('sm.iLayout.LayoutStendhal');
+goog.require('sm.iNewFactory.FactoryStendhal');
+goog.require('sm.lErrorNotFound.Template');
 goog.require('sm.lErrorNotFound.View');
 
 
@@ -26,6 +28,16 @@ goog.scope(function() {
     };
     goog.inherits(sm.lErrorNotFound.ErrorNotFound, sm.iLayout.LayoutStendhal);
     var ErrorNotFound = sm.lErrorNotFound.ErrorNotFound;
+
+    /**
+     * Name of this element in factory
+     */
+    ErrorNotFound.NAME = sm.lErrorNotFound.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.getInstance().register(ErrorNotFound.NAME, {
+        control: ErrorNotFound,
+        view: View
+    });
 });  // goog.scope
 
 
@@ -37,8 +49,8 @@ jQuery(function() {
         sm.lErrorNotFound.View.CssClass.ROOT
     );
 
-    var view = new sm.lErrorNotFound.View(null, null, 'stendhal');
-    var instance = new sm.lErrorNotFound.ErrorNotFound(view);
-
-    instance.decorate(domElement);
+    sm.iNewFactory.FactoryStendhal.getInstance().decorate(
+        sm.lErrorNotFound.ErrorNotFound.NAME,
+        domElement
+    );
 });

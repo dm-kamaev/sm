@@ -4,8 +4,11 @@
  */
 goog.provide('sm.lHome.Home');
 
+goog.require('sm.bSmCatalog.SmCatalog');
+goog.require('sm.bSmSearchPanel.SmSearchPanel');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iLayout.LayoutStendhal');
+goog.require('sm.lHome.Template');
 goog.require('sm.lHome.View');
 
 
@@ -59,6 +62,15 @@ goog.scope(function() {
     goog.inherits(sm.lHome.Home, sm.iLayout.LayoutStendhal);
     var Home = sm.lHome.Home;
 
+    /**
+     * Name of this element in factory
+     */
+    Home.NAME = sm.lHome.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.getInstance().register(Home.NAME, {
+        control: Home,
+        view: View
+    });
 
     /**
      * @param {Element} element
@@ -81,7 +93,7 @@ goog.scope(function() {
         var dom = this.getView().getDom();
 
         this.searchPanel_ = this.decorateChild(
-            'smSearchPanel',
+            sm.bSmSearchPanel.SmSearchPanel.NAME,
             dom.searchPanel
         );
     };
@@ -96,7 +108,7 @@ goog.scope(function() {
 
         if (dom.catalog) {
             this.catalog_ = this.decorateChild(
-                'smCatalog',
+                sm.bSmCatalog.SmCatalog.NAME,
                 dom.catalog
             );
         }
@@ -112,8 +124,8 @@ jQuery(function() {
         sm.lHome.View.CssClass.ROOT
     );
 
-    var view = new sm.lHome.View();
-    var instance = new sm.lHome.Home(view);
-
-    instance.decorate(domElement);
+    sm.iNewFactory.FactoryStendhal.getInstance().decorate(
+        sm.lHome.Home.NAME,
+        domElement
+    );
 });
