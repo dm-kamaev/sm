@@ -23,14 +23,18 @@ class ProfileAdminService {
     public readonly name: string = 'profileAdminService';
 
     public async getList(schoolId: number ): Promise<ProfileGetList[]> {
+        let responce: Promise<ProfileGetList[]> | Array<undefined>;
         const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
         let res: ProfileGetList[];
         const specializedClasses: number[][] | null = school.specializedClasses;
         if (specializedClasses) {
             res =
                 await this.getListProfileClasses_(specializedClasses);
+            responce = Promise.all(res);
+        } else {
+            responce = [];
         }
-        return Promise.all(res);
+        return responce;
     }
 
 
