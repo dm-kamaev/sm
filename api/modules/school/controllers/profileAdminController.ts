@@ -11,11 +11,14 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 import {profileAdminService} from '../services/profileAdminService';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
+import {SchoolProfileNameIsShorter} from './errors/SchoolProfileNameIsShorter';
 
 class ProfileAdminController extends Controller {
     constructor() {
         super();
-        this.errors = {};
+        this.errors = {
+            SchoolProfileNameIsShorter,
+        };
     }
 
 
@@ -221,12 +224,13 @@ class ProfileAdminController extends Controller {
 
 
     /**
-    * @api {get} /api/admin/schoolprofiles
-    * Get all profiles for all school
+    * @api {get} /api/admin/schoolprofiles/?searchString=соц
+    * Search profiles for school
     * @apiVersion 1.0.0
-    * @apiName getAllSchoolProfiles
+    * @apiName searchSchoolProfiles
     * @apiGroup School Profile Admin
     *
+    * @apiParam {String} searchString        search profile name
     *
     * @apiSuccess {Object[]} profile         array of object.
     * @apiSuccess {Number}   profile.id      Id.
@@ -244,8 +248,10 @@ class ProfileAdminController extends Controller {
     *        "name": "Универсальный"
     *    }]
     */
-    public async actionListProfiles() {
-        return await profileAdminService.getListProfiles();
+    public async actionListProfiles(ctx: any) {
+        const query: { searchString: string } = ctx.request.query;
+        const profileName: string  = query.searchString;
+        return await profileAdminService.searchProfiles(profileName);
     }
 
 }

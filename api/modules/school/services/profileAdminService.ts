@@ -10,6 +10,9 @@ import {SchoolInstance} from '../models/school';
 import SpecializedClassTypeModel from '../models/specializedClassType';
 import {SpecializedClassTypeInstance} from '../models/specializedClassType';
 
+import {SchoolProfileNameIsShorter} from
+    './exceptions/SchoolProfileNameIsShorter';
+
 import {
     ProfileGetList,
     ProfileData,
@@ -56,9 +59,21 @@ class ProfileAdminService {
         ];
     }
 
-    public async getListProfiles(): Promise<SpecializedClassTypeInstance> {
+    public async searchProfiles(
+        profileName: string
+    ): Promise<SpecializedClassTypeInstance> {
+        if (profileName.length < 2) {
+            throw new SchoolProfileNameIsShorter(profileName);
+        }
+        profileName = this.capitalize_(profileName);
         return await SpecializedClassTypeModel.findAll({
-            attributes: [ 'id', 'name' ]
+            attributes: [ 'id', 'name' ],
+               where: {
+                   name: {
+                       $like: '%' + profileName + '%'
+                   }
+               },
+               limit: 10,
         });
     }
 
@@ -200,6 +215,10 @@ class ProfileAdminService {
             name = specializedClassInstance.name;
         }
         return name;
+    }
+
+    private capitalize_(str: string): string {
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
 };
 const profileAdminService = new ProfileAdminService();
