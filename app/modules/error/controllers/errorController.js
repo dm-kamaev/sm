@@ -4,11 +4,14 @@ const soy = require.main.require('./app/components/soy');
 const services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 
-const entityTypeEnum =
-    require('../../../../api/modules/entity/enums/entityType');
 const errorView = require('../../../../api/modules/error/views/errorView'),
     schoolErrorView =
-        require('../../../../api/modules/error/views/schoolErrorView');
+        require('../../../../api/modules/error/views/schoolErrorView'),
+    configView = require('../../common/views/configView');
+
+const entityTypeEnum =
+        require('../../../../api/modules/entity/enums/entityType');
+const pageName = require('../../common/enums/pageName');
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 
@@ -16,9 +19,7 @@ const config = require('../../../config').config;
 const analyticsId = config.schools.analyticsId;
 const yandexMetrikaId = config.schools.yandexMetrikaId;
 
-const MODIFIER = 'stendhal',
-    FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId;
+const CARROTQUEST_ID = config.carrotquestId;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -92,6 +93,7 @@ controller.generalError = async(function(
     req, res, next, entityType, subdomain
 ) {
     let html;
+
     try {
         let authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {};
@@ -118,21 +120,18 @@ controller.generalError = async(function(
             config: config
         });
 
+        let templateConfig = configView.render({
+            entityType: entityType,
+            pageName: pageName.ERROR_NOT_FOUND,
+            query: req.query,
+            csrf: req.csrfToken(),
+            config: config
+        });
+
         html = soy.render('sm.lErrorNotFound.Template.errorNotFound', {
             params: {
                 data: templateData,
-                config: {
-                    page: 'error-not-found',
-                    staticVersion: config.lastBuildTimestamp,
-                    entityType: entityType,
-                    modifier: MODIFIER,
-                    analyticsId: config[subdomain].analyticsId,
-                    yandexMetrikaId: config[subdomain].yandexMetrikaId,
-                    carrotquestId: CARROTQUEST_ID,
-                    csrf: req.csrfToken(),
-                    fbClientId: FB_CLIENT_ID,
-                    domain: config[subdomain].host
-                }
+                config: templateConfig
             }
         });
     } catch (error) {

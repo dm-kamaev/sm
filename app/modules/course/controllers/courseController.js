@@ -14,6 +14,9 @@ const courseView = require('../../../../api/modules/course/views/courseView'),
     ),
     configView = require('../../common/views/configView');
 
+const contentExperiment =
+        require('../../../components/contentExperiment/contentExperiment');
+
 const pageName = require('../../common/enums/pageName'),
     entityType = require('../../../../api/modules/entity/enums/entityType.js'),
     filterName = require('../../../../api/modules/course/enums/filterName');
