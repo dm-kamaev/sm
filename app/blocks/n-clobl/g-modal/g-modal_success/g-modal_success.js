@@ -4,7 +4,9 @@ goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.TemplateSuccess');
 goog.require('sm.gModal.ViewSuccess');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 goog.scope(function() {
@@ -35,6 +37,15 @@ goog.scope(function() {
     var ModalSuccess = sm.gModal.ModalSuccess,
         View = sm.gModal.ViewSuccess;
 
+    /**
+     * Name of this element in factory
+     */
+    ModalSuccess.NAME = sm.gModal.TemplateSuccess.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ModalSuccess.NAME, {
+        control: ModalSuccess,
+        view: View
+    });
 
     /**
      * @param {Element} element

@@ -1,6 +1,9 @@
 goog.provide('sm.bSmHeadedList.SmHeadedList');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmHeadedList.Template');
+goog.require('sm.bSmHeadedList.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 goog.scope(function() {
@@ -22,7 +25,18 @@ goog.scope(function() {
 
     };
     goog.inherits(sm.bSmHeadedList.SmHeadedList, cl.iControl.Control);
-    var HeadedList = sm.bSmHeadedList.SmHeadedList;
+    var HeadedList = sm.bSmHeadedList.SmHeadedList,
+        View = sm.bSmHeadedList.View;
+
+    /**
+     * Name of this element in factory
+     */
+    HeadedList.NAME = sm.bSmHeadedList.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(HeadedList.NAME, {
+        control: HeadedList,
+        view: View
+    });
 
 
     /**

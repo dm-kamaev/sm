@@ -6,7 +6,9 @@ goog.require('goog.dom');
 goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmSubheader.SearchSubmitEvent');
+goog.require('sm.bSmSubheader.Template');
 goog.require('sm.bSmSubheader.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -81,6 +83,15 @@ goog.scope(function() {
 
     var SearchSubmitEvent = sm.bSmSubheader.SearchSubmitEvent;
 
+    /**
+     * Name of this element in factory
+     */
+    Subheader.NAME = sm.bSmSubheader.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Subheader.NAME, {
+        control: Subheader,
+        view: View
+    });
 
     /**
      * Subheader modes

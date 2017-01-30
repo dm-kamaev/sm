@@ -2,7 +2,9 @@ goog.provide('sm.gDropdown.DropdownSelect');
 
 goog.require('cl.gDropdown.Dropdown');
 goog.require('sm.gDropdown.Event.ItemSelect');
+goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gDropdown.ViewSelect');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -55,6 +57,15 @@ goog.scope(function() {
 
     var Event = sm.gDropdown.Event;
 
+    /**
+     * Name of this element in factory
+     */
+    Dropdown.NAME = sm.gDropdown.TemplateSelect.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Dropdown.NAME, {
+        control: Dropdown,
+        view: View
+    });
 
     /**
      * @typedef {sm.gDropdown.ViewSelect.Params}

@@ -1,7 +1,9 @@
 goog.provide('sm.gModal.ModalStendhal');
 
 goog.require('cl.gModal.Modal');
+goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gModal.ViewStendhal');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -40,6 +42,15 @@ goog.scope(function() {
 
     var factoryManager = cl.iFactory.FactoryManager.getInstance();
 
+    /**
+     * Name of this element in factory
+     */
+    Modal.NAME = sm.gModal.TemplateStendhal.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Modal.NAME, {
+        control: Modal,
+        view: View
+    });
 
     /**
      * Events enum

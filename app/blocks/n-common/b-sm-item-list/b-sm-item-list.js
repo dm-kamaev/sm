@@ -13,9 +13,11 @@ goog.require('goog.array');
 goog.require('goog.dom.classlist');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemEntity');
+goog.require('sm.bSmItemList.Template');
 goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lCourse.bDepartment.Department');
 
 
@@ -61,8 +63,20 @@ goog.inherits(sm.bSmItemList.SmItemList, cl.iControl.Control);
 
 goog.scope(function() {
     var ItemList = sm.bSmItemList.SmItemList,
-        Analytics = sm.iAnalytics.Analytics;
+        View = sm.bSmItemList.View;
 
+    var Analytics = sm.iAnalytics.Analytics;
+
+
+    /**
+     * Name of this element in factory
+     */
+    ItemList.NAME = sm.bSmItemList.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ItemList.NAME, {
+        control: ItemList,
+        view: View
+    });
 
     /**
      * @typedef {(

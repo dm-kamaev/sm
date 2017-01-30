@@ -1,6 +1,9 @@
 goog.provide('sm.bSmFooter.SmFooter');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmFooter.Template');
+goog.require('sm.bSmFooter.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -28,6 +31,16 @@ goog.inherits(sm.bSmFooter.SmFooter, cl.iControl.Control);
 goog.scope(function() {
     var Footer = sm.bSmFooter.SmFooter,
         View = sm.bSmFooter.View;
+
+    /**
+     * Name of this element in factory
+     */
+    Footer.NAME = sm.bSmFooter.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Footer.NAME, {
+        control: Footer,
+        view: View
+    });
 
     /**
      * @override

@@ -1,7 +1,9 @@
 goog.provide('sm.bSmItem.SmItem');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -26,8 +28,18 @@ goog.inherits(sm.bSmItem.SmItem, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Item = sm.bSmItem.SmItem;
-    var View = sm.bSmItem.View;
+    var Item = sm.bSmItem.SmItem,
+        View = sm.bSmItem.View;
+
+    /**
+     * Name of this element in factory
+     */
+    Item.NAME = sm.bSmItem.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Item.NAME, {
+        control: Item,
+        view: View
+    });
 
     /**
      * @typedef {sm.bSmItem.View.RenderParams}

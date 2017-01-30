@@ -4,6 +4,8 @@ goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.gDropdown.DropdownListLinks');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSearchResults.View');
 
 
@@ -48,6 +50,15 @@ goog.scope(function() {
     goog.inherits(sm.lSearch.bSearchResults.SearchResults, cl.iControl.Control);
     var SearchResults = sm.lSearch.bSearchResults.SearchResults;
 
+    /**
+     * Name of this element in factory
+     */
+    SearchResults.NAME = sm.lSearch.bSearchResults.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SearchResults.NAME, {
+        control: SearchResults,
+        view: View
+    });
 
     /**
      * Css class enum

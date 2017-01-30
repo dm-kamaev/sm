@@ -1,6 +1,9 @@
 goog.provide('sm.bSmCatalog.SmCatalog');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmCatalog.Template');
+goog.require('sm.bSmCatalog.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 goog.scope(function() {
@@ -22,6 +25,15 @@ goog.scope(function() {
     goog.inherits(sm.bSmCatalog.SmCatalog, cl.iControl.Control);
     var Catalog = sm.bSmCatalog.SmCatalog;
 
+    /**
+     * Name of this element in factory
+     */
+    Catalog.NAME = sm.bSmCatalog.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Catalog.NAME, {
+        control: Catalog,
+        view: sm.bSmCatalog.View
+    });
 
     /**
      * @override

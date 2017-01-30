@@ -1,7 +1,9 @@
 goog.provide('sm.bSmCollapsedText.SmCollapsedText');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmCollapsedText.Template');
 goog.require('sm.bSmCollapsedText.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 goog.scope(function() {
 
@@ -24,4 +26,15 @@ goog.inherits(sm.bSmCollapsedText.SmCollapsedText, cl.iControl.Control);
 
     var CollapsedText = sm.bSmCollapsedText.SmCollapsedText,
         View = sm.bSmCollapsedText.View;
+
+    /**
+     * Name of this element in factory
+     */
+    CollapsedText.NAME = sm.bSmCollapsedText.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(CollapsedText.NAME, {
+        control: CollapsedText,
+        view: View
+    });
+
 });  // goog.scope

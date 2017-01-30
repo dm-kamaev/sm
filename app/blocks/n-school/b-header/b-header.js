@@ -3,8 +3,10 @@ goog.provide('sm.bHeader.Header');
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bAuthorizationLink.AuthorizationLink');
+goog.require('sm.bHeader.Template');
 goog.require('sm.bHeader.View');
 goog.require('sm.bSearch.Search');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -77,6 +79,15 @@ goog.scope(function() {
         AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
         FactoryManager = cl.iFactory.FactoryManager;
 
+    /**
+     * Name of this element in factory
+     */
+    Header.NAME = sm.bHeader.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Header.NAME, {
+        control: Header,
+        view: View
+    });
 
     /**
      * Header modes

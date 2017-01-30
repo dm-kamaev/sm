@@ -1,6 +1,9 @@
 goog.provide('sm.gList.List.Select');
 
 goog.require('cl.gList.List');
+goog.require('sm.gList.TemplateSelect');
+goog.require('sm.gList.ViewSelect');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -28,6 +31,15 @@ goog.inherits(sm.gList.List.Select, cl.gList.List);
 goog.scope(function() {
     var SelectList = sm.gList.List.Select;
 
+    /**
+     * Name of this element in factory
+     */
+    SelectList.NAME = sm.gList.TemplateSelect.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SelectList.NAME, {
+        control: SelectList,
+        view: sm.gList.ViewSelect
+    });
 
     /**
      * @param {Element} element

@@ -3,6 +3,8 @@ goog.provide('sm.lSearch.bSuggestFilter.SuggestFilter');
 goog.require('cl.iControl.Control');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.lSearch.bSuggestFilter.Template');
 goog.require('sm.lSearch.bSuggestFilter.View');
 
 
@@ -67,6 +69,15 @@ goog.scope(function() {
         UIInstanceStorage = gorod.iUIInstanceStorage.UIInstanceStorage,
         Suggest = gorod.gSuggest.Suggest;
 
+    /**
+     * Name of this element in factory
+     */
+    SuggestFilter.NAME = sm.lSearch.bSuggestFilter.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SuggestFilter.NAME, {
+        control: SuggestFilter,
+        view: View
+    });
 
     /**
      * Event enum

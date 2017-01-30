@@ -1,7 +1,9 @@
 goog.provide('sm.lCourse.bUserInteraction.UserInteraction');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.iSmViewport.SmViewport');
+goog.require('sm.lCourse.bUserInteraction.Template');
 goog.require('sm.lCourse.bUserInteraction.View');
 
 
@@ -40,6 +42,15 @@ goog.scope(function() {
 
     var Viewport = sm.iSmViewport.SmViewport;
 
+    /**
+     * Name of this element in factory
+     */
+    UserInteraction.NAME = sm.lCourse.bUserInteraction.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(UserInteraction.NAME, {
+        control: UserInteraction,
+        view: View
+    });
 
     /**
      * Css class enum

@@ -1,6 +1,8 @@
 goog.provide('sm.lSearch.bFilterPanel.FilterPanel');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bFilterPanel.View');
 
 
@@ -41,6 +43,15 @@ goog.scope(function() {
     var FilterPanel = sm.lSearch.bFilterPanel.FilterPanel,
         View = sm.lSearch.bFilterPanel.View;
 
+    /**
+     * Name of this element in factory
+     */
+    FilterPanel.NAME = sm.lSearch.bFilterPanel.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FilterPanel.NAME, {
+        control: FilterPanel,
+        view: View
+    });
 
     /**
      * Event enum

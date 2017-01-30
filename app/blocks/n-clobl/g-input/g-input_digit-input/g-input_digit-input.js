@@ -1,7 +1,9 @@
 goog.provide('sm.gInput.DigitInput');
 
+goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gInput.DigitInputView');
 goog.require('sm.gInput.InputStendhal');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -19,15 +21,25 @@ goog.inherits(sm.gInput.DigitInput, sm.gInput.InputStendhal);
 
 
 goog.scope(function() {
-    var DigitInput = sm.gInput.DigitInput;
+    var DigitInput = sm.gInput.DigitInput,
+        View = sm.gInput.DigitInputTemplate;
 
+    /**
+     * Name of this element in factory
+     */
+    DigitInput.NAME = sm.gInput.DigitInputTemplate.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(DigitInput.NAME, {
+        control: DigitInput,
+        view: View
+    });
 
     /**
      * Event enum
      * @enum
      */
     DigitInput.Event = {
-        FOCUS: sm.gInput.DigitInputView.Event.FOCUS
+        FOCUS: View.Event.FOCUS
     };
 
 

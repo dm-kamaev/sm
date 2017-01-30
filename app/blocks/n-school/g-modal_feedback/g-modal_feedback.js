@@ -1,6 +1,9 @@
 goog.provide('sm.gModal.ModalFeedback');
 
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.TemplateFeedback');
+goog.require('sm.gModal.ViewFeedback');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -27,8 +30,18 @@ goog.inherits(sm.gModal.ModalFeedback, sm.gModal.ModalStendhal);
 
 
 goog.scope(function() {
-    var ModalFeedback = sm.gModal.ModalFeedback;
+    var ModalFeedback = sm.gModal.ModalFeedback,
+        View = sm.gModal.ViewFeedback;
 
+    /**
+     * Name of this element in factory
+     */
+    ModalFeedback.NAME = sm.gModal.TemplateFeedback.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ModalFeedback.NAME, {
+        control: ModalFeedback,
+        view: View
+    });
 
     /**
      * Validation error texts

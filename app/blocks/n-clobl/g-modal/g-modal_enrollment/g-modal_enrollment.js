@@ -7,7 +7,9 @@ goog.require('goog.object');
 goog.require('sm.gModal.Event.EnrollmentSuccess');
 goog.require('sm.gModal.Event.Show');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.ViewEnrollment');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 goog.scope(function() {
@@ -71,6 +73,15 @@ goog.scope(function() {
         View = sm.gModal.ViewEnrollment,
         Request = cl.iRequest.Request;
 
+    /**
+     * Name of this element in factory
+     */
+    ModalEnrollment.NAME = sm.gModal.TemplateEnrollment.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ModalEnrollment.NAME, {
+        control: ModalEnrollment,
+        view: View
+    });
 
     /**
      * Events enum

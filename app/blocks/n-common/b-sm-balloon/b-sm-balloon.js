@@ -2,10 +2,12 @@ goog.provide('sm.bSmBalloon.SmBalloon');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmBalloon.Event.Open');
+goog.require('sm.bSmBalloon.Template');
 goog.require('sm.bSmBalloon.View');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmListPaged.SmListPaged');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 goog.scope(function() {
@@ -38,6 +40,15 @@ goog.scope(function() {
     var Balloon = sm.bSmBalloon.SmBalloon,
         Analytics = sm.iAnalytics.Analytics;
 
+    /**
+     * Name of this element in factory
+     */
+    Balloon.NAME = sm.bSmBalloon.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Balloon.NAME, {
+        control: Balloon,
+        view: View
+    });
 
     /**
      * List of Balloon events

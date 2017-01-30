@@ -2,7 +2,9 @@ goog.provide('sm.bBanner.Banner');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.bBanner.Template');
 goog.require('sm.bBanner.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -30,6 +32,16 @@ goog.inherits(sm.bBanner.Banner, cl.iControl.Control);
 goog.scope(function() {
     var Banner = sm.bBanner.Banner,
         View = sm.bBanner.View;
+
+    /**
+     * Name of this element in factory
+     */
+    Banner.NAME = sm.bBanner.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Banner.NAME, {
+        control: Banner,
+        view: View
+    });
 
 
     /**

@@ -1,6 +1,8 @@
 goog.provide('sm.lSearch.bFilter.FilterSwitch');
 
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.TemplateSwitch');
 goog.require('sm.lSearch.bFilter.ViewSwitch');
 
 
@@ -22,6 +24,16 @@ goog.inherits(sm.lSearch.bFilter.FilterSwitch, sm.lSearch.bFilter.Filter);
 goog.scope(function() {
     var FilterSwitch = sm.lSearch.bFilter.FilterSwitch,
         View = sm.lSearch.bFilter.ViewSwitch;
+
+    /**
+     * Name of this element in factory
+     */
+    FilterSwitch.NAME = sm.lSearch.bFilter.TemplateSwitch.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FilterSwitch.NAME, {
+        control: FilterSwitch,
+        view: View
+    });
 
     /**
      * Checks refers element to this control

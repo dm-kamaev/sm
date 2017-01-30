@@ -1,7 +1,9 @@
 goog.provide('sm.gModal.ModalSideMenu');
 
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.TemplateSideMenu');
 goog.require('sm.gModal.ViewSideMenu');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -39,6 +41,15 @@ goog.scope(function() {
     var Modal = sm.gModal.ModalSideMenu,
         View = sm.gModal.ViewSideMenu;
 
+    /**
+     * Name of this element in factory
+     */
+    Modal.NAME = sm.gModal.TemplateSideMenu.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Modal.NAME, {
+        control: Modal,
+        view: View
+    });
 
     /**
      * Events enum

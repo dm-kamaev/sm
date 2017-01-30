@@ -1,7 +1,9 @@
 goog.provide('sm.bSmBadge.SmBadge');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBadge.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -21,6 +23,16 @@ goog.inherits(sm.bSmBadge.SmBadge, cl.iControl.Control);
 goog.scope(function() {
     var Badge = sm.bSmBadge.SmBadge,
         View = sm.bSmBadge.View;
+
+    /**
+     * Name of this element in factory
+     */
+    Badge.NAME = sm.bSmBadge.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Badge.NAME, {
+        control: Badge,
+        view: View
+    });
 
 
     /**

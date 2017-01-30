@@ -1,6 +1,8 @@
 goog.provide('sm.lSearch.bFilter.Filter');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.lSearch.bFilter.Template');
 goog.require('sm.lSearch.bFilter.View');
 
 
@@ -36,8 +38,18 @@ goog.inherits(sm.lSearch.bFilter.Filter, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Filter = sm.lSearch.bFilter.Filter;
+    var Filter = sm.lSearch.bFilter.Filter,
+        View = sm.lSearch.bFilter.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Filter.NAME = sm.lSearch.bFilter.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Filter.NAME, {
+        control: Filter,
+        view: View
+    });
 
     /**
      * Event enum

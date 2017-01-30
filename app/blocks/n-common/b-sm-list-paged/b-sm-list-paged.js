@@ -2,7 +2,9 @@ goog.provide('sm.bSmListPaged.SmListPaged');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.bSmListPaged.Template');
 goog.require('sm.bSmListPaged.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -31,6 +33,15 @@ goog.scope(function() {
     var ListPaged = sm.bSmListPaged.SmListPaged,
         View = sm.bSmListPaged.View;
 
+    /**
+     * Name of this element in factory
+     */
+    ListPaged.NAME = sm.bSmListPaged.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ListPaged.NAME, {
+        control: ListPaged,
+        view: View
+    });
 
     /**
      * Events enum

@@ -1,6 +1,8 @@
 goog.provide('sm.lSearch.bFilter.FilterSwitchLabels');
 
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.FilterSwitch');
+goog.require('sm.lSearch.bFilter.TemplateSwitchLabels');
 goog.require('sm.lSearch.bFilter.ViewSwitchLabels');
 
 
@@ -23,8 +25,18 @@ goog.inherits(
 
 
 goog.scope(function() {
-    var FilterSwitchLabels = sm.lSearch.bFilter.FilterSwitchLabels;
+    var FilterSwitchLabels = sm.lSearch.bFilter.FilterSwitchLabels,
+        View = sm.lSearch.bFilter.ViewSwitchLabels;
 
+    /**
+     * Name of this element in factory
+     */
+    FilterSwitchLabels.NAME = sm.lSearch.bFilter.TemplateSwitchLabels.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FilterSwitchLabels.NAME, {
+        control: FilterSwitchLabels,
+        view: View
+    });
 
     /**
      * Checks refers element to this control
@@ -34,7 +46,7 @@ goog.scope(function() {
     FilterSwitchLabels.isControl = function(element) {
         return goog.dom.classlist.contains(
             element,
-            sm.lSearch.bFilter.ViewSwitchLabels.CssClass.ROOT
+            View.CssClass.ROOT
         );
     };
 

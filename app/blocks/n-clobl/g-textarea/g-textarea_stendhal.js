@@ -1,6 +1,9 @@
 goog.provide('sm.gTextarea.TextareaStendhal');
 
 goog.require('cl.gTextarea.Textarea');
+goog.require('sm.gTextarea.TemplateStendhal');
+goog.require('sm.gTextarea.ViewStendhal');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -20,6 +23,15 @@ goog.inherits(sm.gTextarea.TextareaStendhal, cl.gTextarea.Textarea);
 goog.scope(function() {
     var TextareaStendhal = sm.gTextarea.TextareaStendhal;
 
+    /**
+     * Name of this element in factory
+     */
+    TextareaStendhal.NAME = sm.gTextarea.TemplateStendhal.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(TextareaStendhal.NAME, {
+        control: TextareaStendhal,
+        view: sm.gTextarea.ViewStendhal
+    });
 
     /**
      * Check is any value entered in texarea

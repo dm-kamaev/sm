@@ -1,7 +1,9 @@
 goog.provide('sm.gDropdown.DropdownListLinks');
 
 goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.gDropdown.TemplateListLinks');
 goog.require('sm.gDropdown.ViewListLinks');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -49,6 +51,16 @@ goog.inherits(sm.gDropdown.DropdownListLinks, sm.gDropdown.DropdownSelect);
 goog.scope(function() {
     var Dropdown = sm.gDropdown.DropdownListLinks,
         View = sm.gDropdown.ViewListLinks;
+
+    /**
+     * Name of this element in factory
+     */
+    Dropdown.NAME = sm.gDropdown.TemplateListLinks.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Dropdown.NAME, {
+        control: Dropdown,
+        view: View
+    });
 
     /**
      * Event enum

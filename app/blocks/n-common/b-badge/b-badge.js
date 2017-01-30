@@ -5,6 +5,7 @@ goog.require('goog.dom.classlist');
 goog.require('goog.ui.Component');
 goog.require('goog.uri.utils');
 goog.require('sm.bBadge.Template');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -48,6 +49,15 @@ goog.scope(function() {
     var Badge = sm.bBadge.Badge,
         HintView = cl.gHint.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Badge.NAME = sm.bBadge.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Badge.NAME, {
+        control: Badge,
+        view: View
+    });
 
     /**
      * Css class enum

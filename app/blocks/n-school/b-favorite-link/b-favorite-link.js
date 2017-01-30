@@ -3,7 +3,9 @@ goog.provide('sm.bFavoriteLink.FavoriteLink');
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bFavoriteLink.Event.FavoriteAdded');
+goog.require('sm.bFavoriteLink.Template');
 goog.require('sm.bFavoriteLink.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -40,6 +42,15 @@ goog.scope(function() {
         View = sm.bFavoriteLink.View,
         Event = sm.bFavoriteLink.Event;
 
+    /**
+     * Name of this element in factory
+     */
+    FavoriteLink.NAME = sm.bFavoriteLink.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FavoriteLink.NAME, {
+        control: FavoriteLink,
+        view: View
+    });
 
     /**
      * Event enum

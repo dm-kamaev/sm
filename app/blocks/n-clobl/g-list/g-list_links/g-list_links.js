@@ -1,7 +1,9 @@
 goog.provide('sm.gList.ListLinks');
 
 goog.require('sm.gList.ListStendhal');
+goog.require('sm.gList.TemplateLinks');
 goog.require('sm.gList.ViewLinks');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -34,6 +36,16 @@ goog.inherits(sm.gList.ListLinks, sm.gList.ListStendhal);
 goog.scope(function() {
     var ListLinks = sm.gList.ListLinks,
         View = sm.gList.ViewLinks;
+
+    /**
+     * Name of this element in factory
+     */
+    ListLinks.NAME = sm.gList.TemplateLinks.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ListLinks.NAME, {
+        control: ListLinks,
+        view: View
+    });
 
     /**
      * Event enum

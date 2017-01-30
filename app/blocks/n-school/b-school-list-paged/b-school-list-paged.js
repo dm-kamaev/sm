@@ -3,7 +3,9 @@ goog.provide('sm.bSchoolListPaged.SchoolListPaged');
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bSchoolListItem.SchoolListItem');
+goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSchoolListPaged.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -38,10 +40,19 @@ goog.inherits(sm.bSchoolListPaged.SchoolListPaged, cl.iControl.Control);
 
 goog.scope(function() {
      var SchoolListPaged = sm.bSchoolListPaged.SchoolListPaged,
-        View = sm.bSchoolListPaged.View,
-        SchoolListItem = sm.bSchoolListItem.SchoolListItem,
-        FactoryManager = cl.iFactory.FactoryManager;
+         View = sm.bSchoolListPaged.View,
+         SchoolListItem = sm.bSchoolListItem.SchoolListItem,
+         FactoryManager = cl.iFactory.FactoryManager;
 
+    /**
+     * Name of this element in factory
+     */
+    SchoolListPaged.NAME = sm.bSchoolListPaged.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SchoolListPaged.NAME, {
+        control: SchoolListPaged,
+        view: View
+    });
 
     /**
      * @override

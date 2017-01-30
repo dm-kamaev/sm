@@ -2,6 +2,8 @@ goog.provide('sm.lInformation.bInformationBoard.InformationBoard');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.lInformation.bInformationBoard.Template');
 goog.require('sm.lInformation.bInformationBoard.View');
 
 
@@ -28,4 +30,15 @@ goog.inherits(
 goog.scope(function() {
     var InformationBoard = sm.lInformation.bInformationBoard.InformationBoard,
         View = sm.lInformation.bInformationBoard.View;
+
+    /**
+     * Name of this element in factory
+     */
+    InformationBoard.NAME = sm.lInformation.bInformationBoard.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(InformationBoard.NAME, {
+        control: InformationBoard,
+        view: View
+    });
+
 });  // goog.scope

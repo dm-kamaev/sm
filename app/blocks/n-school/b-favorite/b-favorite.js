@@ -1,7 +1,10 @@
 goog.provide('sm.bFavorite.Favorite');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bFavorite.Template');
+goog.require('sm.bFavorite.View');
 goog.require('sm.iAuthorization.Authorization');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -31,6 +34,15 @@ goog.scope(function() {
         View = sm.bFavorite.View,
         Authorization = sm.iAuthorization.Authorization;
 
+    /**
+     * Name of this element in factory
+     */
+    Favorite.NAME = sm.bFavorite.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Favorite.NAME, {
+        control: Favorite,
+        view: View
+    });
 
     /**
      * Add given item to favorites

@@ -1,6 +1,8 @@
 goog.provide('sm.lSearch.bFilter.FilterLabels');
 
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.TemplateLabels');
 goog.require('sm.lSearch.bFilter.ViewLabels');
 
 
@@ -23,6 +25,15 @@ goog.scope(function() {
     var FilterLabels = sm.lSearch.bFilter.FilterLabels,
         View = sm.lSearch.bFilter.ViewLabels;
 
+    /**
+     * Name of this element in factory
+     */
+    FilterLabels.NAME = sm.lSearch.bFilter.TemplateLabels.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FilterLabels.NAME, {
+        control: FilterLabels,
+        view: View
+    });
 
     /**
      * Event enum

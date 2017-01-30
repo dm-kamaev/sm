@@ -4,7 +4,9 @@
 goog.provide('sm.bSmLink.SmLink');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmLink.Template');
 goog.require('sm.bSmLink.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 goog.scope(function() {
@@ -25,6 +27,15 @@ goog.scope(function() {
     goog.inherits(sm.bSmLink.SmLink, cl.iControl.Control);
     var Link = sm.bSmLink.SmLink;
 
+    /**
+     * Name of this element in factory
+     */
+    Link.NAME = sm.bSmLink.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Link.NAME, {
+        control: Link,
+        view: View
+    });
 
     /**
      * Css class enum

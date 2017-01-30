@@ -3,7 +3,9 @@ goog.provide('sm.bSmItem.SmItemEntity');
 goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bSmItem.Event.FavoriteRemoved');
 goog.require('sm.bSmItem.SmItem');
+goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItem.ViewEntity');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.iSmViewport.SmViewport');
 
 
@@ -46,13 +48,22 @@ goog.inherits(sm.bSmItem.SmItemEntity, sm.bSmItem.SmItem);
 
 
 goog.scope(function() {
-    var Item = sm.bSmItem.SmItemEntity;
-    var View = sm.bSmItem.ViewEntity;
+    var Item = sm.bSmItem.SmItemEntity,
+        View = sm.bSmItem.ViewEntity;
 
     var FavoriteLink = sm.bFavoriteLink.FavoriteLink;
     var Event = sm.bSmItem.Event;
     var Viewport = sm.iSmViewport.SmViewport;
 
+    /**
+     * Name of this element in factory
+     */
+    Item.NAME = sm.bSmItem.TemplateEntity.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Item.NAME, {
+        control: Item,
+        view: View
+    });
 
     /**
      * @typedef {sm.bSmItem.ViewEntity.RenderParams}

@@ -2,8 +2,10 @@ goog.provide('sm.bAuthorizationLink.AuthorizationLink');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bAuthorizationLink.View');
 goog.require('sm.iAuthorization.Authorization');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -26,6 +28,15 @@ goog.scope(function() {
 
     var Authorization = sm.iAuthorization.Authorization;
 
+    /**
+     * Name of this element in factory
+     */
+    AuthorizationLink.NAME = sm.bAuthorizationLink.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(AuthorizationLink.NAME, {
+        control: AuthorizationLink,
+        view: View
+    });
 
     /**
      * Event enum

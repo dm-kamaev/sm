@@ -3,7 +3,9 @@ goog.provide('sm.bPopularSchools.PopularSchools');
 goog.require('cl.iControl.Control');
 
 goog.require('goog.dom');
+goog.require('sm.bPopularSchools.Template');
 goog.require('sm.bPopularSchools.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -33,6 +35,15 @@ goog.scope(function() {
         View = sm.bPopularSchools.View,
         Analytics = sm.iAnalytics.Analytics.getInstance();
 
+    /**
+     * Name of this element in factory
+     */
+    PopularSchools.NAME = sm.bPopularSchools.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(PopularSchools.NAME, {
+        control: PopularSchools,
+        view: View
+    });
 
     /**
      * @override

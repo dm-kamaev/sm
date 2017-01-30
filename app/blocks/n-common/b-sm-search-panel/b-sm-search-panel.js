@@ -2,7 +2,9 @@ goog.provide('sm.bSmSearchPanel.SmSearchPanel');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSearch.Search');
+goog.require('sm.bSmSearchPanel.Template');
 goog.require('sm.bSmSearchPanel.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -50,6 +52,15 @@ goog.scope(function() {
     goog.inherits(sm.bSmSearchPanel.SmSearchPanel, cl.iControl.Control);
     var SearchPanel = sm.bSmSearchPanel.SmSearchPanel;
 
+    /**
+     * Name of this element in factory
+     */
+    SearchPanel.NAME = sm.bSmSearchPanel.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SearchPanel.NAME, {
+        control: SearchPanel,
+        view: View
+    });
 
     /**
      * @param {Element} element

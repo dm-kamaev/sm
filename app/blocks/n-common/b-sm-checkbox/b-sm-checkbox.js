@@ -1,7 +1,9 @@
 goog.provide('sm.bSmCheckbox.SmCheckbox');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCheckbox.View');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -29,6 +31,16 @@ goog.inherits(sm.bSmCheckbox.SmCheckbox, cl.iControl.Control);
 goog.scope(function() {
     var Checkbox = sm.bSmCheckbox.SmCheckbox,
         View = sm.bSmCheckbox.View;
+
+    /**
+     * Name of this element in factory
+     */
+    Checkbox.NAME = sm.bSmCheckbox.Template.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Checkbox.NAME, {
+        control: Checkbox,
+        view: View
+    });
 
 
     /**

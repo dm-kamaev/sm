@@ -1,7 +1,9 @@
 goog.provide('sm.gInput.InputStendhal');
 
 goog.require('cl.gInput.Input');
+goog.require('sm.gInput.TemplateStendhal');
 goog.require('sm.gInput.ViewStendhal');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -22,6 +24,16 @@ goog.scope(function() {
     var Input = sm.gInput.InputStendhal,
         View = sm.gInput.ViewStendhal;
 
+
+    /**
+     * Name of this element in factory
+     */
+    Input.NAME = sm.gInput.TemplateStendhal.NAME();
+
+    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Input.NAME, {
+        control: Input,
+        view: View
+    });
 
     /**
      * Event enum
