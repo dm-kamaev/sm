@@ -19,6 +19,8 @@
     }
 
     .b-sm-item__section_header {
+        margin-bottom: 12px;
+
         font-family: 'PT Serif', serif;
     }
 
@@ -27,7 +29,7 @@
     }
 
     .b-sm-item__section_description {
-        margin-top: 12px;
+        margin-bottom: 15px;
 
         font: 13px/18px Arial, sans-serif;
     }
@@ -39,10 +41,6 @@
     .b-sm-item__description-link {
         display: inline;
     }
-
-    .b-sm-item__section_details {
-        margin-top: 15px;
-    }
 }
 
 
@@ -50,6 +48,9 @@
     .b-sm-item_compact {
         .b-sm-item__section-group_cover {
             float: left;
+
+            margin-top: 10px;
+            margin-bottom: 0;
         }
 
         .b-sm-item__section-group_info {

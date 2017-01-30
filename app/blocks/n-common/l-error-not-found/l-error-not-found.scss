@@ -67,6 +67,7 @@
     &:before {
         display: inline-block;
 
+        width: 0;
         height: 100%;
 
         content: '';
@@ -79,13 +80,18 @@
 
     vertical-align: middle;
     text-align: left;
+
+    line-height: 93px;
+}
+
+.l-error-not-found__wrapper-error-text {
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 120px;
 }
 
 .l-error-not-found__error-text {
     display: inline-block;
-
-    padding-left: 38px;
-    vertical-align: middle;
 
     font-family: 'Proxima';
     font-size: 24px;
@@ -94,12 +100,10 @@
 }
 
 .l-error-not-found__error-img {
-    display: inline-block;
+    float: left;
 
     width: 93px;
     height: 93px;
-
-    vertical-align: middle;
 }
 
 @include media-xl {
@@ -127,10 +131,6 @@
 }
 
 @include media-s {
-    .l-error-not-found__wrapper-error-information {
-        height: auto;
-    }
-
     .l-error-not-found__popular {
         width: 66.66%;
     }
@@ -140,21 +140,13 @@
 
         width: 33.33%
     }
-
-    .l-error-not-found__error-img {
-        float: left;
-
-        display: block;
-    }
-
-    .l-error-not-found__error-text {
-        display: block;
-
-        padding-left: 120px;
-    }
 }
 
 @include media-xs {
+    .l-error-not-found__wrapper-error-information {
+        height: auto;
+    }
+
     .l-error-not-found {
         box-sizing: border-box;
         height: 100%;
@@ -163,6 +155,10 @@
 
     .l-error-not-found__section {
         padding: 0 30px;
+    }
+
+    .l-error-not-found__section-header {
+        padding-bottom: 17px;
     }
 
     .l-error-not-found__popular {
@@ -182,11 +178,15 @@
 }
 
 @include media-xxs {
+    .l-error-not-found__error-information {
+        line-height: normal;
+    }
+
     .l-error-not-found__error-img {
         float: none;
     }
 
-    .l-error-not-found__error-text {
+    .l-error-not-found__wrapper-error-text {
         margin-top: 20px;
         padding-left: 0px;
     }

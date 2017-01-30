@@ -47,7 +47,8 @@ view.render = function(data) {
         user: user,
         authSocialLinks: data.authSocialLinks,
         error: {
-            text: data.errorText || 'Страница, которую вы искали, не найдена'
+            text: data.errorText ||
+                'Страница, которую вы искали, не&nbsp;найдена'
         },
         popular: data.popularEntities ?
             popularView.render({

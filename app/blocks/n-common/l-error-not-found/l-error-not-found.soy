@@ -249,8 +249,11 @@
  * }}
  */
 {template .errorText_}
-    <div class="{call .rootClass/}__error-text">
-        {$params.data.error.text}
+    <div class="{call .rootClass/}__wrapper-error-text">
+        <div class="{call .rootClass/}__error-text">
+            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+            data="$params.data.error.text" /}
+        </div>
     </div>
 {/template}
 
