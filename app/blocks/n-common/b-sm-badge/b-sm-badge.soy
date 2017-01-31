@@ -75,7 +75,7 @@
  *         stylizationModifier: string
  *     }
  * }}
- * @override
+ * @private
  */
 {template .icon_}
     {if $params?.config?.iconName}
@@ -117,7 +117,7 @@
  *         searchByName: boolean
  *     }
  * }}
- * @override
+ * @private
  */
 {template .items_}
     <div class="{call .rootClass/}__items">
@@ -138,7 +138,7 @@
 
 
 /**
- * Container for items
+ * Item
  * @param params {{
  *     data: {
  *         id: (number|undefined),
@@ -149,18 +149,19 @@
  *         searchByName: boolean
  *     }
  * }}
- * @override
+ * @private
  */
 {template .item_}
-    <div class="{call .rootClass/}__item"
-        {call .itemDataParams_ data="all" /}>
-        {$params.data.name}
-    </div>
+    {if $params.config.searchType and $params.config.searchType != 'rating'}
+        {call .itemLink_ data="all" /}
+    {else}
+        {call .itemText_ data="all" /}
+    {/if}
 {/template}
 
 
 /**
- * Item Data Params
+ * Item - link
  * @param params {{
  *     data: {
  *         id: (number|undefined),
@@ -171,17 +172,40 @@
  *         searchByName: boolean
  *     }
  * }}
- * @override
+ * @private
  */
-{template .itemDataParams_ kind="attributes"}
-    data-params="
-        {call cl.iUtils.Utils.stringify}
-            {param json: quoteKeysIfJs([
-                'id': $params.data.id ?: '',
-                'name': $params?.config?.searchByName ? $params.data.name : '',
-                'type': $params?.config?.searchType ?: ''
-            ])/}
-        {/call}"
+{template .itemLink_}
+    {let $name kind="html"}
+        {call cl.iUtils.Utils.encodeURIComponent}
+            {param uri: $params.data.name/}
+        {/call}
+    {/let}
+
+    {let $uri: '?' + $params.config.searchType + '=' + $params.data.id +
+        ($params.config.searchByName ? '&name=' + $name : '')/}
+
+    <a class="{call .rootClass/}__item {call .rootClass/}__item_link"
+        href="{call cl.iUtils.Utils.ordainSanitizedUri}
+                {param uri: $uri/}
+              {/call}">
+        {$params.data.name}
+    </a>
+{/template}
+
+
+/**
+ * Item with text data
+ * @param params {{
+ *     data: {
+ *         name: string
+ *     }
+ * }}
+ * @private
+ */
+{template .itemText_}
+    <div class="{call .rootClass/}__item {call .rootClass/}__item_text">
+        {$params.data.name}
+    </div>
 {/template}
 
 
@@ -192,7 +216,7 @@
  *         searchType: string
  *     }
  * }}
- * @override
+ * @private
  */
 {template .hint_}
     {if $params?.config?.searchType == 'rating'}
@@ -219,32 +243,66 @@
 
 /**
  * Hint Content
- * @override
+ * @private
  */
 {template .hintContent_}
     <div class="{call .rootClass/}__hint-content">
+        {call .hintText_/}
+        {call .hintLink_/}
+    </div>
+{/template}
+
+
+/**
+ * Hint text
+ * @private
+ */
+{template .hintText_}
+    <div class="{call .rootClass/}__hint-text">
         Рейтинг составлен Департаментом образования{sp}
-        Москвы по итогам 2014—2015 учебного года
-        <br>
+        Москвы по итогам 2015—2016 учебного года
+    </div>
+{/template}
 
-        <div class="{call .rootClass/}__hint-link">
-            {call sm.bLink.Template.base}
-                {param params: [
+
+/**
+ * Hint Link
+ * @private
+ */
+{template .hintLink_}
+    {let $linkContent kind="html"}
+        Подробнее{sp}
+        {call .hintIcon_ /}
+    {/let}
+
+    <div class="{call .rootClass/}__hint-link">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__link-hint
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
                     'data': [
-                        'name': 'Подробнее'
+                        'content': $linkContent,
+                        'url': 'http://dogm.mos.ru/rating/'
+                    ],
+                    'config': [
+                        'target': '_blank',
+                        'size': 'm',
+                        'customClasses': [$customClasses]
                     ]
-                ]/}
-            {/call}
-
-            {call .hintIcon_ /}
-        </div>
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
 
 /**
  * Hint Icon
- * @override
+ * @private
  */
 {template .hintIcon_}
     <div class="{call .rootClass/}__hint-link-icon">
@@ -270,6 +328,7 @@
  *         isNotActive: boolean
  *     }
  * }}
+ * @protected
  * @override
  */
 {template .additionalClasses}
@@ -288,8 +347,8 @@
  *         entityType: string
  *     }
  * }}
- * @override
  * @protected
+ * @override
  */
 {template .attributes kind="attributes"}
     data-params="
@@ -299,6 +358,7 @@
             ]) /}
         {/call}"
 {/template}
+
 
 /**
  * Root css class

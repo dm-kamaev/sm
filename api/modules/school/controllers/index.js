@@ -25,12 +25,20 @@ router.get(
     '/school/specializedClassType/popular',
     schoolController.popularSpecializedClassType
 );
+
 router.get('/school/:id', schoolController.view);
 // router.get('/school/apitest', schoolController.yapi);
+
+router.put(
+    '/school/:schoolId/department/:departmentId',
+    checkToken,
+    schoolController.renameDepartment
+);
 
 
 router.post('/school/createschool', checkToken, schoolController.create);
 router.post('/school/:id/comment', csrf, schoolController.createComment);
+
 
 router.put('/school/:id', checkToken, schoolController.update);
 

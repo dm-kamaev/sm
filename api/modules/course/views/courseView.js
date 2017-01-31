@@ -35,6 +35,9 @@ view.page = function(course, categoryAlias) {
         id: course.id,
         name: course.name,
         category: categoryAlias,
+        categoryName: course.courseType && course.courseType.category ?
+            course.courseType.category.name :
+            '',
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
@@ -538,6 +541,7 @@ view.letterData = function(data) {
  *     applicationId: number,
  *     name: string,
  *     phone: string,
+ *     email: string,
  *     link: string,
  *     comment: ?string,
  *     department: Object
@@ -563,6 +567,7 @@ view.letterContent = function(data) {
     result += `<br>Ссылка: ${data.link}`;
     result += `<br>Имя: ${data.name}`;
     result += `<br>Телефон: ${data.phone}`;
+    result += `<br>e-mail: ${data.email}`;
     result += comment;
     result += option;
     result += '</div>';

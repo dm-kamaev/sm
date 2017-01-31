@@ -57,6 +57,7 @@ courseCategoryView.render = function(data) {
         isActive: category.isActive || false,
         priceType: category.priceType,
         tabTitle: seoData.tabTitle || null,
+        pagePrefixTabTitle: seoData.pagePrefixTabTitle,
         metaDescription: seoData.metaDescription || null,
         openGraphTitle: seoData.openGraphTitle || null,
         openGraphDescription: seoData.openGraphDescription || null,

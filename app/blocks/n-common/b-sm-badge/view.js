@@ -55,7 +55,7 @@ goog.scope(function() {
         ACTIVE_STATE: 'b-sm-badge_active',
         ITEM: 'b-sm-badge__item',
         HINT: 'b-sm-badge__hint',
-        HINT_LINK: 'b-sm-badge__hint-link'
+        LINK_HINT: 'b-sm-badge__link-hint'
     };
 
 
@@ -64,8 +64,7 @@ goog.scope(function() {
      * @enum {string}
      */
     View.Event = {
-        ITEM_CLICK: 'item-click',
-        HINT_LINK_CLICK: 'hint-link-click'
+        ITEM_CLICK: 'item-click'
     };
 
 
@@ -125,23 +124,7 @@ goog.scope(function() {
         View.base(this, 'enterDocument');
 
         if (this.isActive_) {
-            this.initItemsListeners_();
             this.initHintControlListeners_();
-        }
-    };
-
-
-    /**
-     * Initializes listeners for items
-     * @private
-     */
-    View.prototype.initItemsListeners_ = function() {
-        for (var i = 0; i < this.dom.items.length; i++) {
-            this.getHandler().listen(
-                this.dom.items[i],
-                goog.events.EventType.CLICK,
-                this.onItemClick_.bind(this)
-            );
         }
     };
 
@@ -162,25 +145,6 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onDocumentClick_
         );
-
-        if (this.dom.hintLink) {
-            this.getHandler().listen(
-                this.dom.hintLink,
-                goog.events.EventType.CLICK,
-                this.onHintLinkClick_
-            );
-        }
-    };
-
-
-    /**
-     * On hint link click
-     * @private
-     */
-    View.prototype.onHintLinkClick_ = function() {
-        this.dispatchEvent({
-            'type': View.Event.HINT_LINK_CLICK
-        });
     };
 
 
@@ -215,21 +179,6 @@ goog.scope(function() {
 
 
     /**
-     * On item click
-     * @param {Object} event
-     * @private
-     */
-    View.prototype.onItemClick_ = function(event) {
-        var data = this.getSearchParams_(event.target);
-
-        this.dispatchEvent({
-            'type': View.Event.ITEM_CLICK,
-            'data': data
-        });
-    };
-
-
-    /**
      * Adds or deletes class to show hint
      * @param {bool} visible
      * @private
@@ -250,49 +199,6 @@ goog.scope(function() {
 
 
     /**
-     * Get search params
-     * @param {Element} item
-     * @return {{
-     *     id: number,
-     *     name: string
-     * }}
-     * @private
-     */
-    View.prototype.getSearchParams_ = function(item) {
-        var params = this.getDataParams_(item),
-            data = {};
-
-        if (params.id) {
-            data[params.type] = params.id;
-            data.name = params.name;
-        } else {
-            data = null;
-        }
-        return data;
-    };
-
-
-    /**
-     * Get data-params
-     * @param {Element} element
-     * @return {{
-     *     id: number,
-     *     name: string,
-     *     type: string
-     * }}
-     * @private
-     */
-    View.prototype.getDataParams_ = function(element) {
-        return JSON.parse(
-            goog.dom.dataset.get(
-                element,
-                'params'
-            )
-        );
-    };
-
-
-    /**
      * Initializes dom elements
      * @private
      */
@@ -304,8 +210,8 @@ goog.scope(function() {
             hint: this.getElementByClass(
                 View.CssClass.HINT
             ),
-            hintLink: this.getElementByClass(
-                View.CssClass.HINT_LINK
+            linkHint: this.getElementByClass(
+                View.CssClass.LINK_HINT
             )
         };
     };

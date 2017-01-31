@@ -15,6 +15,7 @@ if (config.environment != 'production') {
     options.benchmark = true;
 }
 
+
 module.exports = new Sequelize(
     dbConfig.database,
     dbConfig.username,
