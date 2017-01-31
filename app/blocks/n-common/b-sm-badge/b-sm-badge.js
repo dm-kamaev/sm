@@ -80,6 +80,14 @@ goog.scope(function() {
 
 
     /**
+     * @override
+     */
+    Badge.prototype.enterDocument = function() {
+        Badge.base(this, 'enterDocument');
+    };
+
+
+    /**
      * Init link hint
      * @private
      */

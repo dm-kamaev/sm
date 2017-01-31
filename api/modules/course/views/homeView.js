@@ -102,7 +102,7 @@ view.searchPanel = function() {
 
     let links = [{
         'content': 'Английский язык',
-        'url': searchUrl + encodeURIComponent('Английский язык')
+        'url': '/anglijskij'
     }, {
         'content': 'ЦАО',
         'url': searchUrl + encodeURIComponent('ЦАО')

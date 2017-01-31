@@ -55,7 +55,7 @@ goog.scope(function() {
         ACTIVE_STATE: 'b-sm-badge_active',
         ITEM_LINK: 'b-sm-badge__item-link',
         HINT: 'b-sm-badge__hint',
-        HINT_LINK: 'b-sm-badge__hint-link'
+        LINK_HINT: 'b-sm-badge__link-hint'
     };
 
 
@@ -201,8 +201,8 @@ goog.scope(function() {
             hint: this.getElementByClass(
                 View.CssClass.HINT
             ),
-            hintLink: this.getElementByClass(
-                View.CssClass.HINT_LINK
+            linkHint: this.getElementByClass(
+                View.CssClass.LINK_HINT
             )
         };
     };

@@ -18,6 +18,9 @@ const pageName = require('../../common/enums/pageName'),
     entityType = require('../../../../api/modules/entity/enums/entityType.js'),
     filterName = require('../../../../api/modules/course/enums/filterName');
 
+const contentExperiment =
+    require('../../../components/contentExperiment/contentExperiment');
+
 const logger = require('../../../components/logger/logger').getLogger('app');
 
 const config = require('../../../config').config;
@@ -81,6 +84,9 @@ controller.commonSearch = async(function(req, res, next) {
             user = req.user || {},
             searchParams = searchView.initSearchParams(req.query);
 
+        let factory = contentExperiment.getFactoryByQuery(req.query),
+            templateName = contentExperiment.getSearchTemplateName(factory);
+
         let data = await({
                 favorites: services.favorite.getFavoriteEntities(user.id),
                 search: services.search.getData(searchParams, null)
@@ -126,7 +132,7 @@ controller.commonSearch = async(function(req, res, next) {
         });
 
         let html = soy.render(
-            'sm.lSearch.Template.search', {
+            templateName, {
                 params: {
                     data: templateData,
                     config: templateConfig
@@ -158,6 +164,9 @@ controller.search = async(function(req, res, next) {
                 searchParams = searchView.initSearchParams(
                     req.query, categoryInstance.id
                 );
+
+            let factory = contentExperiment.getFactoryByQuery(req.query),
+                templateName = contentExperiment.getSearchTemplateName(factory);
 
             let data = await({
                     favorites: services.favorite.getFavoriteEntities(user.id),
@@ -203,7 +212,7 @@ controller.search = async(function(req, res, next) {
             });
 
             let html = soy.render(
-                'sm.lSearch.Template.search', {
+                templateName, {
                     params: {
                         data: templateData,
                         config: templateConfig
@@ -263,7 +272,10 @@ controller.information = async(function(req, res, next) {
                     categories: services.courseCategory.getAll({
                         isActive: true
                     }),
-                    categoryAliases: services.courseCategory.getAliases()
+                    categoryAliases: services.courseCategory.getAliases(),
+                    seoParams: services.seoCourseList.getPageMeta(
+                        page.category.entityId
+                    )
                 });
 
                 course.categories = data.categories;
@@ -277,6 +289,7 @@ controller.information = async(function(req, res, next) {
                     favorites: data.favorites,
                     categories: data.categories,
                     categoryAliases: data.categoryAliases,
+                    seoParams: data.seoParams,
                     entityType: entityType.COURSE,
                     config: config
                 });

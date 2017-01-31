@@ -76,12 +76,14 @@
             {call .searchButton_ /}
         {/if}
 
+        {let $minLength: $params.config.entityType == 'school' ? 2 : 3 /}
+
         <div class="b-search__suggest-holder i-animate">
             {call gorod.gSuggest.SuggestTemplate.render}
                 {param params: [
                     'data': [
                         'text': $params?.text,
-                        'minLength': 3,
+                        'minLength': $minLength,
                         'autofocus': $params?.autofocus,
                         'placeholder': $params?.placeholder,
                         'sourceUrl': '/api/' + $params.config.entityType + '/search/suggest',

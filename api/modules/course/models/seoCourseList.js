@@ -35,6 +35,10 @@ let SeoCourseList = db.define('SeoCourseList', {
         field: 'list_title'
     },
     text: Sequelize.ARRAY(Sequelize.TEXT),
+    pagePrefixTabTitle: {
+        type: Sequelize.STRING,
+        field: 'page_prefix_tab_title'
+    }
 }, {
     underscored: true,
     tableName: 'seo_course_list',

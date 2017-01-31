@@ -99,14 +99,14 @@ module.exports = class RatingChanger {
 
     /**
      * @private
-     * @param  {string} aggregateFunction
+     * @param  {string} aggregateFunctionName
      * @return {string}
      */
-    aggregateScores_(aggregateFunction) {
+    aggregateScores_(aggregateFunctionName) {
         let scoreAggregations = [];
         for (let i = 1; i <= SCORE_COUNT; i++) {
             scoreAggregations.push(
-                `${aggregateFunction}(rating.score[${i}]) ` +
+                `${aggregateFunctionName}(rating.score[${i}]) ` +
                     this.getFilterCondition_(i)
             );
         }
