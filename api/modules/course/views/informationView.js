@@ -28,7 +28,10 @@ let view = {};
  *     categoryAlias: string,
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
- *     actionButtonText: string
+ *     actionButtonText: string,
+ *     seoParams: {
+ *         pagePrefixTabTitle: string
+ *     }
  * }} data
  * @return {Object}
  */
@@ -43,10 +46,12 @@ view.render = function(data) {
         ) :
         null;
 
+    let pagePrefixTabTitle = data.seoParams.pagePrefixTabTitle || 'Курс';
+
     return {
         seo: {
-            metaTitle: 'Профориентационный курс ' + entityData.name +
-                ' в Москве: стоимость обучения, отзывы.',
+            metaTitle: `${pagePrefixTabTitle} ${entityData.name} в Москве: ` +
+                'стоимость обучения, отзывы.',
             metaDescription: seoView.formatSeoDescription(
                 entityData.description
             )
@@ -55,7 +60,7 @@ view.render = function(data) {
             title: 'Курс ' + entityData.name + ' на «Курсах Мела»',
             description: entityData.description,
             image: imageOpenGraph,
-            relapTag: entityData.category,
+            relapTag: entityData.categoryName,
             relapImage: imageOpenGraph,
             fbClientId: data.fbClientId,
         },

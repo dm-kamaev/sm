@@ -1,11 +1,23 @@
 User-agent: Yandex
+Allow: /school/kadetskiye/$
+Allow: /school/centry-obrazovaniya/$
 Disallow: /search?*
 Disallow: /school/?*
-Disallow: /*?name
+Disallow: /*name=
+Disallow: /*?areaId
+Disallow: /school/kadetskiye/*
+Disallow: /school/centry-obrazovaniya/*
 Host: schools.mel.fm
 
-User-agent:
+User-agent:*
+Allow: /school/kadetskiye/$
+Allow: /school/centry-obrazovaniya/$
 Disallow: /search?*
 Disallow: /school/?*
-Disallow: /*?name
+Disallow: /*name=
+Disallow: /*?areaId
+Disallow: /school/kadetskiye/*
+Disallow: /school/centry-obrazovaniya/*
+Host: schools.mel.fm
+
 Sitemap: http://schools.mel.fm/sitemap.xml

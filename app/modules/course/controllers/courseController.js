@@ -89,7 +89,9 @@ controller.commonSearch = async(function(req, res, next) {
             user = req.user || {},
             searchParams = searchView.initSearchParams(req.query);
 
-        let factory = contentExperiment.getFactoryByQuery(req.query);
+        let factory = contentExperiment.getFactoryByQuery(req.query),
+            templateName = contentExperiment.getSearchTemplateName(factory);
+
         let data = await({
                 favorites: services.favorite.getFavoriteEntities(user.id),
                 search: services.search.getData(searchParams, null)
@@ -127,7 +129,7 @@ controller.commonSearch = async(function(req, res, next) {
         });
 
         let html = soy.render(
-            'sm.lSearch.Template.search', {
+            templateName, {
                 params: {
                     data: templateData,
                     config: {
@@ -172,7 +174,9 @@ controller.search = async(function(req, res, next) {
                     req.query, categoryInstance.id
                 );
 
-            let factory = contentExperiment.getFactoryByQuery(req.query);
+            let factory = contentExperiment.getFactoryByQuery(req.query),
+                templateName = contentExperiment.getSearchTemplateName(factory);
+
             let data = await({
                     favorites: services.favorite.getFavoriteEntities(user.id),
                     search: services.search.getData(
@@ -209,7 +213,7 @@ controller.search = async(function(req, res, next) {
             });
 
             let html = soy.render(
-                'sm.lSearch.Template.search', {
+                templateName, {
                     params: {
                         data: templateData,
                         config: {
@@ -281,7 +285,10 @@ controller.information = async(function(req, res, next) {
                     categories: services.courseCategory.getAll({
                         isActive: true
                     }),
-                    categoryAliases: services.courseCategory.getAliases()
+                    categoryAliases: services.courseCategory.getAliases(),
+                    seoParams: services.seoCourseList.getPageMeta(
+                        page.category.entityId
+                    )
                 });
 
                 course.categories = data.categories;
@@ -295,6 +302,7 @@ controller.information = async(function(req, res, next) {
                     favorites: data.favorites,
                     categories: data.categories,
                     categoryAliases: data.categoryAliases,
+                    seoParams: data.seoParams,
                     entityType: entityType.COURSE,
                     config: config
                 });

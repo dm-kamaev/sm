@@ -1,0 +1,85 @@
+{namespace sm.lSearch.TemplateExperimental}
+
+
+/**
+ * Search page
+ * @param params {{
+ *     data: sm.lSearch.Template.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends sm.lSearch.Template
+ * @constructor
+ * @doc
+ */
+{template .search autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/l-search_experimental.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Container for map
+ * @param params {{
+ *     data: {
+ *         map: sm.bSmMap.Template.Params.Data,
+ *         searchParams: {Array<{string, (string|Array<string>|number)}>}
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @protected
+ * @ovveride
+ */
+{template .sectionMap autoescape="strict" kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_map
+
+        {for $i in range(length($params.data.map.itemGroups))}
+            {if not length($params.data.map.itemGroups[$i].items) or
+                not $params.data.searchParams.metroId or
+                not $params.data.searchParams.areaId or
+                not $params.data.searchParams.districtId}
+
+                {sp}{call .rootClass/}__section_hidden
+            {/if}
+        {/for}
+    {/let}
+
+    <div class="{$classes}">
+        <div class="{call .rootClass /}__section-inner">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smMap',
+                    'renderParams': [
+                        'data': $params.data.map,
+                        'config': [
+                            'enableScrollZoom': false,
+                            'alignZoomControl': 'left',
+                            'sizeViewportShow': 'xs'
+                        ]
+                    ]
+                ] /}
+            {/call}
+        </div>
+    </div>
+{/template}

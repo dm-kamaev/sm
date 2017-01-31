@@ -39,7 +39,7 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'l-search',
+        ROOT: 'l-search_stendhal',
         SECTION_MAP: 'l-search__section_map',
         SECTION_HIDDEN: 'l-search__section_hidden',
         SEARCH_RESULTS: 'l-search__search-results',

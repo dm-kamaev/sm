@@ -20,7 +20,7 @@ const execParams: Lint.ExecutionParams = {
 };
 const executor = new Lint.LintExecutor(lintParams, execParams);
 
-export default function() {
+export const task = function() {
     return executor
         .addEslintLinter()
         .addTslintLinter()

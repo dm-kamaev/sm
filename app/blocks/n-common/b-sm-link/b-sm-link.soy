@@ -66,15 +66,6 @@
 
 
 /**
- * Icon template if exists
- * @type {String}
- */
-{template .icon kind="html"}
-
-{/template}
-
-
-/**
  * Define tag
  * @param params {{
  *     data: {
@@ -87,7 +78,7 @@
     {if $params.data.url}
         a
     {else}
-        span
+        div
     {/if}
 {/template}
 

@@ -16,15 +16,25 @@ let upLetter = function(string, index) {
         string.slice(index + 1);
 };
 
-let getEnteryPointFromName = function(name) {
-    name = name.replace(/l-/, ''); // Remove l-
+let getEnteryPointFromName = function(fileName) {
+    let name = fileName.replace(/l-/, ''); // Remove l-
     let slice = upLetter(name, 0); // doc => Doc
-    let k;
-    while ((k = slice.indexOf('-')) != -1) {
-        slice = upLetter(slice, k + 1);
-        slice = slice.slice(0, k) + slice.slice(k + 1);
+    let modifier = '',
+        index;
+
+    if (~slice.indexOf('_')) {
+        modifier = name.replace(/\w*(?=_)(_)/, '');
+        modifier = upLetter(modifier, 0);
+
+        slice = slice.replace(/_\w*/, '');
     }
-    return 'sm.l' + slice + '.' + slice;
+
+    while ((index = slice.indexOf('-')) != -1) {
+        slice = upLetter(slice, index + 1);
+        slice = slice.slice(0, index) + slice.slice(index + 1);
+    }
+
+    return 'sm.l' + slice + '.' + slice + modifier;
 };
 
 module.exports = {
