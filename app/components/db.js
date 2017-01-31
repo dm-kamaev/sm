@@ -25,6 +25,7 @@ if (config.environment != 'production') {
     // };
 }
 
+
 module.exports = new Sequelize(
     dbConfig.database,
     dbConfig.username,

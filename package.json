@@ -25,7 +25,6 @@
     "bluebird": "^3.4.1",
     "body-parser": "~1.13.2",
     "cheerio": "^0.19.0",
-    "clobl": "git+ssh://git@github.com:c7s/clobl.git#dev",
     "closure": "^1.0.3",
     "closure-templates": "^20141017.0.1",
     "colors": "^1.1.2",
@@ -94,6 +93,7 @@
   },
   "dependencies": {
     "eslint": "^3.14.0",
+    "clobl": "git+ssh://git@github.com/c7s/clobl.git#dev",
     "express": "^4.13.3",
     "geopoint": "^1.0.1",
     "glob": "^5.0.15",

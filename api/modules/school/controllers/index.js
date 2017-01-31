@@ -35,6 +35,12 @@ router.get('/school/adminsearch', checkToken, schoolController.adminSearch);
 router.get('/school/:id', schoolController.view);
 // router.get('/school/apitest', schoolController.yapi);
 
+router.put(
+    '/school/:schoolId/department/:departmentId',
+    checkToken,
+    schoolController.renameDepartment
+);
+
 
 router.post('/school/createschool', checkToken, schoolController.create);
 router.post('/school/:id/comment', csrf, schoolController.createComment);

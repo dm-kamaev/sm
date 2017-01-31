@@ -1,15 +1,16 @@
 'use strict';
 
+// read mail from delete@mel.fm and
+// if exist mail then delete comment
+
 var commander = require('commander');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var imap = require('imap-simple');
 var http = require('http');
-var querystring = require('querystring');
 
-var config = require('../app/config').config;
-
-const TOKEN = 'a71b-2d1-123f';
+const config = require('../app/config/config.json');
+const mailToken = require('../app/config/mailToken.json');
 
 class ParseMail {
     /**
@@ -116,6 +117,7 @@ class ParseMail {
                 }
             }
         });
+
         return processedLetters;
     }
 
@@ -130,26 +132,21 @@ class ParseMail {
     }
 
     /**
-     * Send delete request to api
+     * Send delete request to api for remove comment
      * @param {number} id - comment's id
      * @private
      */
     sendDeleteReq_(id) {
-        var data = querystring.stringify({
-                'token': TOKEN
-            }),
-            options = {
-                host: config.schools.host,
-                method: 'DELETE',
-                path: '/api/comment/delete/' + id,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Content-Length': data.length
-                }
-            };
-
+        const options = {
+            host: config.schools.host,
+            method: 'DELETE',
+            path: '/api/comment/delete/' + id,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                [mailToken.name]: mailToken.token
+            }
+        };
         var req = http.request(options);
-        req.write(data);
         req.end();
     }
 }

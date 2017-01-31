@@ -25,6 +25,10 @@
  *         id: number,
  *         name: string
  *     }>|undefined),
+ *     rating: (Array<{
+ *         id: number,
+ *         name: string
+ *     }>|undefined),
  *     online: ({
  *         value: number,
  *         type: ('only'|'available')
@@ -133,6 +137,10 @@
  *             id: number,
  *             name: string
  *         }>|undefined),
+ *         rating: (Array<{
+ *             id: number,
+ *             name: string
+ *         }>|undefined),
  *         online: ({
  *             value: number,
  *             type: ('only'|'available')
@@ -150,6 +158,7 @@
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_details">
         {call .location data="all" /}
+        {call .rating_ data="all" /}
         {call .countDepartment_ data="all" /}
         {call .online_ data="all" /}
         {call .favoriteLink_ data="all" /}
@@ -305,6 +314,40 @@
         <div class="{call .rootClass/}__badge{sp}
                     {call .rootClass/}__badge_online">
             {call .insertOnline_ data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Rating entity
+ * @param params {{
+ *     data: {
+ *         rating: (Array<{
+ *             id: number,
+ *             name: string
+ *         }>|undefined)
+ *     }
+ * }}
+ */
+{template .rating_}
+    {if $params.data.rating and length($params.data.rating)}
+        <div class="{call .rootClass/}__badge{sp}
+                    {call .rootClass/}__badge_rating">
+            {call .renderChild}
+                {param params: [
+                    'type': 'smBadge',
+                    'renderParams': [
+                        'data': [
+                            'items': $params.data.rating,
+                        ],
+                        'config': [
+                            'searchType': 'rating',
+                            'iconName': 'test'
+                        ]
+                    ]
+                ]/}
+            {/call}
         </div>
     {/if}
 {/template}
