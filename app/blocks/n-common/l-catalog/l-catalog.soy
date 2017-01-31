@@ -89,26 +89,6 @@
 
 
 /**
- * @param params {{
- *     data: sm.iLayout.TemplateStendhal.Params.Data,
- *     config: sm.iLayout.TemplateStendhal.Params.Config
- * }}
- * @override
- */
-{template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
-                {call .attributes data="all"/}>
-        <div class="{call .rootClass/}__wrapper-content">
-            {call .mainSubheader data="all" /}
-            {call .mainContent data="all" /}
-        </div>
-
-        {call .mainFooter data="all" /}
-    </div>
-{/template}
-
-
-/**
  * Content
  * @param params {{
  *     data: {
