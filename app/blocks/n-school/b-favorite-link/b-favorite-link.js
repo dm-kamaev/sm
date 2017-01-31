@@ -1,5 +1,6 @@
 goog.provide('sm.bFavoriteLink.FavoriteLink');
 
+goog.require('cl.gIcon.Icon');
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bFavoriteLink.Event.FavoriteAdded');
@@ -229,7 +230,7 @@ goog.scope(function() {
      */
     FavoriteLink.prototype.initIcon_ = function() {
         this.icon_ = this.decorateChild(
-            'icon',
+            cl.gIcon.Icon.NAME,
             this.getView().getDom().icon
         );
     };

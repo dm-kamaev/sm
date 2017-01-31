@@ -1,5 +1,6 @@
 goog.provide('sm.lSearch.bFilter.FilterSwitch');
 
+goog.require('sm.bSmRadioButton.SmRadioButton');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.TemplateSwitch');
@@ -85,7 +86,7 @@ goog.scope(function() {
 
         for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(
-                'smRadioButton',
+                sm.bSmRadioButton.SmRadioButton.NAME,
                 elements[i]
             );
 

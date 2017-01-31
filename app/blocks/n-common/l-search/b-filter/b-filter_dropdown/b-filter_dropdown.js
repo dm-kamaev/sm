@@ -1,5 +1,6 @@
 goog.provide('sm.lSearch.bFilter.FilterDropdown');
 
+goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.TemplateDropdown');
@@ -216,7 +217,7 @@ goog.scope(function() {
      */
     FilterDropdown.prototype.initOptions = function() {
         this.list_ = this.decorateChild(
-            'dropdown-select',
+            sm.gDropdown.DropdownSelect.NAME,
             this.getView().getDom().list
         );
     };

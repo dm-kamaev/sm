@@ -1,6 +1,6 @@
 goog.provide('sm.lCatalog.Catalog');
 
-goog.require('sm.gTab.TemplateStendhal');
+goog.require('sm.gTab.TabStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal');
 goog.require('sm.lCatalog.Template');
@@ -60,7 +60,7 @@ goog.scope(function() {
      */
     Catalog.prototype.initTabsCatalog_ = function() {
         this.tabsCatalog_ = this.decorateChild(
-            sm.gTab.TemplateStendhal.NAME(),
+            sm.gTab.TabStendhal.NAME,
             this.getView().getDom().tabsCatalog
         );
     };

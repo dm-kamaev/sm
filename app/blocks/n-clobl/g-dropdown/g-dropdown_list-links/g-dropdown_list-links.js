@@ -1,8 +1,10 @@
 goog.provide('sm.gDropdown.DropdownListLinks');
 
+goog.require('sm.bSmLink.SmLink');
 goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.gDropdown.TemplateListLinks');
 goog.require('sm.gDropdown.ViewListLinks');
+goog.require('sm.gList.ListLinks');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -102,7 +104,7 @@ goog.scope(function() {
      */
     Dropdown.prototype.initList = function() {
         this.list = this.decorateChild(
-            'list-links',
+            sm.gList.ListLinks.NAME,
             this.getView().getDom().list
         );
     };
@@ -114,7 +116,7 @@ goog.scope(function() {
      */
     Dropdown.prototype.initLinkOpener_ = function() {
         this.openerLink_ = this.decorateChild(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().openerLink
         );
     };

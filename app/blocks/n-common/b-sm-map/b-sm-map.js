@@ -302,7 +302,7 @@ goog.scope(function() {
 
         this.setBalloon_(
             this.renderChild(
-                'smBalloon',
+                sm.bSmBalloon.SmBalloon.NAME,
                 balloonElement,
                 renderParams
             )

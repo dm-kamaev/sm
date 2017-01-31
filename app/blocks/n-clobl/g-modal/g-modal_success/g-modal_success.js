@@ -1,5 +1,6 @@
 goog.provide('sm.gModal.ModalSuccess');
 
+goog.require('cl.gButton.Button');
 goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
@@ -100,7 +101,7 @@ goog.scope(function() {
      */
     ModalSuccess.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            cl.gButton.Button.NAME,
             this.getView().getDom().button
         );
     };

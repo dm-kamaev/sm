@@ -102,10 +102,10 @@ goog.scope(function() {
      * @enum {string}
      */
     ItemList.ItemType = {
-        ITEM: 'smItem',
-        ITEM_ENTITY: 'smItemEntity',
-        LINK: 'smLink',
-        DEPARTMENT: 'lCourse-department'
+        ITEM: sm.bSmItem.SmItem.NAME,
+        ITEM_ENTITY: sm.bSmItem.SmItemEntity.NAME,
+        LINK: sm.bSmLink.SmLink.NAME,
+        DEPARTMENT: sm.lCourse.bDepartment.Department.NAME
     };
 
 

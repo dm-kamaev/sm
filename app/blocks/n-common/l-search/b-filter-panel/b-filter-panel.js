@@ -1,7 +1,15 @@
 goog.provide('sm.lSearch.bFilterPanel.FilterPanel');
 
+goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.FilterClasses');
+goog.require('sm.lSearch.bFilter.FilterDropdown');
+goog.require('sm.lSearch.bFilter.FilterExtended');
+goog.require('sm.lSearch.bFilter.FilterInput');
+goog.require('sm.lSearch.bFilter.FilterSwitch');
+goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
 goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bFilterPanel.View');
 
@@ -254,25 +262,25 @@ goog.scope(function() {
 
         switch (true) {
             case sm.lSearch.bFilter.FilterExtended.isControl(element) :
-                type = 'lSearch-filterExtended';
+                type = sm.lSearch.bFilter.FilterExtended.NAME;
                 break;
             case sm.lSearch.bFilter.FilterSwitchLabels.isControl(element) :
-                type = 'lSearch-filterSwitchLabels';
+                type = sm.lSearch.bFilter.FilterSwitchLabels.NAME;
                 break;
             case sm.lSearch.bFilter.FilterSwitch.isControl(element) :
-                type = 'lSearch-filterSwitch';
+                type = sm.lSearch.bFilter.FilterSwitch.NAME;
                 break;
             case sm.lSearch.bFilter.FilterInput.isControl(element) :
-                type = 'lSearch-filterInput';
+                type = sm.lSearch.bFilter.FilterInput.NAME;
                 break;
             case sm.lSearch.bFilter.FilterDropdown.isControl(element) :
-                type = 'lSearch-filterDropdown';
+                type = sm.lSearch.bFilter.FilterDropdown.NAME;
                 break;
             case sm.lSearch.bFilter.FilterClasses.isControl(element) :
-                type = 'lSearch-filterClasses';
+                type = sm.lSearch.bFilter.FilterClasses.NAME;
                 break;
             default:
-                type = 'lSearch-filter';
+                type = sm.lSearch.bFilter.Filter.NAME;
         }
 
         return type;
@@ -306,7 +314,7 @@ goog.scope(function() {
      */
     FilterPanel.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            cl.gButton.Button.NAME,
             this.getView().getDom().button
         );
     };

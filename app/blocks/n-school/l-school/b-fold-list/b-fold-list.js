@@ -118,7 +118,7 @@ goog.scope(function() {
         var elements = this.getView().getChildrenLists();
 
         this.foldLists_ = elements.map(function(elem) {
-            return this.decorateChild('fold-list', elem);
+            return this.decorateChild(sm.lSchool.bFoldList.FoldList.NAME, elem);
         }, this);
     };
 });  // goog.scope

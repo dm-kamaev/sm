@@ -4,6 +4,7 @@ goog.require('cl.gDropdown.Dropdown');
 goog.require('sm.gDropdown.Event.ItemSelect');
 goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gDropdown.ViewSelect');
+goog.require('sm.gList.ListStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -249,7 +250,7 @@ goog.scope(function() {
      */
     Dropdown.prototype.initList = function() {
         this.list = this.decorateChild(
-            'list',
+            sm.gList.ListStendhal.NAME,
             this.getView().getDom().list
         );
     };

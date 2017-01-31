@@ -300,9 +300,8 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.sideMenu_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'side-menu',
+        this.sideMenu_ = Factory.decorate(
+            sm.gModal.ModalSideMenu.NAME,
             sideMenu,
             this
         );

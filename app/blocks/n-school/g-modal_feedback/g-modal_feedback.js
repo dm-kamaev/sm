@@ -1,8 +1,12 @@
 goog.provide('sm.gModal.ModalFeedback');
 
+goog.require('cl.gButton.Button');
+goog.require('sm.gDropdown.DropdownSelectLegacy');
+goog.require('sm.gInput.InputStendhal');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.ViewFeedback');
+goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -231,13 +235,16 @@ goog.scope(function() {
         var domElements = this.getView().getDom();
         this.elements_ = {
             dropdown: this.decorateChild(
-                'dropdown-select-legacy', domElements.themeField
+                sm.gDropdown.DropdownSelectLegacy.NAME,
+                domElements.themeField
             ),
             submitButton: this.decorateChild(
-                'button', domElements.submitButton
+                cl.gButton.Button.NAME,
+                domElements.submitButton
             ),
             textarea: this.decorateChild(
-                'textarea', domElements.textArea
+                sm.gTextarea.TextareaStendhal.NAME,
+                domElements.textArea
             )
         };
 
@@ -254,7 +261,9 @@ goog.scope(function() {
         this.elements_.inputs = [];
 
         for (var i = 0; input = view.getDom().inputs[i]; i++) {
-            this.elements_.inputs[i] = this.decorateChild('input', input);
+            this.elements_.inputs[i] = this.decorateChild(
+                sm.gInput.InputStendhal.NAME, input
+            );
         }
     };
 });  // goog.scope

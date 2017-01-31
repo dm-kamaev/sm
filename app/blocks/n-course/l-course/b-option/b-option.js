@@ -6,6 +6,7 @@
 goog.provide('sm.lCourse.bOption.Option');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmExpander.SmExpander');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lCourse.bOption.Template');
 goog.require('sm.lCourse.bOption.View');
@@ -123,7 +124,7 @@ goog.scope(function() {
         Option.base(this, 'decorateInternal', element);
 
         this.expander_ = this.decorateChild(
-            'smExpander',
+            sm.bSmExpander.SmExpander.NAME,
             this.getView().getDom().expander
         );
     };

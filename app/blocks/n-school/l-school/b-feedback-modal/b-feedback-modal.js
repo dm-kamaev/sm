@@ -5,6 +5,9 @@ goog.require('goog.array');
 goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
 goog.require('sm.bStars.Stars');
+goog.require('sm.gInput.DigitInput');
+goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
@@ -237,13 +240,13 @@ goog.scope(function() {
         };
 
         this.modal_ = factory.decorate(
-            'modal',
+            sm.gModal.ModalStendhal.NAME,
             this.getElementByClass(cl.gModal.View.CssClass.ROOT),
             this
         );
 
         this.textarea_ = factory.decorate(
-            'textarea',
+            sm.gTextarea.TextareaStendhal.NAME,
             goog.dom.getElementByClass(
                 cl.gTextarea.View.CssClass.ROOT,
                 this.modal_.getElement()
@@ -259,7 +262,7 @@ goog.scope(function() {
         );
 
         this.yearGraduate_ = factory.decorate(
-            'digit-input',
+            sm.gInput.DigitInput.NAME,
             goog.dom.getElementByClass(
                 cl.gInput.View.CssClass.ROOT,
                 this.modal_.getElement()

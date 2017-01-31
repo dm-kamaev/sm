@@ -2,6 +2,9 @@ goog.provide('sm.lSearch.bFilter.FilterClasses');
 
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.FilterDropdown');
+goog.require('sm.lSearch.bFilter.FilterInput');
+goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
 goog.require('sm.lSearch.bFilter.TemplateClasses');
 goog.require('sm.lSearch.bFilter.ViewClasses');
 
@@ -237,17 +240,17 @@ goog.scope(function() {
         this.options = {};
 
         this.options.optionList = this.decorateChild(
-            'lSearch-filterDropdown',
+            sm.lSearch.bFilter.FilterDropdown.NAME,
             dom.optionList
         );
 
         this.options.optionLabels = this.decorateChild(
-            'lSearch-filterSwitchLabels',
+            sm.lSearch.bFilter.FilterSwitchLabels.NAME,
             dom.optionLabels
         );
 
         this.options.optionKindergarten = this.decorateChild(
-            'lSearch-filter',
+            sm.lSearch.bFilter.Filter.NAME,
             dom.optionKindergarten
         );
     };

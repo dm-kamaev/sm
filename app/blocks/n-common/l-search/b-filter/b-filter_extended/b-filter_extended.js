@@ -4,6 +4,7 @@ goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.TemplateExtended');
 goog.require('sm.lSearch.bFilter.ViewExtended');
+goog.require('sm.lSearch.bSuggestFilter.SuggestFilter');
 
 
 
@@ -206,7 +207,7 @@ goog.scope(function() {
         this.filterModal_ = sm.gModal.ModalStendhal.render(params, true);
 
         this.filterModal_.renderContent(
-            'lSearch-suggestFilter',
+            sm.lSearch.bSuggestFilter.SuggestFilter.NAME,
             this.getModalData_()
         );
     };

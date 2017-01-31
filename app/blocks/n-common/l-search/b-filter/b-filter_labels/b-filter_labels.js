@@ -4,6 +4,7 @@ goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.TemplateLabels');
 goog.require('sm.lSearch.bFilter.ViewLabels');
+goog.require('sm.lSearch.bLabel.Label');
 
 
 
@@ -211,7 +212,7 @@ goog.scope(function() {
 
         for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(
-                'lSearch-label',
+                sm.lSearch.bLabel.Label.NAME,
                 elements[i]
             );
             this.options.push(instance);

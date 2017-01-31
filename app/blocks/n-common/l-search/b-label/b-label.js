@@ -1,6 +1,7 @@
 goog.provide('sm.lSearch.bLabel.Label');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bLabel.Template');
 goog.require('sm.lSearch.bLabel.View');
@@ -105,7 +106,7 @@ goog.scope(function() {
      */
     Label.prototype.initCheckbox_ = function() {
         this.checkbox_ = this.decorateChild(
-            'smCheckbox',
+            sm.bSmCheckbox.SmCheckbox.NAME,
             this.getView().getDom().checkbox
         );
     };

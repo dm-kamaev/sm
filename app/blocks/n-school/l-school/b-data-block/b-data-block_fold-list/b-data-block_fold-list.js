@@ -5,6 +5,7 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('sm.iFactory.FactoryStendhal');
+goog.require('sm.lSchool.bFoldList.FoldList');
 
 
 
@@ -59,7 +60,7 @@ goog.scope(function() {
      */
     DataBlockFoldList.prototype.initFoldList_ = function() {
         this.foldList_ = factory.decorate(
-            'fold-list',
+            sm.lSchool.bFoldList.FoldList.NAME,
             this.getElementByClass(sm.lSchool.bFoldList.View.CssClass.ROOT),
             this
         );

@@ -1,6 +1,7 @@
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
-
 goog.provide('sm.lSearch.bFilter.FilterInput');
+
+goog.require('sm.gInput.InputStendhal');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.TemplateInput');
 goog.require('sm.lSearch.bFilter.ViewInput');
@@ -174,7 +175,7 @@ goog.scope(function() {
 
         for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(
-                'input',
+                sm.gInput.InputStendhal.NAME,
                 elements[i]
             );
             this.options.push(instance);

@@ -4,6 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bBanner.Template');
 goog.require('sm.bBanner.View');
+goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -63,7 +64,7 @@ goog.scope(function() {
         var domElements = this.getView().getDom();
 
         this.modalFeedback_ = this.decorateChild(
-            'feedback-modal',
+            sm.gModal.ModalFeedback.NAME,
             domElements.modalFeedback
         );
     };

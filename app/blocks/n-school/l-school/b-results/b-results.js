@@ -4,7 +4,7 @@ goog.require('cl.gTab.View');
 goog.require('goog.ui.Component');
 goog.require('sm.bDiagram.Diagram');
 goog.require('sm.gDropdown.DropdownSelectLegacy');
-goog.require('sm.gTab.TemplateStendhal');
+goog.require('sm.gTab.TabStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSchool.bResults.Template');
 
@@ -148,7 +148,7 @@ goog.scope(function() {
             diagramElements = this.getElementsByClass(Diagram.CssClass.ROOT);
 
         this.tab_ = Factory.decorate(
-            sm.gTab.TemplateStendhal.NAME(),
+            sm.gTab.TabStendhal.NAME,
             tabElement,
             this
         );

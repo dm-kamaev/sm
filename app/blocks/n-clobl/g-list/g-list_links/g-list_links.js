@@ -1,5 +1,6 @@
 goog.provide('sm.gList.ListLinks');
 
+goog.require('sm.bSmLink.SmLink');
 goog.require('sm.gList.ListStendhal');
 goog.require('sm.gList.TemplateLinks');
 goog.require('sm.gList.ViewLinks');
@@ -77,7 +78,7 @@ goog.scope(function() {
 
         for (var i = 0; i < domElements.length; i++) {
             instance = this.decorateChild(
-                'smLink',
+                sm.bSmLink.SmLink.NAME,
                 domElements[i]
             );
 

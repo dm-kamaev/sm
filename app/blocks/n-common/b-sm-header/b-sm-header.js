@@ -3,6 +3,7 @@ goog.provide('sm.bSmHeader.SmHeader');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmHeader.Template');
 goog.require('sm.bSmHeader.View');
+goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -70,6 +71,6 @@ goog.scope(function() {
      */
     Header.prototype.initLinks_ = function() {
         var links = this.getView().getLinks();
-        this.links_ = this.decorateChildren('smLink', links);
+        this.links_ = this.decorateChildren(sm.bSmLink.SmLink.NAME, links);
     };
 });  // goog.scope

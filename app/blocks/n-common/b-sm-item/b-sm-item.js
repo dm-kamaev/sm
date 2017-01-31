@@ -3,6 +3,7 @@ goog.provide('sm.bSmItem.SmItem');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.View');
+goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -154,6 +155,9 @@ goog.scope(function() {
     Item.prototype.initNameLink_ = function() {
         var dom = this.getView().getDom();
 
-        this.nameLink = this.decorateChild('smLink', dom.nameLink);
+        this.nameLink = this.decorateChild(
+            sm.bSmLink.SmLink.NAME,
+            dom.nameLink
+        );
     };
 });  // goog.scope

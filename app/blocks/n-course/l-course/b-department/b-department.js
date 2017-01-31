@@ -8,6 +8,7 @@ goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lCourse.bDepartment.Event.EnrollButtonClick');
 goog.require('sm.lCourse.bDepartment.Template');
 goog.require('sm.lCourse.bDepartment.View');
+goog.require('sm.lCourse.bOption.Option');
 
 
 goog.scope(function() {
@@ -175,7 +176,7 @@ goog.scope(function() {
      */
     Department.prototype.initOption_ = function(element) {
         return this.decorateChild(
-            'lCourse-option',
+            sm.lCourse.bOption.Option.NAME,
             element
         );
     };

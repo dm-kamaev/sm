@@ -1,5 +1,6 @@
 goog.provide('sm.lCourse.bUserInteraction.UserInteraction');
 
+goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.iSmViewport.SmViewport');
@@ -90,7 +91,7 @@ goog.scope(function() {
      */
     UserInteraction.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            cl.gButton.Button.NAME,
             this.getView().getDom().button
         );
     };

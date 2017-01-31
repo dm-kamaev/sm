@@ -5,6 +5,7 @@ goog.require('sm.bSmBalloon.Event.Open');
 goog.require('sm.bSmBalloon.Template');
 goog.require('sm.bSmBalloon.View');
 goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.bSmLink.SmLink');
 goog.require('sm.bSmListPaged.SmListPaged');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
@@ -196,12 +197,18 @@ goog.scope(function() {
 
         if (goog.isDefAndNotNull(dom.itemList)) {
             this.listPaged_ =
-                this.decorateChild('smListPaged', dom.itemList);
+                this.decorateChild(
+                    sm.bSmListPaged.SmListPaged.NAME,
+                    dom.itemList
+                );
         }
 
         if (goog.isDefAndNotNull(dom.descriptionLink)) {
             this.descriptionLink_ =
-                this.decorateChild('smLink', dom.descriptionLink);
+                this.decorateChild(
+                    sm.bSmLink.SmLink.NAME,
+                    dom.descriptionLink
+                );
         }
     };
 });  // goog.scope

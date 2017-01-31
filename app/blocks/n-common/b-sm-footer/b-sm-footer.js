@@ -3,6 +3,7 @@ goog.provide('sm.bSmFooter.SmFooter');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -58,7 +59,7 @@ goog.scope(function() {
      */
     Footer.prototype.initLinks_ = function() {
         this.links_ = this.decorateChildren(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().links
         );
     };

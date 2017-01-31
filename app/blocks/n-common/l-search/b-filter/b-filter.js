@@ -1,6 +1,7 @@
 goog.provide('sm.lSearch.bFilter.Filter');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Template');
 goog.require('sm.lSearch.bFilter.View');
@@ -467,7 +468,7 @@ goog.scope(function() {
 
         for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(
-                'smCheckbox',
+                sm.bSmCheckbox.SmCheckbox.NAME,
                 elements[i]
             );
 

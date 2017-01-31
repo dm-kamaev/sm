@@ -1,10 +1,12 @@
 goog.provide('sm.bSmItem.SmItemEntity');
 
 goog.require('sm.bFavoriteLink.FavoriteLink');
+goog.require('sm.bSmBadge.SmBadge');
 goog.require('sm.bSmItem.Event.FavoriteRemoved');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItem.ViewEntity');
+goog.require('sm.bSmScore.SmScoreBrief');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.iSmViewport.SmViewport');
 
@@ -231,7 +233,7 @@ goog.scope(function() {
      */
     Item.prototype.initScore_ = function() {
         this.score_ = this.decorateChild(
-            'smScoreBrief',
+            sm.bSmScore.SmScoreBrief.NAME,
             this.getView().getDom().score
         );
     };
@@ -247,7 +249,7 @@ goog.scope(function() {
 
         for (var i = 0; i < badges.length; i++) {
             instance = this.decorateChild(
-                'smBadge',
+                sm.bSmBadge.SmBadge.NAME,
                 badges[i]
             );
 
@@ -262,7 +264,7 @@ goog.scope(function() {
      */
     Item.prototype.initFavoriteLink_ = function() {
         this.favoriteLink_ = this.decorateChild(
-            'favorite-link',
+            sm.bFavoriteLink.FavoriteLink.NAME,
             this.getView().getDom().favoriteLink
         );
     };

@@ -280,11 +280,20 @@ goog.scope(function() {
     SearchResults.prototype.initChildComponents_ = function() {
         var dom = this.getView().getDom();
 
-        this.itemList_ = this.decorateChild('smItemList', dom.itemList);
+        this.itemList_ = this.decorateChild(
+            sm.bSmItemList.SmItemList.NAME,
+            dom.itemList
+        );
 
-        this.sort_ = this.decorateChild('dropdown-list-links', dom.sort);
+        this.sort_ = this.decorateChild(
+            sm.gDropdown.DropdownListLinks.NAME,
+            dom.sort
+        );
 
-        this.showMore_ = this.decorateChild('button', dom.showMore);
+        this.showMore_ = this.decorateChild(
+            cl.gButton.Button.NAME,
+            dom.showMore
+        );
 
         return this;
     };

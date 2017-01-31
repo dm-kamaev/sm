@@ -13,6 +13,7 @@ goog.require('cl.iCloblFactory.CloblFactory');
 sm.iNewFactory.FactoryStendhal = function() {
     sm.iNewFactory.FactoryStendhal.base(this, 'constructor');
     this.setParent(cl.iCloblFactory.CloblFactory.getInstance());
+    this.addStylization('stendhal');
 };
 
 goog.scope(function() {

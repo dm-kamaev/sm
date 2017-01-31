@@ -282,7 +282,7 @@ goog.scope(function() {
      */
     ListPaged.prototype.initList_ = function() {
         this.list_ = this.decorateChild(
-            'smItemList',
+            sm.bSmItemList.SmItemList.NAME,
             this.getView().getDom().list
         );
     };

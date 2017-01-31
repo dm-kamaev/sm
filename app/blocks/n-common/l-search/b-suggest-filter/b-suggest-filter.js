@@ -1,9 +1,12 @@
 goog.provide('sm.lSearch.bSuggestFilter.SuggestFilter');
 
+goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.FilterInput');
 goog.require('sm.lSearch.bSuggestFilter.Template');
 goog.require('sm.lSearch.bSuggestFilter.View');
 
@@ -378,7 +381,7 @@ goog.scope(function() {
      */
     SuggestFilter.prototype.initFilter_ = function() {
         this.filter_ = this.decorateChild(
-            'lSearch-filter',
+            sm.lSearch.bFilter.Filter.NAME,
             this.getView().getDom().filter
         );
     };
@@ -390,7 +393,7 @@ goog.scope(function() {
      */
     SuggestFilter.prototype.initSelected_ = function() {
         this.selected_ = this.decorateChild(
-            'lSearch-filterLabels',
+            sm.lSearch.bFilter.FilterInput.NAME,
             this.getView().getDom().selected
         );
     };
@@ -402,7 +405,7 @@ goog.scope(function() {
      */
     SuggestFilter.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            cl.gButton.Button.NAME,
             this.getView().getDom().button
         );
     };

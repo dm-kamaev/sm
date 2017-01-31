@@ -1,14 +1,18 @@
 goog.provide('sm.gModal.ModalEnrollment');
 
+goog.require('cl.gButton.Button');
 goog.require('cl.iRequest.Request');
 goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
+goog.require('sm.gInput.InputPhone');
+goog.require('sm.gInput.InputStendhal');
 goog.require('sm.gModal.Event.EnrollmentSuccess');
 goog.require('sm.gModal.Event.Show');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.ViewEnrollment');
+goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -378,17 +382,17 @@ goog.scope(function() {
      */
     ModalEnrollment.prototype.initFields_ = function() {
         this.nameField_ = this.decorateChild(
-            'input',
+            sm.gInput.InputStendhal.NAME,
             this.getView().getDom().nameField
         );
 
         this.phoneField_ = this.decorateChild(
-            'phone-input',
+            sm.gInput.InputPhone.NAME,
             this.getView().getDom().phoneField
         );
 
         this.commentField_ = this.decorateChild(
-            'textarea',
+            sm.gTextarea.TextareaStendhal.NAME,
             this.getView().getDom().commentField
         );
     };
@@ -400,7 +404,7 @@ goog.scope(function() {
      */
     ModalEnrollment.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            cl.gButton.Button.NAME,
             this.getView().getDom().button
         );
     };

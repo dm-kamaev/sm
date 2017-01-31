@@ -3,6 +3,8 @@ goog.provide('sm.bHeader.Header');
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bAuthorizationLink.AuthorizationLink');
+goog.require('sm.bBanner.Banner');
+goog.require('sm.bFavorite.Favorite');
 goog.require('sm.bHeader.Template');
 goog.require('sm.bHeader.View');
 goog.require('sm.bSearch.Search');
@@ -164,15 +166,18 @@ goog.scope(function() {
             this.search_.decorate(domElements.search);
         }
 
-        this.banner_ = this.decorateChild('banner', domElements.banner);
+        this.banner_ = this.decorateChild(
+            sm.bBanner.Banner.NAME,
+            domElements.banner
+        );
 
         this.authorizationLink_ = this.decorateChild(
-            'authorization-link',
+            sm.bAuthorizationLink.AuthorizationLink.NAME,
             domElements.authorizationLink
         );
 
         this.favorite_ = this.decorateChild(
-            'favorite',
+            sm.bFavorite.Favorite.NAME,
             domElements.favorite
         );
     };

@@ -241,7 +241,7 @@ goog.scope(function() {
      */
     Expander.prototype.initLink_ = function() {
         this.link_ = this.decorateChild(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().link
         );
     };

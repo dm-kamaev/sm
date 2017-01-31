@@ -3,6 +3,7 @@ goog.provide('sm.bSmHeadedList.SmHeadedList');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmHeadedList.Template');
 goog.require('sm.bSmHeadedList.View');
+goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -64,7 +65,7 @@ goog.scope(function() {
      */
     HeadedList.prototype.initList_ = function() {
         this.decorateChild(
-            'smItemList',
+            sm.bSmItemList.SmItemList.NAME,
             this.getView().getDom().itemList
         );
     };

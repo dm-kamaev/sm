@@ -3,6 +3,7 @@ goog.provide('sm.bFavorite.Favorite');
 goog.require('cl.iControl.Control');
 goog.require('sm.bFavorite.Template');
 goog.require('sm.bFavorite.View');
+goog.require('sm.bSchoolListPaged.SchoolListPaged');
 goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
@@ -116,7 +117,7 @@ goog.scope(function() {
      */
     Favorite.prototype.initSchoolListPaged_ = function() {
         this.schoolListPaged_ = this.decorateChild(
-            'school-list-paged',
+            sm.bSchoolListPaged.SchoolListPaged.NAME,
             this.getView().getDom().schoolListPaged
         );
     };
