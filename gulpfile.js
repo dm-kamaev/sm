@@ -20,11 +20,11 @@ process.stdout.setMaxListeners(MAX_BILD_FILE_AMOUNT);
 
 const config = require('./config.json');
 const gulpConfig = require('./app/config/base/config.json');
-const production = !!util.env.production;
 const BLOCKS_DIR = '/app/blocks';
 const SHARED_STATIC_DIR = '/public/shared/static';
 
 const ENV = util.env.env ? util.env.env : 'dev';
+const IS_PROD = ENV === 'prod';
 
 const gulpHelper =
     require('./node_modules/clobl/gulp-helper.js')
@@ -88,7 +88,7 @@ gulp.task('styles', ['svgSprite', 'sprite'], function() {
             fileName: 'styles.css'
         }],
         dest: path.join(__dirname, SHARED_STATIC_DIR),
-        minify: production
+        minify: IS_PROD
     });
 });
 
@@ -204,7 +204,7 @@ const tasks = function(bool) {
 };
 
 gulp.task('build', tasks(true));
-gulp.task('default', tasks(production));
+gulp.task('default', tasks(false));
 
 
 gulp.task('scripts', ['soy', 'lint'], gulpTasks.scripts);
