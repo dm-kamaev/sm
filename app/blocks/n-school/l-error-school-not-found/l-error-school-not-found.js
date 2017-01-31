@@ -6,15 +6,15 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.bSearchPanel.View');
-goog.require('sm.bSmFooter.View');
-goog.require('sm.bSmHeader.View');
+goog.require('sm.bPopularSchools.PopularSchools');
+goog.require('sm.bSearchPanel.SearchPanel');
+goog.require('sm.bSmFooter.SmFooter');
+goog.require('sm.bSmHeader.SmHeader');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCarrotquest.Carrotquest');
-goog.require('sm.iFactory.FactoryStendhal');
-goog.require('sm.iFactory.TemplateFactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
+goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 
@@ -80,19 +80,13 @@ sm.lErrorSchoolNotFound.ErrorSchoolNotFound = function() {
      */
     this.sideMenu_ = null;
 
-
-    /**
-     * Current factory name
-     * @type {string}
-     * @private
-     */
-    this.factory_ = 'stendhal';
 };
 goog.inherits(sm.lErrorSchoolNotFound.ErrorSchoolNotFound, goog.ui.Component);
 
 
 goog.scope(function() {
     var ErrorSchoolNotFound = sm.lErrorSchoolNotFound.ErrorSchoolNotFound,
+        Factory = sm.iNewFactory.FactoryStendhal.INSTANCE,
         Utils = cl.iUtils.Utils;
 
 
@@ -170,8 +164,7 @@ goog.scope(function() {
             authSocialLinks: {
                 fb: dataParams['authSocialLinks']['fb'],
                 vk: dataParams['authSocialLinks']['vk']
-            },
-            factoryType: this.factory_
+            }
         };
 
         return this;
@@ -201,8 +194,8 @@ goog.scope(function() {
         );
 
         this.popularSchools_ =
-            sm.iFactory.FactoryStendhal.getInstance().decorate(
-                'popular-schools',
+            Factory.decorate(
+                sm.bPopularSchools.PopularSchools.NAME,
                 bPopularSchools,
                 this
             );
@@ -223,8 +216,8 @@ goog.scope(function() {
         );
 
         this.searchPanel_ =
-            sm.iFactory.FactoryStendhal.getInstance().decorate(
-                'search-panel',
+            Factory.decorate(
+                sm.bSearchPanel.SearchPanel.NAME,
                 bSearchPanel,
                 this
             );
@@ -244,9 +237,8 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.footer_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'smFooter',
+        this.footer_ = Factory.decorate(
+            sm.bSmFooter.SmFooter.NAME,
             footer,
             this
         );
@@ -266,9 +258,8 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'smHeader',
+        this.subHeader_ = Factory.decorate(
+            sm.bSmHeader.SmHeader.NAME,
             header,
             this
         );
@@ -288,9 +279,8 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'smSubheader',
+        this.subHeader_ = Factory.decorate(
+            sm.bSmSubheader.SmSubheader.NAME,
             subHeader,
             this
         );
