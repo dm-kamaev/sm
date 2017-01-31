@@ -43,10 +43,18 @@ goog.scope(function() {
 
         /**
          * Instance input phone
-         * @type {sm.gInput.InputPhone}
+         * @type {sm.gInput.InputSthendal}
          * @private
          */
         this.phoneField_ = null;
+
+
+        /**
+         * Instance input email
+         * @type {sm.gInput.InputStendhal}
+         * @private
+         */
+        this.emailField_ = null;
 
 
         /**
@@ -143,6 +151,7 @@ goog.scope(function() {
     ModalEnrollment.prototype.clear = function() {
         this.nameField_.clear();
         this.phoneField_.clear();
+        this.emailField_.clear();
         this.commentField_.clean();
 
         this.button_.enable();
@@ -193,9 +202,10 @@ goog.scope(function() {
      */
     ModalEnrollment.prototype.isValidFields_ = function() {
         var isValidName = this.nameField_.validate(),
-            isValidPhone = this.phoneField_.validate();
+            isValidPhone = this.phoneField_.validate(),
+            isValidEmail = this.emailField_.validate();
 
-        return isValidName && isValidPhone;
+        return isValidName && isValidPhone && isValidEmail;
     };
 
 
@@ -326,6 +336,7 @@ goog.scope(function() {
             '_csrf': window['ctx']['csrf'],
             'name': this.nameField_.getValue(),
             'phone': this.phoneField_.getValue(),
+            'email': this.emailField_.getValue(),
             'comment': this.commentField_.getValue(),
             'link': window.location.href,
             'department': department
@@ -389,6 +400,11 @@ goog.scope(function() {
         this.phoneField_ = this.decorateChild(
             sm.gInput.InputPhone.NAME,
             this.getView().getDom().phoneField
+        );
+
+        this.emailField_ = this.decorateChild(
+            'input',
+            this.getView().getDom().emailField
         );
 
         this.commentField_ = this.decorateChild(

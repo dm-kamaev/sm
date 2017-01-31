@@ -16,6 +16,14 @@ goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
  */
 sm.bSmBadge.SmBadge = function(view, opt_domHelper) {
     sm.bSmBadge.SmBadge.base(this, 'constructor', view, opt_domHelper);
+
+
+    /**
+     * Link hint
+     * @type {sm.bSmLink.SmLink}
+     * @private
+     */
+    this.linkHint_ = null;
 };
 goog.inherits(sm.bSmBadge.SmBadge, cl.iControl.Control);
 
@@ -67,6 +75,8 @@ goog.scope(function() {
      */
     Badge.prototype.decorateInternal = function(element) {
         Badge.base(this, 'decorateInternal', element);
+
+        this.initLinkHint_();
     };
 
 
@@ -80,68 +90,21 @@ goog.scope(function() {
             View.Event.ITEM_CLICK,
             this.onItemClick_
         );
-
-        this.viewListen(
-            View.Event.HINT_LINK_CLICK,
-            this.onHintLinkClick_
-        );
     };
 
 
     /**
-     * On item click
-     * @param {Object} event
+     * Init link hint
      * @private
      */
-    Badge.prototype.onItemClick_ = function(event) {
-        if (!goog.isNull(event.data)) {
-            this.redirectSearch_(event.data);
+    Badge.prototype.initLinkHint_ = function() {
+        var link = this.getView().getDom().linkHint;
+
+        if (link) {
+            this.linkHint_ = this.decorateChild(
+                'smLink',
+                link
+            );
         }
-    };
-
-
-    /**
-     * On hint link click
-     * @private
-     */
-    Badge.prototype.onHintLinkClick_ = function() {
-        this.openPageRanking_();
-    };
-
-
-    /**
-     * Redirect on page Search
-     * @param {{
-     *     id: number,
-     *     name: string
-     * }} data
-     * @private
-     */
-    Badge.prototype.redirectSearch_ = function(data) {
-        document.location.href = this.buildRedirectHref_(data);
-    };
-
-
-    /**
-     * Build redirect href for search redirect
-     * @param {{
-     *     id: number,
-     *     name: string
-     * }} data
-     * @return {string}
-     * @private
-     */
-    Badge.prototype.buildRedirectHref_ = function(data) {
-        return document.location.pathname + '?' +
-            goog.uri.utils.buildQueryDataFromMap(data);
-    };
-
-
-    /**
-     * Open the page ranking
-     * @private
-     */
-    Badge.prototype.openPageRanking_ = function() {
-        window.open('http://dogm.mos.ru/rating/');
     };
 });  // goog.scope

@@ -173,6 +173,7 @@ goog.scope(function() {
      */
     Search.prototype.enterDocument = function() {
         Search.base(this, 'enterDocument');
+
         this.initSubheaderListeners_()
             .initLeftMenuListeners_()
             .initSearchServiceListeners_()
@@ -201,6 +202,24 @@ goog.scope(function() {
             .initLeftMenuInstances_()
             .initSearchResultsInstance_()
             .initMap_();
+    };
+
+
+    /**
+     * Map data load event handler
+     * @param {sm.lSearch.iSearchService.MapDataLoadedEvent} event
+     * @protected
+     */
+    Search.prototype.onMapDataLoaded = function(event) {
+        var itemGroups = event.getItemGroups();
+
+        var isItems = itemGroups.some(function(group) {
+            return group.items.length;
+        });
+        this.getView().setSectionMapVisibility(isItems);
+
+        this.map_.addItems(itemGroups);
+        this.map_.center(event.getPosition());
     };
 
 
@@ -341,7 +360,7 @@ goog.scope(function() {
         this.getHandler().listen(
             this.searchService_,
             SearchService.Event.MAP_DATA_LOADED,
-            this.onMapDataLoaded_
+            this.onMapDataLoaded
         ).listen(
             this.searchService_,
             SearchService.Event.LIST_DATA_LOADED,
@@ -431,24 +450,6 @@ goog.scope(function() {
      */
     Search.prototype.onBalloonOpen_ = function(event) {
         this.sendMapAnalytics_(event.data);
-    };
-
-
-    /**
-     * Map data load event handler
-     * @param  {sm.lSearch.iSearchService.MapDataLoadedEvent} event
-     * @private
-     */
-    Search.prototype.onMapDataLoaded_ = function(event) {
-        var itemGroups = event.getItemGroups();
-
-        var isItems = itemGroups.some(function(group) {
-            return group.items.length;
-        });
-        this.getView().setSectionMapVisibility(isItems);
-
-        this.map_.addItems(itemGroups);
-        this.map_.center(event.getPosition());
     };
 
 
@@ -956,8 +957,10 @@ jQuery(function() {
         sm.lSearch.View.CssClass.ROOT
     );
 
-    sm.iNewFactory.FactoryStendhal.getInstance().decorate(
-        sm.lSearch.Search.NAME,
-        domElement
-    );
+    if (domElement) {
+        sm.iNewFactory.FactoryStendhal.getInstance().decorate(
+            sm.lSearch.Search.NAME,
+            domElement
+        );
+    }
 });

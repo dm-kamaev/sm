@@ -1,0 +1,45 @@
+goog.provide('sm.gButton.ViewStendhal');
+
+goog.require('cl.gButton.View');
+
+
+goog.scope(function() {
+
+
+
+    /**
+     * Button View
+     * @param {Object=} opt_params
+     * @param {string=} opt_type
+     * @param {string=} opt_modifier
+     * @constructor
+     * @extends {cl.gButton.View}
+     */
+    sm.gButton.ViewStendhal = function(opt_params, opt_type, opt_modifier) {
+        sm.gButton.ViewStendhal.base(this, 'constructor', opt_params,
+            opt_type, opt_modifier);
+    };
+    goog.inherits(sm.gButton.ViewStendhal, cl.gButton.View);
+    var View = sm.gButton.ViewStendhal;
+
+
+    /**
+     * Css class enum
+     * @enum {string}
+     */
+    View.CssClass = {
+        ROOT: 'g-button_stendhal'
+    };
+
+
+    /**
+     * Button onclick handler
+     * @override
+     * @protected
+     */
+    View.prototype.onClick = function() {
+        this.getElement().focus();
+
+        View.base(this, 'onClick');
+    };
+});  // goog.scope

@@ -1,4 +1,7 @@
-'use strict'
+'use strict';
+
+// read mail from delete@mel.fm and
+// if exist mail then delete comment
 
 var commander = require('commander');
 var async = require('asyncawait/async');
@@ -9,9 +12,9 @@ var querystring = require('querystring');
 var mimelib = require("mimelib");
 
 var services = require('../app/components/services').all;
-var config = require('../app/config').config;
+const config = require('../app/config/config.json');
+const mailToken = require('../app/config/mailToken.json');
 
-const TOKEN = 'a71b-2d1-123f';
 
 class ParseMail {
     constructor() {
@@ -113,6 +116,7 @@ class ParseMail {
                 }
             }
         });
+
         return processedLetters;
     }
 
@@ -128,26 +132,21 @@ class ParseMail {
     }
 
     /**
-     * Send delete request to api
+     * Send delete request to api for remove comment
      * @param {number} id - comment's id
      * @private
      */
     sendDeleteReq_(id) {
-        var data = querystring.stringify({
-                'token': TOKEN
-            }),
-            options = {
+        const options = {
                 host: config.schools.host,
                 method: 'DELETE',
                 path: '/api/comment/delete/' + id,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Content-Length': data.length
+                    [mailToken.name]: mailToken.token
                 }
             };
-
         var req = http.request(options);
-        req.write(data);
         req.end();
     }
 }

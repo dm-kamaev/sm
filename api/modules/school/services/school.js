@@ -172,7 +172,7 @@ service.delete = async(function(schoolId) {
  */
 service.getAddress = async(function(schoolId, addressId) {
     var address = await(services.address.getById(addressId));
-    if (address.school_id == schoolId) {
+    if (address.school_id === schoolId) {
         return address;
     }
 });
@@ -276,7 +276,7 @@ service.getRandomIndexes = function(start, end, amount) {
     while (res.length < amount) {
         randomIndex = lodash.random(start, end);
 
-        while (res.indexOf(randomIndex) != -1) {
+        while (res.indexOf(randomIndex) !== -1) {
             randomIndex = lodash.random(start, end);
         }
 
@@ -480,7 +480,7 @@ service.getByIdsWithGeoData = async(function(schoolIds) {
 
     return schoolIds.map(schoolId => {
         return schools.find(school => {
-            return school.id == schoolId;
+            return school.id === schoolId;
         });
     });
 });
@@ -521,7 +521,7 @@ service.updateRanks = async(function() {
     var loggingState = sequelize.options.logging;
     sequelize.options.logging = false;
     await(schools.forEach(school => {
-        if (school.totalScore != previousScore) {
+        if (school.totalScore !== previousScore) {
             rankCounter++;
         }
         school.update({
@@ -665,7 +665,7 @@ service.setAddresses = async((school, addresses) => {
     var currentAddresses = await(service.getAddresses(school.id));
     addresses.forEach(adr => {
         var sameAdr = currentAddresses.find(element => {
-            if (element.name == adr.name) {
+            if (element.name === adr.name) {
                 return true;
             }
         });
@@ -904,6 +904,88 @@ service.getByIds = function(ids) {
             }]
         }) :
         [];
+};
+
+
+/**
+ * searchDepartment by schoolId and departmentId
+ * @param  {Number} schoolId
+ * @param  {Number} departmentId
+ * @return {Object}
+ * {
+ *     id: 1,
+ *     name: 'Здание 2',
+ *     oldName: null,
+ *     addressId: 3,
+ *     educationalGrades: [ 5, 6, 7, 8, 9, 10, 11 ],
+ *     created_at: Mon Nov 21 2016 12:47:16 GMT+0300 (MSK),
+ *     updated_at: Mon Nov 21 2016 12:47:16 GMT+0300 (MSK),
+ *     address_id: 3
+ *  }
+ */
+service.searchDepartment = function(schoolId, departmentId) {
+    let res = await(models.School.findOne({
+        where: {
+            id: schoolId
+        },
+        include: [{
+            model: models.Address,
+            as: 'addresses',
+            include: [{
+                model: models.Department,
+                as: 'departments',
+                where: {
+                    id: departmentId
+                }
+            }]
+        }]
+    }));
+
+    if (!res) { return null; }
+    let address = res.addresses[0] || {};
+    let departments = address.departments || [],
+        department = departments[0] || {};
+
+    return department;
+};
+
+
+/**
+ * renameDepartment
+ * @param  {Object} department
+ * {
+ *     id: 1,
+ *     name: 'Здание 2',
+ *     oldName: null,
+ *     addressId: 3,
+ *     educationalGrades: [ 5, 6, 7, 8, 9, 10, 11 ],
+ *     created_at: Mon Nov 21 2016 12:47:16 GMT+0300 (MSK),
+ *     updated_at: Mon Nov 21 2016 12:47:16 GMT+0300 (MSK),
+ *     address_id: 3
+ * }
+ * @param  {string} name 'Здание 4'
+ * @return {Object}
+ * {
+ *     id: 1,
+ *     name: 'Здание 2',
+ *     oldName: 'Здание 4',
+ *     addressId: 3,
+ *     educationalGrades: [ 5, 6, 7, 8, 9, 10, 11 ],
+ *     created_at: Mon Nov 21 2016 12:47:16 GMT+0300 (MSK),
+ *     updated_at: Mon Nov 21 2016 12:47:16 GMT+0300 (MSK),
+ *     address_id: 3
+ *  }
+ */
+service.renameDepartment = function(department, name) {
+    return await(models.Department.update({
+        name,
+        oldName: department.name
+    }, {
+        where: {
+            id: department.id
+        },
+        returning: true
+    }))[1];
 };
 
 module.exports = service;

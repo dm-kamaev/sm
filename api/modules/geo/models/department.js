@@ -1,8 +1,14 @@
-var DataType = require('sequelize'),
-    db = require('../../../../app/components/db');
+'use strict';
 
-var Department = db.define('Department', {
+const DataType = require('sequelize');
+const db = require('../../../../app/components/db');
+
+const Department = db.define('Department', {
     name: DataType.STRING,
+    oldName: {
+        type: DataType.STRING,
+        field: 'old_name'
+    },
     addressId: {
         type: DataType.INTEGER,
         field: 'address_id'
