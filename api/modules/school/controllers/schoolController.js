@@ -1,6 +1,7 @@
 'use strict';
 
 const services = require('../../../../app/components/services').all;
+const util = require('util');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const logger =
@@ -10,6 +11,8 @@ const schoolView = require('../views/schoolView'),
     searchView = require('../views/searchView'),
     specializedClassesView = require('../views/specializedClassesView'),
     activityView = require('../views/activityView');
+
+const SchoolDepartmentNotFound = require('./errors/SchoolDepatmentNotFound.js');
 
 const searchViewEntity = require('../../entity/views/searchView');
 
@@ -547,4 +550,62 @@ exports.getAllTypes = async(function(req, res) {
         res.status(500);
     }
     res.json(result);
+});
+
+
+/*
+ * Rename department of school
+ * @api {get} /school/:schoolId/department/:departmentId
+ * @apiVersion 0.1.0
+ * @apiName renameDepartment
+ * @apiGroup School
+ *
+ * @apiSuccess {Object} department of school
+ * {
+ *      "id": 1,
+ *      "name": "Новое название",
+ *      "created_at": "2016-11-21T09:47:16.370Z",
+ *      "updated_at": "2016-12-22T08:08:12.335Z",
+ *      "address_id": 3,
+ *      "oldName": "Старое название",
+ *      "educationalGrades":[5, 6, 7, 8, 9, 10, 11]
+ * }
+ * @apiError (404) DepartmentNotFound
+ */
+exports.renameDepartment = async(function(req, res) {
+    let result = {},
+        schoolId = parseInt(req.params.schoolId, 10),
+        departmentId = parseInt(req.params.departmentId, 10),
+        name = req.body.name;
+
+    let handlerErr_ = function(error) {
+        let err;
+        if (error instanceof SchoolDepartmentNotFound) {
+            logger.critical(error);
+            logger.critical(util.inspect(error.response, { depth: 5 }));
+            res.status(error.status);
+            err = error.response;
+        } else {
+            logger.critical(error);
+            res.status(500);
+            err = error.message;
+        }
+        return err;
+    };
+
+    try {
+        let department = services.school.searchDepartment(
+            schoolId,
+            departmentId
+        );
+        if (!department) {
+            throw new SchoolDepartmentNotFound(schoolId, departmentId);
+        }
+        result = services.school.renameDepartment(department, name);
+        res.status(200);
+    } catch (error) {
+        result = handlerErr_(error);
+    } finally {
+        res.json(result);
+    }
 });

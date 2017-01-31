@@ -2924,6 +2924,18 @@
       "from": "gulp-debug@>=3.0.0 <4.0.0",
       "resolved": "https://registry.npmjs.org/gulp-debug/-/gulp-debug-3.0.0.tgz"
     },
+    "gulp-eslint": {
+      "version": "2.1.0",
+      "from": "gulp-eslint@>=2.0.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/gulp-eslint/-/gulp-eslint-2.1.0.tgz",
+      "dependencies": {
+        "object-assign": {
+          "version": "4.1.1",
+          "from": "object-assign@>=4.1.0 <5.0.0",
+          "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz"
+        }
+      }
+    },
     "gulp-filter": {
       "version": "3.0.1",
       "from": "gulp-filter@3.0.1",
@@ -7698,6 +7710,11 @@
           "version": "3.0.11",
           "from": "graceful-fs@>=3.0.0 <4.0.0",
           "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-3.0.11.tgz"
+        },
+        "object-assign": {
+          "version": "4.1.1",
+          "from": "object-assign@>=4.0.0 <5.0.0",
+          "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz"
         },
         "readable-stream": {
           "version": "1.0.34",

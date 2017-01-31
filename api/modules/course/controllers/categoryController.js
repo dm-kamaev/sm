@@ -59,6 +59,7 @@ controller.list = async(function(req, res) {
  *         "isActive": true,
  *         "priceType": "total_cost",
  *         "tabTitle": "Курсы профориентации в Москве: стоимость обучения.",
+ *         "pagePrefixTabTitle": "Профориентационные курсы",
  *         "metaDescription": "Удобный фильтр для поиска курсов профориентации",
  *         "openGraphTitle": "Выбор профессии и вуза",
  *         "openGraphDescription": "Все полезные курсы профориентации",
@@ -154,6 +155,7 @@ controller.create = async(function(req, res) {
  *         "isActive": true,
  *         "priceType": "total_cost"
  *         "tabTitle": "Курсы профориентации в Москве: стоимость обучения.",
+ *         "pagePrefixTabTitle": "Профориентационные курсы",
  *         "metaDescription": "Удобный фильтр для поиска курсов профориентации",
  *         "openGraphTitle": "Выбор профессии и вуза",
  *         "openGraphDescription": "Все полезные курсы профориентации",
