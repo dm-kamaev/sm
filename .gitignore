@@ -29,6 +29,7 @@ deployment-config.json
 .csscomb*
 .tags*
 jsconfig.json
+tslint.json
 
 /app/config/local/
 /app/config/*.json
