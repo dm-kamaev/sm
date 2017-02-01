@@ -46,9 +46,6 @@ class DepartmentService {
                 address.id === address
             );
         } else {
-            const addressData = {
-                name: address
-            };
             try {
                 departmentAddress = await addressService.addAddress(
                     schoolId,
@@ -98,11 +95,16 @@ class DepartmentService {
                     addressData.schoolId,
                     entityType.SCHOOL, {
                         name: addressData.address
-                    }
+                    },
+                    departmentId
                 );
                 data.addressId = address.id;
             } catch (error) {
-                throw new AddressDoesNotExist(addressData.address);
+                if (error.name === 'AddressDepartmentExist') {
+                    throw error;
+                } else {
+                    throw new AddressDoesNotExist(addressData.address);
+                }
             }
         }
         const updatedInstance = await instance.update(data);

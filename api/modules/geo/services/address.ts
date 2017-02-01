@@ -13,8 +13,10 @@ import {AddressInstance} from '../models/address';
 import {Model as AddressModel} from '../models/address';
 
 import {AddressIsNotUnique} from './exceptions/AddressIsNotUnique';
+import {AddressDepartmentExist} from './exceptions/AddressDepartmentExist';
 
 const SEARCH_RADIUS = 3; // killometrs, search radius for metro
+
 
 class AddressService {
     public readonly name: string = 'address';
@@ -29,22 +31,35 @@ class AddressService {
      * }} data
      * @return {Address}
      */
-    public async addAddress(entityId, entityType, data) {
+    public async addAddress(
+        entityId: number,
+        entityType: string,
+        data,
+        departmentId?: number
+    ) {
+        const newAddress: string = data.name;
         const addressBD = await services.address.getAddress({
             name: data.name,
             entityType: entityType
         });
-
         let address;
-
         if (addressBD) {
-            logger.debug('Address:' + data.name);
-            logger.debug(
-                'is already binded to ' + entityType +
-                ' with id:' + addressBD.school_id
-            );
-            if (entityType === entityTypes.SCHOOL &&
-                Number(entityId) !== addressBD.entityId) {
+            const isEqualId: boolean = entityId === addressBD.entityId;
+            // and but not current department
+            const isExistDepartment: boolean =
+                await this.isExistDepartmentForAddress_(
+                    entityId,
+                    entityType,
+                    newAddress,
+                    departmentId
+                );
+            if (isEqualId && isExistDepartment) {
+                throw new AddressDepartmentExist(
+                    addressBD.entityId,
+                    addressBD.entityType,
+                    newAddress
+                );
+            } else if (!isEqualId) {
                 throw new AddressIsNotUnique(addressBD.name);
             }
             address = addressBD;
@@ -75,6 +90,7 @@ class AddressService {
         }
         return address;
     }
+
 
     /**
      * Update address data
@@ -368,6 +384,41 @@ class AddressService {
                 overallEducationalGrades.some(grade => grade !== 0) :
                 true
         });
+    }
+
+
+    private async isExistDepartmentForAddress_(
+        entityId: number,
+        entityType: string,
+        newAddress: string,
+        departmentId: number,
+    ): Promise<boolean> {
+        let res: boolean = false;
+        let addressForDepartments: AddressInstance[];
+        addressForDepartments = await AddressModel.findAll({
+            attributes: ['id', 'name'],
+            where: {
+                entityId,
+                entityType,
+            }
+        });
+        const searchAddress = (address: AddressInstance): boolean =>
+            address.name === newAddress;
+        const address: AddressInstance | boolean =
+            addressForDepartments.find(searchAddress);
+
+        // check is current department or not
+        if (address) {
+            const department = await models.Department.findOne({
+                where: {
+                    addressId: address.id
+                }
+            });
+            res = !(department.id === departmentId);
+        } else {
+            res = Boolean(address);
+        }
+        return res;
     }
 }
 

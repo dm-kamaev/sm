@@ -65,6 +65,7 @@ api/modules/school/controllers/errors/AddressIsNotUnique.js
 api/modules/school/controllers/errors/DepartmentNotFound.js
 api/modules/school/controllers/errors/SchoolNotExistTypeError.js
 api/modules/school/controllers/errors/SchoolNotFound.js
+api/modules/school/controllers/errors/AddressDepartmentExist.js
 api/modules/school/controllers/commentAdminController.js
 api/modules/school/controllers/departmentAdminController.js
 api/modules/school/controllers/index.js
@@ -74,6 +75,8 @@ api/modules/school/models/school.js
 
 api/modules/school/services/exceptions/SchoolNotExistType.js
 api/modules/school/services/exceptions/SchoolNotFound.js
+api/modules/geo/services/exceptions/AddressDepartmentExist.js
+
 api/modules/school/services/schoolAdminService.js
 api/modules/school/services/schoolComment.js
 
