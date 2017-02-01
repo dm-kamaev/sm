@@ -5,6 +5,7 @@ goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bPopularSchools.Template');
 goog.require('sm.bPopularSchools.View');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 

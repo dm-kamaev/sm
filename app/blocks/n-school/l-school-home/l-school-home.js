@@ -3,20 +3,19 @@
  */
 goog.provide('sm.lSchoolHome.SchoolHome');
 
-goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.bSearchPanel.View');
-goog.require('sm.bSmFooter.View');
-goog.require('sm.bSmHeader.View');
+goog.require('sm.bPopularSchools.PopularSchools');
+goog.require('sm.bSearchPanel.SearchPanel');
+goog.require('sm.bSmFooter.SmFooter');
+goog.require('sm.bSmHeader.SmHeader');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCarrotquest.Carrotquest');
-goog.require('sm.iFactory.FactoryStendhal');
-goog.require('sm.iFactory.TemplateFactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
+goog.require('sm.iNewFactory.FactoryStendhal');
 
 
 
@@ -83,21 +82,14 @@ sm.lSchoolHome.SchoolHome = function() {
      * @private
      */
     this.footer_ = null;
-
-
-    /**
-     * Current factory name
-     * @type {string}
-     * @private
-     */
-    this.factory_ = 'stendhal';
 };
 goog.inherits(sm.lSchoolHome.SchoolHome, goog.ui.Component);
 
 
 goog.scope(function() {
     var SchoolHome = sm.lSchoolHome.SchoolHome,
-        Utils = cl.iUtils.Utils;
+        Utils = cl.iUtils.Utils,
+        Factory = sm.iNewFactory.FactoryStendhal.getInstance();
 
     var Analytics = sm.iAnalytics.Analytics.getInstance();
 
@@ -205,8 +197,7 @@ goog.scope(function() {
             authSocialLinks: {
                 fb: dataParams['authSocialLinks']['fb'],
                 vk: dataParams['authSocialLinks']['vk']
-            },
-            factoryType: this.factory_
+            }
         };
 
         return this;
@@ -235,12 +226,11 @@ goog.scope(function() {
             this.getElement()
         );
 
-        this.searchPanel_ =
-            sm.iFactory.FactoryStendhal.getInstance().decorate(
-                'search-panel',
-                bSearchPanel,
-                this
-            );
+        this.searchPanel_ = Factory.decorate(
+            sm.bSearchPanel.SearchPanel.NAME,
+            bSearchPanel,
+            this
+        );
 
         return this;
     };
@@ -257,12 +247,11 @@ goog.scope(function() {
             this.getElement()
         );
 
-        this.popularSchools_ =
-            sm.iFactory.FactoryStendhal.getInstance().decorate(
-                'popular-schools',
-                bPopularSchools,
-                this
-            );
+        this.popularSchools_ = Factory.decorate(
+            sm.bPopularSchools.PopularSchools.NAME,
+            bPopularSchools,
+            this
+        );
 
         return this;
     };
@@ -278,9 +267,8 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'smHeader',
+        this.subHeader_ = Factory.decorate(
+            sm.bSmHeader.SmHeader.NAME,
             header,
             this
         );
@@ -300,9 +288,8 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'smSubheader',
+        this.subHeader_ = Factory.decorate(
+            sm.bSmSubheader.SmSubheader.NAME,
             subHeader,
             this
         );
@@ -322,9 +309,8 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.sideMenu_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'side-menu',
+        this.sideMenu_ = Factory.decorate(
+            sm.gModal.ModalSideMenu.NAME,
             sideMenu,
             this
         );
@@ -344,9 +330,8 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.footer_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'smFooter',
+        this.footer_ = Factory.decorate(
+            sm.bSmFooter.SmFooter.NAME,
             footer,
             this
         );

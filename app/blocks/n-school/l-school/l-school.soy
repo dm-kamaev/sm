@@ -260,16 +260,14 @@
 {template .metro_ kind="html" private="true"}
     {if $params.data.metroStations}
         <div class="l-school__metro-stations">
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'icon-svg',
-                    'renderParams': [
-                        'data': [
-                            'type': 'metro'
-                        ],
-                        'config': [
-                            'customClasses':  'l-school__metro-icon'
-                        ]
+            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'icon-svg' /}
+                {param renderParams: [
+                    'data': [
+                        'type': 'metro'
+                    ],
+                    'config': [
+                        'customClasses':  'l-school__metro-icon'
                     ]
                 ]/}
             {/call}
@@ -325,19 +323,17 @@
  */
 {template .feedback_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_feedback">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': 'Оставить отзыв'
+        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'button' /}
+            {param renderParams: [
+                'data': [
+                    'content': 'Оставить отзыв'
+                ],
+                'config': [
+                    'customClasses': [
+                        'g-button_feedback-opener'
                     ],
-                    'config': [
-                        'customClasses': [
-                            'g-button_feedback-opener'
-                        ],
-                        'isDisabled': $params?.data?.user?.isCommented
-                    ]
+                    'isDisabled': $params?.data?.user?.isCommented
                 ]
             ]/}
         {/call}
