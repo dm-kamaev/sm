@@ -10,6 +10,7 @@ const lintParams: Lint.LinterParams = {
         'console/browser/**',
         'build/**',
         'node_modules/**',
+        'parse/**',
         'public/**',
         'typings/**'
     ]
