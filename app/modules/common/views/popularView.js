@@ -112,9 +112,9 @@ popularView.catalog = function(entityType, numberEntities) {
             '&mdash; в&nbsp;нём сейчас',
         descriptionLink: {
             content: `${numberEntities} ${declensionEntity}`,
-            url: '/'
+            url: '/school'
         },
-        url: '/'
+        url: '/school'
     };
 };
 
