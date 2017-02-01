@@ -1,6 +1,7 @@
 goog.provide('sm.gModal.ModalStendhal');
 
 goog.require('cl.gModal.Modal');
+goog.require('goog.dom');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
@@ -71,7 +72,7 @@ goog.scope(function() {
     Modal.render = function(opt_params, opt_selfDestroy) {
         var instance = Factory.render(
             Modal.NAME,
-            document,
+            goog.dom.getDocument().body,
             opt_params
         );
 
@@ -112,7 +113,6 @@ goog.scope(function() {
     Modal.prototype.renderContent = function(templateType, templateParams) {
 
         return Factory.render(
-            this.getView().getStylization(),
             templateType,
             this.getView().getDom().content,
             templateParams,

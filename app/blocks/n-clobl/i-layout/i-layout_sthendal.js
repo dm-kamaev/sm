@@ -1,7 +1,6 @@
 goog.provide('sm.iLayout.LayoutStendhal');
 
 goog.require('cl.iControl.Control');
-goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
 goog.require('sm.bSmFooter.SmFooter');
 goog.require('sm.bSmHeader.SmHeader');
@@ -10,8 +9,6 @@ goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iCarrotquest.Carrotquest');
-goog.require('sm.iFactory.FactoryStendhal');
-goog.require('sm.iFactory.TemplateFactoryStendhal');
 goog.require('sm.iLayout.ViewStendhal');
 goog.require('sm.iMetrika.Metrika');
 

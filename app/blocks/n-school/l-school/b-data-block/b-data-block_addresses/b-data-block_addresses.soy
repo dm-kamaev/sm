@@ -140,16 +140,14 @@
 
         {if $params.data.metroStation}
             <div class="b-data-block__item-content-metroStation">
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'icon-svg',
-                        'renderParams': [
-                            'data': [
-                                'type': 'metro'
-                            ],
-                            'config': [
-                                'customClasses': ['b-data-block__metro-icon']
-                            ]
+                {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                    {param type: 'icon-svg' /}
+                    {param renderParams: [
+                        'data': [
+                            'type': 'metro'
+                        ],
+                        'config': [
+                            'customClasses': ['b-data-block__metro-icon']
                         ]
                     ]/}
                 {/call}

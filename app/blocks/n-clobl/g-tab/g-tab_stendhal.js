@@ -8,12 +8,12 @@ goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 /**
- * Dropdown control
+ * Tab control
  * @param {Object} view
  * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
- * @extends {cl.gAuthSocial.AuthSocial}
+ * @extends {cl.gTab.Tab}
  */
 sm.gTab.TabStendhal = function(view, opt_params, opt_domHelper) {
     sm.gTab.TabStendhal.base(

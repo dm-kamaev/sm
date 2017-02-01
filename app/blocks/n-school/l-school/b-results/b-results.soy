@@ -62,37 +62,35 @@
         {/let}
 
         <div class="b-results">
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'tab',
-                    'renderParams': [
-                        'data': [
-                            'tabs': [
-                                [
-                                    'label': $ege,
-                                    'content': $egeContent,
-                                    'isEmpty': not
-                                        $params?.data?.ege?.years?.length
-                                ],
-                                [
-                                    'label': $gia,
-                                    'content': $giaContent,
-                                    'isEmpty': not
-                                        $params?.data?.gia?.years?.length
-                                ],
-                                [
-                                    'label': $olymp,
-                                    'content': $olympContent,
-                                    'isEmpty': not
-                                        $params?.data?.olymp?.years?.length
-                                ]
+            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'tab' /}
+                {param renderParams: [
+                    'data': [
+                        'tabs': [
+                            [
+                                'label': $ege,
+                                'content': $egeContent,
+                                'isEmpty': not
+                                    $params?.data?.ege?.years?.length
                             ],
-                            'selectedTabId':
-                                $params?.data?.ege?.years?.length ?
-                                    0 :
-                                    $params?.data?.gia?.years?.length ?
-                                        1 : 2
-                        ]
+                            [
+                                'label': $gia,
+                                'content': $giaContent,
+                                'isEmpty': not
+                                    $params?.data?.gia?.years?.length
+                            ],
+                            [
+                                'label': $olymp,
+                                'content': $olympContent,
+                                'isEmpty': not
+                                    $params?.data?.olymp?.years?.length
+                            ]
+                        ],
+                        'selectedTabId':
+                            $params?.data?.ege?.years?.length ?
+                                0 :
+                                $params?.data?.gia?.years?.length ?
+                                    1 : 2
                     ]
                 ]/}
            {/call}
@@ -124,20 +122,18 @@
         <div class="b-results__dropdown">
             {if $params.data?.years.length > 1}
                 <div class="b-results__dropdown-holder">
-                    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                        {param params: [
-                            'type': 'dropdown-select-legacy',
-                            'renderParams': [
-                                'data': [
-                                    'listItems': $params.data?.years,
-                                    'selectedItemId': $params.data?.years.length - 1
-                                ],
-                                'config': [
-                                    'viewType': 'link',
-                                    'iconSprite': 'small-opener-arrow',
-                                    'theme': 'minimal',
-                                    'iconOffset': 'small'
-                                ]
+                    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                        {param type: 'dropdown-select-legacy' /}
+                        {param renderParams: [
+                            'data': [
+                                'listItems': $params.data?.years,
+                                'selectedItemId': $params.data?.years.length - 1
+                            ],
+                            'config': [
+                                'viewType': 'link',
+                                'iconSprite': 'small-opener-arrow',
+                                'theme': 'minimal',
+                                'iconOffset': 'small'
                             ]
                         ]/}
                     {/call}
@@ -288,20 +284,18 @@
         <div class="b-results__dropdown">
         {if $params.data?.years.length > 1}
             <div class="b-results__dropdown-holder">
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'dropdown-select-legacy',
-                        'renderParams': [
-                            'data': [
-                                'listItems': $params.data?.years,
-                                'selectedItemId': $params.data?.years.length - 1
-                            ],
-                            'config': [
-                                'viewType': 'link',
-                                'iconSprite': 'small-opener-arrow',
-                                'theme': 'minimal',
-                                'iconOffset': 'small'
-                            ]
+                {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                    {param type: 'dropdown-select-legacy' /}
+                    {param renderParams: [
+                        'data': [
+                            'listItems': $params.data?.years,
+                            'selectedItemId': $params.data?.years.length - 1
+                        ],
+                        'config': [
+                            'viewType': 'link',
+                            'iconSprite': 'small-opener-arrow',
+                            'theme': 'minimal',
+                            'iconOffset': 'small'
                         ]
                     ]/}
                 {/call}
@@ -389,24 +383,20 @@
                 {$params.label}
             </div>
             <div class="b-results__help-icon i-hint">
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'icon',
-                        'renderParams': [
-                            'data': [
-                                'type': 'school-button'
-                            ]
+                {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                    {param type: 'icon' /}
+                    {param renderParams: [
+                        'data': [
+                            'type': 'school-button'
                         ]
                     ]/}
                 {/call}
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'hint',
-                        'renderParams': [
-                            'data': $tooltip,
-                            'config': [
-                                'customClasses': ['b-results__hint']
-                            ]
+                {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                    {param type: 'hint' /}
+                    {param renderParams: [
+                        'data': $tooltip,
+                        'config': [
+                            'customClasses': ['b-results__hint']
                         ]
                     ]/}
                 {/call}

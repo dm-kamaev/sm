@@ -8,7 +8,7 @@ goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 /**
- * Dropdown control
+ * Auth-social control
  * @param {Object} view
  * @param {Object=} opt_params
  * @param {Object=} opt_domHelper

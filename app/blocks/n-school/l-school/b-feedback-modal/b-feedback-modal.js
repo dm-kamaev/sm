@@ -5,10 +5,11 @@ goog.require('goog.array');
 goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
 goog.require('sm.bStars.Stars');
+goog.require('sm.gDropdown.DropdownSelectLegacy');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
-goog.require('sm.iFactory.FactoryStendhal');
+goog.require('sm.iNewFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
 
@@ -216,7 +217,7 @@ goog.scope(function() {
     FeedbackModal.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var factory = sm.iFactory.FactoryStendhal.getInstance();
+        var factory = sm.iNewFactory.FactoryStendhal.getInstance();
 
         this.elements_ = {
             radio: this.getElementsByClass(FeedbackModal.CssClass.RADIO),
@@ -291,7 +292,7 @@ goog.scope(function() {
         );
 
         this.dropdowns_.userType = factory.decorate(
-            'dropdown-select-legacy',
+            sm.gDropdown.DropdownSelectLegacy.NAME,
             userTypeElement,
             this
         );
@@ -304,7 +305,7 @@ goog.scope(function() {
         );
 
         this.dropdowns_.classType = factory.decorate(
-            'dropdown-select-legacy',
+            sm.gDropdown.DropdownSelectLegacy.NAME,
             classTypeElement,
             this
         );

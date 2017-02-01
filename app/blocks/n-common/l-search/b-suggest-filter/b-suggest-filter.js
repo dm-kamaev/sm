@@ -6,7 +6,7 @@ goog.require('gorod.gSuggest.Suggest');
 goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
-goog.require('sm.lSearch.bFilter.FilterInput');
+goog.require('sm.lSearch.bFilter.FilterLabels');
 goog.require('sm.lSearch.bSuggestFilter.Template');
 goog.require('sm.lSearch.bSuggestFilter.View');
 
@@ -393,7 +393,7 @@ goog.scope(function() {
      */
     SuggestFilter.prototype.initSelected_ = function() {
         this.selected_ = this.decorateChild(
-            sm.lSearch.bFilter.FilterInput.NAME,
+            sm.lSearch.bFilter.FilterLabels.NAME,
             this.getView().getDom().selected
         );
     };

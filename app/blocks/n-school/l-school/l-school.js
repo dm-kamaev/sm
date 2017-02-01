@@ -16,6 +16,7 @@ goog.require('sm.bSearch.Search');
 goog.require('sm.bSmFooter.SmFooter');
 goog.require('sm.bSmHeader.SmHeader');
 goog.require('sm.bSmSubheader.SmSubheader');
+goog.require('sm.gAuthSocial.AuthSocialStendhal');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
@@ -678,7 +679,7 @@ goog.scope(function() {
                 schoolName: this.params_.schoolName
             }
         });
-        this.addChild(this.modal_, true);
+        this.addChild(this.modal_);
 
         return this;
     };

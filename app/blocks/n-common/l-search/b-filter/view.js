@@ -189,10 +189,7 @@ goog.scope(function() {
         return goog.soy.renderAsElement(
             sm.lSearch.bFilter.Template.option, {
                 params: {
-                    data: data,
-                    config: {
-                        stylizationModifier: this.getStylization()
-                    }
+                    data: data
                 }
             }
         );
