@@ -67,9 +67,7 @@ api/modules/user/services/exceptions/WrongAccessAttributes.js
 api/modules/user/services/adminUser.js
 api/modules/user/views/adminUserView.js
 
-app/middleware/ActionChecker/ActionChecker.js
-app/middleware/ActionChecker/BrandActionChecker.js
-app/middleware/ActionChecker/SchoolActionChecker.js
-app/middleware/ActionChecker/SuperUserActionChecker.js
+app/middleware/ActionChecker/*.js
+app/middleware/adminUser.js
 
 gulp/taskBackendLint.js

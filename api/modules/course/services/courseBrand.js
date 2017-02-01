@@ -46,6 +46,7 @@ service.findOrCreate = async(function(data) {
 });
 
 /**
+ * @param {number=} opt_brandId
  * @return {Array<{
  *     id: number,
  *     name: string,
@@ -54,7 +55,7 @@ service.findOrCreate = async(function(data) {
  *     updatedAt: Date
  * }>}
  */
-service.getAll = async(function() {
+service.getAll = async(function(opt_brandId) {
     let query = squel.select({autoQuoteAliasNames: true})
         .from('course_brand')
         .field('course_brand.id')
@@ -77,11 +78,15 @@ service.getAll = async(function() {
             null,
             'course_brand.id = course_department.brand_id'
         )
-        .group('course_brand.id')
-        .toString();
+        .group('course_brand.id');
+
+    if (opt_brandId) {
+        query = query
+            .where(`course_brand.id = ${opt_brandId}`);
+    }
 
     return await(sequelize.query(
-        query, {
+        query.toString(), {
             type: sequelize.QueryTypes.SELECT
         }
     ));

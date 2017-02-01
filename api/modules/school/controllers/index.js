@@ -6,6 +6,11 @@ const schoolController = require('./schoolController');
 const csrf = require('../../../../app/middleware/csrf');
 const checkToken = require('../../../../app/middleware/checkToken');
 
+const adminUser = require('../../../../app/middleware/adminUser').adminUser;
+const SuperUserActionChecker =
+    require('../../../../app/middleware/ActionChecker/SuperUserActionChecker');
+const superUserCheckAction = SuperUserActionChecker.middleware;
+
 /* const SchoolActionChecker =
     require('../../../../app/middleware/ActionChecker/SchoolActionChecker');
 const checkAction = SchoolActionChecker.middleware; */
@@ -46,11 +51,19 @@ router.post('/school/createschool', checkToken, schoolController.create);
 router.post('/school/:id/comment', csrf, schoolController.createComment);
 
 router.put(
-    '/school/:id', checkToken, /* checkAction, */ schoolController.update
+    '/school/:id',
+    checkToken,
+    adminUser,
+    superUserCheckAction,
+    schoolController.update
 );
 
 router.delete(
-    '/school/:id', checkToken, /* checkAction, */ schoolController.delete
+    '/school/:id',
+    checkToken,
+    adminUser,
+    superUserCheckAction,
+    schoolController.delete
 );
 
 

@@ -28,8 +28,10 @@ let controller = {};
  */
 controller.list = async(function(req, res) {
     let result;
+    const accessAttributes = req.adminUser && req.adminUser.accessAttributes;
+    const brandId = accessAttributes && accessAttributes.brandId;
     try {
-        result = await(services.courseBrand.getAll());
+        result = await(services.courseBrand.getAll(brandId));
     } catch (error) {
         logger.error(error.message);
         result = error;

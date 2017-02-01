@@ -15,11 +15,17 @@ const courseController = require('./courseController'),
     checkToken = require('../../../../app/middleware/checkToken'),
     fileHandler = require('../../../../app/middleware/fileHandler');
 
+const adminUser = require('../../../../app/middleware/adminUser').adminUser;
+
 const brandIdExtractor = require('./middleware/brandIdExtractor');
 
 const BrandActionChecker =
     require('../../../../app/middleware/ActionChecker/BrandActionChecker');
 const checkAction = BrandActionChecker.middleware;
+
+const SuperUserActionChecker =
+    require('../../../../app/middleware/ActionChecker/SuperUserActionChecker');
+const superUserCheckAction = SuperUserActionChecker.middleware;
 
 router.get('/course/search', courseController.search);
 router.get('/course/search/map', courseController.searchMap);
@@ -51,22 +57,25 @@ let initCrudRouting = function(route, controller, opt_idExtractor) {
         idExtractor,
         checkToken,
         fileStorage,
+        adminUser,
         checkAction,
         controller.create
     );
-    router.get(`${route}`, controller.list);
+    router.get(`${route}`, adminUser, controller.list);
     router.get(`${route}/:id`, controller.get);
     router.put(
         `${route}/:id`,
         idExtractor,
         checkToken,
         fileStorage,
+        adminUser,
         checkAction,
         controller.update
     );
     router.delete(
         `${route}/:id`,
         checkToken,
+        adminUser,
         checkAction,
         controller.delete
     );
@@ -75,15 +84,51 @@ let initCrudRouting = function(route, controller, opt_idExtractor) {
 initCrudRouting(
     '/coursebrand', brandController, brandIdExtractor.brandExtractor
 );
-initCrudRouting('/course/search-catalog', courseSearchCatalogController);
 initCrudRouting('/course', courseController);
 initCrudRouting(
     '/coursebrand/:brandId/department',
     departmentController,
     brandIdExtractor.departmentExtractor
 );
-initCrudRouting('/course/:courseId/option', optionController);
-initCrudRouting('/coursecategory', categoryController);
-initCrudRouting('/coursetype', typeController);
+initCrudRouting(
+    '/course/:courseId/option',
+    optionController,
+    brandIdExtractor.optionExtractor
+);
+
+/**
+ * @param {string}    route
+ * @param {Object}    controller
+ */
+let initSuperUserCrudRouting = function(route, controller) {
+    router.post(
+        `${route}`,
+        checkToken,
+        adminUser,
+        superUserCheckAction,
+        controller.create
+    );
+    router.get(`${route}`, controller.list);
+    router.get(`${route}/:id`, controller.get);
+    router.put(`${route}/:id`,
+        checkToken,
+        adminUser,
+        superUserCheckAction,
+        controller.update
+    );
+    router.delete(
+        `${route}/:id`,
+        checkToken,
+        adminUser,
+        superUserCheckAction,
+        controller.delete
+    );
+};
+
+initSuperUserCrudRouting(
+    '/course/search-catalog', courseSearchCatalogController
+);
+initSuperUserCrudRouting('/coursecategory', categoryController);
+initSuperUserCrudRouting('/coursetype', typeController);
 
 module.exports = router;

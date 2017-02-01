@@ -11,23 +11,32 @@ const adminUserController = new AdminUserController();
 const superUserActionChecker =
     require('../../../../app/middleware/ActionChecker/SuperUserActionChecker');
 const checkAction = superUserActionChecker.middleware;
+const adminUser = require('../../../../app/middleware/adminUser').adminUser;
 
 var authorizationController = require('./authorizationController');
 
-router.get('/adminuser', checkAction, adminUserController.actionList);
+router.get(
+    '/adminuser', adminUser, checkAction, adminUserController.actionList
+);
 router.get('/adminuser/:adminUserId', adminUserController.actionGet);
 router.post(
-    '/adminuser', checkToken, checkAction, adminUserController.actionCreate
+    '/adminuser',
+    checkToken,
+    adminUser,
+    checkAction,
+    adminUserController.actionCreate
 );
 router.put(
     '/adminuser/:adminUserId',
     checkToken,
+    adminUser,
     checkAction,
     adminUserController.actionUpdate
 );
 router.delete(
     '/adminuser/:adminUserId',
     checkToken,
+    adminUser,
     checkAction,
     adminUserController.actionDelete
 );
