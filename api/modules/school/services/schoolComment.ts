@@ -23,7 +23,9 @@ interface IgetCommentWithUser {
 
 // get comment with user data and rating (score)
 service.getCommentWithUser = async function(
-    schoolId: number, commentId: number): Promise<IgetCommentWithUser> | null {
+    schoolId: number,
+    commentId: number,
+): Promise<IgetCommentWithUser | {}>  {
     const res = await models.School.findOne({
         attributes: ['commentGroupId'],
         where: {
@@ -59,7 +61,9 @@ service.getCommentWithUser = async function(
     }
 
     const comment = res.commentGroup.comments[0];
-    return buildCommentWithUserData_([comment])[0];
+    const commentList: IgetCommentWithUser[] =
+        await buildCommentWithUserData_([comment]);
+    return commentList[0];
 };
 
 
@@ -97,7 +101,7 @@ service.getAllCommentsWithUser =
     }
 
     const comments = res.commentGroup.comments;
-    return buildCommentWithUserData_(comments);
+    return await buildCommentWithUserData_(comments);
 };
 
 
@@ -180,14 +184,17 @@ async function searchComment_(
     return res.commentGroup.comments[0];
 }
 
+
 function buildCommentWithUserData_(comments): Promise<IgetCommentWithUser[]> {
-    return comments.map(comment => {
+    let promises: IgetCommentWithUser[];
+    promises = comments.map(async comment => {
         const userData = comment.userData || {};
         const userId = userData.userId;
         let socialId,
             socialType;
+
         if (userId) {
-            const user = userServices.getUserById(userId);
+            const user = await userServices.getUserById(userId);
             if (user.vkId) {
                 socialId = user.vkId;
                 socialType = socialTypes.VKONTAKTE;
@@ -207,6 +214,7 @@ function buildCommentWithUserData_(comments): Promise<IgetCommentWithUser[]> {
             updatedAt: userData['updated_at'] || '',
         };
     });
+    return Promise.all(promises);
 }
 
 export {service};
