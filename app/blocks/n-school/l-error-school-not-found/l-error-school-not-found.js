@@ -10,6 +10,7 @@ goog.require('sm.bPopularSchools.PopularSchools');
 goog.require('sm.bSearchPanel.SearchPanel');
 goog.require('sm.bSmFooter.SmFooter');
 goog.require('sm.bSmHeader.SmHeader');
+goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCarrotquest.Carrotquest');
