@@ -47,12 +47,14 @@ class AddressService {
             const isEqualId: boolean = entityId === addressBD.entityId;
             // and but not current department
             const isExistDepartment: boolean =
-                await this.isExistDepartmentForAddress_(
-                    entityId,
-                    entityType,
-                    newAddress,
-                    departmentId
-                );
+                entityType === entityTypes.SCHOOL ?
+                    await this.isExistDepartmentForAddress_(
+                        entityId,
+                        entityType,
+                        newAddress,
+                        departmentId
+                    ) :
+                    false;
             if (isEqualId && isExistDepartment) {
                 throw new AddressDepartmentExist(
                     addressBD.entityId,
@@ -401,33 +403,34 @@ class AddressService {
         newAddress: string,
         departmentId: number,
     ): Promise<boolean> {
-        let res: boolean = false;
-        let addressForDepartments: AddressInstance[];
-        addressForDepartments = await AddressModel.findAll({
-            attributes: ['id', 'name'],
-            where: {
-                entityId,
-                entityType,
-            }
-        });
-        const searchAddress = (address: AddressInstance): boolean =>
-            address.name === newAddress;
+        let result: boolean = false;
+        const addressForDepartments: AddressInstance[] =
+            await AddressModel.findAll({
+                attributes: ['id', 'name'],
+                where: {
+                    entityId,
+                    entityType,
+                }
+            });
+
         const address: AddressInstance | boolean =
-            addressForDepartments.find(searchAddress);
+            addressForDepartments.find(address => address.name === newAddress);
 
         // check is current department or not
         if (address) {
             const department = await models.Department.findOne({
-                where: {
-                    addressId: address.id
-                }
-            });
-            res = !(department.id === departmentId);
+                    where: {
+                        addressId: address.id
+                    }
+                });
+            result = !(department.id === departmentId);
         } else {
-            res = Boolean(address);
+            result = Boolean(address);
         }
-        return res;
+        return result;
     }
+
+
 }
 
 export const service = new AddressService();
