@@ -1,11 +1,11 @@
 goog.provide('sm.bSmSearchPanel.SmSearchPanel');
 
-goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.bSmSearchPanel.Template');
 goog.require('sm.bSmSearchPanel.View');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
@@ -128,7 +128,7 @@ goog.scope(function() {
      */
     SearchPanel.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            cl.gButton.Button.NAME,
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };

@@ -1,7 +1,7 @@
 goog.provide('sm.lSearch.bFilterPanel.FilterPanel');
 
-goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterClasses');
@@ -39,7 +39,7 @@ sm.lSearch.bFilterPanel.FilterPanel = function(view, opt_domHelper) {
 
     /**
      * Instance button
-     * @type {cl.gButton.Button}
+     * @type {sm.gButton.ButtonStendhal}
      * @private
      */
     this.button_ = null;
@@ -314,7 +314,7 @@ goog.scope(function() {
      */
     FilterPanel.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            cl.gButton.Button.NAME,
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };

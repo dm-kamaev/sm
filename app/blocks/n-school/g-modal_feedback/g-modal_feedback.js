@@ -1,6 +1,6 @@
 goog.provide('sm.gModal.ModalFeedback');
 
-goog.require('cl.gButton.Button');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gDropdown.DropdownSelectLegacy');
 goog.require('sm.gInput.InputStendhal');
 goog.require('sm.gModal.ModalStendhal');
@@ -239,7 +239,7 @@ goog.scope(function() {
                 domElements.themeField
             ),
             submitButton: this.decorateChild(
-                cl.gButton.Button.NAME,
+                sm.gButton.ButtonStendhal.NAME,
                 domElements.submitButton
             ),
             textarea: this.decorateChild(

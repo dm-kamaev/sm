@@ -1,10 +1,10 @@
 goog.provide('sm.gModal.ModalEnrollment');
 
-goog.require('cl.gButton.Button');
 goog.require('cl.iRequest.Request');
 goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gInput.InputPhone');
 goog.require('sm.gInput.InputStendhal');
 goog.require('sm.gModal.Event.EnrollmentSuccess');
@@ -420,7 +420,7 @@ goog.scope(function() {
      */
     ModalEnrollment.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            cl.gButton.Button.NAME,
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };

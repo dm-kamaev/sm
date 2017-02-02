@@ -1,9 +1,9 @@
 goog.provide('sm.lSearch.bSuggestFilter.SuggestFilter');
 
-goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterLabels');
@@ -49,7 +49,7 @@ sm.lSearch.bSuggestFilter.SuggestFilter = function(view, opt_domHelper) {
 
     /**
      * Instance button
-     * @type {cl.gButton.Button}
+     * @type {sm.gButton.ButtonStendhal}
      * @private
      */
     this.button_ = null;
@@ -405,7 +405,7 @@ goog.scope(function() {
      */
     SuggestFilter.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            cl.gButton.Button.NAME,
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };

@@ -1,9 +1,9 @@
 goog.provide('sm.gModal.ModalSuccess');
 
-goog.require('cl.gButton.Button');
 goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.TemplateSuccess');
 goog.require('sm.gModal.ViewSuccess');
@@ -101,7 +101,7 @@ goog.scope(function() {
      */
     ModalSuccess.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            cl.gButton.Button.NAME,
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };

@@ -3,7 +3,6 @@
  */
 goog.provide('sm.lSchool.School');
 
-goog.require('cl.gButton.Button');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
@@ -17,6 +16,9 @@ goog.require('sm.bSmFooter.SmFooter');
 goog.require('sm.bSmHeader.SmHeader');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.gAuthSocial.AuthSocialStendhal');
+goog.require('sm.gAuthSocialModal.AuthSocialModalStendhal');
+goog.require('sm.gButton.ButtonSocialStendhal');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
@@ -594,7 +596,7 @@ goog.scope(function() {
     School.prototype.initBouton_ = function() {
         if (!this.isCommented_()) {
             this.bouton_ = Factory.decorate(
-                cl.gButton.Button.NAME,
+                sm.gButton.ButtonStendhal.NAME,
                 this.elements_.bouton,
                 this
             );

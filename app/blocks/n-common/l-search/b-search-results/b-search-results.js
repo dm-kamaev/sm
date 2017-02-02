@@ -1,8 +1,8 @@
 goog.provide('sm.lSearch.bSearchResults.SearchResults');
 
-goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 goog.require('sm.lSearch.bSearchResults.Template');
@@ -42,7 +42,7 @@ goog.scope(function() {
 
         /**
          * Show more button instance
-         * @type {cl.gButton.Button}
+         * @type {sm.gButton.ButtonStendhal}
          * @private
          */
         this.showMore_ = null;
@@ -291,7 +291,7 @@ goog.scope(function() {
         );
 
         this.showMore_ = this.decorateChild(
-            cl.gButton.Button.NAME,
+            sm.gButton.ButtonStendhal.NAME,
             dom.showMore
         );
 

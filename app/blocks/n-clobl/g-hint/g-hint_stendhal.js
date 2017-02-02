@@ -8,12 +8,12 @@ goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
 
 
 /**
- * Dropdown control
+ * Hint control
  * @param {Object} view
  * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
- * @extends {cl.gAuthSocial.AuthSocial}
+ * @extends {cl.iControl.Control}
  */
 sm.gHint.HintStendhal = function(view, opt_params, opt_domHelper) {
     sm.gHint.HintStendhal.base(
