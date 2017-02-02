@@ -51,7 +51,7 @@ class DepartmentService {
                 departmentAddress = await addressService.addAddress(
                     schoolId,
                     entityType.SCHOOL, {
-                        name: address
+                        name: address.trim()
                     }
                 );
             } catch (error) {

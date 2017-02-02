@@ -108,7 +108,6 @@ class DepartmentAdminController extends Controller {
     public async actionCreate(actionContext: any, schoolId: string) {
         const body = actionContext.request.body;
         actionContext.status = 201;
-        body.addressName = body.addressName.trim();
         return await departmentService.addDepartment(
             parseInt(schoolId, 10),
             body.addressName,

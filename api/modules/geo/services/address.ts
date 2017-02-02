@@ -67,10 +67,11 @@ class AddressService {
             data.entityId = entityId;
             data.entityType = entityType;
             if (!data.coords) {
-                data.coords = await services.yapi.getCoords(
+                const coords: Array<Number> = await services.yapi.getCoords(
                     'Москва, ' + data.name,
                     true
                 );
+                data.coords = coords;
             }
 
             if (!data.areaId) {
@@ -80,6 +81,10 @@ class AddressService {
                 });
                 data.areaId = areas[0].id;
             }
+
+            if (entityType === entityTypes.SCHOOL) { // school address coords
+                data.coords.reverse();               // stored in reversed order
+            }                                        // but idk why
 
             address = await models.Address.create(data);
 
