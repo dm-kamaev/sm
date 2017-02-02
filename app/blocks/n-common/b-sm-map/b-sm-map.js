@@ -36,7 +36,7 @@ goog.scope(function() {
 
         /**
          *   The yandex maps object
-         *   @type {ymaps.Map|null}
+         *   @type {?ymaps.Map}
          *   @private
          */
         this.ymaps_ = null;
