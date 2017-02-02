@@ -3,7 +3,7 @@ const await = require('asyncawait/await');
 
 const models = require('../../../../app/components/models').all;
 const services = require('../../../../app/components/services').all;
-
+const sequelize = require('../../../../app/components/db.js');
 const Exception = require('nodules/controller/ServiceException');
 
 const entityType = require('../../entity/enums/entityType');
@@ -15,6 +15,7 @@ import {
     Model as DepartmentModel
 } from '../models/department';
 import {AddressInstance} from '../models/address';
+import {Model as AddressModel} from '../models/address';
 import {DepartmentAdmin} from '../interfaces/DepartmentAdmin';
 
 import {DepartmentNotFound} from './exceptions/DepartmentNotFound';
@@ -88,7 +89,8 @@ class DepartmentService {
             address: string
         }
     ): Promise<DepartmentAdmin> {
-        const instance = await this.getById(departmentId);
+        const department = await this.getById(departmentId);
+        const addressId: number = Number(department.addressId);
         if (addressData.address) {
             try {
                 const address = await addressService.addAddress(
@@ -107,9 +109,10 @@ class DepartmentService {
                 }
             }
         }
-        const updatedInstance = await instance.update(data);
+        const updatedDepartment = await department.update(data);
         addressService.updateIsSchool(data.addressId);
-        return updatedInstance;
+        await this.removeAddressWithOutDepartment_(addressId);
+        return updatedDepartment;
     }
 
     /**
@@ -243,6 +246,36 @@ class DepartmentService {
                 .name;
             return department;
         });
+    }
+
+
+    // remove school's address without department
+    private async removeAddressWithOutDepartment_(addressId: number) {
+        let countDepartments: number;
+        countDepartments = await this.countDepartmentsWithAddress_({
+            addressId
+        });
+        if (!countDepartments) {
+            await AddressModel.destroy({
+                where: {
+                    id: addressId,
+                }
+            });
+        }
+    }
+
+
+    // count departments with select address
+    private async countDepartmentsWithAddress_(
+        data: any
+    ): Promise<number> {
+        const res: any = await DepartmentModel.findAll({
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('address_id')), 'count']
+            ],
+            where: data
+        });
+        return Number(res[0].dataValues.count);
     }
 }
 

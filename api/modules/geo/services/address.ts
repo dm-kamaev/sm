@@ -268,8 +268,11 @@ class AddressService {
                 'ASC'
             ]];
         }
-
-        return models.Address.findAll(addressParams);
+        const addresses = await models.Address.findAll(addressParams);
+        // filter address without department
+        return addresses.filter(address =>
+            Boolean(address.departments.length)
+        );
     }
 
     /**
