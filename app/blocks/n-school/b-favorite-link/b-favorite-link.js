@@ -157,8 +157,7 @@ goog.scope(function() {
      * @private
      */
     FavoriteLink.prototype.onSuccessFavoriteAdd_ = function(data) {
-        var item = sm.bSchoolListItem.SchoolListItem.transformParams(data),
-            event = new Event.FavoriteAdded(item, this);
+        var event = new Event.FavoriteAdded(data, this);
         this.dispatchEvent(event);
     };
 
