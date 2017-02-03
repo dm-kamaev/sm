@@ -6,8 +6,7 @@ const footerView = require('../../../../api/modules/entity/views/footerView'),
     headerView = require('../../../../api/modules/entity/views/headerView'),
     sideMenuView = require('../../common/views/sideMenuView');
 
-// const Subheader =
-// require('../../../../api/modules/course/lib/CourseSubheader');
+const Subheader = require('../lib/UniversitySubheader');
 
 let view = {};
 
@@ -48,18 +47,17 @@ view.render = function(data) {
  * @return {Object}
  */
 view.subheader = function(data) {
-    // let subheader = new Subheader();
+    let subheader = new Subheader();
 
-    // subheader.init({
-    //     isLogoRedirect: true,
-    //     isSearchRedirect: true,
-    //     user: data.user,
-    //     favoriteEntities: data.favoriteEntities,
-    //     isBottomLine: true
-    // });
+    subheader.init({
+        isLogoRedirect: true,
+        isSearchRedirect: true,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
 
-    // return subheader.getParams();
-    return {};
+    return subheader.getParams();
 };
 
 module.exports = view;
