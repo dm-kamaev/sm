@@ -1,0 +1,136 @@
+{namespace sm.lUniversity.Template}
+
+
+/**
+ * typedef {{
+ *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined),
+ *         image: (string|undefined),
+ *         relapTag: (string|undefined),
+ *         relapImage: (string|undefined),
+ *         fbClientId: (string|undefined)
+ *     },
+ *     user: {
+ *         firstName: (string|undefined),
+ *         lastName: (string|undefined),
+ *         isCommented: boolean
+ *     },
+ *     authSocialLinks: {
+ *         vk: (string|undefined),
+ *         fb: (string|undefined)
+ *     },
+ *     entityData: {
+ *         id: number,
+ *         name: string,
+ *         description: ?string
+ *     }
+ * }} sm.lUniversity.Template.Data
+ */
+
+
+/**
+ * Page university information
+ * @param params {{
+ *     data: sm.lUniversity.Template.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .university autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/l-university.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.lUniversity.Template.Data,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
+ * @protected
+ * @ovveride
+ */
+{template .mainContent autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__body">
+    {if $params}{/if}
+        // {call .sectionData_ data="all" /}
+        // {call .sectionComments_ data="all" /}
+        // {call .sectionPrograms_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-university
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined),
+ *             isCommented: boolean
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *            vk: string,
+ *            fb: string
+ *         },
+ *         entityData: {
+ *             id: number,
+ *             name: string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string,
+ *         modifier: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'id': $params.data.entityData?.id,
+                'name': $params.data.entityData?.name,
+                'isCommented': $params.data.user?.isCommented,
+                'isUserAuthorized': $params.data.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'modifier': $params.config?.modifier,
+                'type': $params.config.entityType
+            ]/}
+        {/call}"
+{/template}
