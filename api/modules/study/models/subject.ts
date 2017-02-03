@@ -4,6 +4,7 @@ const DataType = require('sequelize'),
 import * as Sequelize from 'sequelize/v3';
 
 interface SubjectAttribute {
+    id: number;
     name: string;
     displayName: string;
     alias: string;
@@ -13,7 +14,11 @@ export interface SubjectInstance
     extends Sequelize.Instance<SubjectAttribute>,
             SubjectAttribute {}
 
-const Subject = db.define('Subject', {
+interface SubjectModel
+    extends Sequelize.Model<SubjectInstance, SubjectAttribute> {}
+
+
+const Subject: SubjectModel = db.define('Subject', {
     name: {
         type: DataType.STRING,
         unique: true
@@ -47,4 +52,4 @@ const Subject = db.define('Subject', {
     }
 });
 
-export default Subject;
+export {Subject as Model};

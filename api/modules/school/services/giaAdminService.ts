@@ -11,10 +11,10 @@ import {Model as SpecializedClassTypeModel}
     from '../models/specializedClassType';
 import {SpecializedClassTypeInstance} from '../models/specializedClassType';
 
-import GiaResultModel from '../../study/models/giaResult';
+import {Model as GiaResultModel} from '../../study/models/giaResult';
 import {GiaResultInstance} from '../../study/models/giaResult';
 
-import SubjectModel from '../../study/models/subject';
+import {Model as SubjectModel} from '../../study/models/subject';
 import {SubjectInstance} from '../../study/models/subject';
 
 
@@ -26,12 +26,20 @@ import {
     ProfileData,
 } from '../interfaces/ProfileAdmin';
 
+interface GiaResult {
+    id: number;
+    subject: string;
+    year: number;
+    averageResult: number;
+    passedNumber: number;
+}
 
 class GiaAdminService {
     public readonly name: string = 'giaAdminService';
 
-    public async getList(schoolId: number): Promise<GiaResultInstance[]> {
-        const giaResults = await GiaResultModel.findAll({
+    public async getList(schoolId: number): Promise<GiaResult[]> {
+        let giaResults: GiaResultInstance[];
+        giaResults = await GiaResultModel.findAll({
             attributes: ['id', 'count', 'result', 'schoolId', 'subjectId'],
             where: {
                 schoolId,
@@ -40,8 +48,7 @@ class GiaAdminService {
         const subjectIds: Array<number> =
             giaResults.map((giaResult): number => giaResult.subjectId);
 
-        console.log('subjectIds=', subjectIds);
-        const subjects = await SubjectModel.findAll({
+        const subjects: SubjectInstance[] = await SubjectModel.findAll({
             attributes: ['id', 'displayName'],
             where: {
                 id: {
@@ -49,19 +56,21 @@ class GiaAdminService {
                 }
             }
         });
-        const hashSubjectName = {};
+        const hashSubjectName: { [key: string]: string } = {};
         subjects.forEach(subject =>
             hashSubjectName[subject.id] = subject.displayName
         );
-        const res = giaResults.map(giaResult => {
+
+        let res: GiaResult[];
+        res = giaResults.map((giaResult: GiaResultInstance):GiaResult => {
             return {
                 id: giaResult.id,
                 subject: hashSubjectName[giaResult.subjectId] || '',
-                year: 2015,
-                result: Number((giaResult.result || 0).toFixed(1)),
+                year: giaResult.year || 2015,
+                averageResult: Number((giaResult.result || 0).toFixed(1)),
+                passedNumber: giaResult.count || 0,
             };
         });
-        console.log('hashSubjectName=', hashSubjectName);
         return res;
     }
 
@@ -69,9 +78,13 @@ class GiaAdminService {
     public async getById(
         schoolId: number,
         giaResultId: number
-    ): Promise<any> {
-        const list: any = await this.getList(schoolId);
-        return list.find(giaResult => giaResult.id === giaResultId) || {};
+    ): Promise<GiaResult | {}> {
+        const list: GiaResult[] = await this.getList(schoolId);
+        let res: GiaResult | boolean;
+        res = list.find((giaResult: GiaResult): boolean =>
+            giaResult.id === giaResultId
+        );
+        return res || {};
     }
 
 
@@ -156,5 +169,4 @@ class GiaAdminService {
 
 
 };
-const giaAdminService = new GiaAdminService();
-export {giaAdminService};
+export const giaAdminService = new GiaAdminService();

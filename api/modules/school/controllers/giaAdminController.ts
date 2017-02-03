@@ -31,28 +31,32 @@ class GiaAdminController extends Controller {
      *
      * @apiParam {Number} schoolId School's id.
      *
-     * @apiSuccess {Object[]} profiles               Array of object.
-     * @apiSuccess {String}   profiles.id            Id.
-     * @apiSuccess {String}   profiles.classNumber   Class's number.
-     * @apiSuccess {String}   profiles.profile       Profile school.
+     * @apiSuccess {Object[]} gias               Array of object.
+     * @apiSuccess {Number}   gias.id            Id.
+     * @apiSuccess {String}   gias.subject       School's ubject
+     * @apiSuccess {Number}   gias.year          gia year
+     * @apiSuccess {Number}   gias.averageResult averageResult by subject
+     * @apiSuccess {Number}   gias.passedNumber  count passed
      *
      * @apiSuccessExample {json} Example response:
      *    [{
-     *        "id": 1,
-     *        "subject": 10,
-     *        "year": "Химико-биологический"
+     *        "id": 5543,
+     *        "subject": "Математика",
+     *        "year": 2015,
+     *        "averageResult": 4.9,
+     *        "passedNumber": 143
      *    }, {
-     *        "id": 2,
-     *        "classNumber": 10,
-     *        "profile": "Биолого-географический"
+     *        "id": 5545,
+     *        "subject": "Информатика",
+     *        "year": 2015,
+     *        "averageResult": 4.6,
+     *        "passedNumber": 7
      *    }, {
-     *        "id": 3,
-     *        "classNumber": 10,
-     *        "profile": "Социально-гуманитарный"
-     *    }, {
-     *        "id": 4,
-     *        "classNumber": 10,
-     *        "profile": "Филологический"
+     *        "id": 5546,
+     *        "subject": "Литература",
+     *        "year": 2015,
+     *        "averageResult": 5,
+     *        "passedNumber": 1
      *    }]
      */
     public async actionList(ctx: any, schoolId: string) {
@@ -61,25 +65,28 @@ class GiaAdminController extends Controller {
 
 
      /**
-     * @api {get} /api/admin/school/:schoolId/profile/:profileNumber
+     * @api {get} /api/admin/school/:schoolId/profile/:giaId
      * Get school profile
      * @apiVersion 1.0.0
-     * @apiName getProfileCurrentClass
-     * @apiGroup School Profile Admin
+     * @apiName getGia
+     * @apiGroup School Gia Admin
      *
      * @apiParam {Number} schoolId  School's id.
-     * @apiParam {Number} profileNumber Profile's id.
+     * @apiParam {Number} giaId Gia's id.
      *
-     * @apiSuccess {Object}   profile               Profile
-     * @apiSuccess {String}   profile.id            Id
-     * @apiSuccess {String}   profile.classNumber   Class Number.
-     * @apiSuccess {String}   profile.profile       Profile school.
+     * @apiSuccess {Number}   gia.id            Id.
+     * @apiSuccess {String}   gia.subject       School's ubject
+     * @apiSuccess {Number}   gia.year          gia year
+     * @apiSuccess {Number}   gia.averageResult averageResult by subject
+     * @apiSuccess {Number}   gia.passedNumber  count passed
      *
      * @apiSuccessExample {json} Example response:
      *    {
-     *        "id": 1,
-     *        "classNumber": 10,
-     *        "profile": "Химико-биологический"
+     *        "id": 5543,
+     *        "subject": "Математика",
+     *        "year": 2015,
+     *        "averageResult": 4.9,
+     *        "passedNumber": 143
      *    }
      */
     public async actionGet(ctx: any, schoolId: string, giaResultId: string) {
