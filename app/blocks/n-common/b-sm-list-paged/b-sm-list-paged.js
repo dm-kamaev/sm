@@ -4,7 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmListPaged.Template');
 goog.require('sm.bSmListPaged.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -38,7 +38,7 @@ goog.scope(function() {
      */
     ListPaged.NAME = sm.bSmListPaged.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ListPaged.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(ListPaged.NAME, {
         control: ListPaged,
         view: View
     });

@@ -2,7 +2,7 @@ goog.provide('sm.lSearch.bLabel.Label');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmCheckbox.SmCheckbox');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bLabel.Template');
 goog.require('sm.lSearch.bLabel.View');
 
@@ -39,7 +39,7 @@ goog.scope(function() {
      */
     Label.NAME = sm.lSearch.bLabel.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Label.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Label.NAME, {
         control: Label,
         view: View
     });

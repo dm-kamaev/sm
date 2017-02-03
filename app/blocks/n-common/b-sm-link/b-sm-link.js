@@ -6,7 +6,7 @@ goog.provide('sm.bSmLink.SmLink');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmLink.Template');
 goog.require('sm.bSmLink.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -32,7 +32,7 @@ goog.scope(function() {
      */
     Link.NAME = sm.bSmLink.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Link.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Link.NAME, {
         control: Link,
         view: View
     });

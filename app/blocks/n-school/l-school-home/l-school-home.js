@@ -18,8 +18,8 @@ goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCarrotquest.Carrotquest');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
-goog.require('sm.iNewFactory.FactoryStendhal');
 
 
 
@@ -93,7 +93,7 @@ goog.inherits(sm.lSchoolHome.SchoolHome, goog.ui.Component);
 goog.scope(function() {
     var SchoolHome = sm.lSchoolHome.SchoolHome,
         Utils = cl.iUtils.Utils,
-        Factory = sm.iNewFactory.FactoryStendhal.getInstance();
+        Factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
     var Analytics = sm.iAnalytics.Analytics.getInstance();
 

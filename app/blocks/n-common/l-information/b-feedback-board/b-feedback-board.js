@@ -2,7 +2,7 @@ goog.provide('sm.lInformation.bFeedbackBoard.FeedbackBoard');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lInformation.bFeedbackBoard.Template');
 goog.require('sm.lInformation.bFeedbackBoard.View');
 
@@ -34,9 +34,11 @@ goog.scope(function() {
      */
     FeedbackBoard.NAME = sm.lInformation.bFeedbackBoard.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FeedbackBoard.NAME, {
-        control: FeedbackBoard,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        FeedbackBoard.NAME, {
+            control: FeedbackBoard,
+            view: View
+        }
+    );
 
 });  // goog.scope

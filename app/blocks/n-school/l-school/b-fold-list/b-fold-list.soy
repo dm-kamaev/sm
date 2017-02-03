@@ -14,7 +14,7 @@
  * Constructor
  * @param params sm.lSchool.bFoldList.Template.Params
  * @extends cl.iControl.Template
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .foldList}
@@ -171,7 +171,7 @@
                {sp}{call .rootClass/}__item_default{/if}">
 
         {if $item?.data}
-            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                 {param type: 'fold-list' /}
                 {param renderParams: $item /}
             {/call}

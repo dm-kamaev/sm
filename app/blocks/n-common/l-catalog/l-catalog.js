@@ -1,8 +1,8 @@
 goog.provide('sm.lCatalog.Catalog');
 
 goog.require('sm.gTab.TabStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal');
 goog.require('sm.lCatalog.Template');
 goog.require('sm.lCatalog.View');
 
@@ -39,7 +39,7 @@ goog.scope(function() {
      */
     Catalog.NAME = sm.lCatalog.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.getInstance().register(Catalog.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Catalog.NAME, {
         control: Catalog,
         view: View
     });
@@ -75,7 +75,7 @@ jQuery(function() {
         sm.lCatalog.View.CssClass.ROOT
     );
 
-    sm.iNewFactory.FactoryStendhal.getInstance().decorate(
+    sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
         sm.lCatalog.Catalog.NAME,
         domElement
     );

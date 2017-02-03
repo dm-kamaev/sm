@@ -10,7 +10,7 @@ goog.provide('sm.iAuthorization.Authorization');
 goog.require('goog.dom');
 goog.require('goog.uri.utils');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -66,7 +66,7 @@ goog.scope(function() {
     var Authorization = sm.iAuthorization.Authorization;
 
 
-    var Factory = sm.iNewFactory.FactoryStendhal.INSTANCE;
+    var Factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
 
     /**

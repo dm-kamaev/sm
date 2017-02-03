@@ -7,7 +7,7 @@ goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.TemplateSuccess');
 goog.require('sm.gModal.ViewSuccess');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -43,7 +43,7 @@ goog.scope(function() {
      */
     ModalSuccess.NAME = sm.gModal.TemplateSuccess.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ModalSuccess.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(ModalSuccess.NAME, {
         control: ModalSuccess,
         view: View
     });

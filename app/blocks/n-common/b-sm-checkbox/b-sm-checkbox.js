@@ -3,7 +3,7 @@ goog.provide('sm.bSmCheckbox.SmCheckbox');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCheckbox.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -37,7 +37,7 @@ goog.scope(function() {
      */
     Checkbox.NAME = sm.bSmCheckbox.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Checkbox.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Checkbox.NAME, {
         control: Checkbox,
         view: View
     });

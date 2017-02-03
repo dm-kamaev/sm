@@ -62,7 +62,7 @@
         {/let}
 
         <div class="b-results">
-            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                 {param type: 'tab' /}
                 {param renderParams: [
                     'data': [
@@ -122,7 +122,7 @@
         <div class="b-results__dropdown">
             {if $params.data?.years.length > 1}
                 <div class="b-results__dropdown-holder">
-                    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                         {param type: 'dropdown-select-legacy' /}
                         {param renderParams: [
                             'data': [
@@ -284,7 +284,7 @@
         <div class="b-results__dropdown">
         {if $params.data?.years.length > 1}
             <div class="b-results__dropdown-holder">
-                {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                     {param type: 'dropdown-select-legacy' /}
                     {param renderParams: [
                         'data': [
@@ -383,7 +383,7 @@
                 {$params.label}
             </div>
             <div class="b-results__help-icon i-hint">
-                {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                     {param type: 'icon' /}
                     {param renderParams: [
                         'data': [
@@ -391,7 +391,7 @@
                         ]
                     ]/}
                 {/call}
-                {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                     {param type: 'hint' /}
                     {param renderParams: [
                         'data': $tooltip,

@@ -6,7 +6,7 @@ goog.require('goog.object');
 goog.require('sm.gInput.InputStendhal');
 goog.require('sm.gInput.TemplatePhone');
 goog.require('sm.gInput.ViewPhone');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -51,7 +51,7 @@ goog.scope(function() {
      */
     InputPhone.NAME = sm.gInput.TemplatePhone.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(InputPhone.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(InputPhone.NAME, {
         control: InputPhone,
         view: View
     });

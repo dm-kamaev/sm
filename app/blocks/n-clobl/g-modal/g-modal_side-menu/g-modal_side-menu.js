@@ -4,7 +4,7 @@ goog.require('sm.bSmLink.SmLink');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.TemplateSideMenu');
 goog.require('sm.gModal.ViewSideMenu');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -47,7 +47,7 @@ goog.scope(function() {
      */
     Modal.NAME = sm.gModal.TemplateSideMenu.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Modal.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Modal.NAME, {
         control: Modal,
         view: View
     });

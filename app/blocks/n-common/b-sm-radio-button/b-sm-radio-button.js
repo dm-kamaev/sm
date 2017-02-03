@@ -3,7 +3,7 @@ goog.provide('sm.bSmRadioButton.SmRadioButton');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmRadioButton.Template');
 goog.require('sm.bSmRadioButton.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -37,7 +37,7 @@ goog.scope(function() {
      */
     RadioButton.NAME = sm.bSmRadioButton.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(RadioButton.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(RadioButton.NAME, {
         control: RadioButton,
         view: View
     });

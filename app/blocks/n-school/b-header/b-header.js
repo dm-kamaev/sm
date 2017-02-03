@@ -8,7 +8,7 @@ goog.require('sm.bFavorite.Favorite');
 goog.require('sm.bHeader.Template');
 goog.require('sm.bHeader.View');
 goog.require('sm.bSearch.Search');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -79,14 +79,14 @@ goog.scope(function() {
         View = sm.bHeader.View,
         Search = sm.bSearch.Search,
         AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
-        Factory = sm.iNewFactory.FactoryStendhal.INSTANCE;
+        Factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
     /**
      * Name of this element in factory
      */
     Header.NAME = sm.bHeader.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Header.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Header.NAME, {
         control: Header,
         view: View
     });

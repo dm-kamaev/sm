@@ -181,7 +181,7 @@
  */
 {template .search_ autoescape="strict" kind="html" private="true"}
     <div class="l-school-home__search">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'search-panel' /}
             {param renderParams: [
                 'panelTitle': 'Что вы ищете?',
@@ -263,7 +263,7 @@
     {/let}
 
     <div class="l-school-home__school-catalog">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'school-catalog' /}
             {param renderParams: [
                 'text': $text,
@@ -282,7 +282,7 @@
  */
 {template .articles_}
     <div class="l-school-home__articles">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'article-links' /}
         {/call}
     </div>

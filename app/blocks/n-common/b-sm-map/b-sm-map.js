@@ -10,7 +10,7 @@ goog.require('sm.bSmBalloon.SmBalloon');
 goog.require('sm.bSmMap.IPresetGenerator');
 goog.require('sm.bSmMap.Template');
 goog.require('sm.bSmMap.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 
 
@@ -93,7 +93,7 @@ goog.scope(function() {
      */
     Map.NAME = sm.bSmMap.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Map.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Map.NAME, {
         control: Map,
         view: View
     });

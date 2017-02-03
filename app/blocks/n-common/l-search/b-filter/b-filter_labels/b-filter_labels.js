@@ -1,6 +1,6 @@
 goog.provide('sm.lSearch.bFilter.FilterLabels');
 
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.TemplateLabels');
 goog.require('sm.lSearch.bFilter.ViewLabels');
@@ -31,7 +31,7 @@ goog.scope(function() {
      */
     FilterLabels.NAME = sm.lSearch.bFilter.TemplateLabels.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FilterLabels.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(FilterLabels.NAME, {
         control: FilterLabels,
         view: View
     });

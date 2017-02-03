@@ -18,7 +18,7 @@
  *     }
  * }}
  * @extends cl.iControl.Template
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .favorite}
@@ -145,7 +145,7 @@
  * }}
  */
 {template .listSchools_ kind="html" private="true"}
-    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
         {param type: 'school-list-paged' /}
         {param renderParams: [
             'data': [

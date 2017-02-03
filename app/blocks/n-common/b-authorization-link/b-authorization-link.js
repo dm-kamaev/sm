@@ -5,7 +5,7 @@ goog.require('goog.dom');
 goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bAuthorizationLink.View');
 goog.require('sm.iAuthorization.Authorization');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -33,10 +33,12 @@ goog.scope(function() {
      */
     AuthorizationLink.NAME = sm.bAuthorizationLink.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(AuthorizationLink.NAME, {
-        control: AuthorizationLink,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        AuthorizationLink.NAME, {
+            control: AuthorizationLink,
+            view: View
+        }
+    );
 
     /**
      * Event enum

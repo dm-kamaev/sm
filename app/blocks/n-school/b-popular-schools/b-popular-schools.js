@@ -6,7 +6,7 @@ goog.require('goog.dom');
 goog.require('sm.bPopularSchools.Template');
 goog.require('sm.bPopularSchools.View');
 goog.require('sm.iAnalytics.Analytics');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -41,10 +41,12 @@ goog.scope(function() {
      */
     PopularSchools.NAME = sm.bPopularSchools.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(PopularSchools.NAME, {
-        control: PopularSchools,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        PopularSchools.NAME, {
+            control: PopularSchools,
+            view: View
+        }
+    );
 
     /**
      * @override

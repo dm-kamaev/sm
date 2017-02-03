@@ -13,7 +13,7 @@ goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.ViewEnrollment');
 goog.require('sm.gTextarea.TextareaStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -90,10 +90,12 @@ goog.scope(function() {
      */
     ModalEnrollment.NAME = sm.gModal.TemplateEnrollment.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ModalEnrollment.NAME, {
-        control: ModalEnrollment,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        ModalEnrollment.NAME, {
+            control: ModalEnrollment,
+            view: View
+        }
+    );
 
     /**
      * Events enum

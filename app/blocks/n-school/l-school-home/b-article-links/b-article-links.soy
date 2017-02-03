@@ -3,7 +3,7 @@
 /**
  * Constructor
  * @extends cl.iControl.Template
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .articleLinks kind="html"}
@@ -68,7 +68,7 @@
     {/let}
 
     <div class="{call .rootClass/}__article {call .rootClass/}__article_first">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'article-link' /}
             {param renderParams: [
                 'articleUrl': $articleUrl,
@@ -102,7 +102,7 @@
     {/let}
 
     <div class="{call .rootClass/}__article {call .rootClass/}__article_second">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'article-link' /}
             {param renderParams: [
                 'articleUrl': $articleUrl,

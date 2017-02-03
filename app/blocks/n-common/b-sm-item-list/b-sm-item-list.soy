@@ -38,7 +38,7 @@
  *     config: (sm.bSmItemList.Template.Params.Config|undefined)
  * }}
  * @extends cl.iControl.Template
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .itemList}
@@ -178,7 +178,7 @@
     ) /}
 
     <div class="{$classes}">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: $params.config.type /}
             {param renderParams: [
                 'data': $params.data.item,

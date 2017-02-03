@@ -30,7 +30,7 @@
  * Constructor
  * @param params {sm.lSearch.bFilter.TemplateInput.Params}
  * @extends sm.lSearch.bFilter.Template
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .filter}
@@ -205,7 +205,7 @@
  */
 {template .input_}
     <div class="{call .rootClass/}__input">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'input' /}
             {param renderParams: [
                 'data': $params.data,

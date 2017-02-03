@@ -4,7 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSmHeader.Template');
 goog.require('sm.bSmHeader.View');
 goog.require('sm.bSmLink.SmLink');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -39,7 +39,7 @@ goog.scope(function() {
      */
     Header.NAME = sm.bSmHeader.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Header.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Header.NAME, {
         control: Header,
         view: View
     });

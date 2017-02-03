@@ -5,7 +5,7 @@ goog.require('cl.gList.List');
 goog.require('sm.gDropdown.TemplateSelectLegacy');
 goog.require('sm.gDropdown.ViewSelectLegacy');
 goog.require('sm.gList.List.Select');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -46,10 +46,12 @@ goog.scope(function() {
      */
     DropdownSelect.NAME = sm.gDropdown.TemplateSelectLegacy.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(DropdownSelect.NAME, {
-        control: DropdownSelect,
-        view: sm.gDropdown.ViewSelectLegacy
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        DropdownSelect.NAME, {
+            control: DropdownSelect,
+            view: sm.gDropdown.ViewSelectLegacy
+        }
+    );
 
     /**
      * Event enum
@@ -67,7 +69,7 @@ goog.scope(function() {
     DropdownSelect.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var Factory = sm.iNewFactory.FactoryStendhal.INSTANCE;
+        var Factory = sm.iCloblFactory.FactoryStendhal.getInstance();
         this.listInstance_ = Factory.decorate(
             sm.gList.List.Select.NAME,
             this.getView().getDom().selectList,

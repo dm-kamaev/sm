@@ -8,8 +8,8 @@ goog.require('sm.bSmScore.SmScoreBrief');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalSuccess');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.lCourse.Template');
 goog.require('sm.lCourse.View');
@@ -125,7 +125,7 @@ goog.scope(function() {
      */
     Course.NAME = sm.lCourse.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.getInstance().register(Course.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Course.NAME, {
         control: Course,
         view: View
     });
@@ -538,7 +538,7 @@ jQuery(function() {
         sm.lCourse.View.CssClass.ROOT
     );
 
-    sm.iNewFactory.FactoryStendhal.getInstance().decorate(
+    sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
         sm.lCourse.Course.NAME,
         domElement
     );

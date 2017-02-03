@@ -2,7 +2,7 @@ goog.provide('sm.lSchool.bFoldList.FoldList');
 
 goog.require('cl.iControl.Control');
 
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFoldList.Template');
 goog.require('sm.lSchool.bFoldList.View');
 
@@ -38,7 +38,7 @@ goog.scope(function() {
      */
     FoldList.NAME = sm.lSchool.bFoldList.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FoldList.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(FoldList.NAME, {
         control: FoldList,
         view: View
     });

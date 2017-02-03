@@ -4,7 +4,7 @@ goog.require('cl.gModal.Modal');
 goog.require('goog.dom');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gModal.ViewStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -40,7 +40,7 @@ goog.inherits(sm.gModal.ModalStendhal, cl.gModal.Modal);
 goog.scope(function() {
     var Modal = sm.gModal.ModalStendhal,
         View = sm.gModal.ViewStendhal,
-        Factory = sm.iNewFactory.FactoryStendhal.INSTANCE;
+        Factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
     /**
      * Name of this element in factory

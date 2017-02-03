@@ -7,7 +7,7 @@ goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gTextarea.TextareaStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -42,10 +42,12 @@ goog.scope(function() {
      */
     ModalFeedback.NAME = sm.gModal.TemplateFeedback.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ModalFeedback.NAME, {
-        control: ModalFeedback,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        ModalFeedback.NAME, {
+            control: ModalFeedback,
+            view: View
+        }
+    );
 
     /**
      * Validation error texts

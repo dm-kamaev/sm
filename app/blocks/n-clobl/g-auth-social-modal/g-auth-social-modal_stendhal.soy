@@ -7,7 +7,7 @@
  * }
  * @extends cl.gAuthSocialModal.Template
  * @constructor
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @doc
  */
 {template .authSocialModal}
@@ -34,7 +34,7 @@
         {call .modalType/}
     {/let}
 
-    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
         {param type: $type /}
         {param renderParams: [
             'data': [

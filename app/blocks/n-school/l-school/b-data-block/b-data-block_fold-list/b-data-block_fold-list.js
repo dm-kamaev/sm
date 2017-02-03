@@ -4,7 +4,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
-goog.require('sm.iNewFactory.FactoryStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFoldList.FoldList');
 
 
@@ -30,7 +30,7 @@ goog.inherits(sm.lSchool.bDataBlock.DataBlockFoldList, goog.ui.Component);
 
 goog.scope(function() {
     var DataBlockFoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
-        factory = sm.iNewFactory.FactoryStendhal.getInstance();
+        factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
 
     /**

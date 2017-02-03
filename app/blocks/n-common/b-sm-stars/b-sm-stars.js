@@ -3,7 +3,7 @@ goog.provide('sm.bSmStars.SmStars');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmStars.Template');
 goog.require('sm.bSmStars.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -29,7 +29,7 @@ goog.scope(function() {
      */
     Stars.NAME = sm.bSmStars.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Stars.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Stars.NAME, {
         control: Stars,
         view: View
     });

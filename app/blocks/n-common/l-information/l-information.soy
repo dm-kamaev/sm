@@ -73,7 +73,7 @@
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -336,7 +336,7 @@
  */
 {template .informationBoard_}
     <div class="{call .rootClass/}__information-board">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'lInformation-informationBoard' /}
             {param renderParams: [
                 'data': $params.data.entityData.informationBoard
@@ -427,7 +427,7 @@
  */
 {template .feedbackBoard_}
     <div class="{call .rootClass/}-feedback-board">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'lInformation-feedbackBoard' /}
             {param renderParams: [
                 'data': $params.data.entityData.feedbackBoard

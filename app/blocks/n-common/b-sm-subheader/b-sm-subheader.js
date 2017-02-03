@@ -11,7 +11,7 @@ goog.require('sm.bSmSubheader.SearchSubmitEvent');
 goog.require('sm.bSmSubheader.Template');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gDropdown.DropdownListLinks');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -91,7 +91,7 @@ goog.scope(function() {
      */
     Subheader.NAME = sm.bSmSubheader.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Subheader.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Subheader.NAME, {
         control: Subheader,
         view: View
     });

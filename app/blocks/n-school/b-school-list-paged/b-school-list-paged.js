@@ -5,7 +5,7 @@ goog.require('goog.dom');
 goog.require('sm.bSchoolListItem.SchoolListItem');
 goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSchoolListPaged.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -48,10 +48,12 @@ goog.scope(function() {
      */
     SchoolListPaged.NAME = sm.bSchoolListPaged.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SchoolListPaged.NAME, {
-        control: SchoolListPaged,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        SchoolListPaged.NAME, {
+            control: SchoolListPaged,
+            view: View
+        }
+    );
 
     /**
      * @override

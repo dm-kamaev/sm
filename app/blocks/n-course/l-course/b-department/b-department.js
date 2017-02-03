@@ -4,7 +4,7 @@
 goog.provide('sm.lCourse.bDepartment.Department');
 
 goog.require('cl.iControl.Control');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lCourse.bDepartment.Event.EnrollButtonClick');
 goog.require('sm.lCourse.bDepartment.Template');
 goog.require('sm.lCourse.bDepartment.View');
@@ -49,7 +49,7 @@ goog.scope(function() {
      */
     Department.NAME = sm.lCourse.bDepartment.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Department.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Department.NAME, {
         control: Department,
         view: View
     });

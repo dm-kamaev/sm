@@ -3,7 +3,7 @@ goog.provide('sm.gHint.HintStendhal');
 goog.require('cl.gHint.View');
 goog.require('cl.iControl.Control');
 goog.require('sm.gHint.TemplateStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -28,7 +28,7 @@ goog.inherits(sm.gHint.HintStendhal, cl.iControl.Control);
  */
 sm.gHint.HintStendhal.NAME = sm.gHint.TemplateStendhal.NAME();
 
-sm.iNewFactory.FactoryStendhal.INSTANCE.register(
+sm.iCloblFactory.FactoryStendhal.getInstance().register(
     sm.gHint.HintStendhal.NAME, {
         control: sm.gHint.HintStendhal,
         view: cl.gHint.View

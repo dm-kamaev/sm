@@ -3,7 +3,7 @@ goog.provide('sm.gInput.InputStendhal');
 goog.require('cl.gInput.Input');
 goog.require('sm.gInput.TemplateStendhal');
 goog.require('sm.gInput.ViewStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -30,7 +30,7 @@ goog.scope(function() {
      */
     Input.NAME = sm.gInput.TemplateStendhal.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Input.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Input.NAME, {
         control: Input,
         view: View
     });

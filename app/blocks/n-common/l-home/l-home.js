@@ -67,7 +67,7 @@ goog.scope(function() {
      */
     Home.NAME = sm.lHome.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.getInstance().register(Home.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Home.NAME, {
         control: Home,
         view: View
     });
@@ -124,7 +124,7 @@ jQuery(function() {
         sm.lHome.View.CssClass.ROOT
     );
 
-    sm.iNewFactory.FactoryStendhal.getInstance().decorate(
+    sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
         sm.lHome.Home.NAME,
         domElement
     );

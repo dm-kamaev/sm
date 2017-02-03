@@ -3,7 +3,7 @@ goog.provide('sm.gList.List.Select');
 goog.require('cl.gList.List');
 goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gList.ViewSelect');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -36,7 +36,7 @@ goog.scope(function() {
      */
     SelectList.NAME = sm.gList.TemplateSelect.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SelectList.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(SelectList.NAME, {
         control: SelectList,
         view: sm.gList.ViewSelect
     });

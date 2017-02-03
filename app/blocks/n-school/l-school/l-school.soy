@@ -260,7 +260,7 @@
 {template .metro_ kind="html" private="true"}
     {if $params.data.metroStations}
         <div class="l-school__metro-stations">
-            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                 {param type: 'icon-svg' /}
                 {param renderParams: [
                     'data': [
@@ -323,7 +323,7 @@
  */
 {template .feedback_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_feedback">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'button' /}
             {param renderParams: [
                 'data': [
@@ -446,7 +446,7 @@
 {template .modalInaccuracy_ private="true"}
     {let $csrf: $params?.config?.csrf /}
 
-    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
         {param type: 'feedback-modal' /}
         {param renderParams: [
             'config': [

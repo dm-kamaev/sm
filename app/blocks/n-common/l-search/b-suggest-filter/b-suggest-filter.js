@@ -4,7 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
 goog.require('sm.gButton.ButtonStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterLabels');
 goog.require('sm.lSearch.bSuggestFilter.Template');
@@ -77,10 +77,12 @@ goog.scope(function() {
      */
     SuggestFilter.NAME = sm.lSearch.bSuggestFilter.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SuggestFilter.NAME, {
-        control: SuggestFilter,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        SuggestFilter.NAME, {
+            control: SuggestFilter,
+            view: View
+        }
+    );
 
     /**
      * Event enum

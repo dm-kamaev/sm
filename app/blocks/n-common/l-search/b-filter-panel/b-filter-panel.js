@@ -2,7 +2,7 @@ goog.provide('sm.lSearch.bFilterPanel.FilterPanel');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.gButton.ButtonStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterClasses');
 goog.require('sm.lSearch.bFilter.FilterDropdown');
@@ -56,7 +56,7 @@ goog.scope(function() {
      */
     FilterPanel.NAME = sm.lSearch.bFilterPanel.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FilterPanel.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(FilterPanel.NAME, {
         control: FilterPanel,
         view: View
     });

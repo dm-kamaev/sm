@@ -5,7 +5,7 @@ goog.require('sm.bFavorite.Template');
 goog.require('sm.bFavorite.View');
 goog.require('sm.bSchoolListPaged.SchoolListPaged');
 goog.require('sm.iAuthorization.Authorization');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -40,7 +40,7 @@ goog.scope(function() {
      */
     Favorite.NAME = sm.bFavorite.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Favorite.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Favorite.NAME, {
         control: Favorite,
         view: View
     });

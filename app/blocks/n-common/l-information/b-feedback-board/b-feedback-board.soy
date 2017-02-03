@@ -30,7 +30,7 @@
  *     data: sm.lInformation.bFeedbackBoard.Template.Params.Data
  * }}
  * @extends cl.iControl.Template
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -200,7 +200,7 @@
     {/let}
 
     <div class="{call .rootClass/}__list-filter">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'dropdown-select-legacy' /}
             {param renderParams: [
                 'data': [
@@ -352,7 +352,7 @@
     {/let}
 
     <div class="{call .rootClass/}__button">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'button' /}
             {param renderParams: [
                 'data': [
@@ -383,7 +383,7 @@
     {/let}
 
     <div class="{call .rootClass/}__button">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'button' /}
             {param renderParams: [
                 'data': [

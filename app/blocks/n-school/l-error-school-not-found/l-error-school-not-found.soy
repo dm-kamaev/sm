@@ -133,7 +133,7 @@
  */
 {template .search_ autoescape="strict" kind="html"}
     <div class="l-error-school-not-found__search">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'search-panel' /}
             {param renderParams: [
                 'dataLinks' : $params.dataLinks,
@@ -210,7 +210,7 @@
  */
 {template .informationSchools_ autoescape="strict" kind="html" private="true"}
     <div class="l-error-school-not-found__information-schools">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'school-catalog' /}
             {param renderParams: [
                 'text': 'Мы\u00A0составили полный каталог школ Москвы\u00A0—

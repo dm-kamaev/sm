@@ -23,7 +23,7 @@
  *     data: ?sm.bHeader.Template.Params.Data,
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header
@@ -79,7 +79,7 @@
  */
 {template .linkSearch_ private="true" autoescape="strict" kind="html"}
     <a class="b-header__search-link" href="/school">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'icon-svg' /}
             {param renderParams: [
                 'data': [
@@ -135,7 +135,7 @@
 {template .linkAuthorization_ kind="html" private="true"}
     <div class="b-header__user-control b-header__user-control_authorization">
         <div class="b-header__authorization-content">
-            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                 {param type: 'authorization-link' /}
                 {param renderParams: [
                     'data': [
@@ -159,7 +159,7 @@
 {template .favorite_ kind="html" private="true"}
     <div class="b-header__user-control b-header__user-control_favorite">
         <div class="b-header__favorite-content">
-            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                 {param type: 'favorite' /}
                 {param renderParams: [
                     'data': $params.data?.favorites,
@@ -261,7 +261,7 @@
             Мы&nbsp;помогли вам выбрать&nbsp;школу?
         {/let}
 
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'banner' /}
             {param renderParams: [
                 'data': [

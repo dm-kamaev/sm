@@ -14,8 +14,8 @@ goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.gHint.HintStendhal');
 goog.require('sm.gIcon.IconStendhal');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal');
 goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
 goog.require('sm.lSearch.Template');
 goog.require('sm.lSearch.View');
@@ -135,7 +135,7 @@ goog.scope(function() {
      */
     Search.NAME = sm.lSearch.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.getInstance().register(Search.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Search.NAME, {
         control: Search,
         view: View
     });
@@ -961,7 +961,7 @@ jQuery(function() {
     );
 
     if (domElement) {
-        sm.iNewFactory.FactoryStendhal.getInstance().decorate(
+        sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
             sm.lSearch.Search.NAME,
             domElement
         );

@@ -44,7 +44,7 @@
  * Constructor
  * @param params {sm.lSearch.bFilter.Template.Params}
  * @extends cl.iControl.Template
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .filter}
@@ -230,7 +230,7 @@
     {/let}
 
     <div class="{$classes}">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'smCheckbox' /}
             {param renderParams: [
                 'data': $params.data,
@@ -413,7 +413,7 @@
         </div>
     {/let}
 
-    {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
         {param type: 'hint' /}
         {param renderParams: [
             'data': $tooltipData,

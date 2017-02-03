@@ -1,6 +1,6 @@
 goog.provide('sm.lSearch.bFilter.FilterClasses');
 
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterDropdown');
 goog.require('sm.lSearch.bFilter.FilterInput');
@@ -50,10 +50,12 @@ goog.scope(function() {
      */
     FilterClasses.NAME = sm.lSearch.bFilter.TemplateClasses.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FilterClasses.NAME, {
-        control: FilterClasses,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        FilterClasses.NAME, {
+            control: FilterClasses,
+            view: View
+        }
+    );
 
     /**
      * Checks refers element to this control

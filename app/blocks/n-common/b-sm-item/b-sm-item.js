@@ -4,7 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.View');
 goog.require('sm.bSmLink.SmLink');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -37,7 +37,7 @@ goog.scope(function() {
      */
     Item.NAME = sm.bSmItem.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Item.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Item.NAME, {
         control: Item,
         view: View
     });

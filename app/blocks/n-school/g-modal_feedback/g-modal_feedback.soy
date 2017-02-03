@@ -12,7 +12,7 @@
  *     }
  * }}
  * @extends sm.gModal.TemplateStendhal
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -135,7 +135,7 @@
 {template .submitButton_}
     <div class="{call .rootClass/}__section{sp}
         {call .rootClass/}__section_submit">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'button' /}
             {param renderParams: [
                 'data': [
@@ -189,7 +189,7 @@
          {call .rootClass/}__input-field_name">
          <div class="{call .rootClass/}__control-name">Ваше имя</div>
          <div class="{call .rootClass/}__control">
-             {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+             {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                  {param type: 'input' /}
                  {param renderParams: [
                      'data': [
@@ -213,7 +213,7 @@
                 {call .rootClass/}__input-field_email">
         <div class="{call .rootClass/}__control-name">Ваш e-mail</div>
         <div class="{call .rootClass/}__control">
-            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                 {param type: 'input' /}
                 {param renderParams: [
                     'data': [
@@ -261,7 +261,7 @@
                 {call .rootClass/}__input-field_theme">
         <div class="{call .rootClass/}__control-name">Выберите тему</div>
         <div class="{call .rootClass/}__control">
-            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                 {param type: 'dropdown-select-legacy' /}
                 {param renderParams: [
                     'data': [
@@ -289,7 +289,7 @@
 {template .textArea_}
     <div class="{call .rootClass/}__input-field{sp}
                 {call .rootClass/}__input-field_text">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'textarea' /}
             {param renderParams: [
                 'data': [

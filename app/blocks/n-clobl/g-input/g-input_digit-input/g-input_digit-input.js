@@ -3,7 +3,7 @@ goog.provide('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gInput.DigitInputView');
 goog.require('sm.gInput.InputStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -29,7 +29,7 @@ goog.scope(function() {
      */
     DigitInput.NAME = sm.gInput.DigitInputTemplate.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(DigitInput.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(DigitInput.NAME, {
         control: DigitInput,
         view: View
     });

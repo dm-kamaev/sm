@@ -7,7 +7,7 @@ goog.provide('sm.bSmScore.SmScoreBrief');
 goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.TemplateBrief');
 goog.require('sm.bSmScore.ViewBrief');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 goog.scope(function() {
 
@@ -38,7 +38,7 @@ goog.scope(function() {
      */
     Score.NAME = sm.bSmScore.TemplateBrief.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Score.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Score.NAME, {
         control: Score,
         view: View
     });

@@ -6,7 +6,7 @@ goog.require('sm.bSmLink.SmLink');
 goog.require('sm.bSmSearchPanel.Template');
 goog.require('sm.bSmSearchPanel.View');
 goog.require('sm.gButton.ButtonStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -59,7 +59,7 @@ goog.scope(function() {
      */
     SearchPanel.NAME = sm.bSmSearchPanel.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SearchPanel.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(SearchPanel.NAME, {
         control: SearchPanel,
         view: View
     });

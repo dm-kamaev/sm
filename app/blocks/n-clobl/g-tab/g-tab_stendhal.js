@@ -3,7 +3,7 @@ goog.provide('sm.gTab.TabStendhal');
 goog.require('cl.gTab.Tab');
 goog.require('cl.gTab.View');
 goog.require('sm.gTab.TemplateStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -28,7 +28,7 @@ goog.inherits(sm.gTab.TabStendhal, cl.gTab.Tab);
  */
 sm.gTab.TabStendhal.NAME = sm.gTab.TemplateStendhal.NAME();
 
-sm.iNewFactory.FactoryStendhal.INSTANCE.register(
+sm.iCloblFactory.FactoryStendhal.getInstance().register(
     sm.gTab.TabStendhal.NAME, {
         control: sm.gTab.TabStendhal,
         view: cl.gTab.View

@@ -3,7 +3,7 @@ goog.provide('sm.gList.ListStendhal');
 goog.require('cl.gList.List');
 goog.require('sm.gList.TemplateStendhal');
 goog.require('sm.gList.ViewStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -34,7 +34,7 @@ goog.scope(function() {
      */
     List.NAME = sm.gList.TemplateStendhal.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(List.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(List.NAME, {
         control: List,
         view: View
     });

@@ -11,7 +11,7 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSmExpander.Template');
 goog.require('sm.bSmExpander.View');
 goog.require('sm.bSmLink.SmLink');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -64,7 +64,7 @@ goog.scope(function() {
      */
     Expander.NAME = sm.bSmExpander.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Expander.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Expander.NAME, {
         control: Expander,
         view: View
     });

@@ -1,7 +1,7 @@
 goog.provide('sm.lInformation.Information');
 
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal');
 goog.require('sm.lInformation.Template');
 goog.require('sm.lInformation.View');
 
@@ -30,7 +30,7 @@ goog.scope(function() {
      */
     Information.NAME = sm.lInformation.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.getInstance().register(Information.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Information.NAME, {
         control: Information,
         view: View
     });
@@ -46,7 +46,7 @@ jQuery(function() {
     );
 
 
-    sm.iNewFactory.FactoryStendhal.getInstance().decorate(
+    sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
         sm.lInformation.Information.NAME,
         domElement
     );

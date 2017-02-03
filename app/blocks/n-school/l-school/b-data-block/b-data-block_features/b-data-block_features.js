@@ -2,7 +2,7 @@ goog.provide('sm.bDataBlock.DataBlockFeatures');
 
 goog.require('sm.bDataBlock.DataBlock');
 goog.require('sm.bDataBlock.DataBlockFeaturesView');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSchool.bDataBlock.TemplateFeatures');
 
 
@@ -30,10 +30,12 @@ goog.scope(function() {
      */
     DataBlockFeatures.NAME = sm.lSchool.bDataBlock.TemplateFeatures.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(DataBlockFeatures.NAME, {
-        control: DataBlockFeatures,
-        view: DataBlockFeaturesView
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        DataBlockFeatures.NAME, {
+            control: DataBlockFeatures,
+            view: DataBlockFeaturesView
+        }
+    );
 
     /**
      * Event enum

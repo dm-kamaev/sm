@@ -8,7 +8,7 @@ goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.bSmListPaged.SmListPaged');
 goog.require('sm.iAnalytics.Analytics');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -46,7 +46,7 @@ goog.scope(function() {
      */
     Balloon.NAME = sm.bSmBalloon.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Balloon.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Balloon.NAME, {
         control: Balloon,
         view: View
     });

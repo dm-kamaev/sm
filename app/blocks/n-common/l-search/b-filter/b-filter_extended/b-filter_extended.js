@@ -1,6 +1,6 @@
 goog.provide('sm.lSearch.bFilter.FilterExtended');
 
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.TemplateExtended');
 goog.require('sm.lSearch.bFilter.ViewExtended');
@@ -47,10 +47,12 @@ goog.scope(function() {
      */
     FilterExtended.NAME = sm.lSearch.bFilter.TemplateExtended.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FilterExtended.NAME, {
-        control: FilterExtended,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        FilterExtended.NAME, {
+            control: FilterExtended,
+            view: View
+        }
+    );
 
     /**
      * Checks refers element to this control

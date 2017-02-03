@@ -3,7 +3,7 @@ goog.provide('sm.gTextarea.TextareaStendhal');
 goog.require('cl.gTextarea.Textarea');
 goog.require('sm.gTextarea.TemplateStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -28,10 +28,12 @@ goog.scope(function() {
      */
     TextareaStendhal.NAME = sm.gTextarea.TemplateStendhal.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(TextareaStendhal.NAME, {
-        control: TextareaStendhal,
-        view: sm.gTextarea.ViewStendhal
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        TextareaStendhal.NAME, {
+            control: TextareaStendhal,
+            view: sm.gTextarea.ViewStendhal
+        }
+    );
 
     /**
      * Check is any value entered in texarea

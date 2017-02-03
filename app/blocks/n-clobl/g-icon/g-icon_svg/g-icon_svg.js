@@ -3,7 +3,7 @@ goog.provide('sm.gIcon.IconStendhal');
 goog.require('cl.gIcon.Icon');
 goog.require('cl.gIcon.View');
 goog.require('sm.gIcon.TemplateSvg');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -28,7 +28,7 @@ goog.inherits(sm.gIcon.IconStendhal, cl.gIcon.Icon);
  */
 sm.gIcon.IconStendhal.NAME = sm.gIcon.TemplateSvg.NAME();
 
-sm.iNewFactory.FactoryStendhal.INSTANCE.register(
+sm.iCloblFactory.FactoryStendhal.getInstance().register(
     sm.gIcon.IconStendhal.NAME, {
         control: sm.gIcon.IconStendhal,
         view: cl.gIcon.View

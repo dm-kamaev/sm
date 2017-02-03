@@ -17,7 +17,7 @@ goog.require('sm.bSmItemList.Template');
 goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iAnalytics.Analytics');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lCourse.bDepartment.Department');
 
 
@@ -73,7 +73,7 @@ goog.scope(function() {
      */
     ItemList.NAME = sm.bSmItemList.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ItemList.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(ItemList.NAME, {
         control: ItemList,
         view: View
     });

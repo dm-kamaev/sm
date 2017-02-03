@@ -5,7 +5,7 @@ goog.require('goog.ui.Component');
 goog.require('sm.bDiagram.Diagram');
 goog.require('sm.gDropdown.DropdownSelectLegacy');
 goog.require('sm.gTab.TabStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSchool.bResults.Template');
 
 
@@ -56,7 +56,7 @@ goog.inherits(sm.lSchool.bResults.Results, goog.ui.Component);
 
 goog.scope(function() {
     var Results = sm.lSchool.bResults.Results,
-        Factory = sm.iNewFactory.FactoryStendhal.INSTANCE,
+        Factory = sm.iCloblFactory.FactoryStendhal.getInstance(),
         TabView = cl.gTab.View,
         DropdownView = cl.gDropdown.View,
         DropdownSelect = sm.gDropdown.DropdownSelectLegacy,

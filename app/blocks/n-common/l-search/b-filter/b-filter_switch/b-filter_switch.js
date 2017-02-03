@@ -1,7 +1,7 @@
 goog.provide('sm.lSearch.bFilter.FilterSwitch');
 
 goog.require('sm.bSmRadioButton.SmRadioButton');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.TemplateSwitch');
 goog.require('sm.lSearch.bFilter.ViewSwitch');
@@ -31,7 +31,7 @@ goog.scope(function() {
      */
     FilterSwitch.NAME = sm.lSearch.bFilter.TemplateSwitch.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FilterSwitch.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(FilterSwitch.NAME, {
         control: FilterSwitch,
         view: View
     });

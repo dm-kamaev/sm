@@ -6,7 +6,7 @@ goog.require('goog.dom');
 goog.require('sm.bFavoriteLink.Event.FavoriteAdded');
 goog.require('sm.bFavoriteLink.Template');
 goog.require('sm.bFavoriteLink.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -48,7 +48,7 @@ goog.scope(function() {
      */
     FavoriteLink.NAME = sm.bFavoriteLink.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(FavoriteLink.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(FavoriteLink.NAME, {
         control: FavoriteLink,
         view: View
     });

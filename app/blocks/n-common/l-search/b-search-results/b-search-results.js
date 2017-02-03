@@ -4,7 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSearchResults.View');
 
@@ -55,10 +55,12 @@ goog.scope(function() {
      */
     SearchResults.NAME = sm.lSearch.bSearchResults.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(SearchResults.NAME, {
-        control: SearchResults,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        SearchResults.NAME, {
+            control: SearchResults,
+            view: View
+        }
+    );
 
     /**
      * Css class enum

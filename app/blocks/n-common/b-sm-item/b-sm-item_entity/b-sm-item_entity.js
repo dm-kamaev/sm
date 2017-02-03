@@ -7,7 +7,7 @@ goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItem.ViewEntity');
 goog.require('sm.bSmScore.SmScoreBrief');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 
 
@@ -62,7 +62,7 @@ goog.scope(function() {
      */
     Item.NAME = sm.bSmItem.TemplateEntity.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Item.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Item.NAME, {
         control: Item,
         view: View
     });

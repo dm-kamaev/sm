@@ -7,7 +7,7 @@ goog.require('sm.bBadge.Badge');
 goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bSchoolListItem.Event.FavoriteRemoved');
 goog.require('sm.bScore.ScoreMinimized');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -430,11 +430,12 @@ goog.scope(function() {
             element
         );
 
-        this.favoriteLink_ = sm.iNewFactory.FactoryStendhal.INSTANCE.decorate(
-            sm.bFavoriteLink.FavoriteLink.NAME,
-            favoriteLink,
-            this
-        );
+        this.favoriteLink_ =
+            sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
+                sm.bFavoriteLink.FavoriteLink.NAME,
+                favoriteLink,
+                this
+            );
     };
 
 

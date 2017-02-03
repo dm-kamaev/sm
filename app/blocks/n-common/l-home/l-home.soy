@@ -38,7 +38,7 @@
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -191,7 +191,7 @@
     {if $params.data.recommendations}
 
         {let $content kind="html"}
-            {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                 {param type: 'smCatalog' /}
                 {param renderParams: [
                     'data': $params.data.recommendations
@@ -294,7 +294,7 @@
  */
 {template .searchPanel_ kind="html"}
     <div class="{call .rootClass/}__search-panel">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'smSearchPanel' /}
             {param renderParams: [
                 'data': $params.data.searchPanel,

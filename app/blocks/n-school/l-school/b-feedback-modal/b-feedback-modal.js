@@ -9,7 +9,7 @@ goog.require('sm.gDropdown.DropdownSelectLegacy');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
 
@@ -217,7 +217,7 @@ goog.scope(function() {
     FeedbackModal.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var factory = sm.iNewFactory.FactoryStendhal.getInstance();
+        var factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
         this.elements_ = {
             radio: this.getElementsByClass(FeedbackModal.CssClass.RADIO),

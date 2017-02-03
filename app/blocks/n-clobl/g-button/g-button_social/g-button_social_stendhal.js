@@ -3,7 +3,7 @@ goog.provide('sm.gButton.ButtonSocialStendhal');
 goog.require('cl.gButton.ButtonSocial');
 goog.require('cl.gButton.ViewSocial');
 goog.require('sm.gButton.TemplateSocialStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -28,7 +28,7 @@ goog.inherits(sm.gButton.ButtonSocialStendhal, cl.gButton.ButtonSocial);
  */
 sm.gButton.ButtonSocialStendhal.NAME = sm.gButton.TemplateSocialStendhal.NAME();
 
-sm.iNewFactory.FactoryStendhal.INSTANCE.register(
+sm.iCloblFactory.FactoryStendhal.getInstance().register(
     sm.gButton.ButtonSocialStendhal.NAME, {
         control: sm.gButton.ButtonSocialStendhal,
         view: cl.gButton.ViewSocial

@@ -13,7 +13,7 @@
  * Constructor
  * @param params {sm.lSearch.bFilter.TemplateSwitchLabels.Params}
  * @extends sm.lSearch.bFilter.TemplateSwitch
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .filter}
@@ -100,7 +100,7 @@
  */
 {template .option}
     <div class="{call .rootClass/}__option">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'smRadioButton' /}
             {param renderParams: [
                 'data': $params.data,

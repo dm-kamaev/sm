@@ -4,7 +4,7 @@ goog.require('sm.bSmLink.SmLink');
 goog.require('sm.gList.ListStendhal');
 goog.require('sm.gList.TemplateLinks');
 goog.require('sm.gList.ViewLinks');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -43,7 +43,7 @@ goog.scope(function() {
      */
     ListLinks.NAME = sm.gList.TemplateLinks.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(ListLinks.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(ListLinks.NAME, {
         control: ListLinks,
         view: View
     });

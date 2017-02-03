@@ -3,7 +3,7 @@ goog.provide('sm.bSmCollapsedText.SmCollapsedText');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmCollapsedText.Template');
 goog.require('sm.bSmCollapsedText.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 goog.scope(function() {
 
@@ -32,9 +32,11 @@ goog.inherits(sm.bSmCollapsedText.SmCollapsedText, cl.iControl.Control);
      */
     CollapsedText.NAME = sm.bSmCollapsedText.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(CollapsedText.NAME, {
-        control: CollapsedText,
-        view: View
-    });
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        CollapsedText.NAME, {
+            control: CollapsedText,
+            view: View
+        }
+    );
 
 });  // goog.scope

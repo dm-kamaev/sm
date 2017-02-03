@@ -3,7 +3,7 @@ goog.provide('sm.gAuthSocial.AuthSocialStendhal');
 goog.require('cl.gAuthSocial.AuthSocial');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocial.ViewStendhal');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -28,8 +28,8 @@ goog.inherits(sm.gAuthSocial.AuthSocialStendhal, cl.gAuthSocial.AuthSocial);
  */
 sm.gAuthSocial.AuthSocialStendhal.NAME = sm.gAuthSocial.TemplateStendhal.NAME();
 
-sm.iNewFactory.FactoryStendhal.INSTANCE.register(
+sm.iCloblFactory.FactoryStendhal.getInstance().register(
     sm.gAuthSocial.AuthSocialStendhal.NAME, {
-        control: cl.gAuthSocial.AuthSocial,
+        control: sm.gAuthSocial.AuthSocialStendhal,
         view: sm.gAuthSocial.ViewStendhal
 });

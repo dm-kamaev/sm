@@ -24,8 +24,8 @@ goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iCarrotquest.Carrotquest');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
-goog.require('sm.iNewFactory.FactoryStendhal');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlock.DataBlockFoldList');
@@ -175,7 +175,7 @@ goog.scope(function() {
         Utils = cl.iUtils.Utils;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance(),
-        Factory = sm.iNewFactory.FactoryStendhal.getInstance();
+        Factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
 
     /**

@@ -18,7 +18,7 @@
  *         analyticsAction: ?string
  *     }
  * }
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  */
 {template .base autoescape="strict" kind="html"}
     {let $analyticsAction: [
@@ -59,7 +59,7 @@
                         {/if}
                         {if length($school?.metro) > 0}
                             <div class="b-popular-schools__metro">
-                                {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+                                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
                                     {param type: 'icon-svg' /}
                                     {param renderParams: [
                                         'data': [

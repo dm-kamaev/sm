@@ -7,7 +7,7 @@ goog.provide('sm.bSmScore.SmScore');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmScore.Template');
 goog.require('sm.bSmScore.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 goog.scope(function() {
     var View = sm.bSmScore.View;
@@ -36,7 +36,7 @@ goog.scope(function() {
      */
     Score.NAME = sm.bSmScore.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Score.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Score.NAME, {
         control: Score,
         view: View
     });

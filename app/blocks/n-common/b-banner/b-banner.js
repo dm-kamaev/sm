@@ -5,7 +5,7 @@ goog.require('goog.dom');
 goog.require('sm.bBanner.Template');
 goog.require('sm.bBanner.View');
 goog.require('sm.gModal.ModalFeedback');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -39,7 +39,7 @@ goog.scope(function() {
      */
     Banner.NAME = sm.bBanner.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Banner.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Banner.NAME, {
         control: Banner,
         view: View
     });

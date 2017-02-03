@@ -4,7 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmFooter.View');
 goog.require('sm.bSmLink.SmLink');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -38,7 +38,7 @@ goog.scope(function() {
      */
     Footer.NAME = sm.bSmFooter.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Footer.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Footer.NAME, {
         control: Footer,
         view: View
     });

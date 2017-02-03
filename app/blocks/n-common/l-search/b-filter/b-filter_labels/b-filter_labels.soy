@@ -13,7 +13,7 @@
  * Constructor
  * @param params {sm.lSearch.bFilter.TemplateLabels.Params}
  * @extends sm.lSearch.bFilter.Template
- * @factory sm.iNewFactory.FactoryStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .filter}
@@ -55,7 +55,7 @@
     {/let}
 
     <div class="{$classes}">
-        {call sm.iNewFactory.FactoryStendhal.INSTANCE.soy}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'lSearch-label' /}
             {param renderParams: [
                 'data': [

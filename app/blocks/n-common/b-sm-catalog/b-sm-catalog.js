@@ -4,7 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSmCatalog.Template');
 goog.require('sm.bSmCatalog.View');
 goog.require('sm.bSmHeadedList.SmHeadedList');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -31,7 +31,7 @@ goog.scope(function() {
      */
     Catalog.NAME = sm.bSmCatalog.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Catalog.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Catalog.NAME, {
         control: Catalog,
         view: sm.bSmCatalog.View
     });

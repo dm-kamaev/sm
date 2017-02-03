@@ -3,7 +3,7 @@ goog.provide('sm.bSmBadge.SmBadge');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBadge.View');
-goog.require('sm.iNewFactory.FactoryStendhal.INSTANCE');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -37,7 +37,7 @@ goog.scope(function() {
      */
     Badge.NAME = sm.bSmBadge.Template.NAME();
 
-    sm.iNewFactory.FactoryStendhal.INSTANCE.register(Badge.NAME, {
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Badge.NAME, {
         control: Badge,
         view: View
     });
