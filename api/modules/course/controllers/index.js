@@ -54,9 +54,9 @@ let initCrudRouting = function(route, controller, opt_idExtractor) {
     };
     router.post(
         `${route}`,
-        idExtractor,
         checkToken,
         fileStorage,
+        idExtractor,
         adminUser,
         checkAction,
         controller.create
@@ -65,9 +65,9 @@ let initCrudRouting = function(route, controller, opt_idExtractor) {
     router.get(`${route}/:id`, controller.get);
     router.put(
         `${route}/:id`,
-        idExtractor,
         checkToken,
         fileStorage,
+        idExtractor,
         adminUser,
         checkAction,
         controller.update
@@ -84,7 +84,7 @@ let initCrudRouting = function(route, controller, opt_idExtractor) {
 initCrudRouting(
     '/coursebrand', brandController, brandIdExtractor.brandExtractor
 );
-initCrudRouting('/course', courseController);
+initCrudRouting('/course', courseController, brandIdExtractor.courseExtractor);
 initCrudRouting(
     '/coursebrand/:brandId/department',
     departmentController,
