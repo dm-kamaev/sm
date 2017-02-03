@@ -194,3 +194,18 @@ gulp debug --layout l-doc
 ```sh
 gulp debug --layout l-doc.js
 ```
+
+## Локализация ##
+######Фронтенд:######
+В шаблонах для печати данных вместо `{$params.data.description}` используем
+функцию getText:
+```sh
+{call .getText}
+    {param message: $params.data.description /}
+{/call}
+```
+
+В контроле используем:
+```sh
+this.i18n.getText('какой-то текст');
+```
