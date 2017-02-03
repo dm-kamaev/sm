@@ -11,6 +11,7 @@ const apidoc = require('gulp-apidoc');
 const exec = require('child_process').exec;
 const eslint = require('gulp-eslint');
 const minimist = require('minimist');
+const sassLint = require('gulp-sass-lint');
 
 const migrationWrapper = require('./app/components/migrationWrapper');
 
@@ -20,6 +21,7 @@ process.stdout.setMaxListeners(MAX_BILD_FILE_AMOUNT);
 
 const config = require('./config.json');
 const gulpConfig = require('./app/config/base/config.json');
+const cssLintConfig = require('./css-lint-config.json');
 const BLOCKS_DIR = '/app/blocks';
 const SHARED_STATIC_DIR = '/public/shared/static';
 
@@ -138,6 +140,10 @@ gulp.task('watch', function() {
         [path.join(__dirname, BLOCKS_DIR, '/**/*.js')],
         ['scripts']
     );
+    gulp.watch(
+        [path.join(__dirname, BLOCKS_DIR, '**/*.s+(a|c)ss')],
+        ['lint-css']
+    );
     gulp.watch([
         path.join(__dirname, BLOCKS_DIR, '/**/*.scss'),
         path.join(__dirname, BLOCKS_DIR, '/**/*.css')
@@ -194,13 +200,23 @@ gulp.task('backendLint', function() {
         }));
 });
 
+gulp.task('lint-css', function() {
+    return gulp
+        .src(path.join(__dirname, BLOCKS_DIR, '**/*.s+(a|c)ss'))
+        .pipe(sassLint(cssLintConfig))
+        .pipe(sassLint.format())
+        .pipe(sassLint.failOnError(result => {
+            console.log(result);
+        }));
+});
+
 const tasks = function(bool) {
     return bool ?
         ['createTimestamp', 'soy', 'compile', 'svgSprite', 'sprite', 'images',
         'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig'] :
         ['watch', 'soy', 'scripts', 'svgSprite', 'sprite', 'images',
-        'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig',
-        'backendLint'];
+        'fonts', 'styles', 'lint-css', 'copySchools', 'copyCourses',
+        'localConfig', 'backendLint'];
 };
 
 gulp.task('build', tasks(true));
