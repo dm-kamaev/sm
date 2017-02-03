@@ -8,11 +8,20 @@
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.lSearch.Template
+ * @factory sm.iCloblFactory.FactoryExperimental
  * @constructor
  * @doc
  */
 {template .search autoescape="strict" kind="html"}
     {call .document data="all" /}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    LSearchExperimental
 {/template}
 
 
@@ -66,17 +75,14 @@
 
     <div class="{$classes}">
         <div class="{call .rootClass /}__section-inner">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smMap',
-                    'renderParams': [
-                        'data': $params.data.map,
-                        'config': [
-                            'enableScrollZoom': false,
-                            'alignZoomControl': 'left',
-                            'sizeViewportShow': 'xs'
-                        ]
+            {call sm.iCloblFactory.FactoryExperimental.INSTANCE.soy}
+                {param type: 'smMap' /}
+                {param renderParams: [
+                    'data': $params.data.map,
+                    'config': [
+                        'enableScrollZoom': false,
+                        'alignZoomControl': 'left',
+                        'sizeViewportShow': 'xs'
                     ]
                 ] /}
             {/call}
