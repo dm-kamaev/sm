@@ -15,12 +15,13 @@ export interface SpecializedClassTypeInstance
     extends Sequelize.Instance<SpecializedClassTypeAttribute>,
             SpecializedClassTypeAttribute {}
 
-interface SchoolModel
+interface SpecializedClassTypeModel
     extends Sequelize.Model<
         SpecializedClassTypeInstance, SpecializedClassTypeAttribute
     > {}
 
-const SpecializedClassType = db.define(
+// const SpecializedClassType = db.define(
+const SpecializedClassType: SpecializedClassTypeModel = db.define(
     'SpecializedClassType',
     {
         id: {
@@ -40,4 +41,6 @@ const SpecializedClassType = db.define(
     }
 );
 
-export default SpecializedClassType;
+// export default SpecializedClassType;
+// export default Model;
+export { SpecializedClassType as Model};

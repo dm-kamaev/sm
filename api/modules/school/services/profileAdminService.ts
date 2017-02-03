@@ -7,7 +7,8 @@ const sequelize = require('../../../../app/components/db.js');
 
 import SchoolModel from '../models/school';
 import {SchoolInstance} from '../models/school';
-import SpecializedClassTypeModel from '../models/specializedClassType';
+import {Model as SpecializedClassTypeModel}
+    from '../models/specializedClassType';
 import {SpecializedClassTypeInstance} from '../models/specializedClassType';
 
 import {SchoolProfileNameIsShorter} from
@@ -22,7 +23,7 @@ import {
 class ProfileAdminService {
     public readonly name: string = 'profileAdminService';
 
-    public async getList(schoolId: number ): Promise<ProfileGetList[]> {
+    public async getList(schoolId: number): Promise<ProfileGetList[]> {
         let responce: Promise<ProfileGetList[]> | Array<undefined>;
         const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
         let res: ProfileGetList[];
@@ -65,7 +66,7 @@ class ProfileAdminService {
 
     public async searchProfiles(
         profileName: string
-    ): Promise<SpecializedClassTypeInstance> {
+    ): Promise<SpecializedClassTypeInstance[]> {
         if (profileName.length < 2) {
             throw new SchoolProfileNameIsShorter(profileName);
         }
@@ -83,7 +84,7 @@ class ProfileAdminService {
 
     public async create(
         schoolId: number,
-        profileData: ProfileData
+    profileData: ProfileData
     ): Promise<number[][]> {
         const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
         let specializedClasses: number[][] = [];
@@ -198,7 +199,7 @@ class ProfileAdminService {
             const specializedClassName: string =
                 await this.getSpecializedClassName_(specializedClassId);
             return {
-                id: i + 1,
+                id: specializedClassId,
                 classNumber: specializedClass[0],
                 profile: specializedClassName
             };
@@ -225,5 +226,5 @@ class ProfileAdminService {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
 };
-const profileAdminService = new ProfileAdminService();
-export {profileAdminService};
+
+export const profileAdminService = new ProfileAdminService();

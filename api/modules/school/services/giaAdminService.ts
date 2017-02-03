@@ -7,7 +7,8 @@ const sequelize = require('../../../../app/components/db.js');
 
 import SchoolModel from '../models/school';
 import {SchoolInstance} from '../models/school';
-import SpecializedClassTypeModel from '../models/specializedClassType';
+import {Model as SpecializedClassTypeModel}
+    from '../models/specializedClassType';
 import {SpecializedClassTypeInstance} from '../models/specializedClassType';
 
 import GiaResultModel from '../../study/models/giaResult';
