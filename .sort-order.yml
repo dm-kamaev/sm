@@ -1,6 +1,6 @@
 rules:
     property-sort-order:
-        - 0
+        - 1
         - order:
             - position
             - z-index
