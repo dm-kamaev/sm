@@ -108,6 +108,7 @@ app.use('/:subdomain/', api.user.router);
 
 app.use('/schools/', modules.school.router);
 app.use('/courses/', modules.course.router);
+app.use('/courses/', modules.university.router);
 
 app.use('/:subdomain/api', api.comment.router);
 app.use('/:subdomain/api', api.geo.router);

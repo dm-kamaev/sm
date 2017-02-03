@@ -36,7 +36,8 @@ let configView = {
 configView.render = function(params) {
     let subdomains = {
         [entityTypeEnum.SCHOOL]: 'schools',
-        [entityTypeEnum.COURSE]: 'courses'
+        [entityTypeEnum.COURSE]: 'courses',
+        [entityTypeEnum.UNIVERSITY]: 'universities'
     };
 
     let subdomain = subdomains[params.entityType],

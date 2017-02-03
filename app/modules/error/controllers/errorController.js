@@ -66,8 +66,6 @@ controller.schoolNotFound = async(function(req, res) {
         config: config
     });
 
-    console.log(JSON.stringify(templateData.sideMenu, null, 4));
-
     var html = soy.render('sm.lErrorSchoolNotFound.Template.base', {
         params: {
             data: templateData,
