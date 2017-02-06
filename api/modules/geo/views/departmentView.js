@@ -1,4 +1,4 @@
-const lodashFlatten = require('lodash/array/flatten');
+const lodash = require('lodash');
 
 var departmentView = {};
 
@@ -16,6 +16,20 @@ departmentView.list = function(departments) {
         });
 };
 
+/**
+ * @param  {Array<Department>} departments
+ * @return {Array<Number>}
+ */
+departmentView.generalGrades = function(departments) {
+    return lodash
+        .chain(departments.map(department =>
+            department.educationalGrades
+        ))
+        .flatten()
+        .uniq()
+        .sortBy()
+        .value();
+};
 
 /**
  * View of departments for the b-data-block_addresses block
@@ -23,11 +37,8 @@ departmentView.list = function(departments) {
  * @return {array<object>}
  */
 departmentView.departmentClasses = function(departments) {
-    return this.classes(
-        lodashFlatten(departments.map(department =>
-            department.educationalGrades
-        ))
-    );
+    const grades = this.generalGrades(departments);
+    return this.classes(grades);
 };
 
 /**

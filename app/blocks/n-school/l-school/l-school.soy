@@ -10,11 +10,7 @@
  *        schoolDescr: string,
  *        features: string,
  *        schoolQuote: string,
- *        directorName: string,
- *        classes: string,
- *        kindergarten: bool,
- *        extendedDayCost: string,
- *        dressCode: bool,
+ *        extra: string,
  *        social: list<[
  *            name: string,
  *            href: string
@@ -533,11 +529,7 @@
  * Extra section
  * @param? params {{
  *     data: {
- *         classes: string,
- *         kindergarten: bool,
- *         extendedDayCost: string,
- *         directorName: string,
- *         dressCode: bool
+ *         extra: string
  *     }
  * }}
  * @param clone {boolean}
@@ -548,11 +540,7 @@
         {call  sm.lSchool.bDataBlock.TemplateInformation.base}
             {param  params: [
                     'content': [
-                        'classes': $params.data.classes,
-                        'kindergarten': $params.data.kindergarten,
-                        'extendedDayCost': $params.data.extendedDayCost,
-                        'dressCode': $params.data.dressCode,
-                        'directorName': $params.data.directorName
+                        'extra': $params.data.extra
                     ]
                 ]
             /}
