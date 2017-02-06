@@ -106,8 +106,8 @@ app.use('/:subdomain/api', api.entity.router);
 
 async(function() {
     const paths = [
-        'app/blocks/n-clobl/i-new_factory/i-new_factory_stendhal.js',
-        'app/blocks/n-clobl/i-new_factory/i-new_factory_experimental.js',
+        'app/blocks/n-clobl/i-clobl-factory/i-clobl-factory_stendhal.js',
+        'app/blocks/n-clobl/i-clobl-factory/i-clobl-factory_experimental.js',
         'build/compiledServerSoy/server.soy.concat.js',
         'node_modules/clobl/blocks/i-utils/i-utils.js',
         'node_modules/clobl/blocks/i-utils-legacy/i-utils.js'
