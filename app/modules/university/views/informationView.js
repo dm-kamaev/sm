@@ -37,6 +37,8 @@ view.render = function(data) {
         user: user,
         authSocialLinks: data.authSocialLinks,
         entityData: data.entityData,
+        subunitType: data.subunitType,
+        subunitName: data.subunitName,
         footer: footerView.render()
     };
 };

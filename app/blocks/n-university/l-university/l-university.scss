@@ -1,5 +1,9 @@
 @import '../../n-common/i-media/i-media';
 
+.l-university {
+    font-family: 'ArialMT', sans-serif;
+}
+
 .l-university__body {
     margin: 0 auto 60px;
 
@@ -17,8 +21,35 @@
     padding-top: 35px;
 }
 
-.l-university__wrap-data_sketch {
+.l-university__data_sketch {
+    float: left;
+
     width: 208px;
+    margin-right: 102px;
+    margin-bottom: 35px;
+}
+
+.l-university__type {
+    color: #747474;
+
+    font-size: 15px;
+    line-height: 22px;
+}
+
+.l-university__name {
+    margin-bottom: 12px;
+
+    font-family: 'Proxima', Arial, sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 44px;
+}
+
+.l-university__description {
+    color: #747474;
+
+    font-size: 15px;
+    line-height: 22px;
 }
 
 
@@ -40,7 +71,7 @@
 }
 
 @include media-m {
-    .l-university__wrap-data_sketch {
+    .l-university__data_sketch {
         width: 100%;
     }
 }

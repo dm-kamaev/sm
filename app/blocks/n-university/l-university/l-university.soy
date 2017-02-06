@@ -24,7 +24,9 @@
  *     entityData: {
  *         id: number,
  *         name: string,
- *         description: ?string
+ *         subunitType: string,
+ *         subunitName: string,
+ *         description: string
  *     }
  * }} sm.lUniversity.Template.Data
  */
@@ -144,7 +146,7 @@
 {template .sectionData_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
         {call .sketchData_ data="all" /}
-        // {call .mainData_ data="all" /}
+        {call .mainData_ data="all" /}
         // {call .listData_ data ="all" /}
     </div>
 {/template}
@@ -160,24 +162,48 @@
  * @protected
  */
 {template .sketchData_}
-    <div class="{call .rootClass/}__wrap-data_sketch">
-        <div class="{call .rootClass/}__data_sketch">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smSketch',
-                    'renderParams': [
-                        'data': [
-                            'description': $params.data.entityData.name,
-                            'image': [
-                                'url': 'http://muzuz.ru/uploads/images/p/r/o/progulshiki_hse_nelaskovaja_vshe.jpg',
-                                'altText': 'HSE'
-                            ],
-                            'buttonContent': 'Оставить отзыв'
-                        ]
+    <div class="{call .rootClass/}__data_sketch">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smSketch',
+                'renderParams': [
+                    'data': [
+                        'description': $params.data.entityData.name,
+                        'image': [
+                            'url': 'http://muzuz.ru/uploads/images/p/r/o/progulshiki_hse_nelaskovaja_vshe.jpg',
+                            'altText': 'HSE'
+                        ],
+                        'buttonContent': 'Оставить отзыв'
                     ]
-                ]/}
-            {/call}
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Data on the middle - section main data
+ * @param params {{
+ *     data: {
+ *         subunitType: string,
+ *         subunitName: string,
+ *         description: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .mainData_}
+    <div class="{call .rootClass/}__data_description">
+        <div class="{call .rootClass/}__type">
+            {$params.data.entityData.subunitType}
+        </div>
+        <div class="{call .rootClass/}__name">
+            {$params.data.entityData.subunitName}
+        </div>
+        <div class="{call .rootClass/}__description">
+            {$params.data.entityData.description}
         </div>
     </div>
 {/template}
