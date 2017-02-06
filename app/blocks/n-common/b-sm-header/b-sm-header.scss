@@ -50,6 +50,10 @@
     border-bottom: 3px solid #00aa00;
 }
 
+.b-sm-header__menu-item_active-university {
+    border-bottom: 3px solid #007aff;
+}
+
 .b-sm-header__helper-text {
     display: inline-block;
 
@@ -98,6 +102,9 @@
         border-bottom: none;
     }
     .b-sm-header__menu-item_active-school {
+        border-bottom: none;
+    }
+    .b-sm-header__menu-item_active-university {
         border-bottom: none;
     }
 }
