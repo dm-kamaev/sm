@@ -1,0 +1,127 @@
+{namespace sm.bSmSketch.Template}
+
+
+/**
+ * @typedef {{
+ *     description: string,
+ *     image: {
+ *         url: string,
+ *         altText: string
+ *     },
+ *     buttonContent: string
+ * }} sm.bSmSketch.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ * }} sm.bSmSketch.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmSketch.Template.Params.Data,
+ *     config: sm.bSmSketch.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .sketch}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmSketch.Template.Params.Data,
+ *     config: sm.bSmSketch.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    // {call .stripData data="all" /}
+    {call .image_ data="all" /}
+    {call .description_ data="all" /}
+    {call .button_ data="all" /}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-sketch
+{/template}
+
+
+/**
+ * Image
+ * @param params {{
+ *     data: {
+ *         image: {
+ *             url: string,
+ *             altText: string
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .image_}
+    <img class="{call .rootClass/}__image"
+        src="{$params.data.image.url}"
+        alt="{$params.data.image.altText}"
+    />
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: string
+ *     }
+ * }}
+ * @private
+ */
+{template .description_}
+    <div class="{call .rootClass/}__description">
+        {$params.data.description}
+    </div>
+{/template}
+
+
+/**
+ * Button
+ * @param params {{
+ *     data: {
+ *         buttonContent: string  
+ *     }
+ * }}
+ * @private
+ */
+{template .button_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__button-action
+    {/let}
+    <div class="{call .rootClass/}__button-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.buttonContent
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': 'thin-ellipse',
+                        'size': 'm'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}

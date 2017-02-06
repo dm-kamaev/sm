@@ -36,7 +36,7 @@ view.render = function(data) {
         }),
         user: user,
         authSocialLinks: data.authSocialLinks,
-        entityData: {},
+        entityData: data.entityData,
         footer: footerView.render()
     };
 };

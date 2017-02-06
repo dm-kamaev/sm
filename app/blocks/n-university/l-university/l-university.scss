@@ -1,4 +1,4 @@
-@import "../../n-common/i-media/i-media";
+@import '../../n-common/i-media/i-media';
 
 .l-university__body {
     margin: 0 auto 60px;
@@ -6,4 +6,41 @@
     color: #000;
 
     font-family: Arial, sans-serif;
+}
+
+
+/** Section data **/
+.l-university__section_data {
+    width: 1200px;
+    min-width: 255px;
+    margin: 0 auto;
+    padding-top: 35px;
+}
+
+.l-university__wrap-data_sketch {
+    width: 208px;
+}
+
+
+@include media-xl {
+    .l-university__section_data {
+        box-sizing: border-box;
+        width: auto;
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}
+
+
+@include media-xs {
+    .l-university__section_data {
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+}
+
+@include media-m {
+    .l-university__wrap-data_sketch {
+        width: 100%;
+    }
 }

@@ -75,7 +75,7 @@
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
     {if $params}{/if}
-        // {call .sectionData_ data="all" /}
+        {call .sectionData_ data="all" /}
         // {call .sectionComments_ data="all" /}
         // {call .sectionPrograms_ data="all" /}
     </div>
@@ -133,4 +133,51 @@
                 'type': $params.config.entityType
             ]/}
         {/call}"
+{/template}
+
+
+/**
+ * Section data
+ * @private
+ * @ovveride
+ */
+{template .sectionData_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
+        {call .sketchData_ data="all" /}
+        // {call .mainData_ data="all" /}
+        // {call .listData_ data ="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the left side - section sketch
+ * @param params {{
+ *     data: {
+ *         entityData: name
+ *     }
+ * }}
+ * @protected
+ */
+{template .sketchData_}
+    <div class="{call .rootClass/}__wrap-data_sketch">
+        <div class="{call .rootClass/}__data_sketch">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smSketch',
+                    'renderParams': [
+                        'data': [
+                            'description': $params.data.entityData.name,
+                            'image': [
+                                'url': 'http://muzuz.ru/uploads/images/p/r/o/progulshiki_hse_nelaskovaja_vshe.jpg',
+                                'altText': 'HSE'
+                            ],
+                            'buttonContent': 'Оставить отзыв'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
 {/template}

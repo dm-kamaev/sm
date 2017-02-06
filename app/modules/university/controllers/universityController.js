@@ -25,6 +25,13 @@ controller.information = async(function(req, res, next) {
 
         let templateData = informationView.render({
             user: user,
+            entityData: {
+                id: 1,
+                name: `Национальный исследовательский университет –
+                    Высшая школа экономики (НИУ–ВШЭ)`,
+                description: 'Менеджемент'
+
+            },
             authSocialLinks: authSocialLinks,
             entityType: entityType.UNIVERSITY,
             config: config
