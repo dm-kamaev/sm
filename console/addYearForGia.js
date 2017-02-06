@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 // author: dm-kamaev
 // add 2015 year for gia result, when year is empty
@@ -12,7 +12,7 @@ const logger = require('../app/components/logger/logger.js').getLogger('app');
 
 const YEAR = 2015;
 
-const addYear = async(function () {
+const addYear = async(function() {
     try {
         logger.info('START');
         const query = `
@@ -21,7 +21,7 @@ const addYear = async(function () {
                 created_at=STATEMENT_TIMESTAMP(),
                 updated_at=STATEMENT_TIMESTAMP()
             WHERE year IS NULL
-            `
+        `;
         await(sequelize.query(query, {
             type: sequelize.QueryTypes.SELECT
         }));
@@ -29,7 +29,7 @@ const addYear = async(function () {
     } catch (err) {
         logger.critical(JSON.stringify(err, null, 2));
     }
-})
+});
 
 
 commander
