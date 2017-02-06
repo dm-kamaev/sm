@@ -205,12 +205,14 @@
  */
 {template .input_}
     <div class="{call .rootClass/}__input">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'input' /}
-            {param renderParams: [
-                'data': $params.data,
-                'config': [
-                    'theme': 'light'
+        {call .renderChild}
+            {param params: [
+                'type': 'input',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'theme': 'light'
+                    ]
                 ]
             ]/}
         {/call}

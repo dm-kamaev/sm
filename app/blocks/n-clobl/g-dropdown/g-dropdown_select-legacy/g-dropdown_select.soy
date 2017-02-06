@@ -88,11 +88,13 @@
     </div>
     {if $params?.config?.iconSprite}
         <div class="{call .rootClass/}__opener-arrow">
-            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-                {param type: 'icon' /}
-                {param renderParams: [
-                    'data': [
-                        'type': $params?.config?.iconSprite
+            {call .renderChild}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': $params?.config?.iconSprite
+                        ]
                     ]
                 ]/}
             {/call}

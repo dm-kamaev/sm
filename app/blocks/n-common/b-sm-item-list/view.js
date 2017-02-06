@@ -259,6 +259,9 @@ goog.scope(function() {
                         type: this.params.itemType
                     }
                 }
+            },
+            {
+                factoryIndex: this.getFactory().getIndex()
             }
         );
     };

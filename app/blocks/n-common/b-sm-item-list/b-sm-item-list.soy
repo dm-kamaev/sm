@@ -178,11 +178,13 @@
     ) /}
 
     <div class="{$classes}">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: $params.config.type /}
-            {param renderParams: [
-                'data': $params.data.item,
-                'config': $itemConfig
+        {call .renderChild}
+            {param params: [
+                'type': $params.config.type,
+                'renderParams': [
+                    'data': $params.data.item,
+                    'config': $itemConfig
+                ]
             ]/}
         {/call}
     </div>

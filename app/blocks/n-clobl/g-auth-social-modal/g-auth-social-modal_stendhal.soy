@@ -34,14 +34,16 @@
         {call .modalType/}
     {/let}
 
-    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-        {param type: $type /}
-        {param renderParams: [
-            'data': [
-                'content': $params.data.content,
-            ],
-            'config': [
-                'size': 's'
+    {call .renderChild}
+        {param params: [
+            'type': $type,
+            'renderParams': [
+                'data': [
+                    'content': $params.data.content,
+                ],
+                'config': [
+                    'size': 's'
+                ]
             ]
         ]/}
     {/call}

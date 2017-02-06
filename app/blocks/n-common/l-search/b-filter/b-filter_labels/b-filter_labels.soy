@@ -55,15 +55,17 @@
     {/let}
 
     <div class="{$classes}">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'lSearch-label' /}
-            {param renderParams: [
-                'data': [
-                    'id': $params.data.id + '-selected',
-                    'name': $params.data.name,
-                    'label': $params.data.label,
-                    'value': $params.data.value,
-                    'isChecked': $params.data.isChecked
+        {call .renderChild}
+            {param params: [
+                'type': 'lSearch-label',
+                'renderParams': [
+                    'data': [
+                        'id': $params.data.id + '-selected',
+                        'name': $params.data.name,
+                        'label': $params.data.label,
+                        'value': $params.data.value,
+                        'isChecked': $params.data.isChecked
+                    ]
                 ]
             ]/}
         {/call}

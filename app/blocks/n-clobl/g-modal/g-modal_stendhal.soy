@@ -63,21 +63,25 @@
  */
 {template .defaultIcons}
     <div class="{call .rootClass/}__close-icon">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'icon' /}
-            {param renderParams: [
-                'data': [
-                    'type': 'close-dialog'
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'close-dialog'
+                    ]
                 ]
             ]/}
         {/call}
     </div>
     <div class="{call .rootClass/}__close-icon-hover">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'icon' /}
-            {param renderParams: [
-                'data': [
-                    'type': 'close-dialog-hovered'
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'close-dialog-hovered'
+                    ]
                 ]
             ]/}
         {/call}
@@ -88,11 +92,13 @@
  * Zzzz
  */
 {template .smallIcon}
-    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-        {param type: 'icon' /}
-        {param renderParams: [
-            'data': [
-                'type': 'light-grey-close'
+    {call .renderChild}
+        {param params: [
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'light-grey-close'
+                ]
             ]
         ]/}
     {/call}

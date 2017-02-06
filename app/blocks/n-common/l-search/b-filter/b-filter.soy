@@ -230,12 +230,14 @@
     {/let}
 
     <div class="{$classes}">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'smCheckbox' /}
-            {param renderParams: [
-                'data': $params.data,
-                'config': [
-                    'theme': $params.config?.theme
+        {call .renderChild}
+            {param params: [
+                'type': 'smCheckbox',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'theme': $params.config?.theme
+                    ]
                 ]
             ]/}
         {/call}
@@ -413,13 +415,15 @@
         </div>
     {/let}
 
-    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-        {param type: 'hint' /}
-        {param renderParams: [
-            'data': $tooltipData,
-            'config': [
-                'align': 'arrow',
-                'customClasses': [$customClasses]
+    {call .renderChild}
+        {param params: [
+            'type': 'hint',
+            'renderParams': [
+                'data': $tooltipData,
+                'config': [
+                    'align': 'arrow',
+                    'customClasses': [$customClasses]
+                ]
             ]
         ]/}
     {/call}

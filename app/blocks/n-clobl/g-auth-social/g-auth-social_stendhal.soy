@@ -34,11 +34,13 @@
  */
 {template .before}
     <h3 class="{call .rootClass/}__title">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'icon' /}
-            {param renderParams: [
-                'data': [
-                    'type': 'mel-logo'
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'mel-logo'
+                    ]
                 ]
             ]/}
         {/call}

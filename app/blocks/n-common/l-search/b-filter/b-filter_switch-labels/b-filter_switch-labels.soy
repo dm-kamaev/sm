@@ -100,15 +100,17 @@
  */
 {template .option}
     <div class="{call .rootClass/}__option">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'smRadioButton' /}
-            {param renderParams: [
-                'data': $params.data,
-                'config': [
-                    'theme': 'label',
-                    'isUncheckable': true,
-                    'isNotDefaultStatus': $params.config.isNotDefaultStatus,
-                    'viewType': $params.config.viewType
+        {call .renderChild}
+            {param params: [
+                'type': 'smRadioButton',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'theme': 'label',
+                        'isUncheckable': true,
+                        'isNotDefaultStatus': $params.config.isNotDefaultStatus,
+                        'viewType': $params.config.viewType
+                    ]
                 ]
             ]/}
         {/call}

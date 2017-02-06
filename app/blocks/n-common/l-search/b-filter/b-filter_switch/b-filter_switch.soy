@@ -59,10 +59,12 @@
     {/let}
 
     <div class="{$classes}">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'smRadioButton' /}
-            {param renderParams: [
-                'data': $params.data
+        {call .renderChild}
+            {param params: [
+                'type': 'smRadioButton',
+                'renderParams': [
+                    'data': $params.data
+                ]
             ]/}
         {/call}
     </div>

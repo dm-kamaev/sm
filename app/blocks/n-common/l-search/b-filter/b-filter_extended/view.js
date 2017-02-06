@@ -69,6 +69,9 @@ goog.scope(function() {
                 params: {
                     data: data
                 }
+            },
+            {
+                factoryIndex: this.getFactory().getIndex()
             }
         );
     };
