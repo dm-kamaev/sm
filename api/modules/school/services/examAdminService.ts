@@ -19,14 +19,6 @@ class ExamAdminService {
         return await SubjectModel.findAll({
             attributes: ['id', 'displayName'],
         });
-
-        // const subjects: SubjectInstance[] = await SubjectModel.findAll();
-        // return subjects.map((subject: SubjectInstance): SchoolSubject => {
-        //     return {
-        //         id: subject.id,
-        //         displayName: subject.displayName,
-        //     };
-        // });
     }
 
 
