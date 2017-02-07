@@ -48,7 +48,6 @@ class Header {
 
         this.initParams()
             .setContacts()
-            .setHelperText()
             .setMenuItems(data);
     }
 
@@ -94,40 +93,16 @@ class Header {
      * @protected
      */
     setContacts() {
-        let contactsGenerator = new ContactsGenerator();
-        this.params_.data.contacts = contactsGenerator.contacts;
+        let data = {
+            entityType: this.entityType_
+        };
+
+        let contactsGenerator = new ContactsGenerator(data);
+        this.params_.data.contacts = contactsGenerator.params;
 
         return this;
     }
 
-    /**
-     * Set helper text
-     * @return {Header}
-     * @protected
-     */
-    setHelperText() {
-        let helper = {};
-
-        switch (this.entityType_) {
-        case entityTypeEnum.SCHOOL:
-            helper.text = 'Поможем выбрать школу!';
-            break;
-        case entityTypeEnum.COURSE:
-            helper.text = 'Поможем выбрать курс!';
-            break;
-        case entityTypeEnum.UNIVERSITY:
-            helper = {
-                text: 'Поможем выбрать ВУЗ',
-                url: '/university',
-                theme: 'neptune'
-            };
-            break;
-        }
-
-        this.params_.data.helper = helper;
-
-        return this;
-    }
 
     /**
      * Set menu items

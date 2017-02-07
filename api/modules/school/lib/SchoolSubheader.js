@@ -14,6 +14,14 @@ class SchoolSubheader extends Subheader {
 
 
         /**
+         * Entity type
+         * @type {string}
+         * @protected
+         */
+        this.entityType = entityType.SCHOOL;
+
+
+        /**
          * Data for logo
          * @type {Object<string, string>}
          * @protected
@@ -49,18 +57,6 @@ class SchoolSubheader extends Subheader {
             placeholder: 'Район, метро, номер школы',
             pageAlias: 'school'
         };
-    }
-
-
-    /**
-     * Config setter
-     * @param {boolean} isBottomLine
-     * @override
-     * @public
-     */
-    setConfig(isBottomLine) {
-        super.setConfig(isBottomLine);
-        this.params.config.entityType = entityType.SCHOOL;
     }
 }
 

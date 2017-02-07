@@ -14,6 +14,14 @@ class UniversitySubheader extends Subheader {
 
 
         /**
+         * Entity type
+         * @type {string}
+         * @protected
+         */
+        this.entityType = entityType.UNIVERSITY;
+
+
+        /**
          * Data for logo
          * @type {Object<string, string>}
          * @protected
@@ -63,19 +71,6 @@ class UniversitySubheader extends Subheader {
             placeholder: 'ВУЗ, специальность',
             pageAlias: 'search'
         };
-    }
-
-
-    /**
-     * Config setter
-     * @param {boolean} isBottomLine
-     * @override
-     * @public
-     */
-    setConfig(isBottomLine) {
-        super.setConfig(isBottomLine);
-
-        this.params.config.entityType = entityType.COURSE;
     }
 }
 
