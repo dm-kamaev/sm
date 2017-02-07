@@ -67,12 +67,12 @@ class GiaAdminService {
 
     public async getById(
         schoolId: number,
-        giaResultId: number
+        giaId: number
     ): Promise<GiaResult | {}> {
         const list: GiaResult[] = await this.getList(schoolId);
         let res: GiaResult | boolean;
-        res = list.find((giaResult: GiaResult): boolean =>
-            giaResult.id === giaResultId
+        res = list.find((gia: GiaResult): boolean =>
+            gia.id === giaId
         );
         return res || {};
     }

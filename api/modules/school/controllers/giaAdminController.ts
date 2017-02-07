@@ -89,10 +89,10 @@ class GiaAdminController extends Controller {
      *        "passedCount": 143
      *    }
      */
-    public async actionGet(ctx: any, schoolId: string, giaResultId: string) {
+    public async actionGet(ctx: any, schoolId: string, giaId: string) {
         return await giaAdminService.getById(
             parseInt(schoolId, 10),
-            parseInt(giaResultId, 10)
+            parseInt(giaId, 10)
         );
     }
 
