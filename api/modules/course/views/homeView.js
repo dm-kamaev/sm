@@ -40,6 +40,15 @@ view.render = function(data) {
             metaTitle: 'Курсы мела',
             metaDescription: ''
         },
+        openGraph: {
+            title: 'Курсы «Мела»',
+            description: 'Поиск, подбор и бронирование курсов и кружков ' +
+                'для вашего ребёнка',
+            image: '/static/images/n-clobl/i-layout/cources_sharing.png',
+            relapTag: 'курсы мела',
+            relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
+            fbClientId: data.fbClientId
+        },
         user: user,
         authSocialLinks: data.authSocialLinks,
         header: headerView.render(data.config, data.entityType),
