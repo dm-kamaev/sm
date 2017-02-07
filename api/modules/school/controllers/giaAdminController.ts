@@ -9,16 +9,16 @@ import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {giaAdminService} from '../services/giaAdminService';
-import {profileAdminService} from '../services/profileAdminService';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
-import {SchoolProfileNameIsShorter} from './errors/SchoolProfileNameIsShorter';
+import {ExamDataAlreadyExistBySubject} from
+    './errors/ExamDataAlreadyExistBySubject';
 
 class GiaAdminController extends Controller {
     constructor() {
         super();
         this.errors = {
-            SchoolProfileNameIsShorter,
+            ExamDataAlreadyExistBySubject,
         };
     }
 
@@ -65,8 +65,8 @@ class GiaAdminController extends Controller {
 
 
      /**
-     * @api {get} /api/admin/school/:schoolId/profile/:giaId
-     * Get school profile
+     * @api {get} /api/admin/school/:schoolId/gia/:giaId
+     * Get school gia
      * @apiVersion 1.0.0
      * @apiName getGia
      * @apiGroup School Gia Admin
@@ -74,11 +74,11 @@ class GiaAdminController extends Controller {
      * @apiParam {Number} schoolId  School's id.
      * @apiParam {Number} giaId Gia's id.
      *
-     * @apiSuccess {Number}   gia.id            Id.
+     * @apiSuccess {Number}   gia.id            Gia's id
      * @apiSuccess {String}   gia.subject       School's ubject
-     * @apiSuccess {Number}   gia.year          gia year
-     * @apiSuccess {Number}   gia.averageResult averageResult by subject
-     * @apiSuccess {Number}   gia.passedNumber  count passed
+     * @apiSuccess {Number}   gia.year          Gia's year
+     * @apiSuccess {Number}   gia.averageResult AverageResult by subject
+     * @apiSuccess {Number}   gia.passedCount   Count passed exam
      *
      * @apiSuccessExample {json} Example response:
      *    {
@@ -86,7 +86,7 @@ class GiaAdminController extends Controller {
      *        "subject": "Математика",
      *        "year": 2015,
      *        "averageResult": 4.9,
-     *        "passedNumber": 143
+     *        "passedCount": 143
      *    }
      */
     public async actionGet(ctx: any, schoolId: string, giaResultId: string) {
@@ -97,93 +97,122 @@ class GiaAdminController extends Controller {
     }
 
     /**
-    * @api {post} /api/admin/school/:schoolId/profile
-    * Create school profile class
+    * @api {post} /api/admin/school/:schoolId/gia
+    * Create gia result for school
     * @apiVersion 1.0.0
-    * @apiName createSchoolProfileClass
-    * @apiGroup School Profile Admin
+    * @apiName createGiaResult
+    * @apiGroup School Gia Admin
     *
     * @apiParamExample {json} Request-Example:
-    *   {
-    *       "classNumber": 5,
-    *       "profileId":  10
-    *   }
+    *    {
+    *        "subjectId": 8,
+    *        "year":  2016,
+    *        "averageResult": 3.5,
+    *        "passedCount": 143
+    *    }
     *
     * @apiParam {Number} schoolId  School's id.
     *
-    * @apiSuccess {Number[][]} specializedClasses  array of array number.
-    * @apiSuccess {Number[]}   specializedClass    array of number.
-    * @apiSuccess {Number}     .-.0                class number
-    * @apiSuccess {Number}     .-.1                profile Id
+    * @apiSuccess {Number}   gia.id            Id.
+    * @apiSuccess {Number}   gia.schoolId      School's id
+    * @apiSuccess {Number}   gia.subjectId     Subject's id
+    * @apiSuccess {Number}   gia.year          Gia year
+    * @apiSuccess {Number}   gia.result        averageResult by subject
+    * @apiSuccess {Number}   gia.count         count passed exam
     *
     * @apiSuccessExample {json} Example response:
-    *    [
-    *        [ 10, 1 ],
-    *        [ 11, 2 ]
-    *    ]
-    *
+    *    {
+    *        "id": 5723,
+    *        "schoolId": 697,
+    *        "subjectId": 9,
+    *        "year": 2014,
+    *        "result": 3.5,
+    *        "count": 143,
+    *        "updated_at": "2017-02-06T09:52:40.086Z",
+    *        "created_at": "2017-02-06T09:52:40.086Z"
+    *    }
+    * @apiError (422) ExamDataAlreadyExistBySubject
+    *     already gia data by subject
     */
     public async actionCreate(ctx: any, schoolId: string) {
-        const profileData: { classNumber: number, profileId: number }
-            = ctx.request.body;
-        return await profileAdminService.create(
+        const giaResult: {
+          subjectId: number,
+          year: number,
+          averageResult: number,
+          passedCount: number
+        } = ctx.request.body;
+        return await giaAdminService.create(
             parseInt(schoolId, 10),
-            profileData
+            giaResult
         );
     }
 
 
     /**
-    * @api {put} /api/admin/school/:schoolId/profile/:profileNumber
-    * Update school profile class
+    * @api {put} /api/admin/school/:schoolId/:giaId
+    * Update school gia data
     * @apiVersion 1.0.0
-    * @apiName updateSchoolProfileClass
-    * @apiGroup School Profile Admin
+    * @apiName updateGiaResult
+    * @apiGroup School Gia Admin
     *
     * @apiParamExample {json} Request-Example:
-    *   {
-    *       "classNumber": 5,
-    *       "profileId":  10
-    *   }
+    *    {
+    *        "subjectId": 8,
+    *        "year":  2016,
+    *        "averageResult": 3.5,
+    *        "passedCount": 143
+    *    }
     *
     * @apiParam {Number} schoolId  School's id.
-    * @apiParam {Number} profileNumber  profile class number.
+    * @apiParam {Number} giaId     Gia's id
     *
-    * @apiSuccess {Number[][]} specializedClasses  array of array number.
-    * @apiSuccess {Number[]}   specializedClass    array of number.
-    * @apiSuccess {Number}     .-.0                class number
-    * @apiSuccess {Number}     .-.1                profile Id
+    * @apiSuccess {Number}   gia.id            Id.
+    * @apiSuccess {Number}   gia.schoolId      School's id
+    * @apiSuccess {Number}   gia.subjectId     Subject's id
+    * @apiSuccess {Number}   gia.year          Gia year
+    * @apiSuccess {Number}   gia.averageResult averageResult by subject
+    * @apiSuccess {Number}   gia.passedCount   count passed exam
+
     *
     * @apiSuccessExample {json} Example response:
-    *    [
-    *        [ 10, 1 ],
-    *        [ 11, 2 ]
-    *    ]
-    *
+    *    {
+    *        "id": 5722,
+    *        "schoolId": 37,
+    *        "subjectId": 10,
+    *        "year": 2014,
+    *        "averageResult": 3.5,
+    *        "passedCount": 143
+    *    }
+    * @apiError (422) ExamDataAlreadyExistBySubject
+    *     already gia data by subject
     */
     public async actionUpdate(
         ctx: any,
         schoolId: string,
-        profileNumber: string
+        giaId: string
     ) {
-        const profileData: { classNumber: number, profileId: number }
-            = ctx.request.body;
-        return await profileAdminService.update(
+        const giaResult: {
+          subjectId: number,
+          year: number,
+          averageResult: number,
+          passedCount: number
+        } = ctx.request.body;
+        return await giaAdminService.update(
             parseInt(schoolId, 10),
-            parseInt(profileNumber, 10),
-            profileData
+            parseInt(giaId, 10),
+            giaResult
         );
     }
 
     /**
-    * @api {delete} /api/admin/school/:schoolId/profile/:profileNumber
-    * Delete school profile class
+    * @api {delete} /api/admin/school/:schoolId/:giaId
+    * Delete gia data for school
     * @apiVersion 1.0.0
-    * @apiName deleteSchoolProfileClass
-    * @apiGroup School Profile Admin
+    * @apiName deleteGiaData
+    * @apiGroup School Gia Admin
     *
     * @apiParam {Number} schoolId  School's id.
-    * @apiParam {Number} profileNumber  profile class number.
+    * @apiParam {Number} giaId     Gia's id
     *
     * @apiSuccess {Number} result delete
     *
@@ -194,74 +223,13 @@ class GiaAdminController extends Controller {
     public async actionDelete(
         ctx: any,
         schoolId: string,
-        profileNumber: string
+        giaId: string
     ) {
-        return await profileAdminService.delete(
+        return await giaAdminService.delete(
             parseInt(schoolId, 10),
-            parseInt(profileNumber, 10),
+            parseInt(giaId, 10),
         );
     }
-
-
-     /**
-     * @api {get} /api/admin/schoolclasses
-     * Get classes for all school
-     * @apiVersion 1.0.0
-     * @apiName getSchoolClasses
-     * @apiGroup School Profile Admin
-     *
-     * @apiSuccess {Number[]}   number of classes
-     * @apiSuccessExample {json} Example response:
-     *    [
-     *        1,
-     *        2,
-     *        3,
-     *        4,
-     *        5,
-     *        6,
-     *        7,
-     *        8,
-     *        9,
-     *        10,
-     *        11
-     *    ]
-     */
-    public async actionListClasses() {
-        return profileAdminService.getListClasses();
-    }
-
-
-    /**
-    * @api {get} /api/admin/schoolprofiles/?searchString=соц
-    * Search profiles for school
-    * @apiVersion 1.0.0
-    * @apiName searchSchoolProfiles
-    * @apiGroup School Profile Admin
-    *
-    * @apiParam {String} searchString        search profile name
-    *
-    * @apiSuccess {Object[]} profile         array of object.
-    * @apiSuccess {Number}   profile.id      Id.
-    * @apiSuccess {String}   profile.name    Name
-    *
-    * @apiSuccessExample {json} Example response:
-    *    [{
-    *        "id": 1,
-    *        "name": "Социально-гуманитарный"
-    *    }, {
-    *        "id": 2,
-    *        "name": "Социально-экономический"
-    *    }, {
-    *        "id": 3,
-    *        "name": "Универсальный"
-    *    }]
-    */
-    public async actionListProfiles(ctx: any) {
-        const query: { searchString: string } = ctx.request.query;
-        const profileName: string  = query.searchString;
-        return await profileAdminService.searchProfiles(profileName);
-    }
-
 }
 
 export {GiaAdminController};

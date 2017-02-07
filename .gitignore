@@ -12,6 +12,8 @@ assets/dump/
 /parse/
 /console/reports
 /vkdata/
+project_tools/
+compile.js
 /*.xlsx
 
 *.log
@@ -62,18 +64,21 @@ api/modules/geo/views/departmentView.js
 
 api/modules/school/interfaces/SchoolAdmin.js
 api/modules/school/interfaces/ProfileAdmin.js
+api/modules/school/interfaces/GiaAdmin.js
 api/modules/school/controllers/errors/AddressDoesNotExist.js
 api/modules/school/controllers/errors/AddressIsNotUnique.js
 api/modules/school/controllers/errors/DepartmentNotFound.js
 api/modules/school/controllers/errors/SchoolNotExistTypeError.js
 api/modules/school/controllers/errors/SchoolNotFound.js
 api/modules/school/controllers/errors/SchoolProfileNameIsShorter.js
+api/modules/school/controllers/errors/ExamDataAlreadyExistBySubject.js
 api/modules/school/controllers/commentAdminController.js
 api/modules/school/controllers/departmentAdminController.js
 api/modules/school/controllers/index.js
 api/modules/school/controllers/schoolAdminController.js
 api/modules/school/controllers/profileAdminController.js
 api/modules/school/controllers/giaAdminController.js
+api/modules/school/controllers/examAdminController.js
 
 api/modules/school/models/school.js
 api/modules/school/models/specializedClassType.js
@@ -81,10 +86,12 @@ api/modules/school/models/specializedClassType.js
 api/modules/school/services/exceptions/SchoolNotExistType.js
 api/modules/school/services/exceptions/SchoolNotFound.js
 api/modules/school/services/exceptions/SchoolProfileNameIsShorter.js
+api/modules/school/services/exceptions/ExamDataAlreadyExistBySubject.js
 api/modules/school/services/schoolAdminService.js
 api/modules/school/services/schoolComment.js
 api/modules/school/services/profileAdminService.js
 api/modules/school/services/giaAdminService.js
+api/modules/school/services/examAdminService.js
 
 api/modules/school/models/specializedClassType.js
 
@@ -98,3 +105,4 @@ app/components/host/host.js
 console/modules/geoTools/geoTools.js
 
 gulp/taskBackendLint.js
+

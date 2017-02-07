@@ -3,36 +3,24 @@
 // author: dm-kamaev
 // service gia admin for school
 
-const sequelize = require('../../../../app/components/db.js');
-
-import SchoolModel from '../models/school';
-import {SchoolInstance} from '../models/school';
-import {Model as SpecializedClassTypeModel}
-    from '../models/specializedClassType';
-import {SpecializedClassTypeInstance} from '../models/specializedClassType';
-
-import {Model as GiaResultModel} from '../../study/models/giaResult';
-import {GiaResultInstance} from '../../study/models/giaResult';
-
-import {Model as SubjectModel} from '../../study/models/subject';
-import {SubjectInstance} from '../../study/models/subject';
-
-
-import {SchoolProfileNameIsShorter} from
-    './exceptions/SchoolProfileNameIsShorter';
+import {
+    Model as GiaResultModel,
+    GiaResultInstance
+} from '../../study/models/giaResult';
 
 import {
-    ProfileGetList,
-    ProfileData,
-} from '../interfaces/ProfileAdmin';
+    Model as SubjectModel,
+    SubjectInstance
+} from '../../study/models/subject';
 
-interface GiaResult {
-    id: number;
-    subject: string;
-    year: number;
-    averageResult: number;
-    passedNumber: number;
-}
+import {ExamDataAlreadyExistBySubject} from
+    './exceptions/ExamDataAlreadyExistBySubject';
+
+import {
+    GiaResult,
+    GiaResultUpdate,
+} from '../interfaces/GiaAdmin';
+
 
 class GiaAdminService {
     public readonly name: string = 'giaAdminService';
@@ -40,7 +28,9 @@ class GiaAdminService {
     public async getList(schoolId: number): Promise<GiaResult[]> {
         let giaResults: GiaResultInstance[];
         giaResults = await GiaResultModel.findAll({
-            attributes: ['id', 'count', 'result', 'schoolId', 'subjectId'],
+            attributes: [
+                'id', 'count', 'result', 'schoolId', 'subjectId', 'year'
+            ],
             where: {
                 schoolId,
             }
@@ -62,13 +52,13 @@ class GiaAdminService {
         );
 
         let res: GiaResult[];
-        res = giaResults.map((giaResult: GiaResultInstance):GiaResult => {
+        res = giaResults.map((giaResult: GiaResultInstance): GiaResult => {
             return {
                 id: giaResult.id,
                 subject: hashSubjectName[giaResult.subjectId] || '',
-                year: giaResult.year || 2015,
+                year: giaResult.year,
                 averageResult: Number((giaResult.result || 0).toFixed(1)),
-                passedNumber: giaResult.count || 0,
+                passedCount: giaResult.count || 0,
             };
         });
         return res;
@@ -90,83 +80,136 @@ class GiaAdminService {
 
     public async create(
         schoolId: number,
-        profileData: ProfileData
-    ): Promise<any> {
-        // const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
-        // let specializedClasses: number[][] = [];
-        // if (school.specializedClasses) {
-        //     specializedClasses = school.specializedClasses;
-        //     specializedClasses.push([
-        //         profileData.classNumber,
-        //         profileData.profileId
-        //     ]);
-        // } else {
-        //     specializedClasses = [[
-        //         profileData.classNumber,
-        //         profileData.profileId
-        //     ]];
-        // }
-
-        // const res = await this.updateSchoolSpecializedClass_(
-        //     schoolId,
-        //     specializedClasses
-        // );
-        // return res ? res[1][0].specializedClasses : null;
+        giaResult: {
+          subjectId: number,
+          year: number,
+          averageResult: number,
+          passedCount: number
+        }
+    ): Promise<GiaResultInstance> {
+        const subjectId: number = giaResult.subjectId;
+        const year: number = giaResult.year;
+        const isExistDataBySubject: boolean =
+            await this.checkExistDataBySubject({
+                schoolId,
+                subjectId,
+                year
+            });
+        if (isExistDataBySubject) {
+            throw new ExamDataAlreadyExistBySubject(
+                subjectId,
+                'gia'
+            );
+        }
+        return await GiaResultModel.create({
+            schoolId,
+            subjectId,
+            year,
+            result: giaResult.averageResult,
+            count: giaResult.passedCount
+        });
     }
 
 
     public async update(
         schoolId: number,
-        profileNumber: number,
-        profileData: ProfileData
-    ): Promise<any> {
-        // const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
-        // let specializedClasses: number[][] = [];
-        // if (school.specializedClasses) {
-        //     specializedClasses = school.specializedClasses;
-        //     const id: number = profileNumber - 1;
-        //     if (specializedClasses[id]) {
-        //         specializedClasses[id] = [
-        //             profileData.classNumber,
-        //             profileData.profileId
-        //         ];
-        //     }
-        // }
-        // const res = await this.updateSchoolSpecializedClass_(
-        //     schoolId,
-        //     specializedClasses
-        // );
-        // return res ? res[1][0].specializedClasses : null;
+        giaId: number,
+        giaResult: {
+          subjectId: number,
+          year: number,
+          averageResult: number,
+          passedCount: number
+        }
+    ): Promise<GiaResultUpdate | null> {
+        let res: GiaResultUpdate | null = null;
+        let gia: [number, GiaResultInstance[]];
+        const subjectId: number = giaResult.subjectId;
+        const year: number = giaResult.year;
+        const isExistDataBySubject: boolean =
+            await this.checkExistDataBySubject({
+                schoolId,
+                subjectId,
+                year,
+                giaId,
+            });
+        if (isExistDataBySubject) {
+            throw new ExamDataAlreadyExistBySubject(
+                subjectId,
+                'gia'
+            );
+        }
+
+        gia = await GiaResultModel.update({
+            schoolId,
+            subjectId,
+            year,
+            result: giaResult.averageResult,
+            count: giaResult.passedCount
+        }, {
+            where: {
+                id: giaId
+            },
+            returning: true
+        });
+
+        if (gia && gia[0]) {
+            const giaData: GiaResultInstance = gia[1][0];
+            res = {
+                id: giaData.id,
+                schoolId: giaData['school_id'],
+                subjectId: giaData['subject_id'],
+                year: giaData.year,
+                passedCount: giaData.count,
+                averageResult: giaData.result,
+            };
+        }
+        return res;
     }
 
 
     public async delete(
         schoolId: number,
-        profileNumber: number
-    ): Promise<any> {
-        // let responce: number = 0;
-        // const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
-        // let specializedClasses: number[][] = [];
-        // if (school.specializedClasses) {
-        //     specializedClasses = school.specializedClasses;
-        //     const id: number = profileNumber - 1;
-        //     const skipProfileClass = (specializedClass, i): boolean => {
-        //         let res: boolean = true;
-        //         if (i === id) {
-        //             responce = 1;
-        //             res = false;
-        //         }
-        //         return res;
-        //     };
-        //     specializedClasses = specializedClasses.filter(skipProfileClass);
-        // }
-        // await this.updateSchoolSpecializedClass_(
-        //     schoolId,
-        //     specializedClasses
-        // );
-        // return responce;
+        giaId: number
+    ): Promise<number> {
+        return await GiaResultModel.destroy({
+            where: {
+                id: giaId,
+                schoolId,
+            }
+        });
     }
 
-
+    // check exist data for gia by subject and year
+    private async checkExistDataBySubject(params: {
+        schoolId: number,
+        subjectId: number,
+        year: number,
+        giaId?: number
+    }): Promise<boolean> {
+        let res: boolean = false;
+        let giaBySubject: GiaResultInstance | null;
+        const schoolId = params.schoolId,
+        subjectId = params.subjectId,
+        year = params.year,
+        giaId = params.giaId;
+        const isUpdate = Boolean(giaId);
+        giaBySubject = await GiaResultModel.findOne({
+            attributes: ['id'],
+            where: {
+                schoolId,
+                subjectId,
+                year,
+            }
+        });
+        if (isUpdate) {
+            // if not updated itself
+            if (giaBySubject && giaId !== giaBySubject.id) {
+                res = true;
+            }
+        } else {
+            res = Boolean(giaBySubject);
+        }
+        return res;
+    }
 };
 export const giaAdminService = new GiaAdminService();

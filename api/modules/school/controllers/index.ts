@@ -17,6 +17,9 @@ const profileAdminController = new ProfileAdminController();
 import {GiaAdminController} from './giaAdminController';
 const giaAdminController = new GiaAdminController();
 
+import {ExamAdminController} from './examAdminController';
+const examAdminController = new ExamAdminController();
+
 
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
@@ -116,5 +119,8 @@ initCrudRouting(
     giaAdminController,
     ':giaId'
 );
+router.get('/admin/schoolsubject', examAdminController.actionGetListSubject);
+router.get('/admin/examyear', examAdminController.actionGetListExamYear);
+
 
 export default router;

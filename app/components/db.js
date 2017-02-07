@@ -12,6 +12,9 @@ var options = {
 
 if (config.environment != 'production') {
     options.logging = logger.debug.bind(logger);
+    // options.logging = function (query) {
+    //   logger.info(query.replace('WHERE' , '\nWHERE'));
+    // };
     options.benchmark = true;
 }
 

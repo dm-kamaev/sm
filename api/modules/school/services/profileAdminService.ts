@@ -199,9 +199,13 @@ class ProfileAdminService {
             const specializedClassName: string =
                 await this.getSpecializedClassName_(specializedClassId);
             return {
-                id: specializedClassId,
+                id: i + 1,
                 classNumber: specializedClass[0],
                 profile: specializedClassName
+                // profile: {
+                //     id: specializedClassId,
+                //     name: specializedClassName
+                // }
             };
         });
     }

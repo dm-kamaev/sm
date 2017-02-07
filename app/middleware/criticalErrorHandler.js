@@ -6,19 +6,19 @@ const ApiError = require('nodules/controller/ControllerError');
 module.exports = function(error, request, response, next) {
     let result;
     if (error instanceof ApiError) {
-        logger.debug(error);
         response.status(error.status);
         result = [{
             code: error.code,
             message: error.message
         }];
+        logger.critical(JSON.stringify(result, null, 2));
         response.send(result);
     } else if (/^Sequelize/.test(error.name)) {
         logger.critical(JSON.stringify(error, null, 2));
         response.status(422);
         result = [{
             code: 'ValidationError',
-            validationErrors: error.errors
+            validationErrors: error.errors || [error.message]
         }];
         response.send(result);
     } else {

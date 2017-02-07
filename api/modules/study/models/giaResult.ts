@@ -4,7 +4,7 @@ const DataType = require('sequelize'),
 import * as Sequelize from 'sequelize/v3';
 
 interface GiaResultAttribute {
-    id: number;
+    id?: number;
     count: number;
     subjectId: number;
     schoolId: number;
@@ -36,7 +36,10 @@ const GiaResult: GiaResultModel = db.define('GiaResult', {
     result: {
         type: DataType.FLOAT,
         allowNull: false
-    }
+    },
+    year: {
+        type: DataType.INTEGER,
+    },
 }, {
     underscored: true,
     tableName: 'gia_result',
