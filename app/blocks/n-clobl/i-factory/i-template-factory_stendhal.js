@@ -83,6 +83,7 @@ goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bLabel.Template');
 goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSuggestFilter.Template');
+goog.require('sm.lUniversity.bDescriptionList.Template');
 
 
 
@@ -429,6 +430,12 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'lCourse-userInteraction',
             sm.lCourse.bUserInteraction.Template.userInteraction
+        );
+
+    /** l-university blocks */
+    this.setTemplateListItem(
+            'lUniversity-descriptionList',
+            sm.lUniversity.bDescriptionList.Template.descriptionList
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

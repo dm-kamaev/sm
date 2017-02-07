@@ -22,11 +22,22 @@
 }
 
 .l-university__data_sketch {
-    float: left;
+    display: inline-block;
 
     width: 208px;
     margin-right: 102px;
     margin-bottom: 35px;
+
+    vertical-align: top;
+}
+
+.l-university__data_main-description {
+    display: inline-block;
+
+    width: calc(100% - 310px);
+    margin-bottom: 25px;
+
+    vertical-align: top;
 }
 
 .l-university__type {
@@ -46,6 +57,8 @@
 }
 
 .l-university__description {
+    margin-bottom: 25px;
+
     color: #747474;
 
     font-size: 15px;
@@ -54,6 +67,10 @@
 
 
 @include media-xl {
+    .l-university__data_main-description {
+        width: 100%;
+    }
+
     .l-university__section_data {
         box-sizing: border-box;
         width: auto;
@@ -73,5 +90,6 @@
 @include media-m {
     .l-university__data_sketch {
         width: 100%;
+        margin-right: 0;
     }
 }

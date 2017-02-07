@@ -1,6 +1,8 @@
 goog.provide('sm.lUniversity.View');
 
 goog.require('sm.iLayout.ViewStendhal');
+goog.require('sm.bSmSketch.View');
+goog.require('sm.lUniversity.bDescriptionList.View');
 
 
 
@@ -46,7 +48,9 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'l-university'
+        ROOT: 'l-university',
+        SKETCH: sm.bSmSketch.View.CssClass.ROOT,
+        DESCRIPTION_LIST: sm.lUniversity.bDescriptionList.View.CssClass.ROOT
     };
 
 
@@ -76,7 +80,14 @@ goog.scope(function() {
 
         goog.object.extend(
             this.dom,
-            {}
+            {
+                sketch: this.getElementByClass(
+                    View.CssClass.SKETCH
+                ),
+                descriptionList: this.getElementByClass(
+                    View.CssClass.DESCRIPTION_LIST
+                )
+            }
         );
     };
 

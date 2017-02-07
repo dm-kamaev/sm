@@ -47,7 +47,7 @@ goog.scope(function() {
      * @override
      */
     View.prototype.decorateInternal = function(element) {
-        Sketch.base(this, 'decorateInternal', element);
+        View.base(this, 'decorateInternal', element);
 
         this.initDom();
     };

@@ -26,7 +26,9 @@
  *         name: string,
  *         subunitType: string,
  *         subunitName: string,
- *         description: string
+ *         description: string,
+ *         descriptionList:
+ *              sm.lUniversity.bDescriptionList.Template.Params.Data
  *     }
  * }} sm.lUniversity.Template.Data
  */
@@ -144,7 +146,9 @@
  * @ovveride
  */
 {template .sectionData_}
-    <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_data{sp}"
+    >
         {call .sketchData_ data="all" /}
         {call .mainData_ data="all" /}
         // {call .listData_ data ="all" /}
@@ -159,7 +163,7 @@
  *         entityData: name
  *     }
  * }}
- * @protected
+ * @private
  */
 {template .sketchData_}
     <div class="{call .rootClass/}__data_sketch">
@@ -192,18 +196,47 @@
  *         description: string
  *     }
  * }}
- * @protected
+ * @private
  */
 {template .mainData_}
-    <div class="{call .rootClass/}__data_description">
+    <div class="{call .rootClass/}__data_main-description">
         <div class="{call .rootClass/}__type">
-            {$params.data.entityData.subunitType}
+            {call cl.iControl.Template.getText}
+                {param message: $params.data.entityData.subunitType /}
+            {/call}
         </div>
         <div class="{call .rootClass/}__name">
-            {$params.data.entityData.subunitName}
+            {call cl.iControl.Template.getText}
+                {param message: $params.data.entityData.subunitName /}
+            {/call}
         </div>
         <div class="{call .rootClass/}__description">
-            {$params.data.entityData.description}
+            {call cl.iControl.Template.getText}
+                {param message: $params.data.entityData.description /}
+            {/call}
         </div>
+        {call .descriptionList_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the middle - section main data
+ * @param params {{
+ *     data: sm.lUniversity.Template.Data
+ * }}
+ * @private
+ */
+{template .descriptionList_}
+    <div class="{call .rootClass/}__description-list">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'lUniversity-descriptionList',
+                'renderParams': [
+                    'data': $params.data.entityData.descriptionList
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}

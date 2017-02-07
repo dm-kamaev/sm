@@ -31,6 +31,9 @@ goog.scope(function() {
      */
     University.prototype.decorateInternal = function(element) {
         University.base(this, 'decorateInternal', element);
+
+        this.initSketch_();
+        this.initDescriptionList_();
     };
 
 
@@ -39,6 +42,35 @@ goog.scope(function() {
      */
     University.prototype.enterDocument = function() {
         University.base(this, 'enterDocument');
+    };
+
+        /**
+     * @override
+     */
+    University.prototype.enterDocument = function() {
+        University.base(this, 'enterDocument');
+    };
+
+
+    /**
+     * @private
+     */
+    University.prototype.initSketch_ = function() {
+        this.decorateChild(
+            'smSketch',
+            this.getView().getDom().sketch
+        );
+    };
+
+
+    /**
+     * @private
+     */
+    University.prototype.initDescriptionList_ = function() {
+        this.decorateChild(
+            'lUniversity-descriptionList',
+            this.getView().getDom().descriptionList
+        );
     };
 });  // goog.scope
 
