@@ -3,7 +3,6 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var commander = require('commander');
 var xlsx = require('node-xlsx');
-var colors = require('colors');
 var common = require('./common');
 
 var ProgressBar = require('progress');
@@ -171,8 +170,7 @@ class MainParser {
     static getSchool(site) {
         site = site.replace(/http:\/\//g, ''); //remove 'http://'
         var instance = await(services.school.findBySite(site));
-       // if (!instance)
-       //      /console.log(colors.red('Cant find school for site ' + site));
+
         return instance;
     }
 

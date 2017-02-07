@@ -1,6 +1,6 @@
 'use strict';
 
-const lodashMap = require('lodash/collection/map');
+const lodashMap = require('lodash/map');
 
 const ID = 'id';
 

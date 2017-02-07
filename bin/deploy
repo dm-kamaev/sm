@@ -11,7 +11,7 @@ echo "Preparing for packaging"
 if [ ! -d node_modules/ ]; then
     npm install
 else
-    npm update
+    npm update --dev
 fi
 
 $gulp backendLint

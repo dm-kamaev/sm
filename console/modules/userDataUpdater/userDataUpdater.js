@@ -133,7 +133,7 @@ class UserDataUpdater {
 
             return result;
         });
-        var uniqNames = lodash.uniq(names, 'original');
+        var uniqNames = lodash.uniqBy(names, 'original');
         return uniqNames;
     }
 
@@ -203,7 +203,7 @@ class UserDataUpdater {
      */
     archive_(comments) {
         var archiver = new Archiver(FILE_PATH);
-        
+
         await(archiver.compress(JSON.stringify(comments)));
     }
 

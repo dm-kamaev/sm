@@ -9,7 +9,7 @@ var await = require('asyncawait/await');
 var imap = require('imap-simple');
 var http = require('http');
 var querystring = require('querystring');
-var mimelib = require("mimelib");
+var mimelib = require('mimelib');
 
 var services = require('../app/components/services').all;
 const config = require('../app/config/config.json');

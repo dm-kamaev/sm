@@ -9,7 +9,6 @@ doc/
 build/
 runtime/
 assets/dump/
-/parse/
 /console/reports
 /vkdata/
 /*.xlsx

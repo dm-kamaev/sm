@@ -4,7 +4,6 @@ var scpConfig = require.main.require('./api/config').scp;
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const commander = require('commander');
-const colors = require('colors');
 const readlineSync = require('readline-sync');
 const fs = require('fs');
 const DUMP_FOLDER = './assets/dump/';
@@ -100,7 +99,7 @@ class DumpCreator {
             ' > ' + filePath;
         var execRes = await(common.execAsync(command));
         if (execRes.success) {
-            console.log('file ' + colors.green(filename) + ' created! ');
+            console.log('file ' + filename + ' created! ');
             if (this.isToRemote_) {
                 await(this.upload_(filePath));
             }
@@ -125,7 +124,7 @@ class DumpCreator {
                 scpConfig.host + ':' + scpConfig.path;
         var execRes = await(common.execAsync(execString));
         if (execRes.success) {
-            console.log('Upload ' + colors.green('success!'));
+            console.log('Upload ' + 'success!');
         } else {
             throw execRes;
         }
@@ -205,10 +204,10 @@ class DumpHelper {
             branch = dump.split(SEPARATOR)[0], //TODO: if no config?
             time = dump.split(SEPARATOR)[1],
             dumpStr = (branch && time) ?
-                'Dump: ' + colors.green(branch) + SEPARATOR + time :
+                'Dump: ' + branch + SEPARATOR + time :
                 'Dump: ' + dump;
         console.log (dumpStr);
-        console.log ('Database: ' + colors.yellow(db));
+        console.log ('Database: ' + db);
     }
 
     /**
@@ -266,7 +265,7 @@ class DumpLoader {
                 this.filename_ + ' ' + DUMP_FOLDER;
         var execRes = await(common.execAsync(execString));
         if (execRes.success) {
-            console.log('Download ' + colors.green('succsess!'));
+            console.log('Download succsess!');
         } else {
             throw execRes;
         }

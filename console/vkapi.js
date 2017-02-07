@@ -8,7 +8,6 @@
 var services = require.main.require('./app/components/services').all;
 var commander = require('commander');
 var https = require('https');
-var colors = require('colors');
 var sleep = require('sleep');
 var fs = require('fs');
 var async = require('asyncawait/async');
@@ -25,11 +24,11 @@ const RETRY_COUNT = 10;
 
 var start = async(() => {
     console.log('\nWhich script to launch?');
-    console.log('\t' + colors.green('1) ') + 'Get matches and write them to file');
-    console.log('\t' + colors.green('2) ') + 'Get matches from excel file');
-    console.log('\t' + colors.green('3) ') + 'Process matches file');
-    console.log('\t' + colors.green('4) ') + 'Write processed matches to db');
-    console.log('\t' + colors.green('5) ') + 'Count items in JSON file');
+    console.log('\t' + '1) ' + 'Get matches and write them to file');
+    console.log('\t' + '2) ' + 'Get matches from excel file');
+    console.log('\t' + '3) ' + 'Process matches file');
+    console.log('\t' + '4) ' + 'Write processed matches to db');
+    console.log('\t' + '5) ' + 'Count items in JSON file');
     var answer;
     while (!answer) {
         answer = readlineSync.prompt();
@@ -51,13 +50,13 @@ var start = async(() => {
                 break;
             default:
                 console.log('Type number from 1 to 5');
-                answer = null;   
+                answer = null;
                 break;
         }
     }
 });
 
-var CountJSON = async(() => { 
+var CountJSON = async(() => {
     var answerPath = readlineSync.question('Type filename of json\n');
     try {
         var json = loadFromJson(answerPath);
@@ -65,17 +64,17 @@ var CountJSON = async(() => {
     } catch (e) {
         console.log(e.message);
     }
-}); 
+});
 
 var GetMatches = async(() => {
     var schools = await(getSchools());
     var ourSchools = await(services.school.listInstances());
-    console.log('Школ вконтакте: ' + colors.yellow(schools.response.items.length));
-    console.log('Наших школ: ' + colors.yellow(ourSchools.length));
+    console.log('Школ вконтакте: ' + schools.response.items.length);
+    console.log('Наших школ: ' + ourSchools.length);
     var matches = compareMatches(schools.response.items, ourSchools);
-    console.log(('================================').yellow);
-    console.log('Количество совпадений: ' + colors.yellow(matches.length));
-    console.log(('================================').yellow);
+    console.log('================================');
+    console.log('Количество совпадений: ' + matches.length);
+    console.log('================================');
     //await(processMatches(matches));
 });
 
@@ -106,7 +105,7 @@ var parseExcel = async((path, outPath) => {
         data = parsed[0].data,
 		matches = [];
     await (data.forEach((row, index) => {
-		if (index) {	
+		if (index) {
 			rowResult = await(processRow(row));
 			matches = matches.concat(rowResult);
 		}
@@ -135,7 +134,7 @@ var getSchools = async ((cityId) => {
     }));
 });
 
- 
+
 var compareMatches = (vkSchools, ourSchools) => {
     var results = [],
         extraResults = [],
@@ -174,14 +173,14 @@ var compareMatches = (vkSchools, ourSchools) => {
     saveToJson(extraResults, 'extra.json');
     saveToJson(notFound, 'notFound.json');
     saveToJson(results, 'matches.json');
-    console.log('Количество точных совпадений: ' + colors.yellow(results.length) +
-            '. Они записаны в файл ' + colors.yellow('matches.json'));
-    console.log('Количество примерных совпадений: ' + 
-            colors.yellow(extraResults.length) +
-            '. Они записаны в файл ' + colors.yellow('extra.json'));
-    console.log('Количество не найденых совпадений: ' + 
-            colors.yellow(notFound.length) +  
-            '. Они записаны в файл ' + colors.yellow('notFound.json'));
+    console.log('Количество точных совпадений: ' + results.length +
+            '. Они записаны в файл ' + 'matches.json');
+    console.log('Количество примерных совпадений: ' +
+            extraResults.length +
+            '. Они записаны в файл ' + 'extra.json');
+    console.log('Количество не найденых совпадений: ' +
+            notFound.length +
+            '. Они записаны в файл ' + 'notFound.json');
     return results;
 };
 
@@ -189,8 +188,8 @@ var compareMatches = (vkSchools, ourSchools) => {
 var getSchoolUsers = async ((school) => {
     var schoolId = school.id;
 
-    console.log('Getting users for school ' + colors.yellow(school.id) +
-    ' || ' + colors.yellow(school.title));
+    console.log('Getting users for school ' + school.id +
+    ' || ' + school.title);
     var results = [];
     var params = {
         fields:'education',
@@ -199,8 +198,8 @@ var getSchoolUsers = async ((school) => {
     };
     for (var i = START_YEAR; i <= END_YEAR; i++) {
         if (vkIgnore.find(el => el.vkId == schoolId && el.year == i))
-            console.log('School ' + colors.red(school.title) + 
-                ' year ' + colors.red(i) + ' in ignore');
+            console.log('School ' + school.title +
+                ' year ' + i + ' in ignore');
         else {
             var yearParams = params;
             yearParams.school_year = i;
@@ -209,8 +208,8 @@ var getSchoolUsers = async ((school) => {
             do {
                 answ = await(request('users.search', yearParams));
                 if (!answ) {
-                    console.log('Didnt get anything after ' + colors.red(reqTry+1) +
-                           ' try ' + school.title + ' year ' + colors.red(i));
+                    console.log('Didnt get anything after ' + reqTry + 1 +
+                           ' try ' + school.title + ' year ' + i);
                     if (!reqTry) {
                         console.log('Going to sleep for 60 seconds');
                         sleep.sleep(60); //sleep for 60 seconds
@@ -220,8 +219,8 @@ var getSchoolUsers = async ((school) => {
             } while (!answ && reqTry < RETRY_COUNT);
             if (answ && !answ.skip) {
                 if (answ.response.count > 1000) {
-                    console.log('There are too many results in school ' + colors.red(school.title) +
-                        ' year ' + colors.red(i));
+                    console.log('There are too many results in school ' +
+                        school.title + ' year ' + i);
                 }
                 else {
                     results.push({
@@ -264,8 +263,8 @@ var request = async ((methodName, params) => {
             response.on('end', function () {
                 if (params.school)
                     console.log('got an answer for school ' +
-                        colors.green(params.school) + ' year ' +
-                        colors.green(params.school_year));
+                        params.school + ' year ' +
+                        params.school_year);
 
                 resolve(JSON.parse(data));
                 //sleep.usleep(210000);
@@ -281,27 +280,27 @@ var request = async ((methodName, params) => {
     do {
         res = await(doRequest);
         if (res && res.error) {
-            console.log(colors.red('ERROR: ' + res.error.error_msg));
-            console.log(colors.yellow('Params:'));
-            console.log(colors.yellow(JSON.stringify(params)));
+            console.log('ERROR: ' + res.error.error_msg);
+            console.log('Params:');
+            console.log(JSON.stringify(params));
             sleep.sleep(10);
         }
     } while (res && res.error && res.error.error_code == 6);
     if (!res){
-        console.log(colors.red('Didnt get any response'));
+        console.log('Didnt get any response');
         return null;
     }
-    if (!res.response) { 
+    if (!res.response) {
         sleep.sleep(1);
-        console.log(colors.red('Didnt get any res.response'));
+        console.log('Didnt get any res.response');
         return null;
-    } 
+    }
 	if (res.response.count === 0) {
 		var answer, command;
-		console.log(colors.red('WARNING'));
+		console.log('WARNING');
 		while (!answer) {
             answer = readlineSync.question('Response count = 0. \n\tType \'S\'' +
-						   'to skip school\\year \n\tType \'T\' to try again' + 
+						   'to skip school\\year \n\tType \'T\' to try again' +
                            '\n\tType \'I\' to add in ignore and skip\n');
             switch (answer){
                 case 'S':
@@ -314,7 +313,7 @@ var request = async ((methodName, params) => {
                     addToIgnore(params.school, params.school_year);
                     command = {skip: true};
                     break;
-                default: 
+                default:
                     answer = null;
                     break;
             }
@@ -335,7 +334,7 @@ var addToIgnore = (id, year) => {
 };
 
 /**
- * trying to find all the numbers in both strings 
+ * trying to find all the numbers in both strings
  * and comparing them. Used in getting matches
  */
 var compareNumbers = (string1, string2) => {
@@ -348,7 +347,7 @@ var compareNumbers = (string1, string2) => {
 		    	isFound = true;
 		    }
 	    });
-    }); 
+    });
     return isFound;
 };
 
@@ -372,8 +371,7 @@ var saveToJson = (schools, name) => { //'vk_schools.json'
 
 var loadFromJson = (name) => { //'vk_schools.json'
     if (!fileExists(name)) {
-        console.log('File ' + colors.yellow(name) +
-            ' is not found and will be created now');
+        console.log('File ' + name + ' is not found and will be created now');
         fs.writeFileSync(name, '[]');
     }
     return require('../' + name);
@@ -413,12 +411,12 @@ var processMatch = async((match) => {
         });
         local_match.years= resultsArr;
     } else {
-        console.log('Got nothing for ' + colors.red(match.title));
+        console.log('Got nothing for ' + match.title);
     }
     return local_match;
 });
 
-var processMatches = async((matches, outPath)=> {    
+var processMatches = async((matches, outPath)=> {
 	console.log('Getting universities for schools. Patience');
     var cached_matches = loadFromJson(outPath);
     var processed_matches = [];
@@ -429,12 +427,12 @@ var processMatches = async((matches, outPath)=> {
                 return true;
         });
         if (cached_match){
-            console.log('Users for school ' +
-                colors.green(cached_match.title) + ' already cached');
+            console.log('Users for school ' + cached_match.title +
+                ' already cached');
             processed_matches.push(cached_match);
         } else {
             var processedMatch = await(processMatch(match));
-            processed_matches.push(processedMatch);    
+            processed_matches.push(processedMatch);
         }
         saveToJson(processed_matches, outPath);
     });
@@ -449,8 +447,8 @@ var writeResultsFromJsonToBd = async ((path)=> {
 	);
 });
 
-/** Writes one school with universities (from processMatchess result array) to database. 
- * 
+/** Writes one school with universities (from processMatchess result array) to database.
+ *
  */
 var writeSchoolToBd = async ((school)=> {
 	services.univer.addSchoolResults(school);

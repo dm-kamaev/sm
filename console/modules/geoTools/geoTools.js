@@ -149,7 +149,7 @@ class GeoTools {
                 coords: metro.Point.pos.split(' ')
             };
         });
-        let metrosUniq = lodash.uniq(metros, 'name');
+        let metrosUniq = lodash.uniqBy(metros, 'name');
         return metrosUniq;
     }
 

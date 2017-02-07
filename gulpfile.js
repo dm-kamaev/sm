@@ -4,9 +4,7 @@ const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const gulp = require('gulp');
 const path = require('path');
-const concat = require('gulp-concat');
 const util = require('gulp-util');
-const babel = require('gulp-babel');
 const apidoc = require('gulp-apidoc');
 const exec = require('child_process').exec;
 const eslint = require('gulp-eslint');
@@ -66,13 +64,6 @@ gulp.task('rollback', async(function() {
         count = parseInt(params.count) || 1;
     await(migrationWrapper.rollback(count));
 }));
-
-gulp.task('appES5', function() {
-    return gulp.src('app.js')
-        .pipe(babel())
-        .pipe(concat('appES5.js'))
-        .pipe(gulp.dest(''));
-});
 
 gulp.task('soy', function() {
     return gulpHelper.soy.build([]);
@@ -215,7 +206,7 @@ const tasks = function(bool) {
         ['createTimestamp', 'soy', 'compile', 'svgSprite', 'sprite', 'images',
         'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig'] :
         ['watch', 'soy', 'scripts', 'svgSprite', 'sprite', 'images',
-        'fonts', 'styles', 'lint-css', 'copySchools', 'copyCourses',
+        'fonts', 'styles', /* 'lint-css',*/ 'copySchools', 'copyCourses',
         'localConfig', 'backendLint'];
 };
 

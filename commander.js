@@ -23,7 +23,6 @@ require('./console/metro_closest.js').Command;
 require('./console/modules/newCommentNotifier/newCommentNotifier.js').Command;
 require('./console/parse.js').Command;
 require('./console/parse_area.js').Command;
-require('./console/parseCourse').Command;
 require('./console/parseExt.js').Command;
 require('./console/parseMail.js').Command;
 require('./console/parsePguActs.js').Command;

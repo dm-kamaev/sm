@@ -7,7 +7,7 @@ var metroView = {};
  * @return {array<object>}
  */
 metroView.list = function(metros) {
-    var uniqMetros = lodash.uniq(metros, 'id');
+    var uniqMetros = lodash.uniqBy(metros, 'id');
 
     return uniqMetros
         .map(metro => {

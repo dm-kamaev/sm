@@ -515,7 +515,7 @@ class CourseSearchQuery extends SearchQuery {
                 );
             }
             this.courseSearchParams_.or(
-                condition
+                condition.toString()
             );
 
             this.courseDataCount_++;

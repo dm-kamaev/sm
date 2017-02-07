@@ -6,7 +6,6 @@ var commander = require('commander');
 var sequelize = require('../app/components/db');
 var squel = require('squel').useFlavour('postgres');
 var services = require('../app/components/services').all;
-var colors = require('colors');
 const RatingParser = require('./modules/parse/dogm.mos.ru/RatingParser.js');
 
 var parse = async(function() {
@@ -22,9 +21,8 @@ var parse = async(function() {
         if (isNotFound)
             notFoundCount++;
     }));
-    var color = notFoundCount ? colors.yellow : colors.green;
     var processed = results.length - notFoundCount;
-    console.log('Processed: ' + color(processed + '/' + results.length));
+    console.log('Processed: ' + processed + '/' + results.length);
 
 });
 
@@ -40,7 +38,7 @@ var processRank = async(function(rank) {
     if (sqlRes[0].length == 1 || id) {
         sequelize.query(generateUpdateSql(id, rank.rankDogm));
     } else {
-        console.log(colors.red(rank.name) + ' | ' + colors.red(rank.site));
+        console.log(rank.name + ' | ' + rank.site);
         notFound = true;
     }
 

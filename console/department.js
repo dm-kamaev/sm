@@ -2,7 +2,6 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var xlsx = require('node-xlsx');
 var lodash = require('lodash');
-var colors = require('colors');
 var exclusion = require('./parseConfig').exclusion;
 var commander = require('commander');
 var models = require.main.require('./app/components/models').all;
@@ -38,11 +37,11 @@ var compareAddresses = function(adrDB, adrExcel, adrExcelConverted) {
  */
 var processAdress = async(function(address, records) {
     var matches = records.filter(
-        record => 
+        record =>
             compareAddresses(address.name, record.address, record.convertedAddress)
     );
     if (!matches.length) {
-        console.log(colors.red(address.name));
+        console.log(address.name);
     } else {
         await(updateDB(address, matches));
     }

@@ -2,7 +2,6 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var commander = require('commander');
 var xlsx = require('node-xlsx');
-var colors = require('colors');
 
 var services = require.main.require('./app/components/services').all;
 
