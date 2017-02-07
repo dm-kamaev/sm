@@ -30,28 +30,42 @@ class ProfileAdminController extends Controller {
      *
      * @apiParam {Number} schoolId School's id.
      *
-     * @apiSuccess {Object[]} profiles               Array of object.
-     * @apiSuccess {String}   profiles.id            Id.
-     * @apiSuccess {String}   profiles.classNumber   Class's number.
-     * @apiSuccess {String}   profiles.profile       Profile school.
+     * @apiSuccess {Object[]} profiles              Array of object.
+     * @apiSuccess {String}   profiles.id           Id.
+     * @apiSuccess {String}   profiles.classNumber  Class's number.
+     * @apiSuccess {Object}   profile.profile       Profile school class
+     * @apiSuccess {Number}   -.id                  Specialized's Id.
+     * @apiSuccess {String}   -.name                Specialized's name.
      *
      * @apiSuccessExample {json} Example response:
      *    [{
      *        "id": 1,
      *        "classNumber": 10,
-     *        "profile": "Химико-биологический"
+     *        "profile": {
+     *            "id": 2,
+     *            "name": "Химико-биологический"
+     *        }
      *    }, {
      *        "id": 2,
      *        "classNumber": 10,
-     *        "profile": "Биолого-географический"
+     *        "profile": {
+     *            "id": 3,
+     *            "name": "Биолого-географический"
+     *        }
      *    }, {
      *        "id": 3,
      *        "classNumber": 10,
-     *        "profile": "Социально-гуманитарный"
+     *        "profile": {
+     *            "id": 4,
+     *            "name": "Социально-гуманитарный"
+     *        }
      *    }, {
      *        "id": 4,
      *        "classNumber": 10,
-     *        "profile": "Филологический"
+     *        "profile": {
+     *            "id": 5,
+     *            "name": "Филологический"
+     *        }
      *    }]
      */
     public async actionList(ctx: any, schoolId: string) {
@@ -71,14 +85,19 @@ class ProfileAdminController extends Controller {
      *
      * @apiSuccess {Object}   profile               Profile
      * @apiSuccess {String}   profile.id            Id
-     * @apiSuccess {String}   profile.classNumber   Class Number.
-     * @apiSuccess {String}   profile.profile       Profile school.
+     * @apiSuccess {String}   profile.classNumber   Class Number
+     * @apiSuccess {Object}   profile.profile       Profile school class
+     * @apiSuccess {Number}   -.id                  Specialized's Id.
+     * @apiSuccess {String}   -.name                Specialized's name.
      *
      * @apiSuccessExample {json} Example response:
      *    {
      *        "id": 1,
      *        "classNumber": 10,
-     *        "profile": "Химико-биологический"
+     *        "profile": {
+     *            "id": 2,
+     *            "name": "Химико-биологический"
+     *        }
      *    }
      */
     public async actionGet(ctx: any, schoolId: string, profileNumber: string) {

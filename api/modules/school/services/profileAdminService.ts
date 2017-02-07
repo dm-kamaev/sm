@@ -5,11 +5,12 @@
 
 const sequelize = require('../../../../app/components/db.js');
 
-import SchoolModel from '../models/school';
+import SchoolModel from '../models/school'
 import {SchoolInstance} from '../models/school';
-import {Model as SpecializedClassTypeModel}
-    from '../models/specializedClassType';
-import {SpecializedClassTypeInstance} from '../models/specializedClassType';
+import {
+    Model as SpecializedClassTypeModel,
+    SpecializedClassTypeInstance
+} from '../models/specializedClassType';
 
 import {SchoolProfileNameIsShorter} from
     './exceptions/SchoolProfileNameIsShorter';
@@ -201,11 +202,10 @@ class ProfileAdminService {
             return {
                 id: i + 1,
                 classNumber: specializedClass[0],
-                profile: specializedClassName
-                // profile: {
-                //     id: specializedClassId,
-                //     name: specializedClassName
-                // }
+                profile: {
+                    id: specializedClassId,
+                    name: specializedClassName
+                }
             };
         });
     }

@@ -1,7 +1,10 @@
 export interface ProfileGetList {
     id: number;
     classNumber: number;
-    profile: string;
+    profile: {
+      id: number;
+      name: string;
+    };
 }
 
 
