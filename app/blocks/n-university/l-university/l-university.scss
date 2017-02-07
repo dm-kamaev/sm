@@ -67,9 +67,6 @@
 
 
 @include media-xl {
-    .l-university__data_main-description {
-        width: 100%;
-    }
 
     .l-university__section_data {
         box-sizing: border-box;
@@ -88,6 +85,10 @@
 }
 
 @include media-m {
+    .l-university__data_main-description {
+        width: 100%;
+    }
+
     .l-university__data_sketch {
         width: 100%;
         margin-right: 0;
