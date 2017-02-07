@@ -9,9 +9,7 @@
  *         linkUrl: ?string
  *     },
  *     listLinks: (sm.gDropdown.TemplateListLinks.Params.Data|undefined),
- *     contacts: {
- *         phone: string
- *     },
+ *     contacts: sm.bSmContacts.Template.Params.Data,
  *     links: ({
  *         nameL: string,
  *         nameM: string,
@@ -107,9 +105,7 @@
  * Section Contacts
  * @param params {{
  *     data: {
- *         contacts: {
- *             phone: string
- *         }
+ *         contacts: sm.bSmContacts.Template.Params.Data
  *     }
  * }}
  */
@@ -170,10 +166,7 @@
             {param params: [
                 'type': 'smContacts',
                 'renderParams': [
-                    'data': $params.data.contacts,
-                    'config': [
-                        'size': 'xl'
-                    ]
+                    'data': $params.data.contacts
                 ]
             ] /}
         {/call}
