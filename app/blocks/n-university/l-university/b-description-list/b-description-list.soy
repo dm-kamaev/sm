@@ -1,0 +1,197 @@
+{namespace sm.lUniversity.bDescriptionList.Template}
+
+
+/**
+ * @typedef {{
+ *     items: Array<{
+ *         data: {
+ *             header: string,
+ *             subitems: (Array<string>|
+ *                  Array<sm.bSmLink.Template.Params.Data>)
+ *         },
+ *         config: {
+ *             inline: boolean
+ *         }
+ *     }>
+ * }} sm.lUniversity.bDescriptionList.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ * }} sm.lUniversity.bDescriptionList.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data:  sm.lUniversity.bDescriptionList.Template.Data,
+ *     config: sm.lUniversity.bDescriptionList.Template.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .descriptionList}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data:  sm.lUniversity.bDescriptionList.Template.Data,
+ *     config: sm.lUniversity.bDescriptionList.Template.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .list_ data="all" /}
+{/template}
+
+
+/**
+ * List
+ * @param params {{
+ *     data: sm.lUniversity.bDescriptionList.Template.Data
+ * }}
+ * @private
+ */
+{template .list_}
+    {foreach $item in $params.data.items}
+        <div class="{call .rootClass/}__item">
+
+            <div class="{call .rootClass/}__item-header">
+                {call .getText}
+                    {param message: $item.data.header /} 
+                {/call}
+            </div>
+
+            <div class="{call .rootClass/}__item-description">
+                {call .itemDescription_}
+                    {param params: [
+                        'subitems': $item.data.subitems,
+                        'inline': $item.config.inline
+                    ]/}
+                {/call}
+            </div>
+
+        </div>        
+    {/foreach}
+{/template}
+
+
+/**
+ * Item description
+ * @param params {
+ *     subitems: (Array<string>|Array<sm.bSmLink.Template.Params.Data>)
+ *     inline: boolean    
+ * }
+ * @private
+ */
+{template .itemDescription_}
+    {if $params.inline}
+        {call .inlineSubtems_ data="all" /}
+    {else}
+        {call .blockSubtems_ data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * Description subitems
+ * @param params {
+ *     subitems: (Array<string>|Array<sm.bSmLink.Template.Params.Data>)
+ * }
+ * @private
+ */
+{template .inlineSubtems_}
+    {foreach $item in $params.subitems}
+
+        {if $item.url}
+            {call .link_}
+                {param item: $item /}
+            {/call}
+        {else}
+            {call .string_ data="all"}
+                {param item: $item /}
+            {/call}
+        {/if}
+
+        {if not isLast($item)}
+            ,{sp}
+        {else}
+        {/if}
+
+    {/foreach}
+{/template}
+
+
+/**
+ * Description subitems
+ * @param params {
+ *     subitems: (Array<string>|Array<sm.bSmLink.Template.Params.Data>)
+ * }
+ * @private
+ */
+{template .blockSubtems_}
+    {foreach $item in $params.subitems}
+        <div class="{call .rootClass/}__subitem">
+
+            {if $item.url}
+                {call .link_}
+                    {param item: $item /}
+                {/call}
+            {else}
+                {call .string_ data="all"}
+                    {param item: $item /}
+                {/call}
+            {/if}
+
+        </div>
+    {/foreach}
+{/template}
+
+
+/**
+ * Link
+ * @param item {sm.bSmLink.Template.Params.Data}
+ * @private
+ */
+{template .link_}
+    {call .renderChild}
+        {param params: [
+            'type': 'smLink',
+            'renderParams': [
+                'data': [
+                    'url': $item.url,
+                    'content': $item.content
+                ],
+                'config': [
+                    'size': 'xl'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * String
+ * @param item {string}
+ * @private
+ */
+{template .string_}
+    {call .getText}
+        {param message: $item /} 
+    {/call}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-description-list
+{/template}

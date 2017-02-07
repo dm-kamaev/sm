@@ -1,0 +1,25 @@
+@import '../../../n-common/i-media/i-media';
+
+.b-description-list__item {
+    margin-bottom: 25px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.b-description-list__item-header {
+    padding-bottom: 12px;
+
+    font-family: 'Proxima', Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 24px;
+}
+
+.b-description-list__item-description {
+    color: #747474;
+
+    font-size: 15px;
+    line-height: 22px;
+}
