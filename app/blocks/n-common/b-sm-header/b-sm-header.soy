@@ -9,7 +9,11 @@
  *         isSelected: boolean
  *     }>,
  *     contacts: sm.bSmContacts.Template.Params.Data,
- *     helperText: string
+ *     helper: {
+ *         text: string,
+ *         url: (string|undefined),
+ *         theme: ('neptune'|undefined)
+ *     }
  * }} sm.bSmHeader.Template.Params.Data
  */
 
@@ -51,7 +55,7 @@
  */
 {template .body}
     <div class="{call .rootClass /}__body">
-        {call .headerMainMenu data="all" /}
+        {call .headerMainMenu_ data="all" /}
     </div>
 {/template}
 
@@ -59,11 +63,12 @@
  * @param params {{
  *     data: sm.bSmHeader.Template.Params.Data
  * }}
+ * @private
  */
-{template .headerMainMenu kind="html"}
+{template .headerMainMenu_ kind="html"}
     <div class="{call .rootClass /}__main-menu">
-        {call .sectionNavigation data="all" /}
-        {call .sectionContacts data="all" /}
+        {call .sectionNavigation_ data="all" /}
+        {call .sectionContacts_ data="all" /}
     </div>
 {/template}
 
@@ -78,11 +83,12 @@
  *         isSelected: boolean
  *     }>
  * }}
+ * @private
  */
-{template .sectionNavigation kind="html"}
+{template .sectionNavigation_ kind="html"}
     <div class="{call .rootClass /}__section
         {sp}{call .rootClass /}__section_menu">
-        {call .menu data="all" /}
+        {call .menu_ data="all" /}
     </div>
 {/template}
 
@@ -95,12 +101,13 @@
  *         helperText: string
  *     }
  * }}
+ * @private
  */
-{template .sectionContacts kind="html"}
+{template .sectionContacts_ kind="html"}
     <div class="{call .rootClass /}__section
         {sp}{call .rootClass /}__section_contacts">
-        {call .helperText data="all" /}
-        {call .contacts data="all" /}
+        {call .helper_ data="all" /}
+        {call .contacts_ data="all" /}
     </div>
 {/template}
 
@@ -117,11 +124,12 @@
  *         }>
  *     }
  * }}
+ * @private
  */
-{template .menu kind="html"}
+{template .menu_ kind="html"}
     <ul class="{call .rootClass /}__navigation-menu">
         {foreach $item in $params.data.menuItems}
-            {call .menuItem}
+            {call .menuItem_}
                 {param params: [
                     'data': $item
                 ] /}
@@ -139,8 +147,9 @@
  *     type: string,
  *     isSelected: boolean
  * }}
+ * @private
  */
-{template .menuItem kind="html"}
+{template .menuItem_ kind="html"}
     {let $classes kind="html"}
         {call .rootClass /}__menu-item
         {if $params.data.type}
@@ -185,19 +194,85 @@
  *         contacts: sm.bSmContacts.Template.Params.Data
  *     }
  * }}
+ * @private
  */
-{template .contacts kind="html"}
-    <div class="{call .rootClass /}__contacts">
+{template .contacts_ kind="html"}
+    {if $params.data.contacts}
+        <div class="{call .rootClass /}__contacts">
+            {call .renderChild}
+                {param params: [
+                    'type': 'smContacts',
+                    'renderParams': [
+                        'data': $params.data.contacts,
+                        'config': [
+                            'size': 'xl'
+                        ]
+                    ]
+                ] /}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Helper template
+ * @param params {{
+ *     data: {
+ *         helper: {
+ *             text: string,
+ *             url: (string|undefined),
+ *             theme: ('neptune'|undefined)
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .helper_ kind="html"}
+    {if $params.data.helper.text}
+        {if $params.data.helper.url}
+            {call .helperLink_ data="all" /}
+        {else}
+            {call .helperText_ data="all" /}
+        {/if}
+    {/if}
+{/template}
+
+
+/**
+ * Helper link template
+ * @param params {{
+ *     data: {
+ *         helper: {
+ *             text: string,
+ *             url: string,
+ *             theme: ('neptune'|undefined)
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .helperLink_ kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__helper-link
+    {/let}
+
+    <div class="{call .rootClass /}__helper {call .rootClass /}__helper_link">
         {call .renderChild}
             {param params: [
-                'type': 'smContacts',
+                'type': 'smLink',
                 'renderParams': [
-                    'data': $params.data.contacts,
+                    'data': [
+                        'content': $params.data.helper.text,
+                        'url': $params.data.helper.url
+                    ],
                     'config': [
-                        'size': 'xl'
+                        'size': 'xxl',
+                        'customClasses': [$customClasses],
+                        'theme': $params.data.helper.theme
                     ]
                 ]
-            ] /}
+            ]/}
         {/call}
     </div>
 {/template}
@@ -206,14 +281,20 @@
 /**
  * Helper text template
  * @param params {{
- *      helperText: string
+ *     data: {
+ *         helper: {
+ *             text: string
+ *         }
+ *     }
  * }}
+ * @private
  */
-{template .helperText kind="html"}
-    <div class="{call .rootClass /}__helper-text">
-        {$params.data.helperText}
+{template .helperText_ kind="html"}
+    <div class="{call .rootClass /}__helper {call .rootClass /}__helper_text">
+        {$params.data.helper.text}
     </div>
 {/template}
+
 
 /**
  * @override

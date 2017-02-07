@@ -54,7 +54,7 @@
     border-bottom: 3px solid #007aff;
 }
 
-.b-sm-header__helper-text {
+.b-sm-header__helper {
     display: inline-block;
 
     padding-right: 10px;
@@ -62,9 +62,14 @@
     vertical-align: middle;
 
     color: #000;
+}
 
-    font-family: 'Times New Roman', Times, serif;
-    font-weight: 200;
+.b-sm-header__helper_text {
+    font: 17px 'PT Serif', serif;
+}
+
+.b-sm-header__helper_link {
+    font-family: Arial, sans-serif;
 }
 
 .b-sm-header__contacts {
@@ -81,7 +86,7 @@
 }
 
 @include media-m {
-    .b-sm-header__helper-text {
+    .b-sm-header__helper {
         display: none;
     }
 }

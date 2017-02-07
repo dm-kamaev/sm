@@ -106,18 +106,25 @@ class Header {
      * @protected
      */
     setHelperText() {
-        let helperText;
+        let helper = {};
 
         switch (this.entityType_) {
         case entityTypeEnum.SCHOOL:
-            helperText = 'Поможем выбрать школу!';
+            helper.text = 'Поможем выбрать школу!';
             break;
         case entityTypeEnum.COURSE:
-            helperText = 'Поможем выбрать курс!';
+            helper.text = 'Поможем выбрать курс!';
+            break;
+        case entityTypeEnum.UNIVERSITY:
+            helper = {
+                text: 'Поможем выбрать ВУЗ',
+                url: '/university',
+                theme: 'neptune'
+            };
             break;
         }
 
-        this.params_.data.helperText = helperText;
+        this.params_.data.helper = helper;
 
         return this;
     }
