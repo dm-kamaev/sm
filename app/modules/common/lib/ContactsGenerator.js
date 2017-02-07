@@ -60,24 +60,20 @@ class ContactsGenerator {
 
     /**
      * Generate params
-     * @return {Array<{
-     *     name: string,
-     *     url: string,
-     *     type: string,
-     *     isSelected: boolean
-     * }>}
+     * @return {Object<string, (string|Array|Object)>}
      * @protected
      */
     generateParams() {
         return {
             helper: this.generateHelper(),
             phone: this.phone_
-        }
+        };
     }
 
 
     /**
      * Generate helper
+     * @return {Object<string, string>}
      * @protected
      */
     generateHelper() {

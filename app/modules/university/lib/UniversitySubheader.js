@@ -57,7 +57,8 @@ class UniversitySubheader extends Subheader {
         this.links = {
             nameL: 'Подобрать ВУЗ',
             nameM: 'Подобрать ВУЗ',
-            url: '/search'
+            url: '/search',
+            theme: 'neptune'
         };
 
 

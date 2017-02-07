@@ -1,5 +1,4 @@
 'use strict';
-const entityTypeEnum = require('../enums/entityType');
 
 const Menu = require('../../../../app/modules/common/lib/Menu'),
     ContactsGenerator =

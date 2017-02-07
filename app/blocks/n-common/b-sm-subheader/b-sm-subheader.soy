@@ -14,7 +14,8 @@
  *         nameL: string,
  *         nameM: string,
  *         nameS: (string|undefined),
- *         url: string
+ *         url: string,
+ *         theme: (string|undefined)
  *     }|undefined),
  *     search: {
  *         placeholder: (string|undefined),
@@ -183,7 +184,8 @@
  *             nameL: string,
  *             nameM: string,
  *             nameS: (string|undefined),
- *             url: string
+ *             url: string,
+ *             theme: (string|undefined)
  *         }|undefined),
  *         user: ?{
  *             firstName: ?string,
@@ -234,7 +236,8 @@
  *             nameL: string,
  *             nameM: string,
  *             nameS: (string|undefined),
- *             url: string
+ *             url: string,
+ *             theme: (string|undefined)
  *         }|undefined)
  *     }
  * }}
@@ -256,7 +259,8 @@
  *             nameL: string,
  *             nameM: string,
  *             nameS: (string|undefined),
- *             url: string
+ *             url: string,
+ *             theme: (string|undefined)
  *         }
  *     }
  * }}
@@ -271,7 +275,8 @@
                     'url': $params.data.links.url
                 ],
                 'config': [
-                    'size': 'l'
+                    'size': 'l',
+                    'theme': $params.data.links.theme
                 ]
             ]/}
         {/call}
@@ -283,7 +288,8 @@
                     'url': $params.data.links.url
                 ],
                 'config': [
-                    'size': 'm'
+                    'size': 'm',
+                    'theme': $params.data.links.theme
                 ]
             ]/}
         {/call}
@@ -295,7 +301,8 @@
                     'url': $params.data.links.url
                 ],
                 'config': [
-                    'size': 's'
+                    'size': 's',
+                    'theme': $params.data.links.theme
                 ]
             ]/}
         {/call}
@@ -550,7 +557,8 @@
  *         name: (string|undefined)
  *     },
  *     config: {
- *         size: string
+ *         size: string,
+ *         theme: (string|undefined)
  *     }
  * }}
  */
@@ -573,7 +581,8 @@
                         'content': $content
                     ],
                     'config': [
-                        'size': 'l'
+                        'size': 'l',
+                        'theme': $params.config.theme ?: 'default'
                     ]
                 ]
             ]/}
