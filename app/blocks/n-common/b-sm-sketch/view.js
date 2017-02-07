@@ -56,7 +56,7 @@ goog.scope(function() {
     /**
      * @protected
      */
-    View.prototype.decorateInternal = function() {
+    View.prototype.initDom = function() {
         this.dom = {
             button: this.getElementByClass(
                 View.CssClass.BUTTON

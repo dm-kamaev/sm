@@ -89,7 +89,9 @@
  */
 {template .description_}
     <div class="{call .rootClass/}__description">
-        {$params.data.description}
+        {call .getText}
+            {param message: $params.data.description /} 
+        {/call}
     </div>
 {/template}
 

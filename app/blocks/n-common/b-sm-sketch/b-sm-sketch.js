@@ -1,7 +1,6 @@
 goog.provide('sm.bSmSketch.SmSketch');
 
 goog.require('cl.iControl.Control');
-goog.require('sm.bSmSketch.View');
 
 
 
@@ -20,7 +19,6 @@ goog.inherits(sm.bSmSketch.SmSketch, cl.iControl.Control);
 
 goog.scope(function() {
     var Sketch = sm.bSmSketch.SmSketch;
-    var View = sm.bSmSketch.View;
 
 
     /**
@@ -34,14 +32,5 @@ goog.scope(function() {
             'button',
             this.getView().getDom().button
         );
-    };
-
-
-    /**
-     * @override
-     * @protected
-     */
-    Sketch.prototype.enterDocument = function() {
-        Sketch.base(this, 'enterDocument');
     };
 });  // goog.scope
