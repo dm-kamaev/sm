@@ -5,7 +5,6 @@ import * as Sequelize from 'sequelize/v3';
 
 interface EgeResultAttribute {
     id?: number;
-    count: number;
     subjectId: number;
     schoolId: number;
     passedCount: number;

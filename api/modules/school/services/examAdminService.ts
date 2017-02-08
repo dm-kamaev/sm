@@ -8,7 +8,7 @@ import {
     SubjectInstance
 } from '../../study/models/subject';
 
-import {SchoolSubject} from '../interfaces/GiaAdmin';
+import {SchoolSubject} from '../interfaces/ExamAdmin';
 
 
 class ExamAdminService {

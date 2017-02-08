@@ -64,7 +64,7 @@ api/modules/geo/views/departmentView.js
 
 api/modules/school/interfaces/SchoolAdmin.js
 api/modules/school/interfaces/ProfileAdmin.js
-api/modules/school/interfaces/GiaAdmin.js
+api/modules/school/interfaces/ExamAdmin.js
 api/modules/school/controllers/errors/AddressDoesNotExist.js
 api/modules/school/controllers/errors/AddressIsNotUnique.js
 api/modules/school/controllers/errors/DepartmentNotFound.js
@@ -79,6 +79,7 @@ api/modules/school/controllers/schoolAdminController.js
 api/modules/school/controllers/profileAdminController.js
 api/modules/school/controllers/giaAdminController.js
 api/modules/school/controllers/examAdminController.js
+api/modules/school/controllers/egeAdminController.js
 
 api/modules/school/models/school.js
 api/modules/school/models/specializedClassType.js
@@ -92,6 +93,7 @@ api/modules/school/services/schoolComment.js
 api/modules/school/services/profileAdminService.js
 api/modules/school/services/giaAdminService.js
 api/modules/school/services/examAdminService.js
+api/modules/school/services/egeAdminService.js
 
 api/modules/school/models/specializedClassType.js
 
@@ -99,6 +101,7 @@ api/modules/school/views/commentView.js
 
 api/modules/study/models/giaResult.js
 api/modules/study/models/subject.js
+api/modules/study/models/egeResult.js
 
 app/components/host/host.js
 

@@ -9,10 +9,16 @@ class ExamDataAlreadyExistBySubject extends Exception {
     private name_: string;
     private subjectId_: number;
     private typeExam_: string;
+    private year_: number;
 
-    constructor(subjectId: number, typeExam: string) {
+    constructor(
+        subjectId: number,
+        year: number,
+        typeExam: string
+    ) {
         const message: string = `
-            Already exist data for "${typeExam}" for subject id "${subjectId}"
+            Already exist data for "${typeExam}" with subject id "${subjectId}"
+            and year "${year}"
         `;
         super(message);
 
@@ -20,6 +26,7 @@ class ExamDataAlreadyExistBySubject extends Exception {
 
         this.subjectId_ = subjectId;
         this.typeExam_ = typeExam;
+        this.year_ = year;
     }
 
     get name(): string {
@@ -36,6 +43,10 @@ class ExamDataAlreadyExistBySubject extends Exception {
 
     get typeExam(): string {
         return this.typeExam_;
+    }
+
+    get year(): number {
+        return this.year_;
     }
 }
 export {ExamDataAlreadyExistBySubject};

@@ -20,6 +20,9 @@ const giaAdminController = new GiaAdminController();
 import {ExamAdminController} from './examAdminController';
 const examAdminController = new ExamAdminController();
 
+import {EgeAdminController} from './egeAdminController';
+const egeAdminController = new EgeAdminController();
+
 
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
@@ -121,6 +124,13 @@ initCrudRouting(
 );
 router.get('/admin/schoolsubject', examAdminController.actionGetListSubject);
 router.get('/admin/examyear', examAdminController.actionGetListExamYear);
+
+
+initCrudRouting(
+    '/admin/school/:schoolId/ege',
+    egeAdminController,
+    ':egeId'
+);
 
 
 export default router;
