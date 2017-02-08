@@ -126,7 +126,7 @@ let initSuperUserCrudRouting = function(route, controller) {
 };
 
 initSuperUserCrudRouting(
-    '/course/search-catalog', courseSearchCatalogController
+    '/coursesearchcatalog', courseSearchCatalogController
 );
 initSuperUserCrudRouting('/coursecategory', categoryController);
 initSuperUserCrudRouting('/coursetype', typeController);
