@@ -8,7 +8,6 @@ const colors = require('colors'),
 const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
     entityType = require('../../entity/enums/entityType');
-const School = models.School;
 
 const SchoolNotFoundError =
     require('../controllers/errors/SchoolNotFoundError.js');
@@ -121,7 +120,7 @@ service.create = function(data) {
  */
 service.update = async(function(schoolId, data) {
     CsvConverter.cureQuotes(data);
-    return await(School.update(data, {
+    return await(models.School.update(data, {
         where: {
             id: schoolId
         }
@@ -135,7 +134,7 @@ service.update = async(function(schoolId, data) {
  * @return {Object} School model instance
  */
 service.checkExist = async(function(schoolId) {
-    let school = await(School.findOne({
+    let school = await(models.School.findOne({
         where: {
             id: schoolId
         }
