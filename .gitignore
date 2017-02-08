@@ -93,6 +93,8 @@ api/modules/school/services/profileAdminService.js
 api/modules/school/services/giaAdminService.js
 api/modules/school/services/examAdminService.js
 
+api/modules/study/models/olimpResult.js
+
 api/modules/school/models/specializedClassType.js
 
 api/modules/school/views/commentView.js
