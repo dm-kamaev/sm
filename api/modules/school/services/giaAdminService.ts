@@ -17,15 +17,15 @@ import {ExamDataAlreadyExistBySubject} from
     './exceptions/ExamDataAlreadyExistBySubject';
 
 import {
-    GiaResult,
-    GiaResultUpdate,
-} from '../interfaces/GiaAdmin';
+    ExamResult,
+    ExamResultUpdate,
+} from '../interfaces/ExamAdmin';
 
 
 class GiaAdminService {
     public readonly name: string = 'giaAdminService';
 
-    public async getList(schoolId: number): Promise<GiaResult[]> {
+    public async getList(schoolId: number): Promise<ExamResult[]> {
         let giaResults: GiaResultInstance[];
         giaResults = await GiaResultModel.findAll({
             attributes: [
@@ -51,8 +51,8 @@ class GiaAdminService {
             hashSubjectName[subject.id] = subject.displayName
         );
 
-        let res: GiaResult[];
-        res = giaResults.map((giaResult: GiaResultInstance): GiaResult => {
+        let res: ExamResult[];
+        res = giaResults.map((giaResult: GiaResultInstance): ExamResult => {
             return {
                 id: giaResult.id,
                 subject: hashSubjectName[giaResult.subjectId] || '',
@@ -68,10 +68,10 @@ class GiaAdminService {
     public async getById(
         schoolId: number,
         giaId: number
-    ): Promise<GiaResult | {}> {
-        const list: GiaResult[] = await this.getList(schoolId);
-        let res: GiaResult | boolean;
-        res = list.find((gia: GiaResult): boolean =>
+    ): Promise<ExamResult | {}> {
+        const list: ExamResult[] = await this.getList(schoolId);
+        let res: ExamResult | boolean;
+        res = list.find((gia: ExamResult): boolean =>
             gia.id === giaId
         );
         return res || {};
@@ -98,6 +98,7 @@ class GiaAdminService {
         if (isExistDataBySubject) {
             throw new ExamDataAlreadyExistBySubject(
                 subjectId,
+                year,
                 'gia'
             );
         }
@@ -120,8 +121,8 @@ class GiaAdminService {
           averageResult: number,
           passedCount: number
         }
-    ): Promise<GiaResultUpdate | null> {
-        let res: GiaResultUpdate | null = null;
+    ): Promise<ExamResultUpdate | null> {
+        let res: ExamResultUpdate | null = null;
         let gia: [number, GiaResultInstance[]];
         const subjectId: number = giaResult.subjectId;
         const year: number = giaResult.year;
@@ -135,6 +136,7 @@ class GiaAdminService {
         if (isExistDataBySubject) {
             throw new ExamDataAlreadyExistBySubject(
                 subjectId,
+                year,
                 'gia'
             );
         }
