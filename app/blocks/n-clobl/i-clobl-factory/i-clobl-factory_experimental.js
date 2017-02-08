@@ -8,7 +8,7 @@ goog.require('sm.iCloblFactory.FactoryStendhal');
 /**
  * NewFactoryExperimental
  * @constructor
- * @extends {cl.iAbstractFactory.AbstractFactory}
+ * @extends {sm.iCloblFactory.FactoryStendhal}
  */
 sm.iCloblFactory.FactoryExperimental = function() {
     sm.iCloblFactory.FactoryExperimental.base(this, 'constructor');
@@ -18,7 +18,7 @@ sm.iCloblFactory.FactoryExperimental = function() {
 
 goog.scope(function() {
     var Factory = sm.iCloblFactory.FactoryExperimental;
-    goog.inherits(Factory, cl.iAbstractFactory.AbstractFactory);
+    goog.inherits(Factory, sm.iCloblFactory.FactoryStendhal);
     goog.addSingletonGetter(Factory);
 
     /** @type {sm.iCloblFactory.FactoryExperimental} */
