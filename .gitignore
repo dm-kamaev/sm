@@ -95,6 +95,8 @@ api/modules/school/services/examAdminService.js
 
 api/modules/study/models/olimpResult.js
 api/modules/study/services/exceptions/*.js
+api/modules/study/services/olimpResult.js
+
 
 api/modules/school/models/specializedClassType.js
 
