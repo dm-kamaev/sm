@@ -22,7 +22,6 @@
             depends="packaging.shared-folders,
                      packaging.supervisor.link,
                      schools.migrate,
-                     schools.update-search-cache,
                      schools.update-sitemap,
                      packaging.release.folder.link,
                      packaging.rollback-script,
@@ -55,12 +54,6 @@
     <target name="schools.migrate">
         <exec executable="${gulp}" dir="${basedir}" failonerror="on">
             <arg line="migrate"/>
-        </exec>
-    </target>
-
-    <target name="schools.update-search-cache">
-        <exec executable="node" dir="${basedir}">
-            <arg line="commander search"/>
         </exec>
     </target>
 
