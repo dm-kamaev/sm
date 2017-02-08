@@ -1,4 +1,4 @@
-goog.provide('sm.lUniversity.bDescriptionList.View');
+goog.provide('sm.bSummaryBoard.View');
 
 goog.require('cl.iControl.View');
 goog.require('sm.bSmLink.View');
@@ -6,32 +6,29 @@ goog.require('sm.bSmLink.View');
 
 
 /**
- * Sketch View
+ * SummaryBoard View
  * @param {Object=} opt_params
  * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.lUniversity.bDescriptionList.View = function(
-    opt_params, opt_type, opt_modifier
-) {
-    sm.bSmSketch.View.base(this, 'constructor', opt_params,
+sm.bSummaryBoard.View = function(opt_params, opt_type, opt_modifier) {
+    sm.bSummaryBoard.View.base(this, 'constructor', opt_params,
         opt_type, opt_modifier);
 
     /*
      * Collection of DOM elements
      * @type {
-     *     links: ?Array<Element>
      * }
      */
     this.dom = {};
 };
-goog.inherits(sm.lUniversity.bDescriptionList.View, cl.iControl.View);
+goog.inherits(sm.bSummaryBoard.View, cl.iControl.View);
 
 
 goog.scope(function() {
-    var View = sm.lUniversity.bDescriptionList.View;
+    var View = sm.bSummaryBoard.View;
 
 
     /**
@@ -40,8 +37,8 @@ goog.scope(function() {
      * @const
      */
     View.CssClass = {
-        ROOT: 'b-description-list',
-        LINK: sm.bSmLink.View.CssClass.ROOT
+        ROOT: 'b-summary-board',
+        LINK: 'b-summary-board__button-link'
     };
 
 
@@ -61,7 +58,7 @@ goog.scope(function() {
      */
     View.prototype.initDom = function() {
         this.dom = {
-            links: this.getElementsByClass(
+            link: this.getElementByClass(
                 View.CssClass.LINK
             )
         };

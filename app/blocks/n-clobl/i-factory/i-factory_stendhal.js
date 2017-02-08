@@ -65,6 +65,8 @@ goog.require('sm.bSmStars.SmStars');
 goog.require('sm.bSmStars.View');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
+goog.require('sm.bSummaryBoard.SummaryBoard');
+goog.require('sm.bSummaryBoard.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
 goog.require('sm.gButton.ViewStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
@@ -220,6 +222,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('favorite-link', {
             control: sm.bFavoriteLink.FavoriteLink,
             view: sm.bFavoriteLink.View
+        })
+        .setControlListItem('summary-board', {
+            control: sm.bSummaryBoard.SummaryBoard,
+            view: sm.bSummaryBoard.View
         });
 
     /** Heirs of the clobl blocks */

@@ -89,6 +89,70 @@ controller.information = async(function(req, res, next) {
                             inline: false
                         }
                     }]
+                },
+                summaryBoard: {
+                    list: [{
+                        header: 'Бюджет',
+                        items: [{
+                            data: {
+                                header: '245 баллов',
+                                description: 'за 4 экзамена'
+                            },
+                            config: {
+                                theme: 'neptune'
+                            }
+                        }, {
+                            data: {
+                                header: '30',
+                                description: 'бюджетных мест'
+                            },
+                            config: {
+                                icon: true
+                            }
+                        }, {
+                            data: {
+                                header: '6',
+                                description: 'человек на место'
+                            }
+                        }]
+                    }, {
+                        header: 'Платное отделение',
+                        items: [{
+                            data: {
+                                header: '200 баллов',
+                                description: 'за 4 экзамена'
+                            },
+                            config: {
+                                theme: 'neptune'
+                            }
+                        }, {
+                            data: {
+                                header: '100',
+                                description: 'платных мест'
+                            }
+                        }, {
+                            data: {
+                                header: '7',
+                                description: 'человек на место'
+                            },
+                            config: {
+                                icon: true
+                            }
+                        }]
+                    }],
+                    content: {
+                        data: {
+                            header: 'Стоимость / год',
+                            description: '350 000 ₽',
+                            link: {
+                                url: 'http://yandex.ru',
+                                content: 'Проконсультироваться'
+                            }
+                        },
+                        config: {
+                            theme: 'neptune'
+                        }
+                    }
                 }
             },
             authSocialLinks: authSocialLinks,

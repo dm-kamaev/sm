@@ -1,0 +1,92 @@
+{namespace sm.bButtonLink.Template}
+
+
+/**
+ * @typedef {sm.bSmLink.Template.Params.Data} 
+ * sm.bButtonLink.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {sm.bSmLink.Template.Params.Config}
+ * sm.bButtonLink.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data:  sm.bButtonLink.Template.Params.Data,
+ *     config: sm.bButtonLink.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .buttonLink}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data:  sm.bButtonLink.Template.Params.Data,
+ *     config: sm.bButtonLink.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {$params.data.content}
+{/template}
+
+
+/**
+ * Define tag
+ * @override
+ */
+{template .tag kind="html"}
+    a
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-button-link
+{/template}
+
+
+/**
+ * Addtitonal classes
+ * @param params {{
+ *     config: {
+ *         size: string,
+ *         theme: string
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses kind="html"}
+    {if $params?.config.size}
+        {sp}{call .rootClass /}_size_{$params?.config.size}
+    {/if}
+    {if $params?.config.theme}
+        {sp}{call .rootClass /}_{$params?.config.theme}-theme
+    {/if}
+{/template}
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     data: {
+ *         url: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    href="{$params.data.url}"
+{/template}

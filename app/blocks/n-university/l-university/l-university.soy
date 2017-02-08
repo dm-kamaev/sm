@@ -28,7 +28,8 @@
  *         subunitName: string,
  *         description: string,
  *         descriptionList:
- *              sm.lUniversity.bDescriptionList.Template.Params.Data
+ *              sm.lUniversity.bDescriptionList.Template.Params.Data,
+ *         summaryBoard: sm.bSummaryBoard.Template.Params.Data
  *     }
  * }} sm.lUniversity.Template.Data
  */
@@ -151,7 +152,6 @@
     >
         {call .sketchData_ data="all" /}
         {call .mainData_ data="all" /}
-        // {call .listData_ data ="all" /}
     </div>
 {/template}
 
@@ -200,6 +200,22 @@
  */
 {template .mainData_}
     <div class="{call .rootClass/}__data_main-description">
+        {call .description_ data="all" /}
+        {call .summaryBoard_ data="all" /}
+        {call .descriptionList_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: sm.lUniversity.Template.Data
+ * }}
+ * @private
+ */
+{template .description_}
+    <div class="{call .rootClass/}__main-description">
         <div class="{call .rootClass/}__type">
             {call cl.iControl.Template.getText}
                 {param message: $params.data.entityData.subunitType /}
@@ -215,7 +231,6 @@
                 {param message: $params.data.entityData.description /}
             {/call}
         </div>
-        {call .descriptionList_ data="all" /}
     </div>
 {/template}
 
@@ -235,6 +250,28 @@
                 'type': 'lUniversity-descriptionList',
                 'renderParams': [
                     'data': $params.data.entityData.descriptionList
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Summary board
+ * @param params {{
+ *     data: sm.lUniversity.Template.Data
+ * }}
+ * @private
+ */
+{template .summaryBoard_}
+    <div class="{call .rootClass/}__summary-board">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'summary-board',
+                'renderParams': [
+                    'data': $params.data.entityData.summaryBoard
                 ]
             ]/}
         {/call}

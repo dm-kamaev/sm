@@ -1,7 +1,8 @@
 goog.provide('sm.lUniversity.View');
 
-goog.require('sm.iLayout.ViewStendhal');
 goog.require('sm.bSmSketch.View');
+goog.require('sm.bSummaryBoard.View');
+goog.require('sm.iLayout.ViewStendhal');
 goog.require('sm.lUniversity.bDescriptionList.View');
 
 
@@ -50,7 +51,8 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'l-university',
         SKETCH: sm.bSmSketch.View.CssClass.ROOT,
-        DESCRIPTION_LIST: sm.lUniversity.bDescriptionList.View.CssClass.ROOT
+        DESCRIPTION_LIST: sm.lUniversity.bDescriptionList.View.CssClass.ROOT,
+        SUMMARY_BOARD: sm.bSummaryBoard.View.CssClass.ROOT
     };
 
 
@@ -86,6 +88,9 @@ goog.scope(function() {
                 ),
                 descriptionList: this.getElementByClass(
                     View.CssClass.DESCRIPTION_LIST
+                ),
+                summaryBoard: this.getElementByClass(
+                    View.CssClass.SUMMARY_BOARD
                 )
             }
         );

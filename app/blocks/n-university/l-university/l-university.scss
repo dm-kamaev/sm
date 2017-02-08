@@ -32,12 +32,31 @@
 }
 
 .l-university__data_main-description {
+    position: relative;
+
     display: inline-block;
 
     width: calc(100% - 310px);
     margin-bottom: 25px;
 
     vertical-align: top;
+}
+
+.l-university__main-description {
+    width: calc(100% - 375px);
+}
+
+.l-university__description-list {
+    width: calc(100% - 375px);
+}
+
+.l-university__summary-board {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 315px;
+    margin-bottom: 50px;
 }
 
 .l-university__type {
@@ -67,7 +86,6 @@
 
 
 @include media-xl {
-
     .l-university__section_data {
         box-sizing: border-box;
         width: auto;
@@ -77,13 +95,6 @@
 }
 
 
-@include media-xs {
-    .l-university__section_data {
-        padding-right: 30px;
-        padding-left: 30px;
-    }
-}
-
 @include media-m {
     .l-university__data_main-description {
         width: 100%;
@@ -92,5 +103,35 @@
     .l-university__data_sketch {
         width: 100%;
         margin-right: 0;
+    }
+
+    .l-university__main-description {
+        width: calc(100% - 355px);
+    }
+
+    .l-university__description-list {
+        width: calc(100% - 355px);
+    }
+}
+
+
+@include media-xs {
+    .l-university__section_data {
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+
+    .l-university__main-description {
+        width: 100%;
+    }
+
+    .l-university__description-list {
+        width: 100%;
+    }
+
+    .l-university__summary-board {
+        position: relative;
+
+        width: 100%;
     }
 }

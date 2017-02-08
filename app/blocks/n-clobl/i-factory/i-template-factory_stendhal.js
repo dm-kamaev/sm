@@ -4,6 +4,7 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 goog.require('cl.iFactory.TemplateFactory');
 goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bBanner.Template');
+goog.require('sm.bButtonLink.Template');
 goog.require('sm.bFavorite.Template');
 goog.require('sm.bFavoriteLink.Template');
 goog.require('sm.bHeader.Template');
@@ -37,6 +38,7 @@ goog.require('sm.bSmSearchPanel.Template');
 goog.require('sm.bSmSketch.Template');
 goog.require('sm.bSmStars.Template');
 goog.require('sm.bSmSubheader.Template');
+goog.require('sm.bSummaryBoard.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
@@ -204,6 +206,14 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'tab-catalog',
             sm.gTab.TemplateCatalog.tab
+        )
+        .setTemplateListItem(
+            'summary-board',
+            sm.bSummaryBoard.Template.summaryBoard
+        )
+        .setTemplateListItem(
+            'button-link',
+            sm.bButtonLink.Template.buttonLink
         );
 
     /** Heirs of the clobl blocks */

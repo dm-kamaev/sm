@@ -72,7 +72,8 @@ goog.scope(function() {
         LIGHT: 'light',
         ATTENTION: 'attention',
         DARK: 'dark',
-        BLOCK: 'block'
+        BLOCK: 'block',
+        NEPTUNE: 'neptune'
     };
 
 

@@ -34,6 +34,7 @@ goog.scope(function() {
 
         this.initSketch_();
         this.initDescriptionList_();
+        this.initSummaryBoard_();
     };
 
 
@@ -59,6 +60,17 @@ goog.scope(function() {
         this.decorateChild(
             'smSketch',
             this.getView().getDom().sketch
+        );
+    };
+
+
+    /**
+     * @private
+     */
+    University.prototype.initSummaryBoard_ = function() {
+        this.decorateChild(
+            'summary-board',
+            this.getView().getDom().summaryBoard
         );
     };
 

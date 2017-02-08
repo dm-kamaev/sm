@@ -46,7 +46,8 @@ goog.scope(function() {
         LIGHT: View.Theme.LIGHT,
         ATTENTION: View.Theme.ATTENTION,
         DARK: View.Theme.DARK,
-        BLOCK: View.Theme.BLOCK
+        BLOCK: View.Theme.BLOCK,
+        NEPTUNE: View.Theme.NEPTUNE
     };
 
 
