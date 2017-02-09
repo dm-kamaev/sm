@@ -1,4 +1,4 @@
-const lodashFlatten = require('lodash/array/flatten');
+const lodashFlatten = require('lodash/flatten');
 
 import {DepartmentAdmin} from '../interfaces/DepartmentAdmin';
 

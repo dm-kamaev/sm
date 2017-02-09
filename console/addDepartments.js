@@ -4,7 +4,7 @@ const commander = require('commander'),
     async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     Converter = require('csvtojson').Converter,
-    lodashCompact = require('lodash/array/compact');
+    lodashCompact = require('lodash/compact');
 
 const services = require('../app/components/services').all,
     CsvConverter = require('./modules/modelArchiver/CsvConverter'),
