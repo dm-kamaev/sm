@@ -1,12 +1,18 @@
 import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
-import AdminUserAlreadyExistError from './errors/AdminUserAlreadyExists';
-import AdminUserNotFoundError from './errors/AdminUserNotFound';
-import WrongAccessAttributesError from './errors/WrongAccessAttributes';
+import {
+    AdminUserAlreadyExists as AdminUserAlreadyExistError
+} from './errors/AdminUserAlreadyExists';
+import {
+    AdminUserAlreadyExists as AdminUserNotFoundError
+} from './errors/AdminUserNotFound';
+import {
+    WrongAttributes as WrongAccessAttributesError
+} from './errors/WrongAccessAttributes';
 
-import adminUserService from '../services/adminUser';
-import adminUserView from '../views/adminUserView';
+import {service as adminUserService} from '../services/adminUser';
+import {adminUserView} from '../views/adminUserView';
 
 class AdminUserController extends Controller {
     constructor() {

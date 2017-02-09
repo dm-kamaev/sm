@@ -24,4 +24,4 @@ class WrongAccessAttributes extends Exception {
     }
 }
 
-export default WrongAccessAttributes;
+export {WrongAccessAttributes};

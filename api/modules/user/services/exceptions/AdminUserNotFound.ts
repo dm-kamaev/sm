@@ -28,4 +28,4 @@ class AdminUserNotFound extends Exception {
     }
 }
 
-export default AdminUserNotFound;
+export {AdminUserNotFound};

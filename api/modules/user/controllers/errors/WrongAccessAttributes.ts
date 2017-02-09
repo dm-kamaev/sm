@@ -23,4 +23,4 @@ class WrongAttributes extends Error {
 
 }
 
-export default WrongAttributes;
+export {WrongAttributes};

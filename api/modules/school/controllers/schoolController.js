@@ -1,7 +1,6 @@
 'use strict';
 
 const services = require('../../../../app/components/services').all;
-const util = require('util');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const logger =

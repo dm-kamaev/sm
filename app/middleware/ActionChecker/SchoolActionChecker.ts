@@ -22,7 +22,7 @@ class SchoolActionChecker extends ActionChecker {
     }
 }
 
-export default SchoolActionChecker;
+export {SchoolActionChecker};
 
 const middleware = createMiddlewareFunction(SchoolActionChecker);
 export {middleware};

@@ -54,4 +54,4 @@ class AdminUserView {
     }
 }
 
-export default new AdminUserView();
+export const adminUserView = new AdminUserView();

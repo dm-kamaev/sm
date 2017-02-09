@@ -4,9 +4,10 @@
 const schoolService = require('../../school/services/school'),
     courseBrandService = require('../../course/services/courseBrand');
 
-import AdminUserModel from '../models/adminUser';
 import {
-    AccessAttributes, AdminUserInstance
+    Model as AdminUserModel,
+    AccessAttributes,
+    AdminUserInstance
 } from '../models/adminUser';
 
 import {
@@ -16,9 +17,9 @@ import {
     AccessAttributesInstancesArrays
 } from '../lib/type';
 
-import AdminUserNotFound from './exceptions/AdminUserNotFound';
-import AdminUserAlreadyExists from './exceptions/AdminUserAlreadyExists';
-import WrongAccessAttributes from './exceptions/WrongAccessAttributes';
+import {AdminUserNotFound} from './exceptions/AdminUserNotFound';
+import {AdminUserAlreadyExists} from './exceptions/AdminUserAlreadyExists';
+import {WrongAccessAttributes} from './exceptions/WrongAccessAttributes';
 
 import * as lodash from 'lodash';
 
@@ -220,4 +221,4 @@ class Service {
     }
 }
 
-export default new Service();
+export const service = new Service();

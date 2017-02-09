@@ -1,7 +1,9 @@
 /**
  * @fileOverview This abstract middleware class that check can user make actions
  */
-import adminUserService from '../../../api/modules/user/services/adminUser';
+import {
+    service as adminUserService
+} from '../../../api/modules/user/services/adminUser';
 import {AccessAttributes} from '../../../api/modules/user/models/adminUser';
 
 const adminConfig = require('../../config/admin.json');

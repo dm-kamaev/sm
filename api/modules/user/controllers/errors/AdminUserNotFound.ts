@@ -17,4 +17,4 @@ class AdminUserAlreadyExists extends Error {
     }
 }
 
-export default AdminUserAlreadyExists;
+export {AdminUserAlreadyExists};

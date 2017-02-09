@@ -23,7 +23,7 @@ export interface AdminUserInstance
 export interface AdminUserModel
     extends Sequelize.Model<AdminUserInstance, AdminUserAttribute> {}
 
-const AdminUser: AdminUserModel = db.define('AdminUser', {
+const Model: AdminUserModel = db.define('AdminUser', {
     id: {
         autoIncrement: true,
         primaryKey: true,
@@ -55,4 +55,4 @@ const AdminUser: AdminUserModel = db.define('AdminUser', {
     }
 });
 
-export default AdminUser;
+export {Model};

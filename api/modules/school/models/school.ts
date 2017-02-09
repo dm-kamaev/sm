@@ -5,7 +5,7 @@ const schoolType = require('../enums/schoolType');
 
 import * as Sequelize from 'sequelize/v3';
 
-interface SchoolAttribute {
+export interface SchoolAttribute {
     id?: number;
     name?: string;
     abbreviation?: string;

@@ -17,7 +17,7 @@ export interface CourseBrandInstance
 export interface CourseBrandModel
     extends Sequelize.Model<CourseBrandInstance, CourseBrandAttribute> {}
 
-const CourseBrand: CourseBrandModel = db.define('CourseBrand', {
+const Model: CourseBrandModel = db.define('CourseBrand', {
     id: {
         type: DataType.INTEGER,
         allowNull: false,
@@ -51,4 +51,4 @@ const CourseBrand: CourseBrandModel = db.define('CourseBrand', {
     }
 });
 
-export default CourseBrand;
+export {Model};

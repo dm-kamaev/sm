@@ -28,4 +28,4 @@ class AdminUserAlreadyExists extends Exception {
     }
 }
 
-export default AdminUserAlreadyExists;
+export {AdminUserAlreadyExists};
