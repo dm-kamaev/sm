@@ -550,7 +550,7 @@ exports.getAllTypes = async(function(req, res) {
         res.status(500);
     }
     res.json(result);
-
+});
 
 /*
  * Rename department of school

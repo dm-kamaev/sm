@@ -9,7 +9,6 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var imap = require('imap-simple');
 var http = require('http');
-var querystring = require('querystring');
 
 
 const config = require('../app/config/config.json');
@@ -142,14 +141,14 @@ class ParseMail {
      */
     sendDeleteReq_(id) {
         const options = {
-                host: config.schools.host,
-                method: 'DELETE',
-                path: '/api/comment/delete/' + id,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    [mailToken.name]: mailToken.token
-                }
-            };
+            host: config.schools.host,
+            method: 'DELETE',
+            path: '/api/comment/delete/' + id,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                [mailToken.name]: mailToken.token
+            }
+        };
         var req = http.request(options);
         req.end();
     }
