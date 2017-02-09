@@ -14,6 +14,7 @@ let service = {
  * @param {number} categoryId
  * @param {{
  *     tabTitle: string,
+ *     pagePrefixTabTitle: ?string,
  *     metaDescription: string,
  *     openGraphTitle: string,
  *     openGraphDescription: string,
@@ -30,6 +31,7 @@ service.create = async(function(categoryId, data) {
     return models.SeoCourseList.create({
         categoryId: categoryId,
         tabTitle: data.tabTitle,
+        pagePrefixTabTitle: data.pagePrefixTabTitle,
         metaDescription: data.metaDescription,
         openGraphTitle: data.openGraphTitle,
         openGraphDescription: data.openGraphDescription,
@@ -42,6 +44,7 @@ service.create = async(function(categoryId, data) {
  * @param {number} categoryId
  * @param {{
  *     tabTitle: string,
+ *     pagePrefixTabTitle: ?string,
  *     metaDescription: string,
  *     openGraphTitle: string,
  *     openGraphDescription: string,
@@ -58,6 +61,7 @@ service.update = async(function(categoryId, data) {
     return models.SeoCourseList.update({
         categoryId: categoryId,
         tabTitle: data.tabTitle,
+        pagePrefixTabTitle: data.pagePrefixTabTitle,
         metaDescription: data.metaDescription,
         openGraphTitle: data.openGraphTitle,
         openGraphDescription: data.openGraphDescription,
@@ -105,6 +109,20 @@ service.createUpdate = async(function(categoryId, data) {
  */
 service.getByCategoryId = async(function(categoryId) {
     return models.SeoCourseList.findOne({
+        where: {
+            categoryId: categoryId
+        },
+        raw: true
+    });
+});
+
+/**
+ * @param {number} categoryId
+ * @return {Promise<models.SeoCourseList>}
+ */
+service.getPageMeta = async(function(categoryId) {
+    return models.SeoCourseList.findOne({
+        attributes: ['pagePrefixTabTitle'],
         where: {
             categoryId: categoryId
         },

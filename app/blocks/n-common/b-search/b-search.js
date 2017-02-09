@@ -4,6 +4,7 @@ goog.require('cl.iUtils.Utils');
 goog.require('goog.dom');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
+goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bSearch.Template');
@@ -372,10 +373,7 @@ goog.scope(function() {
             this.getElement(),
             Search.CssClass.DEFAULT_MODE
         );
-        goog.dom.classlist.add(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
+
         this.suggest_.focus();
         this.disableScroll_();
     };
@@ -394,10 +392,7 @@ goog.scope(function() {
             this.getElement(),
             Search.CssClass.DEFAULT_MODE
         );
-        goog.dom.classlist.remove(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
+
         this.enableScroll_();
     };
 
@@ -410,6 +405,11 @@ goog.scope(function() {
         document.ontouchmove = function(event) {
             event.preventDefault();
         };
+
+        goog.dom.classlist.add(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
     };
 
 
@@ -421,6 +421,11 @@ goog.scope(function() {
         document.ontouchmove = function() {
             return true;
         };
+
+        goog.dom.classlist.remove(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
     };
 
 
@@ -460,56 +465,12 @@ goog.scope(function() {
     Search.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        var handler = this.getHandler();
+        this.initParams_();
+        this.initSuggest_();
 
-        this.dataParams_ = JSON.parse(
-            this.getElement().getAttribute('data-params')
-        );
-
-        var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
-
-        this.suggest_ = ui.getInstanceByElement(this.elements_.suggest);
-
-        this.suggest_.addEventListener(
-            gorod.gSuggest.Suggest.Events.SELECT,
-            this.itemClickHandler_.bind(this)
-        );
-
-        this.suggest_.addEventListener(
-            gorod.gSuggest.Suggest.Events.SUBMIT,
-            this.onSubmit_.bind(this)
-        );
-
-        this.suggest_.addEventListener(
-            gorod.gSuggest.Suggest.Events.TEXT_CHANGE,
-            this.onTextChange_.bind(this)
-        );
-
-        if (this.type_ === Search.Type.FOLDABLE) {
-            handler.listen(
-                this.elements_.searchButton,
-                goog.events.EventType.CLICK,
-                this.onSearchClick_
-            ).listen(
-                this.elements_.clearButton,
-                goog.events.EventType.CLICK,
-                this.onClearClick_
-            ).listen(
-                this.elements_.fader,
-                goog.events.EventType.CLICK,
-                this.onClearClick_
-            ).listen(
-                this.elements_.suggestHolder,
-                goog.events.EventType.ANIMATIONEND,
-                this.onSwitchModeAnimationEnd_
-            );
-        } else if (this.elements_.searchButton) {
-            handler.listen(
-                this.elements_.searchButton,
-                goog.events.EventType.CLICK,
-                this.onSubmit_
-            );
-        }
+        this.initSuggestListeners_();
+        this.initElementsListeners_();
+        this.initDocumentListeners_();
 
         var that = this;
 
@@ -574,7 +535,7 @@ goog.scope(function() {
                 };
             }
         });
-     };
+    };
 
 
     /**
@@ -597,6 +558,92 @@ goog.scope(function() {
             gorod.gSuggest.Suggest.Events.TEXT_CHANGE,
             this.onTextChange_.bind(this)
         );
+    };
+
+
+    /**
+     * Init suggest listeners
+     * @private
+     */
+    Search.prototype.initSuggestListeners_ = function() {
+        this.suggest_.addEventListener(
+            gorod.gSuggest.Suggest.Events.SELECT,
+            this.itemClickHandler_.bind(this)
+        );
+
+        this.suggest_.addEventListener(
+            gorod.gSuggest.Suggest.Events.SUBMIT,
+            this.onSubmit_.bind(this)
+        );
+
+        this.suggest_.addEventListener(
+            gorod.gSuggest.Suggest.Events.TEXT_CHANGE,
+            this.onTextChange_.bind(this)
+        );
+
+        if (this.type_ === Search.Type.FOLDABLE) {
+            this.suggest_.addEventListener(
+                gorod.gSuggest.Suggest.Events.LIST_SHOW,
+                this.onListShow_.bind(this)
+            );
+
+            this.suggest_.addEventListener(
+                gorod.gSuggest.Suggest.Events.LIST_HIDE,
+                this.onListHide_.bind(this)
+            );
+        }
+    };
+
+
+    /**
+     * Init elements listeners
+     * @private
+     */
+    Search.prototype.initElementsListeners_ = function() {
+        var handler = this.getHandler();
+
+        if (this.type_ === Search.Type.FOLDABLE) {
+            handler.listen(
+                this.elements_.searchButton,
+                goog.events.EventType.CLICK,
+                this.onSearchClick_
+            ).listen(
+                this.elements_.clearButton,
+                goog.events.EventType.CLICK,
+                this.onClearClick_
+            ).listen(
+                this.elements_.fader,
+                goog.events.EventType.CLICK,
+                this.onClearClick_
+            ).listen(
+                this.elements_.suggestHolder,
+                goog.events.EventType.ANIMATIONEND,
+                this.onSwitchModeAnimationEnd_
+            );
+        } else if (this.elements_.searchButton) {
+            handler.listen(
+                this.elements_.searchButton,
+                goog.events.EventType.CLICK,
+                this.onSubmit_
+            );
+        }
+    };
+
+
+    /**
+     * Init document listeners
+     * @private
+     */
+    Search.prototype.initDocumentListeners_ = function() {
+        var handler = this.getHandler();
+
+        if (this.type_ === Search.Type.FOLDABLE) {
+            handler.listen(
+                goog.dom.getDocument(),
+                goog.events.EventType.SCROLL,
+                this.onDocumentScroll_
+            );
+        }
     };
 
 
@@ -725,6 +772,42 @@ goog.scope(function() {
                 root
             )
         };
+    };
+
+
+     /**
+     * On document scroll
+     * @private
+     */
+    Search.prototype.onDocumentScroll_ = function() {
+        var suggest = this.elements_.suggest,
+            scrollY = goog.dom.getPageScroll().y;
+
+        var suggestTop = suggest ? goog.style.getBounds(suggest).top : null,
+            top = (scrollY > suggestTop) ? 0 : 'auto';
+
+        goog.style.setPosition(this.elements_.fader, null, top);
+    };
+
+
+    /**
+     * On list show
+     * @private
+     */
+    Search.prototype.onListShow_ = function() {
+        this.enableScroll_();
+    };
+
+
+    /**
+     * On list hide
+     * @private
+     */
+    Search.prototype.onListHide_ = function() {
+        goog.style.setPosition(this.elements_.fader, null, 'auto');
+        goog.dom.getWindow().scrollTo(0, 0);
+
+        this.disableScroll_();
     };
 
 
@@ -1006,5 +1089,26 @@ goog.scope(function() {
         } else {
             this.type_ = Search.Type.DEFAULT;
         }
+    };
+
+
+    /**
+     * Init params
+     * @private
+     */
+    Search.prototype.initParams_ = function() {
+        this.dataParams_ = JSON.parse(
+            this.getElement().getAttribute('data-params')
+        );
+    };
+
+
+    /**
+     * Init suggest
+     * @private
+     */
+    Search.prototype.initSuggest_ = function() {
+        var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
+        this.suggest_ = ui.getInstanceByElement(this.elements_.suggest);
     };
 });  // goog.scope
