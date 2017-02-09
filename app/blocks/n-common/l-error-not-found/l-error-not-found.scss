@@ -11,7 +11,7 @@
     min-height: 100%;
 }
 
-.l-error-not-found__body {
+.l-error-not-found__section {
     width: 1200px;
     min-width: 255px;
     margin: 0 auto 60px;
@@ -19,6 +19,35 @@
     color: #000;
 
     font-family: Arial, sans-serif;
+}
+
+.l-error-not-found__section-header {
+    padding-bottom: 22px;
+
+    text-transform: uppercase;
+
+    font: 800 16px 'Proxima', Arial, sans-serif;
+    letter-spacing: 0.8px;
+}
+
+.l-error-not-found__popular {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 83.33%;
+    padding-right: 15px;
+
+    vertical-align: top;
+}
+
+.l-error-not-found__catalog {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 16.66%;
+    padding-left: 15px;
+
+    vertical-align: top;
 }
 
 .l-error-not-found__footer {
@@ -29,17 +58,40 @@
 
 
 /** section content **/
-.l-error-not-found__error-information {
-    position: relative;
-
+.l-error-not-found__wrapper-error-information {
+    height: 280px;
     margin-top: 60px;
+
+    text-align: center;
+
+    &:before {
+        display: inline-block;
+
+        width: 0;
+        height: 100%;
+
+        content: '';
+        vertical-align: middle;
+    }
+}
+
+.l-error-not-found__error-information {
+    display: inline-block;
+
+    vertical-align: middle;
+    text-align: left;
+
+    line-height: 93px;
+}
+
+.l-error-not-found__wrapper-error-text {
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 120px;
 }
 
 .l-error-not-found__error-text {
     display: inline-block;
-
-    padding-left: 38px;
-    vertical-align: middle;
 
     font-family: 'Proxima';
     font-size: 24px;
@@ -48,41 +100,76 @@
 }
 
 .l-error-not-found__error-img {
-    display: inline-block;
+    float: left;
+
     width: 93px;
     height: 93px;
-    vertical-align: middle;
 }
 
 @include media-xl {
-    .l-error-not-found__body {
+    .l-error-not-found__section {
         box-sizing: border-box;
         width: auto;
         padding: 0 40px;
     }
 }
 
-@include media-s {
-    .l-error-not-found__error-img {
-        position: absolute;
+@include media-l {
+    .l-error-not-found__popular {
+        width: 100%;
     }
 
-    .l-error-not-found__error-text {
-        padding-left: 120px;
+    .l-error-not-found__catalog {
+        display: none;
+    }
+}
 
-        vertical-align: top;
+@include media-m {
+    .l-error-not-found__wrapper-error-information {
+        height: 180px;
+    }
+}
+
+@include media-s {
+    .l-error-not-found__popular {
+        width: 66.66%;
+    }
+
+    .l-error-not-found__catalog {
+        display: inline-block;
+
+        width: 33.33%
     }
 }
 
 @include media-xs {
+    .l-error-not-found__wrapper-error-information {
+        height: auto;
+    }
+
     .l-error-not-found {
         box-sizing: border-box;
         height: 100%;
         padding-bottom: 235px;
     }
 
-    .l-error-not-found__body {
+    .l-error-not-found__section {
         padding: 0 30px;
+    }
+
+    .l-error-not-found__section-header {
+        padding-bottom: 17px;
+    }
+
+    .l-error-not-found__popular {
+        width: 100%;
+        margin-bottom: 30px;
+        padding-right: 0;
+    }
+
+    .l-error-not-found__catalog {
+        width: 100%;
+        padding-left: 0;
     }
 
     .l-error-not-found__footer {
@@ -91,12 +178,16 @@
 }
 
 @include media-xxs {
-    .l-error-not-found__error-img {
-        position: static;
+    .l-error-not-found__error-information {
+        line-height: normal;
     }
 
-    .l-error-not-found__error-text {
+    .l-error-not-found__error-img {
+        float: none;
+    }
+
+    .l-error-not-found__wrapper-error-text {
         margin-top: 20px;
-        padding-left: 0;
+        padding-left: 0px;
     }
 }

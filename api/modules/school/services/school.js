@@ -227,6 +227,11 @@ service.getPopularSchools = async(function(opt_amount) {
                                 as: 'metro'
                             }
                         ]
+                    },
+                    {
+                        model: models.Area,
+                        as: 'area',
+                        attributes: ['id', 'name']
                     }
                 ]
             }],

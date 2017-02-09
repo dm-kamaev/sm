@@ -223,6 +223,9 @@ goog.scope(function() {
             ),
             nameLink: this.getElementByClass(
                 View.CssClass.NAME_LINK
+            ),
+            badges: this.getElementsByClass(
+                sm.bSmBadge.View.CssClass.ROOT
             )
         };
     };

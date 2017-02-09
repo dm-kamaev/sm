@@ -21,6 +21,14 @@ sm.bSmItem.SmItem = function(view, opt_domHelper) {
      * @protected
      */
     this.nameLink = null;
+
+
+    /**
+     * Badges instances
+     * @type {Array<sm.bSmBadge.SmBadge>}
+     * @protected
+     */
+    this.badges = [];
 };
 goog.inherits(sm.bSmItem.SmItem, cl.iControl.Control);
 
@@ -59,6 +67,7 @@ goog.scope(function() {
     Item.prototype.decorateInternal = function(element) {
         Item.base(this, 'decorateInternal', element);
 
+        this.initBadges_();
         this.initNameLink_();
     };
 
@@ -132,6 +141,18 @@ goog.scope(function() {
      */
     Item.prototype.initViewListeners = function() {
         this.autoDispatch(View.Event.CLICK);
+    };
+
+
+    /**
+     * Initializes badges instances
+     * @private
+     */
+    Item.prototype.initBadges_ = function() {
+        this.badges = this.decorateChildren(
+            'smBadge',
+            this.getView().getDom().badges
+        );
     };
 
 

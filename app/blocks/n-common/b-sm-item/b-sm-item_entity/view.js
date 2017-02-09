@@ -152,9 +152,6 @@ goog.scope(function() {
             score: this.getElementByClass(
                 sm.bSmScore.ViewBrief.CssClass.ROOT
             ),
-            badges: this.getElementsByClass(
-                sm.bSmBadge.View.CssClass.ROOT
-            ),
             favoriteLink: this.getElementByClass(
                 sm.bFavoriteLink.View.CssClass.ROOT
             ),
