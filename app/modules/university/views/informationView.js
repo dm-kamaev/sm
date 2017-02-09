@@ -1,12 +1,13 @@
 'use strict';
 
-const userView = require('../../../../api/modules/user/views/user');
-
-const footerView = require('../../../../api/modules/entity/views/footerView'),
+const userView = require('../../../../api/modules/user/views/user'),
+    footerView = require('../../../../api/modules/entity/views/footerView'),
     headerView = require('../../../../api/modules/entity/views/headerView'),
-    sideMenuView = require('../../common/views/sideMenuView');
+    sideMenuView = require('../../common/views/sideMenuView'),
+    Subheader = require('../lib/UniversitySubheader'),
+    FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
 
-const Subheader = require('../lib/UniversitySubheader');
+const FULL_DESCRIPTION_LENGTH = 280;
 
 let view = {};
 
@@ -60,6 +61,31 @@ view.subheader = function(data) {
     });
 
     return subheader.getParams();
+};
+
+/**
+ * @param  {string=} text
+ * @return {Object}
+ */
+view.formatFullDescription = function(text) {
+    let result = {
+        cutText: []
+    };
+
+    if (text) {
+        if (text.length > FULL_DESCRIPTION_LENGTH) {
+            let formatUtils = new FormatUtils();
+            result.fullText = [text];
+            result.cutText.push(
+                formatUtils.cutText(text, FULL_DESCRIPTION_LENGTH, ' ')
+            );
+        } else {
+            result.cutText.push(text);
+        }
+    } else {
+        result = null;
+    }
+    return result;
 };
 
 module.exports = view;

@@ -23,6 +23,18 @@ controller.information = async(function(req, res, next) {
         let authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {};
 
+        const description = `Программа для тех, кто хочет стать профессионалом
+            в сфере маркетинга, управления персонала,
+            бизнес–планирования и проектирования, тех, кто хочет
+            построить свою карьеру в управлении бизнесом. Учебный
+            процесс сочетает в себе как фундаментальное изучение
+            экономики и финансов, права, социологии и психологии,
+            так и овладение общеменеджериальными и специальными
+            дисциплинами. Получив на первых двух курсах фундаментальную
+            подготовку, на третьем–четвертом курсе студенты могут
+            выбрать направление для углубленной специализации.
+            Длительность обучения: 4 года.`;
+
         let templateData = informationView.render({
             user: user,
             entityData: {
@@ -31,17 +43,9 @@ controller.information = async(function(req, res, next) {
                     Высшая школа экономики (НИУ–ВШЭ)`,
                 subunitType: 'Специальность',
                 subunitName: 'Менеджемент',
-                description: `Программа для тех, кто хочет стать профессионалом
-                    в сфере маркетинга, управления персонала,
-                    бизнес–планирования и проектирования, тех, кто хочет
-                    построить свою карьеру в управлении бизнесом. Учебный
-                    процесс сочетает в себе как фундаментальное изучение
-                    экономики и финансов, права, социологии и психологии,
-                    так и овладение общеменеджериальными и специальными
-                    дисциплинами. Получив на первых двух курсах фундаментальную
-                    подготовку, на третьем–четвертом курсе студенты могут
-                    выбрать направление для углубленной специализации.
-                    Длительность обучения: 4 года.`,
+                description: description,
+                cutDescription:
+                    informationView.formatFullDescription(description),
                 descriptionList: {
                     items: [{
                         data: {
@@ -105,14 +109,14 @@ controller.information = async(function(req, res, next) {
                             data: {
                                 header: '30',
                                 description: 'бюджетных мест'
-                            },
-                            config: {
-                                icon: true
                             }
                         }, {
                             data: {
                                 header: '6',
                                 description: 'человек на место'
+                            },
+                            config: {
+                                iconType: 'people'
                             }
                         }]
                     }, {
@@ -136,17 +140,23 @@ controller.information = async(function(req, res, next) {
                                 description: 'человек на место'
                             },
                             config: {
-                                icon: true
+                                iconType: 'people'
                             }
                         }]
                     }],
-                    content: {
+                    item: {
                         data: {
                             header: 'Стоимость / год',
                             description: '350 000 ₽',
-                            link: {
-                                url: 'http://yandex.ru',
-                                content: 'Проконсультироваться'
+                            buttonLink: {
+                                data: {
+                                    url: 'http://yandex.ru',
+                                    content: 'Проконсультироваться'
+                                },
+                                config: {
+                                    theme: 'neptune',
+                                    size: 'm'
+                                }
                             }
                         },
                         config: {

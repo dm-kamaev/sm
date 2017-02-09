@@ -27,6 +27,10 @@
  *         subunitType: string,
  *         subunitName: string,
  *         description: string,
+ *         cutDescription: {
+ *             cutText: Array<string>,
+ *             fullText: (Array<string>|undefined)
+ *         },
  *         descriptionList:
  *              sm.lUniversity.bDescriptionList.Template.Params.Data,
  *         summaryBoard: sm.bSummaryBoard.Template.Params.Data
@@ -178,7 +182,15 @@
                             'url': 'http://muzuz.ru/uploads/images/p/r/o/progulshiki_hse_nelaskovaja_vshe.jpg',
                             'altText': 'HSE'
                         ],
-                        'buttonContent': 'Оставить отзыв'
+                        'button': [
+                            'data': [
+                                'content': 'Оставить отзыв'
+                            ],
+                            'config': [
+                                'theme': 'neptune',
+                                'isBorderRound': true
+                            ]
+                        ]
                     ]
                 ]
             ]/}
@@ -229,6 +241,25 @@
         <div class="{call .rootClass/}__description">
             {call cl.iControl.Template.getText}
                 {param message: $params.data.entityData.description /}
+            {/call}
+        </div>
+        <div class="{call .rootClass/}__description_cut">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smCollapsedText',
+                    'renderParams': [
+                        'data': [
+                            'text': $params.data.entityData.cutDescription,
+                            'buttonTextExpand': 'Развернуть описание'
+                        ],
+                        'config': [
+                            'isButtonCollapse': true,
+                            'buttonFont': 'inherit',
+                            'buttonTheme': 'neptune'
+                        ]
+                    ]
+                ]/}
             {/call}
         </div>
     </div>

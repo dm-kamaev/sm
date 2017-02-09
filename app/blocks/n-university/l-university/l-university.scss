@@ -84,6 +84,17 @@
     line-height: 22px;
 }
 
+.l-university__description_cut {
+    display: none;
+
+    margin-bottom: 25px;
+
+    color: #747474;
+
+    font-size: 15px;
+    line-height: 22px;
+}
+
 
 @include media-xl {
     .l-university__section_data {
@@ -133,5 +144,13 @@
         position: relative;
 
         width: 100%;
+    }
+
+    .l-university__description {
+        display: none;
+    }
+
+    .l-university__description_cut {
+        display: block;
     }
 }

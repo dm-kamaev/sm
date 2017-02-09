@@ -35,6 +35,7 @@ goog.scope(function() {
         this.initSketch_();
         this.initDescriptionList_();
         this.initSummaryBoard_();
+        this.initCutDescription_();
     };
 
 
@@ -82,6 +83,18 @@ goog.scope(function() {
         this.decorateChild(
             'lUniversity-descriptionList',
             this.getView().getDom().descriptionList
+        );
+    };
+
+
+    /**
+     * Initializes instance of cut description
+     * @private
+     */
+    University.prototype.initCutDescription_ = function() {
+        this.decorateChild(
+            'smCollapsedText',
+            this.getView().getDom().cutDescription
         );
     };
 });  // goog.scope

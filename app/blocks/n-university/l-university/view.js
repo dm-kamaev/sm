@@ -1,5 +1,6 @@
 goog.provide('sm.lUniversity.View');
 
+goog.require('sm.bSmCollapsedText.View');
 goog.require('sm.bSmSketch.View');
 goog.require('sm.bSummaryBoard.View');
 goog.require('sm.iLayout.ViewStendhal');
@@ -52,7 +53,8 @@ goog.scope(function() {
         ROOT: 'l-university',
         SKETCH: sm.bSmSketch.View.CssClass.ROOT,
         DESCRIPTION_LIST: sm.lUniversity.bDescriptionList.View.CssClass.ROOT,
-        SUMMARY_BOARD: sm.bSummaryBoard.View.CssClass.ROOT
+        SUMMARY_BOARD: sm.bSummaryBoard.View.CssClass.ROOT,
+        CUT_DESCRIPTION: sm.bSmCollapsedText.View.CssClass.ROOT
     };
 
 
@@ -91,6 +93,9 @@ goog.scope(function() {
                 ),
                 summaryBoard: this.getElementByClass(
                     View.CssClass.SUMMARY_BOARD
+                ),
+                cutDescription: this.getElementByClass(
+                    View.CssClass.CUT_DESCRIPTION
                 )
             }
         );

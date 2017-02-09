@@ -17,6 +17,7 @@
  *     stylizationModifier: string,
  *     isButtonCollapse: (boolean|undefined),
  *     buttonFont: ('inherit'|undefined),
+ *     buttonTheme: (string|undefined),
  *     customClasses: (?Array<string>|undefined)
  * }} sm.bSmCollapsedText.Template.Params.Config
  */
@@ -85,7 +86,8 @@
  *         buttonTextExpand: (string|undefined)
  *     },
  *     config: {
- *         buttonFont: ('inherit'|undefined)
+ *         buttonFont: ('inherit'|undefined),
+ *         buttonTheme: (string|undefined)
  *     }
  * }}
  */
@@ -94,13 +96,15 @@
         <div class="{call .rootClass/}__button{sp}
                     {call .rootClass/}__button_expand">
 
+            {let $theme: $params.config.buttonTheme or 'attention' /}
+
             {call sm.bLink.Template.base}
                 {param params: [
                     'data': [
                         'name': $params.data.buttonTextExpand ?: 'Показать полностью'
                     ],
                     'config': [
-                        'theme': 'attention',
+                        'theme': $theme,
                         'font': $params.config.buttonFont == 'inherit' ?
                             'default' :
                             ''
@@ -159,13 +163,15 @@
                     {call .rootClass/}__button_collapse{sp}
                     i-utils__hidden">
 
+            {let $theme: $params.config.buttonTheme or 'attention' /}
+
             {call sm.bLink.Template.base}
                 {param params: [
                     'data': [
                         'name': $params.data.buttonTextCollapse ?: 'Свернуть'
                     ],
                     'config': [
-                        'theme': 'attention',
+                        'theme': $theme,
                         'font': $params.config.buttonFont == 'inherit' ?
                             'default' :
                             ''
