@@ -131,7 +131,7 @@ class UserDataUpdater {
 
             return result;
         });
-        var uniqNames = lodash.uniq(names, 'original');
+        var uniqNames = lodash.uniqBy(names, 'original');
         return uniqNames;
     }
 

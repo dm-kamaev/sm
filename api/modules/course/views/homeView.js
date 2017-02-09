@@ -156,7 +156,7 @@ view.searchPanel = function() {
  * }>}
  */
 view.recommendations = function(data) {
-    let types = lodash.uniq(data, item => item.type)
+    let types = lodash.uniqBy(data, item => item.type)
         .map(item => item.type);
 
     types = view.setTypesPriority(types);
