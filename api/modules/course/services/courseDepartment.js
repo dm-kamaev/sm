@@ -195,7 +195,9 @@ service.isExistDepartmentWithOutCurrent = async(function(
             }
         }
     }));
-    if (address && address.courseDepartments) { res = true; }
+    if (address && address.courseDepartments) {
+        res = true;
+    }
     return res;
 });
 

@@ -120,7 +120,9 @@ controller.create = async(function(req, res) {
         const isExistDepartment = await(
             services.courseDepartment.isExistDepartment(brandId, address)
         );
-        if (isExistDepartment) { throw new DepartmentExist(brandId, address); }
+        if (isExistDepartment) {
+            throw new DepartmentExist(brandId, address);
+        }
 
         result = await(services.courseDepartment.create(
             brandId,

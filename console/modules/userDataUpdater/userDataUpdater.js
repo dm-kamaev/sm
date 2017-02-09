@@ -3,7 +3,7 @@
 const await = require('asyncawait/await');
 const fs = require('fs');
 const path = require('path');
-const csv2json = require('csvtojson').Converter;
+const Csv2json = require('csvtojson').Converter;
 
 const sequelize = require('../../../app/components/db');
 const squel = require('squel');
@@ -24,10 +24,6 @@ const FILE_PATH = './api/modules/user/migrations/user-data.tar.gz';
  * It write to db through user service, which updates user_data.
  */
 class UserDataUpdater {
-    constructor() {}
-
-
-
     /**
      * Get data from csv and update with given data user data fields
      * @param {string} pathToFile
@@ -71,6 +67,7 @@ class UserDataUpdater {
     /**
      * Opens file from given path
      * @param {string} pathToFile
+     * @return {string}
      * @private
      */
     openCsv_(pathToFile) {
@@ -82,20 +79,21 @@ class UserDataUpdater {
     /**
      * Get data from csv
      * @param {string} pathToFile
+     * @return {Promise}
      * @private
      */
     getDataFromCsv_(pathToFile) {
         var file = this.openCsv_(pathToFile);
 
         return new Promise(function(resolve, reject) {
-            var csvConverter = new csv2json({
+            var csvConverter = new Csv2json({
                 noheader: true,
                 toArrayString: true,
                 delimiter: [';'],
                 headers: ['id', 'username']
             });
             csvConverter.fromString(file, function(error, result) {
-                if(error) {
+                if (error) {
                     reject(error);
                 }
                 resolve(result);
@@ -124,7 +122,7 @@ class UserDataUpdater {
             var result = {},
                 findedOldNameItem = this.findNameById_(oldNames, nameObject.id);
 
-            if(findedOldNameItem) {
+            if (findedOldNameItem) {
                 result = {
                     original: findedOldNameItem.username,
                     corrected: nameObject.username
@@ -178,15 +176,16 @@ class UserDataUpdater {
 
     /**
      * Write new username to user_data with given id
-     * @param {number} id
-     * @param {string} username
+     * @param {string} oldUserName
+     * @param {string} newUserName
+     * @return {Promise}
      * @private
      */
     updateDbUserDataName_(oldUserName, newUserName) {
         var query = squel.update()
             .table('user_data')
             .where('username = \'' + oldUserName + '\'')
-            .set('username',  newUserName)
+            .set('username', newUserName)
             .toString();
 
         return await(sequelize.query(
@@ -203,18 +202,18 @@ class UserDataUpdater {
      */
     archive_(comments) {
         var archiver = new Archiver(FILE_PATH);
-        
+
         await(archiver.compress(JSON.stringify(comments)));
     }
 
     /**
      * Extract comments from given path
+     * @private
      * @param {string} path
-     * @return Array<{
+     * @return {Array<{
      *     original: number,
      *     corrected: string
-     * }>
-     * @private
+     * }>}
      */
     extract_(path) {
         var archiver = new Archiver(path);

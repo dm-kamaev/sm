@@ -114,6 +114,7 @@ exports.view = async(function(req, res, next) {
                         )) !== 'undefined';
 
                 user = userView.school(user, isUserCommented);
+
                 let templateData = schoolView.default(
                     school,
                     dataFromPromises,

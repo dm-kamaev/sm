@@ -8,15 +8,15 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var imap = require('imap-simple');
 var http = require('http');
-var querystring = require('querystring');
-var mimelib = require("mimelib");
 
-var services = require('../app/components/services').all;
 const config = require('../app/config/config.json');
 const mailToken = require('../app/config/mailToken.json');
 
 
 class ParseMail {
+    /**
+     * @constructor
+     */
     constructor() {
         /**
          * Imap connector instance
@@ -29,7 +29,6 @@ class ParseMail {
      * Main function
      */
     process() {
-
         var mailConfig = {
             imap: {
                 user: config.deleteMailbox.email,
@@ -46,7 +45,7 @@ class ParseMail {
             var letters = await(this.getLetters_());
             var processedLettersIds = this.processLetters_(letters);
             this.deleteLetters_(processedLettersIds);
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         } finally {
             this.imapConnection_.end();
@@ -82,6 +81,8 @@ class ParseMail {
     /**
      * Get letter body
      * @private
+     * @param  {Object} letter
+     * @return {string}
      */
     getLetterBody_(letter) {
         /** Get letter parts from letter header **/
@@ -96,8 +97,9 @@ class ParseMail {
     }
 
     /**
-     * @param {array<object>} letters
      * @private
+     * @param  {array<object>} letters
+     * @return {Array<Object>}
      */
     processLetters_(letters) {
         var processedLetters = [];
@@ -121,7 +123,6 @@ class ParseMail {
     }
 
     /**
-     * @param {object} connection
      * @param {array<number>} letterIds - letter's ids
      * @private
      */
@@ -138,14 +139,14 @@ class ParseMail {
      */
     sendDeleteReq_(id) {
         const options = {
-                host: config.schools.host,
-                method: 'DELETE',
-                path: '/api/comment/delete/' + id,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    [mailToken.name]: mailToken.token
-                }
-            };
+            host: config.schools.host,
+            method: 'DELETE',
+            path: '/api/comment/delete/' + id,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                [mailToken.name]: mailToken.token
+            }
+        };
         var req = http.request(options);
         req.end();
     }

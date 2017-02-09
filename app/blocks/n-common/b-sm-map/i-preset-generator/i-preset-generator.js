@@ -49,7 +49,7 @@ goog.scope(function() {
      *     prefix: string,
      *     iconImageSize: Array<number>,
      *     iconImageOffset: Array<number>,
-     *     balloonOffset:
+     *     balloonOffset: Array<number>
      * }}
      */
     PresetGenerator.TypeSettings = {

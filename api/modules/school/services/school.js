@@ -13,6 +13,8 @@ const School = models.School;
 const SchoolNotFoundError =
     require('../controllers/errors/SchoolNotFoundError.js');
 
+const SchoolNotFound = require('./exceptions/SchoolNotFound').SchoolNotFound;
+
 const sequelize = require('../../../../app/components/db'),
     redis = require('../../../../app/components/redis'),
     CsvConverter =
@@ -138,10 +140,14 @@ service.checkExist = async(function(schoolId) {
     let school = await(School.findOne({
         where: {
             id: schoolId
-        }
+        },
+        raw: true
     }));
 
-    if (!school) { throw new SchoolNotFoundError(schoolId); }
+    if (!school) {
+        throw new SchoolNotFound(schoolId);
+    }
+
     return school;
 });
 
@@ -908,6 +914,17 @@ service.getByIds = function(ids) {
 
 
 /**
+ * getAllTypes
+ * @return {Object[]} [ { id, name, values, alias } ]
+ */
+service.getAllTypes = async(function() {
+    return await(models.SchoolTypeFilter.findAll({
+        attributes: [ 'id', 'name', 'values', 'alias' ]
+    }));
+});
+
+
+/*
  * searchDepartment by schoolId and departmentId
  * @param  {Number} schoolId
  * @param  {Number} departmentId

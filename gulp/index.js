@@ -4,6 +4,8 @@ module.exports = function(gulpHelper) {
         createTimestamp: require('./taskCreateTimestamp')(gulpHelper),
         debug: require('./taskDebug')(gulpHelper),
         scripts: require('./taskScripts')(gulpHelper),
-        svgSprite: require('./taskSvgSprite')
+        svgSprite: require('./taskSvgSprite'),
+        tsCompile: require('./taskTsCompile'),
+        backendLint: require('./taskBackendLint').backendLint
     };
 };

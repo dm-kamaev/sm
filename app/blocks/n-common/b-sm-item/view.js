@@ -96,7 +96,7 @@ goog.scope(function() {
 
     /**
      * Transform raw params to compressed ones
-     * @param {Object<string, (string, number, Object)>} rawParams
+     * @param {Object<string, (string|number|Object)>} rawParams
      * @return {sm.bSmItem.View.RenderParams}
      * @public
      */

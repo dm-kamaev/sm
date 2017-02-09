@@ -13,124 +13,11 @@ const schoolView = require('../views/schoolView'),
     activityView = require('../views/activityView');
 
 const SchoolDepartmentNotFound = require('./errors/SchoolDepatmentNotFound.js');
-const SchoolNotFoundError =
-     require('../controllers/errors/SchoolNotFoundError.js');
 
 const searchViewEntity = require('../../entity/views/searchView');
 
 const mapViewType = require('../../entity/enums/mapViewType'),
     entityType = require('../../entity/enums/entityType');
-
-
-/**
- * @api {post} api/school/createschool Creates school
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName Create
- * @apiParamExample {json} Request-Example:
- *     {
- *         "schoolData" : {
- *             "name": "Общеобразовательная школа",
- *             "abbreviation": "ГОУ СКОШ № 00",
- *             "fullName": "Государственное образовательное учреждение",
- *             "schoolType": "Школа",
- *             "director": "Любимов Олег Вадимович",
- *             "phones": ["(495) 223-32-23", "(499)322-23-33"],
- *             "site": "school.ru",
- *             "educationInterval": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
- *             "govermentKey": 100,
- *             "addresses": [{
- *                 "name":  "ул. Веткина, 2",
- *                 "coords": [55.802275, 37.624876],
- *                 "departments": [{
- *                     "stage": "Начальное образование",
- *                     "name": "Начальное образование",
- *                     "availability": [1, 0, 0]
- *                 }]
- *             }]
- *         }
- *     }
- */
-exports.create = async(function(req, res) {
-    var result = '';
-    try {
-        var data = req.body.schoolData;
-        result = await(services.school.create(data));
-    } catch (error) {
-        result = JSON.stringify(error);
-        logger.error(result);
-    } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(JSON.stringify(result));
-    }
-});
-
-
-/**
- * @api {put} api/school/:id/ Update school
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName Update
- * @apiParamExample {json} Request-Example:
- * {
- *   "description": "
- *       Многопрофильная школа с развитой
- *       системой профориентации и «университетскими субботами»
- *    ",
- *   "features": [
- *       "В лицее нет традиционных классов: ученики делятся на группы в
- *        зависимости от выбранного ими учебного плана",
- *       "В расписании предусмотрены факультетские дни, которые лицеисты
- *        проводят на
- *        профильных факультетах НИУ ВШЭ*"
- *   ]
- * }
- * @apiError (Error 404) SchoolNotFoundError
- * @apiSuccessExample {json}
- */
-exports.update = async(function(req, res) {
-    let result = {}, schoolId = req.params.id, data = req.body;
-
-    let handlerErr_ = function(err) {
-        if (err instanceof SchoolNotFoundError) {
-            res.status(err.status);
-            return err.response;
-        } else {
-            logger.error(err);
-            return err;
-        }
-    };
-
-    try {
-        await(services.school.checkExist(schoolId));
-        result = await(services.school.update(schoolId, data));
-    } catch (err) {
-        result = handlerErr_(err);
-    } finally {
-        res.json(result);
-    }
-});
-
-
-/**
- * @api {delete} api/school/:id Delete school
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName Delete
- */
-exports.delete = async(function(req, res) {
-    var result = '';
-    try {
-        var schoolId = req.params.id;
-        result = await(services.school.delete(schoolId));
-    } catch (error) {
-        logger.error(error.message);
-        result = error.message;
-    } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(JSON.stringify(result));
-    }
-});
 
 
 /**
@@ -633,6 +520,40 @@ exports.popularSpecializedClassType = async(function(req, res) {
 
 
 /**
+ * @api {get} /api/school/types Get all types of school [ lyceum, school ]
+ * @apiVersion 0.1.0
+ * @apiName ShoolTypes
+ * @apiGroup School
+ *
+ * @apiSuccess {Object[]} types of school
+ [{
+    "id": 1,
+    "name": "Школы и центры образования",
+    "values": ["SCHOOL", "EDUCATION_CENTER"],
+    "alias": "school-or-center"
+ },{
+    "id": 4,
+    "name": "Коррекционные",
+    "values": ["CORRECTIONAL_SCHOOL", "CORRECTIONAL_SCHOOL_INTERNAT"],
+    "alias": "correctional"
+ }]
+ *
+ */
+exports.getAllTypes = async(function(req, res) {
+    let result;
+    try {
+        result = await(services.school.getAllTypes());
+        res.status(200);
+    } catch (error) {
+        logger.critical(error);
+        result = error.message;
+        res.status(500);
+    }
+    res.json(result);
+});
+
+
+/*
  * Rename department of school
  * @api {get} /school/:schoolId/department/:departmentId
  * @apiVersion 0.1.0

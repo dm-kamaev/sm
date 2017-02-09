@@ -24,8 +24,7 @@ goog.scope(function() {
 
     /**
      * Css class enum
-     * @enum
-     * @type {string}
+     * @enum {string}
      */
     View.CssClass = {
         ROOT: 'g-input_stendhal'
