@@ -11,19 +11,16 @@
  *                 description: string
  *             },
  *             config: ({
- *                 icon: boolean,
- *                 theme: string
+ *                 iconType: (string|undefined),
+ *                 theme: (string|undefined)
  *             }|undefined)
  *         }>
  *     }>,
- *     content: {
+ *     item: {
  *         data: {
  *             header: string,
  *             description: string,
- *             link: {
- *                 url: string,
- *                 content: string
- *             }
+ *             buttonLink: sm.bButtonLink.Template.Params
  *         },
  *         config: ({
  *             theme: string
@@ -88,8 +85,8 @@
  *                     description: string
  *                 },
  *                 config: ({
- *                     icon: boolean,
- *                     theme: string
+ *                     iconType: (string|undefined),
+ *                     theme: (string|undefined)
  *                 }|undefined)
  *             }>
  *         }>,
@@ -118,8 +115,8 @@
  *             description: string
  *         },
  *         config: ({
- *             icon: boolean,
- *             theme: string
+ *             iconType: (string|undefined),
+ *             theme: (string|undefined)
  *         }|undefined)
  *     }>
  * }}
@@ -149,8 +146,8 @@
  *         description: string
  *     },
  *     config: ({
- *         icon: boolean,
- *         theme: string
+ *         iconType: (string|undefined),
+ *         theme: (string|undefined)
  *     }|undefined)
  * }}
  * @override
@@ -162,10 +159,26 @@
         {/if}
     {/let}
     <div class="{call .rootClass/}__list-subitem {$class}">
-        <div class="{call .rootClass/}__list-subitem-header">
-            {call .getText}
-                {param message: $subitem.data.header /}
-            {/call}
+        <div class="{call .rootClass/}__list-subitem-header-wrap">
+            <div class="{call .rootClass/}__list-subitem-header">
+                {call .getText}
+                    {param message: $subitem.data.header /}
+                {/call}
+            </div>
+            {if $subitem.config and $subitem.config.iconType}
+                <div class="{call .rootClass /}__list-subitem-icon">
+                    {call .renderChild}
+                        {param params: [
+                            'type': 'icon',
+                            'renderParams': [
+                                'data': [
+                                    'type': $subitem.config.iconType
+                                ]
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+            {/if}
         </div>
 
         <div class="{call .rootClass/}__list-subitem-description">
@@ -182,14 +195,11 @@
  * Content
  * @param params {{
  *     data: { 
- *         content: {
+ *         item: {
  *             data: {
  *                 header: string,
  *                 description: string,
- *                 link: {
- *                     url: string,
- *                     content: string
- *                 }
+ *                 buttonLink: sm.bButtonLink.Template.Params
  *             },
  *             config: ({
  *                 theme: string
@@ -201,42 +211,42 @@
  */
 {template .content_}
     {let $class kind="text"}
-        {if $params.data.content.config and $params.data.content.config.theme}
-            {call .rootClass/}__content_{$params.data.content.config.theme}-theme
+        {if $params.data.item.config and $params.data.item.config.theme}
+            {call .rootClass/}__item_{$params.data.item.config.theme}-theme
         {/if}
     {/let}
-    <div class="{call .rootClass/}__content {$class}">
-        <div class="{call .rootClass/}__content-header">
+
+    <div class="{call .rootClass/}__item {$class}">
+        <div class="{call .rootClass/}__item-header">
             {call .getText}
-                {param message: $params.data.content.data.header /}
+                {param message: $params.data.item.data.header /}
             {/call}
         </div>
 
-        <div class="{call .rootClass/}__content-description">
+        <div class="{call .rootClass/}__item-description">
             {call .getText}
-                {param message: $params.data.content.data.description /}
+                {param message: $params.data.item.data.description /}
             {/call}
         </div>
+    </div>
 
-        <div class="{call .rootClass/}__content-link">
-            {let $customClasses kind="html"}
-                {call .rootClass/}__button-link
-            {/let}
-            {call .renderChild}
-                {param params: [
-                    'type': 'button-link',
-                    'renderParams': [
-                        'data': [
-                            'url': $params.data.content.data.link.url,
-                            'content': $params.data.content.data.link.content
-                        ],
-                        'config': [
-                            'theme': 'bold',
-                            'customClasses': [$customClasses]
-                        ]
+    <div class="{call .rootClass/}__link">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__button-link
+        {/let}
+        {call .renderChild}
+            {param params: [
+                'type': 'button-link',
+                'renderParams': [
+                    'data': $params.data.item.data.buttonLink.data,
+                    'config': [
+                        'theme': $params.data.item.data.buttonLink.config.theme,
+                        'size': $params.data.item.data.buttonLink.config.size,
+                        'isBorderRound': true,
+                        'customClasses': [$customClasses]
                     ]
-                ]/}
-            {/call}
-        </div>
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}

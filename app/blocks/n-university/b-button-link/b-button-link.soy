@@ -8,7 +8,12 @@
 
 
  /**
- * @typedef {sm.bSmLink.Template.Params.Config}
+ * @typedef {{
+ *     disableHover: boolean,
+ *     size: ('s'|'m'|'l'|'xl'),
+ *     theme: (string|undefined),
+ *     isBorderRound: boolean
+ * }}
  * sm.bButtonLink.Template.Params.Config
  */
 
@@ -72,8 +77,8 @@
     {if $params?.config.size}
         {sp}{call .rootClass /}_size_{$params?.config.size}
     {/if}
-    {if $params?.config.theme}
-        {sp}{call .rootClass /}_{$params?.config.theme}-theme
+    {if $params?.config?.isBorderRound}
+        {sp}{call .rootClass /}_border-round
     {/if}
 {/template}
 
