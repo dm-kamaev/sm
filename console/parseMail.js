@@ -12,7 +12,6 @@ var http = require('http');
 const config = require('../app/config/config.json');
 const mailToken = require('../app/config/mailToken.json');
 
-
 class ParseMail {
     /**
      * @constructor

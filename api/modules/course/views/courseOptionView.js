@@ -20,6 +20,9 @@ view.renderList = function(courseOptions) {
  */
 view.render = function(courseOption) {
     let result = courseOption.toJSON();
+    let course = result.course || {};
+
+    result.brandId = course.brandId;
     result.departments = lodashMap(courseOption.departments, ID);
 
     return result;

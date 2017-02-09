@@ -12,8 +12,6 @@ const schoolView = require('../views/schoolView'),
     specializedClassesView = require('../views/specializedClassesView'),
     activityView = require('../views/activityView');
 
-const SchoolDepartmentNotFound = require('./errors/SchoolDepatmentNotFound.js');
-
 const searchViewEntity = require('../../entity/views/searchView');
 
 const mapViewType = require('../../entity/enums/mapViewType'),
@@ -37,6 +35,45 @@ exports.list = async(function(req, res) {
         result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {get} api/school/adminsearch Search over schools
+ * This api must be replaced by suggest api for market-admin
+ * @apiVersion 0.1.0
+ * @apiName Get schools by params
+ * @apiGroup School
+ *
+ * @apiParam {String} name name of school
+ *
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "name": "Школа №59"
+ *     }
+ *
+ * @apiSuccess {Object[]} schools      found schools
+ * @apiSuccess {Number}   schools.id   id of school
+ * @apiSuccess {String}   schools.name name of school
+ *
+ * @apiSuccessExample {json} Response-Example:
+ *     HTTP/1.1
+ *     [{
+ *        "id": 10,
+ *        "name": "Школа №59"
+ *     }]
+ */
+exports.adminSearch = async(function(req, res) {
+    let result;
+    try {
+        let attributes = req.query;
+        result = await(services.school.getByAttributes(attributes));
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -550,62 +587,4 @@ exports.getAllTypes = async(function(req, res) {
         res.status(500);
     }
     res.json(result);
-});
-
-
-/*
- * Rename department of school
- * @api {get} /school/:schoolId/department/:departmentId
- * @apiVersion 0.1.0
- * @apiName renameDepartment
- * @apiGroup School
- *
- * @apiSuccess {Object} department of school
- * {
- *      "id": 1,
- *      "name": "Новое название",
- *      "created_at": "2016-11-21T09:47:16.370Z",
- *      "updated_at": "2016-12-22T08:08:12.335Z",
- *      "address_id": 3,
- *      "oldName": "Старое название",
- *      "educationalGrades":[5, 6, 7, 8, 9, 10, 11]
- * }
- * @apiError (404) DepartmentNotFound
- */
-exports.renameDepartment = async(function(req, res) {
-    let result = {},
-        schoolId = parseInt(req.params.schoolId, 10),
-        departmentId = parseInt(req.params.departmentId, 10),
-        name = req.body.name;
-
-    let handlerErr_ = function(error) {
-        let err;
-        if (error instanceof SchoolDepartmentNotFound) {
-            logger.critical(error);
-            logger.critical(util.inspect(error.response, { depth: 5 }));
-            res.status(error.status);
-            err = error.response;
-        } else {
-            logger.critical(error);
-            res.status(500);
-            err = error.message;
-        }
-        return err;
-    };
-
-    try {
-        let department = services.school.searchDepartment(
-            schoolId,
-            departmentId
-        );
-        if (!department) {
-            throw new SchoolDepartmentNotFound(schoolId, departmentId);
-        }
-        result = services.school.renameDepartment(department, name);
-        res.status(200);
-    } catch (error) {
-        result = handlerErr_(error);
-    } finally {
-        res.json(result);
-    }
 });

@@ -11,6 +11,12 @@ const commentAdminController = new CommentAdminController();
 import {DepartmentAdminController} from './departmentAdminController';
 const departmentAdminController = new DepartmentAdminController();
 
+import {adminUser} from '../../../../app/middleware/adminUser';
+import {
+    middleware as superUserCheckAction
+} from '../../../../app/middleware/ActionChecker/SuperUserActionChecker';
+
+
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
 
@@ -35,9 +41,9 @@ router.get(
     schoolController.popularSpecializedClassType
 );
 
-router.get('/school/:id', schoolController.view);
-// router.get('/school/apitest', schoolController.yapi);
+router.get('/school/adminsearch', checkToken, schoolController.adminSearch);
 
+router.get('/school/:id', schoolController.view);
 
 router.post('/school/:id/comment', csrf, schoolController.createComment);
 
@@ -77,11 +83,29 @@ router.delete(
 router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
 
 const initCrudRouting = function(route: string, controller: any): void {
-    router.post(route, checkToken, controller.actionCreate);
+    router.post(
+        route,
+        checkToken,
+        adminUser,
+        superUserCheckAction,
+        controller.actionCreate
+    );
     router.get(route, controller.actionList);
     router.get(`${route}/:id`, controller.actionGet);
-    router.put(`${route}/:id`, checkToken, controller.actionUpdate);
-    router.delete(`${route}/:id`, checkToken, controller.actionDelete);
+    router.put(
+        `${route}/:id`,
+        checkToken,
+        adminUser,
+        superUserCheckAction,
+        controller.actionUpdate
+    );
+    router.delete(
+        `${route}/:id`,
+        checkToken,
+        adminUser,
+        superUserCheckAction,
+        controller.actionDelete
+    );
 };
 
 initCrudRouting(
