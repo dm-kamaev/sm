@@ -8,7 +8,15 @@
  *         url: string,
  *         altText: string
  *     },
- *     buttonContent: string
+ *     button: {
+ *         data: {
+ *             content: string
+ *         },
+ *         config: ({
+ *             theme: (string|undefined),
+ *             isBorderRound: (boolean|undefined)
+ *         }|undefined)   
+ *     }
  * }} sm.bSmSketch.Template.Params.Data
  */
 
@@ -45,7 +53,12 @@
     // {call .stripData data="all" /}
     {call .image_ data="all" /}
     {call .description_ data="all" /}
-    {call .button_ data="all" /}
+    {call .button_}
+        {param params: [
+            'data': $params.data.button.data,
+            'config': $params.data.button.config
+        ]/}
+    {/call}
 {/template}
 
 
@@ -100,8 +113,12 @@
  * Button
  * @param params {{
  *     data: {
- *         buttonContent: string  
- *     }
+ *         content: string
+ *     },
+ *     config: ({
+ *         theme: (string|undefined),
+ *         isBorderRound: (boolean|undefined)
+ *     }|undefined)  
  * }}
  * @private
  */
@@ -115,11 +132,12 @@
                 'type': 'button',
                 'renderParams': [
                     'data': [
-                        'content': $params.data.buttonContent
+                        'content': $params.data.content
                     ],
                     'config': [
                         'customClasses': [$customClasses],
-                        'theme': 'thin-ellipse',
+                        'theme': $params.config.theme,
+                        'isBorderRound': $params.config.isBorderRound,
                         'size': 'm'
                     ]
                 ]

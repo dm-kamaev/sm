@@ -39,17 +39,19 @@
     border-color: #e62424;
 }
 
-.g-button_thin-ellipse-theme {
+.g-button_neptune-theme {
     letter-spacing: 0;
     text-transform: none;
 
     color: #007aff;
     border: solid 2px #007aff;
-    border-radius: 100px;
 
-    font-family: 'Proxima', Arial, sans-serif;
     font-weight: 600;
     line-height: 25px;
+
+    &:hover {
+        background-color: rgba(0, 122, 255, 0.2)
+    }
 }
 
 .g-button_thin-theme {
@@ -87,4 +89,8 @@
     &:hover {
         background-color: initial;
     }
+}
+
+.g-button_border-round {
+    border-radius: 100px;
 }

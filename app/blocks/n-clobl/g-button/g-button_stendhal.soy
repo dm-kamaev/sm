@@ -54,4 +54,8 @@
     {if not $params?.config?.disableHover}
         {sp}{call .rootClass /}_hoverable
     {/if}
+
+    {if $params?.config?.isBorderRound}
+        {sp}{call .rootClass /}_border-round
+    {/if}
 {/template}
