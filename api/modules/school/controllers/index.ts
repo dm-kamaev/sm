@@ -47,25 +47,6 @@ router.get('/school/:id', schoolController.view);
 
 router.post('/school/:id/comment', csrf, schoolController.createComment);
 
-router.get(
-    '/school/:schoolId/comment/:commentId',
-    commentAdminController.actionGetComment
-);
-router.get(
-    '/school/:schoolId/comment',
-    commentAdminController.actionGetAllComments
-);
-router.put(
-    '/school/:schoolId/comment/:commentId',
-    checkToken,
-    commentAdminController.actionUpdateText
-);
-router.delete(
-    '/school/:schoolId/comment/:commentId',
-    checkToken,
-    commentAdminController.actionRemoveComment
-);
-
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
         route,
@@ -102,6 +83,11 @@ router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
 initCrudRouting(
     '/admin/school/:schoolId/department',
     departmentAdminController
+);
+
+initCrudRouting(
+    '/school/:schoolId/comment',
+    commentAdminController
 );
 
 export {router};

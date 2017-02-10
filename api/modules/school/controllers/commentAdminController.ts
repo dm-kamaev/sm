@@ -21,13 +21,13 @@ class CommentAdminController extends Controller {
 
     /**
      * Get comment for school with user data
-     * @api {get} /api/school/:schoolId/comment/:commentId
+     * @api {get} /api/school/:schoolId/comment/:id
      * @apiVersion 0.1.0
      * @apiName getAllComments
      * @apiGroup School
      *
      * @apiParam {Number} schoolId schoolId
-     * @apiParam {Number} commentId commentId
+     * @apiParam {Number} commentId id
      *
      * @apiSuccess {Object}   comment
      * @apiSuccess {Number}   comment.id
@@ -50,14 +50,13 @@ class CommentAdminController extends Controller {
      *      "score": 4.75,
      *      "updatedAt": "2016-11-21T09:50:32.184Z"
      * }
-     *
      */
-    public async actionGetComment(ctx, schoolId: string, commentId: string) {
+    public async actionGet(ctx, schoolId: string, id: string) {
         let result = {};
         const comment =
             await schoolCommentService.getCommentWithUser(
                 parseInt(schoolId, 10),
-                parseInt(commentId, 10)
+                parseInt(id, 10)
             );
         if (comment) {
             result = commentView.comment(comment);
@@ -99,9 +98,8 @@ class CommentAdminController extends Controller {
      *          "updatedAt": "2016-11-21T09:50:32.184Z"
      *      },
      * ]
-     *
      */
-    public async actionGetAllComments(ctx, schoolId: string) {
+    public async actionList(ctx, schoolId: string) {
         let result = [];
         const comments = await
             schoolCommentService.getAllCommentsWithUser(
@@ -116,13 +114,13 @@ class CommentAdminController extends Controller {
 
     /**
      * Edit text comment
-     * @api {put} /api/school/:schoolId/comment/:commentId
+     * @api {put} /api/school/:schoolId/comment/:id
      * @apiVersion 0.1.0
      * @apiName editTextComment
      * @apiGroup School
      *
      * @apiParam {Number} schoolId schoolId
-     * @apiParam {Number} commentId commentId
+     * @apiParam {Number} commentId id
      *
      * @apiParamExample {json} Request-Example:
      * {
@@ -140,37 +138,36 @@ class CommentAdminController extends Controller {
      * @apiSuccess {String}   comment.updatedAt
      * @apiSuccess {String}   comment.created_at
      * @apiSuccessExample {json} Success-Response:
-     * HTTP/1.1 200 OK
-     * {
-     *      "id": 3147,
-     *      "created_at": "2016-12-23T09:28:43.403Z",
-     *      "updated_at": "2016-12-23T10:37:52.552Z",
-     *      "text": "ОБНОВИЛИ КОММЕНТАРИЙ111",
-     *      "comment_group_id": 78,
-     *      "rating_id": 3146,
-     *      "user_data_id": 3149,
-     *      "source": "User",
-     *      "isNoticeSend": false
-     *   }
-     *
-     *
+     *     HTTP/1.1 200 OK
+     *     {
+     *         "id": 3147,
+     *         "created_at": "2016-12-23T09:28:43.403Z",
+     *         "updated_at": "2016-12-23T10:37:52.552Z",
+     *         "text": "ОБНОВИЛИ КОММЕНТАРИЙ111",
+     *         "comment_group_id": 78,
+     *         "rating_id": 3146,
+     *         "user_data_id": 3149,
+     *         "source": "User",
+     *         "isNoticeSend": false
+     *     }
      */
-    public async actionUpdateText(ctx, schoolId: string, commentId: string) {
+    public async actionUpdate(ctx, schoolId: string, id: string) {
         let result;
         const text: string = ctx.request.body.text;
         result =
             await schoolCommentService.textEdit(
                 parseInt(schoolId, 10),
-                parseInt(commentId, 10),
+                parseInt(id, 10),
                 text
             );
         return result;
     }
 
+    public async actionCreate(actionContext: any, schoolId: number) {}
 
     /**
      * Remove comment
-     * @api {delete} /api/school/:schoolId/comment/:commentId
+     * @api {delete} /api/school/:schoolId/comment/:id
      * @apiVersion 0.1.0
      * @apiName removeComment
      * @apiGroup School
@@ -180,12 +177,12 @@ class CommentAdminController extends Controller {
      * @apiSuccessExample {Number} Success-Response:
      * 1
      */
-    public async actionRemoveComment(ctx, schoolId: string, commentId: string) {
+    public async actionDelete(ctx, schoolId: string, id: string) {
         let result: number;
         result =
             await schoolCommentService.removeComment(
                 parseInt(schoolId, 10),
-                parseInt(commentId, 10),
+                parseInt(id, 10),
             );
         return result;
     }
