@@ -66,22 +66,6 @@ router.delete(
     commentAdminController.actionRemoveComment
 );
 
-router.get('/admin/school/:id', schoolAdminController.actionGet);
-router.get('/admin/school', schoolAdminController.actionGetAllSchool);
-router.post('/admin/school', checkToken, schoolAdminController.actionCreate);
-router.put(
-    '/admin/school/:schoolId',
-    checkToken,
-    schoolAdminController.actionUpdate
-);
-router.delete(
-    '/admin/school/:schoolId',
-    checkToken,
-    schoolAdminController.actionDelete
-);
-
-router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
-
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
         route,
@@ -107,6 +91,13 @@ const initCrudRouting = function(route: string, controller: any): void {
         controller.actionDelete
     );
 };
+
+initCrudRouting(
+    '/admin/school',
+    schoolAdminController
+);
+
+router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
 
 initCrudRouting(
     '/admin/school/:schoolId/department',

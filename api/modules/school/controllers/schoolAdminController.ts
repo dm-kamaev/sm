@@ -91,7 +91,7 @@ class SchoolAdminController extends Controller {
 
 
     /**
-     * @api {put} /api/admin/school/:schoolId Update school
+     * @api {put} /api/admin/school/:id Update school
      * @apiVersion 0.1.0
      * @apiName UpdateSchool
      * @apiGroup School Admin
@@ -158,17 +158,17 @@ class SchoolAdminController extends Controller {
      *    }
      *
      */
-    public async actionUpdate(ctx, schoolId: string) {
+    public async actionUpdate(ctx, id: string) {
         const schoolData = ctx.request.body;
         return await schoolAdminService.update(
-            parseInt(schoolId, 10),
+            parseInt(id, 10),
             schoolData
         );
     }
 
 
     /**
-     * @api {delete} /api/admin/school/:schoolId Remove school
+     * @api {delete} /api/admin/school/:id Remove school
      * @apiVersion 0.1.0
      * @apiName RemoveSchool
      * @apiGroup School Admin
@@ -178,9 +178,9 @@ class SchoolAdminController extends Controller {
      * @apiSuccessExample {Number} Example response:
      * 1
      */
-    public async actionDelete(ctx, schoolId: string) {
+    public async actionDelete(ctx, id: string) {
         return await schoolAdminService.remove(
-            parseInt(schoolId, 10)
+            parseInt(id, 10)
         );
     }
 
@@ -213,7 +213,7 @@ class SchoolAdminController extends Controller {
      *    }]
      *
      */
-    public async actionGetAllSchool() {
+    public async actionList() {
         return await schoolAdminService.getAllSchool();
     }
 
