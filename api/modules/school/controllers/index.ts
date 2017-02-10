@@ -11,17 +11,21 @@ const commentAdminController = new CommentAdminController();
 import {DepartmentAdminController} from './departmentAdminController';
 const departmentAdminController = new DepartmentAdminController();
 
-import {ProfileAdminController} from './profileAdminController';
+import {ProfileAdminController} from '../../study/controllers/profileAdminController';
 const profileAdminController = new ProfileAdminController();
 
-import {GiaAdminController} from './giaAdminController';
+import {GiaAdminController} from '../../study/controllers/giaAdminController';
 const giaAdminController = new GiaAdminController();
 
-import {ExamAdminController} from './examAdminController';
+import {ExamAdminController} from '../../study/controllers/examAdminController';
 const examAdminController = new ExamAdminController();
 
-import {EgeAdminController} from './egeAdminController';
+import {EgeAdminController} from '../../study/controllers/egeAdminController';
 const egeAdminController = new EgeAdminController();
+
+import {AdditionalClassAdminController}
+    from '../../study/controllers/additionalClassAdminController';
+const additionalClassAdminController = new AdditionalClassAdminController();
 
 
 const checkToken = require('../../../../app/middleware/checkToken');
@@ -132,5 +136,14 @@ initCrudRouting(
     ':egeId'
 );
 
+initCrudRouting(
+    '/admin/school/:schoolId/additionalclass',
+    additionalClassAdminController,
+);
+
+router.get(
+    '/admin/additionalclass/category',
+    additionalClassAdminController.actionListCategory
+);
 
 export default router;
