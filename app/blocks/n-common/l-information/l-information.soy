@@ -336,7 +336,8 @@
  */
 {template .informationBoard_}
     <div class="{call .rootClass/}__information-board">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'lInformation-informationBoard' /}
             {param renderParams: [
                 'data': $params.data.entityData.informationBoard
@@ -427,7 +428,8 @@
  */
 {template .feedbackBoard_}
     <div class="{call .rootClass/}-feedback-board">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'lInformation-feedbackBoard' /}
             {param renderParams: [
                 'data': $params.data.entityData.feedbackBoard

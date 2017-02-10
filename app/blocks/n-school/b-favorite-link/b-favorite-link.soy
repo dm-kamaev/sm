@@ -61,17 +61,19 @@
         {/if}
     {/let}
 
-    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-        {param type: 'icon-svg' /}
-        {param renderParams: [
-            'data': [
-                'type': $params.data?.isFavorite ?
-                    'favorite_red' :
-                    'favorite'
-            ],
-            'config': [
-                'customClasses': [$customClasses],
-                'size': $iconSize ?: ''
+    {call .renderChild}
+        {param params: [
+            'type': 'icon-svg',
+            'renderParams': [
+                'data': [
+                    'type': $params.data?.isFavorite ?
+                        'favorite_red' :
+                        'favorite'
+                ],
+                'config': [
+                    'customClasses': [$customClasses],
+                    'size': $iconSize ?: ''
+                ]
             ]
         ]/}
     {/call}

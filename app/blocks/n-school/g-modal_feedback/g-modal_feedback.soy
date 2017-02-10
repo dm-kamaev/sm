@@ -135,14 +135,16 @@
 {template .submitButton_}
     <div class="{call .rootClass/}__section{sp}
         {call .rootClass/}__section_submit">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'button' /}
-            {param renderParams: [
-                'data': [
-                    'content': 'Отправить'
-                ],
-                'config': [
-                    'theme': 'sienna'
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'Отправить'
+                    ],
+                    'config': [
+                        'theme': 'sienna'
+                    ]
                 ]
             ]/}
         {/call}
@@ -189,15 +191,17 @@
          {call .rootClass/}__input-field_name">
          <div class="{call .rootClass/}__control-name">Ваше имя</div>
          <div class="{call .rootClass/}__control">
-             {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-                 {param type: 'input' /}
-                 {param renderParams: [
-                     'data': [
-                         'placeholder': 'Ваше имя',
-                         'name': 'name'
-                     ],
-                     'config': [
-                         'validations': ['notEmpty']
+             {call .renderChild}
+                 {param params: [
+                     'type': 'input',
+                     'renderParams': [
+                         'data': [
+                             'placeholder': 'Ваше имя',
+                             'name': 'name'
+                         ],
+                         'config': [
+                             'validations': ['notEmpty']
+                         ]
                      ]
                  ]/}
              {/call}
@@ -213,15 +217,17 @@
                 {call .rootClass/}__input-field_email">
         <div class="{call .rootClass/}__control-name">Ваш e-mail</div>
         <div class="{call .rootClass/}__control">
-            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-                {param type: 'input' /}
-                {param renderParams: [
-                    'data': [
-                        'placeholder': 'Ваш e-mail',
-                        'name': 'email'
-                    ],
-                    'config': [
-                        'validations':  ['email', 'notEmpty']
+            {call .renderChild}
+                {param params: [
+                    'type': 'input',
+                    'renderParams': [
+                        'data': [
+                            'placeholder': 'Ваш e-mail',
+                            'name': 'email'
+                        ],
+                        'config': [
+                            'validations':  ['email', 'notEmpty']
+                        ]
                     ]
                 ]/}
             {/call}
@@ -261,21 +267,23 @@
                 {call .rootClass/}__input-field_theme">
         <div class="{call .rootClass/}__control-name">Выберите тему</div>
         <div class="{call .rootClass/}__control">
-            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-                {param type: 'dropdown-select-legacy' /}
-                {param renderParams: [
-                    'data': [
-                        'listItems': $params.config.type  == 'mistake'  ?
-                        $themes.mistake :
-                        $themes.opinion,
-                        'defaultOpenerText': 'Выберите тему'
-                    ],
-                    'config': [
-                        'iconSprite': 'opener-arrow',
-                        'textSize': 'small',
-                        'iconOffset': 'small',
-                        'indent': 'small',
-                        'usePlaceholder': true
+            {call .renderChild}
+                {param params: [
+                'type': 'dropdown-select-legacy',
+                    'renderParams': [
+                        'data': [
+                            'listItems': $params.config.type  == 'mistake'  ?
+                            $themes.mistake :
+                            $themes.opinion,
+                            'defaultOpenerText': 'Выберите тему'
+                        ],
+                        'config': [
+                            'iconSprite': 'opener-arrow',
+                            'textSize': 'small',
+                            'iconOffset': 'small',
+                            'indent': 'small',
+                            'usePlaceholder': true
+                        ]
                     ]
                 ]/}
             {/call}
@@ -289,18 +297,20 @@
 {template .textArea_}
     <div class="{call .rootClass/}__input-field{sp}
                 {call .rootClass/}__input-field_text">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'textarea' /}
-            {param renderParams: [
-                'data': [
-                    'placeholder': 'Сообщение',
-                    'name': 'text',
-                    'maxLength': 750
-                ],
-                'config': [
-                    'autoHeight': true,
-                    'showCounter': true,
-                    'minHeight': 'small'
+        {call .renderChild}
+            {param params: [
+                'type': 'textarea',
+                'renderParams': [
+                    'data': [
+                        'placeholder': 'Сообщение',
+                        'name': 'text',
+                        'maxLength': 750
+                    ],
+                    'config': [
+                        'autoHeight': true,
+                        'showCounter': true,
+                        'minHeight': 'small'
+                    ]
                 ]
             ]/}
         {/call}

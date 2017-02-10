@@ -41,13 +41,8 @@ goog.scope(function() {
  * creates sm.lInformation.Information instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
-        sm.lInformation.View.CssClass.ROOT
-    );
-
-
-    sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
-        sm.lInformation.Information.NAME,
-        domElement
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lInformation.Information,
+        sm.lInformation.View
     );
 });

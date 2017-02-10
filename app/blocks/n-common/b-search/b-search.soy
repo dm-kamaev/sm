@@ -180,7 +180,8 @@
  * Search suggest metro icon
  */
 {template .itemIconMetro_ private="true" autoescape="strict" kind="html"}
-    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+    {call cl.iAbstractFactory.renderChildSoy}
+        {param index: $ij?.factoryIndex /}
         {param type: 'icon-svg' /}
         {param renderParams: [
             'data': [
@@ -198,7 +199,8 @@
  * Search suggest area icon
  */
 {template .itemIconLocation_ private="true" autoescape="strict" kind="html"}
-    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+    {call cl.iAbstractFactory.renderChildSoy}
+        {param index: $ij?.factoryIndex /}
         {param type: 'icon' /}
         {param renderParams: [
             'data': [
@@ -216,7 +218,8 @@
  */
 {template .clearButton_ kind="html"}
     <div class="b-search__control b-search__control_clear i-animate">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call cl.iAbstractFactory.renderChildSoy}
+            {param index: $ij?.factoryIndex /}
             {param type: 'icon-svg' /}
             {param renderParams: [
                 'data': [
@@ -234,7 +237,8 @@
     <div class="b-search__open-button-holder
                 i-animate">
         <div class="b-search__control b-search__control_search i-animate">
-            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {call cl.iAbstractFactory.renderChildSoy}
+                {param index: $ij?.factoryIndex /}
                 {param type: 'icon-svg' /}
                 {param renderParams: [
                     'data': [

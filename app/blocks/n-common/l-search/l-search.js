@@ -956,14 +956,8 @@ goog.scope(function() {
  * creates sm.lSearch.Search instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
-        sm.lSearch.View.CssClass.ROOT
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lSearch.Search,
+        sm.lSearch.View
     );
-
-    if (domElement) {
-        sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
-            sm.lSearch.Search.NAME,
-            domElement
-        );
-    }
 });

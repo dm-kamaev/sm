@@ -191,7 +191,8 @@
     {if $params.data.recommendations}
 
         {let $content kind="html"}
-            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {call .renderChildLayout}
+                {param params: $params /}
                 {param type: 'smCatalog' /}
                 {param renderParams: [
                     'data': $params.data.recommendations
@@ -294,7 +295,8 @@
  */
 {template .searchPanel_ kind="html"}
     <div class="{call .rootClass/}__search-panel">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'smSearchPanel' /}
             {param renderParams: [
                 'data': $params.data.searchPanel,

@@ -47,12 +47,8 @@ goog.scope(function() {
  * creates sm.lErrorNotFound.ErrorNotFound instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
-        sm.lErrorNotFound.View.CssClass.ROOT
-    );
-
-    sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
-        sm.lErrorNotFound.ErrorNotFound.NAME,
-        domElement
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lErrorNotFound.ErrorNotFound,
+        sm.lErrorNotFound.View
     );
 });

@@ -120,12 +120,5 @@ goog.scope(function() {
  * creates sm.lHome.Home instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
-        sm.lHome.View.CssClass.ROOT
-    );
-
-    sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
-        sm.lHome.Home.NAME,
-        domElement
-    );
+    sm.iLayout.LayoutStendhal.autoInstance(sm.lHome.Home, sm.lHome.View);
 });

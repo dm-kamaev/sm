@@ -71,12 +71,8 @@ goog.scope(function() {
  * creates sm.lCatalog.Catalog instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
-        sm.lCatalog.View.CssClass.ROOT
-    );
-
-    sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
-        sm.lCatalog.Catalog.NAME,
-        domElement
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lCatalog.Catalog,
+        sm.lCatalog.View
     );
 });

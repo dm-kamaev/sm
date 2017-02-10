@@ -160,7 +160,8 @@
  */
 {template .sectionCatalog_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_catalog">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'tab-catalog' /}
             {param renderParams: [
                 'data': $params.data.catalog

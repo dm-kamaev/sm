@@ -60,14 +60,16 @@
         {call .rootClass/}__catalog
     {/let}
 
-    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-        {param type: 'icon-svg' /}
-        {param renderParams: [
-            'data': [
-                'type': 'catalog'
-            ],
-            'config': [
-                'customClasses': [$customClasses]
+    {call .renderChild}
+        {param params: [
+            'type': 'icon-svg',
+            'renderParams': [
+                'data': [
+                    'type': 'catalog'
+                ],
+                'config': [
+                    'customClasses': [$customClasses]
+                ]
             ]
         ]/}
     {/call}

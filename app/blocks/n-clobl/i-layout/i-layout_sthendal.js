@@ -13,6 +13,7 @@ goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iCarrotquest.Carrotquest');
+goog.require('sm.iCloblFactory.FactoryExperimental');
 goog.require('sm.iLayout.ViewStendhal');
 goog.require('sm.iMetrika.Metrika');
 
@@ -155,4 +156,40 @@ goog.scope(function() {
     Layout.prototype.onHamburgerMenuClick_ = function() {
         this.sideMenu.show();
     };
+
+
+    /**
+     * Init layout instance
+     * @param {Object} layout constructor for instanse
+     * @param {Object} view
+     * @return {Object} control
+     * @public
+     */
+    Layout.autoInstance = function(layout, view) {
+        return Layout.createInstance_.call(layout, view);
+    };
+
+
+    /**
+     * Init layout instance
+     * @this layout constructor
+     * @param {Object} view
+     * @return {Object} control
+     * @private
+     */
+    Layout.createInstance_ = function(view) {
+        var domElement = goog.dom.getElementByClass(
+            view.CssClass.ROOT
+        );
+
+        var params = goog.dom.dataset.get(domElement, 'params');
+        var factoryName = goog.json.parse(params)['modifier'];
+
+        var factory = factoryName == 'stendhal' ?
+            sm.iCloblFactory.FactoryStendhal :
+            sm.iCloblFactory.FactoryExperimental;
+
+        return factory.getInstance().decorate(this.NAME, domElement);
+    };
+
 });  // goog.scope

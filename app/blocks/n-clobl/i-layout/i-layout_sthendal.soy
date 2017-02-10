@@ -61,6 +61,28 @@
 
 
 /**
+ * @param params
+ * @param type
+ * @param renderParams
+ *
+ */
+{template .renderChildLayout}
+    {let $factoryIndex kind="text"}
+        {if $params.config.modifier == 'stendhal'}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.getIndex /}
+        {else}
+            {call sm.iCloblFactory.FactoryExperimental.INSTANCE.getIndex /}
+        {/if}
+    {/let}
+    {call cl.iAbstractFactory.renderChildSoy}
+        {param index: $factoryIndex /}
+        {param type: $type /}
+        {param renderParams: $renderParams /}
+    {/call}
+{/template}
+
+
+/**
  * @param params {{
  *     data: sm.iLayout.TemplateStendhal.Params.Data,
  *     config: sm.iLayout.TemplateStendhal.Params.Config
@@ -346,7 +368,8 @@
  */
 {template .sideMenu}
     <div class="{call .rootClass /}__side-menu">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'side-menu' /}
             {param renderParams: [
                 'data': $params.data.sideMenu
@@ -366,7 +389,8 @@
  */
 {template .mainHeader kind="html"}
     <div class="{call .rootClass /}__main-header">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'smHeader' /}
             {param renderParams: $params.data.header /}
         {/call}
@@ -388,7 +412,8 @@
  */
 {template .mainSubheader autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__subheader">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'smSubheader' /}
             {param renderParams: $params.data.subHeader /}
         {/call}
@@ -415,7 +440,8 @@
  */
 {template .mainFooter autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__footer">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'smFooter' /}
             {param renderParams: [
                 'data': $params.data.footer

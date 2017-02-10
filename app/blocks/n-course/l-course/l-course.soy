@@ -183,7 +183,8 @@
             {call .rootClass/}__department-list
         {/let}
 
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'smItemList' /}
             {param renderParams: [
                 'data': [
@@ -340,7 +341,8 @@
 {template .mediaContent_}
     {if $params.data.entityData.videoId}
         <div class="{call .rootClass /}__video">
-            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {call .renderChildLayout}
+                {param params: $params /}
                 {param type: 'smEmbed' /}
                 {param renderParams: [
                     'data': [
@@ -396,7 +398,8 @@
  */
 {template .map_}
     <div class="{call .rootClass/}__map">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'smMap' /}
             {param renderParams: [
                 'data': $params.data.map,
@@ -413,10 +416,11 @@
 
 /**
  * Template displaying that is only online course
+ * @param params
  */
 {template .online_}
     <div class="{call .rootClass/}__online">
-        {call .onlineIcon_ /}
+        {call .onlineIcon_ data="all" /}
         {call .onlineText_ /}
     </div>
 {/template}
@@ -424,10 +428,12 @@
 
 /**
  * Template online icon
+ * @param params
  */
 {template .onlineIcon_}
     <div class="{call .rootClass/}__icon {call .rootClass/}__icon_online">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'icon-svg' /}
             {param renderParams: [
                     'data': [
@@ -474,7 +480,8 @@
             {/if}
         {/let}
 
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'lCourse-userInteraction' /}
             {param renderParams: [
                 'data': [
@@ -501,7 +508,8 @@
         Оставьте свой номер и мы перезвоним в&nbsp;течении 24 часов
     {/let}
 
-    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+    {call .renderChildLayout}
+        {param params: $params /}
         {param type: 'modal-enrollment' /}
         {param renderParams: [
             'data': [
@@ -520,13 +528,15 @@
 
 /**
  * Modal to show text successful
+ * @param params
  */
 {template .modalSuccess_}
     {let $textSuccess kind="html"}
         Ваша заявка принята, скоро с&nbsp;вами свяжется наш оператор.
     {/let}
 
-    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+    {call .renderChildLayout}
+        {param params: $params /}
         {param type: 'modal-success' /}
         {param renderParams: [
             'data': [
@@ -617,7 +627,8 @@
  */
 {template .score_}
     <div class="{call .rootClass/}__score {call .rootClass/}__score_xl">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'smScoreBrief' /}
             {param renderParams: [
                 'data': $params.data.entityData.score,
@@ -640,7 +651,8 @@
     </div>
 
     <div class="{call .rootClass/}__score {call .rootClass/}__score_s">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'smScoreBrief' /}
             {param renderParams: [
                 'data': $params.data.entityData.score,
@@ -735,7 +747,8 @@
 {template .fullDescription_}
     {if $params.data.entityData.fullDescription}
         <div class="{call .rootClass/}__full-description">
-            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {call .renderChildLayout}
+                {param params: $params /}
                 {param type: 'smCollapsedText' /}
                 {param renderParams: [
                     'data': [
@@ -765,7 +778,8 @@
  */
 {template .generalOptions_}
     <div class="{call .rootClass/}__general-options">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {call .renderChildLayout}
+            {param params: $params /}
             {param type: 'lCourse-informationBoard' /}
             {param renderParams: [
                 'data': $params.data.entityData.generalOptions

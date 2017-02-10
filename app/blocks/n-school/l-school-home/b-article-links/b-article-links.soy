@@ -68,13 +68,15 @@
     {/let}
 
     <div class="{call .rootClass/}__article {call .rootClass/}__article_first">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'article-link' /}
-            {param renderParams: [
-                'articleUrl': $articleUrl,
-                'imgUrl': $imgUrl,
-                'title': $articleTitle,
-                'subtitle': $articleSubtitle
+        {call .renderChild}
+            {param params: [
+                'type': 'article-link',
+                'renderParams': [
+                    'articleUrl': $articleUrl,
+                    'imgUrl': $imgUrl,
+                    'title': $articleTitle,
+                    'subtitle': $articleSubtitle
+                ]
             ]/}
         {/call}
     </div>
@@ -102,13 +104,15 @@
     {/let}
 
     <div class="{call .rootClass/}__article {call .rootClass/}__article_second">
-        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
-            {param type: 'article-link' /}
-            {param renderParams: [
-                'articleUrl': $articleUrl,
-                'imgUrl': $imgUrl,
-                'title': $articleTitle,
-                'subtitle': $articleSubtitle
+        {call .renderChild}
+            {param params: [
+                'type': 'article-link',
+                'renderParams': [
+                    'articleUrl': $articleUrl,
+                    'imgUrl': $imgUrl,
+                    'title': $articleTitle,
+                    'subtitle': $articleSubtitle
+                ]
             ]/}
         {/call}
     </div>
