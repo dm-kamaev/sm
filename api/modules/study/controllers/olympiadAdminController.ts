@@ -101,20 +101,20 @@ class OlympiadAdminController extends Controller {
      * @apiName GetOneOlympiadResult
      * @apiGroup Olympiad Results
      *
-     * @apiSuccess {Object}   olympiadResult
-     * @apiSuccess {Number}   olympiadResult.schoolId  Id of school of current
+     * @apiParam {Object}   olympiadResult
+     * @apiParam {Number}   olympiadResult.schoolId  Id of school of current
      *     olympiad result
-     * @apiSuccess {Number}   olympiadResult.subjectId Id of subject of current
+     * @apiParam {Number}   olympiadResult.subjectId Id of subject of current
      *     olympiad result
-     * @apiSuccess {String="всероссийская", "московская"}
+     * @apiParam {String="всероссийская", "московская"}
      *     olympiadResult.type   Type of current olympiad
-     * @apiSuccess {Number}   olympiadResult.class     Education grade of
+     * @apiParam {Number}   olympiadResult.class     Education grade of
      *     current olympiad result
-     * @apiSuccess {String="призер", "победитель"}
+     * @apiParam {String="призер", "победитель"}
      *     olympiadResult.status Status of participants of olympiad
-     * @apiSuccess {Number}   olympiadResult.amount   Amount of olympiad
+     * @apiParam {Number}   olympiadResult.amount   Amount of olympiad
      *     participants with current status
-     * @apiSuccess {Date}     olympiadResult.year     Year which current result
+     * @apiParam {Date}     olympiadResult.year     Year which current result
      *     of olympiad was
      *
      * @apiParamExample {json} Request-Example:
@@ -141,6 +141,57 @@ class OlympiadAdminController extends Controller {
             status: data.status,
             year: data.year,
             stage: data.stage,
+            amount: data.amount
+        });
+    }
+
+    /**
+     * @api {put} /api/admin/school/:schoolId/olympiadResult/:id
+     * @apiVersion 0.1.0
+     * @apiName UpdateOneOlympiadResult
+     * @apiGroup Olympiad Results
+     *
+     * @apiParam {Object}                               olympiadResult
+     * @apiParam {Number}                               olympiadResult.schoolId
+     *     Id of school of current olympiad result
+     * @apiParam {Number}                               olympiadResult.subjectId
+     *     Id of subject of current olympiad result
+     * @apiParam {String="всероссийская", "московская"} olympiadResult.type
+     *     Type of current olympiad
+     * @apiParam {Number}                               olympiadResult.class
+     *     Education grade of current olympiad result
+     * @apiParam {String="призер", "победитель"}        olympiadResult.status
+     *     Status of participants of olympiad
+     * @apiParam {Number}                               olympiadResult.amount
+     *     Amount of olympiad participants with current status
+     * @apiParam {Date}                                 olympiadResult.year
+     *     Year which current result of olympiad was
+     *
+     * @apiParamExample {json} Request-Example:
+     *     {
+     *         schoolId: 10,
+     *         subjectId: 12,
+     *         type: "всероссийская",
+     *         class: 10,
+     *         status: "победитель",
+     *         year: 2016,
+     *         amount: 5
+     *     }
+     * 
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP 1/1 203 OK
+     */
+    public async actionUpdate(actionContext: any, schoolId: number, id: number) {
+        const data = actionContext.data;
+        
+        return await olympiadResultService.update(id, {
+            schoolId: schoolId,
+            subjectId: data.subjectId,
+            class: data.class,
+            type: data.type,
+            year: data.year,
+            stage: data.stage,
+            status: data.status,
             amount: data.amount
         });
     }
@@ -236,7 +287,8 @@ class OlympiadAdminController extends Controller {
                 subjectId: searchParams.subjectId,
                 class: searchParams.class,
                 type: searchParams.type,
-                year: searchParams.year
+                year: searchParams.year,
+                status: searchParams.status
             }
         );
     }

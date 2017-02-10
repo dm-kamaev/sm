@@ -27,6 +27,12 @@ class OlympiadResultService {
         return result;
     }
 
+    public async getAll(): Promise<Array<OlympiadResultInstance>> {
+        return await OlympiadResultModel.findAll({
+            raw: true
+        });
+    }
+
     public async getAllBySchoolId(
         schoolId: number
     ): Promise<Array<OlympiadResultInstance>> {
@@ -50,9 +56,24 @@ class OlympiadResultService {
         return await OlympiadResultModel.create(data);
     }
 
-    public async delete(id: number) {
-        const resultInstance = await this.getOne(id);
-        await resultInstance.destroy();
+    public async update(
+        id: number, data: OlympiadResultAttribute
+    ): Promise<OlympiadResultInstance> {
+        const instance = await this.getOne(id);
+
+        return await instance.update(data);
+    }
+
+    public async delete(id: number)
+    public async delete(id: Array<number>)
+    public async delete(id: number | Array<number>) {
+        let result;
+        if(Array.isArray(id)) {
+            result = this.deleteAll_(id);
+        } else {
+            result = this.deleteOne_(id);
+        }
+        return await result;
     }
 
     /**
@@ -80,6 +101,7 @@ class OlympiadResultService {
             subjectId: number,
             class: number,
             type: string,
+            status: string,
             year: number
         }
     ): Promise<OlympiadResultInstance> {
@@ -89,6 +111,7 @@ class OlympiadResultService {
                     schoolId: schoolId,
                     type: searchData.type,
                     subjectId: searchData.subjectId,
+                    status: searchData.status,
                     year: searchData.year
                 }
             }
@@ -100,6 +123,27 @@ class OlympiadResultService {
      */
     private async silentGetOne_(id: number): Promise<OlympiadResultInstance> {
         return await OlympiadResultModel.findById(id);
+    }
+
+    /**
+     * Delete one instance by id
+     */
+    private async deleteOne_(id: number) {
+        const resultInstance = await this.getOne(id);
+        return await resultInstance.destroy();
+    }
+
+    /**
+     * Delete model instances by given id array
+     */
+    private async deleteAll_(id: Array<number>) {
+        return await OlympiadResultModel.destroy({
+            where: {
+                id: {
+                    $in: id
+                }
+            }
+        });
     }
 }
 

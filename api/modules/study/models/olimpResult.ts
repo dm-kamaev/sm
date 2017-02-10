@@ -7,6 +7,7 @@ const olympiadType = require('../enums/olimpType');
 import * as Sequelize from 'sequelize/v3';
 
 export interface OlympiadResultAttribute {
+    [index: string]: any;
     id?: number;
     schoolId?: number;
     subjectId?: number;
@@ -15,7 +16,7 @@ export interface OlympiadResultAttribute {
     class?: number;
     status?: string;
     year?: number;
-    amount?: number;
+    awardeeAmount?: number;
 }
 
 export interface OlympiadResultInstance
@@ -55,6 +56,10 @@ const OlympiadResult: OlympiadResultModel = db.define('OlimpResult', {
     year: {
         type: DataType.INTEGER
     },
+    awardeeAmount: {
+        type: DataType.INTEGER,
+        field: 'awardee_amount'
+    }
 }, {
     underscored: true,
     tableName: 'olimp_result',
