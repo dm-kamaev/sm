@@ -109,6 +109,7 @@ api/modules/study/models/subject.js
 app/components/host/host.js
 
 console/modules/geoTools/geoTools.js
+console/one-off/shrinkOlympiadResults.js
 
 gulp/taskBackendLint.js
 
