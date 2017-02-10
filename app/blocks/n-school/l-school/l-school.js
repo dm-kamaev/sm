@@ -206,9 +206,15 @@ goog.scope(function() {
     School.prototype.createDom = function() {
         goog.base(this, 'createDom');
 
-        var element = goog.soy.renderAsElement(sm.lSchool.Template.base, {
-            params: this.params_
-        });
+        var element = goog.soy.renderAsElement(
+            sm.lSchool.Template.base,
+            {
+                params: this.params_
+            },
+            {
+                factoryIndex: Factory.getIndex()
+            }
+        );
         this.decorateInternal(element);
     };
 
@@ -598,6 +604,7 @@ goog.scope(function() {
             this.bouton_ = Factory.decorate(
                 sm.gButton.ButtonStendhal.NAME,
                 this.elements_.bouton,
+                null,
                 this
             );
         }
@@ -681,7 +688,7 @@ goog.scope(function() {
                 schoolName: this.params_.schoolName
             }
         });
-        this.addChild(this.modal_);
+        this.addChild(this.modal_, true);
 
         return this;
     };
@@ -696,6 +703,7 @@ goog.scope(function() {
         this.modalInaccuracy_ = Factory.decorate(
             sm.gModal.ModalFeedback.NAME,
             this.getElementByClass(sm.gModal.ViewFeedback.CssClass.ROOT),
+            null,
             this
         );
 
@@ -755,6 +763,7 @@ goog.scope(function() {
         this.popularSchools_ = Factory.decorate(
             sm.bPopularSchools.PopularSchools.NAME,
             bPopularSchools,
+            null,
             this
         );
 
@@ -774,6 +783,7 @@ goog.scope(function() {
         this.dataBlockFeatures_ = Factory.decorate(
             sm.bDataBlock.DataBlockFeatures.NAME,
             bDataBlockFeatures,
+            null,
             this
         );
         return this;
@@ -794,6 +804,7 @@ goog.scope(function() {
         this.subHeader_ = Factory.decorate(
             sm.bSmHeader.SmHeader.NAME,
             header,
+            null,
             this
         );
 
@@ -815,6 +826,7 @@ goog.scope(function() {
         this.subHeader_ = Factory.decorate(
             sm.bSmSubheader.SmSubheader.NAME,
             subHeader,
+            null,
             this
         );
 
@@ -836,6 +848,7 @@ goog.scope(function() {
         this.sideMenu_ = Factory.decorate(
             sm.gModal.ModalSideMenu.NAME,
             sideMenu,
+            null,
             this
         );
 
@@ -857,6 +870,7 @@ goog.scope(function() {
         this.footer_ = Factory.decorate(
             sm.bSmFooter.SmFooter.NAME,
             footer,
+            null,
             this
         );
 

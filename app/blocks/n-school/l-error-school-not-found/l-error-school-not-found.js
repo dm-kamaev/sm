@@ -202,6 +202,7 @@ goog.scope(function() {
             Factory.decorate(
                 sm.bPopularSchools.PopularSchools.NAME,
                 bPopularSchools,
+                null,
                 this
             );
 
@@ -224,6 +225,7 @@ goog.scope(function() {
             Factory.decorate(
                 sm.bSearchPanel.SearchPanel.NAME,
                 bSearchPanel,
+                null,
                 this
             );
 
@@ -245,6 +247,7 @@ goog.scope(function() {
         this.footer_ = Factory.decorate(
             sm.bSmFooter.SmFooter.NAME,
             footer,
+            null,
             this
         );
 
@@ -266,6 +269,7 @@ goog.scope(function() {
         this.subHeader_ = Factory.decorate(
             sm.bSmHeader.SmHeader.NAME,
             header,
+            null,
             this
         );
 
@@ -287,6 +291,7 @@ goog.scope(function() {
         this.subHeader_ = Factory.decorate(
             sm.bSmSubheader.SmSubheader.NAME,
             subHeader,
+            null,
             this
         );
 
@@ -308,6 +313,7 @@ goog.scope(function() {
         this.sideMenu_ = Factory.decorate(
             sm.gModal.ModalSideMenu.NAME,
             sideMenu,
+            null,
             this
         );
 

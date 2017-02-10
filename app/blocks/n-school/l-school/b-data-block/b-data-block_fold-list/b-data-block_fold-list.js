@@ -62,6 +62,7 @@ goog.scope(function() {
         this.foldList_ = factory.decorate(
             sm.lSchool.bFoldList.FoldList.NAME,
             this.getElementByClass(sm.lSchool.bFoldList.View.CssClass.ROOT),
+            null,
             this
         );
         return this;

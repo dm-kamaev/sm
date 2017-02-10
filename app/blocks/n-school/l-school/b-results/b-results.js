@@ -129,6 +129,10 @@ goog.scope(function() {
             sm.lSchool.bResults.Template.results,
             {
                 params: this.params_
+            },
+            {
+                factoryIndex:
+                    sm.iCloblFactory.FactoryStendhal.getInstance().getIndex()
             }
         );
 
@@ -150,6 +154,7 @@ goog.scope(function() {
         this.tab_ = Factory.decorate(
             sm.gTab.TabStendhal.NAME,
             tabElement,
+            null,
             this
         );
 
@@ -320,6 +325,7 @@ goog.scope(function() {
                     dropdown: Factory.decorate(
                         sm.gDropdown.DropdownSelectLegacy.NAME,
                         dropdownElement,
+                        null,
                         this
                     ),
                     selectedItemId: innerContentElements.length - 1,

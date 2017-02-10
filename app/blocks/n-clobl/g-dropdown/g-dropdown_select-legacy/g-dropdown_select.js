@@ -73,6 +73,7 @@ goog.scope(function() {
         this.listInstance_ = Factory.decorate(
             sm.gList.List.Select.NAME,
             this.getView().getDom().selectList,
+            null,
             this
         );
     };
