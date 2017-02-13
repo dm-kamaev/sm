@@ -64,11 +64,11 @@ class OlympiadResultService {
         return await instance.update(data);
     }
 
-    public async delete(id: number)
-    public async delete(id: Array<number>)
-    public async delete(id: number | Array<number>) {
+    public async delete(id: number): Promise<void>
+    public async delete(id: Array<number>): Promise<number>
+    public async delete(id: number | Array<number>): Promise<void|number> {
         let result;
-        if(Array.isArray(id)) {
+        if (Array.isArray(id)) {
             result = this.deleteAll_(id);
         } else {
             result = this.deleteOne_(id);
@@ -128,7 +128,7 @@ class OlympiadResultService {
     /**
      * Delete one instance by id
      */
-    private async deleteOne_(id: number) {
+    private async deleteOne_(id: number): Promise<void> {
         const resultInstance = await this.getOne(id);
         return await resultInstance.destroy();
     }
@@ -136,7 +136,7 @@ class OlympiadResultService {
     /**
      * Delete model instances by given id array
      */
-    private async deleteAll_(id: Array<number>) {
+    private async deleteAll_(id: Array<number>): Promise<number> {
         return await OlympiadResultModel.destroy({
             where: {
                 id: {

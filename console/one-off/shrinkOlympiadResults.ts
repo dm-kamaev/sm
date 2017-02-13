@@ -41,7 +41,7 @@ class OlympiadResultsShrinker {
     ): Array<OlympiadResultAttribute> {
         return olympiadResults.reduce((previous, current) => {
             const foundIndex = this.findIndex_(current, previous);
-            if(~foundIndex) {
+            if (~foundIndex) {
                 previous[foundIndex].awardeeAmount =
                     previous[foundIndex].awardeeAmount + 1;
             } else {
@@ -80,7 +80,7 @@ class OlympiadResultsShrinker {
         let isEquals = false;
         const isExcludedAttribute = this.isExcludedAttribute_(name);
 
-        if(isExcludedAttribute) {
+        if (isExcludedAttribute) {
             isEquals = true;
         } else {
             isEquals = (value === compare[name]);
@@ -97,7 +97,7 @@ class OlympiadResultsShrinker {
             (result, value, key) => {
                 const isExcludedAttribute = this.isExcludedAttribute_(key);
 
-                if(!isExcludedAttribute) {
+                if (!isExcludedAttribute) {
                     result[key] = value;
                 }
 
@@ -108,7 +108,7 @@ class OlympiadResultsShrinker {
 
     private isExcludedAttribute_(name: string): boolean {
         const excludedKeys = [
-            'id','stage', 'awardeeAmount', 'created_at', 'updated_at'
+            'id', 'stage', 'awardeeAmount', 'created_at', 'updated_at'
         ];
         return !!~excludedKeys.findIndex(keyName =>
             keyName === name
