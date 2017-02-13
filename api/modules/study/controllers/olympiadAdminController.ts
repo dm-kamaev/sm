@@ -17,27 +17,39 @@ class OlympiadAdminController extends Controller {
             OlympiadResultNotFound
         };
     }
+
     /**
-     * @api {get} /api/admin/school/:schoolId/olympiadResult/:id
+     * @apiDefine OlympiadResultsNotFoundError
+     * @apiError (404) OlympiadResultsNotFound Olympiad user not found
+     * @apiErrorExample {json} Error-Response:
+     *      HTTP/1.1 404 Not Found
+     *      {
+     *           "code": "OlympiadResultNotFound",
+     *           "message": "Olympiad result with id = 5 not found"
+     *      }
+     */
+
+    /**
+     * @api {get} /api/admin/school/:schoolId/olympiadResult/:id Get one result
      * @apiVersion 0.1.0
      * @apiName GetOneOlympiadResult
      * @apiGroup Olympiad Results
      *
-     * @apiSuccess {Object}   olympiadResult
-     * @apiSuccess {Number}   olympiadResult.schoolId  Id of school of current
-     *     olympiad result
-     * @apiSuccess {Number}   olympiadResult.subjectId Id of subject of current
-     *     olympiad result
-     * @apiSuccess {String="всероссийская", "московская"}
-     *     olympiadResult.type   Type of current olympiad
-     * @apiSuccess {Number}   olympiadResult.class     Education grade of
+     * @apiSuccess {Object} olympiadResult
+     * @apiSuccess {Number} olympiadResult.schoolId      Id of school of
      *     current olympiad result
-     * @apiSuccess {String="призер", "победитель"}
-     *     olympiadResult.status Status of participants of olympiad
-     * @apiSuccess {Number}   olympiadResult.amount   Amount of olympiad
+     * @apiSuccess {Number} olympiadResult.subjectId     Id of subject of
+     *     current olympiad result
+     * @apiSuccess {String="всероссийская","московская"} olympiadResult.type
+     *     Type of current olympiad
+     * @apiSuccess {Number} olympiadResult.class         Education grade of
+     *     current olympiad result
+     * @apiSuccess {String="призер","победитель"} olympiadResult.status
+     *     Status of participants of olympiad
+     * @apiSuccess {Number} olympiadResult.awardeeAmount Amount of olympiad
      *     participants with current status
-     * @apiSuccess {Date}     olympiadResult.year     Year which current result
-     *     of olympiad was
+     * @apiSuccess {Number} olympiadResult.year          Year which current
+     *     result of olympiad was
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP 1/1 200 OK
@@ -50,34 +62,36 @@ class OlympiadAdminController extends Controller {
      *         year: 2016,
      *         amount: 5
      *     }
+     *
+     * @apiUse OlympiadResultsNotFoundError
      */
-    public async actionGetOne(
+    public async actionGet(
         actionContext: any, schoolId: number, id: number
     ) {
         return await olympiadResultService.getOne(id);
     }
 
     /**
-     * @api {get} /api/admin/school/:schoolId/olympiadResult
+     * @api {get} /api/admin/school/:schoolId/olympiadResult Get all results
      * @apiVersion 0.1.0
      * @apiName GetAllOlympiadResults
      * @apiGroup Olympiad Results
      *
-     * @apiSuccess {Object}   olympiadResult
-     * @apiSuccess {Number}   olympiadResult.schoolId  Id of school of current
-     *     olympiad result
-     * @apiSuccess {Number}   olympiadResult.subjectId Id of subject of current
-     *     olympiad result
-     * @apiSuccess {String="всероссийская", "московская"}
-     *     olympiadResult.type   Type of current olympiad
-     * @apiSuccess {Number}   olympiadResult.class     Education grade of
+     * @apiSuccess {Object} olympiadResult
+     * @apiSuccess {Number} olympiadResult.schoolId      Id of school of
      *     current olympiad result
-     * @apiSuccess {String="призер", "победитель"}
-     *     olympiadResult.status Status of participants of olympiad
-     * @apiSuccess {Number}   olympiadResult.amount   Amount of olympiad
+     * @apiSuccess {Number} olympiadResult.subjectId     Id of subject of
+     *     current olympiad result
+     * @apiSuccess {String="всероссийская","московская"} olympiadResult.type
+     *     Type of current olympiad
+     * @apiSuccess {Number} olympiadResult.class         Education grade of
+     *     current olympiad result
+     * @apiSuccess {String="призер","победитель"} olympiadResult.status
+     *     Status of participants of olympiad
+     * @apiSuccess {Number} olympiadResult.awardeeAmount Amount of olympiad
      *     participants with current status
-     * @apiSuccess {Date}     olympiadResult.year     Year which current result
-     *     of olympiad was
+     * @apiSuccess {Number} olympiadResult.year          Year which current
+     *     result of olympiad was
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP 1/1 200 OK
@@ -88,34 +102,35 @@ class OlympiadAdminController extends Controller {
      *         class: 10,
      *         status: "победитель",
      *         year: 2016,
-     *         amount: 5
+     *         awardeeAmount: 5
      *     }
      */
-    public async actionGetAllBySchoolId(actionContext: any, schoolId: number) {
+    public async actionList(actionContext: any, schoolId: number) {
         return await olympiadResultService.getAllBySchoolId(schoolId);
     }
 
     /**
-     * @api {post} /api/admin/school/:schoolId/olympiadResult/:id
+     * @api {post} /api/admin/school/:schoolId/olympiadResult/:id Create
+     *     olympiad result
      * @apiVersion 0.1.0
      * @apiName GetOneOlympiadResult
      * @apiGroup Olympiad Results
      *
      * @apiParam {Object}   olympiadResult
-     * @apiParam {Number}   olympiadResult.schoolId  Id of school of current
+     * @apiParam {Number}   olympiadResult.schoolId      Id of school of current
      *     olympiad result
-     * @apiParam {Number}   olympiadResult.subjectId Id of subject of current
-     *     olympiad result
-     * @apiParam {String="всероссийская", "московская"}
-     *     olympiadResult.type   Type of current olympiad
-     * @apiParam {Number}   olympiadResult.class     Education grade of
+     * @apiParam {Number}   olympiadResult.subjectId     Id of subject of
      *     current olympiad result
-     * @apiParam {String="призер", "победитель"}
-     *     olympiadResult.status Status of participants of olympiad
-     * @apiParam {Number}   olympiadResult.amount   Amount of olympiad
+     * @apiParam {String="всероссийская","московская"} olympiadResult.type
+     *     Type of current olympiad
+     * @apiParam {Number}   olympiadResult.class         Education grade of
+     *     current olympiad result
+     * @apiParam {String="призер","победитель"} olympiadResult.status
+     *     Status of participants of olympiad
+     * @apiParam {Number}   olympiadResult.awardeeAmount Amount of olympiad
      *     participants with current status
-     * @apiParam {Date}     olympiadResult.year     Year which current result
-     *     of olympiad was
+     * @apiParam {Number}   olympiadResult.year          Year which current
+     *     result of olympiad was
      *
      * @apiParamExample {json} Request-Example:
      *     {
@@ -125,11 +140,36 @@ class OlympiadAdminController extends Controller {
      *         class: 10,
      *         status: "победитель",
      *         year: 2016,
-     *         amount: 5
+     *         awardeeAmount: 5
      *     }
      *
-     *  @apiSuccessExample {json} Success-Response:
-     *      HTTP 1/1 203 OK
+     * @apiSuccess {Object} olympiadResult
+     * @apiSuccess {Number} olympiadResult.schoolId      Id of school of
+     *     current olympiad result
+     * @apiSuccess {Number} olympiadResult.subjectId     Id of subject of
+     *     current olympiad result
+     * @apiSuccess {String="всероссийская","московская"} olympiadResult.type
+     *     Type of current olympiad
+     * @apiSuccess {Number} olympiadResult.class         Education grade of
+     *     current olympiad result
+     * @apiSuccess {String="призер","победитель"} olympiadResult.status
+     *     Status of participants of olympiad
+     * @apiSuccess {Number} olympiadResult.awardeeAmount Amount of olympiad
+     *     participants with current status
+     * @apiSuccess {Number} olympiadResult.year          Year which current
+     *     result of olympiad was
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP 1/1 200 OK
+     *     {
+     *         schoolId: 10,
+     *         subjectId: 12,
+     *         type: "всероссийская",
+     *         class: 10,
+     *         status: "победитель",
+     *         year: 2016,
+     *         amount: 5
+     *     }
      */
     public async actionCreate(actionContext: any, schoolId: number) {
         const data = actionContext.data;
@@ -141,31 +181,32 @@ class OlympiadAdminController extends Controller {
             status: data.status,
             year: data.year,
             stage: data.stage,
-            amount: data.amount
+            awardeeAmount: data.awardeeAmount
         });
     }
 
     /**
-     * @api {put} /api/admin/school/:schoolId/olympiadResult/:id
+     * @api {put} /api/admin/school/:schoolId/olympiadResult/:id Update olympiad
+     *     result
      * @apiVersion 0.1.0
      * @apiName UpdateOneOlympiadResult
      * @apiGroup Olympiad Results
      *
-     * @apiParam {Object}                               olympiadResult
-     * @apiParam {Number}                               olympiadResult.schoolId
-     *     Id of school of current olympiad result
-     * @apiParam {Number}                               olympiadResult.subjectId
-     *     Id of subject of current olympiad result
-     * @apiParam {String="всероссийская", "московская"} olympiadResult.type
+     * @apiParam {Object}   olympiadResult
+     * @apiParam {Number}   olympiadResult.schoolId      Id of school of current
+     *     olympiad result
+     * @apiParam {Number}   olympiadResult.subjectId     Id of subject of
+     *     current olympiad result
+     * @apiParam {String="всероссийская","московская"} olympiadResult.type
      *     Type of current olympiad
-     * @apiParam {Number}                               olympiadResult.class
-     *     Education grade of current olympiad result
-     * @apiParam {String="призер", "победитель"}        olympiadResult.status
+     * @apiParam {Number}   olympiadResult.class         Education grade of
+     *     current olympiad result
+     * @apiParam {String="призер","победитель"} olympiadResult.status
      *     Status of participants of olympiad
-     * @apiParam {Number}                               olympiadResult.amount
-     *     Amount of olympiad participants with current status
-     * @apiParam {Date}                                 olympiadResult.year
-     *     Year which current result of olympiad was
+     * @apiParam {Number}   olympiadResult.awardeeAmount Amount of olympiad
+     *     participants with current status
+     * @apiParam {Number}   olympiadResult.year          Year which current
+     *     result of olympiad was
      *
      * @apiParamExample {json} Request-Example:
      *     {
@@ -175,15 +216,42 @@ class OlympiadAdminController extends Controller {
      *         class: 10,
      *         status: "победитель",
      *         year: 2016,
+     *         awardeeAmount: 5
+     *     }
+     *
+     * @apiSuccess {Object} olympiadResult
+     * @apiSuccess {Number} olympiadResult.schoolId      Id of school of
+     *     current olympiad result
+     * @apiSuccess {Number} olympiadResult.subjectId     Id of subject of
+     *     current olympiad result
+     * @apiSuccess {String="всероссийская","московская"} olympiadResult.type
+     *     Type of current olympiad
+     * @apiSuccess {Number} olympiadResult.class         Education grade of
+     *     current olympiad result
+     * @apiSuccess {String="призер","победитель"} olympiadResult.status
+     *     Status of participants of olympiad
+     * @apiSuccess {Number} olympiadResult.awardeeAmount Amount of olympiad
+     *     participants with current status
+     * @apiSuccess {Number} olympiadResult.year          Year which current
+     *     result of olympiad was
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP 1/1 200 OK
+     *     {
+     *         schoolId: 10,
+     *         subjectId: 12,
+     *         type: "всероссийская",
+     *         class: 10,
+     *         status: "победитель",
+     *         year: 2016,
      *         amount: 5
      *     }
-     * 
-     * @apiSuccessExample {json} Success-Response:
-     *     HTTP 1/1 203 OK
+     *
+     * @apiUse OlympiadResultsNotFoundError
      */
     public async actionUpdate(actionContext: any, schoolId: number, id: number) {
         const data = actionContext.data;
-        
+
         return await olympiadResultService.update(id, {
             schoolId: schoolId,
             subjectId: data.subjectId,
@@ -197,13 +265,16 @@ class OlympiadAdminController extends Controller {
     }
 
     /**
-     * @api {delete} /api/admin/school/:schoolId/olympiadResult/:id
+     * @api {delete} /api/admin/school/:schoolId/olympiadResult/:id Delete
+     *     olympiad result
      * @apiVersion 0.1.0
      * @apiName DeleteOneOlympiadResult
      * @apiGroup Olympiad Results
      *
      *  @apiSuccessExample {json} Success-Response:
      *      HTTP 1/1 203 OK
+     *
+     * @apiUse OlympiadResultsNotFoundError
      */
     public async actionDelete(
         actionContext: any, schoolId: number, id: number
@@ -212,7 +283,8 @@ class OlympiadAdminController extends Controller {
     }
 
     /**
-     * @api {get} /api/admin/school/:schoolId/olympiadResult/search
+     * @api {get} /api/admin/school/:schoolId/olympiadResult/search Search over
+     *     olympiad results by given params
      * @apiVersion 0.1.0
      * @apiName SearchOlympiadResult
      * @apiGroup Olympiad Results
@@ -229,41 +301,24 @@ class OlympiadAdminController extends Controller {
      *          subjectId: 12
      *      }
      *
-     *
-     * * @apiSuccess {Object}   olympiadResult
-     * @apiSuccess {Number}   olympiadResult.schoolId  Id of school of current
-     *     olympiad result
-     * @apiSuccess {Number}   olympiadResult.subjectId Id of subject of current
-     *     olympiad result
-     * @apiSuccess {String="всероссийская", "московская"}
-     *     olympiadResult.type   Type of current olympiad
-     * @apiSuccess {Number}   olympiadResult.class     Education grade of
-     *     current olympiad result
-     * @apiSuccess {String="призер", "победитель"}
-     *     olympiadResult.status Status of participants of olympiad
-     * @apiSuccess {Number}   olympiadResult.amount    Amount of olympiad
-     *     participants with current status
-     * @apiSuccess {Date}     olympiadResult.year      Year which current result
-     *     of olympiad was
-     *
-     *
-     * @apiSuccess {Object}                               data           Found
+     * @apiSuccess {Object}                              data           Found
      *     data
-     * @apiSuccess {Number}                               data.id        Id of
+     * @apiSuccess {Number}                              data.id        Id of
      *     olympiad result
-     * @apiSuccess {Number}                               data.schoolId  Id of
+     * @apiSuccess {Number}                              data.schoolId  Id of
      *     school of olympiad result
-     * @apiSuccess {Number}                               data.subjectId Id of
+     * @apiSuccess {Number}                              data.subjectId Id of
      *     subject of olympiad result
-     * @apiSuccess {String="всероссийская", "московская"} data.type      Type of
+     * @apiSuccess {String="всероссийская","московская"} data.type      Type of
      *     current olympiad
-     * @apiSuccess {Number}                               data.class
+     * @apiSuccess {Number}                              data.class
      *     Education grade of current olympiad result
-     * @apiSuccess {String}                               data.status    Status
+     * @apiSuccess {String}                              data.status    Status
      *     of participants of olympiad
-     * @apiSuccess {Number}                               data.amount    Amount
+     * @apiSuccess {Number}                              data.awardeeAmount
+     *     Amount
      *     of olympiad participants with current status
-     * @apiSuccess {Number}                               data.year      Year
+     * @apiSuccess {Number}                              data.year      Year
      *     which current result of olympiad was
      *
      * @apiSuccessExample {json} Success-Response:

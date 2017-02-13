@@ -20,6 +20,9 @@ const giaAdminController = new GiaAdminController();
 import {ExamAdminController} from './examAdminController';
 const examAdminController = new ExamAdminController();
 
+import {OlympiadAdminController}
+    from '../../study/controllers/olympiadAdminController';
+const olympiadAdminController = new OlympiadAdminController();
 
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
@@ -118,6 +121,12 @@ initCrudRouting(
     '/admin/school/:schoolId/gia',
     giaAdminController,
     ':giaId'
+);
+
+initCrudRouting(
+    '/admin/school/:schoolId/olympiadResult',
+    olympiadAdminController,
+    ':id'
 );
 router.get('/admin/schoolsubject', examAdminController.actionGetListSubject);
 router.get('/admin/examyear', examAdminController.actionGetListExamYear);
