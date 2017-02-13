@@ -15,6 +15,8 @@ const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 import {SchoolCategoryNameIsShorter} from
     './errors/SchoolCategoryNameIsShorter';
+import {view as additionalClassAdminView}
+    from '../views/additionalClassAdminView';
 
 class AdditionalClassAdminController extends Controller {
     constructor() {
@@ -64,8 +66,12 @@ class AdditionalClassAdminController extends Controller {
      *    ]
      */
     public async actionList(ctx: any, schoolId: string) {
-        return await additionalClassAdminService.getList(
+        const res = await additionalClassAdminService.getList(
             parseInt(schoolId, 10)
+        );
+        return additionalClassAdminView.listAdditionalClasses(
+            res.additionalEducations,
+            res.spheres
         );
     }
 
@@ -99,9 +105,14 @@ class AdditionalClassAdminController extends Controller {
         schoolId: string,
         additionalClassId: string
     ) {
-        return await additionalClassAdminService.getById(
+        const res = await additionalClassAdminService.getById(
             parseInt(schoolId, 10),
             parseInt(additionalClassId, 10)
+        );
+
+        return additionalClassAdminView.oneAdditionalClass(
+            res.additionalEducation,
+            res.spheres
         );
     }
 
@@ -138,10 +149,11 @@ class AdditionalClassAdminController extends Controller {
           categoryId: number,
           name: string,
         } = ctx.request.body;
-        return await additionalClassAdminService.create(
+        const res = await additionalClassAdminService.create(
             parseInt(schoolId, 10),
             additionalClass
         );
+        return additionalClassAdminView.createAdditionalClass(res);
     }
 
 
@@ -184,11 +196,13 @@ class AdditionalClassAdminController extends Controller {
           categoryId: number,
           name: string,
         } = ctx.request.body;
-        return await additionalClassAdminService.update(
+        const res = await additionalClassAdminService.update(
             parseInt(schoolId, 10),
             parseInt(additionalClassId, 10),
             additionalClass
         );
+
+        return additionalClassAdminView.updateAdditionalClass(res);
     }
 
     /**
@@ -199,8 +213,8 @@ class AdditionalClassAdminController extends Controller {
     * @apiName deleteAdditionalClass
     * @apiGroup School Additional Classes Admin
     *
-    * @apiParam {Number} schoolId            School's id.
-    * @apiParam {Number} additionalClassId   Additional class's id
+    * @apiParam {Number} schoolId  School's id.
+    * @apiParam {Number} id        Additional class's id
     *
     * @apiSuccess {Number} result delete
     *
@@ -221,7 +235,7 @@ class AdditionalClassAdminController extends Controller {
 
 
     /**
-    * @api {get} /api/admin/schooladditionalclasscategory?searchString=му
+    * @api {get} /api/admin/additionalclass/category?searchString=му
     * Search category's additional class for schools
     * @apiVersion 1.0.0
     * @apiName searchAdditionalClassCategory

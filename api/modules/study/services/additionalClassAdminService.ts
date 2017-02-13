@@ -3,33 +3,35 @@
 // author: dm-kamaev
 // service additional class admin for school
 
-// TODO : call service, but not model
-import {
-    Model as AdditionalEducationSphereModel,
-    AdditionalEducationSphereInstance
-} from '../../school/models/additionalEducationSphere';
+import {AdditionalEducationSphereInstance}
+    from '../../school/models/additionalEducationSphere';
 
-import {
-    Model as AdditionalEducationModel,
-    AdditionalEducationInstance
-} from '../../school/models/additionalEducation';
+import {AdditionalEducationInstance}
+    from '../../school/models/additionalEducation';
+
+import {service as AdditionalEducationService}
+    from '../../school/services/additionalEducation';
 
 import {SchoolCategoryNameIsShorter} from
     './exceptions/SchoolCategoryNameIsShorter';
 
-import {
-    AdditionalClass,
-    AdditionalClassEdit,
-} from '../intefaces/AdditionalClass';
+type classesAndSpheres = {
+    additionalEducations: AdditionalEducationInstance[],
+    spheres: AdditionalEducationSphereInstance[]
+};
 
+type classAndSpheres = {
+    additionalEducation: AdditionalEducationInstance | boolean,
+    spheres: AdditionalEducationSphereInstance[]
+};
 
 class AdditionalClassAdminService {
     public readonly name: string = 'additionalClassAdminService';
 
-    public async getList(schoolId: number): Promise<AdditionalClass[]> {
+    public async getList(schoolId: number): Promise<classesAndSpheres> {
         let spheres: AdditionalEducationSphereInstance[],
             additionalEducations: AdditionalEducationInstance[];
-        additionalEducations = await AdditionalEducationModel.findAll({
+        additionalEducations = await AdditionalEducationService.getAllByData({
             attributes: [
                 'id', 'name', 'sphereId',
             ],
@@ -40,7 +42,7 @@ class AdditionalClassAdminService {
 
         const sphereIds: Array<number> =
             additionalEducations.map((education): number => education.sphereId);
-        spheres = await AdditionalEducationSphereModel.findAll({
+        spheres = await AdditionalEducationService.getAllSpehereByData({
             attributes: [ 'id', 'name' ],
             where: {
                 id: {
@@ -48,20 +50,31 @@ class AdditionalClassAdminService {
                 }
             }
         });
-        return this.buildAdditionalClasses_(additionalEducations, spheres);
+        return {additionalEducations, spheres};
     }
 
 
     public async getById(
         schoolId: number,
         additionalClassId: number
-    ): Promise<AdditionalClass | {}> {
-        const list: AdditionalClass[] = await this.getList(schoolId);
-        let res: AdditionalClass | boolean;
-        res = list.find((additionalClass: AdditionalClass): boolean =>
-            additionalClass.id === additionalClassId
-        );
-        return res || {};
+    ): Promise<classAndSpheres> {
+        const classesAndSpheres: classesAndSpheres
+            = await this.getList(schoolId);
+        const list: AdditionalEducationInstance[]
+            = classesAndSpheres.additionalEducations;
+        let res: AdditionalEducationInstance;
+        const searchClass = function(
+            additionalClass: AdditionalEducationInstance
+        ): boolean {
+            const res = additionalClass.id &&
+                additionalClass.id === additionalClassId;
+            return res;
+        };
+        res = list.find(searchClass);
+        return {
+            additionalEducation: res,
+            spheres: classesAndSpheres.spheres
+        };
     }
 
 
@@ -71,19 +84,12 @@ class AdditionalClassAdminService {
           categoryId: number,
           name: string
         }
-    ): Promise<AdditionalClassEdit> {
-        let education: AdditionalEducationInstance;
-        education = await AdditionalEducationModel.create({
+    ): Promise<AdditionalEducationInstance> {
+        return await AdditionalEducationService.create({
             schoolId,
             name: additionClass.name,
             sphereId: additionClass.categoryId,
         });
-        return {
-            id: education.id,
-            name: education.name,
-            schoolId: education.schoolId,
-            categoryId: education.sphereId,
-        };
     }
 
 
@@ -94,11 +100,11 @@ class AdditionalClassAdminService {
           categoryId: number,
           name: string,
         }
-    ): Promise<any> {
-        let res: AdditionalClassEdit | null = null;
+    ): Promise<AdditionalEducationInstance | null> {
+        let res: AdditionalEducationInstance | null = null;
         let education: [number, AdditionalEducationInstance[]];
 
-        education = await AdditionalEducationModel.update({
+        education = await AdditionalEducationService.updateByData({
             name: additionalClass.name,
             sphereId: additionalClass.categoryId,
         }, {
@@ -109,13 +115,7 @@ class AdditionalClassAdminService {
         });
 
         if (education && education[0]) {
-            const edu: AdditionalEducationInstance = education[1][0];
-            res = {
-                id: edu.id,
-                name: edu.name,
-                schoolId: edu['school_id'],
-                categoryId: edu['sphere_id'],
-            };
+            res = education[1][0];
         }
         return res;
     }
@@ -125,7 +125,7 @@ class AdditionalClassAdminService {
         schoolId: number,
         additionalClassId: number
     ): Promise<number> {
-        return await AdditionalEducationModel.destroy({
+        return await AdditionalEducationService.deleteByData({
             where: {
                 id: additionalClassId,
                 schoolId,
@@ -136,12 +136,12 @@ class AdditionalClassAdminService {
 
     public async searchCategory(
         categoryName: string
-    ): Promise<any> {
+    ): Promise<AdditionalEducationInstance[]> {
         if (categoryName.length < 2) {
             throw new SchoolCategoryNameIsShorter(categoryName);
         }
         categoryName = this.capitalize_(categoryName);
-        return await AdditionalEducationSphereModel.findAll({
+        return await AdditionalEducationService.getAllByData({
             attributes: [ 'id', 'name' ],
                where: {
                    name: {
@@ -151,29 +151,6 @@ class AdditionalClassAdminService {
                limit: 10,
         });
     }
-
-    private buildAdditionalClasses_(
-        additionalEducations: AdditionalEducationInstance[],
-        spheres: AdditionalEducationSphereInstance[]
-    ): AdditionalClass[] {
-        const hashSphereName: { [key: string]: string } = {};
-        spheres.forEach(sphere =>
-            hashSphereName[sphere.id] = sphere.name
-        );
-
-        const build = function(
-            education: AdditionalEducationInstance
-        ): AdditionalClass {
-            return {
-                id: education.id,
-                categoryId: education.sphereId,
-                categoryName: hashSphereName[education.sphereId] || '',
-                name: education.name,
-            };
-        };
-        return additionalEducations.map(build);
-    }
-
 
     private capitalize_(str: string): string {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();

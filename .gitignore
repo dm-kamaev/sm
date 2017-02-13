@@ -83,6 +83,7 @@ api/modules/school/models/school.js
 api/modules/school/models/specializedClassType.js
 api/modules/school/models/additionalEducation.js
 api/modules/school/models/additionalEducationSphere.js
+api/modules/school/models/specializedClassType.js
 
 api/modules/school/services/exceptions/SchoolNotExistType.js
 api/modules/school/services/exceptions/SchoolNotFound.js
@@ -94,16 +95,15 @@ api/modules/school/services/schoolComment.js
 api/modules/school/services/profileAdminService.js
 api/modules/school/services/giaAdminService.js
 api/modules/school/services/examAdminService.js
+api/modules/school/services/additionalEducation.js
+
+api/modules/school/views/commentView.js
 
 api/modules/study/models/olimpResult.js
 api/modules/study/services/exceptions/*.js
 api/modules/study/services/olimpResult.js
 api/modules/study/controllers/errors/*.js
 api/modules/study/controllers/olympiadAdminController.js
-
-api/modules/school/models/specializedClassType.js
-
-api/modules/school/views/commentView.js
 
 api/modules/study/controllers/*.js
 api/modules/study/controllers/errors/*.js
@@ -120,6 +120,8 @@ api/modules/study/services/egeAdminService.js
 api/modules/study/services/additionalClassAdminService.js
 
 api/modules/study/intefaces/*.js
+
+api/modules/study/views/additionalClassAdminView.js
 
 app/components/host/host.js
 

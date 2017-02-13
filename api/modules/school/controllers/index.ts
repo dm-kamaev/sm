@@ -11,7 +11,8 @@ const commentAdminController = new CommentAdminController();
 import {DepartmentAdminController} from './departmentAdminController';
 const departmentAdminController = new DepartmentAdminController();
 
-import {ProfileAdminController} from '../../study/controllers/profileAdminController';
+import {ProfileAdminController}
+    from '../../study/controllers/profileAdminController';
 const profileAdminController = new ProfileAdminController();
 
 import {GiaAdminController} from '../../study/controllers/giaAdminController';
