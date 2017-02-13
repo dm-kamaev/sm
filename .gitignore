@@ -91,6 +91,17 @@ api/modules/school/services/exceptions/ExamDataAlreadyExistBySubject.js
 api/modules/school/services/exceptions/SchoolCategoryNameIsShorter.js
 api/modules/school/services/schoolAdminService.js
 api/modules/school/services/schoolComment.js
+api/modules/school/services/profileAdminService.js
+api/modules/school/services/giaAdminService.js
+api/modules/school/services/examAdminService.js
+
+api/modules/study/models/olimpResult.js
+api/modules/study/services/exceptions/*.js
+api/modules/study/services/olimpResult.js
+api/modules/study/controllers/errors/*.js
+api/modules/study/controllers/olympiadAdminController.js
+
+api/modules/school/models/specializedClassType.js
 
 api/modules/school/views/commentView.js
 
@@ -113,6 +124,7 @@ api/modules/study/intefaces/*.js
 app/components/host/host.js
 
 console/modules/geoTools/geoTools.js
+console/one-off/shrinkOlympiadResults.js
 
 gulp/taskBackendLint.js
 
