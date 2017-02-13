@@ -14,6 +14,7 @@ goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBalloon.Template');
+goog.require('sm.bSmBanner.Template');
 goog.require('sm.bSmCatalog.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
@@ -362,6 +363,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smSketch',
             sm.bSmSketch.Template.sketch
+        )
+        .setTemplateListItem(
+            'smBanner',
+            sm.bSmBanner.Template.banner
         );
 
     /** l-information blocks **/

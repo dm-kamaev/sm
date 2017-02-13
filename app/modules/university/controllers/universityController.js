@@ -42,7 +42,7 @@ controller.information = async(function(req, res, next) {
                 name: `Национальный исследовательский университет –
                     Высшая школа экономики (НИУ–ВШЭ)`,
                 subunitType: 'Специальность',
-                subunitName: 'Менеджемент',
+                subunitName: 'Менеджмент',
                 description: description,
                 cutDescription:
                     informationView.formatFullDescription(description),
@@ -162,6 +162,25 @@ controller.information = async(function(req, res, next) {
                         config: {
                             theme: 'neptune'
                         }
+                    }
+                },
+                banner: {
+                    data: {
+                        header: 'Сомневаешься?',
+                        description: 'Поможем с выбором и поступлением',
+                        buttonLink: {
+                            data: {
+                                url: 'http://yandex.ru',
+                                content: 'Подробнее'
+                            },
+                            config: {
+                                theme: 'neptune-reverse',
+                                size: 'm'
+                            }
+                        }
+                    },
+                    config: {
+                        theme: 'neptune-compact'
                     }
                 }
             },

@@ -1,0 +1,113 @@
+{namespace sm.bSmBanner.Template}
+
+/**
+ * @typedef {{
+ *     header: string,
+ *     description: string,
+ *     buttonLink: sm.bButtonLink.Template.Params
+ * }} sm.bSmBanner.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     theme: string
+ * }} sm.bSmBanner.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.bSmBanner.Template.Params.Data,
+ *     config: sm.bSmBanner.Template.Params.Config
+ * }} sm.bSmBanner.Template.Params
+ */
+
+
+/**
+ * @param params {{
+ *     data: sm.bSmBanner.Template.Params.Data,
+ *     config: sm.bSmBanner.Template.Params.Config
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .banner}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.bSmBanner.Template.Params.Data,
+ *     config: sm.bSmBanner.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .description_ data="all" /}
+    {call .buttonLink_ data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         header: string,
+ *         description: string 
+ *     }
+ * }}
+ * @override
+ */
+{template .description_}
+    <div class="{call .rootClass data="all" /}__description-wrap">
+
+        <div class="{call .rootClass data="all" /}__description-header">
+            {call cl.iControl.Template.getText}
+                {param message: $params.data.header /}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass data="all" /}__description">
+            {call cl.iControl.Template.getText}
+                {param message: $params.data.description /}
+            {/call}
+        </div>
+
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         buttonLink: sm.bButtonLink.Template.Params
+ *     }
+ * }}
+ * @override
+ */
+{template .buttonLink_}
+    <div class="{call .rootClass data="all" /}__button-link">
+        {call .renderChild}
+            {param params: [
+                'type': 'button-link',
+                'renderParams': [
+                    'data': $params.data.buttonLink.data,
+                    'config': [
+                        'theme': $params.data.buttonLink.config.theme,
+                        'size': $params.data.buttonLink.config.size,
+                        'isBorderRound': true
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-sm-banner
+{/template}

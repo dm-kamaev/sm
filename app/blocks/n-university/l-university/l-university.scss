@@ -48,15 +48,19 @@
 
 .l-university__description-list {
     width: calc(100% - 375px);
+    margin-bottom: 30px;
 }
 
-.l-university__summary-board {
+.l-university__board-wrap {
     position: absolute;
     top: 0;
     right: 0;
 
     width: 315px;
-    margin-bottom: 50px;
+}
+
+.l-university__summary-board{
+    margin-bottom: 30px;
 }
 
 .l-university__type {
@@ -93,6 +97,15 @@
 
     font-size: 15px;
     line-height: 22px;
+}
+
+.l-university__banner {
+    height: 228px;
+    margin-bottom: 30px;
+}
+
+.l-university__banner_size_XS {
+    display: none;
 }
 
 
@@ -140,7 +153,7 @@
         width: 100%;
     }
 
-    .l-university__summary-board {
+    .l-university__board-wrap {
         position: relative;
 
         width: 100%;
@@ -152,5 +165,17 @@
 
     .l-university__description_cut {
         display: block;
+    }
+
+    .l-university__banner {
+        display: none;
+    }
+
+    .l-university__banner_size_XS {
+        display: block;
+        position: relative;
+        left: -30px;
+
+        width: calc(100% + 60px);
     }
 }

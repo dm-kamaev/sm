@@ -32,8 +32,9 @@
  *             fullText: (Array<string>|undefined)
  *         },
  *         descriptionList:
- *              sm.lUniversity.bDescriptionList.Template.Params.Data,
- *         summaryBoard: sm.bSummaryBoard.Template.Params.Data
+ *              sm.lUniversity.bDescriptionList.Template.Params,
+ *         summaryBoard: sm.bSummaryBoard.Template.Params,
+ *         banner: sm.bSmBanner.Template.Params
  *     }
  * }} sm.lUniversity.Template.Data
  */
@@ -164,7 +165,12 @@
  * Data on the left side - section sketch
  * @param params {{
  *     data: {
- *         entityData: name
+ *         entityData: {
+ *             name: string
+ *          }
+ *     },
+ *     config: {
+ *         modifier: string
  *     }
  * }}
  * @private
@@ -215,6 +221,7 @@
         {call .description_ data="all" /}
         {call .summaryBoard_ data="all" /}
         {call .descriptionList_ data="all" /}
+        {call .bannerSizeXS_ data="all" /}
     </div>
 {/template}
 
@@ -291,19 +298,55 @@
 /**
  * Summary board
  * @param params {{
- *     data: sm.lUniversity.Template.Data
+ *     data: sm.lUniversity.Template.Data,
+ *     config: string
  * }}
  * @private
  */
 {template .summaryBoard_}
-    <div class="{call .rootClass/}__summary-board">
+    <div class="{call .rootClass/}__board-wrap">
+
+        <div class="{call .rootClass/}__summary-board">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'summary-board',
+                    'renderParams': [
+                        'data': $params.data.entityData.summaryBoard
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass/}__banner">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smBanner',
+                    'renderParams': $params.data.entityData.banner
+                ]/}
+            {/call}
+        </div>
+
+    </div>
+{/template}
+
+
+/**
+ * Banner size XS
+ * @param params {{
+ *     data: sm.lUniversity.Template.Data,
+ *     config: string
+ * }}
+ * @private
+ */
+{template .bannerSizeXS_}
+    <div class="{call .rootClass/}__banner_size_XS">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
-                'type': 'summary-board',
-                'renderParams': [
-                    'data': $params.data.entityData.summaryBoard
-                ]
+                'type': 'smBanner',
+                'renderParams': $params.data.entityData.banner
             ]/}
         {/call}
     </div>
