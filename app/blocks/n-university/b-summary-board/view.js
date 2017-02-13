@@ -37,30 +37,6 @@ goog.scope(function() {
      * @const
      */
     View.CssClass = {
-        ROOT: 'b-summary-board',
-        LINK: 'b-summary-board__button-link'
-    };
-
-
-    /**
-     * @protected
-     * @override
-     */
-    View.prototype.decorateInternal = function(element) {
-        View.base(this, 'decorateInternal', element);
-
-        this.initDom();
-    };
-
-
-    /**
-     * @protected
-     */
-    View.prototype.initDom = function() {
-        this.dom = {
-            link: this.getElementByClass(
-                View.CssClass.LINK
-            )
-        };
+        ROOT: 'b-summary-board'
     };
 });  // goog.scope

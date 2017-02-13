@@ -231,9 +231,6 @@
     </div>
 
     <div class="{call .rootClass/}__link">
-        {let $customClasses kind="html"}
-            {call .rootClass/}__button-link
-        {/let}
         {call .renderChild}
             {param params: [
                 'type': 'button-link',
@@ -242,8 +239,7 @@
                     'config': [
                         'theme': $params.data.item.data.buttonLink.config.theme,
                         'size': $params.data.item.data.buttonLink.config.size,
-                        'isBorderRound': true,
-                        'customClasses': [$customClasses]
+                        'isBorderRound': true
                     ]
                 ]
             ]/}

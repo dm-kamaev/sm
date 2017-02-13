@@ -21,28 +21,4 @@ goog.inherits(sm.bSummaryBoard.SummaryBoard, cl.iControl.Control);
 
 goog.scope(function() {
     var SummaryBoard = sm.bSummaryBoard.SummaryBoard;
-
-
-    /**
-     * @protected
-     * @override
-     */
-    SummaryBoard.prototype.decorateInternal = function(element) {
-        SummaryBoard.base(this, 'decorateInternal', element);
-        var dom = this.getView().getDom();
-
-        this.decorateChild(
-            'button-link',
-            dom.link
-        );
-    };
-
-
-    /**
-     * @override
-     * @protected
-     */
-    SummaryBoard.prototype.enterDocument = function() {
-        SummaryBoard.base(this, 'enterDocument');
-    };
 });  // goog.scope

@@ -1,4 +1,6 @@
 .b-button-link {
+    position: relative;
+
     display: block;
 
     width: 100%;
@@ -6,6 +8,18 @@
 
     text-align: center;
     text-decoration: none;
+
+    font-family: 'Proxima', Arial, sans-serif;
+}
+
+.b-button-link__content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    margin: 0 auto;
+
+    transform: translate(-50%, -50%);
 }
 
 .b-button-link_neptune-theme {
@@ -13,9 +27,15 @@
     background-color: #007aff;
 }
 
+.b-button-link_neptune-reverse-theme {
+    color: #007aff;
+    background-color: #fff;
+
+    font-weight: 600;
+}
+
 .b-button-link_size_m {
     font-size: 16px;
-    line-height: 46px;
 }
 
 .b-button-link_border-round {
