@@ -66,8 +66,7 @@ class OlympiadAdminController extends Controller {
      * @apiUse OlympiadResultsNotFoundError
      */
     public async actionGet(
-        actionContext: any, schoolId: number, id: number
-    ) {
+            actionContext: any, schoolId: number, id: number) {
         return await olympiadResultService.getOne(id);
     }
 
@@ -249,7 +248,8 @@ class OlympiadAdminController extends Controller {
      *
      * @apiUse OlympiadResultsNotFoundError
      */
-    public async actionUpdate(actionContext: any, schoolId: number, id: number) {
+    public async actionUpdate(
+            actionContext: any, schoolId: number, id: number) {
         const data = actionContext.data;
 
         return await olympiadResultService.update(id, {
@@ -277,8 +277,7 @@ class OlympiadAdminController extends Controller {
      * @apiUse OlympiadResultsNotFoundError
      */
     public async actionDelete(
-        actionContext: any, schoolId: number, id: number
-    ) {
+            actionContext: any, schoolId: number, id: number) {
         await olympiadResultService.delete(id);
     }
 

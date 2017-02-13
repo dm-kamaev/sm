@@ -91,7 +91,7 @@ class OlympiadResultsShrinker {
 
     private getAttributeEntry_(
             data: OlympiadResultInstance): OlympiadResultAttribute {
-        const awardeeAmount = 1;
+        const awardeeAmount = data.awardeeAmount || 1;
         return lodashReduce(
             data,
             (result, value, key) => {
