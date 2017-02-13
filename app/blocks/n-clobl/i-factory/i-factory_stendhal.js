@@ -40,6 +40,7 @@ goog.require('sm.bSmHeadedList.View');
 goog.require('sm.bSmHeader.SmHeader');
 goog.require('sm.bSmHeader.View');
 goog.require('sm.bSmItem.SmItem');
+goog.require('sm.bSmItem.SmItemCompact');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.View');
 goog.require('sm.bSmItem.ViewEntity');
@@ -279,6 +280,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smItemEntity', {
             control: sm.bSmItem.SmItemEntity,
             view: sm.bSmItem.ViewEntity
+        })
+        .setControlListItem('smItemCompact', {
+            control: sm.bSmItem.SmItemCompact,
+            view: sm.bSmItem.ViewCompact
         })
         .setControlListItem('smItemList', {
             control: sm.bSmItemList.SmItemList,

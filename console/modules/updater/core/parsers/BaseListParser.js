@@ -2,8 +2,6 @@
 
 const EmptyParser = require('./EmptyParser');
 
-const StringParser = require('./StringParser');
-
 const errors = require('../errors');
 
 class BaseListParser extends EmptyParser {
@@ -60,7 +58,7 @@ class BaseListParser extends EmptyParser {
         var drafts = pattern.map(
             item => {
                 return BaseListParser.splitStringBySeparator(
-                    item, 
+                    item,
                     separator
                 );
             }

@@ -139,7 +139,7 @@ goog.scope(function() {
 
     /**
      * Replaces items in results list
-     * @param {Array<>} items
+     * @param {Array<sm.bSmItem.SmItem.RenderParams>} items
      * @public
      */
     SearchResults.prototype.replaceItems = function(items) {
@@ -150,7 +150,10 @@ goog.scope(function() {
 
     /**
      * Add items to bottom of list
-     * @param {Array<>} items
+     * @param {Array<(sm.bSmItem.SmItem.RenderParams|
+     * sm.bSmItem.SmItemEntity.RenderParams|
+     * sm.bSmLink.SmLink.RenderParams|
+     * sm.lCourse.bDepartment.Department.RenderParams)>} items
      * @public
      */
     SearchResults.prototype.addItems = function(items) {

@@ -21,8 +21,8 @@ sm.lSearch.bFilter.FilterClasses = function(view, opt_domHelper) {
      * Instances filters
      * @type {{
      *     optionList: sm.lSearch.bFilter.FilterDropdown,
-     *     optionKindergarten: sm.lSearch.bFilter.FilterSwitchLabels,
-     *     optionKindergarten: sm.lSearch.bFilter.Filter,
+     *     optionLabels: sm.lSearch.bFilter.FilterSwitchLabels,
+     *     optionKindergarten: sm.lSearch.bFilter.Filter
      * }}
      * @protected
      * @override

@@ -16,8 +16,8 @@ var convertToString = function(values) {
         var isAllDataTypesMatch = true;
         values.forEach(
             value => {
-                isAllDataTypesMatch = 
-                    isAllDataTypesMatch && 
+                isAllDataTypesMatch =
+                    isAllDataTypesMatch &&
                     value.dataType === dataType;
             }
         );
@@ -33,7 +33,7 @@ var convertToString = function(values) {
         throw new errors.typeError.EmptyListError();
     }
     return result;
-}
+};
 
 module.exports = {
     ARRAY: array,

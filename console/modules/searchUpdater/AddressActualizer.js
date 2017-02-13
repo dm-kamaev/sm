@@ -101,6 +101,27 @@ class AddressActualizer {
             entityType = entityTypeEnum.COURSE;
         }
 
+        if (entityIds) {
+            this.createOrUpdateValues_(
+                entityIds,
+                entityType,
+                searchData,
+                searchType,
+                values
+            );
+        }
+    }
+
+    /**
+     * @private
+     * @param {Array<number>} entityIds
+     * @param {string} entityType
+     * @param {Array<Object>} searchData
+     * @param {string} searchType
+     * @param {Array<number>} values
+     */
+    createOrUpdateValues_(
+            entityIds, entityType, searchData, searchType, values) {
         if (searchData.length) {
             this.updateValues_(
                 entityIds,
@@ -109,7 +130,7 @@ class AddressActualizer {
                 searchType,
                 values
             );
-        } else if (values.length && entityIds) {
+        } else if (values.length) {
             entityIds.forEach(entityId => {
                 await(services.addressSearch.create({
                     entityId: entityId,

@@ -118,7 +118,7 @@ service.getByBrandId = async(function(brandId) {
  */
 service.getById = async(function(id) {
     return await(models.CourseDepartment.findOne({
-        attributes: ['id', 'name', 'phone', 'updated_at'],
+        attributes: ['id', 'name', 'phone', 'brandId', 'updated_at'],
         where: {
             id: id
         },
@@ -195,7 +195,9 @@ service.isExistDepartmentWithOutCurrent = async(function(
             }
         }
     }));
-    if (address && address.courseDepartments) { res = true; }
+    if (address && address.courseDepartments) {
+        res = true;
+    }
     return res;
 });
 

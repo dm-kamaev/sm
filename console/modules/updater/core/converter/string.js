@@ -6,4 +6,4 @@ module.exports = function(values) {
         result = values.map(value => value.data).join('; ');
     }
     return result;
-}
+};
