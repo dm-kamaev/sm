@@ -1,11 +1,10 @@
-'use strict'
+'use strict';
 const dbConfig = require.main.require('./api/config').db;
 var scpConfig = require.main.require('./api/config').scp;
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const commander = require('commander');
 const readlineSync = require('readline-sync');
-const fs = require('fs');
 const DUMP_FOLDER = './assets/dump/';
 const common = require.main.require('./console/common');
 const SEPARATOR = '_';
@@ -13,70 +12,72 @@ const sequelize = require.main.require('./app/components/db');
 
 var start = async(function() {
     var vars = [
-        'Create db dump file [local]',
-        'Create db dump file [local] and write it to config as current',
-        'Create db dump file [remote]',
-        'Create db dump file [remote] and write it to config as current',
-        'Load db dump from the local storage',
-        'Load db dump from the remote storage',
-        'Load db dump from the remote storage by name',
-        'Show current config',
-        'Drop all tables'],
-    index = readlineSync.keyInSelect(vars, 'What to do?');
+            'Create db dump file [local]',
+            'Create db dump file [local] and write it to config as current',
+            'Create db dump file [remote]',
+            'Create db dump file [remote] and write it to config as current',
+            'Load db dump from the local storage',
+            'Load db dump from the remote storage',
+            'Load db dump from the remote storage by name',
+            'Show current config',
+            'Drop all tables'],
+        index = readlineSync.keyInSelect(vars, 'What to do?'),
+        dumpCreator,
+        dumpLoader;
     switch (index) {
-        case 0:
-            var dumpCreator = new DumpCreator();
-            dumpCreator.create();
-            break;
-        case 1:
-            var dumpCreator = new DumpCreator({
-                config: true
-            });
-            dumpCreator.create();
-            break;
-        case 2:
-            var dumpCreator = new DumpCreator({
-                remote: true
-            });
-            dumpCreator.create();
-            break;
-        case 3:
-            var dumpCreator = new DumpCreator({
-                config: true,
-                remote: true
-            });
-            dumpCreator.create();
-            break;
-        case 4:
-            var dumpLoader = new DumpLoader();
-            dumpLoader.load();
-            break;
-        case 5:
-            var dumpLoader = new DumpLoader({
-                remote: true
-            });
-            dumpLoader.load();
-            break;
-        case 6:
-            var dumpLoader = new DumpLoader({
-                remote: true,
-                askName: true
-            });
-            dumpLoader.load();
-            break;
-        case 7:
-            DumpHelper.checkConfig();
-            break;
-        case 8:
-            DumpHelper.dropAll();
-            break;
+    case 0:
+        dumpCreator = new DumpCreator();
+        dumpCreator.create();
+        break;
+    case 1:
+        dumpCreator = new DumpCreator({
+            config: true
+        });
+        dumpCreator.create();
+        break;
+    case 2:
+        dumpCreator = new DumpCreator({
+            remote: true
+        });
+        dumpCreator.create();
+        break;
+    case 3:
+        dumpCreator = new DumpCreator({
+            config: true,
+            remote: true
+        });
+        dumpCreator.create();
+        break;
+    case 4:
+        dumpLoader = new DumpLoader();
+        dumpLoader.load();
+        break;
+    case 5:
+        dumpLoader = new DumpLoader({
+            remote: true
+        });
+        dumpLoader.load();
+        break;
+    case 6:
+        dumpLoader = new DumpLoader({
+            remote: true,
+            askName: true
+        });
+        dumpLoader.load();
+        break;
+    case 7:
+        DumpHelper.checkConfig();
+        break;
+    case 8:
+        DumpHelper.dropAll();
+        break;
     }
 });
 
 class DumpCreator {
     /**
      * @public
-     * @param {object opt_params}
+     * @param {object} opt_params
      */
     constructor(opt_params) {
         opt_params = opt_params || {};
@@ -89,12 +90,14 @@ class DumpCreator {
      */
     create() {
         common.checkDir(DUMP_FOLDER);
-        if (!scpConfig)
+        if (!scpConfig) {
             DumpHelper.fixConfig();
+        }
         var filename = this.generateFilename_();
         var filePath = DUMP_FOLDER + filename;
-        if (common.fileExists(filePath))
+        if (common.fileExists(filePath)) {
             throw new Error('File already exists');
+        }
         var command = 'pg_dump -Fc ' + dbConfig.name +
             ' > ' + filePath;
         var execRes = await(common.execAsync(command));
@@ -146,9 +149,8 @@ class DumpCreator {
     generateFilename_() {
         var timeStamp = this.getTimeStamp_();
         var branchName = this.getBranchName_();
-        var filename =  timeStamp + '.dump';
-        if (branchName)
-            filename = branchName + SEPARATOR + filename;
+        var filename = timeStamp + '.dump';
+        if (branchName) { filename = branchName + SEPARATOR + filename; }
         return filename;
     }
 
@@ -160,8 +162,10 @@ class DumpCreator {
     getTimeStamp_() {
         var time = new Date();
         var timestring = time.getFullYear() +
-            this.leadZero_(time.getMonth() + 1) + this.leadZero_(time.getDate()) +
-            this.leadZero_(time.getHours()) + this.leadZero_(time.getMinutes()) +
+            this.leadZero_(time.getMonth() + 1) +
+            this.leadZero_(time.getDate()) +
+            this.leadZero_(time.getHours()) +
+            this.leadZero_(time.getMinutes()) +
             this.leadZero_(time.getSeconds());
         return timestring;
     }
@@ -177,13 +181,13 @@ class DumpCreator {
 
     /**
      * @private
-     * @return {string || null}
+     * @return {string|null}
      */
     getBranchName_() {
         if (common.fileExists('./.git/HEAD')) {
             var headstr = common.readText('./.git/HEAD');
             return headstr
-                .replace(/ref: refs\/heads\//,'')
+                .replace(/ref: refs\/heads\//, '')
                 .trim();
         } else {
             return null;
@@ -192,22 +196,27 @@ class DumpCreator {
 }
 
 class DumpHelper {
-
+    /**
+     * Drop all
+     */
     static dropAll() {
         await(sequelize.queryInterface.dropAllTables());
         await(sequelize.queryInterface.dropAllEnums());
     }
 
+    /**
+     * Check config
+     */
     static checkConfig() {
         var dump = dbConfig.dump,
             db = dbConfig.name,
-            branch = dump.split(SEPARATOR)[0], //TODO: if no config?
+            branch = dump.split(SEPARATOR)[0], // TODO: if no config?
             time = dump.split(SEPARATOR)[1],
             dumpStr = (branch && time) ?
                 'Dump: ' + branch + SEPARATOR + time :
                 'Dump: ' + dump;
-        console.log (dumpStr);
-        console.log ('Database: ' + db);
+        console.log(dumpStr);
+        console.log('Database: ' + db);
     }
 
     /**
@@ -236,10 +245,13 @@ class DumpLoader {
     constructor(opt_params) {
         opt_params = opt_params || {};
         this.isFromRemote_ = opt_params.remote || false;
-        if (opt_params.askName)
-            this.filename_ = readlineSync.question('Please type dump filename from http://repo.dfarm.lan/db/ :');
-        else
+        if (opt_params.askName) {
+            this.filename_ = readlineSync.question(
+                'Please type dump filename from http://repo.dfarm.lan/db/ :'
+            );
+        } else {
             this.filename_ = dbConfig.dump;
+        }
     }
 
     /**
@@ -247,10 +259,9 @@ class DumpLoader {
      */
     load() {
         if (this.isFromRemote_) {
-            if (common.fileExists(DUMP_FOLDER + this.filename_))
+            if (common.fileExists(DUMP_FOLDER + this.filename_)) {
                 console.log('Found local version of dump file');
-            else
-                await(this.download_());
+            } else { await(this.download_()); }
         }
         this.load_();
     }
@@ -276,16 +287,15 @@ class DumpLoader {
      */
     load_() {
         var filePath = DUMP_FOLDER + this.filename_;
-        if (!common.fileExists(filePath))
+        if (!common.fileExists(filePath)) {
             throw new Error('Can\'t find the file');
+        }
         await(DumpHelper.dropAll());
         var command = 'pg_restore -d ' + dbConfig.name +
             ' ' + filePath;
         await(common.execAsync(command));
     }
 }
-
-
 
 
 

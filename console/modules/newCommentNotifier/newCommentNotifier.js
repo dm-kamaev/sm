@@ -15,9 +15,10 @@ var entityType = require('../../../api/modules/entity/enums/entityType');
 var stoplist = require('./stop-list.json');
 
 
-class newCommentNotifier {
-    constructor() {}
-
+class NewCommentNotifier {
+    /**
+     * Start
+     */
     start() {
         var email = config.emailNotifier.email,
             domain = config.protocol + '://' + config.schools.host;
@@ -54,10 +55,10 @@ class newCommentNotifier {
             letterText += comment.text;
             letterText += '"';
 
-            var letter = new Letter (theme, letterText, 'html');
+            var letter = new Letter(theme, letterText, 'html');
             mailSender.sendMail(email, letter);
 
-            await (services.comment.update(comment, {
+            await(services.comment.update(comment, {
                 isNoticeSend: true
             }));
         });
@@ -75,15 +76,16 @@ class newCommentNotifier {
             isExplicit = false;
 
         while (i-- && !isExplicit) {
-            if (text.indexOf(stoplist[i]) > -1)
+            if (text.indexOf(stoplist[i]) > -1) {
                 isExplicit = true;
+            }
         }
         return isExplicit;
     }
 }
 
 var start = async(() => {
-    var notifier = new newCommentNotifier();
+    var notifier = new NewCommentNotifier();
 
     await(notifier.start());
 });

@@ -3,7 +3,10 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-const squel = require('squel').useFlavour('postgres');
+const Squel = require('squel'),
+    lodash = require('lodash');
+
+const squel = Squel.useFlavour('postgres');
 
 const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
@@ -22,19 +25,28 @@ let service = {
  * @return {CourseBrand}
  */
 service.findOrCreate = async(function(data) {
-    let courseBrand = await(
-        models.CourseBrand.findOrCreate({
-            where: {
-                name: data.name
-            }
-        })
-    )[0]; // findOrCreate returns array where zero element is instance
-    return await(courseBrand.update({
-        description: data.description
+    let courseBrand = await(models.CourseBrand.find({
+        where: {
+            name: data.name
+        }
     }));
+
+    if (!courseBrand) {
+        courseBrand = await(models.CourseBrand.create({
+            name: data.name,
+            description: data.description
+        }));
+    } else {
+        await(courseBrand.update({
+            description: data.description
+        }));
+    }
+
+    return courseBrand;
 });
 
 /**
+ * @param {number=} opt_brandId
  * @return {Array<{
  *     id: number,
  *     name: string,
@@ -43,7 +55,7 @@ service.findOrCreate = async(function(data) {
  *     updatedAt: Date
  * }>}
  */
-service.getAll = async(function() {
+service.getAll = async(function(opt_brandId) {
     let query = squel.select({autoQuoteAliasNames: true})
         .from('course_brand')
         .field('course_brand.id')
@@ -66,11 +78,15 @@ service.getAll = async(function() {
             null,
             'course_brand.id = course_department.brand_id'
         )
-        .group('course_brand.id')
-        .toString();
+        .group('course_brand.id');
+
+    if (opt_brandId) {
+        query = query
+            .where(`course_brand.id = ${opt_brandId}`);
+    }
 
     return await(sequelize.query(
-        query, {
+        query.toString(), {
             type: sequelize.QueryTypes.SELECT
         }
     ));
@@ -86,6 +102,22 @@ service.getById = async(function(id) {
             id: id
         }
     }));
+});
+
+/**
+ * Get brands by given array of id
+ * @param {Array<number>} ids
+ * @return {Array<models.CourseBrand>}
+ */
+service.getByIds = async(function(ids) {
+    return models.CourseBrand.findAll({
+        where: {
+            id: {
+                $in: ids
+            }
+        },
+        raw: true
+    });
 });
 
 /**
@@ -124,6 +156,26 @@ service.deleteAlias = async(function(courseBrand) {
         courseBrand.id,
         entityType.COURSE_BRAND
     ));
+});
+
+/**
+ * Get course brand by attributes
+ * @param {{
+ *     name: string
+ * }} attributes
+ * @return {Array<models.CourseBrand>}
+ */
+service.getByAttributes = async(function(attributes) {
+    let conditions = {};
+    if (!lodash.isEmpty(attributes)) {
+        conditions.name = attributes.name;
+    }
+
+    return models.CourseBrand.findAll({
+        attributes: ['id', 'name'],
+        where: conditions,
+        raw: true
+    });
 });
 
 module.exports = service;

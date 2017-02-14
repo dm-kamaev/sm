@@ -33,10 +33,11 @@ let controller = {};
 controller.list = async(function(req, res) {
     let result;
     try {
+        let brandId = parseInt(req.params.brandId, 10);
         let departments = await(services.courseDepartment.getByBrandId(
-            req.params.brandId
+            brandId
         ));
-        result = departmentView.renderList(departments);
+        result = departmentView.renderList(departments, brandId);
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -65,10 +66,12 @@ controller.list = async(function(req, res) {
 controller.get = async(function(req, res) {
     let result;
     try {
+        let brandId = parseInt(req.params.brandId, 10),
+            departmentId = parseInt(req.params.id, 10);
         let department = await(services.courseDepartment.getById(
-            req.params.id
+            departmentId
         ));
-        result = departmentView.render(department);
+        result = departmentView.render(department, brandId);
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -120,7 +123,9 @@ controller.create = async(function(req, res) {
         const isExistDepartment = await(
             services.courseDepartment.isExistDepartment(brandId, address)
         );
-        if (isExistDepartment) { throw new DepartmentExist(brandId, address); }
+        if (isExistDepartment) {
+            throw new DepartmentExist(brandId, address);
+        }
 
         result = await(services.courseDepartment.create(
             brandId,

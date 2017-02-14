@@ -1,6 +1,6 @@
-const metroView = require('./metroView.js');
-const areaView = require('./areaView.js');
-const departmentView = require('./departmentView.js');
+const metroView = require('./metroView');
+const areaView = require('./areaView');
+const departmentView = require('./departmentView').departmentView;
 const lodashFlatten = require('lodash/flatten');
 
 var addressView = {};

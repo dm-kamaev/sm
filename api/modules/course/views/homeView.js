@@ -173,7 +173,14 @@ view.recommendations = function(data) {
     return types.map(type => ({
         type: type,
         header: view.getTypeHeader(type),
-        items: view.getTypeItems(data, type)
+        list: {
+            items: view.getTypeItems(data, type),
+            itemType: 'smLink',
+            itemConfig: {
+                size: 'xxl',
+                theme: 'interval'
+            }
+        }
     }));
 };
 

@@ -1,5 +1,4 @@
 'use strict';
-
 module.exports = class SchoolNotFoundError extends Error {
     /**
      * @param {int} id

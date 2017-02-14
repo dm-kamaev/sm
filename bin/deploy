@@ -3,6 +3,8 @@
 
 lib_dir=node_modules/deployment
 gulp="./node_modules/.bin/gulp"
+typings="./node_modules/.bin/typings"
+tsc="./node_modules/.bin/tsc"
 
 scriptpath=$(dirname $0)
 cd $scriptpath/../
@@ -13,6 +15,9 @@ if [ ! -d node_modules/ ]; then
 else
     yarn install --pure-lockfile
 fi
+
+$typings install
+$tsc
 
 $gulp backendLint
 $gulp build --env $env

@@ -4,4 +4,4 @@ module.exports = function(values) {
         result = values[0].data;
     }
     return result;
-}
+};

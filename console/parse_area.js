@@ -1,7 +1,5 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var commander = require('commander');
-var xlsx = require('node-xlsx');
 
 var services = require.main.require('./app/components/services').all;
 
@@ -33,7 +31,7 @@ exports.parseAreas = async((data) => {
 var rowToGeoData = (array) => {
     var tmpArray;
 
-    tmpArray = array.map( (item) => {
+    tmpArray = array.map((item) => {
         return {
             addresses: getArray(item, ColumnNames.ADDRESSES_INDEX),
             areas: getArray(item, ColumnNames.AREAS_INDEX)
@@ -56,7 +54,7 @@ var rowToGeoData = (array) => {
  * associates address and area
  * @param {Array.<Object>} data
  */
-var associateAreaAddress = async ( (data) => {
+var associateAreaAddress = async((data) => {
     data.forEach((item) => {
         services.address.setArea(item.area, item.address);
     });
@@ -66,13 +64,13 @@ var associateAreaAddress = async ( (data) => {
  * Parses an input array file and puts unique areas into db
  * @param {Array} data
  */
-var addAreaNamesToDB = async( (data) => {
+var addAreaNamesToDB = async((data) => {
     var areaNames = concatAreaColumns(data);
 
     areaNames = makeUniqueArray(areaNames);
 
-    areaNames.forEach( async( (item)  => {
-       (services.area.create({name: item}));
+    areaNames.forEach(async((item) => {
+        (services.area.create({name: item}));
     }));
 });
 
@@ -83,7 +81,7 @@ var addAreaNamesToDB = async( (data) => {
  */
 var concatAreaColumns = (arr) => {
     var resultArray = [];
-    arr.forEach( (item) => {
+    arr.forEach((item) => {
         resultArray.push(item.area);
     });
     return resultArray;
@@ -110,8 +108,9 @@ var makeUniqueArray = (arr) => {
 
 /**
  * returns array from table cell
- * @param {Number} row
- * @param {Number} index index of cell in row
+ * @param  {Number} row
+ * @param  {Number} index index of cell in row
+ * @return {Array}
  */
 var getArray = (row, index) => {
     return row[index] ?

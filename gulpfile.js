@@ -7,19 +7,19 @@ const path = require('path');
 const util = require('gulp-util');
 const apidoc = require('gulp-apidoc');
 const exec = require('child_process').exec;
-const eslint = require('gulp-eslint');
 const minimist = require('minimist');
 const sassLint = require('gulp-sass-lint');
 
 const migrationWrapper = require('./app/components/migrationWrapper');
 
-const MAX_BILD_FILE_AMOUNT = 20;
+const MAX_BUILD_FILE_AMOUNT = 20;
 
-process.stdout.setMaxListeners(MAX_BILD_FILE_AMOUNT);
+process.stdout.setMaxListeners(MAX_BUILD_FILE_AMOUNT);
 
 const config = require('./config.json');
 const gulpConfig = require('./app/config/base/config.json');
 const cssLintConfig = require('./css-lint-config.json');
+const ROOT_DIR = './';
 const BLOCKS_DIR = '/app/blocks';
 const SHARED_STATIC_DIR = '/public/shared/static';
 
@@ -135,6 +135,10 @@ gulp.task('watch', function() {
         [path.join(__dirname, BLOCKS_DIR, '**/*.s+(a|c)ss')],
         ['lint-css']
     );
+    gulp.watch(
+        [path.join(__dirname, ROOT_DIR, '/**/*.ts')],
+        ['tsCompile']
+    );
     gulp.watch([
         path.join(__dirname, BLOCKS_DIR, '/**/*.scss'),
         path.join(__dirname, BLOCKS_DIR, '/**/*.css')
@@ -170,26 +174,7 @@ gulp.task('localConfig', function() {
     });
 });
 
-gulp.task('backendLint', function() {
-    return gulp.src([
-        'api/**/*.js',
-        'app/modules/**/*.js',
-        'app/components/**/*.js',
-        'app/middleware/**/*.js',
-        '!app/modules/doc/**',
-        'gulp/*.js',
-        './*.js'])
-        .pipe(eslint({
-            config: path.join(__dirname, 'node_modules/nodules/.eslintrc')
-        }))
-        .pipe(eslint.format())
-        .pipe(eslint.results(result => {
-            if (result.errorCount) {
-                throw new Error('Error count: ' + result.errorCount +
-                    '. Linter check failed!');
-            }
-        }));
-});
+gulp.task('backendLint', gulpTasks.backendLint);
 
 gulp.task('lint-css', function() {
     return gulp
@@ -202,12 +187,35 @@ gulp.task('lint-css', function() {
 });
 
 const tasks = function(bool) {
-    return bool ?
-        ['createTimestamp', 'soy', 'compile', 'svgSprite', 'sprite', 'images',
-        'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig'] :
-        ['watch', 'soy', 'scripts', 'svgSprite', 'sprite', 'images',
-        'fonts', 'styles', /* 'lint-css',*/ 'copySchools', 'copyCourses',
-        'localConfig', 'backendLint'];
+    return bool ? [
+        'createTimestamp',
+        'soy',
+        'compile',
+        'tsCompile',
+        'svgSprite',
+        'sprite',
+        'images',
+        'fonts',
+        'styles',
+        'copySchools',
+        'copyCourses',
+        'localConfig'
+    ] : [
+        'watch',
+        'soy',
+        'scripts',
+        'tsCompile',
+        'svgSprite',
+        'sprite',
+        'images',
+        'fonts',
+        'styles',
+        // 'lint-css',
+        'copySchools',
+        'copyCourses',
+        'localConfig',
+        'backendLint'
+    ];
 };
 
 gulp.task('build', tasks(true));
@@ -220,3 +228,5 @@ gulp.task('compile', ['soy'], gulpTasks.compile);
 
 gulp.task('createTimestamp', gulpTasks.createTimestamp);
 gulp.task('svgSprite', gulpTasks.svgSprite);
+gulp.task('tsCompile', gulpTasks.tsCompile);
+gulp.task('backendBuild', ['watch', 'localConfig', 'tsCompile', 'backendLint']);

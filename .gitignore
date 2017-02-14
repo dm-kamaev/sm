@@ -28,6 +28,7 @@ deployment-config.json
 .csscomb*
 .tags*
 jsconfig.json
+tslint.json
 
 /app/config/local/
 /app/config/*.json
@@ -41,3 +42,56 @@ migrate_stderr
 migrate_stdout
 
 **/b-icon_auto-sprite.*
+
+#typings ignore
+typings
+
+#builded typescript files ignore
+api/components/interface.js
+
+api/modules/course/controllers/middleware/**/*.js
+api/modules/course/models/courseBrand.js
+
+api/modules/geo/interfaces/*.js
+api/modules/geo/models/address.js
+api/modules/geo/models/department.js
+api/modules/geo/services/exceptions/*.js
+api/modules/geo/services/address.js
+api/modules/geo/services/department.js
+api/modules/geo/views/departmentView.js
+
+api/modules/school/interfaces/*.js
+
+api/modules/school/controllers/errors/AddressDepartmentExist.js
+api/modules/school/controllers/errors/AddressDoesNotExist.js
+api/modules/school/controllers/errors/AddressIsNotUnique.js
+api/modules/school/controllers/errors/DepartmentNotFound.js
+api/modules/school/controllers/errors/SchoolNotExistTypeError.js
+api/modules/school/controllers/errors/SchoolNotFound.js
+api/modules/school/controllers/commentAdminController.js
+api/modules/school/controllers/departmentAdminController.js
+api/modules/school/controllers/index.js
+api/modules/school/controllers/schoolAdminController.js
+
+api/modules/school/models/school.js
+
+api/modules/school/services/exceptions/*.js
+api/modules/school/services/schoolAdminService.js
+api/modules/school/services/schoolComment.js
+
+api/modules/school/views/commentView.js
+
+api/modules/user/controllers/errors/*.js
+api/modules/user/controllers/adminUserController.js
+api/modules/user/lib/*.js
+api/modules/user/models/adminUser.js
+api/modules/user/services/exceptions/*.js
+api/modules/user/services/adminUser.js
+api/modules/user/views/adminUserView.js
+
+app/middleware/ActionChecker/*.js
+app/middleware/adminUser.js
+
+console/modules/geoTools/*.js
+
+gulp/taskBackendLint.js

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var commander = require('commander');
@@ -19,51 +19,69 @@ const YEAR_COUNT = 7;
 const YEAR_ROW = 2;
 const SUBJECT_ROW = 3;
 const SITE_INDEX = 1;
-const BASE_MATH_COLUMN_INDEX = 1; //base math results should be converted
+const BASE_MATH_COLUMN_INDEX = 1; // base math results should be converted
 const BASE_MATH_YEAR = 2015;
 
 
-var parse = async (function(path) {
+var parse = async(function(path) {
     sequelize.options.logging = false;
     var progressBar = PBar.getInstance();
-    if (!common.fileExists(path))
-        throw new Error('Cant find the file');
+    if (!common.fileExists(path)) { throw new Error('Cant find the file'); }
     var list = xlsx.parse(path)[LIST_INDEX];
     progressBar.parseExcel(LAST_ROW - FIRST_ROW);
-    var parser = await( new MainParser(list));
+    var parser = await(new MainParser(list));
     var results = parser.getSchoolResults();
     progressBar.dbWrite(results.length);
+    // eslint-disable-next-line no-unused-vars
     var dbWriter = await(new DbWriter(results));
 });
 
 class PBar {
-    constructor() {}
+    /**
+     * @return {Object}
+     */
     static getInstance() {
-        if (!PBar.instance)
+        if (!PBar.instance) {
             PBar.instance = new PBar();
+        }
         return PBar.instance;
     }
+
+    /**
+     * @param {number} length
+     */
     parseExcel(length) {
-        if (this.pbar)
+        if (this.pbar) {
             this.pbar.terminate();
+        }
         this.pbar = new ProgressBar('Parsing excel :bar :current/:total', {
             total: length,
             width: 30
         });
     }
 
+    /**
+     * @param {number} length
+     */
     dbWrite(length) {
-        if (this.pbar)
+        if (this.pbar) {
             this.pbar.terminate();
-        this.pbar = new ProgressBar('Writing to database :bar :current/:total', {
-            total: length,
-            width: 30
-        });
+        }
+        this.pbar = new ProgressBar(
+            'Writing to database :bar :current/:total', {
+                total: length,
+                width: 30
+            }
+        );
     }
 
+    /**
+     * Tick
+     */
     tick() {
-        if (this.pbar)
+        if (this.pbar) {
             this.pbar.tick();
+        }
     }
 }
 
@@ -95,8 +113,8 @@ class DbWriter {
      */
     parseSchool_(schoolNode) {
         var school = schoolNode.school;
-        await (services.studyResult.dropEgeResults(school.id));
-        await (schoolNode.results.forEach(yearNode => {
+        await(services.studyResult.dropEgeResults(school.id));
+        await(schoolNode.results.forEach(yearNode => {
             this.parseYear_(yearNode, school);
         }));
         PBar.getInstance().tick();
@@ -104,7 +122,7 @@ class DbWriter {
 
     /**
      * @private
-     * @prarm {string} subject Subject name
+     * @param {string} subjectName Subject name
      * @returns {object} subject instance
      */
     getSubject_(subjectName) {
@@ -159,8 +177,12 @@ class MainParser {
         }
     }
 
+    /**
+     * @param {string} string
+     * @return {string}
+     */
     static getYear(string) {
-        return string.replace(/\D/g, ''); //leave only digits
+        return string.replace(/\D/g, ''); // leave only digits
     }
 
     /**
@@ -168,7 +190,7 @@ class MainParser {
      * @returns {object} instance School instance
      */
     static getSchool(site) {
-        site = site.replace(/http:\/\//g, ''); //remove 'http://'
+        site = site.replace(/http:\/\//g, ''); // remove 'http://'
         var instance = await(services.school.findBySite(site));
 
         return instance;
@@ -177,29 +199,30 @@ class MainParser {
     /**
      * @param {number} result
      * @param {int} col number
+     * @param {number} year
      * @returns {number} normalized result
      */
     static normalizeResult(result, col, year) {
-        var subjectIndex  = (col - FIRST_COL) % (SUBJECT_COUNT * 2);
+        var subjectIndex = (col - FIRST_COL) % (SUBJECT_COUNT * 2);
         if (subjectIndex == BASE_MATH_COLUMN_INDEX) {
-            if (year != BASE_MATH_YEAR)
-                result =  '';
-            else if (typeof result != 'string' && result > 5) {
+            if (year != BASE_MATH_YEAR) {
+                result = '';
+            } else if (typeof result != 'string' && result > 5) {
                 switch (true) {
-                    case (result <= 6):
-                        result = 2;
-                        break;
-                    case (result > 6 && result <= 11):
-                        result = 3;
-                        break;
-                    case (result > 11 && result <= 16):
-                        result = 4;
-                        break;
-                    case (result > 16 && result <= 20):
-                        result = 5;
-                        break;
-                    default:
-                        throw new Error('Undexpected base math result: ' + result);
+                case (result <= 6):
+                    result = 2;
+                    break;
+                case (result > 6 && result <= 11):
+                    result = 3;
+                    break;
+                case (result > 11 && result <= 16):
+                    result = 4;
+                    break;
+                case (result > 16 && result <= 20):
+                    result = 5;
+                    break;
+                default:
+                    throw new Error('Undexpected base math result: ' + result);
                 }
             }
         }
@@ -227,7 +250,7 @@ class MainParser {
     }
     /**
      * @public
-     * @returns JSON with parsed data
+     * @return {Object} JSON with parsed data
      */
     getSchoolResults() {
         return this.schoolResults;
@@ -236,6 +259,7 @@ class MainParser {
     /**
      * @private
      * @param {int} startColumn
+     * @return {Array}
      */
     parseYear_(startColumn) {
         var endColumn = startColumn + SUBJECT_COUNT;
@@ -243,10 +267,10 @@ class MainParser {
             year: MainParser.getYear(this.sheet[YEAR_ROW][startColumn]),
             results: []
         };
-        for (var i = startColumn; i<endColumn; i++) {
+        for (var i = startColumn; i < endColumn; i++) {
             var subject = this.sheet[SUBJECT_ROW][i];
-            var result = this.currentRow[i]|| '';
-                result = MainParser.normalizeResult(result, i, yearRes.year);
+            var result = this.currentRow[i] || '';
+            result = MainParser.normalizeResult(result, i, yearRes.year);
             if (result && typeof result != 'string') {
                 this.isEmtyRow = false;
                 yearRes.results.push({
@@ -261,7 +285,8 @@ class MainParser {
     /**
      * @private
      * @param {int} startColumn
-     * @prama {int} depCount Departament count
+     * @param {int} depCount Departament count
+     * @return {Array}
      */
     parseDepartamYear_(startColumn, depCount) {
         var endColumn = startColumn + SUBJECT_COUNT;
@@ -272,13 +297,14 @@ class MainParser {
         for (var i = startColumn; i < endColumn; i++) {
             var subject = this.sheet[SUBJECT_ROW][i];
             var depResults = [];
-            for (var n = 0; n < depCount; n++ ){
+            for (var n = 0; n < depCount; n++) {
                 var depResult = this.sheet[this.currentRowIndex + n][i] || 0;
-                depResult = MainParser.normalizeResult(depResult, i, yearRes.year);
+                depResult =
+                    MainParser.normalizeResult(depResult, i, yearRes.year);
                 depResults.push(depResult);
             }
-            var depSum = depResults.reduce((a, b) => {return a + b;}, 0);
-            var result =  depSum / depCount;
+            var depSum = depResults.reduce((a, b) => { return a + b; }, 0);
+            var result = depSum / depCount;
             if (result) {
                 yearRes.results.push({
                     subject: subject,
@@ -291,6 +317,7 @@ class MainParser {
 
     /**
      * @private
+     * @return {Array}
      */
     parseDepartaments_() {
         var result = [];
@@ -299,14 +326,17 @@ class MainParser {
             depCount++;
         }
         if (depCount) {
-            this.incrementRow_(); //go to first departament
-            for (var i = 0; i< YEAR_COUNT; i++){
-                var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);//2 to skip the gia
+            this.incrementRow_(); // go to first departament
+            for (var i = 0; i < YEAR_COUNT; i++) {
+                var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);
+                // 2 to skip the gia
                 var yearRes = this.parseDepartamYear_(column, depCount);
-                if (yearRes.results.length)
+                if (yearRes.results.length) {
                     result.push(yearRes);
+                }
             }
-            this.setRow_(this.currentRowIndex + depCount - 1) //-1 because row would be incrementade once after school parsing
+            this.setRow_(this.currentRowIndex + depCount - 1);
+            // -1 because row would be incrementade once after school parsing
         }
 
         return result;
@@ -321,18 +351,21 @@ class MainParser {
         if (site) {
             school = await(MainParser.getSchool(site));
         }
-        if (school){
+        if (school) {
             var schoolResult = {results: []};
             schoolResult.school = school;
             this.isEmtyRow = true;
 
-            for (var i = 0; i < YEAR_COUNT; i++){
-                var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);//2 to skip the gia
+            for (var i = 0; i < YEAR_COUNT; i++) {
+                var column = FIRST_COL +
+                    (i * 2 * SUBJECT_COUNT); // 2 to skip the gia
                 var yearRes = this.parseYear_(column);
-                if (yearRes.results.length)
+                if (yearRes.results.length) {
                     schoolResult.results.push(yearRes);
+                }
             }
-            if (this.isEmtyRow === true) {  //if there is no results for school try to parse departments
+            if (this.isEmtyRow === true) {
+                // if there is no results for school try to parse departments
                 schoolResult.results = this.parseDepartaments_();
             }
             this.schoolResults.push(schoolResult);

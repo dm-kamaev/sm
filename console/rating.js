@@ -5,25 +5,27 @@ var commander = require('commander');
 
 var sequelize = require('../app/components/db');
 var squel = require('squel').useFlavour('postgres');
-var services = require('../app/components/services').all;
+
 const RatingParser = require('./modules/parse/dogm.mos.ru/RatingParser.js');
 
 var parse = async(function() {
     sequelize.options.logging = false;
     var notFoundCount = 0;
-    var firstPageParser
-       = await(new RatingParser('http://dogm.mos.ru/rating/'));
-    var secondPageParser
-       = await(new RatingParser('http://dogm.mos.ru/napdeyat/obdet/ranking-301-to-500.php'));
+    var firstPageParser =
+       await(new RatingParser('http://dogm.mos.ru/rating/'));
+    var secondPageParser =
+       await(new RatingParser(
+           'http://dogm.mos.ru/napdeyat/obdet/ranking-301-to-500.php'
+       ));
     var results = firstPageParser.results.concat(secondPageParser.results);
     await(results.forEach(res => {
         var isNotFound = await(processRank(res));
-        if (isNotFound)
+        if (isNotFound) {
             notFoundCount++;
+        }
     }));
     var processed = results.length - notFoundCount;
     console.log('Processed: ' + processed + '/' + results.length);
-
 });
 
 /**
@@ -65,8 +67,9 @@ var generateFindSql = function(site) {
 };
 
 /**
- * @param {number} schoolId
- * @param {number} rankDogm
+ * @param  {number} schoolId
+ * @param  {number} rankDogm
+ * @return {string}
  */
 var generateUpdateSql = function(schoolId, rankDogm) {
     return squel.update()

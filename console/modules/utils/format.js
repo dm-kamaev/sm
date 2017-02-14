@@ -4,11 +4,6 @@
  * Data formatting unification
  */
 class Format {
-    constructor() {
-
-    }
-
-
     /**
      * Url string formating
      * @param {string} str - url string before formatting
@@ -31,8 +26,8 @@ class Format {
      */
     static phone(str) {
         var res = Format.normalizeStr(str, {
-                collapseSpaces: true
-            });
+            collapseSpaces: true
+        });
 
         res = res.replace(/^.+\(/, '(');
         res = res.replace(/\)(.)/, function(match, symbol) {
@@ -53,7 +48,8 @@ class Format {
      * @param {boolean} [opt_options.trim=true] Trimming
      * @param {boolean} [opt_options.fixQuotes=true] Replacement "" with «»
      * @param {boolean} [opt_options.capitalize=false] Capitalize first char
-     * @param {boolean} [opt_options.collapseSpaces=false] 2 and more spaces collapsed to 1
+     * @param {boolean} [opt_options.collapseSpaces=false] 2 and more spaces
+     *                                                     collapsed to 1
      * @return {string} Normalized string
      */
     static normalizeStr(str, opt_options) {

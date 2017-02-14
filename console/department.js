@@ -1,11 +1,8 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var xlsx = require('node-xlsx');
-var lodash = require('lodash');
-var exclusion = require('./parseConfig').exclusion;
 var commander = require('commander');
 var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
 
 
 var ADDRESS_MSK_INDEX = 0,
@@ -23,10 +20,12 @@ var ADDRESS_MSK_INDEX = 0,
  * @return {bool}
  */
 var compareAddresses = function(adrDB, adrExcel, adrExcelConverted) {
-    if (adrDB == adrExcel)
+    if (adrDB == adrExcel) {
         return true;
-    if (convertAddress(adrDB) == adrExcelConverted)
+    }
+    if (convertAddress(adrDB) == adrExcelConverted) {
         return true;
+    }
     return false;
 };
 
@@ -36,10 +35,11 @@ var compareAddresses = function(adrDB, adrExcel, adrExcelConverted) {
  * @param {array<object>} records - all the excel records
  */
 var processAdress = async(function(address, records) {
-    var matches = records.filter(
-        record =>
-            compareAddresses(address.name, record.address, record.convertedAddress)
-    );
+    var matches = records.filter(record => compareAddresses(
+        address.name,
+        record.address,
+        record.convertedAddress
+    ));
     if (!matches.length) {
         console.log(address.name);
     } else {
@@ -52,7 +52,7 @@ var processAdress = async(function(address, records) {
  * @param {array<object>} matches - excel matches
  */
 var updateDB = async(function(address, matches) {
-    await (models.Department.destroy({
+    await(models.Department.destroy({
         where: {
             addressId: address.id
         }
@@ -74,7 +74,7 @@ var departmentParse = async(function(path) {
     var mskobrData = xlsx.parse(path)[0].data
         .map(mkobrRowToObject)
         .map(record => {
-            record.address = record.address.replace(';','');
+            record.address = record.address.replace(';', '');
             return record;
         });
     var addresses = await(models.Address.findAll());
@@ -86,6 +86,8 @@ var departmentParse = async(function(path) {
 
 /**
  * Get department data from file row
+ * @param {Array} row
+ * @return {Object}
  */
 var mkobrRowToObject = row => {
     return {
@@ -101,9 +103,12 @@ var mkobrRowToObject = row => {
 
 /**
  * Address converter
+ * @param {string} address
+ * @return {string}
  */
-var convertAddress =  function(address) {
+var convertAddress = function(address) {
     if (address !== undefined) {
+        /* eslint-disable no-useless-escape */
         var updateAddress = address.toUpperCase()
             .replace(/Ё/ig, 'Е')
             .replace(/[0-9]{6}|[0-9]{5}/ig, ' ')
@@ -111,17 +116,29 @@ var convertAddress =  function(address) {
             .replace(/РОССИЯ/ig, ' ')
             .replace(/МОСКВА/ig, ' ')
             .replace(/НАБЕРЕЖНАЯ,*| НАБ\.| НАБ(?=[0-9]|,| )|^НАБ\.* /ig, ' ')
-            .replace(/БУЛЬВАР,*| БУЛЬВ\.| БУЛЬВ(?=[0-9]|,| )| Б-Р(?=[0-9]|,| )|^БУЛЬВ\.*|^Б-Р /ig, ' ')
+            .replace(new RegExp('БУЛЬВАР,*| БУЛЬВ\.| БУЛЬВ(?=[0-9]|,| )| Б-Р(' +
+                '?=[0-9]|,| )|^БУЛЬВ\.*|^Б-Р ', 'ig'), ' ')
             .replace(/ШОССЕ,*|Ш\.| Ш(?=[0-9]|,| )|^Ш\.* /ig, ' ')
             .replace(/ПЕРЕУЛОК,*| ПЕР\.| ПЕР(?=[0-9]|,| )|^ПЕР\.* /ig, ' ')
             .replace(/-АЯ|-Я|-ОЙ|-Й|-ТИ|-*ЛЕТИЯ |-*ЛЕТ /ig, ' ')
             .replace(/УЛИЦА,*|УЛ\.| УЛ(?=[0-9]|,| )|^УЛ\.* /ig, ' ')
             .replace(/ПРОЕЗД,*| ПР-Д(?=[0-9]|,| )|^ПР-Д /ig, ' ')
-            .replace(/ПР*ОСПЕКТ,*| ПРОСП\.| ПРОСП(?=[0-9]|,| )|^ПРОСП\.* | ПР-Т(?=[0-9]|,| )|^ПР-Т| ПР\.| ПР(?=[0-9]|,| )|^ПР\.* /ig, ' ')
+            .replace(
+                new RegExp(
+                    'ПР*ОСПЕКТ,*| ПРОСП\.| ПРОСП(?=[0-9]|,| )|^ПРОСП\.* | ПР' +
+                        '-Т(?=[0-9]|,| )|^ПР-Т| ПР\.| ПР(?=[0-9]|,| )|^ПР\.* ',
+                    'ig'
+                    ),
+                ' '
+            )
             .replace(/ ДОМ(?=[0-9]|,| )|Д\.| Д(?=[0-9]| )/ig, ' ')
             .replace(/ ВЛАДЕНИЕ,*/ig, ' ')
             .replace(/ ДОМОВЛАДЕНИЕ,*/ig, ' ')
-            .replace(/ КОРПУС|КОРП\.| КОРП(?=[0-9]| )|КОР\.| КОР(?=[0-9]| )|К\.| К |К(?=[0-9])/ig, '-')
+            .replace(
+                new RegExp(' КОРПУС|КОРП\.| КОРП(?=[0-9]| )|КОР\.| КОР(?=[0' +
+                    '-9]| )|К\.| К |К(?=[0-9])', 'ig'),
+                '-'
+            )
             .replace(/ СТРОЕНИЕ|СТР\.| СТР(?=[0-9]| )|С\.|С(?=[0-9])/ig, '-')
             .replace(/;*/ig, '')
             .replace(/\.*/ig, '')
@@ -129,6 +146,7 @@ var convertAddress =  function(address) {
             .replace(/ */ig, '')
             .replace(/\(№[0-9]{4}-[0-9]\)/ig, '')
             .replace(/\+7\([0-9]{3}\)[0-9]{7}/ig, '');
+        /* eslint-enable no-useless-escape */
         return updateAddress;
     }
 };
@@ -136,10 +154,13 @@ var convertAddress =  function(address) {
 
 /**
  * Stage title converter
+ * @param {string} title
+ * @return {string}
  */
 function convertTitle(title) {
+    var updateTitle;
     if (title !== undefined && title !== '') {
-        var updateTitle = title.replace(/^ +/ig, '');
+        updateTitle = title.replace(/^ +/ig, '');
 
         updateTitle = updateTitle.toLowerCase();
 

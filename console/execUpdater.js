@@ -1,10 +1,7 @@
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
-
 const async = require('asyncawait/async');
-
 const commander = require('commander');
 
 const updaterPath = path.join(__dirname, 'modules', 'updater');
@@ -19,12 +16,11 @@ var exec = async(function(inputFileName) {
         const updaterDirPath = path.join(updaterPath, 'updater');
         const parsersDirPath = path.join(updaterDirPath, 'parsers');
         const taskAssetsPath = inputFileName;
-        
+
         const handler = async(require(updaterDirPath));
         const parsers = require(parsersDirPath);
-    
+
         updateDatabase(taskAssetsPath, handler, parsers);
-    
     } else {
         throw new Error(
             '\n\n\tNot found task in command line arguments.\n\n' +

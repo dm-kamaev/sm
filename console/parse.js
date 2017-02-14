@@ -50,7 +50,7 @@ var parse = async(path => {
             item.school.cityId = moscow.id;
             var school = await(parseSchool(item.school));
 
-            if(item.giaResult.length) {
+            if (item.giaResult.length) {
                 initGiaResults(item.giaResult, school.id);
             }
             if (item.olimpResult.length) {
@@ -78,7 +78,7 @@ var getName = arr => {
  * @returns {*}
  */
 var getType = arr => {
-    if (arr.length > 1){
+    if (arr.length > 1) {
         return arr[1];
     } else {
         return 'unknown';
@@ -107,25 +107,25 @@ var nameParse = item => {
         }
     }
 
-    if( ~str.indexOf("»") && !(~str.indexOf("«")) ){
-        str = str.replace("»",'');
+    if (~str.indexOf('»') && !(~str.indexOf('«'))) {
+        str = str.replace('»', '');
     }
-    if(  (str.split("«").length) > (str.split("»").length) ){
-        str = str.replace("«",'');
+    if ((str.split('«').length) > (str.split('»').length)) {
+        str = str.replace('«', '');
     }
 
-    for(var ex in exclusion){
+    for (var ex in exclusion) {
         str = str.replace(ex, exclusion[ex]);
     }
 
-    for(var ignoreName in ignore){
+    for (var ignoreName in ignore) {
         ignore[ignoreName].forEach(name => {
-            if(~str.indexOf(name)) {
+            if (~str.indexOf(name)) {
                 arr[1] = ignoreName;
             }
         });
     }
-    str = str.replace(/№ /g,'№');
+    str = str.replace(/№ /g, '№');
     arr[0] = str;
 
     return arr;
@@ -138,8 +138,8 @@ var nameParse = item => {
  */
 var notIgnor = item => {
     var res = true;
-    for(ignorName in ignore){
-        if( item == ignorName ){
+    for (var ignorName in ignore) {
+        if (item == ignorName) {
             res = false;
         }
     }
@@ -189,18 +189,19 @@ var getEducationInterval = (opt_programms) => {
         }
     });
 
-	var result = null;
+    var result = null;
     if (!(res.begin == -1 && res.end == -1)) {
         result = [];
-        for (i = res.begin; i<=res.end; i++)
+        for (var i = res.begin; i <= res.end; i++) {
             result.push(i);
-	}
+        }
+    }
     return result;
 };
 
 /**
  * parses row
- * @param {String} row
+ * @param {string} row
  * @returns {Object}
  */
 var rowParse = row => {
@@ -216,6 +217,7 @@ var rowParse = row => {
 
 /**
  * parses row to school object
+ * @param {Array<string>} row
  * @return {Object}
  * */
 var rowToSchool = row => {
@@ -225,14 +227,14 @@ var rowToSchool = row => {
 
     return {
         name: schoolName.trim(),
-		fullName: row[FULL_NAME_INDEX].trim(),
+        fullName: row[FULL_NAME_INDEX].trim(),
         abbreviation: row[NAME_INDEX],
         schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getPhones(row),
         site: row[SITE_INDEX],
         addresses: getArray(row, ADDRESSES_INDEX)
-            .map(address=>{return {name: address, coords: []}; }),
+            .map(address => { return {name: address, coords: []}; }),
         govermentKey: row[GOVERMENT_KEY_INDEX],
         educationInterval: getEducationInterval(row[EDU_PROGRAMM_INDEX])
     };
@@ -245,7 +247,7 @@ var rowToSchool = row => {
  * @return {string[]}
  */
 var getPhones = function(row) {
-    var res =  getArray(row, PHONES_INDEX);
+    var res = getArray(row, PHONES_INDEX);
     if (res[0] && res[0].match(/\(000\)/)) {
         res = [];
     }
@@ -258,6 +260,7 @@ var getPhones = function(row) {
 
 /**
  * parses row to olimp object
+ * @param {Array<string>} row
  * @return {Array<Object>}
  * */
 var rowToOlimp = (row) => {
@@ -273,7 +276,7 @@ var rowToOlimp = (row) => {
         var types = rType
                 .replace(/[\r\n]/g, '')
                 .split(';'),
-            stages =  rStage
+            stages = rStage
                 .toString()
                 .replace(/[\r\n]/g, '')
                 .split(';'),
@@ -310,6 +313,7 @@ var rowToOlimp = (row) => {
 
 /**
  * parse row to GIA results
+ * @param {Array<string>} row
  * @return {Array.<Object>}
  * */
 var rowToGIA = (row) => {
@@ -364,13 +368,13 @@ var parseSchool = async((schoolData) => {
     console.log('Parse school: ' + schoolData.name);
 
     return school ?
-        await (services.school.update(school.id, schoolData)) :
-        await (services.school.create(schoolData));
+        await(services.school.update(school.id, schoolData)) :
+        await(services.school.create(schoolData));
 });
 
-var initGiaResults = async (function (giaResults, schoolId) {
+var initGiaResults = async(function(giaResults, schoolId) {
     giaResults.forEach(gia => {
-        var subject = await (services.subject.get({
+        var subject = await(services.subject.get({
             name: gia.subject
         }, {
             count: 'one',
@@ -380,11 +384,11 @@ var initGiaResults = async (function (giaResults, schoolId) {
         services.studyResult.createGia({
             count: gia.count,
             result: gia.result,
-            school_id: schoolId,
-            subject_id: subject.id
-        },{
+            'school_id': schoolId,
+            'subject_id': subject.id
+        }, {
             updateIfExists: true
-        })
+        });
     });
 });
 

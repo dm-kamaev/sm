@@ -63,7 +63,7 @@ class DistrictProcessor {
      * Create archive of district in db without their id,
      * then archive it
      */
-     archiveDbDistricts() {
+    archiveDbDistricts() {
         var dbDistricts = await(services.district.getAllWithAreas()),
             date = new Date().toJSON(),
             formattedDistricts = dbDistricts.map(district => {

@@ -3,7 +3,7 @@
 const commander = require('commander'),
     async = require('asyncawait/async'),
     await = require('asyncawait/await'),
-    Converter = require("csvtojson").Converter,
+    Converter = require('csvtojson').Converter,
     lodashCompact = require('lodash/compact');
 
 const services = require('../app/components/services').all,
@@ -23,8 +23,6 @@ const INPUT_DELIMITER = ',',
     OUTPUT_DELIMITER = '|';
 
 class DepartmentCreator {
-    constructor() {}
-
     /**
      * @param {string} filePath
      */
@@ -99,6 +97,7 @@ class DepartmentCreator {
     /**
      * @private
      * @param {Array<Object>} departmentsData
+     * @return {Array}
      */
     addToDb_(departmentsData) {
         return lodashCompact(departmentsData.map(department => {
