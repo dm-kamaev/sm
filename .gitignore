@@ -78,6 +78,7 @@ api/modules/school/controllers/commentAdminController.js
 api/modules/school/controllers/departmentAdminController.js
 api/modules/school/controllers/index.js
 api/modules/school/controllers/schoolAdminController.js
+api/modules/school/controllers/profileAdminController.js
 
 api/modules/school/models/school.js
 api/modules/school/models/specializedClassType.js
@@ -96,8 +97,10 @@ api/modules/school/services/profileAdminService.js
 api/modules/school/services/giaAdminService.js
 api/modules/school/services/examAdminService.js
 api/modules/school/services/additionalEducation.js
+api/modules/school/services/specializedClasses.js
 
 api/modules/school/views/commentView.js
+api/modules/school/views/profileAdminView.js
 
 api/modules/study/models/olimpResult.js
 api/modules/study/services/exceptions/*.js

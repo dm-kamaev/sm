@@ -9,6 +9,7 @@ import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {profileAdminService} from '../services/profileAdminService';
+import {view as profileAdminView} from '../views/profileAdminView';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 import {SchoolProfileNameIsShorter} from './errors/SchoolProfileNameIsShorter';
@@ -69,19 +70,24 @@ class ProfileAdminController extends Controller {
      *    }]
      */
     public async actionList(ctx: any, schoolId: string) {
-        return await profileAdminService.getList(parseInt(schoolId, 10));
+        const res = await profileAdminService.getList(parseInt(schoolId, 10));
+        return profileAdminView.listProfile(
+            res.specializedClasses,
+            res.hashClassType,
+        );
+
     }
 
 
      /**
-     * @api {get} /api/admin/school/:schoolId/profile/:profileNumber
+     * @api {get} /api/admin/school/:schoolId/profile/:id
      * Get school profile
      * @apiVersion 1.0.0
      * @apiName getProfileCurrentClass
      * @apiGroup School Profile Admin
      *
      * @apiParam {Number} schoolId  School's id.
-     * @apiParam {Number} profileNumber Profile's id.
+     * @apiParam {Number} id        Profile's id.
      *
      * @apiSuccess {Object}   profile               Profile
      * @apiSuccess {String}   profile.id            Id
@@ -101,9 +107,15 @@ class ProfileAdminController extends Controller {
      *    }
      */
     public async actionGet(ctx: any, schoolId: string, profileNumber: string) {
-        return await profileAdminService.getById(
+        const res = await profileAdminService.getById(
             parseInt(schoolId, 10),
             parseInt(profileNumber, 10)
+        );
+
+        return profileAdminView.oneProfile(
+            parseInt(profileNumber, 10),
+            res.specializedClass,
+            res.hashClassType
         );
     }
 
@@ -145,7 +157,7 @@ class ProfileAdminController extends Controller {
 
 
     /**
-    * @api {put} /api/admin/school/:schoolId/profile/:profileNumber
+    * @api {put} /api/admin/school/:schoolId/profile/:id
     * Update school profile class
     * @apiVersion 1.0.0
     * @apiName updateSchoolProfileClass
@@ -158,7 +170,7 @@ class ProfileAdminController extends Controller {
     *   }
     *
     * @apiParam {Number} schoolId  School's id.
-    * @apiParam {Number} profileNumber  profile class number.
+    * @apiParam {Number} id        Profile' id
     *
     * @apiSuccess {Number[][]} specializedClasses  array of array number.
     * @apiSuccess {Number[]}   specializedClass    array of number.
@@ -187,14 +199,14 @@ class ProfileAdminController extends Controller {
     }
 
     /**
-    * @api {delete} /api/admin/school/:schoolId/profile/:profileNumber
+    * @api {delete} /api/admin/school/:schoolId/profile/:id
     * Delete school profile class
     * @apiVersion 1.0.0
     * @apiName deleteSchoolProfileClass
     * @apiGroup School Profile Admin
     *
     * @apiParam {Number} schoolId  School's id.
-    * @apiParam {Number} profileNumber  profile class number.
+    * @apiParam {Number} id        Profile's id.
     *
     * @apiSuccess {Number} result delete
     *

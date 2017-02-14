@@ -3,47 +3,63 @@
 // author: dm-kamaev
 // service profile admin for school
 
-import SchoolModel from '../../school/models/school';
-import {SchoolInstance} from '../../school/models/school';
+import * as lodash from 'lodash';
+import SchoolModel from '../models/school';
+import {SchoolInstance} from '../models/school';
 import {
     Model as SpecializedClassTypeModel,
     SpecializedClassTypeInstance
-} from '../../school/models/specializedClassType';
+} from '../models/specializedClassType';
+
+import {service as specializedClassService}
+    from '../services/specializedClasses';
 
 import {SchoolProfileNameIsShorter} from
     './exceptions/SchoolProfileNameIsShorter';
 
-import {
-    ProfileGetList,
-    ProfileData,
-} from '../intefaces/ProfileAdmin';
+type profileData = {
+    classNumber: number;
+    profileId: number;
+};
 
+
+type getList = {
+    specializedClasses: number[][] | Array<undefined>;
+    hashClassType: { [key: string]: string }
+};
 
 class ProfileAdminService {
     public readonly name: string = 'profileAdminService';
 
-    public async getList(schoolId: number): Promise<ProfileGetList[]> {
-        let responce: Promise<ProfileGetList[]> | Array<undefined>;
+    public async getList(schoolId: number): Promise<getList> {
         const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
-        let res: ProfileGetList[];
+        const res: getList = { specializedClasses: [], hashClassType: {} };
         const specializedClasses: number[][] | null = school.specializedClasses;
         if (specializedClasses) {
-            res =
-                await this.getListProfileClasses_(specializedClasses);
-            responce = Promise.all(res);
-        } else {
-            responce = [];
+            const hashClassType: { [key: string]: string }
+                = await this.getHashClassType_();
+            res.specializedClasses = specializedClasses;
+            res.hashClassType = hashClassType;
         }
-        return responce;
+        return res;
     }
 
 
     public async getById(
         schoolId: number,
         profileNumber: number
-    ): Promise<ProfileGetList | {}> {
-        const list: ProfileGetList[] = await this.getList(schoolId);
-        return list[profileNumber - 1] || {};
+    ): Promise<{
+        specializedClass: number[],
+        hashClassType: { [key: string]: string }
+    }> {
+        const data: getList = await this.getList(schoolId);
+        const specializedClasses: number[][] | Array<undefined>
+            = data.specializedClasses;
+        ;
+        return {
+            specializedClass: specializedClasses[profileNumber - 1] || [],
+            hashClassType: data.hashClassType
+        };
     }
 
 
@@ -83,7 +99,7 @@ class ProfileAdminService {
 
     public async create(
         schoolId: number,
-    profileData: ProfileData
+    profileData: profileData
     ): Promise<number[][]> {
         const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
         let specializedClasses: number[][] = [];
@@ -111,7 +127,7 @@ class ProfileAdminService {
     public async update(
         schoolId: number,
         profileNumber: number,
-        profileData: ProfileData
+        profileData: profileData
     ): Promise<number[][]> {
         const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
         let specializedClasses: number[][] = [];
@@ -190,39 +206,17 @@ class ProfileAdminService {
     }
 
 
-    private async getListProfileClasses_(
-        specializedClasses
-    ): Promise<ProfileGetList[]> {
-        return specializedClasses.map(async(specializedClass, i) => {
-            const specializedClassId: number = specializedClass[1];
-            const specializedClassName: string =
-                await this.getSpecializedClassName_(specializedClassId);
-            return {
-                id: i + 1,
-                classNumber: specializedClass[0],
-                profile: {
-                    id: specializedClassId,
-                    name: specializedClassName
-                }
-            };
+    // get hash { classType.id: classType.name }
+    private async getHashClassType_(): Promise<{[key: string]: string}> {
+        const classTypes: SpecializedClassTypeInstance[]
+            = await specializedClassService.getAllTypes();
+        const hashClassType: { [key: string]: string } = {};
+        classTypes.forEach((classType: SpecializedClassTypeInstance) => {
+            hashClassType[classType.id] = classType.name;
         });
+        return hashClassType;
     }
 
-    private async getSpecializedClassName_(
-        specializedClassId: number
-    ): Promise<string> {
-        let specializedClassInstance: SpecializedClassTypeInstance | null;
-        specializedClassInstance = await SpecializedClassTypeModel.findOne({
-            where: {
-                id: specializedClassId,
-            }
-        });
-        let name: string = '';
-        if (specializedClassInstance) {
-            name = specializedClassInstance.name;
-        }
-        return name;
-    }
 
     private capitalize_(str: string): string {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();

@@ -12,7 +12,7 @@ import {DepartmentAdminController} from './departmentAdminController';
 const departmentAdminController = new DepartmentAdminController();
 
 import {ProfileAdminController}
-    from '../../study/controllers/profileAdminController';
+    from './profileAdminController';
 const profileAdminController = new ProfileAdminController();
 
 import {GiaAdminController} from '../../study/controllers/giaAdminController';
@@ -119,7 +119,6 @@ initCrudRouting(
 initCrudRouting(
     '/admin/school/:schoolId/profile',
     profileAdminController,
-    ':profileNumber'
 );
 
 router.get('/admin/schoolclasses', profileAdminController.actionListClasses);
