@@ -12,7 +12,9 @@ const specializedClassesView = require('./specializedClassesView.js');
 const ratingView = require('./ratingView.js');
 const egeResultView = require('../../study/views/egeResultView.js');
 const giaResultView = require('../../study/views/giaResultView.js');
-const olimpResultView = require('../../study/views/olimpResultView.js');
+const olympiadResultsView =
+    require('../../../../app/modules/school/views/olympiadResultView')
+        .olympiadResultsView;
 const scoreView = require('../views/scoreView');
 const scoreEntityView = require('../../entity/views/scoreView');
 const seoView = require('./seoView.js');
@@ -84,7 +86,7 @@ schoolView.default = function(
                 data.gia,
                 data.city
             ),
-            olymp: olimpResultView.transformResults(data.olymp)
+            olymp: olympiadResultsView.render(data.olymp)
         },
         authSocialLinks: data.authSocialLinks,
         reviewCount: schoolInstance.totalScore ?

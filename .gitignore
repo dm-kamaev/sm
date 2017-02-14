@@ -107,6 +107,7 @@ api/modules/study/services/exceptions/*.js
 api/modules/study/services/olimpResult.js
 api/modules/study/controllers/errors/*.js
 api/modules/study/controllers/olympiadAdminController.js
+app/modules/school/views/olympiadResultView.js
 
 api/modules/study/controllers/*.js
 api/modules/study/controllers/errors/*.js
