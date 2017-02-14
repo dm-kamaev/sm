@@ -69,14 +69,8 @@ goog.scope(function() {
  * creates sm.lSearch.SearchExperimental instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
-        sm.lSearch.ViewExperimental.CssClass.ROOT
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lSearch.SearchExperimental,
+        sm.lSearch.ViewExperimental
     );
-
-    if (domElement) {
-        sm.iCloblFactory.FactoryExperimental.getInstance().decorate(
-            sm.lSearch.SearchExperimental.NAME,
-            domElement
-        );
-    }
 });

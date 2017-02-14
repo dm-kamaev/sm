@@ -162,34 +162,21 @@ goog.scope(function() {
      * Init layout instance
      * @param {Object} layout constructor for instanse
      * @param {Object} view
-     * @return {Object} control
      * @public
      */
     Layout.autoInstance = function(layout, view) {
-        return Layout.createInstance_.call(layout, view);
-    };
+        var domElement = goog.dom.getElementByClass(view.CssClass.ROOT);
 
+        if (domElement) {
+            var params = goog.dom.dataset.get(domElement, 'params');
+            var factoryName = goog.json.parse(params)['modifier'];
 
-    /**
-     * Init layout instance
-     * @this layout constructor
-     * @param {Object} view
-     * @return {Object} control
-     * @private
-     */
-    Layout.createInstance_ = function(view) {
-        var domElement = goog.dom.getElementByClass(
-            view.CssClass.ROOT
-        );
+            var factory = factoryName == 'stendhal' ?
+                sm.iCloblFactory.FactoryStendhal :
+                sm.iCloblFactory.FactoryExperimental;
 
-        var params = goog.dom.dataset.get(domElement, 'params');
-        var factoryName = goog.json.parse(params)['modifier'];
-
-        var factory = factoryName == 'stendhal' ?
-            sm.iCloblFactory.FactoryStendhal :
-            sm.iCloblFactory.FactoryExperimental;
-
-        return factory.getInstance().decorate(this.NAME, domElement);
+            factory.getInstance().decorate(layout.NAME, domElement);
+        }
     };
 
 });  // goog.scope
