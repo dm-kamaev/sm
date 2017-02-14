@@ -60,7 +60,7 @@ class OlympiadAdminController extends Controller {
      *         class: 10,
      *         status: "победитель",
      *         year: 2016,
-     *         amount: 5
+     *         awardeeAmount: 5
      *     }
      *
      * @apiUse OlympiadResultsNotFoundError
@@ -167,7 +167,7 @@ class OlympiadAdminController extends Controller {
      *         class: 10,
      *         status: "победитель",
      *         year: 2016,
-     *         amount: 5
+     *         awardeeAmount: 5
      *     }
      */
     public async actionCreate(actionContext: any, schoolId: number) {
@@ -243,7 +243,7 @@ class OlympiadAdminController extends Controller {
      *         class: 10,
      *         status: "победитель",
      *         year: 2016,
-     *         amount: 5
+     *         awardeeAmount: 5
      *     }
      *
      * @apiUse OlympiadResultsNotFoundError
@@ -260,7 +260,7 @@ class OlympiadAdminController extends Controller {
             year: data.year,
             stage: data.stage,
             status: data.status,
-            amount: data.amount
+            awardeeAmount: data.awardeeAmount
         });
     }
 
@@ -330,7 +330,7 @@ class OlympiadAdminController extends Controller {
      *         class: 10,
      *         status: "победитель",
      *         year: 2016,
-     *         amount: 5
+     *         awardeeAmount: 5
      *     }
      */
     public async actionFind(actionContext: any, schoolId: number) {
