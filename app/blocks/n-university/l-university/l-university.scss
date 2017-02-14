@@ -5,6 +5,7 @@
 }
 
 .l-university__body {
+    min-height: 975px;
     margin: 0 auto 60px;
 
     color: #000;
@@ -59,7 +60,7 @@
     width: 315px;
 }
 
-.l-university__summary-board{
+.l-university__summary-board {
     margin-bottom: 30px;
 }
 
@@ -104,7 +105,7 @@
     margin-bottom: 30px;
 }
 
-.l-university__banner_size_XS {
+.l-university__banner_size_xs {
     display: none;
 }
 
@@ -135,6 +136,10 @@
 
     .l-university__description-list {
         width: calc(100% - 355px);
+    }
+
+    .l-university__body {
+        min-height: 1130px;
     }
 }
 
@@ -171,10 +176,11 @@
         display: none;
     }
 
-    .l-university__banner_size_XS {
-        display: block;
+    .l-university__banner_size_xs {
         position: relative;
         left: -30px;
+
+        display: block;
 
         width: calc(100% + 60px);
     }

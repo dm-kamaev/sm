@@ -39,6 +39,7 @@ goog.require('sm.bSmSearchPanel.Template');
 goog.require('sm.bSmSketch.Template');
 goog.require('sm.bSmStars.Template');
 goog.require('sm.bSmSubheader.Template');
+goog.require('sm.bSmSubscribeBoard.Template');
 goog.require('sm.bSummaryBoard.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
@@ -367,6 +368,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smBanner',
             sm.bSmBanner.Template.banner
+        )
+        .setTemplateListItem(
+            'smSubscribeBoard',
+            sm.bSmSubscribeBoard.Template.board
         );
 
     /** l-information blocks **/

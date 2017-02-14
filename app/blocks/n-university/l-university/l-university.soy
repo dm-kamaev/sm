@@ -35,7 +35,8 @@
  *              sm.lUniversity.bDescriptionList.Template.Params,
  *         summaryBoard: sm.bSummaryBoard.Template.Params,
  *         banner: sm.bSmBanner.Template.Params
- *     }
+ *     },
+ *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params
  * }} sm.lUniversity.Template.Data
  */
 
@@ -221,6 +222,7 @@
         {call .description_ data="all" /}
         {call .summaryBoard_ data="all" /}
         {call .descriptionList_ data="all" /}
+        {call .subscribeBoard_ data="all" /}
         {call .bannerSizeXS_ data="all" /}
     </div>
 {/template}
@@ -333,6 +335,27 @@
 
 
 /**
+ * Subscribe block input email
+ * @param params {{
+ *     data: sm.lUniversity.Template.Data,
+ *     config: string
+ * }}
+ * @private
+ */
+{template .subscribeBoard_}
+    <div class="{call .rootClass/}__subscribe-board">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smSubscribeBoard',
+                'renderParams': $params.data.subscribeBoard
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
  * Banner size XS
  * @param params {{
  *     data: sm.lUniversity.Template.Data,
@@ -341,7 +364,7 @@
  * @private
  */
 {template .bannerSizeXS_}
-    <div class="{call .rootClass/}__banner_size_XS">
+    <div class="{call .rootClass/}__banner_size_xs">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,

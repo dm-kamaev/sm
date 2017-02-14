@@ -1,0 +1,46 @@
+{namespace sm.bSmSubscribeBoard.Template}
+
+
+/**
+ * @typedef {{
+ *      description: string,
+ *      input: cl.gInput.Template.Params
+ * }} sm.bSmSubscribeBoard.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ * }} sm.bSmSubscribeBoard.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data:  sm.bSmSubscribeBoard.Template.Params.Data,
+ *     config: sm.bSmSubscribeBoard.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .board}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @override
+ */
+{template .body}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-subscribe-board
+{/template}
