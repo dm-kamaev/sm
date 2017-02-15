@@ -5,7 +5,7 @@
 
 import {GiaResultInstance} from '../../study/models/giaResult';
 
-import {examResult, examResultEdit} from '../intefaces/ExamAdmin';
+import {examResult, examResultEdit} from '../types/ExamAdmin';
 
 class View {
 
@@ -16,7 +16,7 @@ class View {
         if (!gias) {
             return [];
         }
-        return gias.map((gia) => {
+        return gias.map((gia: GiaResultInstance): examResult => {
             const subject: string =
                 hashSubjectName[gia.subjectId] || '';
             return this.oneGia_(gia, subject);
@@ -62,7 +62,10 @@ class View {
     }
 
 
-    private oneGia_(gia, subject) {
+    private oneGia_(
+        gia: GiaResultInstance,
+        subject: string
+    ): examResult {
         return {
             id: gia.id,
             subject,
