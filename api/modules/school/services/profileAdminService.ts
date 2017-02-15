@@ -4,7 +4,7 @@
 // service profile admin for school
 
 import * as lodash from 'lodash';
-import SchoolModel from '../models/school';
+import {Model} from '../models/school';
 import {SchoolInstance} from '../models/school';
 import {
     Model as SpecializedClassTypeModel,
@@ -184,7 +184,7 @@ class ProfileAdminService {
         schoolId: number,
         specializedClasses: number[][]
     ): Promise<[number, SchoolInstance[]]> {
-        return await SchoolModel.update({
+        return await Model.update({
             specializedClasses
         }, {
             where: {
@@ -198,7 +198,7 @@ class ProfileAdminService {
     private async getSchoolInstance_(
         schoolId: number
     ): Promise<SchoolInstance> {
-        return await SchoolModel.findOne({
+        return await Model.findOne({
             where: {
                 id: schoolId
             }

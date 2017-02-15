@@ -82,7 +82,7 @@ class OlympiadResultsView {
             top: result.top.sort(this.sorter_),
             middle: result.middle.sort(this.sorter_),
             bottom: result.bottom.sort(this.sorter_)
-        }
+        };
     }
 
     private renderYearResult_(

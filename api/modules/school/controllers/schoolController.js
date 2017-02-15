@@ -19,6 +19,8 @@ const mapViewType = require('../../entity/enums/mapViewType'),
     entityType = require('../../entity/enums/entityType');
 
 
+const util = require('util');
+
 /**
  * @api {get} api/school Get school list
  * @apiVersion 0.0.0

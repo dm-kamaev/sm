@@ -72,25 +72,25 @@ router.post('/school/:id/comment', csrf, schoolController.createComment);
 
 router.get(
     '/school/:schoolId/comment/:commentId',
-    commentAdminController.actionGetComment
+    commentAdminController.actionGet
 );
 router.get(
     '/school/:schoolId/comment',
-    commentAdminController.actionGetAllComments
+    commentAdminController.actionList
 );
 router.put(
     '/school/:schoolId/comment/:commentId',
     checkToken,
-    commentAdminController.actionUpdateText
+    commentAdminController.actionUpdate
 );
 router.delete(
     '/school/:schoolId/comment/:commentId',
     checkToken,
-    commentAdminController.actionRemoveComment
+    commentAdminController.actionDelete
 );
 
 router.get('/admin/school/:id', schoolAdminController.actionGet);
-router.get('/admin/school', schoolAdminController.actionGetAllSchool);
+router.get('/admin/school', schoolAdminController.actionList);
 router.post('/admin/school', checkToken, schoolAdminController.actionCreate);
 router.put(
     '/admin/school/:schoolId',
