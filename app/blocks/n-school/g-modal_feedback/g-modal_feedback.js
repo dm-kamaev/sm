@@ -262,7 +262,7 @@ goog.scope(function() {
         var view = this.getView();
         this.elements_.inputs = [];
 
-        for (var i = 0; input = view.getDom().inputs[i]; i++) {
+        for (var i = 0, input; input = view.getDom().inputs[i]; i++) {
             this.elements_.inputs[i] = this.decorateChild(
                 sm.gInput.InputStendhal.NAME, input
             );

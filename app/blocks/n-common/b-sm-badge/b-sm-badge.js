@@ -19,6 +19,14 @@ sm.bSmBadge.SmBadge = function(view, opt_domHelper) {
 
 
     /**
+     * Items - links instance
+     * @type {Array<sm.bSmLink.SmLink>}
+     * @private
+     */
+    this.items_ = [];
+
+
+    /**
      * Link hint
      * @type {sm.bSmLink.SmLink}
      * @private
@@ -44,16 +52,6 @@ goog.scope(function() {
 
 
     /**
-     * Possible antity types
-     * @enum {string}
-     */
-    Badge.EntityType = {
-        SCHOOL: 'school',
-        COURSE: 'course'
-    };
-
-
-    /**
      * @typedef {sm.bSmBadge.View.RenderParams}
      */
     sm.bSmBadge.SmBadge.RenderParams;
@@ -76,7 +74,20 @@ goog.scope(function() {
     Badge.prototype.decorateInternal = function(element) {
         Badge.base(this, 'decorateInternal', element);
 
+        this.initItems_();
         this.initLinkHint_();
+    };
+
+
+    /**
+     * Init items
+     * @private
+     */
+    Badge.prototype.initItems_ = function() {
+        this.items_ = this.decorateChildren(
+            sm.bSmLink.SmLink.NAME,
+            this.getView().getDom().items
+        );
     };
 
 
@@ -85,11 +96,6 @@ goog.scope(function() {
      */
     Badge.prototype.enterDocument = function() {
         Badge.base(this, 'enterDocument');
-
-        this.viewListen(
-            View.Event.ITEM_CLICK,
-            this.onItemClick_
-        );
     };
 
 
@@ -102,7 +108,7 @@ goog.scope(function() {
 
         if (link) {
             this.linkHint_ = this.decorateChild(
-                'smLink',
+                sm.bSmLink.SmLink.NAME,
                 link
             );
         }

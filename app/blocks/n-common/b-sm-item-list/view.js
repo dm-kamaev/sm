@@ -127,20 +127,15 @@ goog.scope(function() {
 
     /**
      * Initializes items (Dom elements)
-     * @param {Element=} opt_element
      * @public
      */
-    View.prototype.initItems = function(opt_element) {
-        var element = opt_element || this.getElement();
-
+    View.prototype.initItems = function() {
         this.dom.items = this.getElementsByClass(
-            sm.bSmItemList.View.CssClass.ITEM,
-            element
+            sm.bSmItemList.View.CssClass.ITEM
         );
 
         this.dom.itemWrappers = this.getElementsByClass(
-            sm.bSmItemList.View.CssClass.ITEM_WRAP,
-            element
+            sm.bSmItemList.View.CssClass.ITEM_WRAP
         );
     };
 

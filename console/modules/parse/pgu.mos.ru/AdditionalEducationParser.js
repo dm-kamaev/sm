@@ -1,13 +1,12 @@
 'use strict';
 
 var await = require('asyncawait/await'),
-    lodash = require('lodash'),
-    services = require.main.require('./app/components/services').all,
-    fs = require('fs'),
+    lodash = require('lodash');
+var services = require.main.require('./app/components/services').all;
+var fs = require('fs'),
     path = require('path');
 
-var geoConverter = require('../../geo/Converter'),
-    CsvConverter = require('../../modelArchiver/CsvConverter'),
+var CsvConverter = require('../../modelArchiver/CsvConverter'),
     SchoolSearcher = require('../SchoolSearcher'),
     Archiver = require('../../modelArchiver/Archiver'),
     confusionSchools = require('./confusionSchools.json'),
@@ -33,7 +32,9 @@ class AdditionalEducationParser {
     process() {
         this.clearDb_();
         var activitiesBySchool = this.parse_();
-        var addedActivities = this.addActivitiesToDb_(activitiesBySchool.slice(0, 2));
+        var addedActivities = this.addActivitiesToDb_(
+            activitiesBySchool.slice(0, 2)
+        );
 
         this.writeToArchive_(addedActivities);
     }
@@ -77,6 +78,7 @@ class AdditionalEducationParser {
     /**
      * @private
      * @param {array<object>} activities
+     * @return {string}
      */
     createCsv_(activities) {
         var csvConverter = new CsvConverter(activities);
@@ -94,7 +96,7 @@ class AdditionalEducationParser {
             Array.prototype.push.apply(
                 result,
                 this.addSchoolActivitiesToDb_(school)
-            )
+            );
         });
         return result;
     }
@@ -102,6 +104,7 @@ class AdditionalEducationParser {
     /**
      * @private
      * @param {object} school
+     * @return {Array<Object>}
      */
     addSchoolActivitiesToDb_(school) {
         var schoolId = school.id;
@@ -131,6 +134,7 @@ class AdditionalEducationParser {
      * @private
      * @param {number} schoolId
      * @param {object} activity
+     * @return {Object}
      */
     prepareActivity_(schoolId, activity) {
         var preparedActivity = {},
@@ -164,7 +168,7 @@ class AdditionalEducationParser {
      * Gets activities from file/directory
      * @private
      * @param {array<string>} fileNames
-     * @return <array<object>
+     * @return {array<object>}
      */
     getActivities_() {
         var activities,
@@ -260,7 +264,7 @@ class AdditionalEducationParser {
 
     /**
      * @private
-     * @param {array<object>} schools
+     * @param {array<object>} activities
      * @return {array<object>}
      */
     parseActivities_(activities) {
@@ -289,6 +293,7 @@ class AdditionalEducationParser {
     /**
      * @private
      * @param {string} name
+     * @return {string}
      */
     parseSchoolName_(name) {
         var parsedName = '';
@@ -311,7 +316,7 @@ class AdditionalEducationParser {
         var i = array.length,
             uniqArray = [];
         console.log(i);
-        while(i--) {
+        while (i--) {
             if (!(i % 1000)) {
                 process.stdout.clearLine();
                 process.stdout.cursorTo(0);
@@ -343,11 +348,10 @@ class AdditionalEducationParser {
                 maxDescription.length ? {
                     length: activity.description.length,
                     text: activity.description
-                }  : maxDescription;
+                } : maxDescription;
             var schoolName = activity.school;
             if (confusionSchools.indexOf(schoolName) === -1 &&
                 schoolName.indexOf('Москомспорта') === -1) {
-
                 if (sortBySchool.hasOwnProperty(schoolName)) {
                     sortBySchool[schoolName].push(activity);
                 } else {

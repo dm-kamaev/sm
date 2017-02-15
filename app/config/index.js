@@ -1,11 +1,11 @@
-'use strict'
+'use strict';
 
 var fs = require('fs');
 var dbConfig = require('./config.db.json');
 var logConfig = require('./config.log.json');
-var config  = require('./config.json');
+var config = require('./config.json');
 
-var checkEnvironment = function () {
+var checkEnvironment = function() {
     if (fs.existsSync('./config.local.json')) {
         config = require('./config.local.json');
     }

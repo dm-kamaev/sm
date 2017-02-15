@@ -1,8 +1,7 @@
 'use strict';
 
 const commander = require('commander'),
-    async = require('asyncawait/async'),
-    await = require('asyncawait/await');
+    async = require('asyncawait/async');
 
 const SpecializedClassesOperator =
     require('./modules/SpecializedClasses/SpecializedClassesOperator');

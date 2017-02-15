@@ -32,14 +32,6 @@ sm.bSmItem.SmItemEntity = function(view, opt_domHelper) {
 
 
     /**
-     * Badges instances
-     * @type {Array<sm.bSmBadge.SmBadge>}
-     * @private
-     */
-    this.badges_ = [];
-
-
-    /**
      * Favorite Link Instance
      * @type {sm.bFavoriteLink.FavoriteLink}
      * @private
@@ -103,7 +95,6 @@ goog.scope(function() {
         Item.base(this, 'decorateInternal', element);
 
         this.initScore_();
-        this.initBadges_();
         this.initFavoriteLink_();
     };
 

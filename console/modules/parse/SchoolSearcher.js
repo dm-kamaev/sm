@@ -11,7 +11,6 @@ class SchoolSearcher {
      * @param {array<object>} schools
      */
     constructor(schools) {
-
         /**
          * @private
          * @type {array<object>}
@@ -55,7 +54,7 @@ class SchoolSearcher {
                 } else {
                     this.notFoundSchools_.push(school);
                 }
-        }));
+            }));
     }
 
     /**
@@ -84,7 +83,7 @@ class SchoolSearcher {
                 inQuotes: this.getInQuotes_(name),
                 type: this.getType_(name),
                 data: school.data
-            }
+            };
 
         result.rest = this.getRest_(result);
 
@@ -128,16 +127,13 @@ class SchoolSearcher {
                     return sameNumberSchool.name === dbSchoolName;
                 })
             ) {
-
                 school.id = dbSchool.id;
                 foundCount++;
-
             } else if (dbSchool.number &&
                 dbSchool.number === school.number &&
 
                 dbSchool.type === school.type
             ) {
-
                 school.id = dbSchool.id;
                 foundCount++;
             }

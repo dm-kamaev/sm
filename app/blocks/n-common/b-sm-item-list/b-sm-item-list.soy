@@ -1,5 +1,6 @@
 /**
- * @fileOverview itemType can be smItem, smItemEntity, smLink
+ * @fileOverview itemType can be smItem, smItemEntity, smItemCompact, smLink,
+ * lCourse-department
  */
 
 {namespace sm.bSmItemList.Template}
@@ -10,13 +11,19 @@
  *     items: Array<(
  *         sm.bSmItem.Template.Params.Data|
  *         sm.bSmItem.TemplateEntity.Params.Data|
- *         sm.bSmLink.Template.Params.Data
+ *         sm.bSmItem.TemplateCompact.Params.Data|
+ *         sm.bSmLink.Template.Params.Data|
+ *         sm.lCourse.bDepartment.Template.Params.Data
  *     )>,
  *     itemType: string,
  *     countItemsPerPage: (number|undefined),
- *     itemConfig: (sm.bSmItem.Template.Params.Config|
+ *     itemConfig: (
+ *         sm.bSmItem.Template.Params.Config|
  *         sm.bSmItem.TemplateEntity.Params.Config|
- *         sm.bSmLink.Template.Params.Config)
+ *         sm.bSmItem.TemplateCompact.Params.Config|
+ *         sm.bSmLink.Template.Params.Config|
+ *         undefined
+ *     )
  * }} sm.bSmItemList.Template.Params.Data
  */
 
@@ -72,10 +79,20 @@
  *     data: {
  *         items: Array<(
  *             sm.bSmItem.Template.Params.Data|
- *             sm.bSmItem.TemplateEntity.Params.Data
+ *             sm.bSmItem.TemplateEntity.Params.Data|
+ *             sm.bSmItem.TemplateCompact.Params.Data|
+ *             sm.bSmLink.Template.Params.Data|
+ *             sm.lCourse.bDepartment.Template.Params.Data
  *         )>,
  *         itemType: string,
- *         countItemsPerPage: (number|undefined)
+ *         countItemsPerPage: (number|undefined),
+ *         itemConfig: (
+ *             sm.bSmItem.Template.Params.Config|
+ *             sm.bSmItem.TemplateEntity.Params.Config|
+ *             sm.bSmItem.TemplateCompact.Params.Config|
+ *             sm.bSmLink.Template.Params.Config|
+ *             undefined
+ *         )
  *     },
  *     config: {
  *         stylizationModifier: (string|undefined)
@@ -96,14 +113,20 @@
  *     data: {
  *         items: Array<(
  *             sm.bSmItem.Template.Params.Data|
- *             sm.bSmItem.TemplateEntity.Params.Data
+ *             sm.bSmItem.TemplateEntity.Params.Data|
+ *             sm.bSmItem.TemplateCompact.Params.Data|
+ *             sm.bSmLink.Template.Params.Data|
+ *             sm.lCourse.bDepartment.Template.Params.Data
  *         )>,
  *         itemType: string,
  *         countItemsPerPage: ?number,
- *         itemConfig: (sm.bSmItem.Template.Params.Config|
+ *         itemConfig: (
+ *             sm.bSmItem.Template.Params.Config|
  *             sm.bSmItem.TemplateEntity.Params.Config|
+ *             sm.bSmItem.TemplateCompact.Params.Config|
  *             sm.bSmLink.Template.Params.Config|
- *             undefined)
+ *             undefined
+ *         )
  *     },
  *     config: {
  *         stylizationModifier: (string|undefined)
@@ -145,12 +168,18 @@
  *     data: {
  *         item: (
  *             sm.bSmItem.Template.Params.Data|
- *             sm.bSmItem.TemplateEntity.Params.Data
+ *             sm.bSmItem.TemplateEntity.Params.Data|
+ *             sm.bSmItem.TemplateCompact.Params.Data|
+ *             sm.bSmLink.Template.Params.Data|
+ *             sm.lCourse.bDepartment.Template.Params.Data
  *         ),
- *         itemConfig: (sm.bSmItem.Template.Params.Config|
+ *         itemConfig: (
+ *             sm.bSmItem.Template.Params.Config|
  *             sm.bSmItem.TemplateEntity.Params.Config|
+ *             sm.bSmItem.TemplateCompact.Params.Config|
  *             sm.bSmLink.Template.Params.Config|
- *             undefined)
+ *             undefined
+ *         )
  *     },
  *     config: {
  *         type: string,
@@ -196,10 +225,13 @@
  * Attributes
  * @param params {{
  *     data: {
- *         itemConfig: (sm.bSmItem.Template.Params.Config|
+ *         itemConfig: (
+ *             sm.bSmItem.Template.Params.Config|
  *             sm.bSmItem.TemplateEntity.Params.Config|
+ *             sm.bSmItem.TemplateCompact.Params.Config|
  *             sm.bSmLink.Template.Params.Config|
- *             undefined),
+ *             undefined
+ *         ),
  *         itemType: ?string,
  *         countItemsPerPage: ?number
  *     }

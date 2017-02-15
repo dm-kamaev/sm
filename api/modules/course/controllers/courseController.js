@@ -376,15 +376,19 @@ controller.enrollOnCourse = async(function(req, res) {
  */
 controller.list = async(function(req, res) {
     let result;
+    const accessAttributes = req.adminUser && req.adminUser.accessAttributes;
+    const brandId = accessAttributes && accessAttributes.brandId;
+    const courseParams = brandId ?
+        {brandId: brandId} :
+        undefined;
     try {
-        let courses = await(services.course.getAll());
+        let courses = await(services.course.getAll(courseParams));
         result = courseView.renderList(courses);
     } catch (error) {
         logger.error(error);
         result = error;
     } finally {
-        res.header('Content-Type', 'application/json; charset=utf-8');
-        res.end(JSON.stringify(result));
+        res.send(result);
     }
 });
 
@@ -437,6 +441,7 @@ controller.get = async(function(req, res) {
  * @apiSuccess {Course} course
  * @apiParamExample {json} Response-example
  *     {
+ *         "brandId": 1,
  *         "brandName": "Maximum",
  *         "type": 2,
  *         "name": "courses name",
@@ -450,6 +455,7 @@ controller.get = async(function(req, res) {
 controller.create = async(function(req, res) {
     let result, body = req.body || {},
         courseData = {
+            brandId: body.brandId,
             brandName: body.brandName,
             type: body.type,
             name: body.name,
@@ -457,7 +463,7 @@ controller.create = async(function(req, res) {
             fullDescription: body.fullDescription,
             learningOutcome: body.learningOutcome,
             about: body.about,
-            embedId: body.embedId,
+            embedId: body.embedId
         };
     try {
         if (req.files) {

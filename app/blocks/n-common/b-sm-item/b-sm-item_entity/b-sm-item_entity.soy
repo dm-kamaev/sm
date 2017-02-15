@@ -117,7 +117,7 @@
     {/let}
 
     <div class="{$classes}">
-        {call .description_ data="all" /}
+        {call .description data="all" /}
 
         {call .brand_ data="all" /}
 
@@ -269,23 +269,6 @@
             ]/}
         {/call}
     </div>
-{/template}
-
-
-/**
- * Description
- * @param params {{
- *     data: {
- *         description: (string|undefined)
- *     }
- * }}
- */
-{template .description_}
-    {if $params.data?.description}
-        <div class="{call .rootClass/}__description">
-            {$params.data.description}
-        </div>
-    {/if}
 {/template}
 
 
@@ -500,8 +483,7 @@
  *         type: string
  *     },
  *     config: {
- *         enableCover: (boolean|undefined),
- *         stylizationModifier: string
+ *         enableCover: (boolean|undefined)
  *     }
  * }}
  * @override
@@ -509,6 +491,5 @@
 {template .additionalClasses}
     {call .super_additionalClasses data="all"/}{sp}
 
-    {call .rootClass/}_entity{sp}
-    {call .rootClass/}_type_{$params.data.type}
+    {call .rootClass/}_entity
 {/template}

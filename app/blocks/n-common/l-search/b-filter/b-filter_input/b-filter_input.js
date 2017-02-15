@@ -108,7 +108,7 @@ goog.scope(function() {
 
     /**
      * Get all options data
-     * @return {{}}
+     * @return {Object}
      */
     FilterInput.prototype.getAllData = function() {
         return this.allOptionsData;

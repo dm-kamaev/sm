@@ -37,6 +37,7 @@ sm.bSmItemList.SmItemList = function(view, opt_domHelper) {
      * Item instances
      * @type {(sm.bSmItem.SmItem|
      *     sm.bSmItem.SmItemEntity|
+     *     sm.bSmItem.SmItemCompact|
      *     sm.bSmLink.SmLink|
      *     sm.lCourse.bDepartment.Department)}
      * @private
@@ -54,6 +55,7 @@ sm.bSmItemList.SmItemList = function(view, opt_domHelper) {
 
     /**
      * Item config which item list rendered
+     * @type {Object}
      * @private
      */
     this.itemConfig_ = {};
@@ -70,19 +72,18 @@ goog.scope(function() {
 
     /**
      * Name of this element in factory
+     * @const {string}
      */
     ItemList.NAME = sm.bSmItemList.Template.NAME();
 
-    sm.iCloblFactory.FactoryStendhal.getInstance().register(ItemList.NAME, {
-        control: ItemList,
-        view: View
-    });
 
     /**
      * @typedef {(
      *     sm.bSmItem.SmItem.RenderParams|
      *     sm.bSmItem.SmItemEntity.RenderParams|
-     *     sm.bSmLink.SmLink.RenderParams)}
+     *     sm.bSmLink.SmLink.RenderParams|
+     *     sm.lCourse.bDepartment.Department.RenderParams
+     * )}
      */
     ItemList.Item;
 
@@ -104,6 +105,7 @@ goog.scope(function() {
     ItemList.ItemType = {
         ITEM: sm.bSmItem.SmItem.NAME,
         ITEM_ENTITY: sm.bSmItem.SmItemEntity.NAME,
+        ITEM_COMPACT: sm.bSmItem.SmItemCompact.NAME,
         LINK: sm.bSmLink.SmLink.NAME,
         DEPARTMENT: sm.lCourse.bDepartment.Department.NAME
     };
@@ -475,20 +477,12 @@ goog.scope(function() {
     ItemList.prototype.initItems_ = function() {
         this.getView().initItems();
 
-        var items = this.getView().getDom().items,
-            type = this.params.itemType,
-            instance;
-
         this.items_ = [];
 
-        for (var i = 0; i < items.length; i++) {
-            instance = this.decorateChild(
-                type,
-                items[i]
-            );
-
-            this.items_.push(instance);
-        }
+        this.items_ = this.decorateChildren(
+            this.params.itemType,
+            this.getView().getDom().items
+        );
     };
 
 
@@ -504,6 +498,8 @@ goog.scope(function() {
             sm.bSmItem.SmItem.Event;
         ItemEvent[ItemList.ItemType.ITEM_ENTITY] =
             sm.bSmItem.SmItemEntity.Event;
+        ItemEvent[ItemList.ItemType.ITEM_COMPACT] =
+            sm.bSmItem.SmItemCompact.Event;
         ItemEvent[ItemList.ItemType.LINK] =
             sm.bSmLink.SmLink.Event;
         ItemEvent[ItemList.ItemType.DEPARTMENT] =
@@ -524,6 +520,8 @@ goog.scope(function() {
                 sm.bSmItem.SmItem.getRenderParams;
             transformators[ItemList.ItemType.ITEM_ENTITY] =
                 sm.bSmItem.SmItemEntity.getRenderParams;
+            transformators[ItemList.ItemType.ITEM_COMPACT] =
+                sm.bSmItem.SmItemCompact.getRenderParams;
             transformators[ItemList.ItemType.LINK] =
                 sm.bSmLink.SmLink.getRenderParams;
             transformators[ItemList.ItemType.DEPARTMENT] =
@@ -542,4 +540,9 @@ goog.scope(function() {
         var transformedParams = this.renderParamsTransformator_(rawItemConfig);
         this.itemConfig_ = transformedParams.config;
     };
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(ItemList.NAME, {
+        control: ItemList,
+        view: View
+    });
 });  // goog.scope

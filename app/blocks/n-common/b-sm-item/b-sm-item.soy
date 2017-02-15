@@ -150,6 +150,27 @@
  * @protected
  */
 {template .sectionCover}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_cover">
+        {call .image data="all"/}
+    </div>
+{/template}
+
+
+/**
+ * Image item
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: (string|undefined)
+ *         },
+ *         imageUrl: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .image}
     {let $imageUrl kind="html"}
         {if $params.data.imageUrl}
             {$params.data.imageUrl}
@@ -173,9 +194,7 @@
         {/if}
     {/let}
 
-    <a class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_cover"
-        href="{$url}">
+    <a class="{call .rootClass/}__cover-link" href="{$url}">
 
         <img class="{call .rootClass/}__cover-image"
             src="{$imageUrl}"
@@ -232,7 +251,7 @@
     {/let}
 
     <div class="{$classes}">
-        {$params.data?.description ?: ''}
+        {call .description data="all" /}
     </div>
 {/template}
 
@@ -336,6 +355,24 @@
 
 
 /**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: (string|undefined)
+ *     }
+ * }}
+ */
+{template .description}
+    {if $params.data?.description}
+        <div class="{call .rootClass/}__description">
+            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                data="$params.data.description" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
  * Template estimated parameters
  * @param params {{
  *     data: {
@@ -391,6 +428,7 @@
  * Location
  * @param params {{
  *     data: {
+ *         type: string,
  *         metro: ?Array<{
  *             id: number,
  *             name: string
@@ -405,9 +443,9 @@
  */
 {template .location}
     {if $params.data?.metro and length($params.data?.metro)}
-        {call .metro_ data="all" /}
+        {call .metro data="all" /}
     {elseif $params.data?.area and length($params.data?.area)}
-        {call .area_ data="all" /}
+        {call .area data="all" /}
     {/if}
 {/template}
 
@@ -416,14 +454,16 @@
  * Metro badge
  * @param params {{
  *     data: {
+ *         type: string,
  *         metro: ?Array<{
  *             id: number,
  *             name: string
  *         }>
  *     }
  * }}
+ * @protected
  */
-{template .metro_}
+{template .metro}
     <div class="{call .rootClass/}__badge {call .rootClass/}__badge_metro">
         {call .renderChild}
             {param params: [
@@ -450,14 +490,16 @@
  * Area badge
  * @param params {{
  *     data: {
+ *         type: string,
  *         area: ?Array<{
  *             id: number,
  *             name: string
  *         }>
  *     }
  * }}
+ * @protected
  */
-{template .area_}
+{template .area}
     <div class="{call .rootClass/}__badge {call .rootClass/}__badge_area">
         {call .renderChild}
             {param params: [
@@ -482,16 +524,19 @@
 /**
  * Css classes
  * @param params {{
+ *     data: {
+ *         type: string
+ *     },
  *     config: {
- *         enableCover: (boolean|undefined),
- *         stylizationModifier: string
+ *         enableCover: (boolean|undefined)
  *     }
  * }}
  * @override
  */
 {template .additionalClasses}
-    {if $params?.config?.enableCover or
-        $params.config.stylizationModifier == 'experimental'}
+    {call .rootClass/}_type_{$params.data.type}{sp}
+
+    {if $params?.config?.enableCover}
         {call .rootClass/}_cover_enable
     {/if}
 {/template}
@@ -536,13 +581,4 @@
                 'category': $params.data.category
             ]) /}
         {/call}"
-{/template}
-
-
-/**
- * Tag name
- * @override
- */
-{template .tag}
-    div
 {/template}

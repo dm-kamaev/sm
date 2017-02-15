@@ -3,7 +3,7 @@
 const BaseListParser = require('./BaseListParser');
 
 
-class ProfilesParser extends BaseListParser { 
+class ProfilesParser extends BaseListParser {
     /**
      * @return {object}
      */
@@ -15,7 +15,7 @@ class ProfilesParser extends BaseListParser {
             if (isProfiles) {
                 result = BaseListParser
                     .splitBySemicolon(item)
-                    .map(profile => [data[i+1], profile]);
+                    .map(profile => [data[i + 1], profile]);
             }
             return result;
         }).filter(item => item);

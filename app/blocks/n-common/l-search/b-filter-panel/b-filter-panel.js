@@ -28,10 +28,10 @@ sm.lSearch.bFilterPanel.FilterPanel = function(view, opt_domHelper) {
 
     /**
      * Array instances filters
-     * @type {Array<{
-     *     sm.lSearch.bFilter.Filter|
-     *     sm.lSearch.bFilter.FilterExtended
-     * }>}
+     * @type {Array<
+     *     (sm.lSearch.bFilter.Filter|
+     *     sm.lSearch.bFilter.FilterExtended)
+     * >}
      * @private
      */
     this.filters_ = [];

@@ -11,7 +11,12 @@
  *     error: {
  *         text: string
  *     },
- *     subHeader: sm.bSmSubheader.Template.Params.Data
+ *     subHeader: sm.bSmSubheader.Template.Params.Data,
+ *     popular: ({
+ *         header: string,
+ *         list: sm.bSmItemList.Template.Params.Data,
+ *         catalog: sm.bSmItem.TemplateCompact.Params.Data
+ *     }|undefined)
  * }} sm.lErrorNotFound.Template.Params.Data
  */
 
@@ -62,7 +67,12 @@
  *     data: {
  *         error: {
  *             text: string
- *         }
+ *         },
+ *         popular: ({
+ *             header: string,
+ *             list: sm.bSmItemList.Template.Params.Data,
+ *             catalog: sm.bSmItem.TemplateCompact.Params.Data
+ *         }|undefined)
  *     }
  * }}
  * @override
@@ -71,7 +81,7 @@
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionContent_ data="all" /}
-        // {call .sectionPopular_ data="all" /}
+        {call .sectionPopular_ data="all" /}
     </div>
 {/template}
 
@@ -96,6 +106,117 @@
 
 
 /**
+ * Section with popular entities
+ * @param params {{
+ *     data: {
+ *         popular: ({
+ *             header: string,
+ *             popular: sm.bSmItemList.Template.Params.Data,
+ *             catalog: sm.bSmItem.TemplateCompact.Params.Data
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .sectionPopular_}
+    {if $params.data.popular}
+        <div class="{call .rootClass/}__section
+                {sp}{call .rootClass/}__section_popular">
+            {call .headerPopular_ data="all" /}
+            {call .popular_ data="all" /}
+            {call .catalog_ data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         popular: ({
+ *             header: string,
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .headerPopular_}
+    <div class="{call .rootClass/}__section-header{sp}
+                {call .rootClass/}__section-header_popular">
+        {$params.data.popular.header}
+    </div>
+{/template}
+
+
+/**
+ * Popular entities
+ * @param params {{
+ *     data: {
+ *         popular: ({
+ *             list: sm.bSmItemList.Template.Params.Data,
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .popular_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__popular-list
+    {/let}
+
+    <div class="{call .rootClass/}__popular">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': $params.data.popular.list,
+                    'config': [
+                        'enableCover': true,
+                        'theme': 'inline',
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Catalog
+ * @param params {{
+ *     data: {
+ *         popular: ({
+ *             catalog: sm.bSmItem.TemplateCompact.Params.Data
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .catalog_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__catalog-item
+    {/let}
+
+    <div class="{call .rootClass/}__catalog">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smItemCompact',
+                'renderParams': [
+                    'data': $params.data.popular.catalog,
+                    'config': [
+                        'theme': 'inline',
+                        'enableCover': true,
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
  * Error information
  * @param params {{
  *     data: {
@@ -106,9 +227,11 @@
  * }}
  */
 {template .errorInformation_}
-    <div class="{call .rootClass/}__error-information">
-        {call .errorImg_/}
-        {call .errorText_ data="all"/}
+    <div class="{call .rootClass/}__wrapper-error-information">
+        <div class="{call .rootClass/}__error-information i-utils__clearfix">
+            {call .errorImg_/}
+            {call .errorText_ data="all"/}
+        </div>
     </div>
 {/template}
 
@@ -133,8 +256,11 @@
  * }}
  */
 {template .errorText_}
-    <div class="{call .rootClass/}__error-text">
-        {$params.data.error.text}
+    <div class="{call .rootClass/}__wrapper-error-text">
+        <div class="{call .rootClass/}__error-text">
+            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+            data="$params.data.error.text" /}
+        </div>
     </div>
 {/template}
 

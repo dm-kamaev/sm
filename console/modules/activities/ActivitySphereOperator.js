@@ -19,7 +19,7 @@ const Archiver = require('../modelArchiver/Archiver'),
     CsvConverter = require('../modelArchiver/CsvConverter');
 
 const ACTIVITY_ARCHIVE_NAME = 'activities.tar.gz',
-    SPHERE_ARCHIVE_NAME = 'schperes.tar.gz'
+    SPHERE_ARCHIVE_NAME = 'schperes.tar.gz';
 
 class ActivitySphereOperator {
 

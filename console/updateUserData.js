@@ -8,7 +8,7 @@ const await = require('asyncawait/await');
 var parse = async(function(options) {
     var userDataUpdater = new UserDataUpdater();
 
-    await (userDataUpdater.createCorrelatingArchive(options));
+    await(userDataUpdater.createCorrelatingArchive(options));
 });
 
 var update = async(function(path) {

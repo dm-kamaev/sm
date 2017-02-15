@@ -202,8 +202,10 @@ class SeoSchoolListOperator {
         var filePath = path.join(__dirname, ROBOTS_REPORT);
 
         if (!fs.existsSync(filePath)) {
-            fs.open(filePath, "wx", function (err, fd) {
-                fs.close(fd);
+            fs.open(filePath, 'wx', function(err, fd) {
+                if (!err) {
+                    fs.close(fd);
+                }
             });
         }
         fs.writeFileSync(filePath, '');
