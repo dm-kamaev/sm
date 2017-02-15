@@ -127,7 +127,6 @@ router.get('/admin/schoolprofiles', profileAdminController.actionListProfiles);
 initCrudRouting(
     '/admin/school/:schoolId/gia',
     giaAdminController,
-    ':giaId'
 );
 
 initCrudRouting(

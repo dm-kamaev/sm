@@ -16,16 +16,17 @@ import {
 import {ExamDataAlreadyExistBySubject} from
     './exceptions/ExamDataAlreadyExistBySubject';
 
-import {
-    ExamResult,
-    ExamResultUpdate,
-} from '../intefaces/ExamAdmin';
+type getGia = {
+    gias?: GiaResultInstance[],
+    gia?: GiaResultInstance | {},
+    hashSubjectName: { [key: string]: string }
+};
 
 
 class GiaAdminService {
     public readonly name: string = 'giaAdminService';
 
-    public async getList(schoolId: number): Promise<ExamResult[]> {
+    public async getList(schoolId: number): Promise<getGia> {
         let giaResults: GiaResultInstance[];
         giaResults = await GiaResultModel.findAll({
             attributes: [
@@ -46,35 +47,28 @@ class GiaAdminService {
                 }
             }
         });
-        const hashSubjectName: { [key: string]: string } = {};
-        subjects.forEach(subject =>
-            hashSubjectName[subject.id] = subject.displayName
-        );
 
-        let res: ExamResult[];
-        res = giaResults.map((giaResult: GiaResultInstance): ExamResult => {
-            return {
-                id: giaResult.id,
-                subject: hashSubjectName[giaResult.subjectId] || '',
-                year: giaResult.year,
-                averageResult: Number((giaResult.result || 0).toFixed(1)),
-                passedCount: giaResult.count || 0,
-            };
-        });
-        return res;
+        return {
+            gias: giaResults,
+            hashSubjectName: await this.getHashSubjectName_(subjects)
+        };
     }
 
 
     public async getById(
         schoolId: number,
         giaId: number
-    ): Promise<ExamResult | {}> {
-        const list: ExamResult[] = await this.getList(schoolId);
-        let res: ExamResult | boolean;
-        res = list.find((gia: ExamResult): boolean =>
+    ): Promise<getGia> {
+        const data: getGia = await this.getList(schoolId);
+        const gias: GiaResultInstance[] = data.gias;
+        let res: GiaResultInstance | boolean;
+        res = gias.find((gia: GiaResultInstance): boolean =>
             gia.id === giaId
         );
-        return res || {};
+        return {
+            gia: res || {},
+            hashSubjectName: data.hashSubjectName
+        };
     }
 
 
@@ -121,8 +115,8 @@ class GiaAdminService {
           averageResult: number,
           passedCount: number
         }
-    ): Promise<ExamResultUpdate | null> {
-        let res: ExamResultUpdate | null = null;
+    ): Promise<GiaResultInstance | null> {
+        let res: GiaResultInstance | null = null;
         let gia: [number, GiaResultInstance[]];
         const subjectId: number = giaResult.subjectId;
         const year: number = giaResult.year;
@@ -155,15 +149,7 @@ class GiaAdminService {
         });
 
         if (gia && gia[0]) {
-            const giaData: GiaResultInstance = gia[1][0];
-            res = {
-                id: giaData.id,
-                schoolId: giaData['school_id'],
-                subjectId: giaData['subject_id'],
-                year: giaData.year,
-                passedCount: giaData.count,
-                averageResult: giaData.result,
-            };
+            res = gia[1][0];
         }
         return res;
     }
@@ -212,6 +198,17 @@ class GiaAdminService {
             res = Boolean(giaBySubject);
         }
         return res;
+    }
+
+    // get hash { subject.id: subject.name, }
+    private getHashSubjectName_(
+        subjects: SubjectInstance[]
+    ): { [key: string]: string } {
+        const hashSubjectName: { [key: string]: string } = {};
+        subjects.forEach(subject =>
+            hashSubjectName[subject.id] = subject.displayName
+        );
+        return hashSubjectName;
     }
 };
 export const giaAdminService = new GiaAdminService();

@@ -126,6 +126,7 @@ api/modules/study/services/additionalClassAdminService.js
 api/modules/study/intefaces/*.js
 
 api/modules/study/views/additionalClassAdminView.js
+api/modules/study/views/giaAdminView.js
 
 app/components/host/host.js
 

@@ -3,15 +3,6 @@
 // author: dm-kamaev
 // view profile class admin for school
 
-import {AdditionalEducationSphereInstance}
-    from '../../school/models/additionalEducationSphere';
-
-import {AdditionalEducationInstance}
-    from '../../school/models/additionalEducation';
-
-import {SpecializedClassTypeInstance} from '../models/specializedClassType';
-
-
 type profileGetList = {
     id: number;
     classNumber: number;
