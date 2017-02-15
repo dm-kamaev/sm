@@ -12,7 +12,6 @@ goog.require('sm.bSearch.Search');
 goog.require('sm.bSmMap.SmMap');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.gHint.HintStendhal');
-goog.require('sm.gIcon.IconStendhal');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
@@ -34,8 +33,7 @@ goog.scope(function() {
         UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater,
         Map = sm.bSmMap.SmMap,
         Analytics = sm.iAnalytics.Analytics,
-        AnalyticsSender = sm.lSearch.iAnalyticsSender.AnalyticsSender,
-        Balloon = sm.bSmBalloon.SmBalloon;
+        AnalyticsSender = sm.lSearch.iAnalyticsSender.AnalyticsSender;
 
 
 

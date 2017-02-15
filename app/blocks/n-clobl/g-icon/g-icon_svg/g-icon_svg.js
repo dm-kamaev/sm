@@ -1,4 +1,4 @@
-goog.provide('sm.gIcon.IconStendhal');
+goog.provide('sm.gIcon.IconSvg');
 
 goog.require('cl.gIcon.Icon');
 goog.require('cl.gIcon.View');
@@ -15,21 +15,21 @@ goog.require('sm.iCloblFactory.FactoryStendhal');
  * @constructor
  * @extends {cl.gIcon.Icon}
  */
-sm.gIcon.IconStendhal = function(view, opt_params, opt_domHelper) {
-    sm.gIcon.IconStendhal.base(
+sm.gIcon.IconSvg = function(view, opt_params, opt_domHelper) {
+    sm.gIcon.IconSvg.base(
         this, 'constructor', view, opt_params, opt_domHelper
     );
 };
-goog.inherits(sm.gIcon.IconStendhal, cl.gIcon.Icon);
+goog.inherits(sm.gIcon.IconSvg, cl.gIcon.Icon);
 
 
 /**
  * Name of this element in factory
  */
-sm.gIcon.IconStendhal.NAME = sm.gIcon.TemplateSvg.NAME();
+sm.gIcon.IconSvg.NAME = sm.gIcon.TemplateSvg.NAME();
 
 sm.iCloblFactory.FactoryStendhal.getInstance().register(
-    sm.gIcon.IconStendhal.NAME, {
-        control: sm.gIcon.IconStendhal,
+    sm.gIcon.IconSvg.NAME, {
+        control: sm.gIcon.IconSvg,
         view: cl.gIcon.View
     });

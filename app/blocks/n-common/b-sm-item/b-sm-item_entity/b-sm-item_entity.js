@@ -37,6 +37,14 @@ sm.bSmItem.SmItemEntity = function(view, opt_domHelper) {
      * @private
      */
     this.favoriteLink_ = null;
+
+
+    /**
+     * Badges instances
+     * @type {Array<sm.bSmBadge.Badge>}
+     * @private
+     */
+    this.badges_ = [];
 };
 goog.inherits(sm.bSmItem.SmItemEntity, sm.bSmItem.SmItem);
 

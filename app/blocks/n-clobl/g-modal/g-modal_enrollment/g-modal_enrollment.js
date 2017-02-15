@@ -400,12 +400,12 @@ goog.scope(function() {
         );
 
         this.phoneField_ = this.decorateChild(
-            sm.gInput.InputPhone.NAME,
+            sm.gInput.InputStendhal.NAME,
             this.getView().getDom().phoneField
         );
 
         this.emailField_ = this.decorateChild(
-            'input',
+            sm.gInput.InputStendhal.NAME,
             this.getView().getDom().emailField
         );
 
