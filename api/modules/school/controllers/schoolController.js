@@ -11,7 +11,7 @@ const schoolView = require('../views/schoolView'),
     specializedClassesView = require('../views/specializedClassesView'),
     activityView = require('../views/activityView');
 
-const SchoolDepartmentNotFound = require('./errors/SchoolDepatmentNotFound.js');
+const SchoolDepartmentNotFound = require('./errors/DepartmentNotFound');
 
 const searchViewEntity = require('../../entity/views/searchView');
 
