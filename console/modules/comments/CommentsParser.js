@@ -17,6 +17,7 @@ module.exports = class CommentsParser {
     /**
      * @public
      * @param {string} filePath
+     * @param {Object} options
      */
     constructor(filePath, options) {
         this.path_ = filePath;
@@ -36,8 +37,7 @@ module.exports = class CommentsParser {
         var comments = await(this.readCsv_(this.path_)),
             commentsBySchool = this.groupCommentsBySchool_(comments),
 
-            schoolsCommentsToAdd = this.schoolSearcher_.find(commentsBySchool),
-            notFoundSchools = this.schoolSearcher_.getNotFoundSchools();
+            schoolsCommentsToAdd = this.schoolSearcher_.find(commentsBySchool);
 
         var pollComments = new PollComments();
 
@@ -154,29 +154,29 @@ module.exports = class CommentsParser {
     getUserType_(userType) {
         var result;
         switch (userType) {
-            case 'Окончил(а) школу менее 3 лет назад':
-                result = userTypeEnum.GRADUATE;
-                break;
-            case 'Окончил(а) школу 3 или более лет назад':
-                result = userTypeEnum.GRADUATE;
-                break;
-            case 'Сейчас учусь в школе':
-                result = userTypeEnum.SCHOLAR;
-                break;
-            case 'Мои дети ходят в школу':
-                result = userTypeEnum.PARENT;
-                break;
-            case 'Выпускник':
-                result = userTypeEnum.GRADUATE;
-                break;
-            case 'Ученик':
-                result = userTypeEnum.SCHOLAR;
-                break;
-            case 'Родитель':
-                result = userTypeEnum.PARENT;
-                break;
-            default:
-                result = '';
+        case 'Окончил(а) школу менее 3 лет назад':
+            result = userTypeEnum.GRADUATE;
+            break;
+        case 'Окончил(а) школу 3 или более лет назад':
+            result = userTypeEnum.GRADUATE;
+            break;
+        case 'Сейчас учусь в школе':
+            result = userTypeEnum.SCHOLAR;
+            break;
+        case 'Мои дети ходят в школу':
+            result = userTypeEnum.PARENT;
+            break;
+        case 'Выпускник':
+            result = userTypeEnum.GRADUATE;
+            break;
+        case 'Ученик':
+            result = userTypeEnum.SCHOLAR;
+            break;
+        case 'Родитель':
+            result = userTypeEnum.PARENT;
+            break;
+        default:
+            result = '';
         }
         return result;
     }
@@ -209,4 +209,4 @@ module.exports = class CommentsParser {
     getFileHeader_(filePath) {
         return this.options_.file_type === 'new' ? extHeaders : originHeaders;
     }
-}
+};

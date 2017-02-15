@@ -21,6 +21,14 @@ sm.bSmItem.SmItem = function(view, opt_domHelper) {
      * @protected
      */
     this.nameLink = null;
+
+
+    /**
+     * Badges instances
+     * @type {Array<sm.bSmBadge.SmBadge>}
+     * @protected
+     */
+    this.badges = [];
 };
 goog.inherits(sm.bSmItem.SmItem, cl.iControl.Control);
 
@@ -59,13 +67,14 @@ goog.scope(function() {
     Item.prototype.decorateInternal = function(element) {
         Item.base(this, 'decorateInternal', element);
 
+        this.initBadges_();
         this.initNameLink_();
     };
 
 
     /**
      * Transform raw params to compressed ones
-     * @param {Object<string, (string, number, Object)>} rawParams
+     * @param {Object<string, (string|number|Object)>} rawParams
      * @return {sm.bSmItem.smItem.RenderParams}
      */
     Item.getRenderParams = function(rawParams) {
@@ -132,6 +141,18 @@ goog.scope(function() {
      */
     Item.prototype.initViewListeners = function() {
         this.autoDispatch(View.Event.CLICK);
+    };
+
+
+    /**
+     * Initializes badges instances
+     * @private
+     */
+    Item.prototype.initBadges_ = function() {
+        this.badges = this.decorateChildren(
+            'smBadge',
+            this.getView().getDom().badges
+        );
     };
 
 

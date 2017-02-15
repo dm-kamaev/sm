@@ -24,7 +24,7 @@ goog.scope(function() {
         /**
          * Collection of dom objects
          * @type {{
-         *     items: {Array<Element>}
+         *     items: Array<Element>
          * }}
          */
         this.dom = {};

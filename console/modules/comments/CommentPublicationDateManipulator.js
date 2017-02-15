@@ -22,8 +22,6 @@ const FILE_PATH = './api/modules/comment/migrations/Comments.tar.gz';
 
 
 class CommentPublicationDateManipulator {
-    constructor() {}
-
     /**
      * Get comments from archived file,
      * find it in db by text,
@@ -58,7 +56,8 @@ class CommentPublicationDateManipulator {
             shrinkedComments = this.shrinkFields_(notEmptyComments);
 
 
-        console.log('Total amount comments from csv: ' + shrinkedComments.length);
+        console.log('Total amount comments from csv: ' +
+            shrinkedComments.length);
         this.archive_(shrinkedComments);
     }
 
@@ -86,7 +85,7 @@ class CommentPublicationDateManipulator {
      * @private
      */
     getArchivedComments_(path) {
-        var extractedComments =  this.extract_(path);
+        var extractedComments = this.extract_(path);
 
         return extractedComments.map(comment => {
             return {
@@ -133,6 +132,7 @@ class CommentPublicationDateManipulator {
 
     /**
      * Return comments from db by given id or all comments
+     * @param {number=} opt_id
      * @return {Array<{
      *     id: number,
      *     text: string
@@ -179,7 +179,7 @@ class CommentPublicationDateManipulator {
     formatText_(text) {
         return text
             .replace(/[ёЁ]/g, 'е')
-            .replace(/[^а-яА-Я\w\d]/g,'')
+            .replace(/[^а-яА-Я\w\d]/g, '')
             .toLowerCase();
     }
 
@@ -213,11 +213,11 @@ class CommentPublicationDateManipulator {
                     createdAt: new Date(csvComment.createdAt).toUTCString()
                 };
             }
-            
+
             return result;
         });
 
-        var  notEmptyComments = associatedComments.filter(comment => {
+        var notEmptyComments = associatedComments.filter(comment => {
             return !lodash.isEmpty(comment);
         });
         return notEmptyComments;
@@ -250,7 +250,7 @@ class CommentPublicationDateManipulator {
             .set('created_at', date)
             .where('id = ' + id)
             .toString();
-        
+
         await(sequelize.query(
             query,
             {type: sequelize.QueryTypes.UPDATE}
@@ -271,10 +271,10 @@ class CommentPublicationDateManipulator {
     /**
      * Extract comments from given path
      * @param {string} path
-     * @return Array<{
+     * @return {Array<{
      *     text: string,
      *     createdAt: string
-     * }>
+     * }>}
      * @private
      */
     extract_(path) {

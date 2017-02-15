@@ -36,6 +36,8 @@
 }
 
 .b-sm-badge__icon {
+    height: 18px;
+
     float: left;
 }
 
@@ -62,4 +64,17 @@
     display: inline-block;
 
     margin-left: 10px;
+}
+
+
+.b-sm-badge_inline-theme {
+    .b-sm-badge__items {
+        display: inline;
+
+        padding-left: 0;
+    }
+
+    .b-sm-badge__item:first-child {
+        padding-left: 8px;
+    }
 }

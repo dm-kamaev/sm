@@ -31,10 +31,9 @@ const lodash = require('lodash');
 const TMP_TABLE_PREFIX = 'tmp_';
 
 class Archiver {
-
     /**
      * @public
-     * @param {string} relativePath
+     * @param {string} fullPath
      */
     constructor(fullPath) {
         this.path_ = fullPath;
@@ -53,6 +52,9 @@ class Archiver {
         archiver.compress(csvData);
     };
 
+    /**
+     * @return {string}
+     */
     get tmpName() {
         return this.tmpName_;
     }
@@ -63,8 +65,9 @@ class Archiver {
      * @return {string}
      */
     decompress(opt_outputFilePath) {
-        if (!common.fileExists(this.path_))
+        if (!common.fileExists(this.path_)) {
             throw new Error('Can\'t find archive ' + this.path_);
+        }
 
         var archiveFolder = opt_outputFilePath || this.archiveFolder_;
 
@@ -73,7 +76,7 @@ class Archiver {
             await(this.decompressPromise_(opt_outputFilePath));
             var res = common.readText(path.join(archiveFolder, this.tmpName_));
             return res;
-        } catch(e) {
+        } catch (e) {
             console.log(e.message);
         } finally {
             this.cleanFolder_();
@@ -86,11 +89,10 @@ class Archiver {
      * @param {string} path
      */
     compress(text) {
-        try
-        {
+        try {
             this.prepareArchive_(text);
             await(this.compressPromise_());
-        } catch(e) {
+        } catch (e) {
             console.log(e.message);
         } finally {
             this.cleanFolder_();
@@ -350,8 +352,9 @@ class Archiver {
                 .dest(archiveFolder)
                 .use(Decompress.targz({strip: 1}))
                 .run(function(err) {
-                    if (err)
+                    if (err) {
                         reject(err);
+                    }
                     resolve('succsess');
                 });
         });
@@ -366,8 +369,9 @@ class Archiver {
         var archiveFolder = this.archiveFolder_;
         return new Promise(function(resolve, reject) {
             targz().compress(archiveFolder, filePath, function(err) {
-                if (err)
+                if (err) {
                     reject(err);
+                }
                 resolve('success');
             });
         });

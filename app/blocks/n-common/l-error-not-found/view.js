@@ -28,6 +28,30 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'l-error-not-found'
+        ROOT: 'l-error-not-found',
+        POPULAR: 'l-error-not-found__popular-list',
+        CATALOG: 'l-error-not-found__catalog-item'
+    };
+
+
+    /**
+     * Init dom elements
+     * @protected
+     * @override
+     */
+    View.prototype.initDom = function() {
+        View.base(this, 'initDom');
+
+        goog.object.extend(
+            this.dom,
+            {
+                popular: this.getElementByClass(
+                    View.CssClass.POPULAR
+                ),
+                catalog: this.getElementByClass(
+                    View.CssClass.CATALOG
+                )
+            }
+        );
     };
 });  // goog.scope

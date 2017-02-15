@@ -3,8 +3,6 @@ var commander = require('commander');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
-var sequelize = require('../app/components/db');
-
 var AdditionalEducationParser =
     require('./modules/parse/pgu.mos.ru/AdditionalEducationParser');
 

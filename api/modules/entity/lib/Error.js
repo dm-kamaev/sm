@@ -13,4 +13,4 @@ module.exports = new class {
         errorBody[0].message[key] = [message];
         throw new Error(JSON.stringify(errorBody));
     }
-};
+}();

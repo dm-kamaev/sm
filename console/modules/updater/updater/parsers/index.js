@@ -1,17 +1,15 @@
 'use strict';
 
-const EmptyParser = require('../../core/parsers/EmptyParser');
-
 const BoolParser = require('../../core/parsers/BoolParser');
 const IntParser = require('../../core/parsers/IntParser');
 const StringParser = require('../../core/parsers/StringParser');
 const BaseListParser = require('../../core/parsers/BaseListParser');
 const ArrayParser = require('../../core/parsers/ArrayParser');
-const ArrayOfPairsParser = 
+const ArrayOfPairsParser =
     require('../../core/parsers/ArrayOfPairsParser');
-const ArrayOfIntArraysParser = 
+const ArrayOfIntArraysParser =
     require('../../core/parsers/ArrayOfIntArraysParser');
-const ProfilesParser = 
+const ProfilesParser =
     require('../../core/parsers/ProfilesParser');
 
 module.exports = {
@@ -94,5 +92,4 @@ module.exports = {
             return data;
         }
     }
-    //: EmptyParser,
 };

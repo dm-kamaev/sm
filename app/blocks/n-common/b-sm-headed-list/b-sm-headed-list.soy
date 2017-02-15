@@ -5,18 +5,19 @@
  *     type: string,
  *     header: {
  *         label: string,
- *         img: {
+ *         img: ({
  *             url: string,
- *             altText: string
- *         }
+ *             altText: (string|undefined)
+ *         }|undefined)
  *     },
- *     items: Array<sm.bSmLink.Template.Params.Data>
+ *     list: sm.bSmItemList.Template.Params.Data
  * }} sm.bSmHeadedList.Template.Params.Data
  */
 
 
 /**
  * @typedef {{
+ *     theme: (string|undefined)
  * }} sm.bSmHeadedList.Template.Params.Config
  */
 
@@ -52,6 +53,7 @@
 
 
 /**
+ * Header for list
  * @param params {{
  *     data: sm.bSmHeadedList.Template.Params.Data
  * }}
@@ -67,7 +69,10 @@
 /**
  * @param params {{
  *     data: {
- *         items: Array<sm.bSmLink.Template.Params.Data>
+ *         list: sm.bSmItemList.Template.Params.Data
+ *     },
+ *     config: {
+ *         theme: ('inline'|undefined)
  *     }
  * }}
  */
@@ -80,14 +85,7 @@
             {param params: [
                 'type': 'smItemList',
                 'renderParams': [
-                    'data': [
-                        'items': $params?.data?.items,
-                        'itemType': 'smLink',
-                        'itemConfig': [
-                            'size': 'xxl',
-                            'theme': 'interval'
-                        ]
-                    ],
+                    'data': $params.data.list,
                     'config': [
                         'customClasses': [$customClasses]
                     ]
@@ -102,10 +100,10 @@
  * @param params {{
  *     data: {
  *         header: {
- *             img: {
+ *             img: ({
  *                 url: string,
- *                 altText: string
- *             }
+ *                 altText: (string|undefined)
+ *             }|undefined)
  *         }
  *     }
  * }}

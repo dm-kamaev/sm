@@ -26,8 +26,7 @@ goog.scope(function() {
 
     /**
      * Css class enum
-     * @enum
-     * @type {string}
+     * @enum {string}
      */
     View.CssClass = {
         NOT_VALID: 'g-textarea_not-valid',

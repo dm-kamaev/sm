@@ -1,6 +1,6 @@
 'use strict';
 
-var Converter = require("csvtojson").Converter;
+var Converter = require('csvtojson').Converter;
 var converter = new Converter({});
 
 /**

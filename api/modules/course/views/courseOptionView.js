@@ -1,6 +1,6 @@
 'use strict';
 
-const lodashMap = require('lodash/collection/map');
+const lodashMap = require('lodash/map');
 
 const ID = 'id';
 
@@ -20,6 +20,9 @@ view.renderList = function(courseOptions) {
  */
 view.render = function(courseOption) {
     let result = courseOption.toJSON();
+    let course = result.course || {};
+
+    result.brandId = course.brandId;
     result.departments = lodashMap(courseOption.departments, ID);
 
     return result;

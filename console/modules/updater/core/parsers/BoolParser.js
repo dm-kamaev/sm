@@ -18,12 +18,12 @@ class BoolParser extends StringParser {
      */
     parse() {
         var data = null;
-        var isPositiveValue = 
+        var isPositiveValue =
             PositiveValues.indexOf(this.rawData_) !== -1;
         if (isPositiveValue) {
             data = true;
         }
-        var isNegativeValue = 
+        var isNegativeValue =
             NegativeValues.indexOf(this.rawData_) !== -1;
         if (isNegativeValue) {
             data = false;
