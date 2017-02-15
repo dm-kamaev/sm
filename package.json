@@ -67,7 +67,7 @@
     "multi-geocoder": "^0.1.4",
     "node-sass": "^3.3.3",
     "node-xlsx": "^0.7.2",
-    "nodules": "git+ssh://git@github.com:c7s/nodules.git#release-20170208-PB-1883",
+    "nodules": "git+ssh://git@github.com:c7s/nodules.git#e13bf35360c8ed325e95bfd69032a928aed96737",
     "passport": "^0.3.2",
     "pg": "^4.4.2",
     "pg-hstore": "^2.3.2",
@@ -91,7 +91,7 @@
     "xlsx-to-json": "^0.2.4"
   },
   "dependencies": {
-    "clobl": "git+ssh://git@github.com/c7s/clobl.git#release-20170208-PB-1883",
+    "clobl": "git+ssh://git@github.com/c7s/clobl.git#dev",
     "eslint": "^2.13.1",
     "express": "^4.13.3",
     "geopoint": "^1.0.1",
