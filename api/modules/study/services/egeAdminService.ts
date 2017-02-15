@@ -16,16 +16,17 @@ import {
 import {ExamDataAlreadyExistBySubject} from
     './exceptions/ExamDataAlreadyExistBySubject';
 
-import {
-    ExamResult,
-    ExamResultUpdate,
-} from '../intefaces/ExamAdmin';
+type getEge = {
+    eges?: EgeResultInstance[],
+    ege?: EgeResultInstance | {},
+    hashSubjectName: { [key: string]: string }
+};
 
 
 class EgeAdminService {
     public readonly name: string = 'egeAdminService';
 
-    public async getList(schoolId: number): Promise<ExamResult[]> {
+    public async getList(schoolId: number): Promise<getEge> {
         let egeResults: EgeResultInstance[];
         egeResults = await EgeResultModel.findAll({
             attributes: [
@@ -51,30 +52,27 @@ class EgeAdminService {
             hashSubjectName[subject.id] = subject.displayName
         );
 
-        let res: ExamResult[];
-        res = egeResults.map((egeResult: EgeResultInstance): ExamResult => {
-            return {
-                id: egeResult.id,
-                subject: hashSubjectName[egeResult.subjectId] || '',
-                year: egeResult.year,
-                averageResult: Number((egeResult.result || 0).toFixed(1)),
-                passedCount: egeResult.passedCount || 0,
-            };
-        });
-        return res;
+        return {
+            eges: egeResults,
+            hashSubjectName: await this.getHashSubjectName_(subjects)
+        };
     }
 
 
     public async getById(
         schoolId: number,
         egeId: number
-    ): Promise<ExamResult | {}> {
-        const list: ExamResult[] = await this.getList(schoolId);
-        let res: ExamResult | boolean;
-        res = list.find((ege: ExamResult): boolean =>
+    ): Promise<getEge> {
+        const data: getEge = await this.getList(schoolId);
+        const eges: EgeResultInstance[] = data.eges;
+        let egeResult: EgeResultInstance | boolean;
+        egeResult = eges.find((ege: EgeResultInstance): boolean =>
             ege.id === egeId
         );
-        return res || {};
+        return {
+            ege: egeResult || {},
+            hashSubjectName: data.hashSubjectName
+        };
     }
 
 
@@ -121,8 +119,8 @@ class EgeAdminService {
           averageResult: number,
           passedCount: number
         }
-    ): Promise<any> {
-        let res: ExamResultUpdate | null = null;
+    ): Promise<EgeResultInstance | null> {
+        let res: EgeResultInstance | null = null;
         let ege: [number, EgeResultInstance[]];
         const subjectId: number = egeResult.subjectId;
         const year: number = egeResult.year;
@@ -155,15 +153,7 @@ class EgeAdminService {
         });
 
         if (ege && ege[0]) {
-            const egeData: EgeResultInstance = ege[1][0];
-            res = {
-                id: egeData.id,
-                schoolId: egeData['school_id'],
-                subjectId: egeData['subject_id'],
-                year: egeData.year,
-                passedCount: egeData.passedCount,
-                averageResult: egeData.result,
-            };
+            res = ege[1][0];
         }
         return res;
     }
@@ -212,6 +202,18 @@ class EgeAdminService {
             res = Boolean(egeBySubject);
         }
         return res;
+    }
+
+
+    // get hash { subject.id: subject.name, }
+    private getHashSubjectName_(
+        subjects: SubjectInstance[]
+    ): { [key: string]: string } {
+        const hashSubjectName: { [key: string]: string } = {};
+        subjects.forEach(subject =>
+            hashSubjectName[subject.id] = subject.displayName
+        );
+        return hashSubjectName;
     }
 };
 export const egeAdminService = new EgeAdminService();

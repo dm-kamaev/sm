@@ -1,7 +1,7 @@
 'use strict';
 
 // author: dm-kamaev
-// ege for school
+// admin ege for school
 
 const util = require('util');
 
@@ -9,6 +9,7 @@ import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {egeAdminService} from '../services/egeAdminService';
+import {view as egeAdminView} from '../views/egeAdminView';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 import {ExamDataAlreadyExistBySubject} from
@@ -64,19 +65,20 @@ class EgeAdminController extends Controller {
      *    ]
      */
     public async actionList(ctx: any, schoolId: string) {
-        return await egeAdminService.getList(parseInt(schoolId, 10));
+        const res = await egeAdminService.getList(parseInt(schoolId, 10));
+        return egeAdminView.listGia(res.eges, res.hashSubjectName);
     }
 
 
      /**
-     * @api {get} /api/admin/school/:schoolId/ege/:egeId
+     * @api {get} /api/admin/school/:schoolId/ege/:id
      * Get school ege
      * @apiVersion 1.0.0
      * @apiName getGia
      * @apiGroup School Ege Admin
      *
      * @apiParam {Number} schoolId  School's id.
-     * @apiParam {Number} egeId     Ege's id.
+     * @apiParam {Number} id        Ege's id.
      *
      * @apiSuccess {Number}   ege.id            Ege's id
      * @apiSuccess {String}   ege.subject       School's ubject
@@ -94,10 +96,11 @@ class EgeAdminController extends Controller {
      *    }
      */
     public async actionGet(ctx: any, schoolId: string, egeId: string) {
-        return await egeAdminService.getById(
+        const res = await egeAdminService.getById(
             parseInt(schoolId, 10),
             parseInt(egeId, 10)
         );
+        return egeAdminView.oneEge(res.ege, res.hashSubjectName);
     }
 
     /**
@@ -121,7 +124,7 @@ class EgeAdminController extends Controller {
     * @apiSuccess {Number}   ege.schoolId      School's id
     * @apiSuccess {Number}   ege.subjectId     Subject's id
     * @apiSuccess {Number}   ege.year          Ege year
-    * @apiSuccess {Number}   ege.result        AverageResult by subject
+    * @apiSuccess {Number}   ege.averageResult AverageResult by subject
     * @apiSuccess {Number}   ege.passedCount   Count passed exam
     *
     * @apiSuccessExample {json} Example response:
@@ -130,10 +133,8 @@ class EgeAdminController extends Controller {
     *        "schoolId": 697,
     *        "subjectId": 9,
     *        "year": 2014,
-    *        "result": 3.5,
-    *        "passedCount": 143,
-    *        "updated_at": "2017-02-06T09:52:40.086Z",
-    *        "created_at": "2017-02-06T09:52:40.086Z"
+    *        "averageResult": 3.5,
+    *        "passedCount": 143
     *    }
     * @apiError (422) ExamDataAlreadyExistBySubject
     *     already gia data by subject
@@ -145,15 +146,16 @@ class EgeAdminController extends Controller {
           averageResult: number,
           passedCount: number
         } = ctx.request.body;
-        return await egeAdminService.create(
+        const ege = await egeAdminService.create(
             parseInt(schoolId, 10),
             egeResult
         );
+        return egeAdminView.create(ege);
     }
 
 
     /**
-    * @api {put} /api/admin/school/:schoolId/ege/:egeId
+    * @api {put} /api/admin/school/:schoolId/ege/:id
     * Update school ege data
     * @apiVersion 1.0.0
     * @apiName updateEgeResult
@@ -167,8 +169,8 @@ class EgeAdminController extends Controller {
     *        "passedCount": 143
     *    }
     *
-    * @apiParam {Number} schoolId  School's id.
-    * @apiParam {Number} egeId     Ege's id
+    * @apiParam {Number} schoolId School's id.
+    * @apiParam {Number} id       Ege's id
     *
     * @apiSuccess {Number}   ege.id            Id.
     * @apiSuccess {Number}   ege.schoolId      School's id
@@ -180,9 +182,9 @@ class EgeAdminController extends Controller {
     *
     * @apiSuccessExample {json} Example response:
     *    {
-    *        "id": 5722,
-    *        "schoolId": 37,
-    *        "subjectId": 10,
+    *        "id": 5723,
+    *        "schoolId": 697,
+    *        "subjectId": 9,
     *        "year": 2014,
     *        "averageResult": 3.5,
     *        "passedCount": 143
@@ -201,22 +203,24 @@ class EgeAdminController extends Controller {
           averageResult: number,
           passedCount: number
         } = ctx.request.body;
-        return await egeAdminService.update(
+
+        const ege = await egeAdminService.update(
             parseInt(schoolId, 10),
             parseInt(egeId, 10),
             egeResult
         );
+        return egeAdminView.update(ege);
     }
 
     /**
-    * @api {delete} /api/admin/school/:schoolId/ege/:egeId
+    * @api {delete} /api/admin/school/:schoolId/ege/:id
     * Delete ege data for school
     * @apiVersion 1.0.0
     * @apiName deleteEgeData
     * @apiGroup School Ege Admin
     *
-    * @apiParam {Number} schoolId  School's id.
-    * @apiParam {Number} giaId     Ege's id
+    * @apiParam {Number} schoolId School's id.
+    * @apiParam {Number} id       Ege's id
     *
     * @apiSuccess {Number} result delete
     *

@@ -105,17 +105,12 @@ router.delete(
 
 router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
 
-const initCrudRouting = function(
-    route: string,
-    controller: any,
-    entityId?: string
-) {
-    entityId = entityId || ':id';
+const initCrudRouting = function(route: string, controller: any) {
     router.post(route, checkToken, controller.actionCreate);
     router.get(route, controller.actionList);
-    router.get(`${route}/${entityId}`, controller.actionGet);
-    router.put(`${route}/${entityId}`, checkToken, controller.actionUpdate);
-    router.delete(`${route}/${entityId}`, checkToken, controller.actionDelete);
+    router.get(`${route}/:id`, controller.actionGet);
+    router.put(`${route}/:id`, checkToken, controller.actionUpdate);
+    router.delete(`${route}/:id`, checkToken, controller.actionDelete);
 };
 
 initCrudRouting(
@@ -128,7 +123,6 @@ router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
 initCrudRouting(
     '/admin/school/:schoolId/department',
     departmentAdminController,
-
 );
 
 initCrudRouting(
@@ -146,8 +140,7 @@ initCrudRouting(
 
 initCrudRouting(
     '/admin/school/:schoolId/olympiadResult',
-    olympiadAdminController,
-    ':id'
+    olympiadAdminController
 );
 router.get('/admin/schoolsubject', examAdminController.actionGetListSubject);
 router.get('/admin/examyear', examAdminController.actionGetListExamYear);
@@ -156,7 +149,6 @@ router.get('/admin/examyear', examAdminController.actionGetListExamYear);
 initCrudRouting(
     '/admin/school/:schoolId/ege',
     egeAdminController,
-    ':egeId'
 );
 
 initCrudRouting(

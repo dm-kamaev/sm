@@ -123,10 +123,11 @@ api/modules/study/services/examAdminService.js
 api/modules/study/services/egeAdminService.js
 api/modules/study/services/additionalClassAdminService.js
 
-api/modules/study/intefaces/*.js
+api/modules/study/types/*.js
 
 api/modules/study/views/additionalClassAdminView.js
 api/modules/study/views/giaAdminView.js
+api/modules/study/views/egeAdminView.js
 
 api/modules/user/controllers/errors/*.js
 api/modules/user/controllers/adminUserController.js

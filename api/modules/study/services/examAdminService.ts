@@ -8,8 +8,6 @@ import {
     SubjectInstance
 } from '../../study/models/subject';
 
-import {SchoolSubject} from '../intefaces/ExamAdmin';
-
 
 class ExamAdminService {
     public readonly name: string = 'examAdminService';
