@@ -17,9 +17,6 @@ const pageName = require('../../common/enums/pageName');
 
 const config = require('../../../config').config;
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-
 let controller = {};
 
 controller.generalError = async(function(req, res, next, entityType) {
