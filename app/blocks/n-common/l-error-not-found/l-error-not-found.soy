@@ -164,19 +164,17 @@
     {/let}
 
     <div class="{call .rootClass/}__popular">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smItemList',
-                'renderParams': [
-                    'data': $params.data.popular.list,
-                    'config': [
-                        'enableCover': true,
-                        'theme': 'inline',
-                        'customClasses': [$customClasses]
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smItemList' /}
+            {param renderParams: [
+                'data': $params.data.popular.list,
+                'config': [
+                    'enableCover': true,
+                    'theme': 'inline',
+                    'customClasses': [$customClasses]
                 ]
-            ]/}
+            ] /}
         {/call}
     </div>
 {/template}
@@ -198,17 +196,15 @@
     {/let}
 
     <div class="{call .rootClass/}__catalog">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smItemCompact',
-                'renderParams': [
-                    'data': $params.data.popular.catalog,
-                    'config': [
-                        'theme': 'inline',
-                        'enableCover': true,
-                        'customClasses': [$customClasses]
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smItemCompact' /}
+            {param renderParams: [
+                'data': $params.data.popular.catalog,
+                'config': [
+                    'theme': 'inline',
+                    'enableCover': true,
+                    'customClasses': [$customClasses]
                 ]
             ]/}
         {/call}
@@ -229,7 +225,7 @@
 {template .errorInformation_}
     <div class="{call .rootClass/}__wrapper-error-information">
         <div class="{call .rootClass/}__error-information i-utils__clearfix">
-            {call .errorImg_/}
+            {call .errorImg_ /}
             {call .errorText_ data="all"/}
         </div>
     </div>

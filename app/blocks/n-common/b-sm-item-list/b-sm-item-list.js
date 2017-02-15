@@ -12,6 +12,7 @@ goog.require('cl.iControl.Control');
 goog.require('goog.array');
 goog.require('goog.dom.classlist');
 goog.require('sm.bSmItem.SmItem');
+goog.require('sm.bSmItem.SmItemCompact');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItemList.Template');
 goog.require('sm.bSmItemList.View');

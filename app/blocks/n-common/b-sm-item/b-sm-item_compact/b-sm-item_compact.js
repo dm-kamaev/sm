@@ -1,7 +1,7 @@
 goog.provide('sm.bSmItem.SmItemCompact');
 
 goog.require('sm.bSmItem.SmItem');
-goog.require('sm.bSmItem.SmItemCompact');
+goog.require('sm.bSmItem.TemplateCompact');
 goog.require('sm.bSmItem.ViewCompact');
 goog.require('sm.bSmLink.SmLink');
 

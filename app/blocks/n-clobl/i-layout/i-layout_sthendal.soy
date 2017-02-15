@@ -61,10 +61,18 @@
 
 
 /**
- * @param params
- * @param type
- * @param renderParams
- *
+ * Render layout child by given type, layout params and render params
+ * This is same function like renderChild in cl.iControl.Template
+ * @param params {{
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @param type {string}
+ * @param renderParams {{
+ *     data: Object,
+ *     config: Object
+ * }}
  */
 {template .renderChildLayout}
     {let $factoryIndex kind="text"}

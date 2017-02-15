@@ -48,6 +48,7 @@ goog.scope(function() {
 
     /**
      * Name of this element in factory
+     * @const {string}
      */
     ErrorNotFound.NAME = sm.lErrorNotFound.Template.NAME();
 
