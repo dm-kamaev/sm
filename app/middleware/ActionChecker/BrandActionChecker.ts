@@ -17,7 +17,7 @@ class BrandActionChecker extends ActionChecker {
         accessAttributes: AccessAttributes, restrictedId?: number
     ): boolean {
         return accessAttributes.isSuperUser ||
-            accessAttributes.brandId == restrictedId;
+            accessAttributes.brandId === restrictedId;
     }
 }
 

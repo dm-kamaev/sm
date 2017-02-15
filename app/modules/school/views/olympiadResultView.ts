@@ -92,7 +92,7 @@ class OlympiadResultsView {
             subject = this.getSubject_(value),
             positionResults = result[position],
             subjectResultIndex = positionResults.findIndex(
-                item => item.name == subject
+                item => item.name === subject
             );
 
         if (~subjectResultIndex) {

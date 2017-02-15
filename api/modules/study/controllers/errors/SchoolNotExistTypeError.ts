@@ -24,5 +24,5 @@ class SchoolNotExistType extends Error {
         return this.exception_;
     }
 }
-export default SchoolNotExistType;
+export {SchoolNotExistType};
 
