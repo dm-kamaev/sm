@@ -45,4 +45,4 @@ commentView.comments = function(comments: InputComment[]): OutComment[] {
     return comments.map(comment => commentView.comment(comment));
 };
 
-export default commentView;
+export {commentView};

@@ -118,7 +118,7 @@ service.getByBrandId = async(function(brandId) {
  */
 service.getById = async(function(id) {
     return await(models.CourseDepartment.findOne({
-        attributes: ['id', 'name', 'phone', 'updated_at'],
+        attributes: ['id', 'name', 'phone', 'brandId', 'updated_at'],
         where: {
             id: id
         },

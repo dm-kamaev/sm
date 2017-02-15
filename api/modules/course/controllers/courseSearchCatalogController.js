@@ -34,10 +34,9 @@ let controller = {};
  * ]
  */
 controller.list = async(function(req, res) {
-    let result = {};
+    let result;
     result = await(services.courseSearchCatalog.getAll());
-    res.header('Content-Type', 'application/json; charset=utf-8');
-    res.end(JSON.stringify(result));
+    res.send(result);
 });
 
 

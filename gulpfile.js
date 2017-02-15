@@ -181,11 +181,31 @@ gulp.task('backendLint', gulpTasks.backendLint);
 
 const tasks = function(bool) {
     return bool ? [
-        'createTimestamp', 'soy', 'compile', 'tsCompile', 'svgSprite', 'sprite',
-        'images', 'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig'
+        'createTimestamp',
+        'soy',
+        'compile',
+        'tsCompile',
+        'svgSprite',
+        'sprite',
+        'images',
+        'fonts',
+        'styles',
+        'copySchools',
+        'copyCourses',
+        'localConfig'
     ] : [
-        'watch', 'soy', 'scripts', 'tsCompile', 'svgSprite', 'sprite', 'images',
-        'fonts', 'styles', 'copySchools', 'copyCourses', 'localConfig',
+        'watch',
+        'soy',
+        'scripts',
+        'tsCompile',
+        'svgSprite',
+        'sprite',
+        'images',
+        'fonts',
+        'styles',
+        'copySchools',
+        'copyCourses',
+        'localConfig',
         'backendLint'
     ];
 };

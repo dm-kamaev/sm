@@ -32,4 +32,5 @@ class SchoolNotExistType extends Exception {
         return this.schoolType_;
     }
 }
-export default SchoolNotExistType;
+
+export {SchoolNotExistType};

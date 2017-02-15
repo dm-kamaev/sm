@@ -12,7 +12,7 @@ var districtView = {};
  * }>}
  */
 districtView.list = function(districts) {
-    var uniqueDistricts = lodash.uniq(districts, 'id');
+    var uniqueDistricts = lodash.uniqBy(districts, 'id');
 
     return uniqueDistricts.map(district => {
         return {

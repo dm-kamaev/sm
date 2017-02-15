@@ -3,7 +3,6 @@
 // read mail from delete@mel.fm and
 // if exist mail then delete comment
 
-
 var commander = require('commander');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');

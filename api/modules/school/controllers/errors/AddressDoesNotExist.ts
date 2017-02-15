@@ -3,7 +3,7 @@ import {ControllerError} from '../../../../components/interface';
 
 const Error: ControllerError = require('nodules/controller/ControllerError');
 
-export default class AddressDoesNotExist extends Error {
+export class AddressDoesNotExist extends Error {
     public code: String;
     public status: Number;
     public message: String;

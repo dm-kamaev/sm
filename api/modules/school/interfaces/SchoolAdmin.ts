@@ -40,3 +40,8 @@ export interface SchoolDataForView {
     districtName: string;
     updatedAt: string;
 };
+
+
+export interface SchoolAddresses {
+    [ key: string ]: { areaName: string, districtName: string };
+}

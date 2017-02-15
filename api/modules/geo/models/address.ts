@@ -24,7 +24,7 @@ export interface AddressInstance
 interface AddressModel
     extends Sequelize.Model<AddressInstance, AddressAttribute> {}
 
-const Address: AddressModel = db.define('Address', {
+const Model: AddressModel = db.define('Address', {
     entityId: {
         type: DataType.INTEGER,
         field: 'entity_id'
@@ -84,4 +84,4 @@ const Address: AddressModel = db.define('Address', {
     }
 });
 
-export default Address;
+export {Model};

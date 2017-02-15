@@ -11,11 +11,18 @@ var options = {
 };
 
 if (config.environment != 'production') {
-    options.logging = logger.debug.bind(logger);
-    // options.logging = function (query) {
-    //   logger.info(query.replace('WHERE' , '\nWHERE'));
-    // };
     options.benchmark = true;
+    options.logging = logger.debug.bind(logger);
+    // options.logging = function(query) {
+    //     logger.debug(query
+    //         .replace(/SELECT/, '\nSELECT')
+    //         .replace(/INSERT/, '\nINSERT')
+    //         .replace(/UPDATE/, '\nUPDATE')
+    //         .replace(/FROM/, '\nFROM')
+    //         .replace(/LEFT OUTER JOIN/g, '\nLEFT OUTER JOIN')
+    //         .replace(/WHERE/g, '\nWHERE')
+    //     );
+    // };
 }
 
 

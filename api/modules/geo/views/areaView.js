@@ -7,7 +7,7 @@ var areaView = {};
  * @return {array<object>}
  */
 areaView.list = function(areas) {
-    var uniqAreas = lodash.uniq(areas, 'id');
+    var uniqAreas = lodash.uniqBy(areas, 'id');
 
     return uniqAreas
         .map(area => {

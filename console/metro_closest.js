@@ -3,7 +3,7 @@
 var commander = require('commander');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var geoTools = require('./modules/geoTools/geoTools').default;
+var geoTools = require('./modules/geoTools/geoTools').geoTools;
 var services = require.main.require('./app/components/services').all;
 var models = require.main.require('./app/components/models').all;
 

@@ -1,12 +1,17 @@
-import departmentService from '../../geo/services/department';
-import departmentView from '../../geo/views/departmentView';
+import {service as departmentService} from '../../geo/services/department';
+import {departmentView} from '../../geo/views/departmentView';
 
 import {LegacyController} from '../../../components/interface';
 
-import SchoolNotFoundError from './errors/SchoolNotFound';
-import DepartmentNotFoundError from './errors/DepartmentNotFound';
-import AddressDoesNotExistError from './errors/AddressDoesNotExist';
-import AddressIsNotUniqueError from './errors/AddressIsNotUnique';
+import {SchoolNotFound as SchoolNotFoundError} from './errors/SchoolNotFound';
+import {DepartmentNotFound as DepartmentNotFoundError}
+    from './errors/DepartmentNotFound';
+import {AddressDoesNotExist as AddressDoesNotExistError}
+    from './errors/AddressDoesNotExist';
+import {AddressIsNotUnique as AddressIsNotUniqueError}
+    from './errors/AddressIsNotUnique';
+import {AddressDepartmentExist}
+    from './errors/AddressDepartmentExist';
 
 const Controller: LegacyController = require('nodules/controller').Controller;
 
@@ -20,7 +25,8 @@ class DepartmentAdminController extends Controller {
             SchoolNotFoundException: SchoolNotFoundError,
             DepartmentNotFoundException: DepartmentNotFoundError,
             AddressDoesNotExistException: AddressDoesNotExistError,
-            AddressIsNotUniqueException: AddressIsNotUniqueError
+            AddressIsNotUniqueException: AddressIsNotUniqueError,
+            AddressDepartmentExist,
         };
     }
 
@@ -81,6 +87,12 @@ class DepartmentAdminController extends Controller {
      *
      * @apiParam {Number} schoolId School's id.
      *
+     * @apiParamExample {json} Request-Example:
+     * {
+     *     "addressName": "улица Воздвиженка, 4/7",
+     *
+     * }
+     *
      * @apiParam {String}   name              Name.
      * @apiParam {Number[]} educationalGrades Studying classes.
      * @apiParam {String}   addressName       Address' name.
@@ -90,12 +102,14 @@ class DepartmentAdminController extends Controller {
      *
      * @apiError (404) SchoolNotFound      School with schoolId not found.
      * @apiError (422) AddressDoesNotExist Specified address does not exist.
+     * @apiError (422) AddressDepartmentExist
+     *     Address already bind to another departhment
      */
-    public async actionCreate(actionContext: any, schoolId: number) {
+    public async actionCreate(actionContext: any, schoolId: string) {
         const body = actionContext.request.body;
         actionContext.status = 201;
         return await departmentService.addDepartment(
-            schoolId,
+            parseInt(schoolId, 10),
             body.addressName,
             body
         );
@@ -116,23 +130,22 @@ class DepartmentAdminController extends Controller {
      * @apiParam {String}   addressName       Address' name.
      *
      * @apiSuccessExample
-     *     HTTP/1.1 204 OK
+     *     HTTP/1.1 200 OK
      *
      * @apiError (404) DepartmentNotFound Department with given Id not found.
      * @apiError (422) AddressDoesNotExist Specified address does not exist.
      */
     public async actionUpdate(
-        actionContext: any, schoolId: number, id: number
+        actionContext: any, schoolId: string, departmentId: string
     ) {
         const body = actionContext.request.body;
-        await departmentService.update(
-            id,
+        return await departmentService.update(
+            parseInt(departmentId, 10),
             body, {
-                schoolId: schoolId,
-                address: body.addressName
+                schoolId: parseInt(schoolId, 10),
+                address: body.addressName.trim(),
             }
         );
-        actionContext.status = 204;
     }
 
     /**

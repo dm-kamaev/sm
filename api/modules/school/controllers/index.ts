@@ -11,6 +11,7 @@ const commentAdminController = new CommentAdminController();
 import {DepartmentAdminController} from './departmentAdminController';
 const departmentAdminController = new DepartmentAdminController();
 
+
 import {ProfileAdminController}
     from './profileAdminController';
 const profileAdminController = new ProfileAdminController();
@@ -31,6 +32,12 @@ const additionalClassAdminController = new AdditionalClassAdminController();
 import {OlympiadAdminController}
     from '../../study/controllers/olympiadAdminController';
 const olympiadAdminController = new OlympiadAdminController();
+
+import {adminUser} from '../../../../app/middleware/adminUser';
+import {
+    middleware as superUserCheckAction
+} from '../../../../app/middleware/ActionChecker/SuperUserActionChecker';
+
 
 const checkToken = require('../../../../app/middleware/checkToken');
 const csrf = require('../../../../app/middleware/csrf.js');
@@ -56,11 +63,12 @@ router.get(
     schoolController.popularSpecializedClassType
 );
 
-router.get('/school/:id', schoolController.view);
-// router.get('/school/apitest', schoolController.yapi);
+router.get('/school/adminsearch', checkToken, schoolController.adminSearch);
 
+router.get('/school/:id', schoolController.view);
 
 router.post('/school/:id/comment', csrf, schoolController.createComment);
+
 
 router.get(
     '/school/:schoolId/comment/:commentId',
@@ -111,6 +119,13 @@ const initCrudRouting = function(
 };
 
 initCrudRouting(
+    '/admin/school',
+    schoolAdminController
+);
+
+router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
+
+initCrudRouting(
     '/admin/school/:schoolId/department',
     departmentAdminController,
 
@@ -154,4 +169,9 @@ router.get(
     additionalClassAdminController.actionListCategory
 );
 
-export default router;
+initCrudRouting(
+    '/school/:schoolId/comment',
+    commentAdminController
+);
+
+export {router};

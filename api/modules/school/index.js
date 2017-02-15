@@ -1,3 +1,3 @@
-exports.router = require('./controllers').default;
+exports.router = require('./controllers').router;
 exports.models = require('./models');
 exports.services = require('./services');

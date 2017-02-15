@@ -8,12 +8,11 @@ const colors = require('colors'),
 const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
     entityType = require('../../entity/enums/entityType');
-const School = models.School;
 
 const SchoolNotFoundError =
     require('../controllers/errors/SchoolNotFoundError.js');
 
-const SchoolNotFound = require('./exceptions/SchoolNotFound').default;
+const SchoolNotFound = require('./exceptions/SchoolNotFound').SchoolNotFound;
 
 const sequelize = require('../../../../app/components/db'),
     redis = require('../../../../app/components/redis'),
@@ -123,7 +122,7 @@ service.create = function(data) {
  */
 service.update = async(function(schoolId, data) {
     CsvConverter.cureQuotes(data);
-    return await(School.update(data, {
+    return await(models.School.update(data, {
         where: {
             id: schoolId
         }
@@ -137,7 +136,7 @@ service.update = async(function(schoolId, data) {
  * @return {Object} School model instance
  */
 service.checkExist = async(function(schoolId) {
-    let school = await(School.findOne({
+    let school = await(models.School.findOne({
         where: {
             id: schoolId
         },
@@ -228,6 +227,11 @@ service.getPopularSchools = async(function(opt_amount) {
                                 as: 'metro'
                             }
                         ]
+                    },
+                    {
+                        model: models.Area,
+                        as: 'area',
+                        attributes: ['id', 'name']
                     }
                 ]
             }],
@@ -710,7 +714,7 @@ service.findBySite = async(function(site) {
  * @param {number} id
  * @return {Object}
  */
-service.viewOne = function(id) {
+service.viewOne = async(function(id) {
     var school = await(models.School.findOne({
         where: {id: id}
     }));
@@ -734,8 +738,22 @@ service.viewOne = function(id) {
     school.addresses = result.addresses;
 
     return school;
-};
+});
 
+/**
+ * Get school by id
+ * @param {number} id
+ * @return {models.School}
+ * @public
+ */
+service.getById = async(function(id) {
+    return models.School.findOne({
+        where: {
+            id: id
+        },
+        raw: true
+    });
+});
 
 /**
  * @param {number} schoolId
@@ -868,6 +886,26 @@ service.list = async(function(opt_params, opt_config) {
     };
 
     return sequelize.query(sqlString, options);
+});
+
+/**
+ * Search over schools by given attributes
+ * @param {{
+ *     name: string
+ * }} attributes
+ * @return {models.School}
+ */
+service.getByAttributes = async(function(attributes) {
+    let conditions = {};
+    if (!lodash.isEmpty(attributes)) {
+        conditions.name = attributes.name;
+    }
+
+    return models.School.findAll({
+        attributes: ['id', 'name'],
+        where: conditions,
+        raw: true
+    });
 });
 
 /**
@@ -1004,6 +1042,5 @@ service.renameDepartment = function(department, name) {
         returning: true
     }))[1];
 };
-
 
 module.exports = service;

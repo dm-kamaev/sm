@@ -794,11 +794,10 @@ schoolView.uniqueIds = function(schools) {
 
 
 /**
- * Used for item of list favorites
+ * Used for item
  * @param {{
  *     entity: models.School,
- *     type: string,
- *     url: models.Page
+ *     alias: models.Page
  * }} data
  * @return {{
  *     id: number,
@@ -807,6 +806,7 @@ schoolView.uniqueIds = function(schools) {
  *         light: string,
  *         bold: ?string
  *     },
+ *     description: ?string,
  *     alias: string,
  *     score: number,
  *     metro: ?Array<{
@@ -816,24 +816,52 @@ schoolView.uniqueIds = function(schools) {
  *     area: ?Array<{
  *         id: number,
  *         name: string
- *     }>,
- *     category: string
+ *     }>
  * }}
  */
 schoolView.item = function(data) {
-    var entity = data.entity,
-        type = data.type,
-        url = data.alias;
+    let entity = data.entity,
+        page = data.alias || {};
 
     return {
         id: entity.id,
-        type: type,
+        type: entityType.SCHOOL,
         name: {light: entity.name},
+        description: entity.description || '',
         score: entity.totalScore,
         metro: addressView.nearestMetro(entity.addresses),
         area: addressView.getArea(entity.addresses),
-        alias: entityType.SCHOOL + '/' + url.alias
+        alias: entityType.SCHOOL + '/' + page.alias
     };
+};
+
+
+/**
+ * @param {nuber} amount
+ * @return {string}
+ */
+schoolView.declensionEntity = function(amount) {
+    let declensions = {
+        nom: 'школа',
+        gen: 'школы',
+        plu: 'школ'
+    };
+
+    let number = Math.abs(amount),
+        word = '';
+
+    if (number.toString().indexOf('.') > -1) {
+        word = declensions.gen;
+    } else {
+        word = number % 10 == 1 && number % 100 != 11 ?
+            declensions.nom :
+            number % 10 >= 2 && number % 10 <= 4 &&
+            (number % 100 < 10 || number % 100 >= 20) ?
+                declensions.gen :
+                declensions.plu;
+    }
+
+    return word;
 };
 
 module.exports = schoolView;

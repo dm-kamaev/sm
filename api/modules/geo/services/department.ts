@@ -3,22 +3,23 @@ const await = require('asyncawait/await');
 
 const models = require('../../../../app/components/models').all;
 const services = require('../../../../app/components/services').all;
-
+const sequelize = require('../../../../app/components/db.js');
 const Exception = require('nodules/controller/ServiceException');
 
 const entityType = require('../../entity/enums/entityType');
 
-import addressService from './address';
+import {service as addressService} from './address';
 import {
     DepartmentInstance,
-    DepartmentAttribute
+    DepartmentAttribute,
+    Model as DepartmentModel
 } from '../models/department';
-import DepartmentModel from '../models/department';
 import {AddressInstance} from '../models/address';
+import {Model as AddressModel} from '../models/address';
 import {DepartmentAdmin} from '../interfaces/DepartmentAdmin';
 
-import DepartmentNotFound from './exceptions/DepartmentNotFound';
-import AddressDoesNotExist from './exceptions/AddressDoesNotExist';
+import {DepartmentNotFound} from './exceptions/DepartmentNotFound';
+import {AddressDoesNotExist} from './exceptions/AddressDoesNotExist';
 
 class DepartmentService {
     public readonly name: string = 'department';
@@ -46,14 +47,11 @@ class DepartmentService {
                 address.id === address
             );
         } else {
-            const addressData = {
-                name: address
-            };
             try {
                 departmentAddress = await addressService.addAddress(
                     schoolId,
                     entityType.SCHOOL, {
-                        name: address
+                        name: address.trim()
                     }
                 );
             } catch (error) {
@@ -65,12 +63,11 @@ class DepartmentService {
             }
         }
 
-        addressService.updateIsSchool(departmentAddress.id);
-
         return DepartmentModel
             .create(data)
             .then(async instance => {
                 await departmentAddress.addDepartment(instance);
+                addressService.updateIsSchool(departmentAddress.id);
                 return instance;
             });
     }
@@ -92,22 +89,30 @@ class DepartmentService {
             address: string
         }
     ): Promise<DepartmentAdmin> {
-        const instance = await this.getById(departmentId);
+        const department = await this.getById(departmentId);
+        const addressId: number = Number(department.addressId);
         if (addressData.address) {
             try {
                 const address = await addressService.addAddress(
                     addressData.schoolId,
                     entityType.SCHOOL, {
                         name: addressData.address
-                    }
+                    },
+                    departmentId
                 );
                 data.addressId = address.id;
             } catch (error) {
-                throw new AddressDoesNotExist(addressData.address);
+                if (error.name === 'AddressDepartmentExist') {
+                    throw error;
+                } else {
+                    throw new AddressDoesNotExist(addressData.address);
+                }
             }
         }
+        const updatedDepartment = await department.update(data);
         addressService.updateIsSchool(data.addressId);
-        return instance.update(data);
+        await this.removeAddressWithOutDepartment_(addressId);
+        return updatedDepartment;
     }
 
     /**
@@ -116,8 +121,8 @@ class DepartmentService {
      */
     public async delete(departmentId) {
         const instance = await this.getById(departmentId);
-        addressService.updateIsSchool(instance.addressId);
         instance.destroy();
+        addressService.updateIsSchool(instance.addressId);
     }
 
     /**
@@ -142,8 +147,6 @@ class DepartmentService {
     }
 
     public async getById(departmentId: number): Promise<DepartmentAdmin> {
-        await addressService.updateIsSchool(departmentId);
-
         const department: DepartmentAdmin = await DepartmentModel.findOne({
             where: {
                 id: departmentId
@@ -196,9 +199,8 @@ class DepartmentService {
                 if (address.departments.length > 0) {
                     address.departments.forEach(department => {
                         if (department.educationalGrades &&
-                            department.educationalGrades.some(grade =>
-                                grade > 0
-                            )
+                            department.educationalGrades.some(
+                                grade => grade > 0)
                         ) {
                             res = true;
                         }
@@ -245,6 +247,36 @@ class DepartmentService {
             return department;
         });
     }
+
+
+    // remove school's address without department
+    private async removeAddressWithOutDepartment_(addressId: number) {
+        let countDepartments: number;
+        countDepartments = await this.countDepartmentsWithAddress_({
+            addressId
+        });
+        if (!countDepartments) {
+            await AddressModel.destroy({
+                where: {
+                    id: addressId,
+                }
+            });
+        }
+    }
+
+
+    // count departments with select address
+    private async countDepartmentsWithAddress_(
+        data: any
+    ): Promise<number> {
+        const res: any = await DepartmentModel.findAll({
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('address_id')), 'count']
+            ],
+            where: data
+        });
+        return Number(res[0].dataValues.count);
+    }
 }
 
-export default new DepartmentService();
+export const service = new DepartmentService();

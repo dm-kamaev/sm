@@ -12,9 +12,11 @@ const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
 const homeView = require('../../../../api/modules/school/views/homeView');
 const seoView = require('../../../../api/modules/school/views/seoView');
-
 const userView = require('../../../../api/modules/user/views/user');
+const configView = require('../../common/views/configView');
+
 const entityType = require('../../../../api/modules/entity/enums/entityType');
+const pageName = require('../../common/enums/pageName');
 
 const config = require('../../../config').config;
 
@@ -22,8 +24,7 @@ const ANALYTICS_ID = config.schools.analyticsId,
     YANDEX_METRIKA_ID = config.schools.yandexMetrikaId,
     DOMAIN = config.schools.host,
     FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId,
-    MODIFIER = 'stendhal';
+    CARROTQUEST_ID = config.carrotquestId;
 
 
 exports.createComment = async(function(req, res) {
@@ -261,22 +262,19 @@ exports.list = async(function(req, res, next) {
             config: config
         });
 
+        let templateConfig = configView.render({
+            entityType: entityType.SCHOOL,
+            pageName: pageName.SEARCH,
+            query: req.query,
+            csrf: req.csrfToken(),
+            config: config
+        });
+
         let html = soy.render(
             'sm.lSearch.Template.search', {
                 params: {
                     data: templateData,
-                    config: {
-                        entityType: entityType.SCHOOL,
-                        page: 'search',
-                        modifier: MODIFIER,
-                        staticVersion: config.lastBuildTimestamp,
-                        analyticsId: ANALYTICS_ID,
-                        yandexMetrikaId: YANDEX_METRIKA_ID,
-                        carrotquestId: CARROTQUEST_ID,
-                        csrf: req.csrfToken(),
-                        domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID
-                    }
+                    config: templateConfig
                 }
             }
         );

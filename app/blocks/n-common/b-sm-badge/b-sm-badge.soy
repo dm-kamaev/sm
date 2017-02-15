@@ -24,6 +24,7 @@
  *     iconName: (string|undefined),
  *     iconType: ('svg'|undefined),
  *     isNotActive: boolean,
+ *     theme: ('inline'|undefined),
  *     stylizationModifier: string
  * }} sm.bSmBadge.Template.Params.Config
  */
@@ -138,65 +139,50 @@
  *     },
  *     config: {
  *         searchType: (string|undefined),
- *         searchByName: boolean
+ *         searchByName: boolean,
+ *         isNotActive: boolean
  *     }
  * }}
  * @private
  */
 {template .item_}
-    {if $params.config.searchType and $params.config.searchType != 'rating'}
-        {call .itemLink_ data="all" /}
-    {else}
-        {call .itemText_ data="all" /}
-    {/if}
-{/template}
-
-
-/**
- * Item - link
- * @param params {{
- *     data: {
- *         id: (number|undefined),
- *         name: string
- *     },
- *     config: {
- *         searchType: (string|undefined),
- *         searchByName: boolean
- *     }
- * }}
- * @private
- */
-{template .itemLink_}
     {let $name kind="html"}
         {call cl.iUtils.Utils.encodeURIComponent}
             {param uri: $params.data.name/}
         {/call}
     {/let}
 
-    {let $uri: '?' + $params.config.searchType + '=' + $params.data.id +
-        ($params.config.searchByName ? '&name=' + $name : '')/}
+    {let $searchType: $params.config.searchType /}
 
-    <a class="{call .rootClass/}__item {call .rootClass/}__item_link"
-        href="{call cl.iUtils.Utils.ordainSanitizedUri}
-                {param uri: $uri/}
-              {/call}">
-        {$params.data.name}
-    </a>
-{/template}
+    {let $uri: $searchType and $searchType != 'rating' ?
+        (
+            '?' + $searchType + '=' + $params.data.id +
+            ($params.config.searchByName ? '&name=' + $name : '')
+        ) :
+        ''
+    /}
 
+    {let $customClasses kind="html"}
+        {call .rootClass/}__item-link
+    {/let}
 
-/**
- * Item with text data
- * @param params {{
- *     data: {
- *         name: string
- *     }
- * }}
- * @private
- */
-{template .itemText_}
-    <div class="{call .rootClass/}__item {call .rootClass/}__item_text">
-        {$params.data.name}
+    <div class="{call .rootClass/}__item">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.name,
+                        'url': $uri
+                    ],
+                    'config': [
+                        'theme': 'light',
+                        'customClasses': [$customClasses],
+                        'disableHover': $params.config.isNotActive
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 

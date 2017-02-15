@@ -72,10 +72,10 @@ class GeoCoder {
             } catch (error) {
                 logger.critical('Error:');
                 logger.critical(error);
-
-                logger.critical(`AddressId="${address.id}";`,
-                    `AddressName="${address.name}"`);
-
+                logger.critical(
+                    `AddressId="${address.id}";`,
+                    `AddressName="${address.name}"`
+                );
                 logger.critical('Found metros= ' +
                     JSON.stringify(foundMetros, null, 2));
             }

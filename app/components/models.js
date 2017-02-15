@@ -9,7 +9,7 @@ var models = {};
 exports.all = models;
 
 exports.initModels = function(dirPath) {
-    var localModels = fs
+    let localModels = fs
         .readdirSync(dirPath)
         .filter(file => (~file.indexOf('.js') && file != 'index.js'))
         .map(file => require(path.join(dirPath, file)))

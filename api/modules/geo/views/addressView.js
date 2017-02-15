@@ -1,7 +1,7 @@
 const metroView = require('./metroView');
 const areaView = require('./areaView');
-const departmentView = require('./departmentView').default;
-const lodashFlatten = require('lodash/array/flatten');
+const departmentView = require('./departmentView').departmentView;
+const lodashFlatten = require('lodash/flatten');
 
 var addressView = {};
 

@@ -5,7 +5,7 @@ const schoolType = require('../enums/schoolType');
 
 import * as Sequelize from 'sequelize/v3';
 
-interface SchoolAttribute {
+export interface SchoolAttribute {
     id?: number;
     name?: string;
     abbreviation?: string;
@@ -40,7 +40,7 @@ export interface SchoolInstance
 interface SchoolModel
     extends Sequelize.Model<SchoolInstance, SchoolAttribute> {}
 
-const School: SchoolModel = db.define('School', {
+const Model: SchoolModel = db.define('School', {
     id: {
         field: 'id',
         type: DataType.INTEGER,
@@ -161,46 +161,46 @@ const School: SchoolModel = db.define('School', {
 
     classMethods: {
         associate: function(models) {
-            School.hasMany(models.GiaResult, {
+            this.hasMany(models.GiaResult, {
                 as: 'giaResults', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
-            School.hasMany(models.OlimpResult, {
+            this.hasMany(models.OlimpResult, {
                 as: 'olimpResults', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
-            School.hasMany(models.EgeResult, {
+            this.hasMany(models.EgeResult, {
                 as: 'egeResults', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
-            School.hasMany(models.SchoolSearchData, {
+            this.hasMany(models.SchoolSearchData, {
                 as: 'schoolSearchData', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
-            School.hasMany(models.Address, {
+            this.hasMany(models.Address, {
                 as: 'addresses',
                 foreignKey: 'entity_id',
             });
-            School.belongsTo(models.CommentGroup, {
+            this.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id',
                 as: 'commentGroup'
             });
-            School.belongsTo(models.City, {
+            this.belongsTo(models.City, {
                 foreignKey: 'city_id',
                 as: 'city'
             });
-            School.hasMany(models.SchoolUniversity, {
+            this.hasMany(models.SchoolUniversity, {
                 as: 'schoolUniversities', foreignKey: 'school_id'
             });
-            School.hasMany(models.Activity, {
+            this.hasMany(models.Activity, {
                 as: 'activites',
                 foreignKey: 'school_id'
             });
-            School.hasMany(models.AdditionalEducation, {
+            this.hasMany(models.AdditionalEducation, {
                 as: 'additionalEducations',
                 foreignKey: 'school_id'
             });
-            School.hasMany(models.Favorite, {
+            this.hasMany(models.Favorite, {
                 as: 'favorite',
                 foreignKey: 'entity_id',
                 onDelete: 'cascade'
@@ -209,4 +209,4 @@ const School: SchoolModel = db.define('School', {
     }
 });
 
-export default School;
+export {Model};

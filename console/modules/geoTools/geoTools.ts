@@ -151,7 +151,7 @@ class GeoTools {
                 coords: metro.Point.pos.split(' ')
             };
         });
-        const metrosUniq = lodash.uniq(metros, 'name');
+        const metrosUniq = lodash.uniqBy(metros, 'name');
         return metrosUniq;
     }
 
@@ -301,7 +301,9 @@ class GeoTools {
             logger.critical(error);
             throw new Error(error).stack;
         }
+
+        return [latitude, longitude];
     }
 }
 
-export default new GeoTools();
+export const geoTools = new GeoTools();

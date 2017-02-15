@@ -8,13 +8,15 @@ const logger = require('../../../../app/components/logger/logger')
 
 const entityTypes = require('../../entity/enums/entityType');
 
-import geoTools from '../../../../console/modules/geoTools/geoTools';
+import {geoTools} from '../../../../console/modules/geoTools/geoTools';
 import {AddressInstance} from '../models/address';
-import AddressModel from '../models/address';
+import {Model as AddressModel} from '../models/address';
 
-import AddressIsNotUnique from './exceptions/AddressIsNotUnique';
+import {AddressIsNotUnique} from './exceptions/AddressIsNotUnique';
+import {AddressDepartmentExist} from './exceptions/AddressDepartmentExist';
 
 const SEARCH_RADIUS = 3; // killometrs, search radius for metro
+
 
 class AddressService {
     public readonly name: string = 'address';
@@ -29,22 +31,37 @@ class AddressService {
      * }} data
      * @return {Address}
      */
-    public async addAddress(entityId, entityType, data) {
+    public async addAddress(
+        entityId: number,
+        entityType: string,
+        data,
+        departmentId?: number
+    ) {
+        const newAddress: string = data.name;
         const addressBD = await services.address.getAddress({
             name: data.name,
             entityType: entityType
         });
-
         let address;
-
         if (addressBD) {
-            logger.debug('Address:' + data.name);
-            logger.debug(
-                'is already binded to ' + entityType +
-                ' with id:' + addressBD.school_id
-            );
-            if (entityType === entityTypes.SCHOOL &&
-                entityId !== addressBD.entityId) {
+            const isEqualId: boolean = entityId === addressBD.entityId;
+            // and but not current department
+            const isExistDepartment: boolean =
+                entityType === entityTypes.SCHOOL ?
+                    await this.isExistDepartmentForAddress_(
+                        entityId,
+                        entityType,
+                        newAddress,
+                        departmentId
+                    ) :
+                    false;
+            if (isEqualId && isExistDepartment) {
+                throw new AddressDepartmentExist(
+                    addressBD.entityId,
+                    addressBD.entityType,
+                    newAddress
+                );
+            } else if (!isEqualId) {
                 throw new AddressIsNotUnique(addressBD.name);
             }
             address = addressBD;
@@ -52,10 +69,11 @@ class AddressService {
             data.entityId = entityId;
             data.entityType = entityType;
             if (!data.coords) {
-                data.coords = await services.yapi.getCoords(
+                const coords: Array<Number> = await services.yapi.getCoords(
                     'Москва, ' + data.name,
                     true
                 );
+                data.coords = coords;
             }
 
             if (!data.areaId) {
@@ -66,6 +84,10 @@ class AddressService {
                 data.areaId = areas[0].id;
             }
 
+            if (entityType === entityTypes.SCHOOL) { // school address coords
+                data.coords.reverse();               // stored in reversed order
+            }                                        // but idk why
+
             address = await models.Address.create(data);
 
             const metros = await geoTools.getMetros(data.coords, SEARCH_RADIUS);
@@ -75,6 +97,7 @@ class AddressService {
         }
         return address;
     }
+
 
     /**
      * Update address data
@@ -252,8 +275,11 @@ class AddressService {
                 'ASC'
             ]];
         }
-
-        return models.Address.findAll(addressParams);
+        const addresses = await models.Address.findAll(addressParams);
+        // filter address without department
+        return addresses.filter(address =>
+            Boolean(address.departments.length)
+        );
     }
 
     /**
@@ -369,6 +395,42 @@ class AddressService {
                 true
         });
     }
+
+
+    private async isExistDepartmentForAddress_(
+        entityId: number,
+        entityType: string,
+        newAddress: string,
+        departmentId: number,
+    ): Promise<boolean> {
+        let result: boolean = false;
+        const addressForDepartments: AddressInstance[] =
+            await AddressModel.findAll({
+                attributes: ['id', 'name'],
+                where: {
+                    entityId,
+                    entityType,
+                }
+            });
+
+        const address: AddressInstance | boolean =
+            addressForDepartments.find(address => address.name === newAddress);
+
+        // check is current department or not
+        if (address) {
+            const department = await models.Department.findOne({
+                    where: {
+                        addressId: address.id
+                    }
+                });
+            result = !(department.id === departmentId);
+        } else {
+            result = Boolean(address);
+        }
+        return result;
+    }
+
+
 }
 
-export default new AddressService();
+export const service = new AddressService();
