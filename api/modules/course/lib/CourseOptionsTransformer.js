@@ -307,8 +307,8 @@ module.exports = class {
             age: this.formatAge_(option.age),
             schedule: this.formatSchedule_(option.schedule),
             maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
-            totalCost: this.formatCost_(option.totalCost),
-            costPerHour: this.formatCost_(option.costPerHour),
+            totalCost: this.formatTotalCost_(option.totalCost),
+            costPerHour: this.formatCostPerHour_(option.costPerHour),
             regularity: this.formatRegularity_(option.schedule),
             online: this.formatOnline_(option.online),
             duration: this.formatDuration_(option.duration),
@@ -414,12 +414,33 @@ module.exports = class {
      * @param  {number} cost
      * @return {string}
      */
-    formatCost_(cost) {
+    formatTotalCost_(cost) {
+        const totalType = 'курс';
+        return this.formatCost_(cost, totalType);
+    }
+
+    /**
+     * @private
+     * @param  {number} cost
+     * @return {string}
+     */
+    formatCostPerHour_(cost) {
+        const perHourType = 'час';
+        return this.formatCost_(cost, perHourType);
+    }
+
+    /**
+     * @private
+     * @param  {number} cost
+     * @param  {string} type
+     * @return {string}
+     */
+    formatCost_(cost, type) {
         let result;
         if (cost === 0) {
             result = 'Бесплатно';
         } else if (cost > 0) {
-            result = cost + ' руб.';
+            result = `${cost} руб. / ${type}`;
         } else {
             result = ''; // 'Цена не указана';
         }
