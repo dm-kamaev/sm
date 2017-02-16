@@ -1,5 +1,5 @@
 /**
- * @fileoverview Page with filters and results of search
+ * @fileOverview Page with filters and results of search
  */
 goog.provide('sm.lSearch.SearchExperimental');
 

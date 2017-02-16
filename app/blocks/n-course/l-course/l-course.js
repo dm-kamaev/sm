@@ -7,15 +7,12 @@ goog.require('sm.bSmMap.SmMap');
 goog.require('sm.bSmScore.SmScoreBrief');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalSuccess');
-goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
-goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.lCourse.Template');
 goog.require('sm.lCourse.View');
 goog.require('sm.lCourse.bUserInteraction.UserInteraction');
 goog.require('sm.lCourse.iAnalyticsSender.AnalyticsSender');
-
 
 goog.scope(function() {
 
@@ -114,11 +111,8 @@ goog.scope(function() {
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course,
         View = sm.lCourse.View,
-        Viewport = sm.iSmViewport.SmViewport,
         AnalyticsSender = sm.lCourse.iAnalyticsSender.AnalyticsSender,
-        Analytics = sm.iAnalytics.Analytics,
-        Map = sm.bSmMap.SmMap,
-        Balloon = sm.bSmBalloon.SmBalloon;
+        Map = sm.bSmMap.SmMap;
 
     /**
      * Name of this element in factory
@@ -534,12 +528,8 @@ goog.scope(function() {
  * creates sm.lCourse.Course instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
-        sm.lCourse.View.CssClass.ROOT
-    );
-
-    sm.iCloblFactory.FactoryStendhal.getInstance().decorate(
+    sm.iLayout.LayoutStendhal.autoInstance(
         sm.lCourse.Course.NAME,
-        domElement
+        sm.lCourse.View.CssClass.ROOT
     );
 });

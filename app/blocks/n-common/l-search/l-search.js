@@ -955,7 +955,7 @@ goog.scope(function() {
  */
 jQuery(function() {
     sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lSearch.Search,
-        sm.lSearch.View
+        sm.lSearch.Search.NAME,
+        sm.lSearch.View.CssClass.ROOT
     );
 });

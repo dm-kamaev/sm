@@ -14,8 +14,6 @@ goog.require('sm.lHome.View');
 
 goog.scope(function() {
     var View = sm.lHome.View;
-    var Analytics = sm.iAnalytics.Analytics;
-
 
 
 
@@ -120,5 +118,8 @@ goog.scope(function() {
  * creates sm.lHome.Home instance
  */
 jQuery(function() {
-    sm.iLayout.LayoutStendhal.autoInstance(sm.lHome.Home, sm.lHome.View);
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lHome.Home.NAME,
+        sm.lHome.View.CssClass.ROOT
+    );
 });

@@ -46,18 +46,13 @@ goog.scope(function() {
     goog.inherits(sm.lErrorNotFound.ErrorNotFound, sm.iLayout.LayoutStendhal);
     var ErrorNotFound = sm.lErrorNotFound.ErrorNotFound;
 
+
     /**
      * Name of this element in factory
      * @const {string}
      */
     ErrorNotFound.NAME = sm.lErrorNotFound.Template.NAME();
 
-    sm.iCloblFactory.FactoryStendhal.getInstance().register(
-        ErrorNotFound.NAME, {
-            control: ErrorNotFound,
-            view: View
-        }
-    );
 
     /**
      * @param {Element} element
@@ -92,6 +87,13 @@ goog.scope(function() {
             );
         }
     };
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        ErrorNotFound.NAME, {
+            control: ErrorNotFound,
+            view: View
+        }
+    );
 });  // goog.scope
 
 
@@ -100,7 +102,7 @@ goog.scope(function() {
  */
 jQuery(function() {
     sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lErrorNotFound.ErrorNotFound,
-        sm.lErrorNotFound.View
+        sm.lErrorNotFound.ErrorNotFound.NAME,
+        sm.lErrorNotFound.View.CssClass.ROOT
     );
 });
