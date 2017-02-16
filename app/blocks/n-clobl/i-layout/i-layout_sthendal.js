@@ -2,6 +2,7 @@ goog.provide('sm.iLayout.LayoutStendhal');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('goog.json');
 goog.require('sm.bSmFooter.SmFooter');
 goog.require('sm.bSmHeader.SmHeader');
 goog.require('sm.bSmSubheader.SmSubheader');
@@ -64,6 +65,13 @@ goog.inherits(sm.iLayout.LayoutStendhal, cl.iControl.Control);
 
 goog.scope(function() {
     var Layout = sm.iLayout.LayoutStendhal;
+
+    /**
+     * Parameter name in config in data params which corresponds
+     * to current factory name
+     * @const {string}
+     */
+    Layout.FactoryNameParameter = 'modifier';
 
     /**
      * @override
@@ -160,22 +168,23 @@ goog.scope(function() {
 
     /**
      * Init layout instance
-     * @param {Object} layout constructor for instanse
-     * @param {Object} view
+     * @param {string} LayoutName layout name in factory
+     * @param {string} RootCssClass layout root css class
      * @public
      */
-    Layout.autoInstance = function(layout, view) {
-        var domElement = goog.dom.getElementByClass(view.CssClass.ROOT);
+    Layout.autoInstance = function(LayoutName, RootCssClass) {
+        var domElement = goog.dom.getElementByClass(RootCssClass);
 
         if (domElement) {
             var params = goog.dom.dataset.get(domElement, 'params');
-            var factoryName = goog.json.parse(params)['modifier'];
+            var factoryName =
+                goog.json.parse(params)[Layout.FactoryNameParameter];
 
             var factory = factoryName == 'stendhal' ?
                 sm.iCloblFactory.FactoryStendhal :
                 sm.iCloblFactory.FactoryExperimental;
 
-            factory.getInstance().decorate(layout.NAME, domElement);
+            factory.getInstance().decorate(LayoutName, domElement);
         }
     };
 
