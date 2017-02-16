@@ -36,7 +36,7 @@ const Model: PageMetaModel = db.define('PageMeta', {
         field: 'tab_title'
     },
     seoDescription: {
-        type: DataType.STRING,
+        type: DataType.TEXT,
         field: 'seo_description'
     },
     openGraphTitle: {
@@ -44,7 +44,7 @@ const Model: PageMetaModel = db.define('PageMeta', {
         field: 'open_graph_title'
     },
     openGraphDescription: {
-        type: DataType.STRING,
+        type: DataType.TEXT,
         field: 'open_graph_description'
     },
     relapTag: {
@@ -54,6 +54,15 @@ const Model: PageMetaModel = db.define('PageMeta', {
     shareImageUrl: {
         type: DataType.STRING,
         field: 'share_image_url'
+    },
+    classMethods: {
+        associate: function(models) {
+            this.belongsToMany(models.Course, {
+                as: 'pageMeta',
+                through: 'course_page_meta',
+                foreignKey: 'page_meta_id'
+            });
+        }
     }
 });
 

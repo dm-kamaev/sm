@@ -6,7 +6,7 @@ const db = require('../../../../app/components/db'),
     urlService = require('../../entity/services/urls'),
     courseService = require('../services/course');
 
-let Course = db.define('Course', {
+let Course = db.define('this', {
     name: Sequelize.STRING,
     brandId: {
         type: Sequelize.INTEGER,
@@ -66,25 +66,30 @@ let Course = db.define('Course', {
     },
     classMethods: {
         associate: function(models) {
-            Course.belongsTo(models.CourseBrand, {
+            this.belongsTo(models.CourseBrand, {
                 as: 'courseBrand',
                 foreignKey: 'brand_id'
             });
-            Course.belongsTo(models.CourseType, {
+            this.belongsTo(models.CourseType, {
                 as: 'courseType',
                 foreignKey: 'type',
                 onDelete: 'set null',
                 onUpdate: 'cascade'
             });
-            Course.hasMany(models.CourseOption, {
+            this.hasMany(models.CourseOption, {
                 as: 'courseOptions',
                 foreignKey: 'course_id',
                 onDelete: 'cascade'
             });
-            Course.hasMany(models.Favorite, {
+            this.hasMany(models.Favorite, {
                 as: 'favorite',
                 foreignKey: 'entity_id',
                 onDelete: 'cascade'
+            });
+            this.belongsToMany(models.PageMeta, {
+                as: 'courses',
+                through: 'course_page_meta',
+                foreignKey: 'course_id'
             });
         }
     }
