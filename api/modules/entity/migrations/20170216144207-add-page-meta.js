@@ -9,14 +9,38 @@ module.exports = {
                 primaryKey: true,
                 autoIncrement: true
             },
-            'tab_title': Sequelize.STRING,
-            'seo_description': Sequelize.TEXT,
-            'open_graph_title': Sequelize.STRING,
-            'open_graph_description': Sequelize.STRING,
-            'relap_tag': Sequelize.STRING,
-            'share_image_url': Sequelize.STRING,
-            'created_at': Sequelize.DATE,
-            'updated_at': Sequelize.DATE
+            tabTitle: {
+                type: Sequelize.STRING,
+                field: 'tab_title'
+            },
+            seoDescription: {
+                type: Sequelize.TEXT,
+                field: 'seo_description'
+            },
+            openGraphTitle: {
+                type: Sequelize.STRING,
+                field: 'open_graph_title'
+            },
+            openGraphDescription: {
+                type: Sequelize.TEXT,
+                field: 'open_graph_description'
+            },
+            relapTag: {
+                type: Sequelize.STRING,
+                field: 'relap_tag'
+            },
+            shareImageUrl: {
+                type: Sequelize.STRING,
+                field: 'share_image_url'
+            },
+            createdAt: {
+                type: Sequelize.DATE,
+                field: 'created_at'
+            },
+            updatedAt: {
+                type: Sequelize.DATE,
+                field: 'updated_at'
+            }
         });
     },
     down: function(queryInterface, Sequelize) {

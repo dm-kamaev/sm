@@ -54,7 +54,11 @@ const Model: PageMetaModel = db.define('PageMeta', {
     shareImageUrl: {
         type: DataType.STRING,
         field: 'share_image_url'
-    },
+    }
+}, {
+    underscored: true,
+    tableName: 'page_meta'
+}, {
     classMethods: {
         associate: function(models) {
             this.belongsToMany(models.Course, {

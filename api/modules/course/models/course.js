@@ -6,7 +6,7 @@ const db = require('../../../../app/components/db'),
     urlService = require('../../entity/services/urls'),
     courseService = require('../services/course');
 
-let Course = db.define('this', {
+let Course = db.define('Course', {
     name: Sequelize.STRING,
     brandId: {
         type: Sequelize.INTEGER,
