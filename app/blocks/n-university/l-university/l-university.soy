@@ -34,7 +34,8 @@
  *         descriptionList:
  *              sm.lUniversity.bDescriptionList.Template.Params,
  *         summaryBoard: sm.bSummaryBoard.Template.Params,
- *         banner: sm.bSmBanner.Template.Params
+ *         banner: sm.bSmBanner.Template.Params,
+ *         entityRelation: sm.bEntityRelation.Template.Params
  *     },
  *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params
  * }} sm.lUniversity.Template.Data
@@ -178,6 +179,15 @@
  */
 {template .sketchData_}
     <div class="{call .rootClass/}__data_sketch">
+        <div class="{call .rootClass/}__entity-relation">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'entity-relation',
+                    'renderParams': $params.data.entityData.entityRelation
+                ]/}
+            {/call}
+        </div>
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,

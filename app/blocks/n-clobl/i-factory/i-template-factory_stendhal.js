@@ -5,6 +5,7 @@ goog.require('cl.iFactory.TemplateFactory');
 goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bBanner.Template');
 goog.require('sm.bButtonLink.Template');
+goog.require('sm.bEntityRelation.Template');
 goog.require('sm.bFavorite.Template');
 goog.require('sm.bFavoriteLink.Template');
 goog.require('sm.bHeader.Template');
@@ -217,6 +218,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'button-link',
             sm.bButtonLink.Template.buttonLink
+        )
+        .setTemplateListItem(
+            'entity-relation',
+            sm.bEntityRelation.Template.entityRelation
         );
 
     /** Heirs of the clobl blocks */

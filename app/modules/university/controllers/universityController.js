@@ -155,7 +155,7 @@ controller.information = async(function(req, res, next) {
                                 },
                                 config: {
                                     theme: 'neptune',
-                                    size: 'm'
+                                    size: 'xxl'
                                 }
                             }
                         },
@@ -175,12 +175,34 @@ controller.information = async(function(req, res, next) {
                             },
                             config: {
                                 theme: 'neptune-reverse',
-                                size: 'm'
+                                size: 'xxl'
                             }
                         }
                     },
                     config: {
                         theme: 'neptune-compact'
+                    }
+                },
+                entityRelation: {
+                    data: {
+                        items: [{
+                            data: {
+                                content: 'ВУЗ'
+                            }
+                        }, {
+                            data: {
+                                url: 'http://yandex.ru',
+                                content: 'ТОП 50'
+                            },
+                            config: {
+                                theme: 'neptune',
+                                size: 's'
+                            }
+                        }, {
+                            data: {
+                                content: 'Москва'
+                            }
+                        }]
                     }
                 }
             },

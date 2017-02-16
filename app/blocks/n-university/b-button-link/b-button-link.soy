@@ -12,7 +12,7 @@
  *     disableHover: boolean,
  *     size: ('s'|'m'|'l'|'xl'),
  *     theme: (string|undefined),
- *     isBorderRound: boolean
+ *     borderRoundSize: string
  * }}
  * sm.bButtonLink.Template.Params.Config
  */
@@ -41,9 +41,7 @@
  * @override
  */
 {template .body}
-<div class="{call .rootClass /}__content">
     {$params.data.content}
-</div>
 {/template}
 
 
@@ -79,8 +77,8 @@
     {if $params?.config.size}
         {sp}{call .rootClass /}_size_{$params?.config.size}
     {/if}
-    {if $params?.config?.isBorderRound}
-        {sp}{call .rootClass /}_border-round
+    {if $params?.config?.borderRoundSize}
+        {sp}{call .rootClass /}_border-round_size_{$params.config.borderRoundSize}
     {/if}
 {/template}
 

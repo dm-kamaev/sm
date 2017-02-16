@@ -1,0 +1,119 @@
+{namespace sm.bEntityRelation.Template}
+
+
+/**
+ * @typedef {{
+ *     items: Array<({
+ *          data: {
+ *              content: string
+ *          }
+ *     }|sm.bButtonLink.Template.Params)>
+ * }} 
+ * sm.bEntityRelation.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ * }}
+ * sm.bEntityRelation.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data:  sm.bEntityRelation.Template.Params.Data,
+ *     config: sm.bEntityRelation.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .entityRelation}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data:  sm.bEntityRelation.Template.Params.Data,
+ *     config: sm.bEntityRelation.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .list data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data:  sm.bEntityRelation.Template.Params.Data,
+ *     config: sm.bEntityRelation.Template.Params.Config
+ * }}
+ */
+{template .list}
+    <div class="{call .rootClass /}__list">
+        {foreach $item in $params.data.items}
+            {if $item.data.url}
+                {call .itemLink}
+                    {param item: $item /}
+                {/call}
+            {else}
+                {call .item}
+                    {param item: $item /}
+                {/call}
+            {/if}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * @param item {{
+ *     data: {
+ *         content: string
+ *     }
+ * }}
+ * @override
+ */
+{template .item}
+    <div class="{call .rootClass /}__list-item">
+        {call .getText}
+            {param message: $item.data.content /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @param item {sm.bButtonLink.Template.Params}
+ * @override
+ */
+{template .itemLink}
+    <div class="{call .rootClass /}__list-item {call .rootClass /}__list-item_link">
+        {call .renderChild}
+            {param params: [
+                'type': 'button-link',
+                'renderParams': [
+                    'data': $item.data,
+                    'config': [
+                        'theme': $item.config.theme,
+                        'size': $item.config.size,
+                        'borderRoundSize': 'm'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-entity-relation
+{/template}
