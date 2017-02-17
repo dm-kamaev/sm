@@ -1,5 +1,5 @@
 /**
- * @fileOverview Page with filters and results of search
+ * @fileoverview Page with filters and results of search
  */
 goog.provide('sm.lSearch.SearchExperimental');
 
@@ -70,7 +70,7 @@ goog.scope(function() {
  */
 jQuery(function() {
     sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lSearch.SearchExperimental,
-        sm.lSearch.ViewExperimental
+        sm.lSearch.SearchExperimental.NAME,
+        sm.lSearch.ViewExperimental.CssClass.ROOT
     );
 });
