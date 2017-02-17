@@ -2,7 +2,7 @@
 
 module.exports = {
     up: function(queryInterface, Sequelize) {
-        return queryInterface.createTable('course_page_meta', {
+        return queryInterface.createTable('course_page_meta_information', {
             id: {
                 primaryKey: true,
                 autoIncrement: true,
@@ -11,16 +11,18 @@ module.exports = {
             courseId: {
                 type: Sequelize.INTEGER,
                 field: 'course_id',
+                unique: true,
                 references: {
                     model: 'course',
                     key: 'id'
                 }
             },
-            pageMetaId: {
+            pageMetaInformationId: {
                 type: Sequelize.INTEGER,
-                field: 'page_meta_id',
+                field: 'page_meta_information_id',
+                unique: true,
                 references: {
-                    model: 'page_meta',
+                    model: 'page_meta_information',
                     key: 'id'
                 },
                 onDelete: 'cascade'
@@ -36,6 +38,6 @@ module.exports = {
         });
     },
     down: function(queryInterface) {
-        return queryInterface.dropTable('course_page_meta');
+        return queryInterface.dropTable('course_page_meta_information');
     }
 };

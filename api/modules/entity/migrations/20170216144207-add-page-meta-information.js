@@ -2,7 +2,7 @@
 
 module.exports = {
     up: function(queryInterface, Sequelize) {
-        return queryInterface.createTable('page_meta', {
+        return queryInterface.createTable('page_meta_information', {
             id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
@@ -44,6 +44,6 @@ module.exports = {
         });
     },
     down: function(queryInterface, Sequelize) {
-        return queryInterface.dropTable('page_meta');
+        return queryInterface.dropTable('page_meta_information');
     }
 };

@@ -1,61 +1,71 @@
 'use strict';
 
-const Sequelize = require('sequelize');
+const DataType = require('sequelize');
 
 const db = require('../../../../app/components/db'),
     urlService = require('../../entity/services/urls'),
     courseService = require('../services/course');
 
-let Course = db.define('Course', {
-    name: Sequelize.STRING,
+import * as Sequelize from 'sequelize/v3';
+
+import {
+    CourseAttributes,
+    CourseInstance
+} from '../types/courseInterfaces';
+
+interface CourseModel
+    extends Sequelize.Model<CourseInstance, CourseAttributes> {}
+
+let Course: CourseModel = db.define('Course', {
+    name: DataType.STRING,
     brandId: {
-        type: Sequelize.INTEGER,
+        type: DataType.INTEGER,
         field: 'brand_id'
     },
     type: {
-        type: Sequelize.STRING,
+        type: DataType.STRING,
         references: {
             model: 'course_type',
             key: 'id'
         },
         onUpdate: 'cascade'
     },
-    description: Sequelize.STRING,
+    description: DataType.STRING,
     fullDescription: {
-        type: Sequelize.TEXT,
+        type: DataType.TEXT,
         field: 'full_description'
     },
-    about: Sequelize.STRING,
+    about: DataType.STRING,
     entranceExam: {
-        type: Sequelize.TEXT,
+        type: DataType.TEXT,
         field: 'entrance_exam'
     },
     learningOutcome: {
-        type: Sequelize.TEXT,
+        type: DataType.TEXT,
         field: 'learning_outcome'
     },
     leadType: {
-        type: Sequelize.STRING,
+        type: DataType.STRING,
         field: 'lead_type'
     },
-    score: Sequelize.ARRAY(Sequelize.FLOAT),
+    score: DataType.ARRAY(DataType.FLOAT),
     scoreCount: {
-        type: Sequelize.ARRAY(Sequelize.INTEGER),
+        type: DataType.ARRAY(DataType.INTEGER),
         field: 'score_count'
     },
     totalScore: {
-        type: Sequelize.FLOAT,
+        type: DataType.FLOAT,
         field: 'total_score'
     },
     imageUrl: {
-        type: Sequelize.STRING(511),
+        type: DataType.STRING(511),
         field: 'image_url'
     },
     embedId: {
-        type: Sequelize.STRING,
+        type: DataType.STRING,
         field: 'embed_id'
     },
-    ctr: Sequelize.DOUBLE
+    ctr: DataType.DOUBLE
 }, {
     underscored: true,
     tableName: 'course',
@@ -86,13 +96,13 @@ let Course = db.define('Course', {
                 foreignKey: 'entity_id',
                 onDelete: 'cascade'
             });
-            this.belongsToMany(models.PageMeta, {
-                as: 'courses',
-                through: 'course_page_meta',
+            this.belongsToMany(models.PageMetaInformation, {
+                as: 'pageMetaInformation',
+                through: 'course_page_meta_information',
                 foreignKey: 'course_id'
             });
         }
     }
 });
 
-module.exports = Course;
+export {Course as Model};

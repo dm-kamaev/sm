@@ -8,23 +8,16 @@ const DataType = require('sequelize'),
 
 import * as Sequelize from 'sequelize/v3';
 
-export interface PageMetaAttributes {
-    id: number;
-    tabTitle: string;
-    seoDescription: string;
-    openGraphTitle: string;
-    openGraphDescription: string;
-    relapTag: string;
-    shareImageUrl: string;
-}
+import {
+    PageMetaInformationAttributes,
+    PageMetaInformationInstance
+} from '../types/pageMetaInterfaces';
 
-export interface PageMetaInstance
-    extends Sequelize.Instance<PageMetaAttributes>, PageMetaAttributes {}
+interface PageMetaInformationModel
+    extends Sequelize.Model<PageMetaInformationInstance,
+        PageMetaInformationAttributes> {}
 
-interface PageMetaModel
-    extends Sequelize.Model<PageMetaInstance, PageMetaAttributes> {}
-
-const Model: PageMetaModel = db.define('PageMeta', {
+const Model: PageMetaInformationModel = db.define('PageMetaInformation', {
     id: {
         type: DataType.INTEGER,
         allowNull: false,
@@ -57,14 +50,14 @@ const Model: PageMetaModel = db.define('PageMeta', {
     }
 }, {
     underscored: true,
-    tableName: 'page_meta'
+    tableName: 'page_meta_information'
 }, {
     classMethods: {
         associate: function(models) {
             this.belongsToMany(models.Course, {
-                as: 'pageMeta',
-                through: 'course_page_meta',
-                foreignKey: 'page_meta_id'
+                as: 'courses',
+                through: 'course_page_meta_information',
+                foreignKey: 'page_meta_information_id'
             });
         }
     }
