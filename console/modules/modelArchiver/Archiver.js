@@ -2,6 +2,7 @@
 const fs = require('fs-extra');
 const targz = require('tar.gz');
 const Decompress = require('decompress');
+const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const common = require('../../common');
 const path = require('path');
@@ -89,14 +90,18 @@ class Archiver {
      * @param {string} path
      */
     compress(text) {
-        try {
-            this.prepareArchive_(text);
-            await(this.compressPromise_());
-        } catch (e) {
-            console.log(e.message);
-        } finally {
-            this.cleanFolder_();
-        }
+        let that = this;
+        let asyncWrap = async(function() {
+            try {
+                that.prepareArchive_(text);
+                await(that.compressPromise_());
+            } catch (e) {
+                console.log(e.message);
+            } finally {
+                that.cleanFolder_();
+            }
+        });
+        asyncWrap();
     }
 
     /**
@@ -335,15 +340,6 @@ class Archiver {
      * @return {promise}
      */
     decompressPromise_(opt_outputFilePath) {
-        // var path = this.path_;
-        // return new Promise(function(resolve, reject) {
-        //     targz().extract(path, './',function(err) {
-        //         if(err)
-        //             reject(err);
-        //         //bug in tar.gz extract(). Callback called to early
-        //         setTimeout(function() {resolve('succsess');}, 1000);
-        //     });
-        // });
         var filePath = this.path_;
         var archiveFolder = opt_outputFilePath || this.archiveFolder_;
         return new Promise(function(resolve, reject) {

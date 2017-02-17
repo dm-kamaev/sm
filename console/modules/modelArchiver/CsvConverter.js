@@ -1,6 +1,7 @@
 'use strict';
 const Csv2json = require('csvtojson').Converter;
 const json2csv = require('json2csv');
+const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const replace = require('tipograph').Replace;
 const languages = require('tipograph').Languages;
@@ -116,8 +117,12 @@ class CsvConverter {
      */
     toCsv(opt_delimiter, opt_config) {
         var config = opt_config || {},
-            json = this.getJson_(config.notCureQuotes);
-        return await(this.csvPromise_(json, opt_delimiter));
+            json = this.getJson_(config.notCureQuotes),
+            that = this;
+        let asyncWrap = async(function(json, opt_delimiter) {
+            return await(that.csvPromise_(json, opt_delimiter));
+        });
+        return asyncWrap(json, opt_delimiter);
     }
 
     /**

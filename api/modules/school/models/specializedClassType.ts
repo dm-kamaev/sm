@@ -37,7 +37,14 @@ const SpecializedClassType: SpecializedClassTypeModel = db.define(
     },
     {
         underscored: true,
-        tableName: 'specialized_class_type'
+        tableName: 'specialized_class_type',
+        classMethods: {
+            associate: function(models) {
+                this.hasMany(models.SchoolSpecializedClass, {
+                    foreignKey: 'specialized_class_type_id'
+                });
+            }
+        }
     }
 );
 

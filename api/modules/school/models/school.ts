@@ -205,6 +205,10 @@ const Model: SchoolModel = db.define('School', {
                 foreignKey: 'entity_id',
                 onDelete: 'cascade'
             });
+            // this.hasMany(models.SchoolSpecializedClass, {
+            //     as: 'specializedClasses',
+            //     foreignKey: 'school_id'
+            // });
         }
     }
 });

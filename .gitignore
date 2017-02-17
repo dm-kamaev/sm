@@ -82,21 +82,22 @@ api/modules/school/controllers/index.js
 api/modules/school/controllers/schoolAdminController.js
 api/modules/school/controllers/profileAdminController.js
 
-api/modules/school/models/school.js
-api/modules/school/models/specializedClassType.js
+api/modules/school/migrations/20170215215800-school-specialized-class.js
+api/modules/school/migrations/20170217153500-school-specialized-classes-drop.js
+
 api/modules/school/models/additionalEducation.js
 api/modules/school/models/additionalEducationSphere.js
+api/modules/school/models/school.js
+api/modules/school/models/schoolSpecializedClass.js
 api/modules/school/models/specializedClassType.js
 
 
 api/modules/school/services/exceptions/*.js
 
+api/modules/school/services/additionalEducation.js
+api/modules/school/services/profileAdminService.js
 api/modules/school/services/schoolAdminService.js
 api/modules/school/services/schoolComment.js
-api/modules/school/services/profileAdminService.js
-api/modules/school/services/giaAdminService.js
-api/modules/school/services/examAdminService.js
-api/modules/school/services/additionalEducation.js
 api/modules/school/services/specializedClasses.js
 
 api/modules/school/views/commentView.js
@@ -142,14 +143,8 @@ app/middleware/adminUser.js
 
 
 console/one-off/shrinkOlympiadResults.js
-
 console/modules/geoTools/*.js
-
+console/modules/schoolSpecClasses/*.js
+console/importSchoolSpecClasses.js
 
 gulp/taskBackendLint.js
-
-
-
-
-
-
