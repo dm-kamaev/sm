@@ -5,7 +5,6 @@
 }
 
 .l-university__body {
-    min-height: 975px;
     margin: 0 auto 60px;
 
     color: #000;
@@ -16,7 +15,8 @@
 .l-university__section_data {
     width: 1200px;
     min-width: 255px;
-    margin: 0 auto;
+    min-height: 772px;
+    margin: 0 auto 80px auto;;
     padding-top: 35px;
 }
 
@@ -36,7 +36,6 @@
     display: inline-block;
 
     width: calc(100% - 310px);
-    margin-bottom: 25px;
 
     vertical-align: top;
 }
@@ -100,7 +99,6 @@
 
 .l-university__banner {
     height: 228px;
-    margin-bottom: 30px;
 }
 
 .l-university__banner_size_xs {
@@ -113,18 +111,57 @@
     padding-bottom: 23px;
 }
 
+.l-university__section_programs {
+    width: 100%;
+    background-color: #007aff;
+}
+
+.l-university__similar-programs-content{
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 0 57px 0;
+}
+
+.l-university__similar-programs-header {
+    padding-bottom: 35px;
+    font-family: 'Proxima', Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+@include media-l {
+    .l-university__similar-programs-header {
+        padding-bottom: 40px;
+    }
+}
+
 
 @include media-xl {
     .l-university__section_data {
-        box-sizing: border-box;
         width: auto;
         padding-right: 40px;
         padding-left: 40px;
+    }
+
+    .l-university__section_programs {
+        width: auto;
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+
+    .l-university__similar-programs-content{
+        padding-top: 45px;
     }
 }
 
 
 @include media-m {
+    .l-university__section_data {
+        min-height: 930px;
+    }
+
     .l-university__data_main-description {
         width: 100%;
     }
@@ -151,11 +188,25 @@
     }
 }
 
+@include media-s {
+    .l-university__similar-programs-content{
+        padding-bottom: 40px;
+    }
+
+    .l-university__similar-programs-header {
+        padding-bottom: 37px;
+    }
+}
 
 @include media-xs {
     .l-university__section_data {
-        padding-right: 30px;
-        padding-left: 30px;
+        padding-right: 25px;
+        padding-left: 25px;
+    }
+
+    .l-university__section_programs {
+        padding-right: 25px;
+        padding-left: 25px;
     }
 
     .l-university__main-description {
@@ -186,18 +237,25 @@
 
     .l-university__banner_size_xs {
         position: relative;
-        left: -30px;
+        left: -25px;
 
         display: block;
 
-        width: calc(100% + 60px);
+        width: calc(100% + 50px);
+        margin-bottom: 30px;
     }
 
     .l-university__entity-relation {
         display: block;
-    }
-
-    .l-university__entity-relation {
         padding-bottom: 20px;
+    }
+
+    .l-university__similar-programs-content{
+        padding-top: 37px;
+        padding-bottom: 30px;
+    }
+
+    .l-university__similar-programs-header {
+        padding-bottom: 30px;
     }
 }

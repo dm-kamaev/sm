@@ -1,4 +1,4 @@
-@import "../../i-media/i-media";
+@import '../../i-media/i-media';
 
 .b-sm-item_compact {
     padding: 0;
@@ -41,11 +41,78 @@
     .b-sm-item__description-link {
         display: inline;
     }
+
+    &.b-sm-item_neptune-theme {
+        position: relative;
+        height: 176px;
+        box-sizing: border-box;
+
+        .b-sm-item__name {
+            padding: 25px;
+            margin-bottom: 80px;
+            font-family: 'Proxima', Arial, sans-serif;
+            font-size: 19px;
+            font-weight: 600;
+            line-height: 20px;
+        }
+
+        .b-sm-item__section_description {
+            position: absolute;
+            bottom: 30px;
+            left: 25px;
+            margin-bottom: 0;
+        }
+
+        .b-sm-item__section_header {
+            margin-bottom: 0;
+        }
+
+        .b-sm-item__button-link {
+            position: absolute;
+            bottom: 5px;
+            right: 3px;
+        }
+    }
 }
 
+@include media-l {
+    .b-sm-item_compact {
+        &.b-sm-item_neptune-theme {
+            height: 182px;
+
+            .b-sm-item__section_description {
+                bottom: 35px;
+            }
+
+            .b-sm-item__button-link {
+                bottom: 10px;
+                right: 4px;
+            }
+        }
+    }
+}
+
+@include media-m {
+    .b-sm-item_compact {
+        &.b-sm-item_neptune-theme {
+            height: 210px;
+        }
+    }
+}
+
+@include media-s {
+    .b-sm-item_compact {
+        &.b-sm-item_neptune-theme {
+            .b-sm-item__name {
+                padding: 35px;
+            }
+        }
+    }
+}
 
 @include media-xs {
     .b-sm-item_compact {
+
         .b-sm-item__section-group_cover {
             float: left;
 
@@ -55,6 +122,24 @@
 
         .b-sm-item__section-group_info {
             padding-left: 90px;
+        }
+
+        &.b-sm-item_neptune-theme {
+            .b-sm-item__section-group_info {
+                padding-left: 0;;
+            }
+
+            .b-sm-item__name {
+                padding: 25px;
+            }
+        }
+    }
+}
+
+@include media-xxs {
+    .b-sm-item_compact {
+        &.b-sm-item_neptune-theme {
+            height: 176px;
         }
     }
 }

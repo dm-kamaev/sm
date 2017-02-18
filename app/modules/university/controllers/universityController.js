@@ -96,7 +96,7 @@ controller.information = async(function(req, res, next) {
                 },
                 summaryBoard: {
                     list: [{
-                        header: 'Бюджет',
+                        header: 'Главное',
                         items: [{
                             data: {
                                 header: '245 баллов',
@@ -109,25 +109,6 @@ controller.information = async(function(req, res, next) {
                             data: {
                                 header: '30',
                                 description: 'бюджетных мест'
-                            }
-                        }, {
-                            data: {
-                                header: '6',
-                                description: 'человек на место'
-                            },
-                            config: {
-                                iconType: 'people'
-                            }
-                        }]
-                    }, {
-                        header: 'Платное отделение',
-                        items: [{
-                            data: {
-                                header: '200 баллов',
-                                description: 'за 4 экзамена'
-                            },
-                            config: {
-                                theme: 'neptune'
                             }
                         }, {
                             data: {
@@ -204,6 +185,97 @@ controller.information = async(function(req, res, next) {
                             }
                         }]
                     }
+                },
+                similarPrograms: {
+                    header: 'Похожие программы',
+                    countItemsPerPage: 4,
+                    items: [{
+                        id: 1,
+                        type: 'university',
+                        name: {
+                            light: 'Менеджер СПБГУ'
+                        },
+                        description: ' ',
+                        descriptionLink: {
+                            content: 'Специальность',
+                            url: 'http://yandex.ru',
+                            theme: 'neptune',
+                            size: 'xl'
+                        },
+                        buttonLink: {
+                            data: {
+                                icon: 'arrow-circle',
+                                iconType: 'svg',
+                                url: 'http://yandex.ru'
+                            }
+                        }
+                    }, {
+                        id: 2,
+                        type: 'university',
+                        name: {
+                            light: 'Социология НИУ-ВШЭ'
+                        },
+                        description: ' ',
+                        descriptionLink: {
+                            content: 'Специальность',
+                            url: 'http://yandex.ru',
+                            theme: 'neptune',
+                            size: 'xl'
+                        },
+                        buttonLink: {
+                            data: {
+                                icon: 'arrow-circle',
+                                iconType: 'svg',
+                                url: 'http://yandex.ru'
+                            }
+                        }
+                    }, {
+                        id: 3,
+                        type: 'university',
+                        name: {
+                            light: 'Менеджер МГУ'
+                        },
+                        description: ' ',
+                        descriptionLink: {
+                            content: 'Специальность',
+                            url: 'http://yandex.ru',
+                            theme: 'neptune',
+                            size: 'xl'
+                        },
+                        buttonLink: {
+                            data: {
+                                icon: 'arrow-circle',
+                                iconType: 'svg',
+                                url: 'http://yandex.ru'
+                            }
+                        }
+                    }, {
+                        id: 4,
+                        type: 'university',
+                        name: {
+                            light: 'Логистика НИУ-ВШЭ'
+                        },
+                        description: ' ',
+                        descriptionLink: {
+                            content: 'Специальность',
+                            url: 'http://yandex.ru',
+                            theme: 'neptune',
+                            size: 'xl'
+                        },
+                        buttonLink: {
+                            data: {
+                                icon: 'arrow-circle',
+                                iconType: 'svg',
+                                url: 'http://yandex.ru'
+                            }
+                        }
+                    }],
+                    itemType: 'smItemCompact',
+                    itemConfig: {
+                        theme: 'neptune',
+                        isNameNotLink: true
+                    },
+                    theme: 'neptune'
                 }
             },
             authSocialLinks: authSocialLinks,

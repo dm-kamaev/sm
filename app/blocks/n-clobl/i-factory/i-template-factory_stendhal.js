@@ -4,7 +4,6 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 goog.require('cl.iFactory.TemplateFactory');
 goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bBanner.Template');
-goog.require('sm.bButtonLink.Template');
 goog.require('sm.bEntityRelation.Template');
 goog.require('sm.bFavorite.Template');
 goog.require('sm.bFavoriteLink.Template');
@@ -16,6 +15,7 @@ goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBalloon.Template');
 goog.require('sm.bSmBanner.Template');
+goog.require('sm.bSmButtonLink.Template');
 goog.require('sm.bSmCatalog.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
@@ -216,10 +216,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bSummaryBoard.Template.summaryBoard
         )
         .setTemplateListItem(
-            'button-link',
-            sm.bButtonLink.Template.buttonLink
-        )
-        .setTemplateListItem(
             'entity-relation',
             sm.bEntityRelation.Template.entityRelation
         );
@@ -382,6 +378,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smSubscribeBoard',
             sm.bSmSubscribeBoard.Template.board
+        )
+        .setTemplateListItem(
+            'smButtonLink',
+            sm.bSmButtonLink.Template.buttonLink
         );
 
     /** l-information blocks **/

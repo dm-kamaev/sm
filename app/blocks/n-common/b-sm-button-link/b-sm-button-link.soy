@@ -1,8 +1,14 @@
-{namespace sm.bButtonLink.Template}
+{namespace sm.bSmButtonLink.Template}
 
 
 /**
- * @typedef {sm.bSmLink.Template.Params.Data} 
+ * @typedef {{
+ *     id: ?number,
+ *     url: ?strnig,
+ *     icon: ?string,
+ *     iconType: ?string,
+ *     content: ?string
+ * }} 
  * sm.bButtonLink.Template.Params.Data
  */
 
@@ -41,7 +47,30 @@
  * @override
  */
 {template .body}
-    {$params.data.content}
+    {if $params.data.icon}
+        {let $type kind="html"}
+            {if $params.data.iconType}
+                icon-{$params.data.iconType}
+            {else}
+                icon
+            {/if}
+        {/let}
+        {call .renderChild}
+            {param params: [
+                'type': $type,
+                'renderParams': [
+                    'data': [
+                        'type': $params.data.icon
+                    ]
+                ]
+            ]/}
+        {/call}
+    {/if}
+    {if $params.data.content}
+        {call cl.iControl.Template.getText}
+            {param message: $params.data.content /}
+        {/call}
+    {/if}
 {/template}
 
 
@@ -59,7 +88,7 @@
  * @override
  */
 {template .rootClass}
-    b-button-link
+    b-sm-button-link
 {/template}
 
 

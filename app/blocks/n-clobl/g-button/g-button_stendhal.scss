@@ -49,7 +49,7 @@
     font-weight: 600;
     line-height: 25px;
 
-    &:hover {
+    &.g-button_hoverable:hover {
         background-color: rgba(0, 122, 255, 0.2)
     }
 }

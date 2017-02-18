@@ -169,11 +169,13 @@ goog.scope(function() {
      * @protected
      */
     View.prototype.initLinkElementsListeners = function() {
-        this.getHandler().listen(
-            this.dom.nameLink,
-            goog.events.EventType.CLICK,
-            this.onClick
-        );
+        if (this.dom.nameLink) {
+            this.getHandler().listen(
+                this.dom.nameLink,
+                goog.events.EventType.CLICK,
+                this.onClick
+            );
+        }
 
         if (this.dom.coverImage) {
             this.getHandler().listen(

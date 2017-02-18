@@ -15,7 +15,9 @@
  *     description: (string|undefined),
  *     descriptionLink: ({
  *         content: string,
- *         url: string
+ *         url: string,
+ *         size: ?string,
+ *         theme: ?string
  *     }|undefined),
  *     metro: ?Array<{
  *         id: number,
@@ -25,8 +27,7 @@
  *         id: number,
  *         name: string
  *     }>,
- *     category: string,
- *     url: ?string
+ *     category: string
  * }}
  * sm.bSmItem.TemplateCompact.Params.Data
  */
@@ -127,7 +128,8 @@
  *         url: ?string
  *     },
  *     config: {
- *         theme: string
+ *         theme: string,
+ *         isNameNotLink: ?boolean
  *     }
  * }}
  * @protected
@@ -154,23 +156,29 @@
             {call .rootClass/}__link-name
         {/let}
 
-        {call .renderChild}
-            {param params: [
-                'type': 'smLink',
-                'renderParams': [
-                    'data': [
-                        'id': $params.data.id,
-                        'content': $name,
-                        'url': $url
-                    ],
-                    'config': [
-                        'customClasses': [$customClasses],
-                        'theme': 'dark',
-                        'size': 'xxl'
+        {if $params.config.isNameNotLink}
+            {call .getText}
+                {param message: $name /}
+            {/call}
+        {else}
+            {call .renderChild}
+                {param params: [
+                    'type': 'smLink',
+                    'renderParams': [
+                        'data': [
+                            'id': $params.data.id,
+                            'content': $name,
+                            'url': $url
+                        ],
+                        'config': [
+                            'customClasses': [$customClasses],
+                            'theme': 'dark',
+                            'size': 'xxl'
+                        ]
                     ]
-                ]
-            ]/}
-        {/call}
+                ]/}
+            {/call}
+        {/if}
     </div>
 {/template}
 
@@ -331,7 +339,9 @@
  *     data: {
  *         descriptionLink: ({
  *             content: string,
- *             url: string
+ *             url: string,
+ *             size: ?string,
+ *             theme: ?string
  *         }|undefined)
  *     }
  * }}
@@ -349,7 +359,9 @@
                     'renderParams': [
                         'data': $params.data?.descriptionLink,
                         'config': [
-                            'customClasses': [$customClasses]
+                            'customClasses': [$customClasses],
+                            'size': $params.data?.descriptionLink?.size,
+                            'theme': $params.data?.descriptionLink?.theme
                         ]
                     ]
                 ]/}

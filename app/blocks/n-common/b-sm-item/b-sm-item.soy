@@ -22,7 +22,8 @@
  *         name: string
  *     }>,
  *     category: string,
- *     url: ?string
+ *     url: ?string,
+ *     buttonLink: sm.bSmButtonLink.Template.Params
  * }} sm.bSmItem.Template.Params.Data
  */
 
@@ -32,7 +33,8 @@
  *     enableCover: boolean,
  *     stylizationModifier: string,
  *     customClasses: ?Array<string>,
- *     theme: ?string
+ *     theme: ?string,
+ *     isNameNotLink: ?boolean
  * }} sm.bSmItem.Template.Params.Config
  */
 
@@ -78,6 +80,7 @@
     {/if}
 
     {call .sectionGroupInfo data="all" /}
+    {call .buttonLink_ data="all" /}
 {/template}
 
 
@@ -510,6 +513,28 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Button link
+ * @param params {{
+ *     data: {
+ *         buttonLink:
+ *     }
+ * }}
+ */
+{template .buttonLink_}
+    {if $params.data.buttonLink}
+        <div class="{call .rootClass/}__button-link">
+            {call .renderChild}
+                {param params: [
+                    'type': 'smButtonLink',
+                    'renderParams': $params.data.buttonLink
+                ]/}
+            {/call}
+        </div>
+    {/if}
 {/template}
 
 

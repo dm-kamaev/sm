@@ -35,7 +35,8 @@
  *              sm.lUniversity.bDescriptionList.Template.Params,
  *         summaryBoard: sm.bSummaryBoard.Template.Params,
  *         banner: sm.bSmBanner.Template.Params,
- *         entityRelation: sm.bEntityRelation.Template.Params
+ *         entityRelation: sm.bEntityRelation.Template.Params,
+ *         similarPrograms: sm.bSmItemList.Template.Params.Data
  *     },
  *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params
  * }} sm.lUniversity.Template.Data
@@ -89,7 +90,7 @@
     {if $params}{/if}
         {call .sectionData_ data="all" /}
         // {call .sectionComments_ data="all" /}
-        // {call .sectionPrograms_ data="all" /}
+        {call .sectionPrograms_ data="all" /}
     </div>
 {/template}
 
@@ -159,6 +160,20 @@
     >
         {call .sketchData_ data="all" /}
         {call .mainData_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section data
+ * @private
+ * @ovveride
+ */
+{template .sectionPrograms_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_programs{sp}"
+    >
+        {call .programs_ data="all" /}
     </div>
 {/template}
 
@@ -382,5 +397,43 @@
                 'renderParams': $params.data.entityData.banner
             ]/}
         {/call}
+    </div>
+{/template}
+
+
+/**
+ * Similar programs block
+ * @param params {{
+ *     data: sm.lUniversity.Template.Data,
+ *     config: string
+ * }}
+ * @private
+ */
+{template .programs_}
+    <div class="{call .rootClass/}__similar-programs-content">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__programs
+        {/let}
+        <div class="{call .rootClass/}__similar-programs-header">
+            {call cl.iControl.Template.getText}
+                    {param message: $params.data.entityData.similarPrograms.header /}
+            {/call}
+        </div>
+        <div class="{call .rootClass/}__similar-programs-list">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smItemList',
+                    'renderParams': [
+                        'data': $params.data.entityData.similarPrograms,
+                        'config': [
+                            'enableCover': false,
+                            'theme': 'inline',
+                            'customClasses': [$customClasses]
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
     </div>
 {/template}
