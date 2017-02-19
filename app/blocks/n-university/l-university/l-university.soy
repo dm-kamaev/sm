@@ -36,7 +36,8 @@
  *         summaryBoard: sm.bSummaryBoard.Template.Params,
  *         banner: sm.bSmBanner.Template.Params,
  *         entityRelation: sm.bEntityRelation.Template.Params,
- *         similarPrograms: sm.bSmItemList.Template.Params.Data
+ *         similarPrograms: sm.bSmItemList.Template.Params.Data,
+ *         usefulCourses: sm.bSmItemList.Template.Params.Data
  *     },
  *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params
  * }} sm.lUniversity.Template.Data
@@ -91,6 +92,7 @@
         {call .sectionData_ data="all" /}
         // {call .sectionComments_ data="all" /}
         {call .sectionPrograms_ data="all" /}
+        {call .sectionUsefulCourses_ data="all" /}
     </div>
 {/template}
 
@@ -165,7 +167,7 @@
 
 
 /**
- * Section data
+ * Section programs
  * @private
  * @ovveride
  */
@@ -174,6 +176,20 @@
         {call .rootClass/}__section_programs{sp}"
     >
         {call .programs_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section courses
+ * @private
+ * @ovveride
+ */
+{template .sectionUsefulCourses_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_courses{sp}"
+    >
+        {call .courses_ data="all" /}
     </div>
 {/template}
 
@@ -256,7 +272,10 @@
 /**
  * Description
  * @param params {{
- *     data: sm.lUniversity.Template.Data
+ *     data: sm.lUniversity.Template.Data,
+ *     config: {
+ *         modifier: string
+ *     }
  * }}
  * @private
  */
@@ -303,7 +322,15 @@
 /**
  * Data on the middle - section main data
  * @param params {{
- *     data: sm.lUniversity.Template.Data
+ *     data: {
+ *         entityData: {
+ *             descriptionList:
+ *                 sm.lUniversity.bDescriptionList.Template.Params
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
  * }}
  * @private
  */
@@ -325,8 +352,15 @@
 /**
  * Summary board
  * @param params {{
- *     data: sm.lUniversity.Template.Data,
- *     config: string
+ *     data: {
+ *         entityData: {
+ *             summaryBoard: sm.bSummaryBoard.Template.Params,
+ *             banner: sm.bSmBanner.Template.Params,
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
  * }}
  * @private
  */
@@ -362,8 +396,12 @@
 /**
  * Subscribe block input email
  * @param params {{
- *     data: sm.lUniversity.Template.Data,
- *     config: string
+ *     data: {
+ *         subscribeBoard: sm.bSmSubscribeBoard.Template.Params
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
  * }}
  * @private
  */
@@ -383,8 +421,14 @@
 /**
  * Banner size XS
  * @param params {{
- *     data: sm.lUniversity.Template.Data,
- *     config: string
+ *     data: {
+ *         entityData: {
+ *             banner: sm.bSmBanner.Template.Params
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
  * }}
  * @private
  */
@@ -404,8 +448,14 @@
 /**
  * Similar programs block
  * @param params {{
- *     data: sm.lUniversity.Template.Data,
- *     config: string
+ *     data: {
+ *         entityData: {
+ *             similarPrograms: sm.bSmItemList.Template.Params.Data
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
  * }}
  * @private
  */
@@ -416,7 +466,7 @@
         {/let}
         <div class="{call .rootClass/}__similar-programs-header">
             {call cl.iControl.Template.getText}
-                    {param message: $params.data.entityData.similarPrograms.header /}
+                {param message: $params.data.entityData.similarPrograms.header /}
             {/call}
         </div>
         <div class="{call .rootClass/}__similar-programs-list">
@@ -427,7 +477,50 @@
                     'renderParams': [
                         'data': $params.data.entityData.similarPrograms,
                         'config': [
-                            'enableCover': false,
+                            'theme': 'inline',
+                            'customClasses': [$customClasses]
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Similar programs block
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             usefulCourses: sm.bSmItemList.Template.Params.Data
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .courses_}
+    <div class="{call .rootClass/}__useful-courses-content">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__courses
+        {/let}
+        <div class="{call .rootClass/}__useful-courses-header">
+            {call cl.iControl.Template.getText}
+                {param message: $params.data.entityData.usefulCourses.header /}
+            {/call}
+        </div>
+        <div class="{call .rootClass/}__useful-courses-list">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smItemList',
+                    'renderParams': [
+                        'data': $params.data.entityData.usefulCourses,
+                        'config': [
+                            'enableCover': true,
                             'theme': 'inline',
                             'customClasses': [$customClasses]
                         ]

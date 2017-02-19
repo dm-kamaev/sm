@@ -42,6 +42,7 @@
         display: inline;
     }
 
+    /** Neptune theme start **/
     &.b-sm-item_neptune-theme {
         position: relative;
         height: 176px;
@@ -73,10 +74,39 @@
             right: 3px;
         }
     }
+    /** Neptune theme end **/
+
+    /** Neptune-imaged theme start **/
+    &.b-sm-item_neptune-imaged-theme {
+        .b-sm-item__cover-image {
+            width: 100%;
+        }
+
+        .b-sm-item__section-group_cover {
+            margin-bottom: 13px;
+        }
+
+        .b-sm-item__name {
+            padding-right: 0;
+            font-weight: 400;
+            font-family: 'ArialMT', Arial, sans-serif;
+        }
+
+        .b-sm-item__section_description {
+            padding-right: 0;
+            line-height: 24px;
+            font-size: 20px;
+            font-weight: 600;
+            font-family: 'Proxima', Arial, sans-serif;
+        }
+    }
+    /** Neptune-imaged theme end **/
 }
 
 @include media-l {
     .b-sm-item_compact {
+
+        /** Neptune theme start **/
         &.b-sm-item_neptune-theme {
             height: 182px;
 
@@ -89,24 +119,45 @@
                 right: 4px;
             }
         }
+        /** Neptune theme end **/
     }
 }
 
 @include media-m {
     .b-sm-item_compact {
+        /** Neptune theme start **/
         &.b-sm-item_neptune-theme {
             height: 210px;
         }
+        /** Neptune theme end **/
+
+        /** Neptune-imaged theme start **/
+        &.b-sm-item_neptune-imaged-theme {
+            .b-sm-item__cover-image {
+                width: 100%;
+            }
+
+            .b-sm-item__section-group_cover {
+                margin-bottom: 15px;
+            }
+
+            .b-sm-item__name {
+                padding-right: 0;
+            }
+        }
+        /** Neptune-imaged theme end **/
     }
 }
 
 @include media-s {
     .b-sm-item_compact {
+        /** Neptune theme start **/
         &.b-sm-item_neptune-theme {
             .b-sm-item__name {
                 padding: 35px;
             }
         }
+        /** Neptune theme end **/
     }
 }
 
@@ -124,22 +175,51 @@
             padding-left: 90px;
         }
 
+        /** Neptune theme start **/
         &.b-sm-item_neptune-theme {
             .b-sm-item__section-group_info {
-                padding-left: 0;;
+                padding-left: 0;
             }
 
             .b-sm-item__name {
                 padding: 25px;
             }
         }
+        /** Neptune theme end **/
+
+        /** Neptune-imaged theme start **/
+        &.b-sm-item_neptune-imaged-theme {
+            .b-sm-item__cover-image {
+                width: 100%;
+            }
+
+            .b-sm-item__section-group_cover {
+                margin-bottom: 10px;
+            }
+
+            .b-sm-item__section-group_info {
+                padding-left: 0;
+            }
+
+            .b-sm-item__section_description {
+                margin-bottom: 0;
+            }
+
+            .b-sm-item__name {
+                padding-right: 0;
+            }
+        }
+        /** Neptune-imaged theme end **/
     }
 }
 
 @include media-xxs {
     .b-sm-item_compact {
+
+        /** Neptune theme start **/
         &.b-sm-item_neptune-theme {
             height: 176px;
         }
+        /** Neptune theme end **/
     }
 }

@@ -16,7 +16,7 @@
     width: 1200px;
     min-width: 255px;
     min-height: 772px;
-    margin: 0 auto 80px auto;;
+    margin: 0 auto 80px auto;
     padding-top: 35px;
 }
 
@@ -131,6 +131,24 @@
     color: #ffffff;
 }
 
+.l-university__section_courses {
+    width: 1200px;
+    min-width: 255px;
+    margin: 0 auto;
+}
+
+.l-university__useful-courses-content {
+    padding-top: 46px;
+}
+
+.l-university__useful-courses-header {
+    padding-bottom: 25px;
+    line-height: 29px;
+    font-family: 'Proxima', Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+}
+
 @include media-l {
     .l-university__similar-programs-header {
         padding-bottom: 40px;
@@ -146,6 +164,12 @@
     }
 
     .l-university__section_programs {
+        width: auto;
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+
+    .l-university__section_courses {
         width: auto;
         padding-right: 40px;
         padding-left: 40px;
@@ -186,6 +210,10 @@
     .l-university__entity-relation {
         display: none;
     }
+
+    .l-university__useful-courses-content {
+        padding-top: 40px;
+    }
 }
 
 @include media-s {
@@ -205,6 +233,11 @@
     }
 
     .l-university__section_programs {
+        padding-right: 25px;
+        padding-left: 25px;
+    }
+
+    .l-university__section_courses {
         padding-right: 25px;
         padding-left: 25px;
     }
@@ -256,6 +289,14 @@
     }
 
     .l-university__similar-programs-header {
-        padding-bottom: 30px;
+        padding-bottom: px;
+    }
+
+    .l-university__useful-courses-content {
+        padding-top: 30px;
+    }
+
+    .l-university__useful-courses-header {
+        padding-bottom: 5px;
     }
 }

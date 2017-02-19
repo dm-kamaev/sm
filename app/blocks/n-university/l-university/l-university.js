@@ -37,6 +37,7 @@ goog.scope(function() {
         this.initSummaryBoard_();
         this.initCutDescription_();
         this.initPrograms_();
+        this.initCourses_();
     };
 
 
@@ -108,6 +109,17 @@ goog.scope(function() {
         this.decorateChild(
             'smItemList',
             this.getView().getDom().programs
+        );
+    };
+
+    /**
+     * Initializes instance courses item list
+     * @private
+     */
+    University.prototype.initCourses_ = function() {
+        this.decorateChild(
+            'smItemList',
+            this.getView().getDom().courses
         );
     };
 });  // goog.scope

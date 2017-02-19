@@ -55,7 +55,8 @@ goog.scope(function() {
         DESCRIPTION_LIST: sm.lUniversity.bDescriptionList.View.CssClass.ROOT,
         SUMMARY_BOARD: sm.bSummaryBoard.View.CssClass.ROOT,
         CUT_DESCRIPTION: sm.bSmCollapsedText.View.CssClass.ROOT,
-        PROGRAMS: 'l-university__programs'
+        PROGRAMS: 'l-university__programs',
+        COURSES: 'l-university__courses'
     };
 
 
@@ -100,6 +101,9 @@ goog.scope(function() {
                 ),
                 programs: this.getElementByClass(
                     View.CssClass.PROGRAMS
+                ),
+                courses: this.getElementByClass(
+                    View.CssClass.COURSES
                 )
             }
         );

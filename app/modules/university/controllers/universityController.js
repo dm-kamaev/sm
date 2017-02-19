@@ -276,6 +276,47 @@ controller.information = async(function(req, res, next) {
                         isNameNotLink: true
                     },
                     theme: 'neptune'
+                },
+                usefulCourses: {
+                    header: 'Полезные курсы',
+                    countItemsPerPage: 3,
+                    items: [{
+                        id: 1,
+                        type: 'course',
+                        name: {
+                            light: 'Английский язык'
+                        },
+                        description: `Подготовка к ЕГЭ по английскому
+                            языку English First`,
+                        imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
+                            'facebook/000/839/199/8a9.jpg'
+                    }, {
+                        id: 2,
+                        type: 'course',
+                        name: {
+                            light: 'Профориентация'
+                        },
+                        description: 'Система Выбор Smart Course',
+                        imageUrl: 'http://lamcdn.net/lookatme.ru/post_image-' +
+                            'image/vePw1jo6HLFVfp7JIU5_Qg-article.jpg'
+                    }, {
+                        id: 3,
+                        type: 'course',
+                        name: {
+                            light: 'Профориентация'
+                        },
+                        description: `Пропуск в профессию. Индивидуальная
+                            траектория Proekt Pro`,
+                        imageUrl: 'http://cs8.pikabu.ru/post_img/2016/01/14/' +
+                            '12/1452803883198482683.png'
+                    }],
+                    itemType: 'smItemCompact',
+                    itemConfig: {
+                        theme: 'neptune-imaged',
+                        enableCover: true,
+                        nameLinkSize: 'xl'
+                    },
+                    theme: 'neptune'
                 }
             },
             authSocialLinks: authSocialLinks,

@@ -129,7 +129,8 @@
  *     },
  *     config: {
  *         theme: string,
- *         isNameNotLink: ?boolean
+ *         isNameNotLink: ?boolean,
+ *         nameLinkSize: ?string
  *     }
  * }}
  * @protected
@@ -156,6 +157,22 @@
             {call .rootClass/}__link-name
         {/let}
 
+        {let $theme kind="html"}
+            {if $params.config.theme}
+                {$params.config.theme}
+            {else}
+                dark
+            {/if}
+        {/let}
+
+        {let $size kind="html"}
+            {if $params.config.nameLinkSize}
+                {$params.config.nameLinkSize}
+            {else}
+                xxl
+            {/if}
+        {/let}
+
         {if $params.config.isNameNotLink}
             {call .getText}
                 {param message: $name /}
@@ -172,8 +189,8 @@
                         ],
                         'config': [
                             'customClasses': [$customClasses],
-                            'theme': 'dark',
-                            'size': 'xxl'
+                            'theme': $theme,
+                            'size': $size
                         ]
                     ]
                 ]/}
