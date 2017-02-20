@@ -3,8 +3,7 @@
 // author: dm-kamaev
 // service profile admin for school
 
-import * as lodash from 'lodash';
-import {Model} from '../models/school';
+import {Model as SchoolModel} from '../models/school';
 import {SchoolInstance} from '../models/school';
 import {
     Model as SpecializedClassTypeModel,
@@ -21,7 +20,6 @@ type profileData = {
     classNumber: number;
     profileId: number;
 };
-
 
 type getList = {
     specializedClasses: number[][] | Array<undefined>;
@@ -184,7 +182,7 @@ class ProfileAdminService {
         schoolId: number,
         specializedClasses: number[][]
     ): Promise<[number, SchoolInstance[]]> {
-        return await Model.update({
+        return await SchoolModel.update({
             specializedClasses
         }, {
             where: {
@@ -198,7 +196,7 @@ class ProfileAdminService {
     private async getSchoolInstance_(
         schoolId: number
     ): Promise<SchoolInstance> {
-        return await Model.findOne({
+        return await SchoolModel.findOne({
             where: {
                 id: schoolId
             }
