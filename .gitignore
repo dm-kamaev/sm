@@ -90,6 +90,8 @@ api/modules/user/services/exceptions/*.js
 api/modules/user/services/adminUser.js
 api/modules/user/views/adminUserView.js
 
+api/modules/university/**/*.js
+
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
 
