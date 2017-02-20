@@ -1,0 +1,71 @@
+{namespace sm.bSmTabSelect.Template}
+
+/**
+ * @typedef  {{
+ *     items: Array<{
+ *         label: ?string,
+ *         val: (string|number|undefined),
+ *         url: (string|undefined)
+ *     }>,
+ *     selectedItemId: (number|undefined)
+ * }} sm.bSmTabSelect.SmTabSelect.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *
+ * }} sm.bSmTabSelect.SmTabSelect.Params.Config
+ */
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmTabSelect.SmTabSelect.Params.Data,
+ *     config: sm.bSmTabSelect.SmTabSelect.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .tabSelect}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ * @param params
+ */
+{template .body}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link
+    {/let}
+    {let $selectedItemId: $params?.data?.selectedItemId /}
+        {if $params?.data?.items}
+            {for $i in range($params.data.items.length)}
+                {let $item: $params.data.items[$i]/}
+
+                {call .renderChild}
+                    {param params: [
+                        'type': 'smLink',
+                        'renderParams': [
+                            'data': [
+                                'id': $item.value,
+                                'content': $item.label,
+                                'url': $item.url
+                            ],
+                            'config': [
+                                'customClasses': [$customClasses]
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            {/for}
+        {/if}
+{/template}
+
+/**
+ * Root css class
+ */
+{template .rootClass}
+    b-sm-tab-select
+{/template}

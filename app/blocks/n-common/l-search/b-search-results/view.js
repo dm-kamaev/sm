@@ -79,6 +79,7 @@ goog.scope(function() {
         ROOT: 'b-search-results',
         HEADER: 'b-search-results__header_active',
         SORT: 'b-search-results__sort-control',
+        SORT2: 'b-search-results__sort-control2',
         ITEM_LIST: 'b-search-results__item-list',
         SHOW_MORE_BUTTON: 'b-search-results__show-more-button',
         SHOW_MORE_BUTTON_WRAP: 'b-search-results__show-more-button-wrap',
@@ -567,6 +568,7 @@ goog.scope(function() {
             placeholder: this.getElementByClass(View.CssClass.PLACEHOLDER),
             header: this.getElementByClass(View.CssClass.HEADER),
             sort: this.getElementByClass(View.CssClass.SORT),
+            sort2: this.getElementByClass(View.CssClass.SORT2),
             itemList: this.getElementByClass(View.CssClass.ITEM_LIST),
             showMore: this.getElementByClass(View.CssClass.SHOW_MORE_BUTTON),
             showMoreWrap: this.getElementByClass(

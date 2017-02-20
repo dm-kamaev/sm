@@ -3,6 +3,7 @@ goog.provide('sm.lSearch.bSearchResults.SearchResults');
 goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.bSmTabSelect.SmTabSelect');
 goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.lSearch.bSearchResults.View');
 
@@ -37,6 +38,13 @@ goog.scope(function() {
          * @private
          */
         this.sort_ = null;
+
+        /**
+         * Sort control (b-sm-tab-select) instance
+         * @type {sm.bSmTabSelect.SmTabSelect}
+         * @private
+         */
+        this.sort2_ = null;
 
         /**
          * Show more button instance
@@ -272,6 +280,8 @@ goog.scope(function() {
         this.itemList_ = this.decorateChild('smItemList', dom.itemList);
 
         this.sort_ = this.decorateChild('dropdown-list-links', dom.sort);
+
+        this.sort2_ = this.decorateChild('smTabSelect', dom.sort2);
 
         this.showMore_ = this.decorateChild('button', dom.showMore);
 
