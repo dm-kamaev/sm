@@ -683,6 +683,11 @@ view.render = function(course) {
             name: null
         }
     };
+
+    const pageMetaInformation = course.pageMetaInformation[0] ?
+        course.pageMetaInformation[0].id :
+        null;
+
     return {
         id: course.id,
         name: course.name,
@@ -699,6 +704,7 @@ view.render = function(course) {
         isActive: course.dataValues.isActive,
         embedId: course.embedId,
         image: course.imageUrl,
+        pageMetaInformation: pageMetaInformation,
         updatedAt: course['updated_at']
     };
 };

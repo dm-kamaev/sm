@@ -495,7 +495,7 @@ service.getById = async(function(id) {
                 as: 'category'
             }]
         }, {
-            model: models.pageMetaInformation,
+            model: models.PageMetaInformation,
             as: 'pageMetaInformation'
         }]
     }));

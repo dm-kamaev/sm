@@ -84,8 +84,8 @@ class CoursePageMetaController extends Controller {
      * @apiUse PageMetaNotBelongToCourseError
      */
     public async actionGet(
-        actionContext: any, courseId: number, pageMetaId: number) {
-        return await coursePageMetaService.getOne(courseId, pageMetaId);
+        actionContext: any, courseId: string, pageMetaId: string) {
+        return await coursePageMetaService.getOne(+courseId, +pageMetaId);
     }
 
     /**
@@ -147,11 +147,11 @@ class CoursePageMetaController extends Controller {
      *
      * @apiUse CoursePageMetaAlreadyExistsError
      */
-    public async actionCreate(actionContext: any, courseId: number) {
+    public async actionCreate(actionContext: any, courseId: string) {
         const data = actionContext.data;
-        console.log(actionContext.data);
+
         return await coursePageMetaService.create(
-            courseId,
+            +courseId,
             {
                 tabTitle: data.tabTitle,
                 seoDescription: data.seoDescription,
@@ -222,11 +222,11 @@ class CoursePageMetaController extends Controller {
      * @apiUse PageMetaNotBelongToCourseError
      */
     public async actionUpdate(
-            actionContext: any, courseId: number, pageMetaId: number) {
+            actionContext: any, courseId: string, pageMetaId: string) {
         const data = actionContext.data;
         return await coursePageMetaService.update(
-            courseId,
-            pageMetaId,
+            +courseId,
+            +pageMetaId,
             {
                 tabTitle: data.tabTitle,
                 seoDescription: data.seoDescription,
