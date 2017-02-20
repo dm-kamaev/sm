@@ -494,6 +494,9 @@ service.getById = async(function(id) {
                 model: models.CourseCategory,
                 as: 'category'
             }]
+        }, {
+            model: models.pageMetaInformation,
+            as: 'pageMetaInformation'
         }]
     }));
 });

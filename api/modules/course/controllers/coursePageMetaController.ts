@@ -6,7 +6,7 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {service as coursePageMetaService} from '../services/coursePageMeta';
 
-import {PageMetaNotBelongsToCourse} from './errors/PageMetaNotBelongToCourse'
+import {PageMetaNotBelongsToCourse} from './errors/PageMetaNotBelongToCourse';
 import {CoursePageMetaAlreadyExists}
     from './errors/CoursePageMetaAlreadyExists';
 

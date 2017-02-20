@@ -16,7 +16,7 @@ import {
 interface CourseModel
     extends Sequelize.Model<CourseInstance, CourseAttributes> {}
 
-let Course: CourseModel = db.define('Course', {
+const Course: CourseModel = db.define('Course', {
     name: DataType.STRING,
     brandId: {
         type: DataType.INTEGER,

@@ -9,7 +9,7 @@ import {
 import {PageMetaInformationNotFound}
     from './exceptions/pageMetaInformationNotFound';
 
-import {Model as PageMetaModel} from '../models/pageMetaInformation'
+import {Model as PageMetaModel} from '../models/pageMetaInformation';
 
 class PageMetaService {
     public readonly name = 'pageMeta';
@@ -26,7 +26,7 @@ class PageMetaService {
             pageMetaId: number): Promise<PageMetaInformationInstance> {
         const pageMeta = await this.silentGetOne_(pageMetaId);
 
-        if(!pageMeta) {
+        if (!pageMeta) {
             throw new PageMetaInformationNotFound(pageMetaId);
         }
 

@@ -13,7 +13,7 @@ class CoursePageMetaAlreadyExists extends Exception {
 
     constructor(courseId: number) {
         const message = `Course with id = ${courseId} already have an` +
-            ` page meta information`
+            ` page meta information`;
         super(message);
 
         this.name = 'CoursePageMetaAlreadyExists';

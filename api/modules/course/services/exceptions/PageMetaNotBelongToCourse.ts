@@ -13,7 +13,7 @@ class PageMetaNotBelongToCourse extends Exception {
 
     constructor(courseId: number, pageMetaId: number) {
         const message = `Page meta with id = ${pageMetaId} not associated ` +
-            ` with course with id = ${courseId}`
+            ` with course with id = ${courseId}`;
         super(message);
 
         this.name = 'PageMetaNotBelongsToCourse';
