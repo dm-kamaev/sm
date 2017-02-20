@@ -9,16 +9,23 @@ import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {profileAdminService} from '../services/profileAdminService';
+import {
+    service as schoolSpecializedClassService
+} from '../services/schoolSpecializedClass';
+
 import {view as profileAdminView} from '../views/profileAdminView';
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 import {SchoolProfileNameIsShorter} from './errors/SchoolProfileNameIsShorter';
+import {ProfileNotFound} from './errors/ProfileNotFound';
+import {SchoolSpecializedClassInstance} from '../models/schoolSpecializedClass';
 
 class ProfileAdminController extends Controller {
     constructor() {
         super();
         this.errors = {
             SchoolProfileNameIsShorter,
+            ProfileNotFoundException: ProfileNotFound
         };
     }
 
@@ -69,17 +76,16 @@ class ProfileAdminController extends Controller {
      *        }
      *    }]
      */
-    public async actionList(ctx: any, schoolId: string) {
-        const res = await profileAdminService.getList(parseInt(schoolId, 10));
-        return profileAdminView.listProfile(
-            res.specializedClasses,
-            res.hashClassType,
-        );
-
+    public async actionList(actionContext: any, schoolId: string) {
+        const profiles: Array<SchoolSpecializedClassInstance> =
+            await profileAdminService.getList(
+                parseInt(schoolId, 10)
+            );
+        return profiles.map(profileAdminView.render);
     }
 
 
-     /**
+    /**
      * @api {get} /api/admin/school/:schoolId/profile/:id
      * Get school profile
      * @apiVersion 1.0.0
@@ -106,53 +112,63 @@ class ProfileAdminController extends Controller {
      *        }
      *    }
      */
-    public async actionGet(ctx: any, schoolId: string, profileNumber: string) {
-        const res = await profileAdminService.getById(
-            parseInt(schoolId, 10),
-            parseInt(profileNumber, 10)
-        );
-
-        return profileAdminView.oneProfile(
-            parseInt(profileNumber, 10),
-            res.specializedClass,
-            res.hashClassType
+    public async actionGet(
+            actionContext: any, schoolId: string, profileNumber: string) {
+        const profile: SchoolSpecializedClassInstance =
+            await profileAdminService.getById(
+                parseInt(schoolId, 10),
+                parseInt(profileNumber, 10)
+            );
+        return profileAdminView.render(
+            profile
         );
     }
 
     /**
-    * @api {post} /api/admin/school/:schoolId/profile
-    * Create school profile class
-    * @apiVersion 1.0.0
-    * @apiName createSchoolProfileClass
-    * @apiGroup School Profile Admin
-    *
-    * @apiParamExample {json} Request-Example:
-    *   {
-    *       "classNumber": 5,
-    *       "profileId":  10
-    *   }
-    *
-    * @apiParam {Number} schoolId  School's id.
-    *
-    * @apiSuccess {Number[][]} specializedClasses  array of array number.
-    * @apiSuccess {Number[]}   specializedClass    array of number.
-    * @apiSuccess {Number}     .-.0                class number
-    * @apiSuccess {Number}     .-.1                profile Id
-    *
-    * @apiSuccessExample {json} Example response:
-    *    [
-    *        [ 10, 1 ],
-    *        [ 11, 2 ]
-    *    ]
-    *
-    */
-    public async actionCreate(ctx: any, schoolId: string) {
-        const profileData: { classNumber: number, profileId: number }
-            = ctx.request.body;
-        return await profileAdminService.create(
-            parseInt(schoolId, 10),
-            profileData
-        );
+     * @api {post} /api/admin/school/:schoolId/profile
+     * Create school profile class
+     * @apiVersion 1.0.0
+     * @apiName createSchoolProfileClass
+     * @apiGroup School Profile Admin
+     *
+     * @apiParamExample {json} Request-Example:
+     *   {
+     *       "classNumber": 5,
+     *       "profileId":  10
+     *   }
+     *
+     * @apiParam {Number} schoolId  School's id.
+     *
+     * @apiSuccess {Number} id                     Created profile's id.
+     * @apiSuccess {Number} schoolId               School's id.
+     * @apiSuccess {Number} specializedClassTypeId Id of profile's type.
+     * @apiSuccess {Number} class                  Grade.
+     * @apiSuccess {String} updated_at             Updated at.
+     * @apiSuccess {String} created_at             Created at.
+     * @apiSuccess {String} updatedAt              Updated at.
+     * @apiSuccess {String} createdAt              Created at.
+     *
+     * @apiSuccessExample {json} Example response:
+     *     {
+     *         "id": 562,
+     *         "schoolId": 246,
+     *         "specializedClassTypeId": 35,
+     *         "class": 6,
+     *         "updated_at": "2017-02-20T12:03:44.451Z",
+     *         "created_at": "2017-02-20T12:03:44.451Z",
+     *         "createdAt": "2017-02-20T12:03:44.451Z",
+     *         "updatedAt": "2017-02-20T12:03:44.451Z"
+     *     }
+     *
+     */
+    public async actionCreate(actionContext: any, schoolId: string) {
+        const profileData: {classNumber: number, profileId: number}
+            = actionContext.request.body;
+        return schoolSpecializedClassService.create({
+            schoolId: parseInt(schoolId, 10),
+            specializedClassTypeId: profileData.profileId,
+            class: profileData.classNumber
+        });
     }
 
 
@@ -172,29 +188,20 @@ class ProfileAdminController extends Controller {
     * @apiParam {Number} schoolId  School's id.
     * @apiParam {Number} id        Profile' id
     *
-    * @apiSuccess {Number[][]} specializedClasses  array of array number.
-    * @apiSuccess {Number[]}   specializedClass    array of number.
-    * @apiSuccess {Number}     .-.0                class number
-    * @apiSuccess {Number}     .-.1                profile Id
+    * @apiSuccess {Number} - Response body, number of deleted rows.
     *
     * @apiSuccessExample {json} Example response:
-    *    [
-    *        [ 10, 1 ],
-    *        [ 11, 2 ]
-    *    ]
-    *
+    *     1
     */
     public async actionUpdate(
-        ctx: any,
-        schoolId: string,
-        profileNumber: string
-    ) {
-        const profileData: { classNumber: number, profileId: number }
-            = ctx.request.body;
-        return await profileAdminService.update(
-            parseInt(schoolId, 10),
-            parseInt(profileNumber, 10),
-            profileData
+            actionContext: any, schoolId: string, id: string) {
+        const profileData: {classNumber: number, profileId: number}
+            = actionContext.request.body;
+        return schoolSpecializedClassService.update(
+            parseInt(id, 10), {
+                class: profileData.classNumber,
+                specializedClassTypeId: profileData.profileId
+            }
         );
     }
 
@@ -212,16 +219,11 @@ class ProfileAdminController extends Controller {
     *
     * @apiSuccessExample {json} Example response:
     *     1
-    *
     */
     public async actionDelete(
-        ctx: any,
-        schoolId: string,
-        profileNumber: string
-    ) {
-        return await profileAdminService.delete(
-            parseInt(schoolId, 10),
-            parseInt(profileNumber, 10),
+            actionContext: any, schoolId: string, id: string) {
+        return await schoolSpecializedClassService.delete(
+            parseInt(id, 10)
         );
     }
 

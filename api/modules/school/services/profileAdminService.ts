@@ -9,12 +9,19 @@ import {
     Model as SpecializedClassTypeModel,
     SpecializedClassTypeInstance
 } from '../models/specializedClassType';
+import {
+    SchoolSpecializedClassInstance,
+    SchoolSpecializedClassAttribute
+} from '../models/schoolSpecializedClass';
 
 import {service as specializedClassService}
     from '../services/specializedClasses';
+import {service as schoolSpecializedClassService}
+    from './schoolSpecializedClass';
 
 import {SchoolProfileNameIsShorter} from
     './exceptions/SchoolProfileNameIsShorter';
+import {ProfileNotFound} from './exceptions/ProfileNotFound';
 
 type profileData = {
     classNumber: number;
@@ -29,37 +36,23 @@ type getList = {
 class ProfileAdminService {
     public readonly name: string = 'profileAdminService';
 
-    public async getList(schoolId: number): Promise<getList> {
-        const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
-        const res: getList = { specializedClasses: [], hashClassType: {} };
-        const specializedClasses: number[][] | null = school.specializedClasses;
-        if (specializedClasses) {
-            const hashClassType: { [key: string]: string }
-                = await this.getHashClassType_();
-            res.specializedClasses = specializedClasses;
-            res.hashClassType = hashClassType;
+    public async getList(
+            schoolId: number): Promise<Array<SchoolSpecializedClassInstance>> {
+        const specializeClasses =
+            await schoolSpecializedClassService.getBySchoolId(schoolId);
+        return specializeClasses;
+    }
+
+    public async getById(schoolId: number, profileId: number):
+            Promise<SchoolSpecializedClassInstance> {
+        const profile: SchoolSpecializedClassInstance =
+            await schoolSpecializedClassService.get(profileId);
+        if (profile.schoolId !== schoolId) {
+            throw new ProfileNotFound(schoolId, profileId);
+        } else {
+            return profile;
         }
-        return res;
     }
-
-
-    public async getById(
-        schoolId: number,
-        profileNumber: number
-    ): Promise<{
-        specializedClass: number[],
-        hashClassType: { [key: string]: string }
-    }> {
-        const data: getList = await this.getList(schoolId);
-        const specializedClasses: number[][] | Array<undefined>
-            = data.specializedClasses;
-        ;
-        return {
-            specializedClass: specializedClasses[profileNumber - 1] || [],
-            hashClassType: data.hashClassType
-        };
-    }
-
 
     public getListClasses(): Array<number> {
         return [
@@ -94,127 +87,6 @@ class ProfileAdminService {
                limit: 10,
         });
     }
-
-    public async create(
-        schoolId: number,
-    profileData: profileData
-    ): Promise<number[][]> {
-        const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
-        let specializedClasses: number[][] = [];
-        if (school.specializedClasses) {
-            specializedClasses = school.specializedClasses;
-            specializedClasses.push([
-                profileData.classNumber,
-                profileData.profileId
-            ]);
-        } else {
-            specializedClasses = [[
-                profileData.classNumber,
-                profileData.profileId
-            ]];
-        }
-
-        const res = await this.updateSchoolSpecializedClass_(
-            schoolId,
-            specializedClasses
-        );
-        return res ? res[1][0].specializedClasses : null;
-    }
-
-
-    public async update(
-        schoolId: number,
-        profileNumber: number,
-        profileData: profileData
-    ): Promise<number[][]> {
-        const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
-        let specializedClasses: number[][] = [];
-        if (school.specializedClasses) {
-            specializedClasses = school.specializedClasses;
-            const id: number = profileNumber - 1;
-            if (specializedClasses[id]) {
-                specializedClasses[id] = [
-                    profileData.classNumber,
-                    profileData.profileId
-                ];
-            }
-        }
-        const res = await this.updateSchoolSpecializedClass_(
-            schoolId,
-            specializedClasses
-        );
-        return res ? res[1][0].specializedClasses : null;
-    }
-
-
-    public async delete(
-        schoolId: number,
-        profileNumber: number
-    ): Promise<number> {
-        let responce: number = 0;
-        const school: SchoolInstance = await this.getSchoolInstance_(schoolId);
-        let specializedClasses: number[][] = [];
-        if (school.specializedClasses) {
-            specializedClasses = school.specializedClasses;
-            const id: number = profileNumber - 1;
-            const skipProfileClass = (specializedClass, i): boolean => {
-                let res: boolean = true;
-                if (i === id) {
-                    responce = 1;
-                    res = false;
-                }
-                return res;
-            };
-            specializedClasses = specializedClasses.filter(skipProfileClass);
-        }
-        await this.updateSchoolSpecializedClass_(
-            schoolId,
-            specializedClasses
-        );
-        return responce;
-    }
-
-
-
-
-
-    private async updateSchoolSpecializedClass_(
-        schoolId: number,
-        specializedClasses: number[][]
-    ): Promise<[number, SchoolInstance[]]> {
-        return await SchoolModel.update({
-            specializedClasses
-        }, {
-            where: {
-                id: schoolId
-            },
-            returning: true
-        });
-    }
-
-
-    private async getSchoolInstance_(
-        schoolId: number
-    ): Promise<SchoolInstance> {
-        return await SchoolModel.findOne({
-            where: {
-                id: schoolId
-            }
-        });
-    }
-
-
-    // get hash { classType.id: classType.name }
-    private async getHashClassType_(): Promise<{[key: string]: string}> {
-        const classTypes: SpecializedClassTypeInstance[]
-            = await specializedClassService.getAllTypes();
-        const hashClassType: { [key: string]: string } = {};
-        classTypes.forEach((classType: SpecializedClassTypeInstance) => {
-            hashClassType[classType.id] = classType.name;
-        });
-        return hashClassType;
-    }
-
 
     private capitalize_(str: string): string {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();

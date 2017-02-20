@@ -67,15 +67,15 @@ api/modules/geo/views/departmentView.js
 api/modules/school/interfaces/*.js
 
 api/modules/school/controllers/errors/AddressDepartmentExist.js
-
 api/modules/school/controllers/errors/AddressDoesNotExist.js
 api/modules/school/controllers/errors/AddressIsNotUnique.js
 api/modules/school/controllers/errors/DepartmentNotFound.js
+api/modules/school/controllers/errors/ExamDataAlreadyExistBySubject.js
+api/modules/school/controllers/errors/ProfileNotFound.js
+api/modules/school/controllers/errors/SchoolCategoryNameIsShorter.js
 api/modules/school/controllers/errors/SchoolNotExistTypeError.js
 api/modules/school/controllers/errors/SchoolNotFound.js
 api/modules/school/controllers/errors/SchoolProfileNameIsShorter.js
-api/modules/school/controllers/errors/ExamDataAlreadyExistBySubject.js
-api/modules/school/controllers/errors/SchoolCategoryNameIsShorter.js
 api/modules/school/controllers/commentAdminController.js
 api/modules/school/controllers/departmentAdminController.js
 api/modules/school/controllers/index.js
@@ -98,6 +98,7 @@ api/modules/school/services/additionalEducation.js
 api/modules/school/services/profileAdminService.js
 api/modules/school/services/schoolAdminService.js
 api/modules/school/services/schoolComment.js
+api/modules/school/services/schoolSpecializedClass.js
 api/modules/school/services/specializedClasses.js
 
 api/modules/school/views/commentView.js

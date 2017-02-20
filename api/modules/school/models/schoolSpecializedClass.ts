@@ -3,6 +3,8 @@ const db = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
+import {SpecializedClassTypeInstance} from './specializedClassType';
+
 export interface SchoolSpecializedClassAttribute {
     id?: number;
     schoolId?: number;
@@ -10,6 +12,7 @@ export interface SchoolSpecializedClassAttribute {
     class?: number;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    specializedClassType?: SpecializedClassTypeInstance;
 }
 
 export interface SchoolSpecializedClassInstance

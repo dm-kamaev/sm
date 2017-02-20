@@ -721,6 +721,7 @@ service.viewOne = async(function(id) {
 
     var resultPromises = {
         activities: services.additionalEducation.findBySchoolId(id),
+        specializedClasses: services.schoolSpecializedClass.getBySchoolId(id),
         comments: services.comment.getComments(school.commentGroupId),
         addresses: services.address.getWithDepartmentsWithMetro(
             id,
@@ -736,6 +737,7 @@ service.viewOne = async(function(id) {
     school.comments = result.comments;
     school.activities = result.activities;
     school.addresses = result.addresses;
+    school.specializedClasses = result.specializedClasses;
 
     return school;
 });

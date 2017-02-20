@@ -529,15 +529,14 @@ exports.specializedClassType = async(function(req, res) {
  *     HTTP/1.1 200 OK
  *     [
  *         {
- *                "label": "Математика",
- *                "value":"1"
- *             },
- *             {
- *                "label": "Занимательная математика",
- *                "value":"2"
- *             }
+ *             "label": "Математика",
+ *             "value":"1"
+ *         },
+ *         {
+ *             "label": "Занимательная математика",
+ *             "value":"2"
+ *         }
  *     ]
- *
  * @apiError Error (Error 500)
  */
 exports.popularSpecializedClassType = async(function(req, res) {

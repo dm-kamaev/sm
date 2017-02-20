@@ -3,7 +3,11 @@ var lodash = require('lodash');
 var specializedClassesView = {};
 
 /**
- * @param {Array<Array<number>>} schoolSpecializedClasses
+ * @param {Array<({
+ *     schoolId: number,
+ *     specializedClassTypeId: number,
+ *     class: number
+ * }|models.SchoolSpecializedClass)>} schoolSpecializedClasses
  * @param {Array<models.SpecializedClassType>} specializedClassTypes
  * @return {{
  *     data: {
@@ -52,13 +56,13 @@ specializedClassesView.withTypeName = function(
     schoolSpecializedClasses, specializedClassTypes
 ) {
     return schoolSpecializedClasses ?
-        schoolSpecializedClasses.map(specializedClass => {
-            var typeId = specializedClass[1],
+        schoolSpecializedClasses.map(schoolSpecializedClass => {
+            var typeId = schoolSpecializedClass.specializedClassTypeId,
                 type = specializedClassTypes.find(type => {
                     return type.id == typeId;
                 });
 
-            return [specializedClass[0], type.name];
+            return [schoolSpecializedClass.class, type.name];
         }) : null;
 };
 

@@ -3,7 +3,11 @@
 // author: dm-kamaev
 // view profile class admin for school
 
-type profileGetList = {
+import {
+    SchoolSpecializedClassInstance
+} from '../models/schoolSpecializedClass';
+
+type adminProfile = {
     id: number;
     classNumber: number;
     profile: {
@@ -12,13 +16,28 @@ type profileGetList = {
     };
 };
 
+type adminProfileList = Array<adminProfile>;
+
 
 class View {
+    public render(schoolSpecializedClass: SchoolSpecializedClassInstance):
+            adminProfile {
+        const profileId = schoolSpecializedClass.specializedClassType.id;
+        const profileName = schoolSpecializedClass.specializedClassType.name;
+        return {
+            id: schoolSpecializedClass.id,
+            classNumber: schoolSpecializedClass.class,
+            profile: {
+                id: profileId,
+                name: profileName
+            }
+        };
+    }
 
     public listProfile(
         specializedClasses: number[][],
         hashClassType: {[key: string]: string}
-    ): profileGetList[] | Array<undefined> {
+    ): adminProfile[] | Array<undefined> {
         if (!specializedClasses.length) {
             return [];
         }
@@ -34,7 +53,7 @@ class View {
         index: number,
         specializedClass: number[],
         hashClassType: {[key: string]: string}
-    ): profileGetList | {} {
+    ): adminProfile | {} {
         if (!specializedClass.length) {
             return {};
         }
