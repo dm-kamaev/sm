@@ -36,7 +36,7 @@
     "csurf": "^1.8.3",
     "csvtojson": "^0.5.0",
     "decompress": "^3.0.0",
-    "deployment": "git+ssh://git@github.com:c7s/deployment.git#release-20170202-PB-1846",
+    "deployment": "git+ssh://git@github.com:c7s/deployment.git#dev",
     "ejs": "^2.3.4",
     "express-session": "^1.13.0",
     "fs-extra": "^0.26.3",
@@ -91,7 +91,7 @@
     "xlsx-to-json": "^0.2.4"
   },
   "dependencies": {
-    "clobl": "git+ssh://git@github.com/c7s/clobl.git#release-20170208-PB-1883",
+    "clobl": "git+ssh://git@github.com/c7s/clobl.git#dev",
     "eslint": "^2.13.1",
     "express": "^4.13.3",
     "geopoint": "^1.0.1",
