@@ -683,11 +683,6 @@ view.render = function(course) {
             name: null
         }
     };
-    console.log(course.pageMetaInformation);
-
-    const pageMetaInformation = course.pageMetaInformations.length > 0 ?
-        course.pageMetaInformations[0].id :
-        null;
 
     return {
         id: course.id,
@@ -705,7 +700,7 @@ view.render = function(course) {
         isActive: course.dataValues.isActive,
         embedId: course.embedId,
         image: course.imageUrl,
-        pageMetaInformation: pageMetaInformation,
+        pageMetaInformation: view.renderPageMetaInformation(course),
         updatedAt: course['updated_at']
     };
 };
@@ -717,5 +712,20 @@ view.render = function(course) {
 view.renderList = function(courses) {
     return courses.map(this.render);
 };
+
+/**
+ * @param {models.Course} course
+ * @return {?number}
+ */
+view.renderPageMetaInformation = function(course) {
+    let result = null;
+    const pageMetaInformations = course.pageMetaInformations;
+
+    if (pageMetaInformations && pageMetaInformations.length > 0) {
+        result = pageMetaInformations[0].id;
+    }
+
+    return result;
+}
 
 module.exports = view;
