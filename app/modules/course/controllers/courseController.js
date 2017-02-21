@@ -294,6 +294,7 @@ controller.information = async(function(req, res, next) {
                     categories: data.categories,
                     categoryAliases: data.categoryAliases,
                     seoParams: data.seoParams,
+                    pageMetaInformation: data.pageMetaInformation,
                     entityType: entityType.COURSE,
                     config: config
                 });
