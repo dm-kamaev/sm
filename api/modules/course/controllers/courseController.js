@@ -423,6 +423,7 @@ controller.get = async(function(req, res) {
     let result;
     try {
         let course = await(services.course.getById(req.params.id));
+
         result = courseView.render(course);
     } catch (error) {
         logger.error(error.message);

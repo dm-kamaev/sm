@@ -496,7 +496,7 @@ service.getById = async(function(id) {
             }]
         }, {
             model: models.PageMetaInformation,
-            as: 'pageMetaInformation'
+            as: 'pageMetaInformations'
         }]
     }));
 });

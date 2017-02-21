@@ -19,13 +19,14 @@ import {service as pageMetaService}
     from '../../entity/services/pageMetaInformation';
 
 class CoursePageMetaService {
-    public readonly name = 'coursePageMeta';
+    public readonly name = 'coursePageMetaInformation';
 
     public async create(
             courseId: number, data: PageMetaInformationAttributes
     ): Promise<PageMetaInformationInstance> {
-        const course: CourseInstance = await courseService.getById(courseId);
-        if (!this.checkIfPageMetaExist_(course)) {
+        const course: CourseInstance = await courseService.getById(courseId),
+            ifPageMetaExists = await this.checkIfPageMetaExists_(course);
+        if (ifPageMetaExists) {
             throw new CoursePageMetaAlreadyExists(course.id);
         }
 
@@ -62,6 +63,16 @@ class CoursePageMetaService {
         return await pageMetaService.getOne(pageMetaId);
     }
 
+    public async getByCourse(
+            course: CourseInstance
+    ): Promise<PageMetaInformationInstance> {
+        const pageMetaInformations = await course.getPageMetaInformations();
+
+        return pageMetaInformations.length > 0 ?
+            pageMetaInformations[0] :
+            null;
+    }
+
     public async delete(
             courseId: number, pageMetaId: number): Promise<number> {
         const isBelongs =
@@ -76,7 +87,7 @@ class CoursePageMetaService {
     private async checkIsPageMetaBelongs_(
             course: CourseInstance | number, pageMetaId: number
     ): Promise<boolean> {
-        let courseInstance;
+        let courseInstance: CourseInstance;
         if (typeof course === 'number') {
             courseInstance = await courseService.getById(course);
         } else {
@@ -86,9 +97,9 @@ class CoursePageMetaService {
         return await courseInstance.hasPageMetaInformation(pageMetaId);
     }
 
-    private async checkIfPageMetaExist_(
+    private async checkIfPageMetaExists_(
             course: CourseInstance): Promise<boolean> {
-        const pageMetaInformations = await course.getPageMetaInfromations();
+        const pageMetaInformations = await course.getPageMetaInformations();
 
         return pageMetaInformations.length > 0;
     }

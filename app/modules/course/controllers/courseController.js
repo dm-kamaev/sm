@@ -275,7 +275,11 @@ controller.information = async(function(req, res, next) {
                     categoryAliases: services.courseCategory.getAliases(),
                     seoParams: services.seoCourseList.getPageMeta(
                         page.category.entityId
-                    )
+                    ),
+                    pageMetaInformation:
+                        services.coursePageMetaInformation.getByCourse(
+                            courseInstance
+                        )
                 });
 
                 course.categories = data.categories;

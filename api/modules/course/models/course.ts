@@ -97,7 +97,7 @@ const Course: CourseModel = db.define('Course', {
                 onDelete: 'cascade'
             });
             this.belongsToMany(models.PageMetaInformation, {
-                as: 'pageMetaInformation',
+                as: 'pageMetaInformations',
                 through: 'course_page_meta_information',
                 foreignKey: 'course_id'
             });

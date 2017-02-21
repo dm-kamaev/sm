@@ -683,9 +683,10 @@ view.render = function(course) {
             name: null
         }
     };
+    console.log(course.pageMetaInformation);
 
-    const pageMetaInformation = course.pageMetaInformation[0] ?
-        course.pageMetaInformation[0].id :
+    const pageMetaInformation = course.pageMetaInformations.length > 0 ?
+        course.pageMetaInformations[0].id :
         null;
 
     return {

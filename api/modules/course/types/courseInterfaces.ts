@@ -36,7 +36,7 @@ export interface CourseInstance
                 number,
                 PageMetaInformationAttributes
             >;
-        getPageMetaInfromations:
+        getPageMetaInformations:
             Sequelize.BelongsToManyGetAssociationsMixin<
                 PageMetaInformationInstance
             >;
