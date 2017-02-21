@@ -9,7 +9,8 @@ import {
 
 import {Model as OlympiadResultModel} from '../models/olimpResult';
 import {OlympiadResultNotFound} from './exceptions/OlympiadResultNotFound';
-import {OlympiadAlreadyExists} from './exceptions/OlympiadResultAlreadyExists';
+import {OlympiadResultAlreadyExists}
+    from './exceptions/OlympiadResultAlreadyExists';
 
 class OlympiadResultService {
     public readonly name: string;
@@ -66,7 +67,7 @@ class OlympiadResultService {
             await this.findByParameters(schoolId, searchData);
 
         if (OlympiadResult) {
-            throw new OlympiadAlreadyExists(schoolId, searchData);
+            throw new OlympiadResultAlreadyExists(schoolId, searchData);
         }
 
         return await OlympiadResultModel.create(data);
