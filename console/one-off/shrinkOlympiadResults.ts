@@ -13,7 +13,7 @@ import {service as olympiadResultService}
 import {
     OlympiadResultInstance,
     OlympiadResultAttribute
-} from '../../api/modules/study/models/olimpResult';
+} from '../../api/modules/study/types/OlympiadResult';
 
 const db = require('../../app/components/db');
 

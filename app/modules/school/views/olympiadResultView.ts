@@ -9,7 +9,7 @@ import {
 
 import {
     OlympiadResultInstance
-} from '../../../../api/modules/study/models/olimpResult';
+} from '../../../../api/modules/study/types/OlympiadResult';
 
 type templateData = {
     years: Array<{
