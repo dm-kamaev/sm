@@ -56,6 +56,8 @@ api/modules/course/models/courseBrand.js
 api/modules/geo/interfaces/*.js
 api/modules/geo/models/address.js
 api/modules/geo/models/department.js
+api/modules/geo/models/metro.js
+api/modules/geo/models/metro.ts
 api/modules/geo/services/exceptions/*.js
 api/modules/geo/services/address.js
 api/modules/geo/services/department.js
