@@ -3,18 +3,18 @@ const sequelize = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
-interface ProfileAttribute {
+export interface ProfileAttribute {
     id?: number;
     name?: string;
 }
 
-interface ProfileInstance
+export interface ProfileInstance
     extends Sequelize.Instance<ProfileAttribute>, ProfileAttribute {}
 
 interface ProfileModel
     extends Sequelize.Model<ProfileInstance, ProfileAttribute> {}
 
-const Profile = sequelize.define('Profile', {
+const Profile: ProfileModel = sequelize.define('Profile', {
     id: {
         type: DataType.INTEGER,
         autoIncrement: true,
@@ -24,7 +24,8 @@ const Profile = sequelize.define('Profile', {
     },
     name: {
         type: DataType.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 }, {
     underscored: true,

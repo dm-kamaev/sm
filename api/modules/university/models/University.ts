@@ -21,7 +21,7 @@ interface UniversityInstance
 interface UniversityModel
     extends Sequelize.Model<UniversityInstance, UniversityAttribute> {}
 
-const University = sequelize.define('University', {
+const University: UniversityModel = sequelize.define('University', {
     id: {
         type: DataType.INTEGER,
         autoIncrement: true,

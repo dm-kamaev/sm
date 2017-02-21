@@ -100,6 +100,7 @@ app.use(morgan('dev', {
 
 app.use('/courses/api', api.course.router);
 app.use('/schools/api', api.school.router);
+app.use('/universities/api', api.university.router);
 app.use('/:subdomain/api', api.user.router);
 app.use('/:subdomain/api', api.mail.router);
 // generate token in cookies, all request not GET

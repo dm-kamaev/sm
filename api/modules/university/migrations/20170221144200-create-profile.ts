@@ -10,7 +10,8 @@ module.exports = {
             },
             name: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: false,
+                unique: true
             },
             createdAt: {
                 field: 'created_at',
