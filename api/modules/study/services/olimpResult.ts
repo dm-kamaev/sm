@@ -2,13 +2,14 @@ const Sequelize = require('sequelize');
 const models = require('../../../../app/components/models').all;
 
 import {
-    Model as OlympiadResultModel,
     OlympiadResultAttribute,
-    OlympiadResultInstance
-} from '../models/olimpResult';
+    OlympiadResultInstance,
+    olympiadResultUniqueData
+} from '../types/OlympiadResult';
 
-import {OlympiadResultNotFound} from './exceptions/olympiadResultNotFound';
-
+import {Model as OlympiadResultModel} from '../models/olimpResult';
+import {OlympiadResultNotFound} from './exceptions/OlympiadResultNotFound';
+import {OlympiadAlreadyExists} from './exceptions/OlympiadResultAlreadyExists';
 
 class OlympiadResultService {
     public readonly name: string;
@@ -53,6 +54,21 @@ class OlympiadResultService {
     public async create(
         data: OlympiadResultAttribute
     ): Promise<OlympiadResultInstance> {
+        const searchData = {
+                subjectId: data.subjectId,
+                class: data.class,
+                type: data.type,
+                status: data.status,
+                year: data.year
+            },
+            schoolId = data.schoolId;
+        const OlympiadResult =
+            await this.findByParameters(schoolId, searchData);
+
+        if (OlympiadResult) {
+            throw new OlympiadAlreadyExists(schoolId, searchData);
+        }
+
         return await OlympiadResultModel.create(data);
     }
 
@@ -97,13 +113,7 @@ class OlympiadResultService {
      */
     public async findByParameters(
         schoolId: number,
-        searchData: {
-            subjectId: number,
-            class: number,
-            type: string,
-            status: string,
-            year: number
-        }
+        searchData: olympiadResultUniqueData
     ): Promise<OlympiadResultInstance> {
         return await OlympiadResultModel.findOne({
             where: {
