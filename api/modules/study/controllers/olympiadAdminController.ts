@@ -7,6 +7,8 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {service as olympiadResultService} from '../services/olimpResult';
 import {OlympiadResultNotFound} from './errors/OlympiadResultNotFound';
+import {OlympiadResultsAlreadyExists}
+    from './errors/OlympiadResultAlreadyExists';
 
 class OlympiadAdminController extends Controller {
     public readonly errors: any;
@@ -14,18 +16,32 @@ class OlympiadAdminController extends Controller {
         super();
 
         this.errors = {
-            OlympiadResultNotFound
+            OlympiadResultNotFound,
+            OlympiadResultsAlreadyExists
         };
     }
 
     /**
      * @apiDefine OlympiadResultsNotFoundError
-     * @apiError (404) OlympiadResultsNotFound Olympiad user not found
+     * @apiError (404) OlympiadResultsNotFound Olympiad result not found
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 404 Not Found
      *      {
      *           "code": "OlympiadResultNotFound",
      *           "message": "Olympiad result with id = 5 not found"
+     *      }
+     */
+
+    /**
+     * @apiDefine OlympiadResultsAlreadyExistsError
+     * @apiError (422) OlympiadResultsAlreadyExists
+     *     Olympiad result with same parameters already exists
+     * @apiErrorExample {json} Error-Response:
+     *      HTTP/1.1 404 Not Found
+     *      {
+     *           "code": "OlympiadResultsAlreadyExists",
+     *           "message":
+     *               "Olympiad result with given parameters already exists"
      *      }
      */
 
@@ -169,6 +185,8 @@ class OlympiadAdminController extends Controller {
      *         year: 2016,
      *         awardeeAmount: 5
      *     }
+     *
+     * @apiUse OlympiadResultsAlreadyExists
      */
     public async actionCreate(actionContext: any, schoolId: number) {
         const data = actionContext.data;
@@ -279,72 +297,6 @@ class OlympiadAdminController extends Controller {
     public async actionDelete(
             actionContext: any, schoolId: number, id: number) {
         await olympiadResultService.delete(id);
-    }
-
-    /**
-     * @api {get} /api/admin/school/:schoolId/olympiadResult/search Search over
-     *     olympiad results by given params
-     * @apiVersion 0.1.0
-     * @apiName SearchOlympiadResult
-     * @apiGroup Olympiad Results
-     *
-     * @apiParam {Object} olympiadResult
-     * @apiParam {String} olympiadResult.type
-     * @apiParam {Number} olympiadResult.class
-     * @apiParam {Number} olympiadResult.subjectId
-     *
-     * @apiParamExample {json} Request-Example:
-     *      {
-     *          type: "всероссийская",
-     *          class: 10,
-     *          subjectId: 12
-     *      }
-     *
-     * @apiSuccess {Object}                              data           Found
-     *     data
-     * @apiSuccess {Number}                              data.id        Id of
-     *     olympiad result
-     * @apiSuccess {Number}                              data.schoolId  Id of
-     *     school of olympiad result
-     * @apiSuccess {Number}                              data.subjectId Id of
-     *     subject of olympiad result
-     * @apiSuccess {String="всероссийская","московская"} data.type      Type of
-     *     current olympiad
-     * @apiSuccess {Number}                              data.class
-     *     Education grade of current olympiad result
-     * @apiSuccess {String}                              data.status    Status
-     *     of participants of olympiad
-     * @apiSuccess {Number}                              data.awardeeAmount
-     *     Amount
-     *     of olympiad participants with current status
-     * @apiSuccess {Number}                              data.year      Year
-     *     which current result of olympiad was
-     *
-     * @apiSuccessExample {json} Success-Response:
-     *     HTTP 200 OK
-     *     {
-     *         id: 21,
-     *         schoolId: 10,
-     *         subjectId: 12,
-     *         type: "всероссийская",
-     *         class: 10,
-     *         status: "победитель",
-     *         year: 2016,
-     *         awardeeAmount: 5
-     *     }
-     */
-    public async actionFind(actionContext: any, schoolId: number) {
-        const searchParams = actionContext.data;
-        return await olympiadResultService.findByParameters(
-            schoolId,
-            {
-                subjectId: searchParams.subjectId,
-                class: searchParams.class,
-                type: searchParams.type,
-                year: searchParams.year,
-                status: searchParams.status
-            }
-        );
     }
 }
 
