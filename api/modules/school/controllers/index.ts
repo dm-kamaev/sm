@@ -105,12 +105,30 @@ router.delete(
 
 router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
 
-const initCrudRouting = function(route: string, controller: any) {
-    router.post(route, checkToken, controller.actionCreate);
+const initCrudRouting = function(route: string, controller: any): void {
+    router.post(
+        route,
+        checkToken,
+        adminUser,
+        superUserCheckAction,
+        controller.actionCreate
+    );
     router.get(route, controller.actionList);
     router.get(`${route}/:id`, controller.actionGet);
-    router.put(`${route}/:id`, checkToken, controller.actionUpdate);
-    router.delete(`${route}/:id`, checkToken, controller.actionDelete);
+    router.put(
+        `${route}/:id`,
+        checkToken,
+        adminUser,
+        superUserCheckAction,
+        controller.actionUpdate
+    );
+    router.delete(
+        `${route}/:id`,
+        checkToken,
+        adminUser,
+        superUserCheckAction,
+        controller.actionDelete
+    );
 };
 
 initCrudRouting(
