@@ -19,7 +19,6 @@ module.exports = {
                 field: 'image_url'
             },
             links: Sequelize.ARRAY(Sequelize.STRING),
-            type: Sequelize.STRING,
             militaryDepartment: {
                 type: Sequelize.BOOLEAN,
                 field: 'military_department'

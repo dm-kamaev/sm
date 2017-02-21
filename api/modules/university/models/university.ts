@@ -10,13 +10,12 @@ interface UniversityAttribute {
     description?: string;
     imageUrl?: string;
     links?: string;
-    type?: string;
     militaryDepartment?: boolean;
     dormitory?: boolean;
     cityId?: number;
 }
 
-export interface UniversityInstance
+interface UniversityInstance
     extends Sequelize.Instance<UniversityAttribute>, UniversityAttribute {}
 
 interface UniversityModel
@@ -41,7 +40,6 @@ const University = sequelize.define('University', {
         field: 'image_url'
     },
     links: DataType.ARRAY(DataType.STRING),
-    type: DataType.STRING,
     militaryDepartment: {
         type: DataType.BOOLEAN,
         field: 'military_department'
@@ -63,6 +61,9 @@ const University = sequelize.define('University', {
             this.belongsTo(models.City, {
                 foreignKey: 'city_id',
                 as: 'city'
+            });
+            this.belongsToMany(models.Profile, {
+                through: 'university_profile'
             });
         }
     }
