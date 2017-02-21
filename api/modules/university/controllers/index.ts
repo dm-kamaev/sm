@@ -3,6 +3,8 @@ import * as express from 'express';
 const router = express.Router();
 
 const checkToken = require('../../../../app/middleware/checkToken');
+const fileHandler = require('../../../../app/middleware/fileHandler');
+const fileStorage = fileHandler.any();
 import {adminUser} from '../../../../app/middleware/adminUser';
 import {
     middleware as superUserCheckAction
@@ -11,10 +13,14 @@ import {
 import {ProfileAdminController} from './ProfileAdminController';
 const profileAdminController = new ProfileAdminController();
 
+import {UniversityAdminController} from './UniversityAdminController';
+const universityAdminController = new UniversityAdminController();
+
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
         route,
         checkToken,
+        fileStorage,
         adminUser,
         superUserCheckAction,
         controller.actionCreate
@@ -24,6 +30,7 @@ const initCrudRouting = function(route: string, controller: any): void {
     router.put(
         `${route}/:id`,
         checkToken,
+        fileStorage,
         adminUser,
         superUserCheckAction,
         controller.actionUpdate
@@ -38,5 +45,7 @@ const initCrudRouting = function(route: string, controller: any): void {
 };
 
 initCrudRouting('/admin/profile', profileAdminController);
+
+initCrudRouting('/admin/university', universityAdminController);
 
 export {router};

@@ -21,7 +21,7 @@ class ProfileAdminController extends Controller {
      * @api {get} /api/admin/profile Get all profiles
      * @apiVersion 1.0.0
      * @apiName getAllProfiles
-     * @apiGroup Admin University
+     * @apiGroup Admin University Profile
      *
      * @apiSuccess {Object[]} -            Response body.
      * @apiSuccess {Number}   -.id         Id.

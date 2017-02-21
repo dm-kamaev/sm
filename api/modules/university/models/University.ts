@@ -3,7 +3,7 @@ const sequelize = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
-interface UniversityAttribute {
+export interface UniversityAttribute {
     id?: number;
     name?: string;
     abbreviation?: string;
@@ -15,7 +15,7 @@ interface UniversityAttribute {
     cityId?: number;
 }
 
-interface UniversityInstance
+export interface UniversityInstance
     extends Sequelize.Instance<UniversityAttribute>, UniversityAttribute {}
 
 interface UniversityModel
