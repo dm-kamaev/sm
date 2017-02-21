@@ -7,23 +7,10 @@ const olympiadType = require('../enums/olimpType');
 import * as Sequelize from 'sequelize/v3';
 import {SubjectInstance} from './subject';
 
-export interface OlympiadResultAttribute {
-    [index: string]: any;
-    id?: number;
-    schoolId?: number;
-    subjectId?: number;
-    type?: string;
-    stage?: number;
-    class?: number;
-    status?: string;
-    year?: number;
-    awardeeAmount?: number;
-    subject?: SubjectInstance;
-}
-
-export interface OlympiadResultInstance
-    extends Sequelize.Instance<OlympiadResultAttribute>,
-        OlympiadResultAttribute {}
+import {
+    OlympiadResultAttribute,
+    OlympiadResultInstance
+} from '../types/OlympiadResult';
 
 interface OlympiadResultModel
     extends Sequelize.Model<OlympiadResultInstance, OlympiadResultAttribute> {}
