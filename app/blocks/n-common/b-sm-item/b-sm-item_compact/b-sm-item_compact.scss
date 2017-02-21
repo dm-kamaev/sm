@@ -1,0 +1,60 @@
+@import "../../i-media/i-media";
+
+.b-sm-item_compact {
+    padding: 0;
+
+    cursor: default;
+
+    &:after {
+        display: block;
+        clear: both;
+
+        content: '';
+    }
+
+    .b-sm-item__section-group_cover {
+        margin-bottom: 25px;
+
+        font-family: 'Proxima', Arial, sans-serif;
+    }
+
+    .b-sm-item__section_header {
+        margin-bottom: 12px;
+
+        font-family: 'PT Serif', serif;
+    }
+
+    .b-sm-item__name {
+        font-weight: 800;
+    }
+
+    .b-sm-item__section_description {
+        margin-bottom: 15px;
+
+        font: 13px/18px Arial, sans-serif;
+    }
+
+    .b-sm-item__description {
+        display: inline;
+    }
+
+    .b-sm-item__description-link {
+        display: inline;
+    }
+}
+
+
+@include media-xs {
+    .b-sm-item_compact {
+        .b-sm-item__section-group_cover {
+            float: left;
+
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
+        .b-sm-item__section-group_info {
+            padding-left: 90px;
+        }
+    }
+}

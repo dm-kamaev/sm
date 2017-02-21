@@ -28,8 +28,49 @@ let controller = {};
  */
 controller.list = async(function(req, res) {
     let result;
+    const accessAttributes = req.adminUser && req.adminUser.accessAttributes;
+    const brandId = accessAttributes && accessAttributes.brandId;
     try {
-        result = await(services.courseBrand.getAll());
+        result = await(services.courseBrand.getAll(brandId));
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {get} /api/coursebrand/search Search over course brands
+ * This api must be replaced by suggest api for market-admin
+ * @apiVersion 0.1.0
+ * @apiName Get brands by params
+ * @apiGroup Course brand
+ *
+ * @apiParam {String} name name of school
+ *
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "name": "Smart Course"
+ *     }
+ *
+ * @apiSuccess {Object[]} brands      found brands
+ * @apiSuccess {Number}   brands.id   id of brand
+ * @apiSuccess {String}   brands.name name of brand
+ *
+ * @apiSuccessExample {json} Response-Example:
+ *     HTTP/1.1
+ *     [{
+ *        "id": 10,
+ *        "name": "Smart Course"
+ *     }]
+ */
+controller.search = async(function(req, res) {
+    let result;
+    try {
+        let attributes = req.query;
+        result = await(services.courseBrand.getByAttributes(attributes));
     } catch (error) {
         logger.error(error.message);
         result = error;

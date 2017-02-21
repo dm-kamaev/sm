@@ -1,7 +1,6 @@
 var commander = require('commander');
 var replace = require('tipograph').Replace;
 const languages = require('tipograph').Languages;
-var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -48,7 +47,10 @@ var updateSchool = function(school) {
 };
 
 var fixQutoesAndEscape = function(string) {
-    return string.replace(/[«»]/g, '"').replace('\n','').replace(/"([^"]*)"/g, '«$1»');
+    return string
+        .replace(/[«»]/g, '"')
+        .replace('\n', '')
+        .replace(/"([^"]*)"/g, '«$1»');
 };
 
 commander

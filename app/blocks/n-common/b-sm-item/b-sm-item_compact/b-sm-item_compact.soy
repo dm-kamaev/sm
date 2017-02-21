@@ -1,0 +1,359 @@
+{namespace sm.bSmItem.TemplateCompact}
+
+
+/**
+ * @typedef {{
+ *     id: number,
+ *     type: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
+ *     imageUrl: (string|undefined),
+ *     alias: ?string,
+ *     score: ?number,
+ *     description: (string|undefined),
+ *     descriptionLink: ({
+ *         content: string,
+ *         url: string
+ *     }|undefined),
+ *     metro: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>,
+ *     area: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>,
+ *     category: string,
+ *     url: ?string
+ * }}
+ * sm.bSmItem.TemplateCompact.Params.Data
+ */
+
+
+/**
+ * @typedef {sm.bSmItem.Template.Params.Config}
+ * sm.bSmItem.TemplateCompact.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmItem.TemplateCompact.Params.Data,
+ *     config: sm.bSmItem.TemplateCompact.Params.Config
+ * }}
+ * @extends sm.bSmItem.Template
+ * @constructor
+ */
+{template .item}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: (string|undefined)
+ *         },
+ *         score: ?number,
+ *         imageUrl: (string|undefined)
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .sectionCover}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_cover">
+        {if $params.data.imageUrl}
+            {call .image data="all" /}
+        {else}
+            {call .score data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionDescription}
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_description
+
+        {if not $params.data?.description}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .description data="all" /}
+        {call .descriptionLink_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Template estimated parameters
+ * @protected
+ */
+{template .estimates}
+    <div class="{call .rootClass/}__estimates{sp}
+                {cl.iUtils.Utils.CssClass.HIDDEN}">
+    </div>
+{/template}
+
+
+/**
+ * Item name
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         alias: ?string,
+ *         url: ?string
+ *     },
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .name}
+    <div class="{call .rootClass/}__name">
+        {let $name kind="html"}
+            {$params.data.name.light}
+
+            {if $params.data.name?.bold}
+                {$params.data.name.bold}
+            {/if}
+        {/let}
+
+        {let $url kind="html"}
+            {if $params.data.url}
+                {$params.data.url}
+            {else}
+                /{$params.data.alias}
+            {/if}
+        {/let}
+
+        {let $customClasses kind="html"}
+            {call .rootClass/}__link-name
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'id': $params.data.id,
+                        'content': $name,
+                        'url': $url
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': 'dark',
+                        'size': 'xxl'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Score
+ * @param params {{
+ *     data: {
+ *         score: ?number
+ *     }
+ * }}
+ * @protected
+ */
+{template .score}
+    <div class="{call .rootClass/}__score">
+        {call .renderChild}
+            {param params: [
+                'type': 'smMark',
+                'renderParams': [
+                    'data': [
+                        'value': $params.data.score
+                    ],
+                    'config': [
+                        'theme': 'ring'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Image item
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: (string|undefined)
+ *         },
+ *         imageUrl: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .image}
+    {if $params.data.imageUrl}
+        {let $description kind="html"}
+            {$params.data.name.light}
+            {if $params.data.name.bold}
+                {sp}{$params.data.name.bold}
+            {/if}
+        {/let}
+
+        <div class="{call .rootClass/}__cover-link">
+            <img class="{call .rootClass/}__cover-image"
+                src="{$params.data.imageUrl}"
+                alt="{$description}"
+            >
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Metro badge
+ * @param params {{
+ *     data: {
+ *         metro: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .metro}
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_metro">
+        {call .renderChild}
+            {param params: [
+                'type': 'smBadge',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.metro,
+                    ],
+                    'config': [
+                        'iconName': 'metro',
+                        'iconType': 'svg',
+                        'isNotActive': true,
+                        'theme': 'inline',
+                        'entityType': $params.data.type
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Area badge
+ * @param params {{
+ *     data: {
+ *         area: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .area}
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_area">
+        {call .renderChild}
+            {param params: [
+                'type': 'smBadge',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.area,
+                    ],
+                    'config': [
+                        'iconName': 'location',
+                        'isNotActive': true,
+                        'theme': 'inline',
+                        'entityType': $params.data.type
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     data: {
+ *         type: string
+ *     },
+ *     config: {
+ *         enableCover: (boolean|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {call .super_additionalClasses data="all"/}{sp}
+
+    {call .rootClass/}_compact
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         descriptionLink: ({
+ *             content: string,
+ *             url: string
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .descriptionLink_}
+    {if $params.data?.descriptionLink}
+        {let $customClasses kind="html"}
+            {call .rootClass/}__link-description
+        {/let}
+
+        <div class="{call .rootClass/}__description-link">{sp}
+            {call .renderChild}
+                {param params: [
+                    'type': 'smLink',
+                    'renderParams': [
+                        'data': $params.data?.descriptionLink,
+                        'config': [
+                            'customClasses': [$customClasses]
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}

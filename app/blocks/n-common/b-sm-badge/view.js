@@ -53,18 +53,9 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-badge',
         ACTIVE_STATE: 'b-sm-badge_active',
-        ITEM: 'b-sm-badge__item',
+        ITEM_LINK: 'b-sm-badge__item-link',
         HINT: 'b-sm-badge__hint',
         LINK_HINT: 'b-sm-badge__link-hint'
-    };
-
-
-    /**
-     * Event enum
-     * @enum {string}
-     */
-    View.Event = {
-        ITEM_CLICK: 'item-click'
     };
 
 
@@ -205,7 +196,7 @@ goog.scope(function() {
     View.prototype.initDom_ = function() {
         this.dom = {
             items: this.getElementsByClass(
-                View.CssClass.ITEM
+                View.CssClass.ITEM_LINK
             ),
             hint: this.getElementByClass(
                 View.CssClass.HINT

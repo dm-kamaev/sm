@@ -26,7 +26,7 @@ var start = async(function(path) {
  * @param {string} path
  * @return {[Object]}
  */
-var parseXlsx = function (path) {
+var parseXlsx = function(path) {
     var parsed = xlsx.parse(path),
         rows = parsed[0].data;
 
@@ -47,6 +47,8 @@ var updateSchools = function(data) {
 
 /**
  * Get department data from file row
+ * @param  {Array|Object} row
+ * @return {Object}
  */
 var rowToObject = row => {
     return {

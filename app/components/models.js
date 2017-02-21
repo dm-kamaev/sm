@@ -1,34 +1,21 @@
+'use strict';
+
 var path = require('path'),
     fs = require('fs');
 var async = require('asyncawait/async');
 
-
 var models = {};
-
 
 exports.all = models;
 
-exports.initAll = function(apiModulesPath) {
-    var modules = fs.readdirSync(apiModulesPath)
-        .filter(file => (file.indexOf('.') && file != 'index.js'));
-    modules.forEach(module => {
-        var modulePath = path.join(apiModulesPath, module);
-        var moduleFolders = fs.readdirSync(modulePath)
-            .filter(file => (file.indexOf('.') && file != 'index.js'));
-        if (moduleFolders.indexOf('models') != -1) {
-            this.initModels(path.join(modulePath, 'models'));
-        }
-    });
-    return this.all;
-};
-
 exports.initModels = function(dirPath) {
-    var localModels = fs
+    let localModels = fs
         .readdirSync(dirPath)
-        .filter(file => (file.indexOf('.') && file != 'index.js'))
+        .filter(file => (~file.indexOf('.js') && file != 'index.js'))
         .map(file => require(path.join(dirPath, file)))
         .reduce(function(res, model) {
-            res[model.name] = model;
+            let SequelizeModel = model.Model || model;
+            res[SequelizeModel.name] = SequelizeModel;
             return res;
         }, {});
 
@@ -36,8 +23,6 @@ exports.initModels = function(dirPath) {
 
     return localModels;
 };
-
-
 
 exports.initAssociations = async(function() {
     Object.keys(models).forEach(function(name) {
