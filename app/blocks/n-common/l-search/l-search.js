@@ -384,6 +384,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onFilterPanelSubmit_ = function() {
+        this.sentFilterAnalytics_();
         this.updatePage_();
         this.filterPanel_.collapse();
     };
@@ -752,6 +753,14 @@ goog.scope(function() {
         Analytics.getInstance().send('pageview');
     };
 
+    /**
+     *
+     * @private
+     */
+    Search.prototype.sentFilterAnalytics_ = function() {
+        var data = this.filterPanel_.getData();
+        this.analyticsSender_.filterAndSendFiltersAnalytics(data);
+    };
 
      /**
      * Send Analytics when shown items

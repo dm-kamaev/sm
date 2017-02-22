@@ -99,6 +99,32 @@ goog.scope(function() {
 
 
     /**
+     * @param {Object} data
+     */
+    AnalyticsSender.prototype.filterAndSendFiltersAnalytics = function(data) {
+        var stringifyData = '';
+        var dataWithoutEmptyArrays = goog.object.filter(data, function(arr) {
+            return arr.length != 0;
+        });
+
+        goog.object.map(dataWithoutEmptyArrays, function(dataFromFilter, key) {
+            var filtredData = goog.array.map(dataFromFilter,
+                function(data) {
+                    return data.label ? data.label : data.value;
+                });
+            var stringifyDataFromOneFilter = key + ':' + filtredData.join(',');
+            stringifyData += stringifyDataFromOneFilter + ';';
+        });
+
+        this.send({
+            category: 'filters',
+            action: 'search',
+            name: stringifyData
+        });
+    };
+
+
+    /**
      * Send data
      * @param {{
      *     category: string,
