@@ -28,7 +28,16 @@ var Page = sequelize.define('Page', {
     description: Sequelize.STRING(300)
 }, {
     underscored: true,
-    tableName: 'page'
+    tableName: 'page',
+    classMethods: {
+        associate: function(models) {
+            this.belongsToMany(models.Program, {
+                as: 'program',
+                through: 'program_page',
+                foreignKey: 'program_id',
+            });
+        }
+    }
 });
 
 module.exports = Page;
