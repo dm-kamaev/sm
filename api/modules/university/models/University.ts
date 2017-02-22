@@ -9,7 +9,7 @@ export interface UniversityAttribute {
     abbreviation?: string;
     description?: string;
     imageUrl?: string;
-    links?: string;
+    links?: Array<string>;
     militaryDepartment?: boolean;
     dormitory?: boolean;
     cityId?: number;
