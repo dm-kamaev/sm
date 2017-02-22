@@ -1,5 +1,5 @@
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.createTable('program_page', {
             id: {
                 type: Sequelize.INTEGER,
@@ -39,7 +39,7 @@ module.exports = {
             },
         });
     },
-    down: function (queryInterface, Sequelize) {
+    down: function(queryInterface, Sequelize) {
         return queryInterface.dropTable('program_page');
     }
 };
