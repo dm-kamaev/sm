@@ -588,10 +588,10 @@ view.formatFeature = function(feature) {
 };
 
 
-/*
+/**
  * Used for item
  * @param {{
- *     entity: models.Course
+ *     entity: models.Course,
  *     alias: models.Page,
  *     brandAlias: ?models.Page,
  *     categoryAlias: Object
@@ -726,6 +726,6 @@ view.renderPageMetaInformation = function(course) {
     }
 
     return result;
-}
+};
 
 module.exports = view;
