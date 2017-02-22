@@ -759,7 +759,10 @@ goog.scope(function() {
      */
     Search.prototype.sentFilterAnalytics_ = function() {
         var data = this.filterPanel_.getData();
-        this.analyticsSender_.filterAndSendFiltersAnalytics(data);
+        var dataWithoutEmptyArrays = goog.object.filter(data, function(arr) {
+            return arr.length != 0;
+        });
+        this.analyticsSender_.sendFiltersData(dataWithoutEmptyArrays);
     };
 
      /**
