@@ -3,26 +3,10 @@ const sequelize = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
-interface ProgramAttribute {
-    id: number;
-    name: string;
-    universityId: number;
-    description: string;
-    commentGroupId: number;
-    category: string;
-    links: Array<string>;
-    specializations: Array<string>;
-    duration: number;
-    employment: number;
-    salary: number;
-    extraExam: Array<string>;
-    discount: boolean;
-    createdAt: string;
-    updatedAt: string;
-}
-
-export interface ProgramInstance
-    extends Sequelize.Instance<ProgramAttribute>, ProgramAttribute {}
+import {
+    ProgramAttribute,
+    ProgramInstance
+} from '../types/program';
 
 interface ProgramModel
     extends Sequelize.Model<ProgramInstance, ProgramAttribute> {}
@@ -99,6 +83,10 @@ const Program: ProgramModel = sequelize.define('Program', {
             this.hasMany(models.ProgramEgeExam, {
                 as: 'programEgeExams',
                 foreignKey: 'program_id'
+            });
+            this.belongsToMany(models.Address, {
+                as: 'addresses',
+                through: 'program_address'
             });
         }
     }
