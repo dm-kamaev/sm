@@ -29,6 +29,8 @@ goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.bSmCheckbox.View');
 goog.require('sm.bSmCollapsedText.SmCollapsedText');
 goog.require('sm.bSmCollapsedText.View');
+goog.require('sm.bSmComment.SmComment');
+goog.require('sm.bSmComment.View');
 goog.require('sm.bSmExpander.SmExpander');
 goog.require('sm.bSmExpander.View');
 goog.require('sm.bSmFavorite.SmFavorite');
@@ -370,6 +372,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smSubscribeBoard', {
             control: sm.bSmSubscribeBoard.SmSubscribeBoard,
             view: sm.bSmSubscribeBoard.View
+        })
+        .setControlListItem('smComment', {
+            control: sm.bSmComment.SmComment,
+            view: sm.bSmComment.View
         });
 
     /** l-information blocks **/

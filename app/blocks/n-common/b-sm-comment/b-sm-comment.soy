@@ -1,0 +1,147 @@
+{namespace sm.bSmComment.Template}
+
+
+/**
+ * @typedef {{
+ *     author: {
+ *         photoUrl: string,
+ *         name: string,
+ *         status: string
+ *     },
+ *     score: number,
+ *     text: Array<{
+ *         header: string,
+ *         description: string
+ *     }>
+ * }} sm.bSmComment.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ * }} sm.bSmComment.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmComment.Template.Params.Data,
+ *     config: sm.bSmComment.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .comment}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmComment.Template.Params.Data,
+ *     config: sm.bSmComment.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .author_ data="all" /}
+    {call .text_ data="all" /}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-comment
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         author: {
+ *             photoUrl: string,
+ *             name: string,
+ *             status: string
+ *         },
+ *         score: number
+ *     }
+ * }}
+ */
+{template .author_}
+    <div class="{call .rootClass /}__author">
+        <div class="{call .rootClass /}__author-photo-wrap">
+            {if $params.data.author.imageUrl}
+                <img class="{call .rootClass /}__author-image"
+                    src="{$params.data.author.imageUrl}"
+                />
+            {/if}
+        </div>
+
+        <div class="{call .rootClass /}__author-data">
+            <div class="{call .rootClass /}__author-name">
+                {call .getText}
+                    {param message: $params.data.author.name /}
+                {/call}
+            </div>
+
+            <div class="{call .rootClass /}__author-status">
+                {call .getText}
+                    {param message: $params.data.author.status /}
+                {/call}
+            </div>
+        </div>
+
+        <div class="{call .rootClass /}__score">
+            // {call .score_ data="all"}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         text: Array<{
+ *             header: string,
+ *             description: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .text_}
+    <div class="{call .rootClass /}__text">
+        {foreach $paragraph in $params.data.text}
+            {call .paragraph_}
+                {param paragraph: $paragraph /}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * @param paragraph {{
+ *     header: string,
+ *     description: string
+ * }}
+ */
+{template .paragraph_}
+    <div class="{call .rootClass /}__paragraph">
+        <div class="{call .rootClass /}__paragraph-header">
+            {call .getText}
+                {param message: $paragraph.header /}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass /}__paragraph-description">
+            {call .getText}
+                {param message: $paragraph.description /}
+            {/call}
+        </div>
+    </div>
+{/template}

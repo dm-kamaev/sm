@@ -19,6 +19,7 @@ goog.require('sm.bSmButtonLink.Template');
 goog.require('sm.bSmCatalog.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
+goog.require('sm.bSmComment.Template');
 goog.require('sm.bSmContacts.Template');
 goog.require('sm.bSmEmbed.Template');
 goog.require('sm.bSmExpander.Template');
@@ -383,6 +384,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smButtonLink',
             sm.bSmButtonLink.Template.buttonLink
+        )
+        .setTemplateListItem(
+            'smComment',
+            sm.bSmComment.Template.comment
         );
 
     /** l-information blocks **/
