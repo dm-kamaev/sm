@@ -4,16 +4,18 @@ const sequelize = require('../../../../app/components/db');
 import * as Sequelize from 'sequelize/v3';
 
 interface ProgramEgeExamAttribute {
-    id: number;
-    subjectId: number;
-    programId: number;
-    isMain: boolean;
-    createdAt: string;
-    updatedAt: string;
+    id?: number;
+    subjectId?: number;
+    programId?: number;
+    isMain?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface ProgramEgeExamInstance
-    extends Sequelize.Instance<ProgramEgeExamAttribute>, ProgramEgeExamAttribute {}
+    extends
+        Sequelize.Instance<ProgramEgeExamAttribute>,
+        ProgramEgeExamAttribute {}
 
 interface ProgramEgeExamModel
     extends Sequelize.Model<ProgramEgeExamInstance, ProgramEgeExamAttribute> {}

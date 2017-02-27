@@ -4,11 +4,11 @@ const sequelize = require('../../../../app/components/db');
 import * as Sequelize from 'sequelize/v3';
 
 interface ProgramPageAttribute {
-    id: number;
-    programId: number;
-    pageId: number;
-    createdAt: string;
-    updatedAt: string;
+    id?: number;
+    programId?: number;
+    pageId?: number;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface ProgramPageInstance
