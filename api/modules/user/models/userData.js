@@ -33,7 +33,11 @@ var UserData = db.define('UserData', {
     tableName: 'user_data',
     classMethods: {
         associate: function(models) {
-            UserData.hasOne(models.Comment, {
+            this.hasOne(models.Comment, {
+                as: 'userData',
+                foreignKey: 'user_data_id'
+            });
+            this.hasOne(models.UniversityComment, {
                 as: 'userData',
                 foreignKey: 'user_data_id'
             });

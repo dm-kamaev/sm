@@ -5,8 +5,12 @@ var CommentGroup = db.define('CommentGroup', {}, {
     tableName: 'comment_group',
     classMethods: {
         associate: function(models) {
-            CommentGroup.hasMany(models.Comment, {
+            this.hasMany(models.Comment, {
                 as: 'comments', foreignKey: 'comment_group_id'
+            });
+            this.hasMany(models.UniversityComment, {
+                as: 'universityComments',
+                foreignKey: 'comment_group_id'
             });
         }
     }

@@ -29,7 +29,10 @@ var Rating = db.define('Rating', {
     tableName: 'rating',
     classMethods: {
         associate: function(models) {
-            Rating.hasOne(models.Comment, {
+            this.hasOne(models.Comment, {
+                foreignKey: 'rating_id'
+            });
+            this.hasOne(models.UniversityComment, {
                 foreignKey: 'rating_id'
             });
         }

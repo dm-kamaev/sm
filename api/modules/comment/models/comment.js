@@ -38,14 +38,14 @@ var Comment = db.define('Comment', {
     tableName: 'comment',
     classMethods: {
         associate: function(models) {
-            Comment.belongsTo(models.CommentGroup, {
+            this.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id'
             });
-            Comment.belongsTo(models.Rating, {
+            this.belongsTo(models.Rating, {
                 as: 'rating',
                 foreignKey: 'rating_id'
             });
-            Comment.belongsTo(models.UserData, {
+            this.belongsTo(models.UserData, {
                 as: 'userData',
                 foreignKey: 'user_data_id'
             });
