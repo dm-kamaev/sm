@@ -9,7 +9,7 @@ const logger = require('../../../../app/components/logger/logger')
 const entityTypes = require('../../entity/enums/entityType');
 
 import {geoTools} from '../../../../console/modules/geoTools/geoTools';
-import {AddressInstance} from '../models/address';
+import {AddressInstance} from '../types/address';
 import {Model as AddressModel} from '../models/address';
 
 import {AddressIsNotUnique} from './exceptions/AddressIsNotUnique';

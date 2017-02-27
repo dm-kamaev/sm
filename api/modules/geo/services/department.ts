@@ -14,9 +14,11 @@ import {
     DepartmentAttribute,
     Model as DepartmentModel
 } from '../models/department';
-import {AddressInstance} from '../models/address';
+
+import {AddressInstance} from '../types/address';
 import {Model as AddressModel} from '../models/address';
-import {DepartmentAdmin} from '../interfaces/DepartmentAdmin';
+
+import {DepartmentAdmin} from '../types/department';
 
 import {DepartmentNotFound} from './exceptions/DepartmentNotFound';
 import {AddressDoesNotExist} from './exceptions/AddressDoesNotExist';
