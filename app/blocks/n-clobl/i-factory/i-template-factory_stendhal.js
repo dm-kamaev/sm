@@ -59,6 +59,7 @@ goog.require('sm.gInput.TemplateStendhal');
 goog.require('sm.gList.TemplateLinks');
 goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gList.TemplateStendhal');
+goog.require('sm.gModal.TemplateComment');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateSideMenu');
@@ -240,6 +241,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal-success',
             sm.gModal.TemplateSuccess.modal
+        )
+        .setTemplateListItem(
+            'modal-comment',
+            sm.gModal.TemplateComment.modal
         )
         .setTemplateListItem(
             'list',
