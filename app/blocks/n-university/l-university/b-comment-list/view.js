@@ -1,6 +1,10 @@
 goog.provide('sm.lUniversity.bCommentList.View');
 
 goog.require('cl.iControl.View');
+goog.require('cl.iUtils.Utils');
+goog.require('goog.dom.classlist');
+goog.require('goog.events');
+goog.require('goog.events.EventType');
 
 
 
@@ -21,7 +25,8 @@ sm.lUniversity.bCommentList.View = function(
      * Collection of DOM elements
      * @type {
      *     showCommentsButton: Element,
-     *     leaveCommentButton: Element
+     *     leaveCommentButton: Element,
+     *     itemList: Element
      * }
      */
     this.dom = {};
@@ -41,7 +46,19 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-comment-list',
         SHOW_COMMENTS_BUTTON: 'b-comment-list__show-comments-button',
-        LEAVE_COMMENT_BUTTON: 'b-comment-list__leave-comment-button'
+        SHOW_COMMENTS_BUTTON_WRAP: 'b-comment-list__show-comments-button-wrap',
+        LEAVE_COMMENT_BUTTON: 'b-comment-list__leave-comment-button',
+        ITEM_LIST: 'b-comment-list__item-list'
+    };
+
+
+    /**
+     * Event enum
+     * @enum {string}
+     * @const
+     */
+    View.Event = {
+        SHOW_BUTTON_CLICK: goog.events.getUniqueId('show-button-click')
     };
 
 
@@ -53,6 +70,18 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initDom();
+        this.initParams_();
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.initButtonListeners_();
     };
 
 
@@ -64,9 +93,91 @@ goog.scope(function() {
             showCommentsButton: this.getElementByClass(
                 View.CssClass.SHOW_COMMENTS_BUTTON
             ),
+            showCommentsButtonWrap: this.getElementByClass(
+                View.CssClass.SHOW_COMMENTS_BUTTON_WRAP
+            ),
             leaveCommentButton: this.getElementByClass(
                 View.CssClass.LEAVE_COMMENT_BUTTON
+            ),
+            itemList: this.getElementByClass(
+                View.CssClass.ITEM_LIST
             )
+        };
+    };
+
+
+    /**
+     * Init buttons listeners
+     * @private
+     */
+    View.prototype.initButtonListeners_ = function() {
+        this.getHandler().listen(
+            this.dom.showCommentsButton,
+            goog.events.EventType.CLICK,
+            this.onShowCommentButtonClick_
+        );
+    };
+
+
+    /**
+     * Click show button handler
+     * @private
+     */
+    View.prototype.onShowCommentButtonClick_ = function() {
+        this.dispatchEvent(View.Event.SHOW_BUTTON_CLICK);
+        this.hideShowCommentsButton_();
+    };
+
+
+    /**
+     * Hide show comments button
+     * @private
+     */
+    View.prototype.hideShowCommentsButton_ = function() {
+        goog.dom.classlist.add(
+            this.dom.showCommentsButtonWrap,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * Initializes params from attributes data-params
+     * @private
+     */
+    View.prototype.initParams_ = function() {
+        var rawParams = this.getRawDataParams_();
+
+        this.params = this.transformParams_(rawParams);
+    };
+
+
+    /**
+     * Return raw data params from dom element
+     * @return {Object}
+     * @private
+     */
+    View.prototype.getRawDataParams_ = function() {
+        return JSON.parse(
+            goog.dom.dataset.get(
+                this.getElement(),
+                'params'
+            )
+        );
+    };
+
+
+    /**
+     * Transform raw params object to compiled one
+     * Item config stay in uncompressed state as in view we dont know
+     * about transformation function for it
+     * @param  {Object} rawParams
+     * @return {sm.bSmItemList.View.Params}
+     * @private
+     */
+    View.prototype.transformParams_ = function(rawParams) {
+        return {
+            countShownItems: rawParams['countShownItems']
         };
     };
 });  // goog.scope

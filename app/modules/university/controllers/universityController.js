@@ -40,9 +40,9 @@ controller.information = async(function(req, res, next) {
                 photoUrl: 'http://avatar.exe.by/avatars/movie/' +
                     'img/0973.jpg',
                 name: 'Егор',
-                status: 'Выпускник 2016',
-                score: 3
+                status: 'Выпускник 2016'
             },
+            score: 3,
             text: [{
                 header: 'Что понравилось',
                 description: `Вариативность в направленности

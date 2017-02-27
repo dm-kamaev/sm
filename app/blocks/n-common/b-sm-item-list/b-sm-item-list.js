@@ -11,6 +11,7 @@ goog.provide('sm.bSmItemList.SmItemList');
 goog.require('cl.iControl.Control');
 goog.require('goog.array');
 goog.require('goog.dom.classlist');
+goog.require('sm.bSmComment.SmComment');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItemList.View');
@@ -95,7 +96,8 @@ goog.scope(function() {
         ITEM_ENTITY: 'smItemEntity',
         ITEM_COMPACT: 'smItemCompact',
         LINK: 'smLink',
-        DEPARTMENT: 'lCourse-department'
+        DEPARTMENT: 'lCourse-department',
+        COMMENT: 'smComment'
     };
 
 
@@ -323,6 +325,18 @@ goog.scope(function() {
 
 
     /**
+     * If list load items once, there are some hidden items,
+     * this method show its from start to end
+     * @param {number} start
+     * @param {number} end
+     * @public
+     */
+    ItemList.prototype.showItems = function(start, end) {
+        this.getView().showItems_(start, end);
+    };
+
+
+    /**
      * Send Analytics when user clicks on item
      * @param {number} itemId
      * @param {string} list
@@ -492,6 +506,8 @@ goog.scope(function() {
             sm.bSmLink.SmLink.Event;
         ItemEvent[ItemList.ItemType.DEPARTMENT] =
             sm.lCourse.bDepartment.Department.Event;
+        ItemEvent[ItemList.ItemType.COMMENT] =
+            sm.bSmComment.SmComment.Event;
 
         return ItemEvent[this.params.itemType];
     };
@@ -514,6 +530,8 @@ goog.scope(function() {
                 sm.bSmLink.SmLink.getRenderParams;
             transformators[ItemList.ItemType.DEPARTMENT] =
                 sm.lCourse.bDepartment.Department.getRenderParams;
+            transformators[ItemList.ItemType.COMMENT] =
+                sm.bSmComment.SmComment.getRenderParams;
 
         this.renderParamsTransformator_ = transformators[itemType];
     };

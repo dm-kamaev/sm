@@ -1,11 +1,17 @@
 @import '../../../n-common/i-media/i-media';
 
 .b-comment-list__header {
+    margin-bottom: 30px;
     padding-left: 310px;
+
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 20px;
     font-weight: 800;
     line-height: 24px;
+}
+
+.b-comment-list__list {
+    margin-bottom: 55px;
 }
 
 .b-comment-list__control-panel {
@@ -23,4 +29,46 @@
     display: inline-block;
 
     width: 187px;
+}
+
+.b-comment-list__empty-list {
+    padding-left: 310px;
+    padding-bottom: 30px;
+
+    color: #747474;
+
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 17px;
+}
+
+
+@include media-xl {
+    .b-comment-list__header {
+        padding-left: 0;
+    }
+
+    .b-comment-list__control-panel {
+        padding-left: 0;
+    }
+
+    .b-comment-list__show-comments-button-wrap {
+        width: 150px;
+    }
+}
+
+
+@include media-xs {
+    .b-comment-list__leave-comment-button-wrap {
+        width: 100%;
+    }
+
+    .b-comment-list__show-comments-button-wrap {
+        width: 100%;
+        margin-bottom: 18px;
+    }
+
+    .b-comment-list__list {
+        margin-bottom: 25px;
+    }
 }
