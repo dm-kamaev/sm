@@ -28,7 +28,8 @@
                      packaging.supervisor.restart,
                      packaging.crontab.install,
                      packaging.initd.install,
-                     schools.change-owner"/>
+                     schools.change-owner,
+                     schools.change-permissions"/>
 
     <!-- Stop previous release -->
     <target name="packaging.release.clean"
@@ -66,6 +67,14 @@
     <target name="schools.change-owner">
         <exec executable="chown" dir="${basedir}">
             <arg line="-R schools ${basedir}"/>
+        </exec>
+    </target>
+
+    <target name="schools.change-permissions">
+        <exec executable="chmod" dir="${basedir}">
+            <arg line=
+                "644 ${project.node-modules.path}/tipograph/src/languages.js"
+            />
         </exec>
     </target>
 
