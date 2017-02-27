@@ -424,7 +424,7 @@
 
 /**
  * @param params {{
-        data: sm.bSmTabSelect.SmTabSelect.Params.Data
+        data: sm.bSmSwitch.SmSwitch.Params.Data
     }}
  */
 {template .tab}
@@ -434,11 +434,13 @@
 
     {call .renderChild}
         {param params: [
-            'type': 'bSmTabSelect',
+            'type': 'smSwitch',
             'renderParams': [
                 'data': $params.data,
                 'config': [
-                    'customClasses': [$customClasses]
+                    'customClasses': [$customClasses],
+                    'size': 'xxxl',
+                    'linksTheme': 'gray'
                 ]
             ]
         ]/}

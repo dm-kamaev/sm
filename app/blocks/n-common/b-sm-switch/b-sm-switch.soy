@@ -1,0 +1,116 @@
+{namespace sm.bSmSwitch.Template}
+
+/**
+ * @typedef  {{
+ *     items: Array<{
+ *         label: string,
+ *         value: ?(string|number),
+ *         url: ?string
+ *     }>,
+ *     selectedItemId: (number|undefined)
+ * }} sm.bSmSwitch.SmSwitch.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *      size: sm.bSmLink.Template.Params.Config.size,
+ *      linksTheme: sm.bSmLink.Template.Params.Config.theme,
+ * }} sm.bSmSwitch.SmSwitch.Params.Config
+ */
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmSwitch.SmSwitch.Params.Data,
+ *     config: sm.bSmSwitch.SmSwitch.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .switch}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ * @param params {
+       data: sm.bSmSwitch.SmSwitch.Params.Data
+   }
+ */
+{template .body}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link
+    {/let}
+    {let $selectedItemId kind="text"}
+        {if $params?.data?.selectedItemId}
+            $params.data.selectedItemId
+        {else}
+            0
+        {/if}
+    {/let}
+        {if $params?.data?.items}
+            {for $i in range($params.data.items.length)}
+                {let $item: $params.data.items[$i]/}
+                {let $isSelected kind="text"}
+                    {if $i == $selectedItemId}
+                        true
+                    {/if}
+                {/let}
+                <div class="{call .rootClass/}__link-wrapper{sp}
+                    {if $i == $selectedItemId}
+                        {call .rootClass/}__link_selected
+                    {/if}
+                ">
+                    {call .renderChild}
+                        {param params: [
+                            'type': 'smLink',
+                            'renderParams': [
+                                'data': [
+                                    'content': $item.label,
+                                    'url': $item.url
+                                ],
+                                'config': [
+                                    'customClasses': [$customClasses],
+                                    'size': $params.config?.size,
+                                    'theme' : $params.config?.linksTheme,
+                                    'isSelected' : $isSelected
+                                ]
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+            {/for}
+        {/if}
+{/template}
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     data: {
+ *         items: Array<{
+ *             label: ?string,
+ *             value: (string|number|undefined),
+ *             url: (string|undefined)
+ *          }>,
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: [
+            'items': $params.data.items
+        ]/}
+    {/call}"
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-switch
+{/template}

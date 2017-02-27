@@ -274,7 +274,7 @@ goog.scope(function() {
             this.onSortReleased_
         ).listen(
             this.searchResults_,
-            sm.bSmTabSelect.SmTabSelect.Event.ITEM_SELECT,
+            sm.bSmSwitch.SmSwitch.Event.ITEM_SELECT,
             this.onSortReleased_
         ).listen(
             this.searchResults_,

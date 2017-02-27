@@ -58,7 +58,8 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-link',
-        HOVERABLE: 'b-sm-link_hoverable'
+        HOVERABLE: 'b-sm-link_hoverable',
+        SELECTED: 'b-sm-link_selected'
     };
 
 
@@ -72,7 +73,8 @@ goog.scope(function() {
         LIGHT: 'light',
         ATTENTION: 'attention',
         DARK: 'dark',
-        BLOCK: 'block'
+        BLOCK: 'block',
+        GRAY: 'gray'
     };
 
 

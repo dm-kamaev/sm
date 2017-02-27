@@ -37,7 +37,7 @@ goog.require('sm.bSmScore.TemplateBrief');
 goog.require('sm.bSmSearchPanel.Template');
 goog.require('sm.bSmStars.Template');
 goog.require('sm.bSmSubheader.Template');
-goog.require('sm.bSmTabSelect.Template');
+goog.require('sm.bSmSwitch.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
@@ -236,6 +236,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.gList.TemplateLinks.list
         )
         .setTemplateListItem(
+            'list-tab',
+            sm.gList.TemplateLinks.list
+        )
+        .setTemplateListItem(
             'dropdown-select',
             sm.gDropdown.TemplateSelect.dropdown
         )
@@ -354,8 +358,8 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bSmHeadedList.Template.headedList
         )
         .setTemplateListItem(
-            'bSmTabSelect',
-            sm.bSmTabSelect.Template.tabSelect
+            'smSwitch',
+            sm.bSmSwitch.Template.switch
         );
 
     /** l-information blocks **/

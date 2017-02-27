@@ -80,4 +80,16 @@
 
     color: #356fc4;
 }
+
+.b-sm-link_gray-theme {
+    color: #747474;
+
+    &.b-sm-link_hoverable:hover {
+        color: #007aff;
+    }
+
+    &.b-sm-link_selected {
+        color: #000000;
+    }
+}
 /** Themes end */

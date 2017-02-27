@@ -19,7 +19,7 @@
  * @typedef {{
  *     target: (string|undefined),
  *     disableHover: boolean,
- *     size: ('s'|'m'|'l'|'xl'),
+ *     size: ('s'|'m'|'l'|'xl','xxl','xxxl'),
  *     theme: ('attention'|'light'|'block'|'dark'|'default'|undefined),
  *     isSelected: boolean
  * }} sm.bSmLink.Template.Params.Config
@@ -117,7 +117,8 @@
  * Addtitonal classes
  * @param params {{
  *     config: {
- *         size: ('s'|'m'|'l'|'xl')
+ *         size: ('s'|'m'|'l'|'xl'|'xxl'|'xxxl'),
+ *         isSelected: boolean
  *     }
  * }}
  * @override

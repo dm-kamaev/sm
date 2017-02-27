@@ -1,4 +1,4 @@
-goog.provide('sm.bSmTabSelect.Event.ItemSelect');
+goog.provide('sm.bSmSwitch.Event.ItemSelect');
 
 goog.require('goog.events.Event');
 
@@ -16,7 +16,7 @@ goog.scope(function() {
      * @constructor
      * @extends {goog.events.Event}
      */
-    sm.bSmTabSelect.Event.ItemSelect = function(params, opt_target) {
+    sm.bSmSwitch.Event.ItemSelect = function(params, opt_target) {
         goog.base(this, ItemSelect.Type, opt_target);
 
 
@@ -32,8 +32,8 @@ goog.scope(function() {
             label: params.label
         };
     };
-    goog.inherits(sm.bSmTabSelect.Event.ItemSelect, goog.events.Event);
-    var ItemSelect = sm.bSmTabSelect.Event.ItemSelect;
+    goog.inherits(sm.bSmSwitch.Event.ItemSelect, goog.events.Event);
+    var ItemSelect = sm.bSmSwitch.Event.ItemSelect;
 
 
     /**
