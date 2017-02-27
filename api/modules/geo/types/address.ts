@@ -1,5 +1,5 @@
 import * as Sequelize from 'sequelize/v3';
-import {DepartmentAttribute} from '../models/department';
+import {DepartmentAttribute} from './department';
 
 export interface AddressAttribute {
     id?: number;
