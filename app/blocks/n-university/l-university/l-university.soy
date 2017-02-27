@@ -37,7 +37,8 @@
  *         banner: sm.bSmBanner.Template.Params,
  *         entityRelation: sm.bEntityRelation.Template.Params,
  *         similarPrograms: sm.bSmItemList.Template.Params.Data,
- *         usefulCourses: sm.bSmItemList.Template.Params.Data
+ *         usefulCourses: sm.bSmItemList.Template.Params.Data,
+ *         comments: sm.bCommentList.Template.Params.Data
  *     },
  *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params
  * }} sm.lUniversity.Template.Data
@@ -90,7 +91,12 @@
     <div class="{call .rootClass/}__body">
     {if $params}{/if}
         {call .sectionData_ data="all" /}
-        // {call .sectionComments_ data="all" /}
+
+        {if $params.data.entityData.comments}
+            {call .sectionComments_ data="all" /}
+        {else}
+        {/if}
+
         {call .sectionPrograms_ data="all" /}
         {call .sectionUsefulCourses_ data="all" /}
     </div>
@@ -162,6 +168,20 @@
     >
         {call .sketchData_ data="all" /}
         {call .mainData_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section comments
+ * @private
+ * @ovveride
+ */
+{template .sectionComments_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_comments{sp}"
+    >
+        {call .comments_ data="all" /}
     </div>
 {/template}
 
@@ -250,11 +270,8 @@
 /**
  * Data on the middle - section main data
  * @param params {{
- *     data: {
- *         subunitType: string,
- *         subunitName: string,
- *         description: string
- *     }
+ *     data: sm.lUniversity.Template.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @private
  */
@@ -286,16 +303,19 @@
                 {param message: $params.data.entityData.subunitType /}
             {/call}
         </div>
+
         <div class="{call .rootClass/}__name">
             {call cl.iControl.Template.getText}
                 {param message: $params.data.entityData.subunitName /}
             {/call}
         </div>
+
         <div class="{call .rootClass/}__description">
             {call cl.iControl.Template.getText}
                 {param message: $params.data.entityData.description /}
             {/call}
         </div>
+
         <div class="{call .rootClass/}__description_cut">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                 {param params: [
@@ -528,5 +548,38 @@
                 ]/}
             {/call}
         </div>
+    </div>
+{/template}
+
+
+/**
+ * Comments block
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             comments: Array<sm.bComment.Template.Params>
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .comments_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__comments
+    {/let}
+    <div class="{call .rootClass/}__comment-list">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'lUniversity-commentList',
+                'renderParams': [
+                    'data': $params.data.entityData.comments,
+                    'config': [
+                        'theme': 'neptune',
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}

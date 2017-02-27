@@ -1,0 +1,26 @@
+@import '../../../n-common/i-media/i-media';
+
+.b-comment-list__header {
+    padding-left: 310px;
+    font-family: 'Proxima', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 24px;
+}
+
+.b-comment-list__control-panel {
+    padding-left: 310px;
+}
+
+.b-comment-list__show-comments-button-wrap {
+    display: inline-block;
+
+    width: 230px;
+    margin-right: 20px;
+}
+
+.b-comment-list__leave-comment-button-wrap {
+    display: inline-block;
+
+    width: 187px;
+}

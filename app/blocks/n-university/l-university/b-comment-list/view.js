@@ -1,7 +1,6 @@
-goog.provide('sm.lUniversity.bDescriptionList.View');
+goog.provide('sm.lUniversity.bCommentList.View');
 
 goog.require('cl.iControl.View');
-goog.require('sm.bSmLink.View');
 
 
 
@@ -12,25 +11,26 @@ goog.require('sm.bSmLink.View');
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.lUniversity.bDescriptionList.View = function(
+sm.lUniversity.bCommentList.View = function(
     opt_params, opt_type, opt_modifier
 ) {
-    sm.lUniversity.bDescriptionList.View.base(this, 'constructor', opt_params,
+    sm.lUniversity.bCommentList.View.base(this, 'constructor', opt_params,
         opt_type, opt_modifier);
 
     /*
      * Collection of DOM elements
      * @type {
-     *     links: ?Array<Element>
+     *     showCommentsButton: Element,
+     *     leaveCommentButton: Element
      * }
      */
     this.dom = {};
 };
-goog.inherits(sm.lUniversity.bDescriptionList.View, cl.iControl.View);
+goog.inherits(sm.lUniversity.bCommentList.View, cl.iControl.View);
 
 
 goog.scope(function() {
-    var View = sm.lUniversity.bDescriptionList.View;
+    var View = sm.lUniversity.bCommentList.View;
 
 
     /**
@@ -39,8 +39,9 @@ goog.scope(function() {
      * @const
      */
     View.CssClass = {
-        ROOT: 'b-description-list',
-        LINK: sm.bSmLink.View.CssClass.ROOT
+        ROOT: 'b-comment-list',
+        SHOW_COMMENTS_BUTTON: 'b-comment-list__show-comments-button',
+        LEAVE_COMMENT_BUTTON: 'b-comment-list__leave-comment-button'
     };
 
 
@@ -60,8 +61,11 @@ goog.scope(function() {
      */
     View.prototype.initDom = function() {
         this.dom = {
-            links: this.getElementsByClass(
-                View.CssClass.LINK
+            showCommentsButton: this.getElementByClass(
+                View.CssClass.SHOW_COMMENTS_BUTTON
+            ),
+            leaveCommentButton: this.getElementByClass(
+                View.CssClass.LEAVE_COMMENT_BUTTON
             )
         };
     };

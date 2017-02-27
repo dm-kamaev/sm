@@ -50,7 +50,25 @@
     line-height: 25px;
 
     &.g-button_hoverable:hover {
-        background-color: rgba(0, 122, 255, 0.2)
+        background-color: rgba(0, 122, 255, 0.2);
+    }
+}
+
+.g-button_neptune-reverse-theme {
+    height: 49px;
+
+    letter-spacing: 0;
+    text-transform: none;
+
+    color: #fff;
+    border: solid 2px #007aff;
+    background-color: #007aff;
+
+    font-weight: 600;
+    line-height: 25px;
+
+    &.g-button_hoverable:hover {
+        background-color: #007aff;
     }
 }
 

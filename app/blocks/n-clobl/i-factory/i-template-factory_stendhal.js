@@ -89,6 +89,7 @@ goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bLabel.Template');
 goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSuggestFilter.Template');
+goog.require('sm.lUniversity.bCommentList.Template');
 goog.require('sm.lUniversity.bDescriptionList.Template');
 
 
@@ -444,7 +445,7 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.lSearch.bSearchResults.Template.searchResults
         );
 
-        /** l-course blocks */
+    /** l-course blocks */
     this.setTemplateListItem(
             'lCourse-informationBoard',
             sm.lCourse.bInformationBoard.Template.informationBoard
@@ -466,6 +467,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
     this.setTemplateListItem(
             'lUniversity-descriptionList',
             sm.lUniversity.bDescriptionList.Template.descriptionList
+        )
+        .setTemplateListItem(
+            'lUniversity-commentList',
+            sm.lUniversity.bCommentList.Template.commentList
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

@@ -38,6 +38,7 @@ goog.scope(function() {
         this.initCutDescription_();
         this.initPrograms_();
         this.initCourses_();
+        this.initComments_();
     };
 
 
@@ -112,6 +113,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Initializes instance courses item list
      * @private
@@ -120,6 +122,18 @@ goog.scope(function() {
         this.decorateChild(
             'smItemList',
             this.getView().getDom().courses
+        );
+    };
+
+
+    /**
+     * Initializes instance comment item list
+     * @private
+     */
+    University.prototype.initComments_ = function() {
+        this.decorateChild(
+            'lUniversity-commentList',
+            this.getView().getDom().comments
         );
     };
 });  // goog.scope
