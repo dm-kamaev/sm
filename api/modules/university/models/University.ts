@@ -70,6 +70,11 @@ const University: UniversityModel = sequelize.define('University', {
             this.belongsToMany(models.Profile, {
                 through: 'university_profile'
             });
+            this.belongsToMany(models.Page, {
+                as: 'page',
+                through: 'university_page',
+                foreignKey: 'university_id',
+            });
         }
     }
 });

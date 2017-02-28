@@ -31,10 +31,15 @@ var Page = sequelize.define('Page', {
     tableName: 'page',
     classMethods: {
         associate: function(models) {
+            this.belongsToMany(models.University, {
+                as: 'university',
+                through: 'university_page',
+                foreignKey: 'page_id',
+            });
             this.belongsToMany(models.Program, {
                 as: 'program',
                 through: 'program_page',
-                foreignKey: 'program_id',
+                foreignKey: 'page_id',
             });
         }
     }
