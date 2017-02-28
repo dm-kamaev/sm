@@ -75,24 +75,20 @@
 {template .author_}
     <div class="{call .rootClass /}__author">
         <div class="{call .rootClass /}__author-photo-wrap">
-            {if $params.data.author.imageUrl}
-                <img class="{call .rootClass /}__author-image"
-                    src="{$params.data.author.imageUrl}"
+            {if $params.data.author.photoUrl}
+                <img class="{call .rootClass /}__author-photo"
+                    src="{$params.data.author.photoUrl}"
                 />
             {/if}
         </div>
 
         <div class="{call .rootClass /}__author-data">
             <div class="{call .rootClass /}__author-name">
-                {call .getText}
-                    {param message: $params.data.author.name /}
-                {/call}
+                {$params.data.author.name}
             </div>
 
             <div class="{call .rootClass /}__author-status">
-                {call .getText}
-                    {param message: $params.data.author.status /}
-                {/call}
+                , {$params.data.author.status}
             </div>
         </div>
 
@@ -133,15 +129,11 @@
 {template .paragraph_}
     <div class="{call .rootClass /}__paragraph">
         <div class="{call .rootClass /}__paragraph-header">
-            {call .getText}
-                {param message: $paragraph.header /}
-            {/call}
+            {$paragraph.header}
         </div>
 
         <div class="{call .rootClass /}__paragraph-description">
-            {call .getText}
-                {param message: $paragraph.description /}
-            {/call}
+            {$paragraph.description}
         </div>
     </div>
 {/template}
