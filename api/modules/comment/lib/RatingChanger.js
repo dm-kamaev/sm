@@ -4,7 +4,7 @@ const await = require('asyncawait/await');
 const squel = require('squel').useFlavour('postgres');
 
 const sequelize = require('../../../../app/components/db'),
-    ratingService = require('../services/rating');
+    ratingService = require('../services/rating').service;
 
 const SCORE_COUNT = 4, // number of score positions
     MIN_SCORE_COUNT = 3, // minimum number of each score
@@ -34,11 +34,12 @@ module.exports = class RatingChanger {
      * Update rating in entity table
      */
     update() {
+        console.log(ratingService);
         let totalRating = this.getTotalRating_();
 
         totalRating.score = totalRating.score.map((grade, i) =>
             totalRating.scoreCount[i] >= MIN_SCORE_COUNT ?
-                grade :
+                parseFloat(grade) :
                 0
         );
 
