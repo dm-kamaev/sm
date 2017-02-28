@@ -91,6 +91,7 @@ api/modules/user/models/adminUser.js
 api/modules/user/services/exceptions/*.js
 api/modules/user/services/adminUser.js
 api/modules/user/views/adminUserView.js
+api/modules/user/models/userData.js
 
 api/modules/university/**/*.js
 

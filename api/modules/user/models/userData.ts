@@ -1,16 +1,26 @@
-var DataType = require('sequelize'),
-    userType = require('../enums/userType');
-var db = require('../../../../app/components/db');
+const DataType = require('sequelize');
 
-var UserData = db.define('UserData', {
+const sequelize = require('../../../../app/components/db');
+const userType = require('../enums/userType');
+
+import * as Sequelize from 'sequelize/v3';
+
+import {UserDataAttributes, UserDataInstance} from '../types/userData';
+
+interface UserDataModel
+    extends Sequelize.Model<UserDataInstance, UserDataAttributes> {}
+
+const Model: UserDataModel = sequelize.define('UserData', {
     userType: {
         field: 'user_type',
-        type: DataType.ENUM,
-        values: userType.toArray()
+        type: DataType.STRING,
+        validate: {
+            isIn: [userType.toArray()]
+        }
     },
-    classType: {
+    grade: {
         type: DataType.INTEGER,
-        field: 'class_type'
+        field: 'grade'
     },
     yearGraduate: {
         type: DataType.INTEGER,
@@ -45,4 +55,4 @@ var UserData = db.define('UserData', {
     }
 });
 
-module.exports = UserData;
+export {Model};
