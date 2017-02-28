@@ -24,7 +24,7 @@ const BLOCKS_DIR = '/app/blocks';
 const SHARED_STATIC_DIR = '/public/shared/static';
 
 const ENV = util.env.env ? util.env.env : 'dev';
-const IS_PROD = ENV === 'prod';
+const IS_DEV = ENV === 'dev';
 
 const gulpHelper =
     require('./node_modules/clobl/gulp-helper.js')
@@ -81,7 +81,7 @@ gulp.task('styles', ['svgSprite', 'sprite'], function() {
             fileName: 'styles.css'
         }],
         dest: path.join(__dirname, SHARED_STATIC_DIR),
-        minify: IS_PROD
+        minify: !IS_DEV
     });
 });
 
