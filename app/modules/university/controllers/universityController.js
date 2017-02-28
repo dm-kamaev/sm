@@ -252,7 +252,7 @@ controller.information = async(function(req, res, next) {
                             light: 'Менеджер СПБГУ'
                         },
                         description: ' ',
-                        descriptionLink: {
+                        additionalLink: {
                             content: 'Специальность',
                             url: 'http://yandex.ru',
                             theme: 'neptune',
@@ -272,7 +272,7 @@ controller.information = async(function(req, res, next) {
                             light: 'Социология НИУ-ВШЭ'
                         },
                         description: ' ',
-                        descriptionLink: {
+                        additionalLink: {
                             content: 'Специальность',
                             url: 'http://yandex.ru',
                             theme: 'neptune',
@@ -292,7 +292,7 @@ controller.information = async(function(req, res, next) {
                             light: 'Менеджер МГУ'
                         },
                         description: ' ',
-                        descriptionLink: {
+                        additionalLink: {
                             content: 'Специальность',
                             url: 'http://yandex.ru',
                             theme: 'neptune',
@@ -312,7 +312,7 @@ controller.information = async(function(req, res, next) {
                             light: 'Логистика НИУ-ВШЭ'
                         },
                         description: ' ',
-                        descriptionLink: {
+                        additionalLink: {
                             content: 'Специальность',
                             url: 'http://yandex.ru',
                             theme: 'neptune',
@@ -328,8 +328,7 @@ controller.information = async(function(req, res, next) {
                     }],
                     itemType: 'smItemCompact',
                     itemConfig: {
-                        theme: 'neptune',
-                        isNameNotLink: true
+                        theme: 'neptune'
                     },
                     theme: 'neptune'
                 },
@@ -345,7 +344,9 @@ controller.information = async(function(req, res, next) {
                         description: `Подготовка к ЕГЭ по английскому
                             языку English First`,
                         imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
-                            'facebook/000/839/199/8a9.jpg'
+                            'facebook/000/839/199/8a9.jpg',
+                        url: 'http://yandex.ru',
+                        nameLinkUrl: 'http://google.com'
                     }, {
                         id: 2,
                         type: 'course',
@@ -354,7 +355,9 @@ controller.information = async(function(req, res, next) {
                         },
                         description: 'Система Выбор Smart Course',
                         imageUrl: 'http://lamcdn.net/lookatme.ru/post_image-' +
-                            'image/vePw1jo6HLFVfp7JIU5_Qg-article.jpg'
+                            'image/vePw1jo6HLFVfp7JIU5_Qg-article.jpg',
+                        url: 'http://yandex.ru',
+                        nameLinkUrl: 'http://google.com'
                     }, {
                         id: 3,
                         type: 'course',
@@ -364,12 +367,15 @@ controller.information = async(function(req, res, next) {
                         description: `Пропуск в профессию. Индивидуальная
                             траектория Proekt Pro`,
                         imageUrl: 'http://cs8.pikabu.ru/post_img/2016/01/14/' +
-                            '12/1452803883198482683.png'
+                            '12/1452803883198482683.png',
+                        url: 'http://yandex.ru',
+                        nameLinkUrl: 'http://google.com'
                     }],
                     itemType: 'smItemCompact',
                     itemConfig: {
                         theme: 'neptune-imaged',
                         enableCover: true,
+                        isDescriptionLink: true,
                         nameLinkSize: 'xl'
                     },
                     theme: 'neptune'

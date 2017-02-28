@@ -16,12 +16,18 @@ sm.bSmItem.SmItem = function(view, opt_domHelper) {
     sm.bSmItem.SmItem.base(this, 'constructor', view, opt_domHelper);
 
     /**
-     * Link Instance
+     * Link instance
      * @type {sm.bSmLink.SmLink}
      * @protected
      */
     this.nameLink = null;
 
+    /**
+     * Link instance
+     * @type {sm.bSmLink.SmLink}
+     * @protected
+     */
+    this.descriptionLink = null;
 
     /**
      * Badges instances
@@ -68,7 +74,7 @@ goog.scope(function() {
         Item.base(this, 'decorateInternal', element);
 
         this.initBadges_();
-        this.initNameLink_();
+        this.initLinks_();
     };
 
 
@@ -157,13 +163,19 @@ goog.scope(function() {
 
 
     /**
-     * Initializes name link instance
+     * Initializes link instances
      * @private
      */
-    Item.prototype.initNameLink_ = function() {
+    Item.prototype.initLinks_ = function() {
         var dom = this.getView().getDom();
+
         if (dom.nameLink) {
             this.nameLink = this.decorateChild('smLink', dom.nameLink);
+        }
+
+        if (dom.descriptionLink) {
+            this.descriptionLink =
+                this.decorateChild('smLink', dom.descriptionLink);
         }
     };
 });  // goog.scope

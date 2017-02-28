@@ -299,21 +299,15 @@
 {template .description_}
     <div class="{call .rootClass/}__main-description">
         <div class="{call .rootClass/}__type">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.subunitType /}
-            {/call}
+            {$params.data.entityData.subunitType}
         </div>
 
         <div class="{call .rootClass/}__name">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.subunitName /}
-            {/call}
+            {$params.data.entityData.subunitName}
         </div>
 
         <div class="{call .rootClass/}__description">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.description /}
-            {/call}
+            {$params.data.entityData.description}
         </div>
 
         <div class="{call .rootClass/}__description_cut">
@@ -485,9 +479,7 @@
             {call .rootClass/}__programs
         {/let}
         <div class="{call .rootClass/}__similar-programs-header">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.similarPrograms.header /}
-            {/call}
+            {$params.data.entityData.similarPrograms.header}
         </div>
         <div class="{call .rootClass/}__similar-programs-list">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
@@ -528,9 +520,7 @@
             {call .rootClass/}__courses
         {/let}
         <div class="{call .rootClass/}__useful-courses-header">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.usefulCourses.header /}
-            {/call}
+            {$params.data.entityData.usefulCourses.header}
         </div>
         <div class="{call .rootClass/}__useful-courses-list">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
