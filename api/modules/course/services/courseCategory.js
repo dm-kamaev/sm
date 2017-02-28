@@ -111,7 +111,8 @@ service.getById = async(function(id) {
  * @param  {{
  *     name: string,
  *     isActive: ?boolean,
- *     filters: Array<string>
+ *     filters: Array<string>,
+ *     priceType: ?CategoryPrice
  * }} data
  * @return {CourseCategory}
  */
@@ -129,7 +130,8 @@ service.create = async(function(data) {
  * @param  {{
  *     name: string,
  *     isActive: ?boolean,
- *     filters: Array<string>
+ *     filters: Array<string>,
+ *     priceType: ?CategoryPrice
  * }} data
  * @return {number}
  */
