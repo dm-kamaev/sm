@@ -1,0 +1,184 @@
+{namespace sm.bSmInteractionForm.Template}
+
+
+/**
+ * @typedef {{
+ *     fields: Array<{
+ *         data: Object,
+ *         config: Object,
+ *         controlName: string
+ *     }>
+ * }} sm.bSmInteractionForm.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     stylizationModifier: string
+ * }} sm.bSmInteractionForm.Template.Params.Config
+ */
+
+
+/**
+ * Template interaction form
+ * @param params {{
+ *     data: sm.bSmInteractionForm.Template.Params.Data,
+ *     config: sm.bSmInteractionForm.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ * @doc
+ */
+{template .interactionForm}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Template body
+ * @param params {{
+ *     data: sm.bSmInteractionForm.Template.Params.Data,
+ *     config: sm.bSmInteractionForm.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .sectionFields data="all" /}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-interaction-form
+{/template}
+
+
+/**
+ * Fields
+ * @param params {{
+ *     data: {
+ *         fields: Array<{
+ *             data: Object,
+ *             config: Object,
+ *             controlName: string
+ *         }>
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionFields}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_fields">
+        {call .fields_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Title
+ * @param params {{
+ *     title: ?string,
+ *     modifier: (string|undefined)
+ * }}
+ * @protected
+ */
+{template .title}
+    {let $classes kind="html"}
+        {call .rootClass/}__title{sp}
+
+        {if $params.modifier}
+            {call .rootClass/}__title_{$params.modifier}
+        {/if}
+    {/let}
+
+    {if $params.title}
+        <div class="{$classes}">
+            {$params.title}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Fields
+ * @param params {{
+ *     data: {
+ *         fields: Array<{
+ *             data: Object,
+ *             config: Object,
+ *             controlName: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .fields_}
+    <div class="{call .rootClass/}__fields">
+        {foreach $field in $params.data.fields}
+            {call .fieldWrap_}
+                {param params: $field /}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Field wrap
+ * @param params {{
+ *     data: Object,
+ *     config: Object,
+ *     controlName: string
+ * }}
+ */
+{template .fieldWrap_}
+    <div class="{call .rootClass/}__field-wrap">
+        {call .title}
+            {param params: [
+                'title': $params.data.title
+            ] /}
+        {/call}
+
+        {call .field_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Field
+ * @param params {{
+ *     data: Object,
+ *     config: Object,
+ *     controlName: string
+ * }}
+ */
+{template .field_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__field-item
+    {/let}
+
+    {let $config: augmentMap(
+        [
+            'customClasses': [$customClasses]
+        ],
+        $params.config
+    ) /}
+
+    <div class="{call .rootClass/}__field"{sp}
+        data-params={call cl.iUtils.Utils.stringify}
+            {param json: ['name': $params.controlName]/}
+        {/call}
+    >
+
+        {call .renderChild}
+            {param params: [
+                'type': $params.controlName,
+                'renderParams': [
+                    'data': $params.data,
+                    'config': $config
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}

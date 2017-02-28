@@ -1,0 +1,160 @@
+{namespace sm.bSmInteractionForm.TemplateComment}
+
+
+/**
+ * @typedef {{
+ *     fields: Array<{
+ *         data: Object,
+ *         config: Object,
+ *         controlName: string
+ *     }>,
+ *     evaluations: {
+ *         title: string,
+ *         items: Array<{
+ *            name: string,
+ *            description: string
+ *         }>
+ *     }
+ * }} sm.bSmInteractionForm.TemplateComment.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     stylizationModifier: string
+ * }} sm.bSmInteractionForm.TemplateComment.Params.Config
+ */
+
+
+/**
+ * Template interaction form
+ * @param params {{
+ *     data: sm.bSmInteractionForm.TemplateComment.Params.Data,
+ *     config: sm.bSmInteractionForm.TemplateComment.Params.Config
+ * }}
+ * @extends sm.bSmInteractionForm.Template
+ * @constructor
+ * @doc
+ */
+{template .interactionForm}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Template body
+ * @param params {{
+ *     data: sm.bSmInteractionForm.TemplateComment.Params.Data,
+ *     config: sm.bSmInteractionForm.TemplateComment.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .sectionFields data="all" /}
+    {call .sectionEvaluations_ data="all" /}
+{/template}
+
+
+/**
+ * Fields
+ * @param params {{
+ *     data: {
+ *         evaluations: {
+ *             title: string,
+ *             items: Array<{
+ *                name: string,
+ *                description: string
+ *             }>
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionEvaluations_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_evaluations">
+
+        {call .title}
+            {param params: [
+                'title': $params.data.title,
+                'modifier': 'section'
+            ] /}
+        {/call}
+
+        {call .evaluations_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Evaluation items
+ * @param params {{
+ *     data: {
+ *         evaluations: {
+ *             title: string,
+ *             items: Array<{
+ *                name: string,
+ *                description: string
+ *             }>
+ *         }
+ *     }
+ * }}
+ */
+{template .evaluations_}
+    <div class="{call .rootClass/}__evaluations">
+        {foreach $item in $params.data.evaluations.items}
+            {call .evaluation_}
+                {param params: [
+                    'data': $item
+                ]/}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Evaluation
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         description: string
+ *     }
+ * }}
+ */
+{template .evaluation_}
+    <div class="{call .rootClass/}__evaluation">
+        <div class="{call .rootClass/}__evaluation-name">
+            {$params.data.name}
+        </div>
+
+        <div class="{call .rootClass/}__evaluation-stars">
+            {call .renderChild}
+                {param params: [
+                    'type': 'smStars',
+                    'renderParams': [
+                        'data': [
+                            'amount': 5
+                        ],
+                        'config': [
+                            'isActive': true,
+                            'theme': 'neptune'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass/}__evaluation-description">
+            {$params.data.description}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_comment
+{/template}

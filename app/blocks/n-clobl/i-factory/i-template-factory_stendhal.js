@@ -26,6 +26,8 @@ goog.require('sm.bSmFavorite.Template');
 goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmHeadedList.Template');
 goog.require('sm.bSmHeader.Template');
+goog.require('sm.bSmInteractionForm.Template');
+goog.require('sm.bSmInteractionForm.TemplateComment');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.TemplateCompact');
 goog.require('sm.bSmItem.TemplateEntity');
@@ -59,9 +61,9 @@ goog.require('sm.gInput.TemplateStendhal');
 goog.require('sm.gList.TemplateLinks');
 goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gList.TemplateStendhal');
-goog.require('sm.gModal.TemplateComment');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
+goog.require('sm.gModal.TemplateInteraction');
 goog.require('sm.gModal.TemplateSideMenu');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gModal.TemplateSuccess');
@@ -243,8 +245,8 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.gModal.TemplateSuccess.modal
         )
         .setTemplateListItem(
-            'modal-comment',
-            sm.gModal.TemplateComment.modal
+            'modal-interaction',
+            sm.gModal.TemplateInteraction.modal
         )
         .setTemplateListItem(
             'list',
@@ -387,6 +389,14 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smButtonLink',
             sm.bSmButtonLink.Template.buttonLink
+        )
+        .setTemplateListItem(
+            'smInteractionForm',
+            sm.bSmInteractionForm.Template.interactionForm
+        )
+        .setTemplateListItem(
+            'smInteractionFormComment',
+            sm.bSmInteractionForm.TemplateComment.interactionForm
         );
 
     /** l-information blocks **/

@@ -1,0 +1,234 @@
+{namespace sm.gModal.TemplateInteraction}
+
+
+/**
+ * @typedef {{
+ *     header: ({
+ *         text: ?string
+ *     }|undefined),
+ *     content: (
+ *         sm.bSmInteractionForm.Template.Params.Data|
+ *         sm.bSmInteractionForm.TemplateComment.Params.Data
+ *     ),
+ *     contentName: ('smInteractionForm'|'smInteractionFormComment'),
+ *     api: string,
+ *     button: {
+ *         text: string,
+ *         theme: (string|undefined)
+ *     },
+ *     error: ({
+ *         text: ?string
+ *     }|undefined)
+ * }} sm.gModal.TemplateInteraction.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     stylizationModifier: string,
+ *     size: (string|undefined)
+ * }} sm.gModal.TemplateInteraction.Params.Config
+ */
+
+
+/**
+ * Modal template
+ * @param params {{
+ *     data: sm.gModal.TemplateInteraction.Params.Data,
+ *     config: sm.gModal.TemplateInteraction.Params.Config
+ * }}
+ * @extends sm.gModal.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .modal}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.gModal.TemplateInteraction.Params.Data,
+ *     config: sm.gModal.TemplateInteraction.Params.Config
+ * }}
+ * @override
+ */
+{template .content}
+    {call .sectionHeader_ data="all" /}
+    {call .sectionContent_ data="all" /}
+    {call .sectionButton_ data="all" /}
+    {call .sectionError_ data="all" /}
+{/template}
+
+/**
+ * Css classes
+ * @param params {
+ *     config: {
+ *         size: ?string
+ *     }
+ * }
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_interaction{sp}
+    {call .super_additionalClasses data="all"/}
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         contentName: ('smInteractionForm'|'smInteractionFormComment'),
+ *         url: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'contentName': $params.data.contentName,
+                'api': $params.data.api
+            ]/}
+        {/call}"
+{/template}
+
+
+/**
+ * Section header
+ * @param params {{
+ *     data: {
+ *         header: ({
+ *             text: ?string
+ *         }|undefined)
+ *     },
+ *     config: {
+ *         stylizationModifier: string,
+ *         size: (string|undefined)
+ *     }
+ * }}
+ */
+{template .sectionHeader_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
+        {call .header_ data="all" /}
+        {call .closer data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section content
+ * @param params {{
+ *     data: {
+ *         content: (
+ *             sm.bSmInteractionForm.Template.Params.Data|
+ *             sm.bSmInteractionForm.TemplateComment.Params.Data
+ *         ),
+ *         contentName: ('smInteractionForm'|'smInteractionFormComment')
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionContent_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_content">
+
+        {call .renderChild}
+            {param params: [
+                'type': $params.data.contentName,
+                'renderParams': [
+                    'data': $params.data.content
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section button
+ * @param params {{
+ *     data: {
+ *         button: {
+ *             text: string,
+ *             theme: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionButton_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_button">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__button
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.button.text
+                    ],
+                    'config': [
+                        'theme': $params.data.button.theme
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section for error message
+ * @param params {{
+ *     data: {
+ *         error: ({
+ *             text: ?string
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .sectionError_}
+    {let $text: (($params.data.error and $params.data.error.text) ?
+        $params.data.error.text :
+        null)
+    /}
+
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_error
+
+        {if not $text}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        <div class="{call .rootClass/}__error">
+            {$text}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         header: ({
+ *             text: ?string
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .header_}
+    {if $params.data.header and $params.data.header.text}
+        <div class="{call .rootClass/}__header">
+            {$params.data.header.text}
+        </div>
+    {/if}
+{/template}

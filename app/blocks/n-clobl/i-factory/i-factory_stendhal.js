@@ -39,13 +39,16 @@ goog.require('sm.bSmHeadedList.SmHeadedList');
 goog.require('sm.bSmHeadedList.View');
 goog.require('sm.bSmHeader.SmHeader');
 goog.require('sm.bSmHeader.View');
+goog.require('sm.bSmInteractionForm.SmInteractionForm');
+goog.require('sm.bSmInteractionForm.SmInteractionFormComment');
+goog.require('sm.bSmInteractionForm.View');
+goog.require('sm.bSmInteractionForm.ViewComment');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemCompact');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.View');
 goog.require('sm.bSmItem.ViewEntity');
 goog.require('sm.bSmItemList.SmItemList');
-goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.bSmLink.View');
 goog.require('sm.bSmListPaged.SmListPaged');
@@ -91,11 +94,13 @@ goog.require('sm.gList.ViewSelect');
 goog.require('sm.gList.ViewStendhal');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
+goog.require('sm.gModal.ModalInteraction');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.gModal.ModalStendhal');
-goog.require('sm.gModal.ModalSuccess');
 goog.require('sm.gModal.ViewEnrollment');
 goog.require('sm.gModal.ViewFeedback');
+goog.require('sm.gModal.ViewInteraction');
+goog.require('sm.gModal.ViewInteraction');
 goog.require('sm.gModal.ViewSideMenu');
 goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gModal.ViewSuccess');
@@ -247,6 +252,10 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.gModal.ModalSuccess,
             view: sm.gModal.ViewSuccess
         })
+        .setControlListItem('modal-interaction', {
+            control: sm.gModal.ModalInteraction,
+            view: sm.gModal.ViewInteraction
+        })
         .setControlListItem('list', {
             control: sm.gList.ListStendhal,
             view: sm.gList.ViewStendhal
@@ -368,6 +377,14 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smSubscribeBoard', {
             control: sm.bSmSubscribeBoard.SmSubscribeBoard,
             view: sm.bSmSubscribeBoard.View
+        })
+        .setControlListItem('smInteractionForm', {
+            control: sm.bSmInteractionForm.SmInteractionForm,
+            view: sm.bSmInteractionForm.View
+        })
+        .setControlListItem('smInteractionFormComment', {
+            control: sm.bSmInteractionForm.SmInteractionFormComment,
+            view: sm.bSmInteractionForm.ViewComment
         });
 
     /** l-information blocks **/
