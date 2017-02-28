@@ -1,5 +1,6 @@
 goog.provide('sm.bSmSketch.SmSketch');
 
+goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 
 
@@ -19,6 +20,15 @@ goog.inherits(sm.bSmSketch.SmSketch, cl.iControl.Control);
 
 goog.scope(function() {
     var Sketch = sm.bSmSketch.SmSketch;
+
+
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    Sketch.Event = {
+        'BUTTON_CLICK': cl.gButton.Button.Event.CLICK
+    };
 
 
     /**

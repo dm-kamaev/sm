@@ -41,23 +41,40 @@ view.render = function(data) {
         subunitType: data.subunitType,
         subunitName: data.subunitName,
         modalComment: {
+            header: {
+                text: 'Оставьте ваш отзыв'
+            },
             content: {
-                header: 'Оставьте ваш отзыв',
-                textAreas: [{
-                    title: 'Что понравилось',
-                    'name': 'pros',
-                    placeholder: 'Ваш комментарий',
-                    maxLength: 500
+                fields: [{
+                    data: {
+                        title: 'Что понравилось',
+                        name: 'pros',
+                        placeholder: 'Ваш комментарий'
+                    },
+                    config: {
+                        maxLength: 500
+                    },
+                    controlName: 'textarea'
                 }, {
-                    title: 'Не понравилось',
-                    'name': 'cons',
-                    placeholder: 'Ваш комментарий',
-                    maxLength: 500
+                    data: {
+                        title: 'Не понравилось',
+                        name: 'cons',
+                        placeholder: 'Ваш комментарий'
+                    },
+                    config: {
+                        maxLength: 500
+                    },
+                    controlName: 'textarea'
                 }, {
-                    title: 'Какой совет можешь дать поступающим?',
-                    'name': 'advice',
-                    placeholder: 'Ваш комментарий',
-                    maxLength: 500
+                    data: {
+                        title: 'Какой совет можешь дать поступающим?',
+                        name: 'advice',
+                        placeholder: 'Ваш комментарий'
+                    },
+                    config: {
+                        maxLength: 500
+                    },
+                    controlName: 'textarea'
                 }],
                 evaluations: {
                     title: 'Ваши оценки',
@@ -85,10 +102,11 @@ view.render = function(data) {
                             всестороннего развития детей?`
                     }]
                 },
-                button: {
-                    text: 'Оставить отзыв',
-                    theme: 'neptune'
-                }
+            },
+            contentName: 'smInteractionFormComment',
+            button: {
+                text: 'Оставить отзыв',
+                theme: 'neptune'
             }
         },
         footer: footerView.render()

@@ -1,5 +1,6 @@
 goog.provide('sm.lUniversity.University');
 
+goog.require('sm.gModal.ModalInteraction');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.lUniversity.View');
 
@@ -19,6 +20,22 @@ goog.scope(function() {
         sm.lUniversity.University.base(
             this, 'constructor', view, opt_domHelper
         );
+
+
+        /**
+         * Instance sketch
+         * @type {sm.bSmSketch.SmSketch}
+         * @private
+         */
+        this.sketch_ = null;
+
+
+        /**
+         * Instance modal comment
+         * @type {sm.gModal.ModalInteraction}
+         * @private
+         */
+        this.modalComment_ = null;
     };
     goog.inherits(sm.lUniversity.University, sm.iLayout.LayoutStendhal);
     var University = sm.lUniversity.University,
@@ -38,6 +55,7 @@ goog.scope(function() {
         this.initCutDescription_();
         this.initPrograms_();
         this.initCourses_();
+        this.initModals_();
     };
 
 
@@ -46,13 +64,32 @@ goog.scope(function() {
      */
     University.prototype.enterDocument = function() {
         University.base(this, 'enterDocument');
+
+        this.initSketchListeners_();
     };
 
-        /**
-     * @override
+
+    /**
+     * Initializes listeners for sketch
+     * @private
      */
-    University.prototype.enterDocument = function() {
-        University.base(this, 'enterDocument');
+    University.prototype.initSketchListeners_ = function() {
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.sketch_,
+            sm.bSmSketch.SmSketch.Event.BUTTON_CLICK,
+            this.onButtonSketchClick_
+        );
+    };
+
+
+    /**
+     * Button sketch handler
+     * @private
+     */
+    University.prototype.onButtonSketchClick_ = function() {
+        this.modalComment_.show();
     };
 
 
@@ -60,7 +97,7 @@ goog.scope(function() {
      * @private
      */
     University.prototype.initSketch_ = function() {
-        this.decorateChild(
+        this.sketch_ = this.decorateChild(
             'smSketch',
             this.getView().getDom().sketch
         );
@@ -112,6 +149,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Initializes instance courses item list
      * @private
@@ -120,6 +158,18 @@ goog.scope(function() {
         this.decorateChild(
             'smItemList',
             this.getView().getDom().courses
+        );
+    };
+
+
+    /**
+     * Initializes instance of modals
+     * @private
+     */
+    University.prototype.initModals_ = function() {
+        this.modalComment_ = this.decorateChild(
+            'modal-interaction',
+            this.getView().getDom().modalComment
         );
     };
 });  // goog.scope

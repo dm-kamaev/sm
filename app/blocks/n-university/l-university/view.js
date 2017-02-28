@@ -104,6 +104,9 @@ goog.scope(function() {
                 ),
                 courses: this.getElementByClass(
                     View.CssClass.COURSES
+                ),
+                modalComment: this.getElementByClass(
+                    sm.gModal.ViewInteraction.CssClass.ROOT
                 )
             }
         );

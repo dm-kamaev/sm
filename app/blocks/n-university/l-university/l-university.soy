@@ -39,7 +39,8 @@
  *         similarPrograms: sm.bSmItemList.Template.Params.Data,
  *         usefulCourses: sm.bSmItemList.Template.Params.Data
  *     },
- *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params
+ *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params,
+ *     modalComment: sm.gModal.TemplateInteraction.Data
  * }} sm.lUniversity.Template.Data
  */
 
@@ -88,11 +89,11 @@
  */
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
-    {if $params}{/if}
         {call .sectionData_ data="all" /}
         // {call .sectionComments_ data="all" /}
         {call .sectionPrograms_ data="all" /}
         {call .sectionUsefulCourses_ data="all" /}
+        {call .sectionModals_ data="all" /}
     </div>
 {/template}
 
@@ -154,7 +155,6 @@
 /**
  * Section data
  * @private
- * @ovveride
  */
 {template .sectionData_}
     <div class="{call .rootClass/}__section{sp}
@@ -169,7 +169,6 @@
 /**
  * Section programs
  * @private
- * @ovveride
  */
 {template .sectionPrograms_}
     <div class="{call .rootClass/}__section{sp}
@@ -183,13 +182,31 @@
 /**
  * Section courses
  * @private
- * @ovveride
  */
 {template .sectionUsefulCourses_}
     <div class="{call .rootClass/}__section{sp}
         {call .rootClass/}__section_courses{sp}"
     >
         {call .courses_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section modals
+ * @param params {{
+ *     data: {
+ *         modalComment: sm.gModal.TemplateInteraction.Data
+ *     },
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @private
+ */
+{template .sectionModals_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_modals"
+    >
+        {call .modalComment_ data="all" /}
     </div>
 {/template}
 
@@ -528,5 +545,30 @@
                 ]/}
             {/call}
         </div>
+    </div>
+{/template}
+
+
+/**
+ * Modal to leave comment
+ * @param params {{
+ *     data: {
+ *         modalComment: sm.gModal.TemplateInteraction.Data
+ *     },
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @private
+ */
+{template .modalComment_}
+    <div class="{call .rootClass/}__modal {call .rootClass/}__modal_comment">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'modal-interaction',
+                'renderParams': [
+                    'data': $params.data.modalComment
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
