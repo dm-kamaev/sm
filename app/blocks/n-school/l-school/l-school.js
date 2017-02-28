@@ -18,7 +18,6 @@ goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
-goog.require('sm.iCarrotquest.Carrotquest');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
