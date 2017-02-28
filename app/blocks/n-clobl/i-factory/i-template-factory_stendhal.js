@@ -15,6 +15,7 @@ goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBalloon.Template');
 goog.require('sm.bSmBanner.Template');
+goog.require('sm.bSmBreadcrumbs.Template');
 goog.require('sm.bSmButtonLink.Template');
 goog.require('sm.bSmCatalog.Template');
 goog.require('sm.bSmCheckbox.Template');
@@ -388,6 +389,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smComment',
             sm.bSmComment.Template.comment
+        )
+        .setTemplateListItem(
+            'smBreadcrumbs',
+            sm.bSmBreadcrumbs.Template.breadcrumbs
         );
 
     /** l-information blocks **/

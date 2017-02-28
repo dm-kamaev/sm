@@ -1,0 +1,112 @@
+{namespace sm.bSmBreadcrumbs.Template}
+
+/**
+ * @typedef  {{
+ *     items: Array<{
+ *         label: string,
+ *         url: ?string,
+ *         id: ?number
+ *     }>,
+ *     selectedItemId: ?number
+ * }} sm.bSmBreadcrumbs.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ * }} sm.bSmBreadcrumbs.Template.Params.Config
+ */
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmBreadcrumbs.Template.Params.Data,
+ *     config: sm.bBreadcrumbs.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .breadcrumbs}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ * @param params {{
+ *     data: sm.bSmBreadcrumbs.Template.Params.Data,
+ *     config: sm.bBreadcrumbs.Template.Params.Config
+ * }}
+ */
+{template .body}
+    {if $params?.data?.items}
+        {let $selectedItemId : $params?.data?.selectedItemId ?:
+                ($params.data.items.length - 1)
+        /}
+
+        {for $i in range($params.data.items.length)}
+            {let $isSelected : ($i == $selectedItemId) ? true : false /}
+
+            {call .link}
+                {param item: $params.data.items[$i]/}
+                {param config: $params.config/}
+                {param isSelected: $isSelected/}
+            {/call}
+
+            {if $i != ($params.data.items.length - 1)}
+                 {call .divider /}
+            {/if}
+        {/for}
+    {/if}
+{/template}
+
+/**
+ * @param item {{
+ *      label: string,
+ *      url: ?string,
+ *      id: ?number
+ * }}
+ * @param config {?sm.bBreadcrumbs.Template.Params.Config}
+ * @param isSelected {boolean}
+ */
+{template .link}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link
+    {/let}
+    {let $url : $isSelected ? '' : $item.url /}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'content': $item.label,
+                        'url': $url,
+                        'id': $item.id
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'size': $config?.size,
+                        'theme' : $config?.linksTheme,
+                        'isSelected' : $isSelected
+                    ]
+                ]
+            ]/}
+        {/call}
+
+{/template}
+
+/**
+ * add dividing symbol between links
+ */
+{template .divider}
+    <div class="{call .rootClass/}__divider">/</div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-breadcrumbs
+{/template}
