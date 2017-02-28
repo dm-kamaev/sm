@@ -109,6 +109,7 @@ goog.scope(function() {
         ROOT: 'b-map',
         ITEM_NAME: 'b-map__href',
         BALLOON: 'b-map__balloon',
+        BALLOON_NAME: 'b-map__balloon-name',
         CLOSE_BALLOON: 'b-map__balloon-close'
     };
 
@@ -119,7 +120,8 @@ goog.scope(function() {
      */
     Map.Event = {
       READY: 'ready',
-      ITEM_NAME_CLICK: 'item-name-click'
+      ITEM_NAME_CLICK: 'item-name-click',
+      OPEN_BALLOON: 'open-balloon'
     };
 
 
@@ -668,6 +670,15 @@ goog.scope(function() {
                         'click',
                         jQuery.proxy(this.onItemNameClick, this)
                     );
+                    that.dispatchEvent({
+                        'type': Map.Event.OPEN_BALLOON,
+                        'data': {
+                            'name': goog.dom.getElementByClass(
+                                Map.CssClass.BALLOON_NAME,
+                                this._$element[0]
+                            ).innerText
+                        }
+                    });
                 },
                 clear: function() {
                     this.closeButton_.off('click');
