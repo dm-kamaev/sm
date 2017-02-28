@@ -779,7 +779,7 @@ service.review = async(function(schoolId, params) {
     var userData = {
         userType: params.userType,
         yearGraduate: params.yearGraduate,
-        classType: params.classType,
+        grade: params.classType,
         key: params.key,
         username: params.username,
         userId: params.userId

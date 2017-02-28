@@ -15,7 +15,7 @@ let service = {
  * @param {Object} data
  * @param {Enum} data.userType
  * @param {number} data.yearGraduate
- * @param {number} data.classType
+ * @param {number} data.grade
  * @param {string} data.key
  * @param {string} data.username
  * @param {number} data.userId
@@ -24,7 +24,7 @@ service.create = async(function(data) {
     var params = {
         userType: data.userType,
         yearGraduate: data.yearGraduate ? data.yearGraduate : null,
-        classType: data.classType ? data.classType : null,
+        grade: data.grade ? data.grade : null,
         key: data.key ? data.key : null,
         username: data.username ? data.username : null,
         userId: data.userId

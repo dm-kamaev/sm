@@ -1,4 +1,4 @@
-import * as Sequelize from "sequelize/v3";
+import * as Sequelize from 'sequelize/v3';
 
 export interface UniversityCommentAttributes {
     id?: number;
