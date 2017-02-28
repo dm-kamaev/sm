@@ -79,6 +79,17 @@
                 <img class="{call .rootClass /}__author-photo"
                     src="{$params.data.author.photoUrl}"
                 />
+            {else}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'icon-svg',
+                        'renderParams': [
+                            'data': [
+                                'type': 'graduate'
+                            ]
+                        ]
+                    ]/}
+                {/call}
             {/if}
         </div>
 
