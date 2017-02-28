@@ -29,6 +29,8 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
+        ROOT: 'g-textarea_standhal',
+        TEXTAREA: 'g-textarea__textarea',
         NOT_VALID: 'g-textarea_not-valid',
         COUNTER_CUSTOM_TEXT_SYMBOLS: 'g-textarea__counter-custom-text-symbols',
         COUNTER_CUSTOM_TEXT_LEFT: 'g-textarea__counter-custom-text-left'
@@ -59,6 +61,30 @@ goog.scope(function() {
         this.dom.counterCustomTextLeft = this.getElementByClass(
             View.CssClass.COUNTER_CUSTOM_TEXT_LEFT
         );
+
+        this.dom.field = this.getElementByClass(
+            View.CssClass.TEXTAREA
+        );
+    };
+
+
+    /**
+     * Get name
+     * @return {string}
+     * @public
+     */
+    View.prototype.getValue = function() {
+        return this.dom.field.value || null;
+    };
+
+
+    /**
+     * Get name
+     * @return {string}
+     * @public
+     */
+    View.prototype.getName = function() {
+        return this.dom.field.name || null;
     };
 
 
