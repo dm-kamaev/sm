@@ -9,6 +9,7 @@ export interface UniversityAttribute {
     abbreviation?: string;
     description?: string;
     imageUrl?: string;
+    relapImageUrl?: string;
     links?: Array<string>;
     militaryDepartment?: boolean;
     dormitory?: boolean;
@@ -38,6 +39,10 @@ const University: UniversityModel = sequelize.define('University', {
     imageUrl: {
         type: DataType.STRING(511),
         field: 'image_url'
+    },
+    relapImageUrl: {
+        type: DataType.STRING(511),
+        field: 'relap_image_url'
     },
     links: DataType.ARRAY(DataType.STRING),
     militaryDepartment: {

@@ -1,6 +1,6 @@
 const UniversityImageSize = {
-    DEFAULT: [640, 435],
-    SMALL: [300, 197]
+    DEFAULT: [252, 252],
+    RELAP: [560, 373]
 };
 
 export {UniversityImageSize};

@@ -34,6 +34,9 @@ class UniversityAdminController extends Controller {
      * @apiSuccess {String}   -.imageUrl           Url for university image.
      *     It has {width} parameter in it, which should be replaced for required
      *     width size in px.
+     * @apiSuccess {String}   -.relapImageUrl      Url for relap image.
+     *     It has {width} parameter in it, which should be replaced for required
+     *     width size in px.
      * @apiSuccess {String[]} -.links              Array of links
      *     (official site, facebook communities)
      * @apiSuccess {Boolean}  -.militaryDepartment Military department.
@@ -57,6 +60,9 @@ class UniversityAdminController extends Controller {
      * @apiSuccess {String}   abbreviation       Abbreviation.
      * @apiSuccess {String}   description        Description.
      * @apiSuccess {String}   imageUrl           Url for university image.
+     * @apiSuccess {String}   relapImageUrl      Url for relap image.
+     *     It has {width} parameter in it, which should be replaced for required
+     *     width size in px.
      *     It has {width} parameter in it, which should be replaced for required
      *     width size in px.
      * @apiSuccess {String[]} links              Array of links
@@ -84,6 +90,8 @@ class UniversityAdminController extends Controller {
      * @apiGroup Admin University
      *
      * @apiParam {File}     image              File should be send using
+     *    multipart/form-data.
+     * @apiParam {File}     relapImage         File should be send using
      *    multipart/form-data.
      * @apiParam {String}   name               Name.
      * @apiParam {String}   abbreviation       Abbreviation.
@@ -114,6 +122,7 @@ class UniversityAdminController extends Controller {
     public async actionCreate(actionContext: any) {
         const request = actionContext.request;
         const body = request.body;
+        const files = request.files;
         const universityData: UniversityAttribute = {
             name: body.name,
             abbreviation: body.abbreviation,
@@ -123,12 +132,21 @@ class UniversityAdminController extends Controller {
             dormitory: body.dormitory,
             cityId: body.cityId
         };
-        if (request.files) {
+        const image = files.find(file => file.fieldname === 'image');
+        const relapImage = files.find(file => file.fieldname === 'relapImage');
+        if (image) {
             const imageUrls = await imageService.upload(
-                request.files,
-                [UniversityImageSize.DEFAULT, UniversityImageSize.SMALL]
+                [image],
+                [UniversityImageSize.DEFAULT]
             );
             universityData.imageUrl = imageUrls[0];
+        }
+        if (relapImage) {
+            const relapImageUrls = await imageService.upload(
+                [relapImage],
+                [UniversityImageSize.RELAP]
+            );
+            universityData.relapImageUrl = relapImageUrls[0];
         }
         return universityService.create(universityData);
     }
@@ -140,6 +158,8 @@ class UniversityAdminController extends Controller {
      * @apiGroup Admin University
      *
      * @apiParam {File}     image              File should be send using
+     *    multipart/form-data.
+     * @apiParam {File}     relapImage         File should be send using
      *    multipart/form-data.
      * @apiParam {String}   name               Name.
      * @apiParam {String}   abbreviation       Abbreviation.
@@ -164,6 +184,7 @@ class UniversityAdminController extends Controller {
     public async actionUpdate(actionContext: any, id: any) {
         const request = actionContext.request;
         const body = request.body;
+        const files = request.files || [];
         const universityData: UniversityAttribute = {
             name: body.name,
             abbreviation: body.abbreviation,
@@ -173,12 +194,21 @@ class UniversityAdminController extends Controller {
             dormitory: body.dormitory,
             cityId: body.cityId
         };
-        if (request.files) {
+        const image = files.find(file => file.fieldname === 'image');
+        const relapImage = files.find(file => file.fieldname === 'relapImage');
+        if (image) {
             const imageUrls = await imageService.upload(
-                request.files,
-                [UniversityImageSize.DEFAULT, UniversityImageSize.SMALL]
+                [image],
+                [UniversityImageSize.DEFAULT]
             );
             universityData.imageUrl = imageUrls[0];
+        }
+        if (relapImage) {
+            const relapImageUrls = await imageService.upload(
+                [relapImage],
+                [UniversityImageSize.RELAP]
+            );
+            universityData.relapImageUrl = relapImageUrls[0];
         }
         return universityService.update(id, universityData);
     }

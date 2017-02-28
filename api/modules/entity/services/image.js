@@ -21,10 +21,10 @@ let service = {
  *     size: number
  * }}> images,
  * @param  {Array<Array<string, ?string>>} defaultSizes
- * @return {{
+ * @return Array<{{
  *     id: string,
  *     extension: string
- * }}
+ * }}>
  */
 service.upload = async(function(images, defaultSizes) {
     let defaultPreviews = defaultSizes
