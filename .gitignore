@@ -62,6 +62,7 @@ api/modules/geo/services/exceptions/*.js
 api/modules/geo/services/address.js
 api/modules/geo/services/department.js
 api/modules/geo/views/departmentView.js
+api/modules/geo/types/**/*.js
 
 api/modules/school/interfaces/*.js
 
@@ -92,6 +93,13 @@ api/modules/user/services/exceptions/*.js
 api/modules/user/services/adminUser.js
 api/modules/user/views/adminUserView.js
 api/modules/user/models/userData.js
+api/modules/user/types/**/*.js
+api/modules/user/migrations/20170227191120-drop-user-data-user-type-enum.js
+api/modules/user/migrations/20170227193010-user-data-class-type-rename.js
+
+api/modules/comment/types/**/*.js
+api/modules/comment/migrations/20170227134914-create-university-comments.js
+api/modules/comment/models/UniversityComment.js
 
 api/modules/university/**/*.js
 
