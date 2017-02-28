@@ -88,6 +88,10 @@ const Program: ProgramModel = sequelize.define('Program', {
                 as: 'addresses',
                 through: 'program_address'
             });
+            this.hasMany(models.EntranceStatistic, {
+                as: 'entranceStatistics',
+                foreignKey: 'program_id',
+            });
         }
     }
 });
