@@ -14,7 +14,7 @@ class ExamAdminController extends Controller {
 
         this.errors = {
             ExamNotFoundException: ExamNotFound
-        }
+        };
     }
 
     /**
