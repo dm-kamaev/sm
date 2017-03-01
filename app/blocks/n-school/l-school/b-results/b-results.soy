@@ -164,7 +164,7 @@
         {foreach $yearResults in $params.yearResults}
             <div class="b-results__inner-content
                 {isLast($yearResults) ? '' : ' i-utils__hidden'}">
-                {if $yearResults.top}
+                {if length($yearResults.top) > 0}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
                             Младшие классы
@@ -178,7 +178,7 @@
                         </div>
                     </div>
                 {/if}
-                {if $yearResults.middle}
+                {if length($yearResults.middle) > 0}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
                             Средние классы
@@ -192,7 +192,7 @@
                         </div>
                     </div>
                 {/if}
-                {if $yearResults.bottom}
+                {if length($yearResults.bottom) > 0}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
                             Старшие классы

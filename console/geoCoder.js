@@ -57,6 +57,14 @@ class GeoCoder {
                 foundMetros = await(
                     getMetros_(address.coords, this.searchRadius)
                 );
+
+                logger.info(
+                    `AddressId="${address.id}";`,
+                    `AddressName="${address.name}"`
+                );
+                logger.info('Found metros= ' +
+                    JSON.stringify(foundMetros, null, 2));
+
                 this.addedMetroStation(foundMetros);
                 this.addedMetrosForAdress(address, foundMetros);
                 logger.info(`${++i} from ${len}`);

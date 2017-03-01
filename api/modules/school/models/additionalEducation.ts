@@ -1,7 +1,31 @@
-var DataType = require('sequelize'),
+const DataType = require('sequelize'),
     db = require('../../../../app/components/db');
 
-var AdditionalEducation = db.define('AdditionalEducation', {
+import * as Sequelize from 'sequelize/v3';
+
+interface AdditionalEducationAttribute {
+    id?: number;
+    sphereId?: number;
+    schoolId?: number;
+    category?: string;
+    name?: string;
+    phone?: string;
+    contact?: string;
+    requirements?: string;
+    rawData?: string;
+}
+
+export interface AdditionalEducationInstance
+    extends Sequelize.Instance<AdditionalEducationAttribute>,
+            AdditionalEducationAttribute {}
+
+interface AdditionalEducationModel
+    extends
+    Sequelize.Model<AdditionalEducationInstance,
+    AdditionalEducationAttribute> {}
+
+const AdditionalEducation: AdditionalEducationModel = db.define(
+    'AdditionalEducation', {
     sphereId: {
         type: DataType.INTEGER,
         field: 'sphere_id'
@@ -43,4 +67,4 @@ var AdditionalEducation = db.define('AdditionalEducation', {
     }
 });
 
-module.exports = AdditionalEducation;
+export {AdditionalEducation as Model};
