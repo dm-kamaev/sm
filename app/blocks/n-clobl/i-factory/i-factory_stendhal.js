@@ -23,8 +23,6 @@ goog.require('sm.bSmBadge.SmBadge');
 goog.require('sm.bSmBadge.View');
 goog.require('sm.bSmBalloon.SmBalloon');
 goog.require('sm.bSmBalloon.View');
-goog.require('sm.bSmBreadcrumbs.SmBreadcrumbs');
-goog.require('sm.bSmBreadcrumbs.View');
 goog.require('sm.bSmCatalog.SmCatalog');
 goog.require('sm.bSmCatalog.View');
 goog.require('sm.bSmCheckbox.SmCheckbox');
@@ -58,6 +56,8 @@ goog.require('sm.bSmMap.SmMap');
 goog.require('sm.bSmMap.View');
 goog.require('sm.bSmRadioButton.SmRadioButton');
 goog.require('sm.bSmRadioButton.View');
+goog.require('sm.bSmRowLinks.SmRowLinks');
+goog.require('sm.bSmRowLinks.View');
 goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.SmScoreBrief');
 goog.require('sm.bSmScore.View');
@@ -379,9 +379,9 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.bSmComment.SmComment,
             view: sm.bSmComment.View
         })
-        .setControlListItem('smBreadcrumbs', {
-            control: sm.bSmBreadcrumbs.SmBreadcrumbs,
-            view: sm.bSmBreadcrumbs.View
+        .setControlListItem('SmRowLinks', {
+            control: sm.bSmRowLinks.SmRowLinks,
+            view: sm.bSmRowLinks.View
         });
 
     /** l-information blocks **/

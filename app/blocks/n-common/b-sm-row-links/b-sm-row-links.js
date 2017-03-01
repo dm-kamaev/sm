@@ -1,9 +1,9 @@
-goog.provide('sm.bSmBreadcrumbs.SmBreadcrumbs');
+goog.provide('sm.bSmRowLinks.SmRowLinks');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmLink.SmLink');
-goog.require('sm.bSmBreadcrumbs.Template');
-goog.require('sm.bSmBreadcrumbs.View');
+goog.require('sm.bSmRowLinks.Template');
+goog.require('sm.bSmRowLinks.View');
 
 
 
@@ -15,8 +15,8 @@ goog.require('sm.bSmBreadcrumbs.View');
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bSmBreadcrumbs.SmBreadcrumbs = function(view, opt_params, opt_domHelper) {
-    sm.bSmBreadcrumbs.SmBreadcrumbs.base(
+sm.bSmRowLinks.SmRowLinks = function(view, opt_params, opt_domHelper) {
+    sm.bSmRowLinks.SmRowLinks.base(
         this, 'constructor', view, opt_params, opt_domHelper
     );
 
@@ -29,22 +29,22 @@ sm.bSmBreadcrumbs.SmBreadcrumbs = function(view, opt_params, opt_domHelper) {
     this.items = [];
 
 };
-goog.inherits(sm.bSmBreadcrumbs.SmBreadcrumbs, cl.iControl.Control);
+goog.inherits(sm.bSmRowLinks.SmRowLinks, cl.iControl.Control);
 
 goog.scope(function() {
-    var Breadcrumbs = sm.bSmBreadcrumbs.SmBreadcrumbs;
+    var RowLinks = sm.bSmRowLinks.SmRowLinks;
 
     /**
      * @param {Element} element
      * @override
      * @protected
      */
-    Breadcrumbs.prototype.decorateInternal = function(element) {
-        Breadcrumbs.base(this, 'decorateInternal', element);
+    RowLinks.prototype.decorateInternal = function(element) {
+        RowLinks.base(this, 'decorateInternal', element);
 
         var links = this.getView().getDom().links;
         this.items = this.decorateChildren('smLink', links);
     };
 
 
-}); // goog.scope
+});  // goog.scope

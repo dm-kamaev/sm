@@ -15,7 +15,6 @@ goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBalloon.Template');
 goog.require('sm.bSmBanner.Template');
-goog.require('sm.bSmBreadcrumbs.Template');
 goog.require('sm.bSmButtonLink.Template');
 goog.require('sm.bSmCatalog.Template');
 goog.require('sm.bSmCheckbox.Template');
@@ -37,6 +36,7 @@ goog.require('sm.bSmListPaged.Template');
 goog.require('sm.bSmMap.Template');
 goog.require('sm.bSmMark.Template');
 goog.require('sm.bSmRadioButton.Template');
+goog.require('sm.bSmRowLinks.Template');
 goog.require('sm.bSmScore.Template');
 goog.require('sm.bSmScore.TemplateBrief');
 goog.require('sm.bSmSearchPanel.Template');
@@ -391,8 +391,8 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bSmComment.Template.comment
         )
         .setTemplateListItem(
-            'smBreadcrumbs',
-            sm.bSmBreadcrumbs.Template.breadcrumbs
+            'SmRowLinks',
+            sm.bSmRowLinks.Template.rowLinks
         );
 
     /** l-information blocks **/

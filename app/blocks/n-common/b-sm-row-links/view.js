@@ -1,4 +1,4 @@
-goog.provide('sm.bSmBreadcrumbs.View');
+goog.provide('sm.bSmRowLinks.View');
 
 goog.require('cl.iControl.View');
 goog.require('goog.dom');
@@ -13,24 +13,24 @@ goog.require('goog.dom');
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.bSmBreadcrumbs.View = function(opt_params, opt_template, opt_modifier) {
-    sm.bSmBreadcrumbs.View.base(
+sm.bSmRowLinks.View = function(opt_params, opt_template, opt_modifier) {
+    sm.bSmRowLinks.View.base(
         this, 'constructor', opt_params, opt_template, opt_modifier
     );
 };
-goog.inherits(sm.bSmBreadcrumbs.View, cl.iControl.View);
+goog.inherits(sm.bSmRowLinks.View, cl.iControl.View);
 
 
 goog.scope(function() {
-    var View = sm.bSmBreadcrumbs.View;
+    var View = sm.bSmRowLinks.View;
 
     /**
      * Css class enum
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'b-sm-breadcrumbs',
-        LINK: 'b-sm-breadcrumbs__link'
+        ROOT: 'b-sm-row-links',
+        LINK: 'b-sm-row-links__link'
     };
 
     /**
@@ -43,4 +43,4 @@ goog.scope(function() {
 
         this.dom.links = goog.dom.getElementsByClass(View.CssClass.LINK);
     };
-}); // goog.scope
+});  // goog.scope
