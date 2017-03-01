@@ -1,6 +1,7 @@
 goog.provide('sm.lUniversity.View');
 
 goog.require('sm.bSmCollapsedText.View');
+goog.require('sm.bSmRowLinks.View');
 goog.require('sm.bSmSketch.View');
 goog.require('sm.bSummaryBoard.View');
 goog.require('sm.iLayout.ViewStendhal');
@@ -57,7 +58,8 @@ goog.scope(function() {
         CUT_DESCRIPTION: sm.bSmCollapsedText.View.CssClass.ROOT,
         PROGRAMS: 'l-university__programs',
         COURSES: 'l-university__courses',
-        COMMENTS: 'l-university__comments'
+        COMMENTS: 'l-university__comments',
+        NAVIGATION_PANEL: sm.bSmRowLinks.View.CssClass.ROOT
     };
 
 
@@ -108,6 +110,9 @@ goog.scope(function() {
                 ),
                 comments: this.getElementByClass(
                     View.CssClass.COMMENTS
+                ),
+                navigationPanel: this.getElementByClass(
+                    View.CssClass.NAVIGATION_PANEL
                 )
             }
         );

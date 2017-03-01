@@ -379,7 +379,7 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.bSmComment.SmComment,
             view: sm.bSmComment.View
         })
-        .setControlListItem('SmRowLinks', {
+        .setControlListItem('smRowLinks', {
             control: sm.bSmRowLinks.SmRowLinks,
             view: sm.bSmRowLinks.View
         });

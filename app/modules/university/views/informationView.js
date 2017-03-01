@@ -40,6 +40,8 @@ view.render = function(data) {
         entityData: data.entityData,
         subunitType: data.subunitType,
         subunitName: data.subunitName,
+        subscribeBoard: data.subscribeBoard,
+        navigationPanel: data.navigationPanel,
         footer: footerView.render()
     };
 };

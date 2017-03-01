@@ -40,7 +40,8 @@
  *         usefulCourses: sm.bSmItemList.Template.Params.Data,
  *         comments: sm.bCommentList.Template.Params.Data
  *     },
- *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params
+ *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params,
+ *     navigationPanel: sm.bSmRowLinks.Template.Params.Data
  * }} sm.lUniversity.Template.Data
  */
 
@@ -94,7 +95,6 @@
 
         {if $params.data.entityData.comments}
             {call .sectionComments_ data="all" /}
-        {else}
         {/if}
 
         {call .sectionPrograms_ data="all" /}
@@ -277,11 +277,40 @@
  */
 {template .mainData_}
     <div class="{call .rootClass/}__data_main-description">
+        {call .navigationPanel_ data="all" /}
         {call .description_ data="all" /}
         {call .summaryBoard_ data="all" /}
         {call .descriptionList_ data="all" /}
         {call .subscribeBoard_ data="all" /}
         {call .bannerSizeXS_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the middle - section main data
+ * @param params {{
+ *     data: {
+ *         navigationPanel: sm.bSmRowLinks.Template.Params.Data
+ *     },
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @private
+ */
+{template .navigationPanel_}
+    <div class="{call .rootClass/}__navigation-panel">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smRowLinks',
+                'renderParams': [
+                    'data': $params.data.navigationPanel,
+                    'config': [
+                        'theme': 'breadcrumbs'
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 

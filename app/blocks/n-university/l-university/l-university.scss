@@ -153,6 +153,11 @@
     margin-bottom: 100px;
 }
 
+.l-university__navigation-panel {
+    width: calc(100% - 295px);
+    padding-bottom: 25px;
+}
+
 
 @include media-xl {
     .l-university__section_data {
@@ -306,5 +311,9 @@
 
     .l-university__useful-courses-header {
         padding-bottom: 5px;
+    }
+
+    .l-university__navigation-panel {
+        display: none;
     }
 }

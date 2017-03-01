@@ -391,7 +391,7 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bSmComment.Template.comment
         )
         .setTemplateListItem(
-            'SmRowLinks',
+            'smRowLinks',
             sm.bSmRowLinks.Template.rowLinks
         );
 

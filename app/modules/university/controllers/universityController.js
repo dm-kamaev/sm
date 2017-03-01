@@ -407,6 +407,37 @@ controller.information = async(function(req, res, next) {
                         }
                     }
                 }
+            },
+            navigationPanel: {
+                items: [{
+                    data: {
+                        url: 'http://yandex.ru',
+                        content: 'ВУЗы'
+                    },
+                    config: {
+                        theme: 'sky',
+                        size: 'xl'
+                    }
+                }, {
+                    data: {
+                        url: 'http://yandex.ru',
+                        content: 'НИУ-ВШЭ'
+                    },
+                    config: {
+                        theme: 'sky',
+                        size: 'xl'
+                    }
+                }, {
+                    data: {
+                        url: 'http://yandex.ru',
+                        content: 'Менеджмент'
+                    },
+                    config: {
+                        theme: 'sky',
+                        size: 'xl',
+                        isSelected: true
+                    }
+                }]
             }
         });
 
