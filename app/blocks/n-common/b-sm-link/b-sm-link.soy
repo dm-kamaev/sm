@@ -8,17 +8,17 @@
 
 /**
  * @typedef {{
- *     id: (number|undefined),
- *     url: (strnig|undefined),
- *     content: (string|undefined)
+ *     id: ?number,
+ *     url: ?string,
+ *     content: ?string
  * }} sm.bSmLink.Template.Params.Data
  */
 
 
 /**
  * @typedef {{
- *     target: (string|undefined),
- *     disableHover: boolean,
+ *     target: ?string,
+ *     disableHover: ?boolean,
  *     size: ('s'|'m'|'l'|'xl','xxl','xxxl'),
  *     theme: ('attention'|'light'|'block'|'dark'|'default'|undefined),
  *     isSelected: boolean

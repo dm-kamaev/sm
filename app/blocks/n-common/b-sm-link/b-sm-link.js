@@ -95,11 +95,30 @@ goog.scope(function() {
 
 
     /**
-     * Disable hover reaction on element
+     * Return isSelected status
+     * @return {boolean}
      * @public
      */
-    Link.prototype.disableHover = function() {
-        this.getView().disableHover();
+    Link.prototype.isSelected = function() {
+        return this.getView().isSelected();
+    };
+
+
+    /**
+     * Set class SELECTED
+     * @public
+     */
+    Link.prototype.select = function() {
+        this.getView().select();
+    };
+
+
+    /**
+     * Remove class SELECTED
+     * @public
+     */
+    Link.prototype.deselect = function() {
+        this.getView().deselect();
     };
 
 

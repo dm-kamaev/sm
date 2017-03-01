@@ -74,7 +74,7 @@ goog.scope(function() {
         ATTENTION: 'attention',
         DARK: 'dark',
         BLOCK: 'block',
-        GRAY: 'gray'
+        HOAR: 'hoar'
     };
 
 
@@ -112,6 +112,7 @@ goog.scope(function() {
                 target: rawParams['target'],
                 size: rawParams['size'],
                 disableHover: rawParams['disableHover'],
+                isSelected: rawParams['isSelected'],
                 theme: rawParams['theme']
             }
         };
@@ -138,15 +139,14 @@ goog.scope(function() {
 
 
     /**
-     * Enable hover reaction on element if it possible (not-mobile device)
+     * Enable hover reaction on element if it possible (not-mobile device
+     * and element isn't selected)
      * @public
      */
     View.prototype.enableHover = function() {
-        if (goog.labs.userAgent.device.isDesktop()) {
-            goog.dom.classlist.add(
-                this.getElement(),
-                View.CssClass.HOVERABLE
-            );
+        if (goog.labs.userAgent.device.isDesktop() && !this.isSelected()) {
+            goog.dom.classlist.add(this.getElement(), View.CssClass.HOVERABLE);
+            this.params.disableHover = undefined;
         }
     };
 
@@ -156,10 +156,43 @@ goog.scope(function() {
      * @public
      */
     View.prototype.disableHover = function() {
-        goog.dom.classlist.remove(
+        goog.dom.classlist.remove(this.getElement(), View.CssClass.HOVERABLE);
+        this.params.disableHover = true;
+    };
+
+    /**
+     * Return isSelected status
+     * @return {boolean}
+     * @public
+     */
+    View.prototype.isSelected = function() {
+        return goog.dom.classlist.contains(
             this.getElement(),
-            View.CssClass.HOVERABLE
+            View.CssClass.SELECTED
         );
+    };
+
+
+    /**
+     * Set class SELECTED and disable hover
+     * @public
+     */
+    View.prototype.select = function() {
+        goog.dom.classlist.add(this.getElement(), View.CssClass.SELECTED);
+        goog.dom.classlist.remove(this.getElement(), View.CssClass.HOVERABLE);
+    };
+
+
+    /**
+     * Remove class SELECTED and enable hover if it possible
+     * @public
+     */
+    View.prototype.deselect = function() {
+        goog.dom.classlist.remove(this.getElement(), View.CssClass.SELECTED);
+
+        if (!this.params.disableHover) {
+            this.enableHover();
+        }
     };
 
 
