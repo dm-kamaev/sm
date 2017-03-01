@@ -680,8 +680,8 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.getFormData_ = function() {
         return {
-            'userType' : this.getFormDataUserType_(),
-            'classType' : this.getFormDataClassType_(),
+            'userType': this.getFormDataUserType_(),
+            'classType': this.getFormDataClassType_(),
             'text': this.getFormDataText_(),
             'yearGraduate': this.getFormDataYearGraduate_(),
             'score': this.getFormDataScore_()

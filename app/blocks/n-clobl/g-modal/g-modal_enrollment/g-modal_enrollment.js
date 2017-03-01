@@ -281,7 +281,9 @@ goog.scope(function() {
 
         errorData.forEach(function(data) {
             for (field in data.message) {
-                errorMessages.push(data.message[field]);
+                if (data.message.hasOwnProperty(field)) {
+                    errorMessages.push(data.message[field]);
+                }
             }
         });
         return errorMessages;

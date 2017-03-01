@@ -89,7 +89,9 @@ goog.scope(function() {
      */
     FilterClasses.prototype.reset = function() {
         for (var key in this.options) {
-            this.options[key].reset();
+            if (this.options.hasOwnProperty(key)) {
+                this.options[key].reset();
+            }
         }
 
         this.collapse();
