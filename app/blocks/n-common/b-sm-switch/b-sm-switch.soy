@@ -7,7 +7,7 @@
  *         value: ?(string|number),
  *         url: ?string
  *     }>,
- *     selectedItemId: (number|undefined)
+ *     selectedItemId: ?number
  * }} sm.bSmSwitch.SmSwitch.Params.Data
  */
 
@@ -35,30 +35,22 @@
 /**
  * @override
  * @param params {
-       data: sm.bSmSwitch.SmSwitch.Params.Data
-   }
+ *     data: sm.bSmSwitch.SmSwitch.Params.Data,
+ *     config: sm.bSmSwitch.SmSwitch.Params.Config
+ * }
  */
 {template .body}
     {let $customClasses kind="html"}
         {call .rootClass/}__link
     {/let}
-    {let $selectedItemId kind="text"}
-        {if $params?.data?.selectedItemId}
-            $params.data.selectedItemId
-        {else}
-            0
-        {/if}
-    {/let}
+    {let $selectedItemId: $params?.data?.selectedItemId ?: 0 /}
         {if $params?.data?.items}
             {for $i in range($params.data.items.length)}
                 {let $item: $params.data.items[$i]/}
-                {let $isSelected kind="text"}
-                    {if $i == $selectedItemId}
-                        true
-                    {/if}
-                {/let}
+                {let $isSelected: ($i == $selectedItemId) ? true : false /}
+
                 <div class="{call .rootClass/}__link-wrapper{sp}
-                    {if $i == $selectedItemId}
+                    {if $isSelected}
                         {call .rootClass/}__link_selected
                     {/if}
                 ">
@@ -92,7 +84,7 @@
  *         items: Array<{
  *             label: ?string,
  *             value: (string|number|undefined),
- *             url: (string|undefined)
+ *             url: ?string
  *          }>,
  *     }
  * }}

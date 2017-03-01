@@ -19,21 +19,6 @@ sm.bSmSwitch.View = function(opt_params, opt_template, opt_modifier) {
     sm.bSmSwitch.View.base(
         this, 'constructor', opt_params, opt_template, opt_modifier
     );
-
-    /**
-     * id of selected link
-     * @type {?number}
-     * @private
-     */
-    this.selectedLinkId_ = null;
-
-    /**
-     * data params
-     * @type {?Object}
-     * @private
-     */
-    this.params_ = null;
-
 };
 goog.inherits(sm.bSmSwitch.View, cl.iControl.View);
 
@@ -53,12 +38,17 @@ goog.scope(function() {
     };
 
     /**
-     * Event enum
-     * @enum {string}
+     * Select link on id
+     * @param {number} id
      */
-    View.Event = {
-        ITEM_SELECT: sm.bSmSwitch.Event.ItemSelect.Type
+    View.prototype.selectLink = function(id) {
+        this.dom.link_wraps.forEach(function(item) {
+            goog.dom.classlist.remove(item, View.CssClass.SELECTED);
+        });
+
+        goog.dom.classlist.add(this.dom.link_wraps[id], View.CssClass.SELECTED);
     };
+
 
     /**
      * @override
@@ -68,65 +58,9 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.params = JSON.parse(goog.dom.dataset.get(element, 'params'));
         this.dom.links = goog.dom.getElementsByClass(View.CssClass.LINK);
-        this.dom.wraps = goog.dom.getElementsByClass(View.CssClass.LINK_WRAP);
-    };
-
-    /**
-     * @override
-     * @public
-     */
-    View.prototype.enterDocument = function() {
-        View.base(this, 'enterDocument');
-
-        if (this.dom.links.length > 0) {
-
-            this.dom.links.forEach(function(item, i) {
-                this.getHandler().listen(
-                    item,
-                    goog.events.EventType.CLICK,
-                    this.onItemClick.bind(this, i)
-                );
-            }, this);
-
-        }
-    };
-
-    /**
-     * Item click handler
-     * @param {number} id
-     * @param {goog.events.Event} event
-     * @protected
-     */
-    View.prototype.onItemClick = function(id, event) {
-        if (id != this.selectedLinkId_) {
-            this.selectLink(id);
-            var params = this.params.items[id];
-            var newEvent = new sm.bSmSwitch.Event.ItemSelect(params);
-            this.dispatchEvent(newEvent);
-        }
-    };
-
-    /**
-     * control presence of class SELECTED
-     * @param {number} id
-     */
-    View.prototype.selectLink = function(id) {
-        this.selectedLinkId_ = id;
-
-        this.dom.links.forEach(function(item) {
-            goog.dom.classlist.remove(item, sm.bSmLink.View.CssClass.SELECTED);
-        });
-        this.dom.wraps.forEach(function(item) {
-            goog.dom.classlist.remove(item, View.CssClass.SELECTED);
-        });
-
-        goog.dom.classlist.add(
-            this.dom.links[id],
-            sm.bSmLink.View.CssClass.SELECTED
-        );
-        goog.dom.classlist.add(this.dom.wraps[id], View.CssClass.SELECTED);
+        this.dom.link_wraps =
+            goog.dom.getElementsByClass(View.CssClass.LINK_WRAP);
     };
 
 });  // goog.scope

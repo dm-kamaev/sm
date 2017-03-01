@@ -28,6 +28,14 @@ sm.bSmSwitch.SmSwitch = function(view, opt_params, opt_domHelper) {
      */
     this.items = [];
 
+
+    /**
+     * id of selected link
+     * @type {?number}
+     * @private
+     */
+    this.selectedLinkId_ = null;
+
 };
 goog.inherits(sm.bSmSwitch.SmSwitch, cl.iControl.Control);
 
@@ -41,7 +49,57 @@ goog.scope(function() {
      * @enum {string}
      */
     Switch.Event = {
-        ITEM_SELECT: View.Event.ITEM_SELECT
+        CLICK: sm.bSmLink.SmLink.Event.CLICK,
+        ITEM_SELECT: sm.bSmSwitch.Event.ItemSelect.Type
+    };
+
+
+    /**
+     * @override
+     * @public
+     */
+    Switch.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.items.forEach(function(item, i) {
+            this.getHandler().listen(
+                item,
+                Switch.Event.CLICK,
+                this.onItemClick.bind(this, i)
+            );
+        }, this);
+    };
+
+
+    /**
+     * control presence of class SELECTED
+     * @param {number} id
+     * @public
+     */
+    Switch.prototype.selectLink = function(id) {
+        this.selectedLinkId_ = id;
+
+        this.items.forEach(function(item) {
+            item.deselect();
+        });
+        this.items[id].select();
+
+        this.getView().selectLink(id);
+    };
+
+
+    /**
+     * Item click handler
+     * @param {number} id
+     * @protected
+     */
+    Switch.prototype.onItemClick = function(id) {
+        if (id != this.selectedLinkId_) {
+            this.selectLink(id);
+            var params = this.params.items[id];
+            var event = new sm.bSmSwitch.Event.ItemSelect(params);
+            this.dispatchEvent(event);
+        }
     };
 
 
@@ -56,16 +114,4 @@ goog.scope(function() {
         var links = this.getView().getDom().links;
         this.items = this.decorateChildren('smLink', links);
     };
-
-
-    /**
-     * @override
-     * @public
-     */
-    Switch.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
-
-        this.autoDispatch(Switch.Event.ITEM_SELECT);
-    };
-
 });  // goog.scope
