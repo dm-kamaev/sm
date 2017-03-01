@@ -10,7 +10,7 @@ import {ExamNotFound} from './exceptions/ExamNotFound';
 
 const subjectService = require('../../study/services/subject');
 
-class UniversityService {
+class ProgramEgeExamService {
     public async getByProgramId(programId: number):
             Promise<Array<ProgramEgeExamAdmin>> {
         const exams: Array<ProgramEgeExamAdmin> = await ExamModel.findAll({
@@ -83,6 +83,6 @@ class UniversityService {
     }
 }
 
-const universityService = new UniversityService();
+const programEgeExamService = new ProgramEgeExamService();
 
-export {universityService as service};
+export {programEgeExamService as service};

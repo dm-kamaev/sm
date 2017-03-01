@@ -83,13 +83,13 @@ class ExamAdminController extends Controller {
     }
 
     /**
-    * @api {put} /api/admin/program/:programId/exam/:id update program's exam
-    * @apiVersion 1.0.0
-    * @apiName updateProgramExam
-    * @apiGroup Admin Program Exam
-    *
-    * @apiParam {Number}  subjectId Subject's id.
-    * @apiParam {Boolean} isMain    Is that exam main.
+     * @api {put} /api/admin/program/:programId/exam/:id update program's exam
+     * @apiVersion 1.0.0
+     * @apiName updateProgramExam
+     * @apiGroup Admin Program Exam
+     *
+     * @apiParam {Number}  subjectId Subject's id.
+     * @apiParam {Boolean} isMain    Is that exam main.
      *
      * @apiSuccess {Array}  -    Response body.
      * @apiSuccess {Number} -[0] Number of updated rows (Should be always 1).
