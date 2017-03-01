@@ -11,9 +11,9 @@ cd $scriptpath/../
 
 echo "Preparing for packaging"
 if [ ! -d node_modules/ ]; then
-    npm install
+    yarn install --pure-lockfile
 else
-    npm update
+    yarn install --pure-lockfile
 fi
 
 $typings install

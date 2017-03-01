@@ -4,13 +4,9 @@
  * Addresses item
  * @param params {
  *     modifier: ?string
- *     content: [
- *         classes: string,
- *         kindergarten: bool,
- *         extendedDayCost: string,
- *         directorName: string,
- *         dressCode: bool
- *     ]
+ *     content: {
+ *         extra: string
+ *     }
  * }
  * @extends sm.lSchool.bDataBlock.Template
  * @constructor
@@ -29,36 +25,13 @@
 /**
  * Content item
  * @param params {
- *     content: [
- *         classes: ?string,
- *         kindergarten: ?string,
- *         extendedDayCost: ?string,
- *         directorName: ?string,
- *         dressCode: ?string
- *     ]
+ *     content: {
+ *         extra: string
+ *     }
  * }
  */
 {template .content autoescape="strict" kind="html"}
-     <ul class="b-data-block__content">
-        {if $params.content.classes != ''}
-            {$params.content.classes}
-        {/if}
-
-        {if $params.content.kindergarten != ''}
-            ,{sp}{$params.content.kindergarten}
-        {/if}
-
-        {if $params.content.extendedDayCost != ''}
-            ,{sp}{$params.content.extendedDayCost}
-        {/if}
-
-        {if $params.content.dressCode == true}
-            ,{sp}школьная форма обязательна
-        {/if}
-
-        {if $params.content.directorName != ''}
-            .{sp}Директор{sp}&mdash;{sp}
-            {$params.content.directorName}
-        {/if}
+    <ul class="b-data-block__content">
+        {$params.content.extra}
     </ul>
 {/template}

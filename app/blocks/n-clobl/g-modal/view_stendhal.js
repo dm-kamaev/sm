@@ -93,9 +93,9 @@ goog.scope(function() {
      * @public
      */
     View.prototype.show = function() {
-        View.base(this, 'show');
-
         this.reduseHeightBody_();
+
+        View.base(this, 'show');
     };
 
 

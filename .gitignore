@@ -9,7 +9,6 @@ doc/
 build/
 runtime/
 assets/dump/
-/parse/
 /console/reports
 /vkdata/
 project_tools/
@@ -130,6 +129,21 @@ api/modules/study/types/*.js
 api/modules/study/views/additionalClassAdminView.js
 api/modules/study/views/giaAdminView.js
 api/modules/study/views/egeAdminView.js
+
+api/modules/course/types/*.js
+api/modules/course/models/course.js
+api/modules/course/services/exceptions/*.js
+api/modules/course/services/coursePageMeta.js
+api/modules/course/controllers/coursePageMetaController.js
+api/modules/course/controllers/errors/PageMetaNotBelongToCourse.js
+api/modules/course/controllers/errors/CoursePageMetaAlreadyExists.js
+
+api/modules/entity/types/*.js
+api/modules/entity/models/pageMetaInformation.js
+api/modules/entity/services/pageMetaInformation.js
+api/modules/entity/services/exceptions/*.js
+api/modules/course/types/*.js
+
 
 api/modules/user/controllers/errors/*.js
 api/modules/user/controllers/adminUserController.js

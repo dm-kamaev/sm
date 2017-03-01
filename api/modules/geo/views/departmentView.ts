@@ -1,4 +1,4 @@
-const lodashFlatten = require('lodash/flatten');
+const lodash = require('lodash');
 
 import {DepartmentAdmin} from '../interfaces/DepartmentAdmin';
 
@@ -25,6 +25,20 @@ class DepartmentView {
             });
     }
 
+    /**
+     * @param  {Array<Department>} departments
+     * @return {Array<Number>}
+     */
+    public generalGrades(departments) {
+        return lodash
+            .chain(departments.map(department =>
+                department.educationalGrades
+            ))
+            .flatten()
+            .uniq()
+            .sortBy()
+            .value();
+    }
 
     /**
      * View of departments for the b-data-block_addresses block
@@ -32,11 +46,8 @@ class DepartmentView {
      * @return {array<object>}
      */
     public departmentClasses(departments) {
-        return this.classes(
-            lodashFlatten(departments.map(department =>
-                department.educationalGrades
-            ))
-        );
+        const grades = this.generalGrades(departments);
+        return this.classes(grades);
     }
 
     /**
