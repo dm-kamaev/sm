@@ -3,7 +3,7 @@ const sequelize = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
-interface ProgramEgeExamAttribute {
+export interface ProgramEgeExamAttribute {
     id?: number;
     subjectId?: number;
     programId?: number;

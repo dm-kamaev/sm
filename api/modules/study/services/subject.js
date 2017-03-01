@@ -119,3 +119,17 @@ exports.listCityResults = async(() => {
         include: sequelizeInclude(includeParams)
     }));
 });
+
+/**
+ * @param  {Array<number>} ids
+ * @return {Promise<Array<Subject>>}
+ */
+exports.getByIds = async(function(ids) {
+    return models.Subject.findAll({
+        where: {
+            id: {
+                $in: ids
+            }
+        }
+    });
+});
