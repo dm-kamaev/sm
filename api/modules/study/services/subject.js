@@ -133,3 +133,13 @@ exports.getByIds = async(function(ids) {
         }
     });
 });
+
+exports.searchByName = async(function(name) {
+    return models.Subject.findAll({
+        where: {
+            name: {
+                $ilike: `%${name}%`
+            }
+        }
+    });
+});

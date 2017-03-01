@@ -103,6 +103,7 @@ app.use('/schools/api', api.school.router);
 app.use('/universities/api', api.university.router);
 app.use('/:subdomain/api', api.user.router);
 app.use('/:subdomain/api', api.mail.router);
+app.use('/:subdomain/api', api.study.router);
 // generate token in cookies, all request not GET
 app.use(csrf);
 

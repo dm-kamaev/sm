@@ -50,6 +50,10 @@ typings
 #builded typescript files ignore
 api/components/interface.js
 
+api/modules/comment/types/**/*.js
+api/modules/comment/migrations/20170227134914-create-university-comments.js
+api/modules/comment/models/UniversityComment.js
+
 api/modules/course/controllers/middleware/**/*.js
 api/modules/course/models/courseBrand.js
 
@@ -85,6 +89,10 @@ api/modules/school/services/schoolComment.js
 
 api/modules/school/views/commentView.js
 
+api/modules/study/controllers/**/*.js
+
+api/modules/university/**/*.js
+
 api/modules/user/controllers/errors/*.js
 api/modules/user/controllers/adminUserController.js
 api/modules/user/lib/*.js
@@ -96,12 +104,6 @@ api/modules/user/models/userData.js
 api/modules/user/types/**/*.js
 api/modules/user/migrations/20170227191120-drop-user-data-user-type-enum.js
 api/modules/user/migrations/20170227193010-user-data-class-type-rename.js
-
-api/modules/comment/types/**/*.js
-api/modules/comment/migrations/20170227134914-create-university-comments.js
-api/modules/comment/models/UniversityComment.js
-
-api/modules/university/**/*.js
 
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
