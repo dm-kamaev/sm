@@ -2,7 +2,10 @@ goog.provide('sm.bBanner.Banner');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.bBanner.Template');
 goog.require('sm.bBanner.View');
+goog.require('sm.gModal.ModalFeedback');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -31,6 +34,16 @@ goog.scope(function() {
     var Banner = sm.bBanner.Banner,
         View = sm.bBanner.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Banner.NAME = sm.bBanner.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Banner.NAME, {
+        control: Banner,
+        view: View
+    });
+
 
     /**
      * @param {Element} element
@@ -51,7 +64,7 @@ goog.scope(function() {
         var domElements = this.getView().getDom();
 
         this.modalFeedback_ = this.decorateChild(
-            'feedback-modal',
+            sm.gModal.ModalFeedback.NAME,
             domElements.modalFeedback
         );
     };

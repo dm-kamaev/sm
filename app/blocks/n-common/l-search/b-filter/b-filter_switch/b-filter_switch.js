@@ -1,6 +1,9 @@
 goog.provide('sm.lSearch.bFilter.FilterSwitch');
 
+goog.require('sm.bSmRadioButton.SmRadioButton');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.TemplateSwitch');
 goog.require('sm.lSearch.bFilter.ViewSwitch');
 
 
@@ -22,6 +25,16 @@ goog.inherits(sm.lSearch.bFilter.FilterSwitch, sm.lSearch.bFilter.Filter);
 goog.scope(function() {
     var FilterSwitch = sm.lSearch.bFilter.FilterSwitch,
         View = sm.lSearch.bFilter.ViewSwitch;
+
+    /**
+     * Name of this element in factory
+     */
+    FilterSwitch.NAME = sm.lSearch.bFilter.TemplateSwitch.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(FilterSwitch.NAME, {
+        control: FilterSwitch,
+        view: View
+    });
 
     /**
      * Checks refers element to this control
@@ -73,7 +86,7 @@ goog.scope(function() {
 
         for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(
-                'smRadioButton',
+                sm.bSmRadioButton.SmRadioButton.NAME,
                 elements[i]
             );
 

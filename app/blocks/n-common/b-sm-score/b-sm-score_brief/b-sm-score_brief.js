@@ -5,7 +5,9 @@
 goog.provide('sm.bSmScore.SmScoreBrief');
 
 goog.require('sm.bSmScore.SmScore');
+goog.require('sm.bSmScore.TemplateBrief');
 goog.require('sm.bSmScore.ViewBrief');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 goog.scope(function() {
 
@@ -31,6 +33,15 @@ goog.scope(function() {
     var Score = sm.bSmScore.SmScoreBrief,
         View = sm.bSmScore.ViewBrief;
 
+    /**
+     * Name of this element in factory
+     */
+    Score.NAME = sm.bSmScore.TemplateBrief.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Score.NAME, {
+        control: Score,
+        view: View
+    });
 
     /**
      * Event enum

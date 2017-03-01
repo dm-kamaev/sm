@@ -30,10 +30,18 @@
  * Constructor
  * @param params {sm.lSearch.bFilter.TemplateInput.Params}
  * @extends sm.lSearch.bFilter.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .filter}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch-filterInput
 {/template}
 
 
@@ -197,9 +205,8 @@
  */
 {template .input_}
     <div class="{call .rootClass/}__input">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params.config.stylizationModifier,
                 'type': 'input',
                 'renderParams': [
                     'data': $params.data,

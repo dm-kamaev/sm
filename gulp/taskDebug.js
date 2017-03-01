@@ -23,7 +23,8 @@ module.exports = function(gulpHelper) {
             outputFiles: filteredEntryPoints,
             compile: true,
             compilerFlags: {
-                debug: true
+                debug: true,
+                'warning_level': 'QUIET'
             },
             dest: Path.SHARED_STATIC_DIR
         });

@@ -8,6 +8,9 @@ goog.require('cl.iControl.Control');
 goog.require('goog.Promise');
 goog.require('sm.bSmBalloon.SmBalloon');
 goog.require('sm.bSmMap.IPresetGenerator');
+goog.require('sm.bSmMap.Template');
+goog.require('sm.bSmMap.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 
 
@@ -82,8 +85,18 @@ goog.scope(function() {
         this.selectedPlacemarkId_ = null;
     };
     goog.inherits(sm.bSmMap.SmMap, cl.iControl.Control);
-    var Map = sm.bSmMap.SmMap;
+    var Map = sm.bSmMap.SmMap,
+        View = sm.bSmMap.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Map.NAME = sm.bSmMap.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Map.NAME, {
+        control: Map,
+        view: View
+    });
 
     /**
      * Possible events
@@ -289,7 +302,7 @@ goog.scope(function() {
 
         this.setBalloon_(
             this.renderChild(
-                'smBalloon',
+                sm.bSmBalloon.SmBalloon.NAME,
                 balloonElement,
                 renderParams
             )

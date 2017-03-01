@@ -2,7 +2,11 @@ goog.provide('sm.bSmSearchPanel.SmSearchPanel');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSearch.Search');
+goog.require('sm.bSmLink.SmLink');
+goog.require('sm.bSmSearchPanel.Template');
 goog.require('sm.bSmSearchPanel.View');
+goog.require('sm.gButton.ButtonStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -50,6 +54,15 @@ goog.scope(function() {
     goog.inherits(sm.bSmSearchPanel.SmSearchPanel, cl.iControl.Control);
     var SearchPanel = sm.bSmSearchPanel.SmSearchPanel;
 
+    /**
+     * Name of this element in factory
+     */
+    SearchPanel.NAME = sm.bSmSearchPanel.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(SearchPanel.NAME, {
+        control: SearchPanel,
+        view: View
+    });
 
     /**
      * @param {Element} element
@@ -115,7 +128,7 @@ goog.scope(function() {
      */
     SearchPanel.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };
@@ -127,7 +140,7 @@ goog.scope(function() {
      */
     SearchPanel.prototype.initLinks_ = function() {
         this.links_ = this.decorateChildren(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().links
         );
     };

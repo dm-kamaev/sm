@@ -5,7 +5,11 @@ goog.require('goog.array');
 goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
 goog.require('sm.bStars.Stars');
-goog.require('sm.iFactory.FactoryStendhal');
+goog.require('sm.gDropdown.DropdownSelectLegacy');
+goog.require('sm.gInput.DigitInput');
+goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gTextarea.TextareaStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
 
@@ -197,9 +201,15 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.createDom = function() {
         var elem = goog.soy.renderAsElement(
-            sm.lSchool.bFeedbackModal.Template.feedback, {
+            sm.lSchool.bFeedbackModal.Template.feedback,
+            {
                 params: this.params_
-            });
+            },
+            {
+                factoryIndex:
+                    sm.iCloblFactory.FactoryStendhal.getInstance().getIndex()
+            }
+        );
 
         this.decorateInternal(elem);
     };
@@ -213,7 +223,7 @@ goog.scope(function() {
     FeedbackModal.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var factory = sm.iFactory.FactoryStendhal.getInstance();
+        var factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
         this.elements_ = {
             radio: this.getElementsByClass(FeedbackModal.CssClass.RADIO),
@@ -237,17 +247,19 @@ goog.scope(function() {
         };
 
         this.modal_ = factory.decorate(
-            'modal',
+            sm.gModal.ModalStendhal.NAME,
             this.getElementByClass(cl.gModal.View.CssClass.ROOT),
+            null,
             this
         );
 
         this.textarea_ = factory.decorate(
-            'textarea',
+            sm.gTextarea.TextareaStendhal.NAME,
             goog.dom.getElementByClass(
                 cl.gTextarea.View.CssClass.ROOT,
                 this.modal_.getElement()
             ),
+            null,
             this
         );
 
@@ -259,15 +271,15 @@ goog.scope(function() {
         );
 
         this.yearGraduate_ = factory.decorate(
-            'digit-input',
+            sm.gInput.DigitInput.NAME,
             goog.dom.getElementByClass(
                 cl.gInput.View.CssClass.ROOT,
                 this.modal_.getElement()
             ),
-            this,
             {
                 'validations': []
-            }
+            },
+            this
         );
 
         this.initDropdowns_(factory);
@@ -288,8 +300,9 @@ goog.scope(function() {
         );
 
         this.dropdowns_.userType = factory.decorate(
-            'dropdown-select-legacy',
+            sm.gDropdown.DropdownSelectLegacy.NAME,
             userTypeElement,
+            null,
             this
         );
 
@@ -301,8 +314,9 @@ goog.scope(function() {
         );
 
         this.dropdowns_.classType = factory.decorate(
-            'dropdown-select-legacy',
+            sm.gDropdown.DropdownSelectLegacy.NAME,
             classTypeElement,
+            null,
             this
         );
     };

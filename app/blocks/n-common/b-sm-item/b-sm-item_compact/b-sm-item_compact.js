@@ -1,7 +1,9 @@
 goog.provide('sm.bSmItem.SmItemCompact');
 
 goog.require('sm.bSmItem.SmItem');
+goog.require('sm.bSmItem.TemplateCompact');
 goog.require('sm.bSmItem.ViewCompact');
+goog.require('sm.bSmLink.SmLink');
 
 
 
@@ -34,6 +36,13 @@ goog.scope(function() {
      * @typedef {sm.bSmItem.SmItem.RenderParams}
      */
     sm.bSmItem.SmItemCompact.RenderParams;
+
+
+    /**
+     * Element name in factory
+     * @const {string}
+     */
+    Item.NAME = sm.bSmItem.TemplateCompact.NAME();
 
 
     /**
@@ -76,9 +85,14 @@ goog.scope(function() {
 
         if (link) {
             this.descriptionLink_ = this.decorateChild(
-                'smLink',
+                sm.bSmLink.SmLink.NAME,
                 link
             );
         }
     };
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Item.NAME, {
+        control: Item,
+        view: View
+    });
 });  // goog.scope

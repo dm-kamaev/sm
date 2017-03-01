@@ -4,10 +4,16 @@ goog.require('cl.iRequest.Request');
 goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
+goog.require('sm.gButton.ButtonStendhal');
+goog.require('sm.gInput.InputPhone');
+goog.require('sm.gInput.InputStendhal');
 goog.require('sm.gModal.Event.EnrollmentSuccess');
 goog.require('sm.gModal.Event.Show');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.ViewEnrollment');
+goog.require('sm.gTextarea.TextareaStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -79,6 +85,17 @@ goog.scope(function() {
         View = sm.gModal.ViewEnrollment,
         Request = cl.iRequest.Request;
 
+    /**
+     * Name of this element in factory
+     */
+    ModalEnrollment.NAME = sm.gModal.TemplateEnrollment.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        ModalEnrollment.NAME, {
+            control: ModalEnrollment,
+            view: View
+        }
+    );
 
     /**
      * Events enum
@@ -378,22 +395,22 @@ goog.scope(function() {
      */
     ModalEnrollment.prototype.initFields_ = function() {
         this.nameField_ = this.decorateChild(
-            'input',
+            sm.gInput.InputStendhal.NAME,
             this.getView().getDom().nameField
         );
 
         this.phoneField_ = this.decorateChild(
-            'input',
+            sm.gInput.InputStendhal.NAME,
             this.getView().getDom().phoneField
         );
 
         this.emailField_ = this.decorateChild(
-            'input',
+            sm.gInput.InputStendhal.NAME,
             this.getView().getDom().emailField
         );
 
         this.commentField_ = this.decorateChild(
-            'textarea',
+            sm.gTextarea.TextareaStendhal.NAME,
             this.getView().getDom().commentField
         );
     };
@@ -405,7 +422,7 @@ goog.scope(function() {
      */
     ModalEnrollment.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };

@@ -12,11 +12,19 @@
  *     }
  * }}
  * @extends sm.gModal.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .modal}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    feedback-modal
 {/template}
 
 /**
@@ -123,18 +131,12 @@
 
 /**
   * Submit button template
-  * @param? params {{
-  *     config: {
-  *        type: string
-  *     }
-  * }}
   */
 {template .submitButton_}
     <div class="{call .rootClass/}__section{sp}
         {call .rootClass/}__section_submit">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params?.config?.stylizationModifier,
                 'type': 'button',
                 'renderParams': [
                     'data': [
@@ -183,20 +185,14 @@
 
 /**
  * Name input template
- * @param? params {{
- *     config: {
- *        stylizationModifier: string
- *     }
- * }}
  */
 {template .nameInput_}
      <div class="{call .rootClass/}__input-field{sp}
          {call .rootClass/}__input-field_name">
          <div class="{call .rootClass/}__control-name">Ваше имя</div>
          <div class="{call .rootClass/}__control">
-             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+             {call .renderChild}
                  {param params: [
-                     'factory': $params.config.stylizationModifier,
                      'type': 'input',
                      'renderParams': [
                          'data': [
@@ -215,20 +211,14 @@
 
 /**
  * Email input template
- * @param? params {{
- *     config: {
- *        stylizationModifier: string
- *     }
- * }}
  */
 {template .emailInput_}
     <div class="{call .rootClass/}__input-field{sp}
                 {call .rootClass/}__input-field_email">
         <div class="{call .rootClass/}__control-name">Ваш e-mail</div>
         <div class="{call .rootClass/}__control">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {call .renderChild}
                 {param params: [
-                    'factory': $params?.config?.stylizationModifier,
                     'type': 'input',
                     'renderParams': [
                         'data': [
@@ -249,8 +239,7 @@
  * Dropdown field template
  * @param? params {{
  *     config: {
- *        type: string,
- *        stylizationModifier: string
+ *        type: string
  *     }
  * }}
  */
@@ -278,10 +267,9 @@
                 {call .rootClass/}__input-field_theme">
         <div class="{call .rootClass/}__control-name">Выберите тему</div>
         <div class="{call .rootClass/}__control">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {call .renderChild}
                 {param params: [
-                    'factory': $params?.config?.stylizationModifier,
-                    'type': 'dropdown-select-legacy',
+                'type': 'dropdown-select-legacy',
                     'renderParams': [
                         'data': [
                             'listItems': $params.config.type  == 'mistake'  ?
@@ -305,18 +293,12 @@
 
 /**
  * Textarea template
- * @param? params {{
- *     config: {
- *        stylizationModifier: ?string
- *     }
- * }}
  */
 {template .textArea_}
     <div class="{call .rootClass/}__input-field{sp}
                 {call .rootClass/}__input-field_text">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params?.config?.stylizationModifier,
                 'type': 'textarea',
                 'renderParams': [
                     'data': [

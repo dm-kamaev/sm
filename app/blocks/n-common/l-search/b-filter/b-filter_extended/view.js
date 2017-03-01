@@ -67,11 +67,11 @@ goog.scope(function() {
         return goog.soy.renderAsElement(
             sm.lSearch.bFilter.TemplateExtended.option, {
                 params: {
-                    data: data,
-                    config: {
-                        stylizationModifier: this.getStylization()
-                    }
+                    data: data
                 }
+            },
+            {
+                factoryIndex: this.getFactory().getIndex()
             }
         );
     };

@@ -44,10 +44,18 @@
  * Constructor
  * @param params {sm.lSearch.bFilter.Template.Params}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .filter}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch-filter
 {/template}
 
 
@@ -203,8 +211,7 @@
  *     config: {
  *         hidden: (boolean|undefined),
  *         hidable: (boolean|undefined),
- *         theme: (string|undefined),
- *         stylizationModifier: string
+ *         theme: (string|undefined)
  *     }
  * }}
  * @public
@@ -223,9 +230,8 @@
     {/let}
 
     <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params.config.stylizationModifier,
                 'type': 'smCheckbox',
                 'renderParams': [
                     'data': $params.data,
@@ -409,9 +415,8 @@
         </div>
     {/let}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+    {call .renderChild}
         {param params: [
-            'factory': 'stendhal',
             'type': 'hint',
             'renderParams': [
                 'data': $tooltipData,

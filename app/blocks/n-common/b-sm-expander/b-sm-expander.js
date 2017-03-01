@@ -8,8 +8,10 @@
 goog.provide('sm.bSmExpander.SmExpander');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmExpander.Template');
 goog.require('sm.bSmExpander.View');
 goog.require('sm.bSmLink.SmLink');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -57,6 +59,15 @@ goog.scope(function() {
     goog.inherits(sm.bSmExpander.SmExpander, cl.iControl.Control);
     var Expander = sm.bSmExpander.SmExpander;
 
+    /**
+     * Name of this element in factory
+     */
+    Expander.NAME = sm.bSmExpander.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Expander.NAME, {
+        control: Expander,
+        view: View
+    });
 
     /**
      * List of CSS classes
@@ -230,7 +241,7 @@ goog.scope(function() {
      */
     Expander.prototype.initLink_ = function() {
         this.link_ = this.decorateChild(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().link
         );
     };

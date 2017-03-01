@@ -29,7 +29,7 @@ let view = {};
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
  *     actionButtonText: string,
- *     seoParams: {
+ *     seoParams: ?{
  *         pagePrefixTabTitle: string
  *     }
  * }} data
@@ -46,7 +46,10 @@ view.render = function(data) {
         ) :
         null;
 
-    let pagePrefixTabTitle = data.seoParams.pagePrefixTabTitle || 'Курс';
+    let pagePrefixTabTitle =
+        (data.seoParams && data.seoParams.pagePrefixTabTitle) ?
+            data.seoParams.pagePrefixTabTitle :
+            'Курс';
 
     let metaInformation = {
         seo: {

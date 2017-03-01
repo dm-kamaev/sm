@@ -6,6 +6,7 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bScore.ScoreMinimized');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSchool.bComment.Template');
 
 
@@ -52,9 +53,16 @@ goog.scope(function() {
      */
     Comment.prototype.createDom = function() {
         goog.base(this, 'createDom');
-        var el = goog.soy.renderAsElement(sm.lSchool.bComment.Template.base, {
-            params: this.params_
-        });
+        var el = goog.soy.renderAsElement(
+            sm.lSchool.bComment.Template.base,
+            {
+                params: this.params_
+            },
+            {
+                factoryIndex:
+                    sm.iCloblFactory.FactoryStendhal.getInstance().getIndex()
+            }
+        );
         this.decorateInternal(el);
     };
 

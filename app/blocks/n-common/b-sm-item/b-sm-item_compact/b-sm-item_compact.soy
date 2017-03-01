@@ -45,6 +45,7 @@
  *     config: sm.bSmItem.TemplateCompact.Params.Config
  * }}
  * @extends sm.bSmItem.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .item}
@@ -356,4 +357,12 @@
             {/call}
         </div>
     {/if}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smItemCompact
 {/template}

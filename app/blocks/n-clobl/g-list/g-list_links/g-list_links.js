@@ -1,7 +1,10 @@
 goog.provide('sm.gList.ListLinks');
 
+goog.require('sm.bSmLink.SmLink');
 goog.require('sm.gList.ListStendhal');
+goog.require('sm.gList.TemplateLinks');
 goog.require('sm.gList.ViewLinks');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -36,6 +39,16 @@ goog.scope(function() {
         View = sm.gList.ViewLinks;
 
     /**
+     * Name of this element in factory
+     */
+    ListLinks.NAME = sm.gList.TemplateLinks.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(ListLinks.NAME, {
+        control: ListLinks,
+        view: View
+    });
+
+    /**
      * Event enum
      * @enum {string}
      */
@@ -65,7 +78,7 @@ goog.scope(function() {
 
         for (var i = 0; i < domElements.length; i++) {
             instance = this.decorateChild(
-                'smLink',
+                sm.bSmLink.SmLink.NAME,
                 domElements[i]
             );
 

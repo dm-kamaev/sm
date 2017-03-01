@@ -183,16 +183,13 @@
  */
 {template .search_ autoescape="strict" kind="html" private="true"}
     <div class="l-school-home__search">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'search-panel',
-                'renderParams': [
-                    'panelTitle': 'Что вы ищете?',
-                    'dataLinks': $params.dataLinks,
-                    'config': [
-                        'theme': 'three-columns'
-                    ]
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'search-panel' /}
+            {param renderParams: [
+                'panelTitle': 'Что вы ищете?',
+                'dataLinks': $params.dataLinks,
+                'config': [
+                    'theme': 'three-columns'
                 ]
             ]/}
         {/call}
@@ -268,17 +265,14 @@
     {/let}
 
     <div class="l-school-home__school-catalog">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'school-catalog',
-                'renderParams': [
-                    'text': $text,
-                    'amount': $params.amountSchools,
-                    'dataLink': [
-                        'name': 'Все школы',
-                        'url': '/school'
-                    ]
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'school-catalog' /}
+            {param renderParams: [
+                'text': $text,
+                'amount': $params.amountSchools,
+                'dataLink': [
+                    'name': 'Все школы',
+                    'url': '/school'
                 ]
             ]/}
         {/call}
@@ -290,11 +284,8 @@
  */
 {template .articles_}
     <div class="l-school-home__articles">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'article-links'
-            ]/}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'article-links' /}
         {/call}
     </div>
 {/template}

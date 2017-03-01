@@ -23,10 +23,18 @@
  *     config: sm.lSearch.bFilterPanel.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .filterPanel}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch-filterPanel
 {/template}
 
 

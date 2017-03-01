@@ -1,7 +1,10 @@
 goog.provide('sm.gModal.ModalSideMenu');
 
+goog.require('sm.bSmLink.SmLink');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.TemplateSideMenu');
 goog.require('sm.gModal.ViewSideMenu');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -39,6 +42,15 @@ goog.scope(function() {
     var Modal = sm.gModal.ModalSideMenu,
         View = sm.gModal.ViewSideMenu;
 
+    /**
+     * Name of this element in factory
+     */
+    Modal.NAME = sm.gModal.TemplateSideMenu.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Modal.NAME, {
+        control: Modal,
+        view: View
+    });
 
     /**
      * Events enum
@@ -69,7 +81,7 @@ goog.scope(function() {
      */
     Modal.prototype.initMenuLinks_ = function() {
         this.menuLinks_ = this.decorateChildren(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().menuLinks
         );
     };
@@ -81,7 +93,7 @@ goog.scope(function() {
      */
     Modal.prototype.initFooterLinks_ = function() {
         this.footerLinks_ = this.decorateChildren(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().footerLinks
         );
     };
