@@ -3,16 +3,16 @@ const sequelize = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
-interface EntranceStatisticAttribute {
+export interface EntranceStatisticAttribute {
     id?: number;
     programId?: number;
     year?: number;
     competition?: number;
-    budget_places?: number;
-    commercial_places?: number;
+    budgetPlaces?: number;
+    commercialPlaces?: number;
     cost?: number;
     discount?: boolean;
-    ege_pass_score?: number;
+    egePassScore?: number;
     createdAt?: string;
     updatedAt?: string;
 }
