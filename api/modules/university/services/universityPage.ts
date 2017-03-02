@@ -110,6 +110,14 @@ class UniversityPageService {
             await pageServices.update({ id: page.id }, data);
         }
     }
+
+    // remove page for university from table page
+    public async removePage(university: UniversityInstance): Promise<void> {
+        console.log('university=', university);
+        const universityName: string = university.name,
+        universityId: number = university.id;
+        await pageServices.delete(universityId, entityTypies.UNIVERSITY);
+    }
 }
 
 export const service = new UniversityPageService();

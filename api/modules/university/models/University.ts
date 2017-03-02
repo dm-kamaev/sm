@@ -69,6 +69,7 @@ const University: UniversityModel = sequelize.define('University', {
         afterUpdate: universityPageService.updatePage.bind(
             universityPageService
         ),
+        afterDestroy: universityPageService.removePage
     },
     classMethods: {
         associate: function(models) {

@@ -185,8 +185,8 @@ class PageService {
      * @param  {string} entityType
      * @return {number}
      */
-    public async delete(entityId, entityType) {
-        models.Page.destroy({
+    public async delete(entityId: number, entityType: string): Promise<void> {
+        await models.Page.destroy({
             where: {
                 entityId: entityId,
                 entityType: entityType
