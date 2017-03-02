@@ -142,11 +142,21 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.buildRequestData_ = function() {
         return {
-            url: '/university/subscribe',
+            url: this.buildApiAddress_(),
             type: 'POST',
             data: this.buildQueryParams_(),
             isJSON: true
         };
+    };
+
+
+    /**
+     * Build and get Api Address
+     * @return {string}
+     * @private
+     */
+    SubscribeBoard.prototype.buildApiAddress_ = function() {
+        return '/' + this.params.entityType + '/subscribe';
     };
 
 
@@ -157,7 +167,8 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.buildQueryParams_ = function() {
         return {
-            'email_address': this.input_.getValue()
+            'email_address': this.input_.getValue(),
+            'id': this.params.entityId
         };
     };
 

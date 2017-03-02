@@ -419,6 +419,12 @@ controller.information = async(function(req, res, next) {
                         isSelected: true
                     }
                 }]
+            },
+            subscribeBoard: {
+                data: {
+                    entityId: 1,
+                    entityType: entityType.UNIVERSITY
+                }
             }
         });
 

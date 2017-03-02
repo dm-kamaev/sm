@@ -3,7 +3,8 @@
 
 /**
  * @typedef {{
- *      description: string,
+ *      entityId: number,
+ *      entityType: string,
  *      input: cl.gInput.Template.Params
  * }} sm.bSmSubscribeBoard.Template.Params.Data
  */
@@ -73,7 +74,7 @@
 
 
 /**
- * MailChimp block
+ * Input block
  */
 {template .input_}
     {let $placeholder kind="text"}
@@ -99,7 +100,6 @@
                     ],
                     'config': [
                         'theme': 'neptune',
-                        'validations': ['email', 'notEmpty'],
                         'customClasses': [$customClasses]
                     ]
                 ]
@@ -137,3 +137,21 @@
     </div>
 {/template}
 
+
+/**
+ * @param params {
+ *     data: {
+ *         entityId: number,
+ *         entityType: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+            {param json: quoteKeysIfJs([
+                'entityId': $params.data.entityId,
+                'entityType': $params.data.entityType
+            ]) /}
+        {/call}"
+{/template}
