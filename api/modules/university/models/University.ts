@@ -1,6 +1,7 @@
 const DataType = require('sequelize');
 const sequelize = require('../../../../app/components/db');
 
+import {service as universityPageService} from '../services/universityPage';
 import * as Sequelize from 'sequelize/v3';
 
 export interface UniversityAttribute {
@@ -61,6 +62,14 @@ const University: UniversityModel = sequelize.define('University', {
 }, {
     underscored: true,
     tableName: 'university',
+    hooks: {
+        afterCreate: universityPageService.createPage.bind(
+            universityPageService
+        ),
+        afterUpdate: universityPageService.updatePage.bind(
+            universityPageService
+        ),
+    },
     classMethods: {
         associate: function(models) {
             this.belongsTo(models.City, {

@@ -5,7 +5,12 @@ import {
 } from '../models/University';
 
 const cityModel = require('../../geo/models/city');
+const sequelize = require('../../../../app/components/db.js');
+const logger =
+    require('../../../../app/components/logger/logger').getLogger('app');
 
+
+import {UniversityPageInstance} from '../models/UniversityPage';
 import {UniversityNotFound} from './exceptions/UniversityNotFound';
 
 class UniversityService {
@@ -59,6 +64,5 @@ class UniversityService {
     }
 }
 
-const universityService = new UniversityService();
+export const service = new UniversityService();
 
-export {universityService as service};
