@@ -1,6 +1,7 @@
 goog.provide('sm.bSmSubscribeBoard.SmSubscribeBoard');
 
 goog.require('cl.iControl.Control');
+goog.require('cl.iRequest.Request');
 goog.require('sm.bSmSubscribeBoard.View');
 goog.require('sm.gInput.InputStendhal');
 
@@ -17,13 +18,29 @@ sm.bSmSubscribeBoard.SmSubscribeBoard = function(view, opt_domHelper) {
     sm.bSmSubscribeBoard.SmSubscribeBoard.base(
         this, 'constructor', view, opt_domHelper
     );
+
+    /**
+     * iRequest instance
+     * @type {cl.iRequest.Request}
+     * @private
+     */
+    this.request_ = null;
+
+
+    /**
+     * Input instance
+     * @type {sm.gInput.InputStendhal}
+     * @private
+     */
+    this.input_ = null;
 };
 goog.inherits(sm.bSmSubscribeBoard.SmSubscribeBoard, cl.iControl.Control);
 
 
 goog.scope(function() {
     var SubscribeBoard = sm.bSmSubscribeBoard.SmSubscribeBoard,
-        View = sm.bSmSubscribeBoard.View;
+        View = sm.bSmSubscribeBoard.View,
+        Request = cl.iRequest.Request;
 
 
     /**
@@ -33,7 +50,7 @@ goog.scope(function() {
     SubscribeBoard.prototype.enterDocument = function() {
         SubscribeBoard.base(this, 'enterDocument');
 
-        this.viewListen(View.Event.SUBMIT, this.onSubmit_);
+        this.initInputsListeners_();
     };
 
 
@@ -45,6 +62,7 @@ goog.scope(function() {
         SubscribeBoard.base(this, 'decorateInternal', element);
 
         this.initInputs_();
+        this.initRequest_();
     };
 
 
@@ -52,9 +70,30 @@ goog.scope(function() {
      * @private
      */
     SubscribeBoard.prototype.initInputs_ = function() {
-        this.decorateChild(
+        this.input_ = this.decorateChild(
             'input',
             this.getView().getDom().emailInput
+        );
+    };
+
+    /**
+     * @private
+     */
+    SubscribeBoard.prototype.initRequest_ = function() {
+        this.request_ = Request.getInstance();
+    };
+
+
+    /**
+     * @private
+     */
+    SubscribeBoard.prototype.initInputsListeners_ = function() {
+        this.viewListen(View.Event.SUBMIT, this.onSubmit_);
+
+        this.getHandler().listen(
+            this.input_,
+            sm.gInput.InputStendhal.Event.ENTER_PRESS,
+            this.onSubmit_
         );
     };
 
@@ -64,6 +103,83 @@ goog.scope(function() {
      * @private
      */
     SubscribeBoard.prototype.onSubmit_ = function() {
-        console.log('test');
+        if (this.isValid_()) {
+            this.sendData_();
+        }
+    };
+
+
+    /**
+     * Is inputs is valid
+     * @private
+     * @return {boolean}
+     */
+    SubscribeBoard.prototype.isValid_ = function() {
+        return this.input_.validate();
+    };
+
+
+    /**
+     * Send data to server
+     * @private
+     */
+    SubscribeBoard.prototype.sendData_ = function() {
+        var data = this.buildRequestData_();
+
+        this.request_
+            .send(data)
+            .then(
+                this.onSuccess_.bind(this),
+                this.onError_.bind(this)
+            );
+    };
+
+
+    /**
+     * Build and get data for request
+     * @return {Object}
+     * @private
+     */
+    SubscribeBoard.prototype.buildRequestData_ = function() {
+        return {
+            url: '/university/subscribe',
+            type: 'POST',
+            data: this.buildQueryParams_(),
+            isJSON: true
+        };
+    };
+
+
+    /**
+     * Build and get data body for request
+     * @return {Object}
+     * @private
+     */
+    SubscribeBoard.prototype.buildQueryParams_ = function() {
+        return {
+            'email_address': this.input_.getValue()
+        };
+    };
+
+
+    /**
+     * Handler of server response success
+     * @param {{
+     * }} response
+     * @private
+     */
+    SubscribeBoard.prototype.onSuccess_ = function(response) {
+        console.log(response);
+    };
+
+
+    /**
+     * Handler of server response error
+     * @param {{
+     * }} error
+     * @private
+     */
+    SubscribeBoard.prototype.onError_ = function(error) {
+        console.log(error);
     };
 });  // goog.scope
