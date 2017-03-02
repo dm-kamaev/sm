@@ -2,7 +2,7 @@
 
 /**
  *  @typedef  {{
- *      items: Array<{sm.bSmLink.Template.Params}>,
+ *      items: Array<sm.bSmLink.Template.Params>,
  *  }} sm.bSmRowLinks.Template.Params.Data
  */
 
@@ -10,7 +10,6 @@
 /**
  *  @typedef {{
  *      theme: ?('breadcrumbs')
- *
  *  }} sm.bSmRowLinks.Template.Params.Config
  */
 
@@ -36,33 +35,17 @@
  */
 {template .body}
     {if $params?.data?.items}
-        {let $customClasses kind="html"}
-            {call .rootClass/}__link
-        {/let}
-
         {for $i in range($params.data.items.length)}
-
-            {let $config: augmentMap(
-                $params.data.items[$i].config,
-                [
-                    'customClasses': [$customClasses]
-                ]
-            ) /}
             <div class="{call .rootClass/}__link-wrap{sp}
-            {if $config.isSelected}
-                {call .rootClass/}__link-wrap_selected
-            {/if}
+                {if $params.data.items[$i].config?.isSelected}
+                    {call .rootClass/}__link-wrap_selected
+                {/if}
             ">
-                {call .renderChild}
-                    {param params: [
-                        'type': 'smLink',
-                        'renderParams': [
-                            'data': $params.data.items[$i].data,
-                            'config': $config
-                        ]
-                    ]/}
+                {call .link}
+                    {param params: $params.data.items[$i] /}
                 {/call}
             </div>
+
             {if ($params.config?.theme == 'breadcrumbs') and
                 ($i != ($params.data.items.length - 1))
             }
@@ -70,6 +53,34 @@
             {/if}
         {/for}
     {/if}
+{/template}
+
+
+/**
+ * render b-sm-link
+ * @param params {sm.bSmLink.Template.Params}
+ */
+{template .link}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link
+    {/let}
+
+    {let $config: augmentMap(
+        $params.config,
+        [
+            'customClasses': [$customClasses]
+        ]
+    ) /}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'smLink',
+            'renderParams': [
+                'data': $params.data,
+                'config': $config
+            ]
+        ]/}
+    {/call}
 {/template}
 
 
