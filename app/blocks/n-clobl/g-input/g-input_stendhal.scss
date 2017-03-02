@@ -39,8 +39,8 @@
 
 .g-input_stendhal.g-input_neptune-theme {
     .g-input__input {
-        box-shadow: none;
-
         font-size: 15px;
+        box-shadow: inset 0 0 0 50px #fff;
+        -webkit-text-fill-color: #747474;
     }
 }
