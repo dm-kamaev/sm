@@ -1,5 +1,6 @@
 .g-input_stendhal {
     height: 100%;
+
     .g-input__input {
         box-sizing: border-box;
         width: 100%;
@@ -33,5 +34,13 @@
         box-sizing: border-box;
 
         border: 2px solid #ee362c;
+    }
+}
+
+.g-input_stendhal.g-input_neptune-theme {
+    .g-input__input {
+        box-shadow: none;
+
+        font-size: 15px;
     }
 }

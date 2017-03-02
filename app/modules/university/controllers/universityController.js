@@ -389,25 +389,6 @@ controller.information = async(function(req, res, next) {
             authSocialLinks: authSocialLinks,
             entityType: entityType.UNIVERSITY,
             config: config,
-            subscribeBoard: {
-                data: {
-                    description: `Напомним о днях открытых дверей,
-                        пришлём списки зачисления и проходные баллы
-                        вам на почту`,
-                    input: {
-                        data: {
-                            placeholder: 'Введите свой email',
-                            maxLength: 50,
-                            name: 'Подписка на новости этого вуза:',
-                            type: 'text'
-                        },
-                        config: {
-                            theme: 'neptune',
-                            validations: ['email', 'notEmpty']
-                        }
-                    }
-                }
-            },
             navigationPanel: {
                 items: [{
                     data: {

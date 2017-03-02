@@ -1,6 +1,7 @@
 goog.provide('sm.bSmSubscribeBoard.View');
 
 goog.require('cl.iControl.View');
+goog.require('goog.events.EventType');
 goog.require('sm.bSmLink.View');
 
 
@@ -19,10 +20,11 @@ sm.bSmSubscribeBoard.View = function(opt_params, opt_type, opt_modifier) {
 
     /*
      * Collection of DOM elements
-     * @type {
-     * }
+     * @type {{
+     *     emailInput: sm.gInput.InputStendhal
+     * }}
      */
-    this.dom = {};
+    this.dom = null;
 };
 goog.inherits(sm.bSmSubscribeBoard.View, cl.iControl.View);
 
@@ -37,6 +39,76 @@ goog.scope(function() {
      * @const
      */
     View.CssClass = {
-        ROOT: 'b-sm-subscribe-board'
+        ROOT: 'b-sm-subscribe-board',
+        EMAIL_INPUT: 'b-sm-subscribe-board__email-input',
+        SUBMIT_BUTTON: 'b-sm-subscribe-board__input-icon'
+    };
+
+
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    View.Event = {
+        SUBMIT: goog.events.getUniqueId('submit')
+    };
+
+
+    /**
+     * @override
+     */
+    View.prototype.decorateInternal = function(element) {
+        View.base(this, 'decorateInternal', element);
+
+        this.initDom();
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.initSubmitListeners_();
+    };
+
+
+    /**
+     * Dom initialization
+     * @protected
+     */
+    View.prototype.initDom = function() {
+        this.dom = {
+            emailInput: this.getElementByClass(
+                View.CssClass.EMAIL_INPUT
+            ),
+            submitButton: this.getElementByClass(
+                View.CssClass.SUBMIT_BUTTON
+            )
+        };
+    };
+
+
+    /**
+     * Init submit listeners
+     * @private
+     */
+    View.prototype.initSubmitListeners_ = function() {
+        this.getHandler().listen(
+            this.dom.submitButton,
+            goog.events.EventType.CLICK,
+            this.onSubmit_
+        );
+    };
+
+
+    /**
+     * Submit
+     * @private
+     */
+    View.prototype.onSubmit_ = function() {
+        this.dispatchEvent(View.Event.SUBMIT);
     };
 });  // goog.scope

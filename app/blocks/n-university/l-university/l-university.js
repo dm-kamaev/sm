@@ -1,5 +1,6 @@
 goog.provide('sm.lUniversity.University');
 
+goog.require('sm.bSmSubscribeBoard.SmSubscribeBoard');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.lUniversity.View');
 
@@ -40,6 +41,7 @@ goog.scope(function() {
         this.initCourses_();
         this.initComments_();
         this.initNavigationPanel_();
+        this.initSubscribeBoard_();
     };
 
 
@@ -147,6 +149,18 @@ goog.scope(function() {
         this.decorateChild(
             'smRowLinks',
             this.getView().getDom().navigationPanel
+        );
+    };
+
+
+    /**
+     * Init subscribe board
+     * @private
+     */
+    University.prototype.initSubscribeBoard_ = function() {
+        this.decorateChild(
+            'smSubscribeBoard',
+            this.getView().getDom().subscribeBoard
         );
     };
 });  // goog.scope

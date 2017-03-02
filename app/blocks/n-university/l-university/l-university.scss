@@ -158,6 +158,11 @@
     padding-bottom: 25px;
 }
 
+.l-university__subscribe-board {
+    width: calc(100% - 375px);
+    margin-bottom: 80px;
+}
+
 
 @include media-xl {
     .l-university__section_data {
@@ -229,6 +234,10 @@
 
     .l-university__board-wrap {
         margin-top: 45px;
+    }
+
+    .l-university__subscribe-board {
+        width: calc(100% - 355px);
     }
 }
 
@@ -321,5 +330,9 @@
 
     .l-university__navigation-panel {
         display: none;
+    }
+
+    .l-university__subscribe-board {
+        width: 100%;
     }
 }
