@@ -36,10 +36,12 @@ const Model: RatingModel = db.define('Rating', {
     classMethods: {
         associate: function(models) {
             this.hasOne(models.Comment, {
-                foreignKey: 'rating_id'
+                foreignKey: 'rating_id',
+                as: 'comment'
             });
             this.hasOne(models.UniversityComment, {
-                foreignKey: 'rating_id'
+                foreignKey: 'rating_id',
+                as: 'universityComment'
             });
         }
     }
