@@ -45,4 +45,15 @@ goog.scope(function() {
 
         this.autoDispatch(View.Event.ENTER_PRESS);
     };
+
+
+    /**
+     * Get input name
+     * @return {?string
+     * }
+     * @public
+     */
+    Input.prototype.getName = function() {
+        return this.getView().getName();
+    };
 });  // goog.scope
