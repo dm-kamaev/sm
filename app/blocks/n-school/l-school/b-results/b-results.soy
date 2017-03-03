@@ -237,7 +237,10 @@
             {/if}
 
             <div class="b-results__olymp-item">
-                {$params.data[$i].name} —
+                {$params.data[$i].name}
+                {if $params.data[$i].winners or $params.data[$i].awardees}
+                    {sp}—
+                {/if}
                 {if $params.data[$i].winners}
                     {sp}
                     {$params.data[$i].winners}
