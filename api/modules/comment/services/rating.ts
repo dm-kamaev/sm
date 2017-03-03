@@ -3,7 +3,7 @@
  */
 import {RatingAttributes, RatingInstance} from '../types/rating';
 
-import {Model as RatingModel} from '../models/rating';
+import {Model as RatingModel} from '../models/Rating';
 
 class RatingService {
     public readonly name: string = 'rating';
@@ -16,7 +16,7 @@ class RatingService {
     }
 
     public async update(ratingId: number, data: RatingAttributes) {
-        var instance = await this.getById(ratingId);
+        const instance = await this.getById(ratingId);
         return await(instance.update(data));
     }
 
@@ -29,7 +29,7 @@ class RatingService {
     }
 
     public async delete(ratingId: number): Promise<void> {
-        let instance = await this.silentGetOne_(ratingId);
+        const instance = await this.silentGetOne_(ratingId);
 
         if (!instance) {
 
@@ -39,11 +39,11 @@ class RatingService {
     }
 
     public calculateTotalScore(score: Array<number>): number {
-        let notEmptyScore = score.every(scoreGrade => !!scoreGrade),
-            result = 0;
+        const notEmptyScore = score.every(scoreGrade => !!scoreGrade);
+        let result = 0;
 
         if (notEmptyScore) {
-            let sum = score.reduce(
+            const sum = score.reduce(
                 (total, current) => total + current,
                 0
             );
