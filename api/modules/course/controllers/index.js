@@ -40,6 +40,8 @@ router.get('/coursefilter', filterController.list);
 
 router.get('/coursebrand/search', checkToken, brandController.search);
 
+router.get('/coursecategory/pricetype', categoryController.getPriceTypes);
+
 const fileStorage = fileHandler.any();
 
 

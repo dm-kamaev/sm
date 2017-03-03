@@ -9,6 +9,7 @@ const services = require('../../../../app/components/services').all,
     sequelize = require('../../../../app/components/db');
 
 const entityType = require('../../entity/enums/entityType');
+const categoryPriceType = require('../enums/categoryPrice');
 
 const CATEGORY = 'course_category';
 
@@ -173,5 +174,12 @@ service.deleteAlias = async(function(courseCategory) {
 service.getAliases = async(function() {
     return await(services.page.getAllAliases(entityType.COURSE_CATEGORY));
 });
+
+/**
+ * @return {Array<string>}
+ */
+service.getCategoryPrices = function() {
+    return categoryPriceType.toArray();
+};
 
 module.exports = service;
