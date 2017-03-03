@@ -53,7 +53,10 @@ const Program: ProgramModel = sequelize.define('Program', {
         type: DataType.ARRAY(DataType.STRING),
         field: 'extra_exam'
     },
-    discount: DataType.BOOLEAN,
+    exchangeProgram: {
+        type: DataType.BOOLEAN,
+        field: 'exchange_program'
+    },
     createdAt: {
         field: 'created_at',
         type: DataType.DATE

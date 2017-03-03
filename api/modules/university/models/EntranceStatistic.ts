@@ -50,7 +50,7 @@ const EntranceStatistic: EntranceStatisticModel
         type: DataType.INTEGER,
     },
     competition: {
-        type: DataType.INTEGER,
+        type: DataType.FLOAT,
     },
     budget_places: {
         type: DataType.INTEGER,

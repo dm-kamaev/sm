@@ -15,7 +15,7 @@ export interface ProgramAttribute {
     employment?: number;
     salary?: number;
     extraExam?: Array<string>;
-    discount?: boolean;
+    exchangeProgram?: boolean;
     createdAt?: string;
     updatedAt?: string;
 }
