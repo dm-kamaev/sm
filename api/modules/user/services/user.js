@@ -2,13 +2,14 @@
 
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
-    axios = require('axios');
+    axios = require('axios'),
+    lodashUniq = require('lodash/uniq');
 
 const services = require('../../../../app/components/services').all;
 
 const config = require('../../../../app/config').config;
 
-const USER_API = config.userApi,
+const USER_API = config.usercApi,
     GET_USER = '/user/',
     AUTH_API = config.authApi,
     POST_AUTH = '/oauth/',
@@ -45,29 +46,61 @@ service.getUserByCode = async(function(data, baseUrl) {
 
 /**
  * @param  {string} id
- * @return {Object}
- *{
- *  id: 1,
-    facebookId: '177546869304808',
-    vkId: null,
-    okId: null,
-    googleId: null,
-    twitterId: null,
-    firstName: 'Eero',
-    lastName: 'Ettala',
-    gender: 'm',
-    phone: '',
-    email: 'easy2rider2@gmail.com',
-    password: null,
-    photoUrl: 'http://image.mel.fm/i/L/LzA3Yylxmd/128.jpg',
-    status: 'active',
-    birthDate: null,
-    created_at: '2016-08-12',
-    updated_at: '2016-11-03'
-  }
+ * @return {{
+ *     id: 1,
+ *     facebookId: '177546869304808',
+ *     vkId: null,
+ *     okId: null,
+ *     googleId: null,
+ *     twitterId: null,
+ *     firstName: 'Eero',
+ *     lastName: 'Ettala',
+ *     gender: 'm',
+ *     phone: '',
+ *     email: 'easy2rider2@gmail.com',
+ *     password: null,
+ *     photoUrl: 'http://image.mel.fm/i/L/LzA3Yylxmd/128.jpg',
+ *     status: 'active',
+ *     birthDate: null,
+ *     created_at: '2016-08-12',
+ *     updated_at: '2016-11-03'
+ * }}
  */
 service.getUserById = async(function(id) {
     return await(axios.get(USER_API + GET_USER + id)).data;
+});
+
+/**
+ * @param {Array<number>} ids
+ * @return {Array<{
+ *     id: 1,
+ *     facebookId: '177546869304808',
+ *     vkId: null,
+ *     okId: null,
+ *     googleId: null,
+ *     twitterId: null,
+ *     firstName: 'Eero',
+ *     lastName: 'Ettala',
+ *     gender: 'm',
+ *     phone: '',
+ *     email: 'easy2rider2@gmail.com',
+ *     password: null,
+ *     photoUrl: 'http://image.mel.fm/i/L/LzA3Yylxmd/128.jpg',
+ *     status: 'active',
+ *     birthDate: null,
+ *     created_at: '2016-08-12',
+ *     updated_at: '2016-11-03'
+ * }>}
+ */
+service.getUserByIds = async(function(ids) {
+    const uniqueIds = lodashUniq(ids),
+        formattedIds = uniqueIds.reduce(
+            (previous, id) => previous + `,${id}`,
+            ''
+        ),
+        queryParams = `?id=${formattedIds}`;
+
+    return await(axios.get(USER_API + GET_USER + queryParams)).data;
 });
 
 module.exports = service;
