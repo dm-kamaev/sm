@@ -3,6 +3,23 @@
 
 /**
  * @typedef {{
+ *     userFields: {
+ *         userType: {
+ *             data: Object,
+ *             config: Object,
+ *             controlName: string
+ *         },
+ *         yearGraduate: {
+ *             data: Object,
+ *             config: Object,
+ *             controlName: string
+ *         },
+ *         grade: {
+ *             data: Object,
+ *             config: Object,
+ *             controlName: string
+ *         }
+ *     },
  *     fields: Array<{
  *         data: Object,
  *         config: Object,
@@ -50,8 +67,46 @@
  * @override
  */
 {template .body}
+    {call .sectionUserData_ data="all" /}
     {call .sectionFields data="all" /}
     {call .sectionEvaluations_ data="all" /}
+{/template}
+
+
+/**
+ * Fields to leave user data
+ * @param params {{
+ *     data: {
+ *         userFields: {
+ *             userType: {
+ *                 data: Object,
+ *                 config: Object,
+ *                 controlName: string
+ *             },
+ *             yearGraduate: {
+ *                 data: Object,
+ *                 config: Object,
+ *                 controlName: string
+ *             },
+ *             grade: {
+ *                 data: Object,
+ *                 config: Object,
+ *                 controlName: string
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionUserData_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_user-data">
+
+        <div class="{call .rootClass/}__user-data">
+            {call .userTypeField_ data="all" /}
+            {call .yearGraduateField_ data="all" /}
+            {call .gradeField_ data="all" /}
+        </div>
+    </div>
 {/template}
 
 
@@ -75,13 +130,97 @@
 
         {call .title}
             {param params: [
-                'title': $params.data.title,
+                'title': $params.data.evaluations.title,
                 'modifier': 'section'
             ] /}
         {/call}
 
         {call .evaluations_ data="all" /}
     </div>
+{/template}
+
+
+/**
+ * User type field
+ * @param params {{
+ *     data: {
+ *         userFields: {
+ *             userType: {
+ *                 data: Object,
+ *                 config: Object,
+ *                 controlName: string
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .userTypeField_}
+    {call .field}
+        {param params: [
+            'data': [
+                'field': $params.data.userFields.userType
+            ],
+            'config': [
+                'modifier': 'user-type'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Year Graduate field
+ * @param params {{
+ *     data: {
+ *         userFields: {
+ *             yearGraduate: {
+ *                 data: Object,
+ *                 config: Object,
+ *                 controlName: string
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .yearGraduateField_}
+    {call .field}
+        {param params: [
+            'data': [
+                'field': $params.data.userFields.yearGraduate
+            ],
+            'config': [
+                'modifier': 'year-graduate'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Grade field
+ * @param params {{
+ *     data: {
+ *         userFields: {
+ *             grade: {
+ *                 data: Object,
+ *                 config: Object,
+ *                 controlName: string
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .gradeField_}
+    {call .field}
+        {param params: [
+            'data': [
+                'field': $params.data.userFields.grade
+            ],
+            'config': [
+                'modifier': 'grade'
+            ]
+        ]/}
+    {/call}
 {/template}
 
 

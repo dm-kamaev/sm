@@ -1,0 +1,32 @@
+@import "../../../n-common/i-media/i-media";
+
+.g-modal_interaction.g-modal_default-theme {
+    .g-modal__content {
+        text-align: left;
+
+        font-family: 'Proxima', Arial, sans-serif;
+    }
+
+    .g-modal__section {
+        box-sizing: border-box;
+
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+
+    .g-modal__section_header {
+        padding-bottom: 25px;
+
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .g-modal__header {
+        margin-top: 55px;
+    }
+
+    .g-modal__button {
+        width: 240px;
+        margin: 50px auto;
+    }
+}

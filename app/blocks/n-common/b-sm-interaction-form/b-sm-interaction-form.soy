@@ -7,7 +7,8 @@
  *         data: Object,
  *         config: Object,
  *         controlName: string
- *     }>
+ *     }>,
+ *     id: ?(number|undefined)
  * }} sm.bSmInteractionForm.Template.Params.Data
  */
 
@@ -57,6 +58,26 @@
 
 
 /**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         contentName: ('smInteractionForm'|'smInteractionFormComment'),
+ *         url: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'id': $params.data.id
+            ]/}
+        {/call}"
+{/template}
+
+
+/**
  * Fields
  * @param params {{
  *     data: {
@@ -72,6 +93,43 @@
 {template .sectionFields}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_fields">
         {call .fields_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Field
+ * @param params {{
+ *     data: {
+ *         field: {
+ *             data: Object,
+ *             config: Object,
+ *             controlName: string
+ *         }
+ *     },
+ *     config: ({
+ *         modifier: string
+ *     }|undefined)
+ * }}
+ * @protected
+ */
+{template .field}
+    {let $classes kind="html"}
+        {call .rootClass/}__field-wrap
+
+        {if $params.config and $params.config.modifier}
+            {sp}{call .rootClass/}__field-wrap_{$params.config.modifier}
+        {/if}
+    {/let}
+    
+    <div class="{$classes}">
+        {call .title}
+            {param params: [
+                'title': $params.data.field.data.title
+            ] /}
+        {/call}
+
+        {call .fieldItem_ data="all" /}
     </div>
 {/template}
 
@@ -116,8 +174,12 @@
 {template .fields_}
     <div class="{call .rootClass/}__fields">
         {foreach $field in $params.data.fields}
-            {call .fieldWrap_}
-                {param params: $field /}
+            {call .field}
+                {param params: [
+                    'data': [
+                        'field': $field
+                    ]
+                ]/}
             {/call}
         {/foreach}
     </div>
@@ -125,57 +187,52 @@
 
 
 /**
- * Field wrap
+ * Field item
  * @param params {{
- *     data: Object,
- *     config: Object,
- *     controlName: string
+ *     data: {
+ *         field: {
+ *             data: Object,
+ *             config: Object,
+ *             controlName: string
+ *         }
+ *     },
+ *     config: ({
+ *         modifier: string
+ *     }|undefined)
  * }}
  */
-{template .fieldWrap_}
-    <div class="{call .rootClass/}__field-wrap">
-        {call .title}
-            {param params: [
-                'title': $params.data.title
-            ] /}
-        {/call}
+{template .fieldItem_}
+    {let $modifier kind="html"}
+        {if $params.config and $params.config.modifier}
+            {$params.config.modifier}
+        {else}
+            default
+        {/if}
+    {/let}
 
-        {call .field_ data="all" /}
-    </div>
-{/template}
-
-
-/**
- * Field
- * @param params {{
- *     data: Object,
- *     config: Object,
- *     controlName: string
- * }}
- */
-{template .field_}
     {let $customClasses kind="html"}
-        {call .rootClass/}__field-item
+        {call .rootClass/}__field-item{sp}
+        {call .rootClass/}__field-item_{$modifier}
     {/let}
 
     {let $config: augmentMap(
         [
             'customClasses': [$customClasses]
         ],
-        $params.config
+        $params.data.field.config
     ) /}
 
     <div class="{call .rootClass/}__field"{sp}
         data-params={call cl.iUtils.Utils.stringify}
-            {param json: ['name': $params.controlName]/}
+            {param json: ['name': $params.data.field.controlName]/}
         {/call}
     >
 
         {call .renderChild}
             {param params: [
-                'type': $params.controlName,
+                'type': $params.data.field.controlName,
                 'renderParams': [
-                    'data': $params.data,
+                    'data': $params.data.field.data,
                     'config': $config
                 ]
             ]/}

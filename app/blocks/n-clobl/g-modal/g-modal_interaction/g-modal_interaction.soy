@@ -42,7 +42,19 @@
  * @doc
  */
 {template .modal}
-    {call .init data="all" /}
+    {let $config: augmentMap(
+        [
+            'theme': 'default'
+        ],
+        $params.config
+    ) /}
+
+    {call .init}
+        {param params: [
+            'data': $params.data,
+            'config': $config
+        ] /}
+    {/call}
 {/template}
 
 
@@ -161,23 +173,21 @@
  */
 {template .sectionButton_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_button">
-        {let $customClasses kind="html"}
-            {call .rootClass/}__button
-        {/let}
-
-        {call .renderChild}
-            {param params: [
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': $params.data.button.text
-                    ],
-                    'config': [
-                        'theme': $params.data.button.theme
+        <div class="{call .rootClass/}__button">
+            {call .renderChild}
+                {param params: [
+                    'type': 'button',
+                    'renderParams': [
+                        'data': [
+                            'content': $params.data.button.text
+                        ],
+                        'config': [
+                            'theme': $params.data.button.theme
+                        ]
                     ]
-                ]
-            ]/}
-        {/call}
+                ]/}
+            {/call}
+        </div>
     </div>
 {/template}
 
