@@ -5,7 +5,7 @@ export interface UserDataAttributes {
     userType: string;
     grade?: number;
     yearGraduate: number;
-    userId: number;
+    userId?: number;
     key?: string;
     username?: string;
     createdAt?: string;

@@ -6,6 +6,7 @@ const services = require('../../../../app/components/services').all;
 
 import {UserDataAttributes, UserDataInstance} from '../types/userData';
 
+
 class UserDataService {
     public readonly name: string = 'userData';
 
@@ -33,14 +34,20 @@ class UserDataService {
     public async update(
             userDataId: number, data: UserDataAttributes
     ): Promise<UserDataInstance> {
-        const userData = await this.silentGetOne_(userDataId);
+        const userData = await this.getOne(userDataId);
 
         await userData.update(data);
 
         return userData;
     }
 
-    private async silentGetOne_(userDataId: number): Promise<UserDataInstance> {
+    public async delete(userDataId: number): Promise<void> {
+        const userData = await this.getOne(userDataId);
+
+        return await userData.destroy();
+    }
+
+    public async getOne(userDataId: number): Promise<UserDataInstance> {
         return await UserDataModel.findById(userDataId);
     }
 }
