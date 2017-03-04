@@ -191,7 +191,8 @@ goog.scope(function() {
     View.prototype.reduseHeightBody_ = function() {
         var height = Math.max(
             goog.dom.getWindow().innerHeight,
-            goog.dom.getViewportSize().height
+            goog.dom.getViewportSize().height,
+            goog.style.getSize(this.getElement()).height
         );
         goog.style.setHeight(goog.dom.getDocument().body, height);
     };
