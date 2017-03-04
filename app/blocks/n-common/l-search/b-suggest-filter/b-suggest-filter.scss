@@ -74,7 +74,8 @@
     box-shadow: inset 0 1px 6px #dbdbd4;
 }
 
-@include media-xs {
+
+@include media-s {
     .b-suggest-filter__section {
         padding-right: 30px;
         padding-left: 30px;
