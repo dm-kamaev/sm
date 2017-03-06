@@ -1,4 +1,6 @@
-var lodash = require('lodash');
+'use strict';
+
+const lodash = require('lodash');
 
 var specializedClassesView = {};
 
@@ -26,13 +28,7 @@ specializedClassesView.list = function(
         specializedClasses = specializedClassesView.withTypeName(
             schoolSpecializedClasses, specializedClassTypes
         );
-
-    var itemsData = [
-        specializedClassesView.itemsByClasses_(specializedClasses, 0, 4),
-        specializedClassesView.itemsByClasses_(specializedClasses, 5, 9),
-        specializedClassesView.itemsByClasses_(specializedClasses, 9, 11)
-    ];
-
+    const itemsData = specializedClassesView.getListClasses_(specializedClasses);
     var items = itemsData
             .map((data, index) => {
                 var step = steps[index];
@@ -68,31 +64,27 @@ specializedClassesView.withTypeName = function(
 
 
 /**
- * creates an array of the classes (from, to)
+ * creates an array of the profile classes
  * @param {Array<Array<(string|number)>>} specializedClasses
- * @param {number} start
- * @param {number} end
- * @return {Array<string>}
+ * [ [ 9, 'Социально-экономический' ] ]
+ * @return {Array<string>} [ [], [ 'Социально-экономический' ], [ 'Физ-мат' ] ]
  */
-specializedClassesView.itemsByClasses_ = function(
-    specializedClasses, start, end
-) {
-    var classes = lodash.filter(specializedClasses, function(collection) {
-        /** Element in array with index 0 means grade of pupils
-         * for current specialized class. If current specialized class
-         * between start and end => place it into result array **/
-        if (collection[0] >= start && collection[0] <= end) {
-            return collection[1];
+specializedClassesView.getListClasses_ = function (specializedClasses) {
+    const juniorSchool = [], middleSchool = [], highSchool = [];
+    const res = [juniorSchool, middleSchool, highSchool];
+    for (let i = 0, l = specializedClasses.length; i < l; i++) {
+        const specializedClass = specializedClasses[i];
+        const classNumber = specializedClass[0];
+        const className = specializedClass[1];
+        if (classNumber >= 0 && classNumber <= 4) {
+            juniorSchool.push(className);
+        } else if (classNumber >= 5 && classNumber <= 9) {
+            middleSchool.push(className);
+        } else if (classNumber >= 9 && classNumber <= 11) {
+            highSchool.push(className);
         }
-    });
-
-    var items = [];
-
-    lodash.forEach(classes, function(item) {
-        items.push(lodash.last(item));
-    });
-
-    return items;
+    }
+    return res;
 };
 
 /**

@@ -27,7 +27,8 @@ process.on('unhandledRejection', (reason, promise) => {
     logger
         .getLogger('app')
         .critical(
-            `Unhandled Rejection at: Promise ${promiseString} reason: ${reason}`
+            `Unhandled Rejection at: Promise ${promiseString}\n` +
+            `reason: ${reason.stack}`
         );
 });
 
