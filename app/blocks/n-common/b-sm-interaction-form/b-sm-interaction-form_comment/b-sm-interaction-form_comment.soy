@@ -5,24 +5,24 @@
  * @typedef {{
  *     userFields: {
  *         userType: {
- *             data: Object,
- *             config: Object,
+ *             data: sm.gDropdown.TemplateSelect.Params.Data,
+ *             config: sm.gDropdown.TemplateSelect.Params.Config,
  *             controlName: string
  *         },
  *         yearGraduate: {
- *             data: Object,
- *             config: Object,
+ *             data: sm.gInput.TemplateStendhal.Params.Data,
+ *             config: sm.gInput.TemplateStendhal.Params.Config,
  *             controlName: string
  *         },
  *         grade: {
- *             data: Object,
- *             config: Object,
+ *             data: sm.gDropdown.TemplateSelect.Params.Data,
+ *             config: sm.gDropdown.TemplateSelect.Params.Config,
  *             controlName: string
  *         }
  *     },
  *     fields: Array<{
- *         data: Object,
- *         config: Object,
+ *         data: sm.gTextarea.TemplateStendhal.Params.Data,
+ *         config: sm.gTextarea.TemplateStendhal.Params.Config,
  *         controlName: string
  *     }>,
  *     evaluations: {
@@ -31,7 +31,8 @@
  *            name: string,
  *            description: string
  *         }>
- *     }
+ *     },
+ *     id: ?(number|undefined)
  * }} sm.bSmInteractionForm.TemplateComment.Params.Data
  */
 
@@ -79,18 +80,18 @@
  *     data: {
  *         userFields: {
  *             userType: {
- *                 data: Object,
- *                 config: Object,
+ *                 data: sm.gDropdown.TemplateSelect.Params.Data,
+ *                 config: sm.gDropdown.TemplateSelect.Params.Config,
  *                 controlName: string
  *             },
  *             yearGraduate: {
- *                 data: Object,
- *                 config: Object,
+ *                 data: sm.gInput.TemplateStendhal.Params.Data,
+ *                 config: sm.gInput.TemplateStendhal.Params.Config,
  *                 controlName: string
  *             },
  *             grade: {
- *                 data: Object,
- *                 config: Object,
+ *                 data: sm.gDropdown.TemplateSelect.Params.Data,
+ *                 config: sm.gDropdown.TemplateSelect.Params.Config,
  *                 controlName: string
  *             }
  *         }
@@ -146,8 +147,8 @@
  *     data: {
  *         userFields: {
  *             userType: {
- *                 data: Object,
- *                 config: Object,
+ *                 data: sm.gDropdown.TemplateSelect.Params.Data,
+ *                 config: sm.gDropdown.TemplateSelect.Params.Config,
  *                 controlName: string
  *             }
  *         }
@@ -173,9 +174,12 @@
  * @param params {{
  *     data: {
  *         userFields: {
+ *             userType: {
+ *                 data: sm.gDropdown.TemplateSelect.Params.Data
+ *             },
  *             yearGraduate: {
- *                 data: Object,
- *                 config: Object,
+ *                 data: sm.gInput.TemplateStendhal.Params.Data,
+ *                 config: sm.gInput.TemplateStendhal.Params.Config,
  *                 controlName: string
  *             }
  *         }
@@ -183,13 +187,18 @@
  * }}
  */
 {template .yearGraduateField_}
+    {let $selectedUserType kind="html"}
+        {call .selectedUserType_ data="all" /}
+    {/let}
+
     {call .field}
         {param params: [
             'data': [
                 'field': $params.data.userFields.yearGraduate
             ],
             'config': [
-                'modifier': 'year-graduate'
+                'modifier': 'year-graduate',
+                'isHidden': not ($selectedUserType == 'Graduate')
             ]
         ]/}
     {/call}
@@ -201,9 +210,12 @@
  * @param params {{
  *     data: {
  *         userFields: {
+ *             userType: {
+ *                 data: sm.gDropdown.TemplateSelect.Params.Data
+ *             },
  *             grade: {
- *                 data: Object,
- *                 config: Object,
+ *                 data: sm.gDropdown.TemplateSelect.Params.Data,
+ *                 config: sm.gDropdown.TemplateSelect.Params.Config,
  *                 controlName: string
  *             }
  *         }
@@ -211,16 +223,52 @@
  * }}
  */
 {template .gradeField_}
+    {let $selectedUserType kind="html"}
+        {call .selectedUserType_ data="all" /}
+    {/let}
+
     {call .field}
         {param params: [
             'data': [
                 'field': $params.data.userFields.grade
             ],
             'config': [
-                'modifier': 'grade'
+                'modifier': 'grade',
+                'isHidden': not ($selectedUserType == 'Student')
             ]
         ]/}
     {/call}
+{/template}
+
+
+/**
+ * Return selected user type
+ * @param params {{
+ *     data: {
+ *         userFields: {
+ *             userType: {
+ *                 data: {
+ *                     content: {
+ *                         items: Array<{
+ *                             label: string,
+ *                             value: string,
+ *                             isSelected: boolean
+ *                         }>
+ *                     }
+ *                 }
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .selectedUserType_}
+    {foreach $userTypeItem in
+        $params.data.userFields.userType?.data?.content?.items}
+
+        {if $userTypeItem and $userTypeItem.isSelected}
+            {$userTypeItem.value}
+        {/if}
+    {/foreach}
 {/template}
 
 
@@ -276,7 +324,8 @@
                         ],
                         'config': [
                             'isActive': true,
-                            'theme': 'neptune'
+                            'theme': 'neptune',
+                            'size': 's'
                         ]
                     ]
                 ]/}

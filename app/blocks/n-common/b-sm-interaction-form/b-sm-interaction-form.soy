@@ -4,8 +4,14 @@
 /**
  * @typedef {{
  *     fields: Array<{
- *         data: Object,
- *         config: Object,
+ *         data: (
+ *             sm.gTextarea.TemplateStendhal.Params.Data|
+ *             sm.gInput.TemplateStendhal.Params.Data
+ *         ),
+ *         config: (
+ *             sm.gTextarea.TemplateStendhal.Params.Config|
+ *             sm.gInput.TemplateStendhal.Params.Config
+ *         ),
  *         controlName: string
  *     }>,
  *     id: ?(number|undefined)
@@ -61,8 +67,7 @@
  * Attributes
  * @param params {{
  *     data: {
- *         contentName: ('smInteractionForm'|'smInteractionFormComment'),
- *         url: string
+ *         id: ?(number|undefined)
  *     }
  * }}
  * @override
@@ -82,8 +87,14 @@
  * @param params {{
  *     data: {
  *         fields: Array<{
- *             data: Object,
- *             config: Object,
+ *             data: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Data|
+ *                 sm.gInput.TemplateStendhal.Params.Data
+ *             ),
+ *             config: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Config|
+ *                 sm.gInput.TemplateStendhal.Params.Config
+ *             ),
  *             controlName: string
  *         }>
  *     }
@@ -102,13 +113,20 @@
  * @param params {{
  *     data: {
  *         field: {
- *             data: Object,
- *             config: Object,
+ *             data: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Data|
+ *                 sm.gInput.TemplateStendhal.Params.Data
+ *             ),
+ *             config: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Config|
+ *                 sm.gInput.TemplateStendhal.Params.Config
+ *             ),
  *             controlName: string
  *         }
  *     },
  *     config: ({
- *         modifier: string
+ *         modifier: ?string,
+ *         isHidden: boolean
  *     }|undefined)
  * }}
  * @protected
@@ -117,8 +135,12 @@
     {let $classes kind="html"}
         {call .rootClass/}__field-wrap
 
-        {if $params.config and $params.config.modifier}
+        {if $params.config?.modifier}
             {sp}{call .rootClass/}__field-wrap_{$params.config.modifier}
+        {/if}
+
+        {if $params.config?.isHidden}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
         {/if}
     {/let}
     
@@ -164,8 +186,14 @@
  * @param params {{
  *     data: {
  *         fields: Array<{
- *             data: Object,
- *             config: Object,
+ *             data: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Data|
+ *                 sm.gInput.TemplateStendhal.Params.Data
+ *             ),
+ *             config: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Config|
+ *                 sm.gInput.TemplateStendhal.Params.Config
+ *             ),
  *             controlName: string
  *         }>
  *     }
@@ -191,8 +219,14 @@
  * @param params {{
  *     data: {
  *         field: {
- *             data: Object,
- *             config: Object,
+ *             data: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Data|
+ *                 sm.gInput.TemplateStendhal.Params.Data
+ *             ),
+ *             config: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Config|
+ *                 sm.gInput.TemplateStendhal.Params.Config
+ *             ),
  *             controlName: string
  *         }
  *     },
