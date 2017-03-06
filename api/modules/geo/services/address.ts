@@ -9,14 +9,17 @@ const logger = require('../../../../app/components/logger/logger')
 const entityTypes = require('../../entity/enums/entityType');
 
 import {geoTools} from '../../../../console/modules/geoTools/geoTools';
-import {AddressInstance} from '../types/address';
+import {AddressInstance, AddressAttribute} from '../types/address';
 import {Model as AddressModel} from '../models/address';
+import {Model as AreaModel} from '../models/area';
+
+import {service as cityService} from './city';
 
 import {AddressIsNotUnique} from './exceptions/AddressIsNotUnique';
 import {AddressDepartmentExist} from './exceptions/AddressDepartmentExist';
 
 const SEARCH_RADIUS = 3; // killometrs, search radius for metro
-
+const DEFAULT_CITY_ID = 2; // default id in database related to 'Москва'
 
 class AddressService {
     public readonly name: string = 'address';
@@ -70,7 +73,8 @@ class AddressService {
             data.entityType = entityType;
             if (!data.coords) {
                 const coords: Array<Number> = await services.yapi.getCoords(
-                    'Москва, ' + data.name,
+                    'Москва',
+                    data.name,
                     true
                 );
                 data.coords = coords;
@@ -98,6 +102,28 @@ class AddressService {
         return address;
     }
 
+    public async findOrCreateByName(name: string, cityId?: number):
+            Promise<AddressInstance> {
+        cityId = cityId || DEFAULT_CITY_ID;
+        let address = await AddressModel.findOne({
+            where: {
+                name: name
+            },
+            include: [{
+                model: AreaModel,
+                as: 'area'
+            }]
+        });
+        if (!address || address.area.cityId !== cityId) {
+            address = await this.fullCreate(
+                {
+                    name: name
+                },
+                cityId
+            );
+        }
+        return address;
+    }
 
     /**
      * Update address data
@@ -191,7 +217,8 @@ class AddressService {
         metroArr.forEach(async metro => {
             const ourMetro = await models.Metro.findOne({
                 where: {
-                    name: metro.name
+                    name: metro.name,
+                    cityId: metro.cityId
                 }
             });
 
@@ -200,7 +227,8 @@ class AddressService {
             } else {
                 await address.createMetroStation({
                     name: metro.name,
-                    coords: metro.coords
+                    coords: metro.coords,
+                    cityId: metro.cityId
                 });
             }
         });
@@ -343,7 +371,7 @@ class AddressService {
     public async setDistance(address) {
         const addressMetros = await models.AddressMetro.findAll({
             where: {
-                addressId: address.id,
+                addressId: address.id
             }
         });
 
@@ -396,6 +424,40 @@ class AddressService {
         });
     }
 
+    private async fullCreate(data: AddressAttribute, cityId: number):
+            Promise<AddressInstance> {
+        const city = await cityService.get(cityId);
+        if (!data.coords) {
+            const coords: Array<number> = await services.yapi.getCoords(
+                city.name,
+                data.name,
+                true
+            );
+            data.coords = coords;
+        }
+
+        if (!data.areaId) {
+            const areas = await services.area.create({
+                name: await geoTools.getArea(data.coords),
+                    // area name from coords
+                cityId: city.id
+            });
+            data.areaId = areas[0].id;
+        }
+
+        const address = await models.Address.create(data);
+
+        const metros = await geoTools.getMetros(data.coords, SEARCH_RADIUS);
+        const metrosData = metros.map(metro => {
+            metro.cityId = city.id;
+            return metro;
+        });
+
+        await this.setMetro(address, metrosData);
+        await this.setDistance(address);
+
+        return address;
+    }
 
     private async isExistDepartmentForAddress_(
         entityId: number,
@@ -429,8 +491,6 @@ class AddressService {
         }
         return result;
     }
-
-
 }
 
 export const service = new AddressService();

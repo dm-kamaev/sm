@@ -4,10 +4,7 @@ import {
     UniversityAttribute
 } from '../models/University';
 
-const cityModel = require('../../geo/models/city');
-const sequelize = require('../../../../app/components/db.js');
-const logger =
-    require('../../../../app/components/logger/logger').getLogger('app');
+import {Model as CityModel} from '../../geo/models/city';
 
 
 import {UniversityPageInstance} from '../models/UniversityPage';
@@ -25,13 +22,13 @@ class UniversityService {
     public async get(id: number): Promise<UniversityInstance> {
         const university: UniversityInstance = await UniversityModel.findOne({
             attributes: {
-                exclude: ['cityId', 'city_id']
+                exclude: ['city_id']
             },
             where: {
                 id: id
             },
             include: [{
-                model: cityModel,
+                model: CityModel,
                 as: 'city'
             }]
         });
@@ -65,4 +62,3 @@ class UniversityService {
 }
 
 export const service = new UniversityService();
-

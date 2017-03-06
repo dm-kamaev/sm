@@ -86,7 +86,7 @@ service.create = function(data) {
         data.addresses.forEach(address => {
             if (!address.coords) {
                 var coords = await(
-                        services.yapi.getCoords('Москва, ' + address.name)
+                        services.yapi.getCoords('Москва', address.name)
                     );
                 address.coords = coords;
             }

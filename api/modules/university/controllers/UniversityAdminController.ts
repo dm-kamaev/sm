@@ -38,7 +38,7 @@ class UniversityAdminController extends Controller {
      *     It has {width} parameter in it, which should be replaced for required
      *     width size in px.
      * @apiSuccess {String[]} -.links              Array of links
-     *     (official site, facebook communities)
+     *     (official site, facebook communities).
      * @apiSuccess {Boolean}  -.militaryDepartment Military department.
      * @apiSuccess {Boolean}  -.dormitory          Dormitory.
      * @apiSuccess {Object}   -.cityId             City's id.
@@ -66,7 +66,7 @@ class UniversityAdminController extends Controller {
      *     It has {width} parameter in it, which should be replaced for required
      *     width size in px.
      * @apiSuccess {String[]} links              Array of links
-     *     (official site, facebook communities)
+     *     (official site, facebook communities).
      * @apiSuccess {Boolean}  militaryDepartment Military department.
      * @apiSuccess {Boolean}  dormitory          Dormitory.
      * @apiSuccess {Object}   city               City object.
@@ -97,7 +97,7 @@ class UniversityAdminController extends Controller {
      * @apiParam {String}   abbreviation       Abbreviation.
      * @apiParam {String}   description        Description.
      * @apiParam {String[]} links              Array of links
-     *     (official site, facebook communities)
+     *     (official site, facebook communities).
      * @apiParam {Boolean}  militaryDepartment Military department.
      * @apiParam {Boolean}  dormitory          Dormitory.
      * @apiParam {Number}   cityId             City's id.

@@ -28,4 +28,10 @@ export interface ProgramInstance
     getAddresses: Sequelize.BelongsToManyGetAssociationsMixin<
             AddressInstance
         >;
+    setAddresses: Sequelize.BelongsToManyAddAssociationsMixin<
+        AddressInstance, number, AddressAttribute>;
+}
+
+export interface ProgramAdmin extends ProgramAttribute {
+    addressName?: string;
 }

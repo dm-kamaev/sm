@@ -8,6 +8,8 @@ import {
     ProgramInstance
 } from '../types/program';
 
+import {AddressInstance} from '../../geo/types/address';
+
 interface ProgramModel
     extends Sequelize.Model<ProgramInstance, ProgramAttribute> {}
 

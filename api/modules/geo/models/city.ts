@@ -1,7 +1,12 @@
-var DataType = require('sequelize'),
-    db = require('../../../../app/components/db');
+const DataType = require('sequelize');
+const db = require('../../../../app/components/db');
 
-var City = db.define('City', {
+import * as Sequelize from 'sequelize/v3';
+import {CityAttribute, CityInstance} from '../types/city';
+
+interface CityModel extends Sequelize.Model<CityInstance, CityAttribute> {}
+
+const City: CityModel = db.define('City', {
     name: DataType.STRING,
 }, {
     underscored: true,
@@ -20,4 +25,4 @@ var City = db.define('City', {
     }
 });
 
-module.exports = City;
+export {City as Model};

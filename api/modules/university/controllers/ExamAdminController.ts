@@ -49,6 +49,8 @@ class ExamAdminController extends Controller {
      * @apiSuccess {Boolean} isMain      Is that exam main.
      * @apiSuccess {String}  createdAt   Created at.
      * @apiSuccess {String}  updatedAt   Updated at.
+     *
+     * @apiError (404) ExamNotFound Exam with given Id not found.
      */
     public async actionGet(actionContext: any, programId: string, id: string) {
         return examService.get(Number(id));

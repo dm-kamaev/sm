@@ -52,7 +52,9 @@ api/components/interface.js
 
 api/modules/comment/types/**/*.js
 api/modules/comment/migrations/20170227134914-create-university-comments.js
+api/modules/comment/models/commentGroup.js
 api/modules/comment/models/UniversityComment.js
+api/modules/comment/services/commentGroup.js
 
 api/modules/entity/services/page.js
 
@@ -61,11 +63,13 @@ api/modules/course/models/courseBrand.js
 
 api/modules/geo/interfaces/*.js
 api/modules/geo/models/address.js
+api/modules/geo/models/area.js
+api/modules/geo/models/city.js
 api/modules/geo/models/department.js
 api/modules/geo/models/metro.js
-api/modules/geo/models/area.js
 api/modules/geo/services/exceptions/*.js
 api/modules/geo/services/address.js
+api/modules/geo/services/city.js
 api/modules/geo/services/department.js
 api/modules/geo/views/departmentView.js
 api/modules/geo/types/**/*.js

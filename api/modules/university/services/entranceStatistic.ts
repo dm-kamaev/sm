@@ -6,14 +6,14 @@ import {
 
 const subjectService = require('../../study/services/subject');
 
-const EXCLUDE_ATTRIBUTES = ['created_at', 'updated_at', 'program_id'];
+const EXCLUDE_FIELDS = ['created_at', 'updated_at', 'program_id'];
 
 class EntranceStatisticService {
     public async getByProgramId(programId: number):
             Promise<Array<EntranceStatisticAttribute>> {
         return EntranceStatisticModel.findAll({
             attributes: {
-                exclude: EXCLUDE_ATTRIBUTES
+                exclude: EXCLUDE_FIELDS
             },
             where: {
                 programId: programId
@@ -24,7 +24,7 @@ class EntranceStatisticService {
     public async get(id: number): Promise<EntranceStatisticAttribute> {
         return EntranceStatisticModel.findOne({
             attributes: {
-                exclude: EXCLUDE_ATTRIBUTES
+                exclude: EXCLUDE_FIELDS
             },
             where: {
                 id: id

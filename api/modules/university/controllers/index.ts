@@ -16,6 +16,9 @@ const profileAdminController = new ProfileAdminController();
 import {UniversityAdminController} from './UniversityAdminController';
 const universityAdminController = new UniversityAdminController();
 
+import {ProgramAdminController} from './ProgramAdminController';
+const programAdminController = new ProgramAdminController();
+
 import {ExamAdminController} from './ExamAdminController';
 const examAdminController = new ExamAdminController();
 
@@ -52,6 +55,10 @@ const initCrudRouting = function(route: string, controller: any): void {
 
 initCrudRouting('/admin/profile', profileAdminController);
 initCrudRouting('/admin/university', universityAdminController);
+initCrudRouting(
+    '/admin/university/:universityId/program',
+    programAdminController
+);
 initCrudRouting('/admin/program/:programId/exam', examAdminController);
 initCrudRouting(
     '/admin/program/:programId/statistic',
