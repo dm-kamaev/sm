@@ -45,34 +45,117 @@ view.render = function(data) {
                 text: 'Оставьте ваш отзыв'
             },
             content: {
+                userFields: {
+                    userType: {
+                        data: {
+                            name: 'userType',
+                            defaultOpenerText: 'Кто вы?',
+                            content: {
+                                items: [{
+                                    label: 'Выпускник',
+                                    value: 'Graduate'
+                                },
+                                {
+                                    label: 'Студент',
+                                    value: 'Student'
+                                }]
+                            }
+                        },
+                        config: {
+                            iconName: 'blue-arrow',
+                            iconType: 'icon-svg',
+                            theme: 'light'
+                        },
+                        controlName: 'dropdown-select'
+                    },
+                    yearGraduate: {
+                        data: {
+                            name: 'yearGraduate',
+                            placeholder: 'Укажите год выпуска'
+                        },
+                        config: {
+                            theme: 'thin'
+                        },
+                        controlName: 'input'
+                    },
+                    grade: {
+                        data: {
+                            name: 'grade',
+                            defaultOpenerText: 'Укажите курс',
+                            content: {
+                                items: [{
+                                    label: 1,
+                                    value: 1
+                                },
+                                {
+                                    label: 2,
+                                    value: 2
+                                },
+                                {
+                                    label: 3,
+                                    value: 3
+                                },{
+                                    label: 4,
+                                    value: 4
+                                },
+                                {
+                                    label: 5,
+                                    value: 5
+                                },
+                                {
+                                    label: 6,
+                                    value: 6
+                                }]
+                            }
+                        },
+                        config: {
+                            iconName: 'blue-arrow',
+                            iconType: 'icon-svg',
+                            theme: 'light'
+                        },
+                        controlName: 'dropdown-select'
+                    }
+                },
                 fields: [{
                     data: {
                         title: 'Что понравилось',
                         name: 'pros',
-                        placeholder: 'Ваш комментарий'
+                        placeholder: 'Ваш комментарий',
+                        maxLength: 500
                     },
                     config: {
-                        maxLength: 500
+                        showCounter: true,
+                        autoHeight: true,
+                        theme: 'thin',
+                        minHeight: 'large'
                     },
                     controlName: 'textarea'
                 }, {
                     data: {
                         title: 'Не понравилось',
                         name: 'cons',
-                        placeholder: 'Ваш комментарий'
+                        placeholder: 'Ваш комментарий',
+                        maxLength: 500
                     },
                     config: {
-                        maxLength: 500
+                        showCounter: true,
+                        autoHeight: true,
+                        theme: 'thin',
+                        minHeight: 'large'
                     },
                     controlName: 'textarea'
                 }, {
                     data: {
                         title: 'Какой совет можешь дать поступающим?',
                         name: 'advice',
-                        placeholder: 'Ваш комментарий'
+                        placeholder: 'Ваш комментарий',
+                        maxLength: 500
                     },
                     config: {
-                        maxLength: 500
+                        showCounter: true,
+                        autoHeight: true,
+                        theme: 'thin',
+                        minHeight: 'large'
                     },
                     controlName: 'textarea'
                 }],
@@ -106,7 +189,12 @@ view.render = function(data) {
             contentName: 'smInteractionFormComment',
             button: {
                 text: 'Оставить отзыв',
-                theme: 'neptune'
+                theme: 'neptune-fill',
+                borderRound: 'l'
+            },
+            closer: {
+                iconName: 'blue-close',
+                iconType: 'icon-svg'
             }
         },
         footer: footerView.render()
