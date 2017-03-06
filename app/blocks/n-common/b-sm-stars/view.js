@@ -118,7 +118,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.getSelectedStarsAmount_ = function() {
-        return this.dom.selectedStars.length;
+        return this.dom.selectedStars ? this.dom.selectedStars.length : null;
     };
 
 
