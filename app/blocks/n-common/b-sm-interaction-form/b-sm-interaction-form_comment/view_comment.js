@@ -1,5 +1,6 @@
 goog.provide('sm.bSmInteractionForm.ViewComment');
 
+goog.require('cl.iUtils.Utils');
 goog.require('sm.bSmInteractionForm.View');
 
 
@@ -26,7 +27,7 @@ goog.scope(function() {
         sm.bSmInteractionForm.ViewComment,
         sm.bSmInteractionForm.View
     );
-    var ViewComment = sm.bSmInteractionForm.ViewComment;
+    View = sm.bSmInteractionForm.ViewComment;
 
 
     /**
@@ -34,8 +35,50 @@ goog.scope(function() {
      * @enum {string}
      * @const
      */
-    ViewComment.CssClass = {
-        ROOT: 'b-sm-interaction-form_comment'
+    View.CssClass = {
+        ROOT: 'b-sm-interaction-form_comment',
+        FIELD_YEAR_WRAP: 'b-sm-interaction-form__field-wrap_year-graduate',
+        FIELD_GRADE_WRAP: 'b-sm-interaction-form__field-wrap_grade',
+        FIELD_DEFAULT: 'b-sm-interaction-form__field-item_default',
+        FIELD_USER_TYPE: 'b-sm-interaction-form__field-item_user-type',
+        FIELD_YEAR: 'b-sm-interaction-form__field-item_year-graduate',
+        FIELD_GRADE: 'b-sm-interaction-form__field-item_grade'
+    };
+
+
+    /**
+     * Set year field visibility
+     * @param {boolean} visible
+     * @public
+     */
+    View.prototype.setYearFieldVisibility = function(visible) {
+        visible ?
+            goog.dom.classlist.remove(
+                this.dom.yearFieldWrap,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classlist.add(
+                this.dom.yearFieldWrap,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+    };
+
+
+    /**
+     * Set grade field visibility
+     * @param {boolean} visible
+     * @public
+     */
+    View.prototype.setGradeFieldVisibility = function(visible) {
+        visible ?
+            goog.dom.classlist.remove(
+                this.dom.gradeFieldWrap,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classlist.add(
+                this.dom.gradeFieldWrap,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
     };
 
 
@@ -44,8 +87,8 @@ goog.scope(function() {
      * @protected
      * @override
      */
-    ViewComment.prototype.decorateInternal = function(element) {
-        ViewComment.base(this, 'decorateInternal', element);
+    View.prototype.decorateInternal = function(element) {
+        View.base(this, 'decorateInternal', element);
 
         this.initDom_();
     };
@@ -55,7 +98,31 @@ goog.scope(function() {
      * Init dom elements
      * @private
      */
-    ViewComment.prototype.initDom_ = function() {
+    View.prototype.initDom_ = function() {
+        this.dom.yearFieldWrap = this.getElementByClass(
+            View.CssClass.FIELD_YEAR_WRAP
+        );
+
+        this.dom.gradeFieldWrap = this.getElementByClass(
+            View.CssClass.FIELD_GRADE_WRAP
+        );
+
+        this.dom.userTypeField = this.getElementByClass(
+            View.CssClass.FIELD_USER_TYPE
+        );
+
+        this.dom.yearField = this.getElementByClass(
+            View.CssClass.FIELD_YEAR
+        );
+
+        this.dom.gradeField = this.getElementByClass(
+            View.CssClass.FIELD_GRADE
+        );
+
+        this.dom.fields = this.getElementsByClass(
+            View.CssClass.FIELD_DEFAULT
+        );
+
         this.dom.stars = this.getElementsByClass(
             sm.bSmStars.View.CssClass.ROOT
         );

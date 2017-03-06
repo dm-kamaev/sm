@@ -3,6 +3,8 @@ goog.provide('sm.bSmInteractionForm.SmInteractionFormComment');
 goog.require('sm.bSmInteractionForm.SmInteractionForm');
 goog.require('sm.bSmInteractionForm.ViewComment');
 goog.require('sm.bSmStars.SmStars');
+goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.gInput.InputStendhal');
 
 
 goog.scope(function() {
@@ -25,6 +27,30 @@ goog.scope(function() {
 
 
         /**
+         * User type field instance
+         * @type {sm.gDropdown.DropdownSelect}
+         * @private
+         */
+        this.userTypeField_ = null;
+
+
+        /**
+         * Year graduate instance
+         * @type {sm.gInput.InputStendhal}
+         * @private
+         */
+        this.yearField_ = null;
+
+
+        /**
+         * User type field instance
+         * @type {sm.gDropdown.DropdownSelect}
+         * @private
+         */
+        this.gradeField_ = null;
+
+
+        /**
          * Instance stars
          * @type {Array<sm.smStars.Stars>}
          * @private
@@ -40,14 +66,12 @@ goog.scope(function() {
 
 
     /**
-     * @param {Element} element
-     * @protected
-     * @override
+     * User type enum
+     * @enum {string}
      */
-    InteractionForm.prototype.decorateInternal = function(element) {
-        InteractionForm.base(this, 'decorateInternal', element);
-
-        this.initEvaluations_();
+    InteractionForm.UserType = {
+        GRADUATE: 'Graduate',
+        STUDENT: 'Student'
     };
 
 
@@ -57,6 +81,155 @@ goog.scope(function() {
      */
     InteractionForm.prototype.enterDocument = function() {
         InteractionForm.base(this, 'enterDocument');
+
+        this.initUserFieldsListeners_();
+    };
+
+
+    /**
+     * Get data
+     * @return {Object<string, (string|number|Array<(string|number)>)>}
+     * @override
+     * @public
+     */
+    InteractionForm.prototype.getData = function() {
+        var data = InteractionForm.base(this, 'getData'),
+            userData = this.getUserData_(),
+            evaluationsData = this.getEvaluationsData_();
+
+        goog.object.extend(data, userData, evaluationsData);
+        console.log('data', data);
+        return data;
+    };
+
+
+    /**
+     * Validate all fields
+     * @return {boolean}
+     * @override
+     * @public
+     */
+    InteractionForm.prototype.validate = function() {
+        var isValidFields = InteractionForm.base(this, 'validate');
+        return null;
+    };
+
+
+    /**
+     * Clear all fields
+     * @override
+     * @public
+     */
+    InteractionForm.prototype.clear = function() {
+        InteractionForm.base(this, 'clear');
+    };
+
+
+    /**
+     * @param {Element} element
+     * @protected
+     * @override
+     */
+    InteractionForm.prototype.decorateInternal = function(element) {
+        InteractionForm.base(this, 'decorateInternal', element);
+
+        this.initUserFields_();
+        this.initEvaluations_();
+    };
+
+
+    /**
+     * Init user fields listeners
+     * @private
+     */
+    InteractionForm.prototype.initUserFieldsListeners_ = function() {
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.userTypeField_,
+            sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+            this.onUserTypeSelect_
+        );
+    };
+
+
+    /**
+     * Handler select item of user type
+     * @private
+     */
+    InteractionForm.prototype.onUserTypeSelect_ = function() {
+        var userType = this.userTypeField_.getValue();
+
+        if (userType == InteractionForm.UserType.GRADUATE) {
+            this.getView().setYearFieldVisibility(true);
+            this.getView().setGradeFieldVisibility(false);
+        }
+        else if (userType == InteractionForm.UserType.STUDENT) {
+            this.getView().setYearFieldVisibility(false);
+            this.getView().setGradeFieldVisibility(true);
+        }
+    };
+
+
+    /**
+     * Get user data
+     * @return {Object<string, (string|number|Array<(string|number)>)>}
+     * @private
+     */
+    InteractionForm.prototype.getUserData_ = function() {
+        var data = {};
+
+        var userTypeFieldName = this.userTypeField_.getName(),
+            userType = this.userTypeField_.getValue();
+
+        data[userTypeFieldName] = userType;
+
+        if (userType == InteractionForm.UserType.GRADUATE) {
+            var yearFieldName = this.yearField_.getName();
+            data[yearFieldName] = this.yearField_.getValue();
+        }
+        else if (userType == InteractionForm.UserType.STUDENT) {
+            var gradeFieldName = this.gradeField_.getName();
+            data[gradeFieldName] = this.gradeField_.getValue();
+        }
+
+        return data;
+    };
+
+
+    /**
+     * Get evaluations
+     * @return {Object<string, (string|number|Array<(string|number)>)>}
+     * @private
+     */
+    InteractionForm.prototype.getEvaluationsData_ = function() {
+        var score = this.stars_.map(function(star) {
+            return star.getValue() || 0;
+        });
+
+        var hasValues = score.some(function(value) {
+            return value > 0;
+        });
+
+        return {
+            'score': hasValues ? score : null
+        };
+    };
+
+
+    /**
+     * Initializes instance to use for evaluations
+     * @private
+     */
+    InteractionForm.prototype.initUserFields_ = function() {
+        var userTypeField = this.getView().getDom().userTypeField;
+        this.userTypeField_ = this.getFieldInstance(userTypeField);
+
+        var yearField = this.getView().getDom().yearField;
+        this.yearField_ = this.getFieldInstance(yearField);
+
+        var gradeField = this.getView().getDom().gradeField;
+        this.gradeField_ = this.getFieldInstance(gradeField);
     };
 
 

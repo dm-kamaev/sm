@@ -86,6 +86,18 @@ goog.scope(function() {
 
 
     /**
+     * Get instance of field
+     * @param {Element} domElement
+     * @return {Object}
+     * @protected
+     */
+    InteractionForm.prototype.getFieldInstance = function(domElement) {
+        var controlName = this.getView().getFieldControlName(domElement);
+        return this.decorateChild(controlName, domElement);
+    };
+
+
+    /**
      * Initializes instance of fields
      * @private
      */
@@ -96,10 +108,7 @@ goog.scope(function() {
         );
 
         this.fields = fields.map(function(field) {
-            var controlName = this.getView().getFieldControlName(field);
-            return this.decorateChild(controlName, field);
+            return this.getFieldInstance(field);
         }, this);
-
-        console.log('this.fields', this.fields);
     };
 });  // goog.scope
