@@ -19,6 +19,7 @@ goog.require('sm.bSmButtonLink.Template');
 goog.require('sm.bSmCatalog.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
+goog.require('sm.bSmComment.Template');
 goog.require('sm.bSmContacts.Template');
 goog.require('sm.bSmEmbed.Template');
 goog.require('sm.bSmExpander.Template');
@@ -37,6 +38,7 @@ goog.require('sm.bSmListPaged.Template');
 goog.require('sm.bSmMap.Template');
 goog.require('sm.bSmMark.Template');
 goog.require('sm.bSmRadioButton.Template');
+goog.require('sm.bSmRowLinks.Template');
 goog.require('sm.bSmScore.Template');
 goog.require('sm.bSmScore.TemplateBrief');
 goog.require('sm.bSmSearchPanel.Template');
@@ -92,6 +94,7 @@ goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bLabel.Template');
 goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSuggestFilter.Template');
+goog.require('sm.lUniversity.bCommentList.Template');
 goog.require('sm.lUniversity.bDescriptionList.Template');
 
 
@@ -397,6 +400,14 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smInteractionFormComment',
             sm.bSmInteractionForm.TemplateComment.interactionForm
+        )
+        .setTemplateListItem(
+            'smComment',
+            sm.bSmComment.Template.comment
+        )
+        .setTemplateListItem(
+            'smRowLinks',
+            sm.bSmRowLinks.Template.rowLinks
         );
 
     /** l-information blocks **/
@@ -459,7 +470,7 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.lSearch.bSearchResults.Template.searchResults
         );
 
-        /** l-course blocks */
+    /** l-course blocks */
     this.setTemplateListItem(
             'lCourse-informationBoard',
             sm.lCourse.bInformationBoard.Template.informationBoard
@@ -481,6 +492,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
     this.setTemplateListItem(
             'lUniversity-descriptionList',
             sm.lUniversity.bDescriptionList.Template.descriptionList
+        )
+        .setTemplateListItem(
+            'lUniversity-commentList',
+            sm.lUniversity.bCommentList.Template.commentList
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

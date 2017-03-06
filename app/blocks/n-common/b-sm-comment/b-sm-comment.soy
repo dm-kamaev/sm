@@ -1,0 +1,150 @@
+{namespace sm.bSmComment.Template}
+
+
+/**
+ * @typedef {{
+ *     author: {
+ *         photoUrl: string,
+ *         name: string,
+ *         status: string
+ *     },
+ *     score: number,
+ *     text: Array<{
+ *         header: string,
+ *         description: string
+ *     }>
+ * }} sm.bSmComment.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ * }} sm.bSmComment.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmComment.Template.Params.Data,
+ *     config: sm.bSmComment.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .comment}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmComment.Template.Params.Data,
+ *     config: sm.bSmComment.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .author_ data="all" /}
+    {call .text_ data="all" /}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-comment
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         author: {
+ *             photoUrl: string,
+ *             name: string,
+ *             status: string
+ *         },
+ *         score: number
+ *     }
+ * }}
+ */
+{template .author_}
+    <div class="{call .rootClass /}__author">
+        <div class="{call .rootClass /}__author-photo-wrap">
+            {if $params.data.author.photoUrl}
+                <img class="{call .rootClass /}__author-photo"
+                    src="{$params.data.author.photoUrl}"
+                />
+            {else}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'icon-svg',
+                        'renderParams': [
+                            'data': [
+                                'type': 'graduate'
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            {/if}
+        </div>
+
+        <div class="{call .rootClass /}__author-data">
+            <div class="{call .rootClass /}__author-name">
+                {$params.data.author.name}
+            </div>
+
+            <div class="{call .rootClass /}__author-status">
+                , {$params.data.author.status}
+            </div>
+        </div>
+
+        <div class="{call .rootClass /}__score">
+            // {call .score_ data="all"}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         text: Array<{
+ *             header: string,
+ *             description: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .text_}
+    <div class="{call .rootClass /}__text">
+        {foreach $paragraph in $params.data.text}
+            {call .paragraph_}
+                {param paragraph: $paragraph /}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * @param paragraph {{
+ *     header: string,
+ *     description: string
+ * }}
+ */
+{template .paragraph_}
+    <div class="{call .rootClass /}__paragraph">
+        <div class="{call .rootClass /}__paragraph-header">
+            {$paragraph.header}
+        </div>
+
+        <div class="{call .rootClass /}__paragraph-description">
+            {$paragraph.description}
+        </div>
+    </div>
+{/template}

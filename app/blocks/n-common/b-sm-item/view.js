@@ -69,7 +69,8 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-item',
         COVER_IMAGE: 'b-sm-item__cover-image',
-        NAME_LINK: 'b-sm-item__link-name'
+        NAME_LINK: 'b-sm-item__link-name',
+        DESCRIPTION_LINK: 'b-sm-item__description-link'
     };
 
 
@@ -228,6 +229,9 @@ goog.scope(function() {
             ),
             badges: this.getElementsByClass(
                 sm.bSmBadge.View.CssClass.ROOT
+            ),
+            descriptionLink: this.getElementByClass(
+                View.CssClass.DESCRIPTION_LINK
             )
         };
     };

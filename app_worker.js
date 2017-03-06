@@ -38,7 +38,8 @@ process.on('unhandledRejection', (reason, promise) => {
     logger
         .getLogger('app')
         .critical(
-            `Unhandled Rejection at: Promise ${promiseString} reason: ${reason}`
+            `Unhandled Rejection at: Promise ${promiseString}\n` +
+            `reason: ${reason.stack}`
         );
 });
 
@@ -103,6 +104,7 @@ app.use('/schools/api', api.school.router);
 app.use('/universities/api', api.university.router);
 app.use('/:subdomain/api', api.user.router);
 app.use('/:subdomain/api', api.mail.router);
+app.use('/:subdomain/api', api.study.router);
 // generate token in cookies, all request not GET
 app.use(csrf);
 

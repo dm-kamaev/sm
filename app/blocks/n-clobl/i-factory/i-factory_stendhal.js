@@ -29,6 +29,8 @@ goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.bSmCheckbox.View');
 goog.require('sm.bSmCollapsedText.SmCollapsedText');
 goog.require('sm.bSmCollapsedText.View');
+goog.require('sm.bSmComment.SmComment');
+goog.require('sm.bSmComment.View');
 goog.require('sm.bSmExpander.SmExpander');
 goog.require('sm.bSmExpander.View');
 goog.require('sm.bSmFavorite.SmFavorite');
@@ -57,6 +59,8 @@ goog.require('sm.bSmMap.SmMap');
 goog.require('sm.bSmMap.View');
 goog.require('sm.bSmRadioButton.SmRadioButton');
 goog.require('sm.bSmRadioButton.View');
+goog.require('sm.bSmRowLinks.SmRowLinks');
+goog.require('sm.bSmRowLinks.View');
 goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.SmScoreBrief');
 goog.require('sm.bSmScore.View');
@@ -143,6 +147,8 @@ goog.require('sm.lSearch.bSearchResults.SearchResults');
 goog.require('sm.lSearch.bSearchResults.View');
 goog.require('sm.lSearch.bSuggestFilter.SuggestFilter');
 goog.require('sm.lSearch.bSuggestFilter.View');
+goog.require('sm.lUniversity.bCommentList.CommentList');
+goog.require('sm.lUniversity.bCommentList.View');
 goog.require('sm.lUniversity.bDescriptionList.DescriptionList');
 goog.require('sm.lUniversity.bDescriptionList.View');
 
@@ -385,6 +391,14 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smInteractionFormComment', {
             control: sm.bSmInteractionForm.SmInteractionFormComment,
             view: sm.bSmInteractionForm.ViewComment
+        })
+        .setControlListItem('smComment', {
+            control: sm.bSmComment.SmComment,
+            view: sm.bSmComment.View
+        })
+        .setControlListItem('smRowLinks', {
+            control: sm.bSmRowLinks.SmRowLinks,
+            view: sm.bSmRowLinks.View
         });
 
     /** l-information blocks **/
@@ -465,6 +479,10 @@ sm.iFactory.FactoryStendhal = function() {
     this.setControlListItem('lUniversity-descriptionList', {
             control: sm.lUniversity.bDescriptionList.DescriptionList,
             view: sm.lUniversity.bDescriptionList.View
+        })
+        .setControlListItem('lUniversity-commentList', {
+            control: sm.lUniversity.bCommentList.CommentList,
+            view: sm.lUniversity.bCommentList.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

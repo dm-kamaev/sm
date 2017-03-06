@@ -1,5 +1,6 @@
 goog.provide('sm.lUniversity.University');
 
+goog.require('sm.bSmSubscribeBoard.SmSubscribeBoard');
 goog.require('sm.gModal.ModalInteraction');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.lUniversity.View');
@@ -56,6 +57,9 @@ goog.scope(function() {
         this.initPrograms_();
         this.initCourses_();
         this.initModals_();
+        this.initComments_();
+        this.initNavigationPanel_();
+        this.initSubscribeBoard_();
     };
 
 
@@ -170,6 +174,42 @@ goog.scope(function() {
         this.modalComment_ = this.decorateChild(
             'modal-interaction',
             this.getView().getDom().modalComment
+        );
+    };
+
+
+    /**
+     * Initializes instance comment item list
+     * @private
+     */
+    University.prototype.initComments_ = function() {
+        this.decorateChild(
+            'lUniversity-commentList',
+            this.getView().getDom().comments
+        );
+    };
+
+
+    /**
+     * Initializes instance of navigation panel
+     * @private
+     */
+    University.prototype.initNavigationPanel_ = function() {
+        this.decorateChild(
+            'smRowLinks',
+            this.getView().getDom().navigationPanel
+        );
+    };
+
+
+    /**
+     * Init subscribe board
+     * @private
+     */
+    University.prototype.initSubscribeBoard_ = function() {
+        this.decorateChild(
+            'smSubscribeBoard',
+            this.getView().getDom().subscribeBoard
         );
     };
 });  // goog.scope

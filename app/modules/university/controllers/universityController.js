@@ -35,6 +35,62 @@ controller.information = async(function(req, res, next) {
             выбрать направление для углубленной специализации.
             Длительность обучения: 4 года.`;
 
+        const comment = {
+            author: {
+                photoUrl: 'http://avatar.exe.by/avatars/movie/' +
+                    'img/0973.jpg',
+                name: 'Егор',
+                status: 'Выпускник 2016'
+            },
+            score: 3,
+            text: [{
+                header: 'Что понравилось',
+                description: `Вариативность в направленности
+                обучения. Грубо говоря, если ты хочешь грызть
+                гранит науки - вот тебе одна дорога, если хочешь
+                нарабатывать опыт и стажироваться - вот тебе другая.
+                Такая возможность есть, действительно, но для этого
+                нужно быть коммуникабельным. Этот ВУЗ как никакой
+                другой подразумевает то, что ты сам должен искать
+                выходы и нестандартные решения. Они есть, но найти
+                их должен ты сам. И это будет не самая легкая
+                задачка)`
+            }, {
+                header: 'Не понравилось',
+                description: `Коммерция в ВУЗе. Кажется, будто этот
+                ВУЗ заточен под то, чтобы ты платил. При входе
+                расположен Синергия Store, где ты можешь приобрести
+                всю атрибутику. Преподаватели не берут взяток, это
+                ложь. Но выпускники заочного и электронного
+                обучения, как правило, ничего не знают о своей
+                профессии. То есть, сам ВУЗ не проверяет знания.
+                Если ты не хочешь учиться - ты получишь корочку,
+                это да. Но знания нужно добывать. Они не польются к
+                тебе ручьем. Но это, наверное, в любом ВУЗе.
+                Внутренней жизни ВУЗа (старосты, студ. актив,
+                посвяты) практически нет. Если что-то есть - то это
+                вечеринки. Но на них ты не чувствуешь себя
+                причастным. Собственно это один из главных минусов
+                - ты просто ходишь в ВУЗ как на серую работу. Нет
+                причастности. Нет ощущения сообщества. Ну и
+                напоследок - почти никто из работодателей ничего
+                не знает о Синергии. Хотя, полагаю, что с учетом
+                "Synergy Global Forum" всё изменится.`
+            }, {
+                header: 'Какой совет можешь дать поступающим?',
+                description: `Если вы уверены в том, что готовы
+                рыть носом землю и искать выходы на что-то
+                большое и прибыльное - то этот ВУЗ для вас.
+                Собственно говоря, если вы набрали минимум
+                баллов по ЕГЭ и не проходите на бюджет, то у
+                вас есть только платное отделение. Синергия -
+                это как РАНХ, как ВШЭ, только бюджетней. И здесь
+                вы будете не учиться с "делягами", а находиться в
+                том месте, где эти "деляги" работают. Смотрите в
+                верхний эшелон) И пробуйте)`
+            }]
+        };
+
         let templateData = informationView.render({
             user: user,
             entityData: {
@@ -196,7 +252,7 @@ controller.information = async(function(req, res, next) {
                             light: 'Менеджер СПБГУ'
                         },
                         description: ' ',
-                        descriptionLink: {
+                        additionalLink: {
                             content: 'Специальность',
                             url: 'http://yandex.ru',
                             theme: 'neptune',
@@ -216,7 +272,7 @@ controller.information = async(function(req, res, next) {
                             light: 'Социология НИУ-ВШЭ'
                         },
                         description: ' ',
-                        descriptionLink: {
+                        additionalLink: {
                             content: 'Специальность',
                             url: 'http://yandex.ru',
                             theme: 'neptune',
@@ -236,7 +292,7 @@ controller.information = async(function(req, res, next) {
                             light: 'Менеджер МГУ'
                         },
                         description: ' ',
-                        descriptionLink: {
+                        additionalLink: {
                             content: 'Специальность',
                             url: 'http://yandex.ru',
                             theme: 'neptune',
@@ -256,7 +312,7 @@ controller.information = async(function(req, res, next) {
                             light: 'Логистика НИУ-ВШЭ'
                         },
                         description: ' ',
-                        descriptionLink: {
+                        additionalLink: {
                             content: 'Специальность',
                             url: 'http://yandex.ru',
                             theme: 'neptune',
@@ -272,8 +328,7 @@ controller.information = async(function(req, res, next) {
                     }],
                     itemType: 'smItemCompact',
                     itemConfig: {
-                        theme: 'neptune',
-                        isNameNotLink: true
+                        theme: 'neptune'
                     },
                     theme: 'neptune'
                 },
@@ -289,7 +344,9 @@ controller.information = async(function(req, res, next) {
                         description: `Подготовка к ЕГЭ по английскому
                             языку English First`,
                         imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
-                            'facebook/000/839/199/8a9.jpg'
+                            'facebook/000/839/199/8a9.jpg',
+                        url: 'http://yandex.ru',
+                        nameLinkUrl: 'http://google.com'
                     }, {
                         id: 2,
                         type: 'course',
@@ -298,7 +355,9 @@ controller.information = async(function(req, res, next) {
                         },
                         description: 'Система Выбор Smart Course',
                         imageUrl: 'http://lamcdn.net/lookatme.ru/post_image-' +
-                            'image/vePw1jo6HLFVfp7JIU5_Qg-article.jpg'
+                            'image/vePw1jo6HLFVfp7JIU5_Qg-article.jpg',
+                        url: 'http://yandex.ru',
+                        nameLinkUrl: 'http://google.com'
                     }, {
                         id: 3,
                         type: 'course',
@@ -308,38 +367,58 @@ controller.information = async(function(req, res, next) {
                         description: `Пропуск в профессию. Индивидуальная
                             траектория Proekt Pro`,
                         imageUrl: 'http://cs8.pikabu.ru/post_img/2016/01/14/' +
-                            '12/1452803883198482683.png'
+                            '12/1452803883198482683.png',
+                        url: 'http://yandex.ru',
+                        nameLinkUrl: 'http://google.com'
                     }],
                     itemType: 'smItemCompact',
                     itemConfig: {
                         theme: 'neptune-imaged',
                         enableCover: true,
+                        isDescriptionLink: true,
                         nameLinkSize: 'xl'
                     },
                     theme: 'neptune'
+                },
+                comments: {
+                    header: 'Отзывы – Менеджмент (НИУ–ВШЭ)',
+                    items: [comment, comment, comment, comment, comment],
+                    itemType: 'smComment'
                 }
             },
             authSocialLinks: authSocialLinks,
             entityType: entityType.UNIVERSITY,
             config: config,
-            subscribeBoard: {
-                data: {
-                    description: `Напомним о днях открытых дверей,
-                        пришлём списки зачисления и проходные баллы
-                        вам на почту`,
-                    input: {
-                        data: {
-                            placeholder: 'Введите свой email',
-                            maxLength: 50,
-                            name: 'Подписка на новости этого вуза:',
-                            type: 'text'
-                        },
-                        config: {
-                            theme: 'neptune',
-                            validations: ['email', 'notEmpty']
-                        }
+            navigationPanel: {
+                items: [{
+                    data: {
+                        url: 'http://yandex.ru',
+                        content: 'ВУЗы'
+                    },
+                    config: {
+                        theme: 'sky',
+                        size: 'xl'
                     }
-                }
+                }, {
+                    data: {
+                        url: 'http://yandex.ru',
+                        content: 'НИУ-ВШЭ'
+                    },
+                    config: {
+                        theme: 'sky',
+                        size: 'xl'
+                    }
+                }, {
+                    data: {
+                        url: 'http://yandex.ru',
+                        content: 'Менеджмент'
+                    },
+                    config: {
+                        theme: 'sky',
+                        size: 'xl',
+                        isSelected: true
+                    }
+                }]
             }
         });
 

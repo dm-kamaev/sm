@@ -1,0 +1,204 @@
+{namespace sm.lUniversity.bCommentList.Template}
+
+
+/**
+ * @typedef {{
+ *     header: string,
+ *     items: Array<sm.bSmComment.Template.Params.Data>,
+ *     itemType: string
+ * }} sm.lUniversity.bCommentList.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     theme: ?string,
+ *     customClasses: ?Array<string>,
+ *     countShownItems: ?number
+ * }} sm.lUniversity.bCommentList.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.lUniversity.bCommentList.Template.Data,
+ *     config: sm.lUniversity.bCommentList.Template.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .commentList}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data:  sm.lUniversity.bCommentList.Template.Data,
+ *     config: sm.lUniversity.bCommentList.Template.Config
+ * }}
+ */
+{template .body}
+    {call .header_ data="all" /}
+    // {call .filterPanel_ data="all" /}
+    {if $params.data.items and $params.data.items.length > 0}
+        {call .list_ data="all" /}
+    {else}
+        {call .emptyList_ data="all" /}
+    {/if}
+    {call .controlPanel_ data="all" /}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-comment-list
+{/template}
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         header: string
+ *     }
+ * }}
+ */
+{template .header_}
+    <div class="{call .rootClass /}__header">
+        {call .getText}
+            {param message: $params.data.header /} 
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Comment list
+ * @param params {{
+ *     data: sm.lUniversity.bCommentList.Template.Params.Data,
+ *     config: sm.lUniversity.bCommentList.Template.Config
+ * }}
+ */
+{template .list_}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__item-list
+    {/let}
+
+    <div class="{call .rootClass /}__list">
+        {call .renderChild}
+            {param params: [
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': $params.config?.theme,
+                        'countShownItems': $params.config?.countShownItems
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Empty list
+ */
+{template .emptyList_}
+    <div class="{call .rootClass /}__empty-list">
+        {call .getText}
+            {param message: 'Пока никто не оставил отзывов об этой специальности.' /} 
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Buttons
+ * @param params {{
+ *     data: {
+ *        items: Array<sm.bSmComment.Template.Params.Data>
+ *     },
+ *     config: {
+ *         countShownItems: ?number
+ *     }
+ * }}
+ */
+{template .controlPanel_}
+    <div class="{call .rootClass /}__control-panel">
+        {let $classes kind="html"}
+            {call .rootClass /}__show-comments-button-wrap
+            {if $params.data.items and
+                $params.data.items.length <= $params.config?.countShownItems
+            }
+                {sp}i-utils__hidden
+            {/if}
+        {/let}
+
+        <div class="{$classes}">
+            {call .renderChild}
+                {param params: [
+                    'type': 'button',
+                    'renderParams': [
+                        'data': [
+                            'content': 'Все отзывы'
+                        ],
+                        'config': [
+                            'customClasses': ['b-comment-list__show-comments-button'],
+                            'theme': 'neptune-reverse',
+                            'isBorderRound': true,
+                            'size': 'm'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass /}__leave-comment-button-wrap">
+            {call .renderChild}
+                {param params: [
+                    'type': 'button',
+                    'renderParams': [
+                        'data': [
+                            'content': 'Оставить отзыв'
+                        ],
+                        'config': [
+                            'customClasses': ['b-comment-list__leave-comment-button'],
+                            'theme': 'neptune',
+                            'isBorderRound': true,
+                            'size': 'm'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     config: {
+ *         countShownItems: ?number
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $data: quoteKeysIfJs([
+        'countShownItems': $params.config?.countShownItems
+    ])/}
+
+    data-params="
+    {call cl.iUtils.Utils.stringify}
+        {param json: $data/}
+    {/call}"
+{/template}

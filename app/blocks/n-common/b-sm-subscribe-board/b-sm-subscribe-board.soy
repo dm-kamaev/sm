@@ -30,17 +30,110 @@
 
 
 /**
- * Body
- * @override
- */
-{template .body}
-{/template}
-
-
-/**
  * Root css class
  * @override
  */
 {template .rootClass}
     b-sm-subscribe-board
 {/template}
+
+
+/**
+ * Body
+ * @override
+ */
+{template .body}
+    {call .header_ data="all" /}
+    {call .input_ data="all" /}
+    {call .description_ data="all" /}
+{/template}
+
+
+/**
+ * Header
+ */
+{template .header_}
+    {let $text kind="text"}
+        Подписка на новости этого вуза:
+    {/let}
+    {let $textSizeXs kind="text"}
+        Подписка на новости:
+    {/let}
+    <div class="{call .rootClass/}__header">
+        {call .getText}
+            {param message: $text /}
+        {/call}
+    </div>
+    <div class="{call .rootClass/}__header_size_xs">
+        {call .getText}
+            {param message: $textSizeXs /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * MailChimp block
+ */
+{template .input_}
+    {let $placeholder kind="text"}
+        {call .getText}
+            {param message: 'Введите свой email' /}
+        {/call}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass/}__email-input
+    {/let}
+
+    <div class="{call .rootClass/}__input">
+        {call .renderChild}
+            {param params: [
+                'type': 'input',
+                'renderParams': [
+                    'data': [
+                        'placeholder': $placeholder,
+                        'maxLength': 50,
+                        'name': 'email',
+                        'type': 'text'
+                    ],
+                    'config': [
+                        'theme': 'neptune',
+                        'validations': ['email', 'notEmpty'],
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+
+        <div class="{call .rootClass/}__input-icon">
+            {call .renderChild}
+                {param params: [
+                    'type': 'icon-svg',
+                    'renderParams': [
+                        'data': [
+                            'type': 'arrow-send'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+
+{/template}
+
+
+/**
+ * Description
+ */
+{template .description_}
+    {let $text kind="text"}
+        Напомним о днях открытых дверей, пришлём списки зачисления и проходные баллы вам на почту
+    {/let}
+    <div class="{call .rootClass/}__description">
+        {call .getText}
+            {param message: $text /}
+        {/call}
+    </div>
+{/template}
+

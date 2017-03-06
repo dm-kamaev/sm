@@ -16,6 +16,12 @@ const profileAdminController = new ProfileAdminController();
 import {UniversityAdminController} from './UniversityAdminController';
 const universityAdminController = new UniversityAdminController();
 
+import {ExamAdminController} from './ExamAdminController';
+const examAdminController = new ExamAdminController();
+
+import {EntranceStatisticController} from './EntranceStatisticController';
+const entranceStatisticController = new EntranceStatisticController();
+
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
         route,
@@ -45,7 +51,11 @@ const initCrudRouting = function(route: string, controller: any): void {
 };
 
 initCrudRouting('/admin/profile', profileAdminController);
-
 initCrudRouting('/admin/university', universityAdminController);
+initCrudRouting('/admin/program/:programId/exam', examAdminController);
+initCrudRouting(
+    '/admin/program/:programId/statistic',
+    entranceStatisticController
+);
 
 export {router};

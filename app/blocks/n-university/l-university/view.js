@@ -1,7 +1,9 @@
 goog.provide('sm.lUniversity.View');
 
 goog.require('sm.bSmCollapsedText.View');
+goog.require('sm.bSmRowLinks.View');
 goog.require('sm.bSmSketch.View');
+goog.require('sm.bSmSubscribeBoard.View');
 goog.require('sm.bSummaryBoard.View');
 goog.require('sm.iLayout.ViewStendhal');
 goog.require('sm.lUniversity.bDescriptionList.View');
@@ -56,7 +58,10 @@ goog.scope(function() {
         SUMMARY_BOARD: sm.bSummaryBoard.View.CssClass.ROOT,
         CUT_DESCRIPTION: sm.bSmCollapsedText.View.CssClass.ROOT,
         PROGRAMS: 'l-university__programs',
-        COURSES: 'l-university__courses'
+        COURSES: 'l-university__courses',
+        COMMENTS: 'l-university__comments',
+        NAVIGATION_PANEL: sm.bSmRowLinks.View.CssClass.ROOT,
+        SUBSCRIBE_BOARD: sm.bSmSubscribeBoard.View.CssClass.ROOT
     };
 
 
@@ -107,6 +112,15 @@ goog.scope(function() {
                 ),
                 modalComment: this.getElementByClass(
                     sm.gModal.ViewInteraction.CssClass.ROOT
+                ),
+                comments: this.getElementByClass(
+                    View.CssClass.COMMENTS
+                ),
+                navigationPanel: this.getElementByClass(
+                    View.CssClass.NAVIGATION_PANEL
+                ),
+                subscribeBoard: this.getElementByClass(
+                    View.CssClass.SUBSCRIBE_BOARD
                 )
             }
         );

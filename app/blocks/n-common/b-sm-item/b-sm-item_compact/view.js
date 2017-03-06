@@ -36,7 +36,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-item_compact',
-        DESCRIPTION_LINK: 'b-sm-item__link-description'
+        ADDITIONAL_LINK: 'b-sm-item__additional-link'
     };
 
     /**
@@ -48,8 +48,8 @@ goog.scope(function() {
         View.base(this, 'initDom');
 
         goog.object.extend(this.dom, {
-            descriptionLink: this.getElementByClass(
-                View.CssClass.DESCRIPTION_LINK
+            additionalLink: this.getElementByClass(
+                View.CssClass.ADDITIONAL_LINK
             )
         });
     };

@@ -1,6 +1,7 @@
 const DataType = require('sequelize');
 const sequelize = require('../../../../app/components/db');
 
+import {service as universityPageService} from '../services/universityPage';
 import * as Sequelize from 'sequelize/v3';
 
 export interface UniversityAttribute {
@@ -9,7 +10,8 @@ export interface UniversityAttribute {
     abbreviation?: string;
     description?: string;
     imageUrl?: string;
-    links?: string;
+    relapImageUrl?: string;
+    links?: Array<string>;
     militaryDepartment?: boolean;
     dormitory?: boolean;
     cityId?: number;
@@ -39,6 +41,10 @@ const University: UniversityModel = sequelize.define('University', {
         type: DataType.STRING(511),
         field: 'image_url'
     },
+    relapImageUrl: {
+        type: DataType.STRING(511),
+        field: 'relap_image_url'
+    },
     links: DataType.ARRAY(DataType.STRING),
     militaryDepartment: {
         type: DataType.BOOLEAN,
@@ -56,6 +62,15 @@ const University: UniversityModel = sequelize.define('University', {
 }, {
     underscored: true,
     tableName: 'university',
+    hooks: {
+        afterCreate: universityPageService.createPage.bind(
+            universityPageService
+        ),
+        afterUpdate: universityPageService.updatePage.bind(
+            universityPageService
+        ),
+        afterDestroy: universityPageService.removePage
+    },
     classMethods: {
         associate: function(models) {
             this.belongsTo(models.City, {
@@ -64,6 +79,11 @@ const University: UniversityModel = sequelize.define('University', {
             });
             this.belongsToMany(models.Profile, {
                 through: 'university_profile'
+            });
+            this.belongsToMany(models.Page, {
+                as: 'page',
+                through: 'university_page',
+                foreignKey: 'university_id',
             });
         }
     }

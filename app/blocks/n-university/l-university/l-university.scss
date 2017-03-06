@@ -1,7 +1,7 @@
 @import '../../n-common/i-media/i-media';
 
 .l-university {
-    font-family: 'ArialMT', Arial, sans-serif;
+    font-family: Arial, sans-serif;
 }
 
 .l-university__body {
@@ -15,7 +15,7 @@
 .l-university__section_data {
     width: 1200px;
     min-width: 255px;
-    min-height: 772px;
+    min-height: 817px;
     margin: 0 auto 80px auto;
     padding-top: 35px;
 }
@@ -149,10 +149,18 @@
     font-weight: 600;
 }
 
-@include media-l {
-    .l-university__similar-programs-header {
-        padding-bottom: 40px;
-    }
+.l-university__section_comments {
+    margin-bottom: 100px;
+}
+
+.l-university__navigation-panel {
+    width: calc(100% - 375px);
+    padding-bottom: 25px;
+}
+
+.l-university__subscribe-board {
+    width: calc(100% - 375px);
+    margin-bottom: 80px;
 }
 
 
@@ -181,9 +189,13 @@
 }
 
 
-@include media-m {
+@include media-l {
+    .l-university__similar-programs-header {
+        padding-bottom: 40px;
+    }
+
     .l-university__section_data {
-        min-height: 930px;
+        min-height: 975px;
     }
 
     .l-university__data_main-description {
@@ -204,7 +216,7 @@
     }
 
     .l-university__body {
-        min-height: 1130px;
+        min-height: 1175px;
     }
 
     .l-university__entity-relation {
@@ -214,7 +226,21 @@
     .l-university__useful-courses-content {
         padding-top: 40px;
     }
+
+    .l-university__navigation-panel {
+        width: 100%;
+        padding-bottom: 25px;
+    }
+
+    .l-university__board-wrap {
+        margin-top: 45px;
+    }
+
+    .l-university__subscribe-board {
+        width: calc(100% - 355px);
+    }
 }
+
 
 @include media-s {
     .l-university__similar-programs-content{
@@ -226,10 +252,12 @@
     }
 }
 
+
 @include media-xs {
     .l-university__section_data {
         padding-right: 25px;
         padding-left: 25px;
+        margin-bottom: 30px;
     }
 
     .l-university__section_programs {
@@ -298,5 +326,13 @@
 
     .l-university__useful-courses-header {
         padding-bottom: 5px;
+    }
+
+    .l-university__navigation-panel {
+        display: none;
+    }
+
+    .l-university__subscribe-board {
+        width: 100%;
     }
 }

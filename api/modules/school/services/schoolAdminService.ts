@@ -3,7 +3,6 @@
 // author: dm-kamaev
 // service admin for school
 
-const sequelize = require('../../../../app/components/db.js');
 const models = require('../../../../app/components/models').all;
 const CsvConverter =
     require('../../../../console/modules/modelArchiver/CsvConverter');
@@ -11,8 +10,6 @@ const schoolType = require('../enums/schoolType.js');
 
 import {Model as SchoolModel} from '../models/school';
 import {SchoolInstance} from '../models/school';
-import {Model as AddressModel} from '../../geo/models/address';
-import {AddressInstance} from '../../geo/models/address';
 
 import {SchoolNotExistType} from './exceptions/SchoolNotExistType';
 

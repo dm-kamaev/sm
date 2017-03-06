@@ -63,7 +63,7 @@ goog.scope(function() {
     Item.prototype.decorateInternal = function(element) {
         Item.base(this, 'decorateInternal', element);
 
-        this.initDescriptionLink_();
+        this.initAdditionalLink_();
     };
 
 
@@ -71,11 +71,11 @@ goog.scope(function() {
      * Initializes description link instance
      * @private
      */
-    Item.prototype.initDescriptionLink_ = function() {
-        var link = this.getView().getDom().descriptionLink;
+    Item.prototype.initAdditionalLink_ = function() {
+        var link = this.getView().getDom().additionalLink;
 
         if (link) {
-            this.descriptionLink_ = this.decorateChild(
+            this.additionalLink_ = this.decorateChild(
                 'smLink',
                 link
             );

@@ -6,7 +6,6 @@ goog.require('sm.bSmLink.View');
 
 
 /**
- * Sketch View
  * @param {Object=} opt_params
  * @param {string=} opt_type
  * @param {string=} opt_modifier
@@ -16,7 +15,7 @@ goog.require('sm.bSmLink.View');
 sm.lUniversity.bDescriptionList.View = function(
     opt_params, opt_type, opt_modifier
 ) {
-    sm.bSmSketch.View.base(this, 'constructor', opt_params,
+    sm.lUniversity.bDescriptionList.View.base(this, 'constructor', opt_params,
         opt_type, opt_modifier);
 
     /*

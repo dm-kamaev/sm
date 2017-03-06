@@ -34,8 +34,8 @@
  *     stylizationModifier: string,
  *     customClasses: ?Array<string>,
  *     theme: ?string,
- *     isNameNotLink: ?boolean,
- *     nameLinkSize: ?string
+ *     nameLinkSize: ?string,
+ *     isDescriptionLink: ?string
  * }} sm.bSmItem.Template.Params.Config
  */
 
@@ -354,15 +354,43 @@
  * Description
  * @param params {{
  *     data: {
- *         description: (string|undefined)
+ *         id: ?number,
+ *         description: (string|undefined),
+ *         url: ?string,
+ *     },
+ *     config: {
+ *         isDescriptionLink: ?string
  *     }
  * }}
  */
 {template .description}
     {if $params.data?.description}
         <div class="{call .rootClass/}__description">
-            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
-                data="$params.data.description" /}
+            {if $params.config.isDescriptionLink}
+                {let $customClasses kind="html"}
+                    {call .rootClass /}__description-link
+                {/let}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'smLink',
+                        'renderParams': [
+                            'data': [
+                                'id': $params.data.id,
+                                'content': $params.data.description,
+                                'url': $params.data.url
+                            ],
+                            'config': [
+                                'customClasses': [$customClasses],
+                                'theme': 'dark',
+                                'size': '6xl'
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            {else}
+                {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                    data="$params.data.description" /}
+            {/if}
         </div>
     {/if}
 {/template}

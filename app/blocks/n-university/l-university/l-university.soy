@@ -37,10 +37,12 @@
  *         banner: sm.bSmBanner.Template.Params,
  *         entityRelation: sm.bEntityRelation.Template.Params,
  *         similarPrograms: sm.bSmItemList.Template.Params.Data,
- *         usefulCourses: sm.bSmItemList.Template.Params.Data
+ *         usefulCourses: sm.bSmItemList.Template.Params.Data,
+ *         comments: sm.bCommentList.Template.Params.Data
  *     },
  *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params,
- *     modalComment: sm.gModal.TemplateInteraction.Data
+ *     modalComment: sm.gModal.TemplateInteraction.Data,
+ *     navigationPanel: sm.bSmRowLinks.Template.Params.Data
  * }} sm.lUniversity.Template.Data
  */
 
@@ -90,7 +92,11 @@
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionData_ data="all" /}
-        // {call .sectionComments_ data="all" /}
+
+        {if $params.data.entityData.comments}
+            {call .sectionComments_ data="all" /}
+        {/if}
+
         {call .sectionPrograms_ data="all" /}
         {call .sectionUsefulCourses_ data="all" /}
         {call .sectionModals_ data="all" /}
@@ -162,6 +168,20 @@
     >
         {call .sketchData_ data="all" /}
         {call .mainData_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section comments
+ * @private
+ * @ovveride
+ */
+{template .sectionComments_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_comments{sp}"
+    >
+        {call .comments_ data="all" /}
     </div>
 {/template}
 
@@ -267,21 +287,47 @@
 /**
  * Data on the middle - section main data
  * @param params {{
- *     data: {
- *         subunitType: string,
- *         subunitName: string,
- *         description: string
- *     }
+ *     data: sm.lUniversity.Template.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @private
  */
 {template .mainData_}
     <div class="{call .rootClass/}__data_main-description">
+        {call .navigationPanel_ data="all" /}
         {call .description_ data="all" /}
         {call .summaryBoard_ data="all" /}
         {call .descriptionList_ data="all" /}
         {call .subscribeBoard_ data="all" /}
         {call .bannerSizeXS_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the middle - section main data
+ * @param params {{
+ *     data: {
+ *         navigationPanel: sm.bSmRowLinks.Template.Params.Data
+ *     },
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @private
+ */
+{template .navigationPanel_}
+    <div class="{call .rootClass/}__navigation-panel">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smRowLinks',
+                'renderParams': [
+                    'data': $params.data.navigationPanel,
+                    'config': [
+                        'theme': 'breadcrumbs'
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -299,20 +345,17 @@
 {template .description_}
     <div class="{call .rootClass/}__main-description">
         <div class="{call .rootClass/}__type">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.subunitType /}
-            {/call}
+            {$params.data.entityData.subunitType}
         </div>
+
         <div class="{call .rootClass/}__name">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.subunitName /}
-            {/call}
+            {$params.data.entityData.subunitName}
         </div>
+
         <div class="{call .rootClass/}__description">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.description /}
-            {/call}
+            {$params.data.entityData.description}
         </div>
+
         <div class="{call .rootClass/}__description_cut">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                 {param params: [
@@ -482,9 +525,7 @@
             {call .rootClass/}__programs
         {/let}
         <div class="{call .rootClass/}__similar-programs-header">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.similarPrograms.header /}
-            {/call}
+            {$params.data.entityData.similarPrograms.header}
         </div>
         <div class="{call .rootClass/}__similar-programs-list">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
@@ -525,9 +566,7 @@
             {call .rootClass/}__courses
         {/let}
         <div class="{call .rootClass/}__useful-courses-header">
-            {call cl.iControl.Template.getText}
-                {param message: $params.data.entityData.usefulCourses.header /}
-            {/call}
+            {$params.data.entityData.usefulCourses.header}
         </div>
         <div class="{call .rootClass/}__useful-courses-list">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
@@ -567,6 +606,41 @@
                 'type': 'modal-interaction',
                 'renderParams': [
                     'data': $params.data.modalComment
+                    ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Comments block
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             comments: Array<sm.bComment.Template.Params>
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .comments_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__comments
+    {/let}
+
+    <div class="{call .rootClass/}__comment-list">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'lUniversity-commentList',
+                'renderParams': [
+                    'data': $params.data.entityData.comments,
+                    'config': [
+                        'theme': 'neptune',
+                        'customClasses': [$customClasses],
+                        'countShownItems': 2
+                    ]
                 ]
             ]/}
         {/call}

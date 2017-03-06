@@ -197,6 +197,8 @@ view.render = function(data) {
                 iconType: 'icon-svg'
             }
         },
+        subscribeBoard: data.subscribeBoard,
+        navigationPanel: data.navigationPanel,
         footer: footerView.render()
     };
 };
