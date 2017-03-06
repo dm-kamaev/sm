@@ -38,6 +38,7 @@ goog.scope(function() {
      * @typedef {{
      *     opener: (string|undefined),
      *     defaultOpenerText: (string|undefined),
+     *     name: (string|undefined),
      *     items: Array<{
      *         label: string,
      *         value: string
@@ -128,11 +129,13 @@ goog.scope(function() {
         return {
             opener: rawParams['opener'],
             defaultOpenerText: defaultOpenerText,
+            name: rawParams['name'],
             items: rawParams['items'] ?
                 rawParams['items'].map(function(item) {
                     return {
                         label: item['label'],
-                        value: item['value']
+                        value: item['value'],
+                        isSelected: item['isSelected']
                     };
                 }) :
                 []

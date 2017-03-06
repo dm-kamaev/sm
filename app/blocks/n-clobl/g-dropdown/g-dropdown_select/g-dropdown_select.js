@@ -82,6 +82,7 @@ goog.scope(function() {
         Dropdown.base(this, 'decorateInternal', element);
 
         this.initList();
+        this.initDefaultSelectedItem_();
     };
 
 
@@ -114,27 +115,31 @@ goog.scope(function() {
 
     /**
      * Get value on list item
-     * @param {number} itemId
      * @return {?string}
      * @public
      */
-    Dropdown.prototype.getValue = function(itemId) {
-        return this.params.items[itemId] ?
-            this.params.items[itemId].value :
-            null;
+    Dropdown.prototype.getValue = function() {
+        return this.getSelectedItemData().value;
     };
 
 
     /**
      * Get label on list item
-     * @param {number} itemId
      * @return {?string}
      * @public
      */
-    Dropdown.prototype.getLabel = function(itemId) {
-        return this.params.items[itemId] ?
-            this.params.items[itemId].label :
-            null;
+    Dropdown.prototype.getLabel = function() {
+        return this.getSelectedItemData().label;
+    };
+
+
+    /**
+     * Get dropdown name
+     * @return {?string}
+     * @public
+     */
+    Dropdown.prototype.getName = function() {
+        return this.params.name || null;
     };
 
 
@@ -193,12 +198,12 @@ goog.scope(function() {
      * @protected
      */
     Dropdown.prototype.setSelectedItemData = function(itemId) {
-        var value = this.getValue(itemId);
+        var value = this.getValueById_(itemId);
 
         if (goog.isDefAndNotNull(value)) {
             this.selectedItemData = {
                 value: value,
-                label: this.getLabel(itemId)
+                label: this.getLabelById_(itemId)
             };
         } else {
             this.selectedItemData = {};
@@ -241,5 +246,46 @@ goog.scope(function() {
             'list',
             this.getView().getDom().list
         );
+    };
+
+
+    /**
+     * Init default selected item
+     * @private
+     */
+    Dropdown.prototype.initDefaultSelectedItem_ = function() {
+        var itemId = goog.array.findIndex(this.params.items, function(item) {
+            return item.isSelected;
+        });
+
+        if (~itemId) {
+            this.selectItem(itemId);
+        }
+    };
+
+
+    /**
+     * Get value on list item by item id
+     * @param {number} itemId
+     * @return {?string}
+     * @private
+     */
+    Dropdown.prototype.getValueById_ = function(itemId) {
+        return value = this.params.items[itemId] ?
+            this.params.items[itemId].value :
+            null;
+    };
+
+
+    /**
+     * Get label on list item by item id
+     * @param {number} itemId
+     * @return {?string}
+     * @private
+     */
+    Dropdown.prototype.getLabelById_ = function(itemId) {
+        return label = this.params.items[itemId] ?
+            this.params.items[itemId].label :
+            null;
     };
 });  // goog.scope

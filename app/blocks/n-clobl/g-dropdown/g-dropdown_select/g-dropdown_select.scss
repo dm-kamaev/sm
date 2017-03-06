@@ -37,3 +37,30 @@
         margin-top: 0;
     }
 }
+
+
+.g-dropdown_select.g-dropdown_light-theme {
+    .g-dropdown__opener {
+        height: 48px;
+
+        border: 1px solid #deded8;
+
+        line-height: 48px;
+    }
+
+    .g-dropdown__opener-text {
+        margin-left: 15px;
+    }
+
+    .g-dropdown__opener-icon {
+        float: right;
+
+        margin-right: 20px;
+
+        line-height: 44px;
+    }
+
+    .g-dropdown__content {
+        margin-top: 0;
+    }
+}
