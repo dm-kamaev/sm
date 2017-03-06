@@ -28,6 +28,18 @@
     }
 }
 
+.g-input_stendhal.g-input_thin-theme {
+    .g-input__input {
+        height: 50px;
+        padding: 0 0 0 12px;
+
+        line-height: 50px;
+
+        border: 1px solid #deded8;
+        box-shadow: none;
+    }
+}
+
 .g-input_stendhal.g-input_not-valid {
     .g-input__input {
         box-sizing: border-box;
