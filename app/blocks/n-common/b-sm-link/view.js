@@ -146,7 +146,7 @@ goog.scope(function() {
     View.prototype.enableHover = function() {
         if (goog.labs.userAgent.device.isDesktop() && !this.isSelected()) {
             goog.dom.classlist.add(this.getElement(), View.CssClass.HOVERABLE);
-            this.params.disableHover = undefined;
+            this.params.disableHover = false;
         }
     };
 
@@ -229,7 +229,7 @@ goog.scope(function() {
     View.prototype.transformParams = function(rawParams) {
         return {
             id: rawParams['id'],
-            disableHover: rawParams['disableHover']
+            disableHover: rawParams['disableHover'] || false
         };
     };
 

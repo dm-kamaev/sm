@@ -85,6 +85,16 @@ goog.scope(function() {
         this.getView().setTheme(theme);
     };
 
+
+    /**
+     * Disable hover reaction on element
+     * @public
+     */
+    Link.prototype.disableHover = function() {
+        this.getView().disableHover();
+    };
+
+
     /**
      * Enable hover reaction on element if it possible (not-mobile device)
      * @public
@@ -131,7 +141,7 @@ goog.scope(function() {
 
 
         /** Enable hover here as params initialization already occurs */
-        if (!this.params.disableHover) {
+        if (!this.getView().getParams().disableHover) {
             this.enableHover();
         }
     };

@@ -65,7 +65,7 @@ goog.scope(function() {
             this.getHandler().listen(
                 item,
                 Switch.Event.CLICK,
-                this.onItemClick.bind(this, i)
+                this.onItemClick_.bind(this, i)
             );
         }, this);
     };
@@ -91,9 +91,9 @@ goog.scope(function() {
     /**
      * Item click handler
      * @param {number} id
-     * @protected
+     * @private
      */
-    Switch.prototype.onItemClick = function(id) {
+    Switch.prototype.onItemClick_ = function(id) {
         if (id != this.selectedLinkId_) {
             this.selectLink(id);
             var params = this.params.items[id];
