@@ -1,19 +1,31 @@
 {namespace sm.gTextarea.TemplateStendhal}
 
+
+/**
+ * @typedef {{
+ *     placeholder: ?string,
+ *     value: ?string,
+ *     name: ?string,
+ *     maxLength: ?number
+ * }} sm.gTextarea.TemplateStendhal.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     stylizationModifier: string,
+ *     autoHeight: ?bolean,
+ *     showCounter: ?bolean,
+ *     minHeight: ?string,
+ *     theme: (string|undefined)
+ * }} sm.gTextarea.TemplateStendhal.Params.Config
+ */
+
 /**
  * Constructor
  * @param? params {{
- *     data: {
- *         placeholder: ?string, - placeholder value
- *         value: ?string,
- *         name: ?string,
- *         maxLength: ?number
- *     },
- *     config: {
- *         autoHeight: ?bool,
- *         showCounter: ?bool,
- *         minHeight: ?string
- *     }
+ *     data: sm.gTextarea.TemplateStendhal.Params.Data,
+ *     config: sm.gTextarea.TemplateStendhal.Params.Config
  * }}
  * @extends cl.gTextarea.Template
  * @constructor

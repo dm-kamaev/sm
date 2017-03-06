@@ -73,16 +73,6 @@ goog.scope(function() {
      * @return {string}
      * @public
      */
-    View.prototype.getValue = function() {
-        return this.dom.field.value || null;
-    };
-
-
-    /**
-     * Get name
-     * @return {string}
-     * @public
-     */
     View.prototype.getName = function() {
         return this.dom.field.name || null;
     };
