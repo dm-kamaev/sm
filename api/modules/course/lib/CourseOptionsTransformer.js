@@ -431,6 +431,7 @@ module.exports = class {
 
     /**
      * @private
+     * @param  {boolean} openSchedule
      * @param  {Array<Object>} schedule
      * @return {string}
      */
