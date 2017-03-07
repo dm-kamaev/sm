@@ -2,8 +2,10 @@ goog.provide('sm.lUniversity.University');
 
 goog.require('sm.bSmSubscribeBoard.SmSubscribeBoard');
 goog.require('sm.gModal.ModalInteraction');
+goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.lUniversity.View');
+goog.require('sm.lUniversity.bCommentList.CommentList');
 
 
 goog.scope(function() {
@@ -32,6 +34,14 @@ goog.scope(function() {
 
 
         /**
+         * Instance comment List
+         * @type {sm.lUniversity.bCommentList.CommentList}
+         * @private
+         */
+        this.commentList_ = null;
+
+
+        /**
          * Instance modal comment
          * @type {sm.gModal.ModalInteraction}
          * @private
@@ -42,6 +52,8 @@ goog.scope(function() {
     var University = sm.lUniversity.University,
         View = sm.lUniversity.View;
 
+    var Authorization = sm.iAuthorization.Authorization;
+
 
     /**
      * @param {Element} element
@@ -50,6 +62,7 @@ goog.scope(function() {
     University.prototype.decorateInternal = function(element) {
         University.base(this, 'decorateInternal', element);
 
+        this.initAuthorization_();
         this.initSketch_();
         this.initDescriptionList_();
         this.initSummaryBoard_();
@@ -70,6 +83,7 @@ goog.scope(function() {
         University.base(this, 'enterDocument');
 
         this.initSketchListeners_();
+        this.initCommentsListeners_();
     };
 
 
@@ -83,7 +97,22 @@ goog.scope(function() {
         handler.listen(
             this.sketch_,
             sm.bSmSketch.SmSketch.Event.BUTTON_CLICK,
-            this.onButtonSketchClick_
+            this.onLeaveCommentClick_
+        );
+    };
+
+
+    /**
+     * Initializes listeners for comments
+     * @private
+     */
+    University.prototype.initCommentsListeners_ = function() {
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.commentList_,
+            sm.lUniversity.bCommentList.CommentList.Event.LEAVE_COMMENT_CLICK,
+            this.onLeaveCommentClick_
         );
     };
 
@@ -92,8 +121,27 @@ goog.scope(function() {
      * Button sketch handler
      * @private
      */
-    University.prototype.onButtonSketchClick_ = function() {
-        this.modalComment_.show();
+    University.prototype.onLeaveCommentClick_ = function() {
+        var authorization = Authorization.getInstance();
+
+        authorization.isUserAuthorized() ?
+            this.modalComment_.show() :
+            authorization.authorize();
+    };
+
+
+    /**
+     * Init authorization
+     * @private
+     */
+    University.prototype.initAuthorization_ = function() {
+        var authParams = {
+            isUserAuthorized: this.params.isUserAuthorized,
+            authSocialLinks: this.params.authSocialLinks,
+            factoryType: this.getView().getStylization()
+        };
+
+        Authorization.getInstance().init(authParams);
     };
 
 
@@ -183,7 +231,7 @@ goog.scope(function() {
      * @private
      */
     University.prototype.initComments_ = function() {
-        this.decorateChild(
+        this.commentList_ = this.decorateChild(
             'lUniversity-commentList',
             this.getView().getDom().comments
         );

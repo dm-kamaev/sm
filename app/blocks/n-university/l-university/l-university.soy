@@ -119,16 +119,11 @@
  *     data: {
  *         user: {
  *             firstName: (string|undefined),
- *             lastName: (string|undefined),
- *             isCommented: boolean
+ *             lastName: (string|undefined)
  *         },
  *         authSocialLinks: {
  *             vk: (string|undefined),
  *             fb: (string|undefined)
- *         },
- *         authSocialLinks: {
- *            vk: string,
- *            fb: string
  *         },
  *         entityData: {
  *             id: number,
@@ -148,7 +143,6 @@
             {param json: [
                 'id': $params.data.entityData?.id,
                 'name': $params.data.entityData?.name,
-                'isCommented': $params.data.user?.isCommented,
                 'isUserAuthorized': $params.data.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'modifier': $params.config?.modifier,
@@ -256,6 +250,7 @@
                 ]/}
             {/call}
         </div>
+
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,

@@ -1,5 +1,6 @@
 goog.provide('sm.lUniversity.bCommentList.CommentList');
 
+goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.lUniversity.bCommentList.View');
 
@@ -49,6 +50,15 @@ goog.scope(function() {
 
 
     /**
+     * Event enum
+     * @enum {string}
+     */
+    CommentList.Event = {
+        LEAVE_COMMENT_CLICK: goog.events.getUniqueId('leave-comment-click')
+    };
+
+
+    /**
      * @protected
      * @override
      */
@@ -70,6 +80,44 @@ goog.scope(function() {
         this.viewListen(
             View.Event.SHOW_BUTTON_CLICK,
             this.onShowCommentButtonClick_
+        );
+
+        this.initControlPanelListeners_();
+    };
+
+
+    /**
+     * Initializes buttons
+     * @private
+     */
+    CommentList.prototype.initControlPanelListeners_ = function() {
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.leaveCommentButton_,
+            cl.gButton.Button.Event.CLICK,
+            this.onLeaveCommentButtonClick_
+        );
+    };
+
+
+    /**
+     * Click button to leave comment handler
+     * @private
+     */
+    CommentList.prototype.onLeaveCommentButtonClick_ = function() {
+        this.dispatchEvent(CommentList.Event.LEAVE_COMMENT_CLICK);
+    };
+
+
+    /**
+     * Click show button handler
+     * @private
+     */
+    CommentList.prototype.onShowCommentButtonClick_ = function() {
+        this.list_.showItems(
+            this.params.countShownItems,
+            this.list_.getCountItems()
         );
     };
 
@@ -103,17 +151,5 @@ goog.scope(function() {
                 this.getView().getDom().itemList
             );
         }
-    };
-
-
-    /**
-     * Click show button handler
-     * @private
-     */
-    CommentList.prototype.onShowCommentButtonClick_ = function() {
-        this.list_.showItems(
-            this.params.countShownItems,
-            this.list_.getCountItems()
-        );
     };
 });  // goog.scope
