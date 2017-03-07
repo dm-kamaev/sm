@@ -28,6 +28,7 @@ const SuperUserActionChecker =
 const superUserCheckAction = SuperUserActionChecker.middleware;
 
 router.get('/course/search', courseController.search);
+router.get('/course/search/count', courseController.getSearchCount);
 router.get('/course/search/map', courseController.searchMap);
 router.get('/course/search/suggest', courseController.suggestSearch);
 

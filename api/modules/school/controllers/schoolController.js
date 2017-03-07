@@ -590,10 +590,10 @@ exports.getAllTypes = async(function(req, res) {
 
 
 /**
- * @api {get} api/school/searchCount Search count controller
+ * @api {get} api/school/count Search count controller
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName SchoolsCount
+ * @apiName Count
  * @apiParam {Object} searchParams
  * @apiParamExample {Object} Request-Example:
  *     {
@@ -605,8 +605,6 @@ exports.getAllTypes = async(function(req, res) {
  *         "olimp": [3, 2],
  *         "specializedClassType": [1],
  *         "activitySphere": [2, 1],
- *         "sortType": 1,
- *         "page": 0,
  *         "metroId: 1,
  *         "areaId: 2,
  *         "districtId: 3

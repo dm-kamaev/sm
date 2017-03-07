@@ -540,4 +540,48 @@ controller.delete = async(function(req, res) {
     }
 });
 
+
+/**
+ * @api {get} api/course/count Search count controller
+ * @apiVersion 0.0.0
+ * @apiGroup Course
+ * @apiName Count
+ * @apiParam {Object} searchParams
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "name": "Sky",
+ *         "age" 12,
+ *         "type": [1],
+ *         "cost": [0, 1],
+ *         "weekdays": [0, 1],
+ *         "time": 1,
+ *         "regularity": [0, 2],
+ *         "formTraining": 0,
+ *         "duration": [0, 1],
+ *         "metroId: 1,
+ *         "areaId: 2,
+ *         "districtId: 3,
+ *         "categoryId: 4
+ *     }
+ * @apiSuccess {number} count of courses
+ */
+controller.getSearchCount = async(function(req, res) {
+    let result;
+    try {
+        let searchParams = searchView.initSearchParams(req.query);
+        let courses = await(services.course.list(searchParams, {
+                limit: 1
+            }));
+
+        result = courses[0] && courses[0].countResults || 0;
+        res.status(200);
+    } catch (error) {
+        logger.critical(error);
+        result = error.message;
+        res.status(500);
+    }
+    res.json(result);
+});
+
+
 module.exports = controller;
