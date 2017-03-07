@@ -587,3 +587,45 @@ exports.getAllTypes = async(function(req, res) {
     }
     res.json(result);
 });
+
+
+/**
+ * @api {get} api/school/searchCount Search count controller
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName SchoolsCount
+ * @apiParam {Object} searchParams
+ * @apiParamExample {Object} Request-Example:
+ *     {
+ *         "name": "Sky",
+ *         "classes": [1,2,3,4],
+ *         "schoolType": [2, 3],
+ *         "gia": [2, 1],
+ *         "ege": [4, 2],
+ *         "olimp": [3, 2],
+ *         "specializedClassType": [1],
+ *         "activitySphere": [2, 1],
+ *         "sortType": 1,
+ *         "page": 0,
+ *         "metroId: 1,
+ *         "areaId: 2,
+ *         "districtId: 3
+ *     }
+ * @apiSuccess {number} count of school
+ */
+exports.getSchoolsCount = async(function(req, res) {
+    let result;
+    try {
+        let searchParams = searchView.initSearchParams(req.query),
+            schools = await(services.school.list(
+                searchParams, {limitResults: 1}
+            ));
+        result = schools[0] && schools[0].countResults || 0;
+        res.status(200);
+    } catch (error) {
+        logger.critical(error);
+        result = error.message;
+        res.status(500);
+    }
+    res.json(result);
+});

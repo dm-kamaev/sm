@@ -26,6 +26,7 @@ router.get('/school/search/map', schoolController.searchMap);
 router.get(
     '/school/searchMapPointsLegacy', schoolController.searchMapPointsLegacy
 );
+router.get('/school/search/schoolCount', schoolController.getSchoolsCount);
 router.get('/school/search/suggest', schoolController.suggestSearch);
 router.get('/school/search/filters', schoolController.listSearchFilters);
 router.get('/school/activitySphere', schoolController.activitySphere);
