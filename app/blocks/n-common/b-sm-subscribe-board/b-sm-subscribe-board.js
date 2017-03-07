@@ -125,7 +125,7 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.sendData_ = function() {
         var data = this.buildRequestData_();
-
+        console.log(data);
         this.request_
             .send(data)
             .then(
@@ -142,10 +142,11 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.buildRequestData_ = function() {
         return {
-            url: this.buildApiAddress_(),
-            type: 'POST',
-            data: this.buildQueryParams_(),
-            isJSON: true
+            /*'_csrf': window['ctx']['csrf'],*/
+            'url': this.buildApiAddress_(),
+            'type': 'POST',
+            'data': this.buildQueryParams_(),
+            'isJSON': true
         };
     };
 
@@ -167,7 +168,7 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.buildQueryParams_ = function() {
         return {
-            'email_address': this.input_.getValue(),
+            'email': this.input_.getValue(),
             'id': this.params.entityId
         };
     };
@@ -180,7 +181,7 @@ goog.scope(function() {
      * @private
      */
     SubscribeBoard.prototype.onSuccess_ = function(response) {
-        console.log(response);
+        console.log('response', response);
     };
 
 
@@ -191,6 +192,6 @@ goog.scope(function() {
      * @private
      */
     SubscribeBoard.prototype.onError_ = function(error) {
-        console.log(error);
+        console.log('error', error);
     };
 });  // goog.scope
