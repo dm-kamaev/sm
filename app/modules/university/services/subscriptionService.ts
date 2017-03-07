@@ -4,7 +4,12 @@ const mailChimp: any = require('../../../config/config.json').mailChimp;
 const mailChimpUrl: string = `https://${mailChimp.dc}.api.mailchimp.com/3.0` +
     `/lists/${mailChimp.listId}/members`;
 
+const INVALID_RESOURSE_ERROR: string = 'Invalid Resource';
+const EMAIL_EXIST_ERROR: string = 'Member Exists';
+
+
 import {EmailAlreadyExist} from './exceptions/EmailAlreadyExist';
+import {InvalidEmail} from './exceptions/InvalidEmail';
 
 interface Isubscriber {
     id: string; //"id": 1
@@ -48,7 +53,14 @@ class SubscriptionService {
         try {
             response = await(axios.post(mailChimpUrl, data, config));
         } catch (error) {
-            throw new EmailAlreadyExist(email);
+            switch (error.data.title) {
+            case INVALID_RESOURSE_ERROR:
+                throw new InvalidEmail(email);
+            case EMAIL_EXIST_ERROR:
+                throw new EmailAlreadyExist(email);
+            default:
+                throw new Error();
+            }
         }
         return response;
     }

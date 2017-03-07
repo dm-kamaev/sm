@@ -6,12 +6,16 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 import {EmailAlreadyExist as EmailAlreadyExistError}
     from './errors/EmailAlreadyExist';
 
+import {InvalidEmail as InvalidEmailError}
+    from './errors/InvalidEmail';
+
 class SubscriptionController extends Controller {
     constructor() {
         super();
 
         this.errors = {
-            EmailAlreadyExistException: EmailAlreadyExistError
+            EmailAlreadyExistException: EmailAlreadyExistError,
+            InvalidEmailException: InvalidEmailError
         };
     }
 

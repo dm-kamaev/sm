@@ -5,15 +5,15 @@ import {ServiceException} from '../../../../../api/components/interface';
 const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
-class EmailAlreadyExist extends Exception {
+class InvalidEmail extends Exception {
     private name_: string;
 
     constructor(email: string) {
-        const message: string = `Email ${email} already exist.`;
+        const message: string = `Email ${email} is invalid.`;
 
         super(message);
 
-        this.name_ = 'EmailAlreadyExistException';
+        this.name_ = 'InvalidEmailException';
     }
 
     get name(): string {
@@ -25,4 +25,4 @@ class EmailAlreadyExist extends Exception {
     }
 }
 
-export {EmailAlreadyExist};
+export {InvalidEmail};
