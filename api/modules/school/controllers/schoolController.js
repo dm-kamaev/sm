@@ -613,7 +613,7 @@ exports.getAllTypes = async(function(req, res) {
  *     }
  * @apiSuccess {number} count of school
  */
-exports.getSchoolsCount = async(function(req, res) {
+exports.getSearchCount = async(function(req, res) {
     let result;
     try {
         let searchParams = searchView.initSearchParams(req.query),
