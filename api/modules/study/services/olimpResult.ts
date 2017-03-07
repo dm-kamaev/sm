@@ -63,13 +63,12 @@ class OlympiadResultService {
                 year: data.year
             },
             schoolId = data.schoolId;
-        const OlympiadResult =
+        const olympiadResult =
             await this.findByParameters(schoolId, searchData);
 
-        if (OlympiadResult) {
+        if (olympiadResult) {
             throw new OlympiadResultAlreadyExists(schoolId, searchData);
         }
-
         return await OlympiadResultModel.create(data);
     }
 

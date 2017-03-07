@@ -1,7 +1,5 @@
 'use strict';
 
-const lodash = require('lodash');
-
 var specializedClassesView = {};
 
 /**
@@ -28,7 +26,8 @@ specializedClassesView.list = function(
         specializedClasses = specializedClassesView.withTypeName(
             schoolSpecializedClasses, specializedClassTypes
         );
-    const itemsData = specializedClassesView.getListClasses_(specializedClasses);
+    const itemsData =
+        specializedClassesView.getListClasses_(specializedClasses);
     var items = itemsData
             .map((data, index) => {
                 var step = steps[index];
@@ -69,7 +68,7 @@ specializedClassesView.withTypeName = function(
  * [ [ 9, 'Социально-экономический' ] ]
  * @return {Array<string>} [ [], [ 'Социально-экономический' ], [ 'Физ-мат' ] ]
  */
-specializedClassesView.getListClasses_ = function (specializedClasses) {
+specializedClassesView.getListClasses_ = function(specializedClasses) {
     const juniorSchool = [], middleSchool = [], highSchool = [];
     const res = [juniorSchool, middleSchool, highSchool];
     for (let i = 0, l = specializedClasses.length; i < l; i++) {
