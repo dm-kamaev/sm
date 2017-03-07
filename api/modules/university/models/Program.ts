@@ -59,6 +59,16 @@ const Program: ProgramModel = sequelize.define('Program', {
         type: DataType.BOOLEAN,
         field: 'exchange_program'
     },
+    programMajorId: {
+        allowNull: false,
+        onUpdate: 'cascade',
+        type: DataType.INTEGER,
+        field: 'program_major_id',
+        references: {
+            model: 'program_major',
+            key: 'id'
+        }
+    },
     createdAt: {
         field: 'created_at',
         type: DataType.DATE
@@ -97,8 +107,14 @@ const Program: ProgramModel = sequelize.define('Program', {
                 as: 'entranceStatistics',
                 foreignKey: 'program_id',
             });
+            this.belongsTo(models.ProgramMajor, {
+                foreignKey: 'program_major_id',
+                as: 'programMajor'
+            });
         }
     }
 });
 
 export {Program as Model};
+
+
