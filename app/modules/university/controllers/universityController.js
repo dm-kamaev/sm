@@ -432,7 +432,7 @@ controller.information = async(function(req, res, next) {
             entityType: entityType.UNIVERSITY,
             pageName: pageName.INFORMATION,
             query: req.query,
-            csrf: req.csrfToken(),
+            //csrf: req.csrfToken(),
             config: config
         });
 

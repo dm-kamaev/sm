@@ -1,1 +1,0 @@
-exports.router = require('./controllers');
