@@ -41,11 +41,12 @@
 
 .g-dropdown_select.g-dropdown_light-theme {
     .g-dropdown__opener {
-        height: 48px;
+        box-sizing: border-box;
+        height: 50px;
 
         border: 1px solid #deded8;
 
-        line-height: 48px;
+        line-height: 50px;
     }
 
     .g-dropdown__opener-text {
@@ -62,5 +63,11 @@
 
     .g-dropdown__content {
         margin-top: 0;
+    }
+}
+
+.g-dropdown_select.g-dropdown_light-theme.g-dropdown_not-valid {
+    .g-dropdown__opener {
+        border: 2px solid #ee362c;
     }
 }

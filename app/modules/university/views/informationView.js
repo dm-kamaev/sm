@@ -59,6 +59,9 @@ view.render = function(data) {
                                     label: 'Студент',
                                     value: 'Student'
                                 }]
+                            },
+                            contentConfig: {
+                                size: 'm'
                             }
                         },
                         config: {
@@ -95,7 +98,8 @@ view.render = function(data) {
                                 {
                                     label: 3,
                                     value: 3
-                                },{
+                                },
+                                {
                                     label: 4,
                                     value: 4
                                 },
@@ -107,6 +111,9 @@ view.render = function(data) {
                                     label: 6,
                                     value: 6
                                 }]
+                            },
+                            contentConfig: {
+                                size: 'm'
                             }
                         },
                         config: {

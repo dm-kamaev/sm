@@ -46,30 +46,6 @@ goog.scope(function() {
 
 
     /**
-     * @param {Element} element
-     * @protected
-     * @override
-     */
-    ModalInteraction.prototype.decorateInternal = function(element) {
-        ModalInteraction.base(this, 'decorateInternal', element);
-
-        this.initContent_();
-        this.initButton_();
-    };
-
-
-    /**
-     * @protected
-     * @override
-     */
-    ModalInteraction.prototype.enterDocument = function() {
-        ModalInteraction.base(this, 'enterDocument');
-
-        this.initButtonListeners_();
-    };
-
-
-    /**
      * Show error message
      * @param {string} errorMessage
      * @public
@@ -85,6 +61,30 @@ goog.scope(function() {
      */
     ModalInteraction.prototype.hideError = function() {
         this.getView().hideError();
+    };
+
+
+    /**
+     * @protected
+     * @override
+     */
+    ModalInteraction.prototype.enterDocument = function() {
+        ModalInteraction.base(this, 'enterDocument');
+
+        this.initButtonListeners_();
+    };
+
+
+    /**
+     * @param {Element} element
+     * @protected
+     * @override
+     */
+    ModalInteraction.prototype.decorateInternal = function(element) {
+        ModalInteraction.base(this, 'decorateInternal', element);
+
+        this.initContent_();
+        this.initButton_();
     };
 
 
@@ -108,7 +108,7 @@ goog.scope(function() {
      * @private
      */
     ModalInteraction.prototype.onButtonClick_ = function() {
-        if (this.content_.validate) {
+        if (this.content_.validate()) {
             this.sendRequest_();
         }
     };
@@ -149,9 +149,9 @@ goog.scope(function() {
      * @private
      */
     ModalInteraction.prototype.onError_ = function(error) {
-        var errorData = JSON.parse(error.data);
+        var message = JSON.parse(error.data.message);
 
-        this.getView().showErrors(message);
+        this.showError(message);
     };
 
 

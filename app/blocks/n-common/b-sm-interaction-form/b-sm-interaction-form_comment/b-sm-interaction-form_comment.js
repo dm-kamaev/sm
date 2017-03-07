@@ -98,20 +98,19 @@ goog.scope(function() {
             evaluationsData = this.getEvaluationsData_();
 
         goog.object.extend(data, userData, evaluationsData);
-        console.log('data', data);
+
         return data;
     };
 
 
     /**
-     * Validate all fields
+     * Validate fields
      * @return {boolean}
      * @override
      * @public
      */
     InteractionForm.prototype.validate = function() {
-        var isValidFields = InteractionForm.base(this, 'validate');
-        return null;
+        return this.validateUserData_();
     };
 
 
@@ -168,6 +167,28 @@ goog.scope(function() {
             this.getView().setYearFieldVisibility(false);
             this.getView().setGradeFieldVisibility(true);
         }
+    };
+
+
+    /**
+     * Validate fields of user data
+     * @return {boolean}
+     * @private
+     */
+    InteractionForm.prototype.validateUserData_ = function() {
+        var isValid = false,
+            isValidUserTypeField = this.userTypeField_.validate();
+
+        var userType = this.userTypeField_.getValue();
+
+        if (userType == InteractionForm.UserType.GRADUATE) {
+            isValid = this.yearField_.validate() && isValidUserTypeField;
+        }
+        else if (userType == InteractionForm.UserType.STUDENT) {
+            isValid = this.gradeField_.validate() && isValidUserTypeField;
+        }
+
+        return isValid;
     };
 
 

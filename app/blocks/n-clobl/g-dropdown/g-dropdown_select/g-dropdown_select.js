@@ -157,6 +157,22 @@ goog.scope(function() {
 
 
     /**
+     * Return true if dropdown has value,
+     * and set or unset not valid state depends have it value or not
+     * @return {boolean}
+     * @public
+     */
+    Dropdown.prototype.validate = function() {
+        var value = this.getValue(),
+            isValid = goog.isDefAndNotNull(value);
+
+        this.getView().setStateValidity(isValid);
+
+        return isValid;
+    };
+
+
+    /**
      * Get true if item was selected else - false
      * @return {boolean}
      * @public
@@ -201,6 +217,8 @@ goog.scope(function() {
         var value = this.getValueById_(itemId);
 
         if (goog.isDefAndNotNull(value)) {
+            this.getView().setStateValidity(true);
+
             this.selectedItemData = {
                 value: value,
                 label: this.getLabelById_(itemId)

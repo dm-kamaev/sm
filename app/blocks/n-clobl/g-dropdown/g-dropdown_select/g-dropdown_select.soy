@@ -6,7 +6,8 @@
  *     opener: (string|undefined),
  *     defaultOpenerText: (string|undefined),
  *     name: (string|undefined),
- *     content: sm.gList.TemplateSthendal.Params.Data
+ *     content: sm.gList.TemplateSthendal.Params.Data,
+ *     contentConfig: (sm.gList.TemplateStendhal.Params.Config|undefined)
  * }} sm.gDropdown.TemplateSelect.Params.Data
  */
 
@@ -150,7 +151,8 @@
  * Content
  * @param params {{
  *     data: {
- *        content: sm.gList.TemplateSthendal.Params.Data
+ *        content: sm.gList.TemplateSthendal.Params.Data,
+ *        contentConfig: (sm.gList.TemplateStendhal.Params.Config|undefined)
  *     }
  * }}
  * @override
@@ -160,7 +162,8 @@
         {param params: [
             'type': 'list',
             'renderParams': [
-                'data': $params.data.content
+                'data': $params.data.content,
+                'config': $params.data.contentConfig
             ]
         ]/}
     {/call}

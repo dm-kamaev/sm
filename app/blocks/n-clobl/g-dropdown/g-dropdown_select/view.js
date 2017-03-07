@@ -57,7 +57,8 @@ goog.scope(function() {
         OPENER: 'g-dropdown__opener',
         OPENER_TEXT: 'g-dropdown__opener-text',
         OPENER_TEXT_CHANGING: 'g-dropdown__text_changing',
-        CONTENT: 'g-dropdown__content'
+        CONTENT: 'g-dropdown__content',
+        NOT_VALID_STATE: 'g-dropdown_not-valid'
     };
 
     /**
@@ -84,7 +85,7 @@ goog.scope(function() {
     /**
      * Change text of opener
      * @param {string} text
-     * @protected
+     * @public
      */
     View.prototype.changeOpenerText = function(text) {
         if (this.dom.changingOpenerText) {
@@ -93,6 +94,24 @@ goog.scope(function() {
                 text
             );
         }
+    };
+
+
+    /**
+     * Adds or deletes class what not valid
+     * @param {boolean} valid
+     * @public
+     */
+    View.prototype.setStateValidity = function(valid) {
+        valid ?
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.NOT_VALID_STATE
+            ) :
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.NOT_VALID_STATE
+            );
     };
 
 
