@@ -20,7 +20,7 @@
 
     .b-sm-interaction-form__section_user-data {
         min-height: 55px;
-        margin-bottom: 20px;
+        margin-bottom: 5px;
 
         .b-sm-interaction-form__field-wrap {
             display: inline-block;
@@ -34,6 +34,16 @@
     .b-sm-interaction-form__field-wrap_user-type {
         margin-right: 30px;
         margin-bottom: 15px;
+    }
+
+    .b-sm-interaction-form__section_fields {
+        .b-sm-interaction-form__field-wrap {
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
     }
 
     .b-sm-interaction-form__evaluations {
@@ -87,6 +97,8 @@
 @include media-xs {
     .b-sm-interaction-form_comment {
         .b-sm-interaction-form__section_user-data {
+            margin-bottom: 20px;
+
             .b-sm-interaction-form__field-wrap {
                 width: 100%;
             }
@@ -98,7 +110,7 @@
             width: 100%;
 
             &:nth-child(n) {
-                margin-top: 20px;
+                margin-top: 30px;
                 padding: 0;
             }
 

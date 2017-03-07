@@ -55,8 +55,6 @@
 }
 
 .g-button_neptune-reverse-theme {
-    height: 49px;
-
     letter-spacing: 0;
     text-transform: none;
 
@@ -64,6 +62,7 @@
     border: solid 2px #007aff;
     background-color: #007aff;
 
+    font-family: inherit;
     font-weight: 600;
     line-height: 25px;
 
@@ -72,23 +71,6 @@
     }
 }
 
-.g-button_neptune-fill-theme {
-    height: 60px;
-    padding: 0;
-
-    text-transform: none;
-
-    color: #fff;
-    background-color: #007aff;
-    border: none;
-
-    font-weight: 600;
-    line-height: 60px;
-
-    &.g-button_hoverable:hover {
-        background-color: #007aff;
-    }
-}
 
 .g-button_thin-theme {
     padding: 14px 0 15px 0;
@@ -117,6 +99,14 @@
     font-size: 16px;
 }
 
+.g-button_size_xl {
+    height: 58px;
+    padding: 14px;
+
+    font-size: 18px;
+    font-weight: normal;
+}
+
 .g-button_disabled {
     cursor: default;
 
@@ -127,6 +117,6 @@
     }
 }
 
-.g-button_border-round {
+.g-button_border-round-size_xl {
     border-radius: 100px;
 }

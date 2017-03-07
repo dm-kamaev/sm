@@ -74,7 +74,8 @@ view.render = function(data) {
                             placeholder: 'Укажите год выпуска'
                         },
                         config: {
-                            theme: 'thin'
+                            theme: 'thin',
+                            validations: ['notEmpty']
                         },
                         controlName: 'input'
                     },
@@ -188,9 +189,14 @@ view.render = function(data) {
             },
             contentName: 'smInteractionFormComment',
             button: {
-                text: 'Оставить отзыв',
-                theme: 'neptune-fill',
-                borderRound: 'l'
+                data: {
+                    content: 'Оставить отзыв'
+                },
+                config: {
+                    theme: 'neptune-reverse',
+                    borderRoundSize: 'xl',
+                    size: 'xl'
+                }
             },
             closer: {
                 iconName: 'blue-close',

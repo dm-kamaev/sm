@@ -13,8 +13,8 @@
  *     contentName: ('smInteractionForm'|'smInteractionFormComment'),
  *     api: string,
  *     button: {
- *         text: string,
- *         theme: (string|undefined)
+ *         data: sm.gButton.TemplateStendhal.Params.Data,
+ *         config: sm.gButton.TemplateStendhal.Params.Config
  *     },
  *     error: ({
  *         text: ?string
@@ -169,8 +169,8 @@
  * @param params {{
  *     data: {
  *         button: {
- *             text: string,
- *             theme: (string|undefined)
+ *             data: sm.gButton.TemplateStendhal.Params.Data,
+ *             config: sm.gButton.TemplateStendhal.Params.Config
  *         }
  *     }
  * }}
@@ -182,12 +182,8 @@
                 {param params: [
                     'type': 'button',
                     'renderParams': [
-                        'data': [
-                            'content': $params.data.button.text
-                        ],
-                        'config': [
-                            'theme': $params.data.button.theme
-                        ]
+                        'data': $params.data.button.data,
+                        'config': $params.data.button.config
                     ]
                 ]/}
             {/call}

@@ -6,6 +6,8 @@
 
         font-family: 'Proxima', Arial, sans-serif;
         line-height: normal;
+
+        padding-bottom: 25px;
     }
 
     .g-modal__section {
@@ -35,10 +37,26 @@
         padding: 10px;
     }
 
+    .g-modal__section_button {
+        padding: 50px 0 25px;
+    }
+
     .g-modal__button {
         width: 240px;
-        margin: 50px auto;
+        margin: 0 auto;
     }
+
+    .g-modal__section_error {
+        font-family: Arial,sans-serif;
+    }
+
+    .g-modal__error {
+        text-align: center;
+        color: #e2332a;
+
+        font-size: 14px;
+    }
+
 }
 
 @include media-xs {
@@ -46,6 +64,10 @@
         .g-modal__section {
             padding-left: 30px;
             padding-right: 30px;
+        }
+
+        .g-modal__section_button {
+            padding-top: 35px;
         }
     }
 }

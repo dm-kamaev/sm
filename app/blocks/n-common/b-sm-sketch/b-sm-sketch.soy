@@ -14,8 +14,8 @@
  *         },
  *         config: ({
  *             theme: (string|undefined),
- *             isBorderRound: (boolean|undefined)
- *         }|undefined)   
+ *             borderRoundSize: (string|undefined)
+ *         }|undefined)
  *     }
  * }} sm.bSmSketch.Template.Params.Data
  */
@@ -117,8 +117,8 @@
  *     },
  *     config: ({
  *         theme: (string|undefined),
- *         isBorderRound: (boolean|undefined)
- *     }|undefined)  
+ *         borderRoundSize: (string|undefined)
+ *     }|undefined)
  * }}
  * @private
  */
@@ -137,7 +137,7 @@
                     'config': [
                         'customClasses': [$customClasses],
                         'theme': $params.config.theme,
-                        'isBorderRound': $params.config.isBorderRound,
+                        'borderRoundSize': $params.config.borderRoundSize,
                         'size': 'm'
                     ]
                 ]
