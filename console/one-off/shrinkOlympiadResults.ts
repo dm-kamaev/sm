@@ -19,16 +19,18 @@ const db = require('../../app/components/db');
 
 class OlympiadResultsShrinker {
     public async shrink() {
+        const initialLogging = db.options.logging;
         db.options.logging = false;
         const olympiadResults = await this.getOlympiadResults_();
         const dbData = this.processOlympiadResults_(olympiadResults);
-        try {
-            await this.writeToDb_(dbData);
-            await this.destroyProcessed_(olympiadResults);
-        } catch (error) {
-            console.log(error);
-        }
-        db.options.logging = true;
+
+        await db.transaction(async() => {
+            return Promise.all([
+                this.destroyProcessed_(olympiadResults),
+                this.writeToDb_(dbData)
+            ]);
+        }).catch(error => console.log(error));
+        db.options.logging = initialLogging;
     }
 
     private  async getOlympiadResults_():
@@ -117,7 +119,9 @@ class OlympiadResultsShrinker {
 
     private async writeToDb_(
             data: Array<OlympiadResultAttribute>): Promise<any> {
-        return await data.map(olympiadResultService.create);
+        return await Promise.all(
+            data.map(item => olympiadResultService.create(item))
+        );
     }
 
     private async destroyProcessed_(instances: Array<OlympiadResultInstance>) {
