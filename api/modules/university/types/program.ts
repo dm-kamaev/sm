@@ -1,6 +1,7 @@
 import * as Sequelize from 'sequelize/v3';
 
 import {AddressAttribute, AddressInstance} from '../../geo/types/address';
+import {ProgramMajorInstance} from '../models/ProgramMajor';
 
 export interface ProgramAttribute {
     id?: number;
@@ -31,6 +32,7 @@ export interface ProgramInstance
         >;
     setAddresses: Sequelize.BelongsToManyAddAssociationsMixin<
         AddressInstance, number, AddressAttribute>;
+    programMajor: ProgramMajorInstance;
 }
 
 export interface ProgramAdmin extends ProgramAttribute {
