@@ -113,7 +113,7 @@ class OlympiadResultsView {
         const grade = value.class;
         let position;
 
-        if (grade > 8) {
+        if (grade > 9) {
             position = OlympiadResultsView.PositionType.BOTTOM;
         } else if (grade > 4) {
             position = OlympiadResultsView.PositionType.MIDDLE;
