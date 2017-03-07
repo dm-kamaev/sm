@@ -56,7 +56,7 @@ const Program: ProgramModel = sequelize.define('Program', {
         field: 'extra_exam'
     },
     exchangeProgram: {
-        type: DataType.BOOLEAN,
+        type: DataType.STRING,
         field: 'exchange_program'
     },
     programMajorId: {

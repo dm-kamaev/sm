@@ -40,6 +40,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Object} -.programMajor    Major program for program
      * @apiSuccess {Number}   -.programMajor.id   Major program id
      * @apiSuccess {String}   -.programMajor.name Major program name
+     * @apiSuccess {String} -.exchangeProgram Exchange program
      * @apiSuccess {String} -.createdAt       Created at.
      * @apiSuccess {String} -.updatedAt       Updated at.
      * @apiSuccessExample {json} Success-Response:
@@ -102,6 +103,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {String[]} extraExam       Array of extra exams.
      * @apiSuccess {String}   addressName     Name of address.
      * @apiSuccess {Object}   programMajor    Major program for program
+     * @apiSuccess {String}   exchangeProgram Exchange program
      * @apiSuccess {Number}       -.programMajor.id   Major program id
      * @apiSuccess {String}       -.programMajor.name Major program name
      * @apiSuccess {String}   createdAt       Created at.
@@ -162,6 +164,7 @@ class ProgramAdminController extends Controller {
      * @apiParam {String[]} links       Array of links
      *     (official site, facebook communities).
      * @apiParam {Number}   programMajorId Program major Id
+     * @apiParam {String} -.exchangeProgram Exchange program
      *
      *
      * @apiSuccess {Number}   id              Id.
@@ -178,6 +181,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Number}   salary          Salary after graduation.
      * @apiSuccess {Number}   programMajorId  Program major Id
      * @apiSuccess {String[]} extraExam       Array of extra exams.
+     * @apiSuccess {String} -.exchangeProgram Exchange program
      * @apiSuccess {String}   createdAt       Created at.
      * @apiSuccess {String}   updatedAt       Updated at.
      * @apiSuccess {String}   created_at      Created at.
@@ -201,7 +205,7 @@ class ProgramAdminController extends Controller {
      *        "specializations": null,
      *        "createdAt": "2017-03-07T10:43:42.034Z",
      *        "updatedAt": "2017-03-07T10:43:42.034Z",
-     *        "exchangeProgram": null
+     *        "exchangeProgram": 'да'
      *    }
      */
     public async actionCreate(actionContext: any, universityId: string) {
@@ -218,7 +222,8 @@ class ProgramAdminController extends Controller {
             salary: body.salary,
             links: body.links,
             addressName: body.addressName,
-            programMajorId: Number(body.programMajorId)
+            programMajorId: Number(body.programMajorId),
+            exchangeProgram: body.exchangeProgram.trim()
         };
         return programService.create(programData);
     }
@@ -265,7 +270,8 @@ class ProgramAdminController extends Controller {
             salary: body.salary,
             links: body.links,
             addressName: body.addressName,
-            programMajorId: Number(body.programMajorId)
+            programMajorId: Number(body.programMajorId),
+            exchangeProgram: body.exchangeProgram.trim()
         };
         return programService.update(Number(id), programData);
     }
