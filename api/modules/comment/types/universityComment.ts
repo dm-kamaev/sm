@@ -43,6 +43,6 @@ export type AdminUniversityComment = {
     grade?: number;
     yearGraduate?: number;
     username?: string;
-    socialId: number;
+    socialId: string;
     socialType: string;
 };
