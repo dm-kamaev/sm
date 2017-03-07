@@ -37,8 +37,44 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Number}   -.employment      Percent of employment.
      * @apiSuccess {Number}   -.salary          Salary after graduation.
      * @apiSuccess {String[]} -.extraExam       Array of extra exams.
-     * @apiSuccess {String}   -.createdAt       Created at.
-     * @apiSuccess {String}   -.updatedAt       Updated at.
+     * @apiSuccess {Object} -.programMajor    Major program for program
+     * @apiSuccess {Number}   -.programMajor.id   Major program id
+     * @apiSuccess {String}   -.programMajor.name Major program name
+     * @apiSuccess {String} -.createdAt       Created at.
+     * @apiSuccess {String} -.updatedAt       Updated at.
+     * @apiSuccessExample {json} Success-Response:
+     *    [
+     *        {
+     *            "id": 5,
+     *            "name": "Прикладная математика",
+     *            "universityId": 62,
+     *            "description": "lalala",
+     *            "commentGroupId": 369,
+     *            "category": "sadadasdsadsad",
+     *            "links": [
+     *                "http://yandex.ru",
+     *                "http://yandex1.ru"
+     *            ],
+     *            "specializations": [
+     *                "прикладная математика",
+     *                "химия"
+     *            ],
+     *            "duration": 1,
+     *            "employment": 1.2,
+     *            "salary": 12000,
+     *            "extraExam": [
+     *                "100 отжимагий",
+     *                "рисование"
+     *            ],
+     *            "exchangeProgram": true,
+     *            "createdAt": "2017-03-07T06:59:52.220Z",
+     *            "updatedAt": "2017-03-07T06:59:52.220Z",
+     *            "programMajor": {
+     *                "id": 1,
+     *                "name": "экономист"
+     *            }
+     *        }
+     *    ]
      */
     public async actionList(actionContext: any, universityId: string) {
         return programService.getAll();
@@ -65,10 +101,45 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Number}   salary          Salary after graduation.
      * @apiSuccess {String[]} extraExam       Array of extra exams.
      * @apiSuccess {String}   addressName     Name of address.
+     * @apiSuccess {Object}   programMajor    Major program for program
+     * @apiSuccess {Number}       -.programMajor.id   Major program id
+     * @apiSuccess {String}       -.programMajor.name Major program name
      * @apiSuccess {String}   createdAt       Created at.
      * @apiSuccess {String}   updatedAt       Updated at.
      *
      * @apiError (404) ProgramNotFound Program with given Id not found.
+     * @apiSuccessExample {json} Success-Response:
+     *    {
+     *        "id": 5,
+     *        "name": "Прикладная математика",
+     *        "universityId": 62,
+     *        "description": "lalala",
+     *        "commentGroupId": 369,
+     *        "category": "sadadasdsadsad",
+     *        "links": [
+     *            "http://yandex.ru",
+     *            "http://yandex1.ru"
+     *        ],
+     *        "specializations": [
+     *            "прикладная математика",
+     *            "химия"
+     *        ],
+     *        "duration": 1,
+     *        "employment": 1.2,
+     *        "salary": 12000,
+     *        "extraExam": [
+     *            "100 отжимагий",
+     *            "рисование"
+     *        ],
+     *        "exchangeProgram": true,
+     *        "createdAt": "2017-03-07T06:59:52.220Z",
+     *        "updatedAt": "2017-03-07T06:59:52.220Z",
+     *        "programMajor": {
+     *            "id": 1,
+     *            "name": "экономист"
+     *        },
+     *        "addressName": null
+     *    }
      */
     public async actionGet(actionContext: any, universityId: string, id: any) {
         return programService.get(id);
@@ -90,6 +161,8 @@ class ProgramAdminController extends Controller {
      * @apiParam {Number}   salary      Salary after graduation.
      * @apiParam {String[]} links       Array of links
      *     (official site, facebook communities).
+     * @apiParam {Number}   programMajorId Program major Id
+     *
      *
      * @apiSuccess {Number}   id              Id.
      * @apiSuccess {String}   name            Name.
@@ -103,11 +176,33 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Number}   duration        Number of studying years.
      * @apiSuccess {Number}   employment      Percent of employment.
      * @apiSuccess {Number}   salary          Salary after graduation.
+     * @apiSuccess {Number}   programMajorId  Program major Id
      * @apiSuccess {String[]} extraExam       Array of extra exams.
      * @apiSuccess {String}   createdAt       Created at.
      * @apiSuccess {String}   updatedAt       Updated at.
      * @apiSuccess {String}   created_at      Created at.
      * @apiSuccess {String}   updated_at      Updated at.
+     * @apiSuccessExample {json} Success-Response:
+     *    {
+     *        "id": 8,
+     *        "name": "кибернетика",
+     *        "universityId": 62,
+     *        "description": "вуз номер ",
+     *        "extraExam": [],
+     *        "category": "something",
+     *        "duration": 4,
+     *        "employment": 1.9,
+     *        "salary": 80000,
+     *        "links": [],
+     *        "programMajorId": 1,
+     *        "commentGroupId": 372,
+     *        "updated_at": "2017-03-07T10:43:42.034Z",
+     *        "created_at": "2017-03-07T10:43:42.034Z",
+     *        "specializations": null,
+     *        "createdAt": "2017-03-07T10:43:42.034Z",
+     *        "updatedAt": "2017-03-07T10:43:42.034Z",
+     *        "exchangeProgram": null
+     *    }
      */
     public async actionCreate(actionContext: any, universityId: string) {
         const request = actionContext.request;
@@ -122,7 +217,8 @@ class ProgramAdminController extends Controller {
             employment: body.employment,
             salary: body.salary,
             links: body.links,
-            addressName: body.addressName
+            addressName: body.addressName,
+            programMajorId: Number(body.programMajorId)
         };
         return programService.create(programData);
     }
@@ -143,6 +239,7 @@ class ProgramAdminController extends Controller {
      * @apiParam {Number}   salary      Salary after graduation.
      * @apiParam {String[]} links       Array of links
      *     (official site, facebook communities).
+     * @apiParam {Number}   programMajorId Program major Id
      *
      * @apiSuccess {Array}  -    Response body.
      * @apiSuccess {Number} -[0] Number of updated rows (Should be always 1).
@@ -167,7 +264,8 @@ class ProgramAdminController extends Controller {
             employment: body.employment,
             salary: body.salary,
             links: body.links,
-            addressName: body.addressName
+            addressName: body.addressName,
+            programMajorId: Number(body.programMajorId)
         };
         return programService.update(Number(id), programData);
     }

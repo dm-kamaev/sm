@@ -1,6 +1,7 @@
 const sequelize = require('../../../../app/components/db');
 
 import {Model as ProgramModel} from '../models/Program';
+import {Model as ProgramMajor} from '../models/ProgramMajor';
 import {
     ProgramInstance,
     ProgramAdmin
@@ -18,7 +19,9 @@ const EXCLUDE_FIELDS = [
     'created_at',
     'updated_at',
     'university_id',
-    'comment_group_id'
+    'comment_group_id',
+    'program_major_id',
+    'programMajorId',
 ];
 
 class ProgramService {
@@ -27,9 +30,12 @@ class ProgramService {
             attributes: {
                 exclude: EXCLUDE_FIELDS
             },
-            raw: true
+            include: [{
+                attributes: ['id', 'name'],
+                model: ProgramMajor,
+                as: 'programMajor'
+            }],
         });
-
         return programs;
     }
 
@@ -40,7 +46,12 @@ class ProgramService {
             },
             where: {
                 id: id
-            }
+            },
+            include: [{
+                attributes: ['id', 'name'],
+                model: ProgramMajor,
+                as: 'programMajor'
+            }],
         });
         if (!program) {
             throw new ProgramNotFound(id);
