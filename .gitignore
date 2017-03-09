@@ -61,18 +61,24 @@ api/modules/entity/services/page.js
 api/modules/course/controllers/middleware/**/*.js
 api/modules/course/models/courseBrand.js
 
+api/modules/geo/controllers/index.js
+
 api/modules/geo/interfaces/*.js
 api/modules/geo/models/address.js
 api/modules/geo/models/area.js
 api/modules/geo/models/city.js
 api/modules/geo/models/department.js
 api/modules/geo/models/metro.js
+api/modules/geo/models/Region.js
 api/modules/geo/services/exceptions/*.js
 api/modules/geo/services/address.js
 api/modules/geo/services/city.js
 api/modules/geo/services/department.js
 api/modules/geo/views/departmentView.js
 api/modules/geo/types/**/*.js
+
+api/modules/geo/migrations/20170309140000-create-region.js
+api/modules/geo/migrations/20170309144500-add-region-id-for-city.js
 
 api/modules/school/interfaces/*.js
 

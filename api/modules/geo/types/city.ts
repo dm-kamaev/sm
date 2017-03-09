@@ -2,6 +2,7 @@ import * as Sequelize from 'sequelize/v3';
 
 export interface CityAttribute {
     name?: string;
+    regionId?: number;
 }
 
 export interface CityInstance

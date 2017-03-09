@@ -8,6 +8,15 @@ interface CityModel extends Sequelize.Model<CityInstance, CityAttribute> {}
 
 const City: CityModel = db.define('City', {
     name: DataType.STRING,
+    regionId: {
+        onUpdate: 'cascade',
+        type: DataType.INTEGER,
+        field: 'region_id',
+        references: {
+            model: 'region',
+            key: 'id'
+        }
+    }
 }, {
     underscored: true,
     tableName: 'city',
