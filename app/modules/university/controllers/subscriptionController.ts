@@ -25,15 +25,24 @@ class SubscriptionController extends Controller {
      * @apiVersion 1.0.0
      * @apiName addSubscriber
      *
-     * @apiSuccess {Number} id         Id.
-     * @apiSuccess {String} email      Email.
-     * @apiSuccess {String} status     Status.
+     * @apiSuccess {Object} subsciber
+     * @apiSuccess {Number} subsciber.id
+     * @apiSuccess {String} subsciber.email
+     * @apiSuccess {String} subsciber.status
+     * @apiSuccessExample {json} Success-Response:
+     * HTTP/1.1 200 OK
+     * {
+     *     "id": "76234da8e",
+     *     "email": "123qwe@yandex.ru",
+     *     "status": "subscribed"
+     * }
      */
     public async actionCreate(actionContext: any) {
-        const result: any = await(service.create(
+        const result = await(service.create(
             actionContext.request.body.id,
             actionContext.request.body.email
         ));
+
         return {
             id: result.id,
             email: result['email_address'],

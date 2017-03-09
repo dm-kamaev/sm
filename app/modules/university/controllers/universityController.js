@@ -382,8 +382,10 @@ controller.information = async(function(req, res, next) {
                 },
                 comments: {
                     header: 'Отзывы – Менеджмент (НИУ–ВШЭ)',
-                    items: [comment, comment, comment, comment, comment],
-                    itemType: 'smComment'
+                    list: {
+                        items: [comment, comment, comment, comment, comment],
+                        itemType: 'smComment'
+                    }
                 }
             },
             authSocialLinks: authSocialLinks,
@@ -432,7 +434,7 @@ controller.information = async(function(req, res, next) {
             entityType: entityType.UNIVERSITY,
             pageName: pageName.INFORMATION,
             query: req.query,
-            //csrf: req.csrfToken(),
+            csrf: req.csrfToken(),
             config: config
         });
 

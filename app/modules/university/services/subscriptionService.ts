@@ -59,7 +59,7 @@ class SubscriptionService {
             case EMAIL_EXIST_ERROR:
                 throw new EmailAlreadyExist(email);
             default:
-                throw new Error();
+                throw error;
             }
         }
         return response;

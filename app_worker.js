@@ -105,13 +105,13 @@ app.use('/universities/api', api.university.router);
 app.use('/:subdomain/api', api.user.router);
 app.use('/:subdomain/api', api.mail.router);
 app.use('/:subdomain/api', api.study.router);
-app.use('/courses/', modules.university.router);
 // generate token in cookies, all request not GET
 app.use(csrf);
 
 app.use('/:subdomain/', api.user.router);
 app.use('/schools/', modules.school.router);
 app.use('/courses/', modules.course.router);
+app.use('/courses/', modules.university.router);
 
 app.use('/:subdomain/api', api.comment.router);
 app.use('/:subdomain/api', api.geo.router);
