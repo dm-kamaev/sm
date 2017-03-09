@@ -56,4 +56,20 @@ goog.scope(function() {
     Input.prototype.getName = function() {
         return this.getView().getName();
     };
+
+
+    /**
+     * Set not valid state
+     */
+    Input.prototype.setNotValidState = function() {
+        this.getView().setNotValidState();
+    };
+
+
+    /**
+     * Set valid state
+     */
+    Input.prototype.setValidState = function() {
+        this.getView().setValidState();
+    };
 });  // goog.scope

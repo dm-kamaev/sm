@@ -44,6 +44,19 @@ goog.scope(function() {
 
 
     /**
+     * Validation error message
+     * @enum {string}
+     */
+    SubscribeBoard.Message = {
+        SUCCESS: 'Спасибо! Теперь необходимо подтвердить подписку. ' +
+            'Мы вам отправили письмо со ссылкой. Перейдите по ней, ' +
+            'чтобы закончить процесс подписки.',
+        EMAIL_EXIST: 'Данный email уже зарегистрирован.',
+        DEFAULT: 'Ошибка при подписке.'
+    };
+
+
+    /**
      * @override
      * @public
      */
@@ -95,6 +108,12 @@ goog.scope(function() {
             sm.gInput.InputStendhal.Event.ENTER_PRESS,
             this.onSubmit_
         );
+
+        this.getHandler().listen(
+            this.input_,
+            sm.gInput.InputStendhal.Event.NOT_VALID,
+            this.onInvalidInputValue_
+        );
     };
 
 
@@ -125,7 +144,6 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.sendData_ = function() {
         var data = this.buildRequestData_();
-        console.log(data);
         this.request_
             .send(data)
             .then(
@@ -142,7 +160,6 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.buildRequestData_ = function() {
         return {
-            /*'_csrf': window['ctx']['csrf'],*/
             'url': this.buildApiAddress_(),
             'type': 'POST',
             'data': this.buildQueryParams_(),
@@ -168,6 +185,7 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.buildQueryParams_ = function() {
         return {
+            '_csrf': window['ctx']['csrf'],
             'email': this.input_.getValue(),
             'id': this.params.entityId
         };
@@ -175,23 +193,37 @@ goog.scope(function() {
 
 
     /**
-     * Handler of server response success
-     * @param {{
-     * }} response
      * @private
      */
-    SubscribeBoard.prototype.onSuccess_ = function(response) {
-        console.log('response', response);
+    SubscribeBoard.prototype.onInvalidInputValue_ = function() {
+        this.input_.setNotValidState();
+    };
+
+
+    /**
+     * Handler of server response success
+     * @private
+     */
+    SubscribeBoard.prototype.onSuccess_ = function() {
+        this.getView().showMessage(SubscribeBoard.Message.SUCCESS);
     };
 
 
     /**
      * Handler of server response error
-     * @param {{
-     * }} error
+     * @param {Error} error
      * @private
      */
     SubscribeBoard.prototype.onError_ = function(error) {
-        console.log('error', error);
+        switch (error.status) {
+            case 400:
+                this.getView().showMessage(SubscribeBoard.Message.EMAIL_EXIST);
+                break;
+            case 422:
+                this.onInvalidInputValue_();
+                break;
+            default:
+                this.getView().showMessage(SubscribeBoard.Message.DEFAULT);
+        }
     };
 });  // goog.scope

@@ -45,7 +45,7 @@
  */
 {template .body}
     {call .header_ data="all" /}
-    {call .input_ data="all" /}
+    {call .inputBlock_ data="all" /}
     {call .description_ data="all" /}
 {/template}
 
@@ -60,11 +60,13 @@
     {let $textSizeXs kind="text"}
         Подписка на новости:
     {/let}
+
     <div class="{call .rootClass/}__header">
         {call .getText}
             {param message: $text /}
         {/call}
     </div>
+
     <div class="{call .rootClass/}__header_size_xs">
         {call .getText}
             {param message: $textSizeXs /}
@@ -75,6 +77,17 @@
 
 /**
  * Input block
+ */
+{template .inputBlock_}
+    <div class="{call .rootClass/}__input">
+        {call .input_ /}
+        {call .inputIcon_ /}
+    </div>
+{/template}
+
+
+/**
+ * Description
  */
 {template .input_}
     {let $placeholder kind="text"}
@@ -87,40 +100,43 @@
         {call .rootClass/}__email-input
     {/let}
 
-    <div class="{call .rootClass/}__input">
+    {call .renderChild}
+        {param params: [
+            'type': 'input',
+            'renderParams': [
+                'data': [
+                    'placeholder': $placeholder,
+                    'maxLength': 50,
+                    'name': 'email',
+                    'type': 'text'
+                ],
+                'config': [
+                    'theme': 'neptune',
+                    'validations': ['email', 'notEmpty'],
+                    'customClasses': [$customClasses]
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Description
+ */
+{template .inputIcon_}
+    <div class="{call .rootClass/}__input-icon">
         {call .renderChild}
             {param params: [
-                'type': 'input',
+                'type': 'icon-svg',
                 'renderParams': [
                     'data': [
-                        'placeholder': $placeholder,
-                        'maxLength': 50,
-                        'name': 'email',
-                        'type': 'text'
-                    ],
-                    'config': [
-                        'theme': 'neptune',
-                        'validations': ['email', 'notEmpty'],
-                        'customClasses': [$customClasses]
+                        'type': 'arrow-send'
                     ]
                 ]
             ]/}
         {/call}
-
-        <div class="{call .rootClass/}__input-icon">
-            {call .renderChild}
-                {param params: [
-                    'type': 'icon-svg',
-                    'renderParams': [
-                        'data': [
-                            'type': 'arrow-send'
-                        ]
-                    ]
-                ]/}
-            {/call}
-        </div>
     </div>
-
 {/template}
 
 
@@ -131,6 +147,7 @@
     {let $text kind="text"}
         Напомним о днях открытых дверей, пришлём списки зачисления и проходные баллы вам на почту
     {/let}
+
     <div class="{call .rootClass/}__description">
         {call .getText}
             {param message: $text /}

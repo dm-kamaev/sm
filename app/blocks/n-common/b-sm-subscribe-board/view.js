@@ -1,6 +1,7 @@
 goog.provide('sm.bSmSubscribeBoard.View');
 
 goog.require('cl.iControl.View');
+goog.require('goog.dom');
 goog.require('goog.events.EventType');
 goog.require('sm.bSmLink.View');
 
@@ -41,7 +42,8 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-subscribe-board',
         EMAIL_INPUT: 'b-sm-subscribe-board__email-input',
-        SUBMIT_BUTTON: 'b-sm-subscribe-board__input-icon'
+        SUBMIT_BUTTON: 'b-sm-subscribe-board__input-icon',
+        DESCRIPTION: 'b-sm-subscribe-board__description'
     };
 
 
@@ -71,7 +73,7 @@ goog.scope(function() {
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
 
-        this.initSubmitListeners_();
+        this.initSubmitButtonListeners_();
     };
 
 
@@ -86,6 +88,9 @@ goog.scope(function() {
             ),
             submitButton: this.getElementByClass(
                 View.CssClass.SUBMIT_BUTTON
+            ),
+            description: this.getElementByClass(
+                View.CssClass.DESCRIPTION
             )
         };
     };
@@ -118,10 +123,20 @@ goog.scope(function() {
 
 
     /**
+     * Show  message
+     * @param {string} message
+     * @protected
+     */
+    View.prototype.showMessage = function(message) {
+        goog.dom.setTextContent(this.dom.description, message);
+    };
+
+
+    /**
      * Init submit listeners
      * @private
      */
-    View.prototype.initSubmitListeners_ = function() {
+    View.prototype.initSubmitButtonListeners_ = function() {
         this.getHandler().listen(
             this.dom.submitButton,
             goog.events.EventType.CLICK,
