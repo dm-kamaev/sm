@@ -29,12 +29,20 @@ export interface UniversityCommentInstance
         Sequelize.BelongsToSetAssociationMixin<CommentGroupInstance, number>;
 }
 
-export interface UniversityCommentFullCreateAttributes
-        extends UniversityCommentAttributes, UserDataAttributes {
+export interface UniversityCommentFullCreateAttributes {
+    pros: string;
+    cons: string;
+    advice: string;
+    userType: string;
+    userId?: number;
+    grade?: number;
+    yearGraduate?: number;
+    username?: string;
     score: Array<number>;
 }
 
 export type AdminUniversityComment = {
+    id: number;
     pros: string;
     cons: string;
     advice: string;
