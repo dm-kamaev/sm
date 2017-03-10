@@ -27,7 +27,6 @@ let configView = {
  *     analyticsId: string,
  *     experimentId: ?string,
  *     yandexMetrikaId: number,
- *     carrotquestId: string,
  *     domain: string,
  *     fbClientId: ?number,
  *     csrf: string
@@ -51,7 +50,6 @@ configView.render = function(params) {
         analyticsId: config[subdomain].analyticsId,
         experimentId: config[subdomain].experimentId,
         yandexMetrikaId: config[subdomain].yandexMetrikaId,
-        carrotquestId: config.carrotquestId,
         fbClientId: config.facebookClientId,
         domain: config[subdomain].host,
         csrf: params.csrf
