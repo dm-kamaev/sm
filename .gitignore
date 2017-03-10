@@ -141,8 +141,6 @@ app/modules/university/controllers/subscriptionController.js
 app/modules/university/services/exceptions/*.js
 app/modules/university/services/subscriptionService.js
 
-app/modules/university/services
-
 console/modules/geoTools/*.js
 
 gulp/taskBackendLint.js
