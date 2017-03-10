@@ -29,11 +29,7 @@ class RatingService {
     }
 
     public async delete(ratingId: number): Promise<void> {
-        const instance = await this.silentGetOne_(ratingId);
-
-        if (!instance) {
-
-        }
+        const instance = await RatingModel.findById(ratingId);;
 
         return await instance.destroy();
     }
@@ -51,10 +47,6 @@ class RatingService {
         }
 
         return result;
-    }
-
-    private async silentGetOne_(ratingId: number): Promise<RatingInstance> {
-        return await RatingModel.findById(ratingId);
     }
 }
 

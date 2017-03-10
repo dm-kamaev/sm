@@ -54,3 +54,16 @@ export type AdminUniversityComment = {
     socialId: string;
     socialType: string;
 };
+
+export type BackendUniversityComment = {
+    id: number;
+    pros: string;
+    cons: string;
+    advice: string;
+    score?: Array<number>;
+    totalScore?: number;
+    userType: string;
+    grade?: number;
+    yearGraduate?: number;
+    userId: number;
+};

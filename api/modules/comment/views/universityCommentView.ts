@@ -4,7 +4,8 @@
 
 import {
     UniversityCommentInstance,
-    AdminUniversityComment
+    AdminUniversityComment,
+    BackendUniversityComment
 } from '../types/universityComment';
 
 import {userView} from '../../user/views/user';
@@ -12,6 +13,30 @@ import {userView} from '../../user/views/user';
 import {UserAttributes} from '../../user/types/user';
 
 class UniversityCommentView {
+    public render(
+            universityComment: UniversityCommentInstance
+    ): BackendUniversityComment {
+        const userData = universityComment.userData;
+        return {
+            id: universityComment.id,
+            pros: universityComment.pros,
+            cons: universityComment.cons,
+            advice: universityComment.advice,
+            score: this.renderScore_(universityComment),
+            totalScore: this.renderTotalScore_(universityComment),
+            userType: userData.userType,
+            grade: userData.grade,
+            yearGraduate: userData.yearGraduate,
+            userId: userData.userId
+        };
+    }
+
+    public renderList(
+            universityComments: Array<UniversityCommentInstance>
+    ): Array<BackendUniversityComment> {
+        return universityComments.map(comment => this.render(comment));
+    }
+
     public adminRender(
             universityComment: UniversityCommentInstance,
             user: UserAttributes
@@ -50,6 +75,14 @@ class UniversityCommentView {
             universityComment: UniversityCommentInstance): number | null {
         return universityComment.rating ?
             universityComment.rating.totalScore :
+            null;
+    }
+
+    private renderScore_(
+            universityComment: UniversityCommentInstance
+    ): Array<number> | null {
+        return universityComment.rating ?
+            universityComment.rating.score :
             null;
     }
 }
