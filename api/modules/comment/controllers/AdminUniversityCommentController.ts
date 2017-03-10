@@ -11,7 +11,7 @@ const userService = require('../../user/services/user');
 import {ProgramNotFound} from './errors/ProgramNotFound';
 import {UniversityCommentNotFound} from './errors/UniversityCommentNotFound';
 import {
-UniversityCommentNotBelongsToProgram
+    UniversityCommentNotBelongsToProgram
 } from './errors/UniversityCommentNotBelongsToProgram';
 
 class AdminUniversityCommentController extends Controller {
@@ -52,7 +52,7 @@ class AdminUniversityCommentController extends Controller {
     /**
      * @apiDefine UniversityCommentNotBelongsToProgramError
      * @apiError (422) UniversityCommentNotBelongsToProgram
-     *     University comment not found
+     *     University comment not belongs to program
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 422 Not Found
      *      {
@@ -65,8 +65,10 @@ class AdminUniversityCommentController extends Controller {
 
     /**
      * @api {get} /api/admin/program/:programId/comment
+     *     Get university comments by program
      * @apiVersion 1.0.0
-     * @apiName Get university comments by program
+     * @apiGroup AdminUniversityComment
+     * @apiName GetAdminUniversityComments
      *
      * @apiSuccess universityComment            {Object[]}
      *     Requested university comment object
@@ -76,6 +78,10 @@ class AdminUniversityCommentController extends Controller {
      *     Type of social network of registered user, who placed comment
      * @apiSuccess universityComment.userType   {String="Student", "Graduate"}
      *     Selected type of user
+     * @apiSuccess universityComment.grade        {Number}
+     *     Current grade of user, if it is student
+     * @apiSuccess universityComment.yearGraduate {Number}
+     *    Graduation year of user if it already graduate university
      * @apiSuccess universityComment.pros       {String}
      *     Pros of study in university
      * @apiSuccess universityComment.cons       {String}
@@ -92,6 +98,8 @@ class AdminUniversityCommentController extends Controller {
      *         "socialId": 234561,
      *         "socialType": "vk",
      *         "userType": "Student",
+     *         "grade": 4,
+     *         "yearGraduate": 2016,
      *         "pros": 'Очень хороший университет',
      *         "cons": 'Общежитие отвратительное',
      *         "advice": 'Поступайте все!',
@@ -107,14 +115,15 @@ class AdminUniversityCommentController extends Controller {
                 ),
             userId = comments.map(comment => comment.userData.userId),
             users = await userService.getUserByIds(userId);
-        console.log(users);
         return universityCommentView.adminListRender(comments, users);
     }
 
     /**
      * @api {get} /api/admin/program/:programId/comment/:commentId
+     *     Get university comment by program id an comment id
      * @apiVersion 1.0.0
-     * @apiName Get university comment
+     * @apiGroup AdminUniversityComment
+     * @apiName GetAdminUniversityComment
      *
      * @apiSuccess universityComment            {Object}
      *     Requested university comment object
@@ -124,6 +133,10 @@ class AdminUniversityCommentController extends Controller {
      *     Type of social network of registered user, who placed comment
      * @apiSuccess universityComment.userType   {String="Student", "Graduate"}
      *     Selected type of user
+     * @apiSuccess universityComment.grade        {Number}
+     *     Current grade of user, if it is student
+     * @apiSuccess universityComment.yearGraduate {Number}
+     *    Graduation year of user if it already graduate university
      * @apiSuccess universityComment.pros       {String}
      *     Pros of study in university
      * @apiSuccess universityComment.cons       {String}
@@ -140,6 +153,8 @@ class AdminUniversityCommentController extends Controller {
      *         "socialId": 234561,
      *         "socialType": "vk",
      *         "userType": "Student",
+     *         "grade": 4,
+     *         "yearGraduate": 2016,
      *         "pros": 'Очень хороший университет',
      *         "cons": 'Общежитие отвратительное',
      *         "advice": 'Поступайте все!',
@@ -164,6 +179,7 @@ class AdminUniversityCommentController extends Controller {
 
     /**
      * @api {post} /api/admin/program/:programId/comment
+     * @apiGroup AdminUniversityComment
      * @apiVersion 1.0.0
      */
     public async actionCreate(actionContext: any, programId: string) {
@@ -174,6 +190,7 @@ class AdminUniversityCommentController extends Controller {
      * @api {put} /api/admin/program/:programId/comment/:commentId
      *     Update only text in comment
      * @apiVersion 1.0.0
+     * @apiGroup AdminUniversityComment
      * @apiName Update university comment
      *
      * @apiParam {Object} universityComment
@@ -210,6 +227,7 @@ class AdminUniversityCommentController extends Controller {
      * @api {delete} /api/admin/program/:programId/comment/:commentId
      *     Delete comment with user data and rating (if exists)
      * @apiVersion 1.0.0
+     * @apiGroup AdminUniversityComment
      * @apiName Delete comment
      *
      * @apiSuccessExample {json} Success-Response:
