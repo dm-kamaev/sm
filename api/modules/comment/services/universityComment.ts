@@ -138,11 +138,11 @@ class UniversityCommentService {
             programId: number, commentId: number): Promise<void> {
         const commentInstance = await this.getOne(programId, commentId);
 
+        await commentInstance.destroy();
         await userDataService.delete(commentInstance.userDataId);
         if (commentInstance.ratingId) {
             await ratingService.delete(commentInstance.ratingId);
         }
-        await commentInstance.destroy();
     }
 
     private async fullCreate_(

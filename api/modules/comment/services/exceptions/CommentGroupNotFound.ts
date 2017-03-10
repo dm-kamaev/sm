@@ -13,7 +13,7 @@ class CommentGroupNotFound extends Exception {
     constructor(commentGroupId: number) {
         super(`Comment group with id = ${commentGroupId} not found`);
 
-        this.name = 'commentGroupNotFound';
+        this.name = 'CommentGroupNotFoundException';
     }
 }
 

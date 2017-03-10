@@ -12,7 +12,7 @@ class UniversityCommentNotFound extends Exception {
     constructor(universityCommentId: number) {
         super(`University comment with id = ${universityCommentId} not found`);
 
-        this.name = 'universityCommentNotFound';
+        this.name = 'UniversityCommentNotFoundException';
     }
 }
 

@@ -15,7 +15,7 @@ class UniversityCommentNotBelongsToProgram extends Exception {
             ` not belongs to program with id = ${programId}`;
         super(message);
 
-        this.name = 'universityCommentNotBelongsToProgram';
+        this.name = 'UniversityCommentNotBelongsToProgramException';
     }
 }
 
