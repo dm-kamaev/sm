@@ -1,6 +1,6 @@
 'use strict';
 
-const userView = require('../../../../api/modules/user/views/user'),
+const userView = require('../../../../api/modules/user/views/user').userView,
     footerView = require('../../../../api/modules/entity/views/footerView'),
     headerView = require('../../../../api/modules/entity/views/headerView'),
     sideMenuView = require('../../common/views/sideMenuView'),
@@ -21,7 +21,7 @@ let view = {};
  * @return {Object}
  */
 view.render = function(data) {
-    let user = userView.default(data.user);
+    let user = userView.renderDefault(data.user);
 
     return {
         seo: {
