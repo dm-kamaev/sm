@@ -52,11 +52,13 @@ const EntranceStatistic: EntranceStatisticModel
     competition: {
         type: DataType.FLOAT,
     },
-    budget_places: {
+    budgetPlaces: {
         type: DataType.INTEGER,
+        field: 'budget_places',
     },
-    commercial_places: {
+    commercialPlaces: {
         type: DataType.INTEGER,
+        field: 'commercial_places',
     },
     cost: {
         type: DataType.INTEGER,
@@ -64,8 +66,9 @@ const EntranceStatistic: EntranceStatisticModel
     discount: {
         type: DataType.BOOLEAN,
     },
-    ege_pass_score: {
+    egePassScore: {
         type: DataType.INTEGER,
+        field: 'ege_pass_score',
     },
     createdAt: {
         field: 'created_at',
