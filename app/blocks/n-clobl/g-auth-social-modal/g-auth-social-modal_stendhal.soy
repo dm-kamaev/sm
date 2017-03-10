@@ -7,6 +7,7 @@
  * }
  * @extends cl.gAuthSocialModal.Template
  * @constructor
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @doc
  */
 {template .authSocialModal}
@@ -15,12 +16,16 @@
 
 /**
  * @override
+ */
+{template .NAME}
+    auth-social-modal
+{/template}
+
+/**
+ * @override
  * @param params {
  *     data: {
  *         content: ?string
- *     },
- *     config: {
- *         stylizationModifier: string
  *     }
  * }
  */
@@ -29,9 +34,8 @@
         {call .modalType/}
     {/let}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+    {call .renderChild}
         {param params: [
-            'factory': $params.config.stylizationModifier,
             'type': $type,
             'renderParams': [
                 'data': [

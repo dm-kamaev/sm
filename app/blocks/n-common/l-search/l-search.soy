@@ -50,6 +50,7 @@
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -57,6 +58,12 @@
     {call .document data="all" /}
 {/template}
 
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch
+{/template}
 
 /**
  * Add layout script to page
@@ -154,17 +161,15 @@
 
     <div class="{$classes}">
         <div class="{call .rootClass /}__section-inner">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smMap',
-                    'renderParams': [
-                        'data': $params.data.map,
-                        'config': [
-                            'enableScrollZoom': false,
-                            'alignZoomControl': 'left',
-                            'sizeViewportShow': 'xs'
-                        ]
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smMap' /}
+                {param renderParams: [
+                    'data': $params.data.map,
+                    'config': [
+                        'enableScrollZoom': false,
+                        'alignZoomControl': 'left',
+                        'sizeViewportShow': 'xs'
                     ]
                 ] /}
             {/call}
@@ -284,12 +289,10 @@
  */
 {template .filters_}
     <div class="{call .rootClass/}__filters">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'lSearch-filterPanel',
-                'renderParams': $params.data.filterPanel
-            ] /}
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lSearch-filterPanel' /}
+            {param renderParams: $params.data.filterPanel /}
         {/call}
     </div>
 {/template}
@@ -312,9 +315,6 @@
  *                 plu: string
  *             }
  *         }
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
@@ -324,15 +324,13 @@
     {/let}
 
     <div class="{call .rootClass/}__search-results-wrap">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'lSearch-searchResults',
-                'renderParams': [
-                    'data': $params.data.resultsList,
-                    'config': [
-                        'customClasses': [$customClasses]
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lSearch-searchResults' /}
+            {param renderParams: [
+                'data': $params.data.resultsList,
+                'config': [
+                    'customClasses': [$customClasses]
                 ]
             ] /}
         {/call}

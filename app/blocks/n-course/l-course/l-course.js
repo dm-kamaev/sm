@@ -1,13 +1,18 @@
 goog.provide('sm.lCourse.Course');
 
 goog.require('cl.iRequest.Request');
+goog.require('sm.bSmCollapsedText.SmCollapsedText');
+goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmMap.SmMap');
-goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.bSmScore.SmScoreBrief');
+goog.require('sm.gModal.ModalEnrollment');
+goog.require('sm.gModal.ModalSuccess');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
-goog.require('sm.iSmViewport.SmViewport');
+goog.require('sm.lCourse.Template');
 goog.require('sm.lCourse.View');
+goog.require('sm.lCourse.bUserInteraction.UserInteraction');
 goog.require('sm.lCourse.iAnalyticsSender.AnalyticsSender');
-
 
 goog.scope(function() {
 
@@ -106,12 +111,18 @@ goog.scope(function() {
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course,
         View = sm.lCourse.View,
-        Viewport = sm.iSmViewport.SmViewport,
         AnalyticsSender = sm.lCourse.iAnalyticsSender.AnalyticsSender,
-        Analytics = sm.iAnalytics.Analytics,
-        Map = sm.bSmMap.SmMap,
-        Balloon = sm.bSmBalloon.SmBalloon;
+        Map = sm.bSmMap.SmMap;
 
+    /**
+     * Name of this element in factory
+     */
+    Course.NAME = sm.lCourse.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Course.NAME, {
+        control: Course,
+        view: View
+    });
 
     /**
      * @param {Element} element
@@ -429,7 +440,7 @@ goog.scope(function() {
 
         for (var i = 0; i < domElements.length; i++) {
             instance = this.decorateChild(
-                'smScoreBrief',
+                sm.bSmScore.SmScoreBrief.NAME,
                 domElements[i]
             );
 
@@ -446,7 +457,7 @@ goog.scope(function() {
         var fullDescription = this.getView().getDom().fullDescription;
         if (fullDescription) {
             this.fullDescription_ = this.decorateChild(
-                'smCollapsedText',
+                sm.bSmCollapsedText.SmCollapsedText.NAME,
                 fullDescription
             );
         }
@@ -460,7 +471,7 @@ goog.scope(function() {
     Course.prototype.initMap_ = function() {
         if (this.getView().getDom().map) {
             this.map_ = this.decorateChild(
-                'smMap',
+                sm.bSmMap.SmMap.NAME,
                 this.getView().getDom().map
             );
         }
@@ -473,7 +484,7 @@ goog.scope(function() {
      */
     Course.prototype.initUserInteractions_ = function() {
         this.userInteractions_ = this.decorateChildren(
-            'lCourse-userInteraction',
+            sm.lCourse.bUserInteraction.UserInteraction.NAME,
             this.getView().getDom().userInteractions
         );
     };
@@ -488,7 +499,7 @@ goog.scope(function() {
 
         if (domElement) {
             this.departmentList_ = this.decorateChild(
-                'smItemList',
+                sm.bSmItemList.SmItemList.NAME,
                 domElement
             );
         }
@@ -501,12 +512,12 @@ goog.scope(function() {
      */
     Course.prototype.initModals_ = function() {
         this.modalEnrollment_ = this.decorateChild(
-            'modal-enrollment',
+            sm.gModal.ModalEnrollment.NAME,
             this.getView().getDom().modalEnrollment
         );
 
         this.modalSuccess_ = this.decorateChild(
-            'modal-success',
+            sm.gModal.ModalSuccess.NAME,
             this.getView().getDom().modalSuccess
         );
     };
@@ -517,12 +528,8 @@ goog.scope(function() {
  * creates sm.lCourse.Course instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lCourse.Course.NAME,
         sm.lCourse.View.CssClass.ROOT
     );
-
-    var view = new sm.lCourse.View();
-    var instance = new sm.lCourse.Course(view);
-
-    instance.decorate(domElement);
 });

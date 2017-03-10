@@ -1,7 +1,9 @@
 goog.provide('sm.bSmStars.SmStars');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmStars.Template');
 goog.require('sm.bSmStars.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -19,8 +21,18 @@ goog.inherits(sm.bSmStars.SmStars, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Stars = sm.bSmStars.SmStars;
+    var Stars = sm.bSmStars.SmStars,
+        View = sm.bSmStars.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Stars.NAME = sm.bSmStars.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Stars.NAME, {
+        control: Stars,
+        view: View
+    });
 
     /**
      * Get value to input

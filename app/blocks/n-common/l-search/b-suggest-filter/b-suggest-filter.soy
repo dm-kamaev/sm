@@ -29,10 +29,18 @@
  *     config: sm.lSearch.bSuggestFilter.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .suggestFilter}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch-suggestFilter
 {/template}
 
 

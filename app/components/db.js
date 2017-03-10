@@ -1,4 +1,8 @@
-var Sequelize = require('sequelize');
+const cls = require('continuation-local-storage');
+const namespace = cls.createNamespace('school-market-namespace');
+// cls for autoset transactions
+const Sequelize = require('sequelize');
+Sequelize.cls = namespace;
 
 var config = require('../config').config;
 var dbConfig = require('../config').db;

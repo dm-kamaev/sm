@@ -1,7 +1,10 @@
 goog.provide('sm.lSearch.bFilter.FilterExtended');
 
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.TemplateExtended');
 goog.require('sm.lSearch.bFilter.ViewExtended');
+goog.require('sm.lSearch.bSuggestFilter.SuggestFilter');
 
 
 
@@ -39,6 +42,17 @@ goog.scope(function() {
     var FilterExtended = sm.lSearch.bFilter.FilterExtended,
         View = sm.lSearch.bFilter.ViewExtended;
 
+    /**
+     * Name of this element in factory
+     */
+    FilterExtended.NAME = sm.lSearch.bFilter.TemplateExtended.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        FilterExtended.NAME, {
+            control: FilterExtended,
+            view: View
+        }
+    );
 
     /**
      * Checks refers element to this control
@@ -195,7 +209,7 @@ goog.scope(function() {
         this.filterModal_ = sm.gModal.ModalStendhal.render(params, true);
 
         this.filterModal_.renderContent(
-            'lSearch-suggestFilter',
+            sm.lSearch.bSuggestFilter.SuggestFilter.NAME,
             this.getModalData_()
         );
     };

@@ -1,6 +1,9 @@
 goog.provide('sm.lSearch.bFilter.FilterDropdown');
 
+goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.TemplateDropdown');
 goog.require('sm.lSearch.bFilter.ViewDropdown');
 
 
@@ -38,6 +41,17 @@ goog.scope(function() {
     var FilterDropdown = sm.lSearch.bFilter.FilterDropdown,
         View = sm.lSearch.bFilter.ViewDropdown;
 
+    /**
+     * Name of this element in factory
+     */
+    FilterDropdown.NAME = sm.lSearch.bFilter.TemplateDropdown.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        FilterDropdown.NAME, {
+            control: FilterDropdown,
+            view: View
+        }
+    );
 
     /**
      * Checks refers element to this control
@@ -205,7 +219,7 @@ goog.scope(function() {
      */
     FilterDropdown.prototype.initOptions = function() {
         this.list_ = this.decorateChild(
-            'dropdown-select',
+            sm.gDropdown.DropdownSelect.NAME,
             this.getView().getDom().list
         );
     };

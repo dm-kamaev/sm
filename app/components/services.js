@@ -15,7 +15,7 @@ exports.initServices = function(dirPath) {
         .filter(file => (~file.indexOf('.js') && file != 'index.js'))
         .map(file => require(path.join(dirPath, file)))
         .reduce(function(res, service) {
-            let serviceInstance = service.service || service;
+            let serviceInstance = service.service || service.default || service;
             res[serviceInstance.name] = serviceInstance;
             return res;
         }, {});

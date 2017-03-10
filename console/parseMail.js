@@ -9,8 +9,10 @@ var await = require('asyncawait/await');
 var imap = require('imap-simple');
 var http = require('http');
 
+
 const config = require('../app/config/config.json');
 const mailToken = require('../app/config/mailToken.json');
+
 
 class ParseMail {
     /**

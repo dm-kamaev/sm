@@ -158,10 +158,10 @@ class SchoolAdminController extends Controller {
      *    }
      *
      */
-    public async actionUpdate(ctx, id: string) {
+    public async actionUpdate(ctx, schoolId: string) {
         const schoolData = ctx.request.body;
         return await schoolAdminService.update(
-            parseInt(id, 10),
+            parseInt(schoolId, 10),
             schoolData
         );
     }

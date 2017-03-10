@@ -29,7 +29,7 @@ let view = {};
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
  *     actionButtonText: string,
- *     seoParams: {
+ *     seoParams: ?{
  *         pagePrefixTabTitle: string
  *     }
  * }} data
@@ -46,9 +46,12 @@ view.render = function(data) {
         ) :
         null;
 
-    let pagePrefixTabTitle = data.seoParams.pagePrefixTabTitle || 'Курс';
+    let pagePrefixTabTitle =
+        (data.seoParams && data.seoParams.pagePrefixTabTitle) ?
+            data.seoParams.pagePrefixTabTitle :
+            'Курс';
 
-    return {
+    let metaInformation = {
         seo: {
             metaTitle: `${pagePrefixTabTitle} ${entityData.name} в Москве: ` +
                 'стоимость обучения, отзывы.',
@@ -62,8 +65,20 @@ view.render = function(data) {
             image: imageOpenGraph,
             relapTag: entityData.categoryName,
             relapImage: imageOpenGraph,
-            fbClientId: data.fbClientId,
-        },
+            fbClientId: data.fbClientId
+        }
+    };
+
+    if (data.pageMetaInformation) {
+        metaInformation = view.actualizeMetaInformation(
+            metaInformation,
+            data.pageMetaInformation
+        );
+    }
+
+    return {
+        seo: metaInformation.seo,
+        openGraph: metaInformation.openGraph,
         header: headerView.render(data.config, data.entityType),
         sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: view.subheader({
@@ -84,6 +99,42 @@ view.render = function(data) {
             'Хочу этот курс!',
         footer: footerView.render()
     };
+};
+
+
+/**
+ * @param {Object} information
+ * @param {Object} actualInformation
+ * @return {Object}
+ */
+view.actualizeMetaInformation = function(information, actualInformation) {
+    let result = information;
+
+    if (actualInformation.tabTitle) {
+        result.seo.metaTitle = actualInformation.tabTitle;
+    }
+
+    if (actualInformation.seoDescription) {
+        result.seo.metaDescription = actualInformation.seoDescription;
+    }
+
+    if (actualInformation.openGraphTitle) {
+        result.openGraph.title = actualInformation.openGraphTitle;
+    }
+
+    if (actualInformation.openGraphDescription) {
+        result.openGraph.description = actualInformation.openGraphDescription;
+    }
+
+    if (actualInformation.shareImageUrl) {
+        result.openGraph.image = actualInformation.shareImageUrl;
+    }
+
+    if (actualInformation.relapTag) {
+        result.openGraph.relapTag = actualInformation.relapTag;
+    }
+
+    return result;
 };
 
 

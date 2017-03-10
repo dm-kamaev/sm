@@ -126,11 +126,11 @@ goog.scope(function() {
         return goog.soy.renderAsElement(
             sm.lSearch.bFilter.TemplateLabels.option, {
                 params: {
-                    data: data,
-                    config: {
-                        stylizationModifier: this.getStylization()
-                    }
+                    data: data
                 }
+            },
+            {
+                factoryIndex: this.getFactory().getIndex()
             }
         );
     };

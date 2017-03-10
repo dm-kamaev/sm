@@ -13,10 +13,18 @@
  * Constructor
  * @param params {sm.lSearch.bFilter.TemplateSwitch.Params}
  * @extends sm.lSearch.bFilter.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .filter}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch-filterSwitch
 {/template}
 
 
@@ -32,8 +40,7 @@
  *     },
  *     config: {
  *         hidden: (boolean|undefined),
- *         hidable: (boolean|undefined),
- *         stylizationModifier: string
+ *         hidable: (boolean|undefined)
  *     }
  * }}
  * @public
@@ -52,9 +59,8 @@
     {/let}
 
     <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params.config.stylizationModifier,
                 'type': 'smRadioButton',
                 'renderParams': [
                     'data': $params.data

@@ -31,10 +31,18 @@
  *     config: ?sm.bSmListPaged.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .listPaged}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smListPaged
 {/template}
 
 

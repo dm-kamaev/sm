@@ -5,7 +5,6 @@ const async = require('asyncawait/async');
 const models = require.main.require('./app/components/models').all;
 const path = require('path');
 const readlineSync = require('readline-sync');
-const colors = require('colors');
 const fs = require('fs-extra');
 
 var modules = {
@@ -100,7 +99,7 @@ var chooseAttributes = function(model) {
         }, '');
 
     console.log('\n');
-    console.log(colors.green('\tAttributes:\n'));
+    console.log('\tAttributes:\n');
     console.log(variantsStr);
 
     try {

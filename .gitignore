@@ -9,9 +9,10 @@ doc/
 build/
 runtime/
 assets/dump/
-/parse/
 /console/reports
 /vkdata/
+project_tools/
+compile.js
 /*.xlsx
 
 *.log
@@ -61,26 +62,88 @@ api/modules/geo/services/address.js
 api/modules/geo/services/department.js
 api/modules/geo/views/departmentView.js
 
+
 api/modules/school/interfaces/*.js
 
 api/modules/school/controllers/errors/AddressDepartmentExist.js
 api/modules/school/controllers/errors/AddressDoesNotExist.js
 api/modules/school/controllers/errors/AddressIsNotUnique.js
 api/modules/school/controllers/errors/DepartmentNotFound.js
+api/modules/school/controllers/errors/ExamDataAlreadyExistBySubject.js
+api/modules/school/controllers/errors/ProfileNotFound.js
+api/modules/school/controllers/errors/SchoolCategoryNameIsShorter.js
 api/modules/school/controllers/errors/SchoolNotExistTypeError.js
 api/modules/school/controllers/errors/SchoolNotFound.js
+api/modules/school/controllers/errors/SchoolProfileNameIsShorter.js
 api/modules/school/controllers/commentAdminController.js
 api/modules/school/controllers/departmentAdminController.js
 api/modules/school/controllers/index.js
 api/modules/school/controllers/schoolAdminController.js
+api/modules/school/controllers/profileAdminController.js
 
+api/modules/school/migrations/20170215215800-school-specialized-class.js
+api/modules/school/migrations/20170217153500-school-specialized-classes-drop.js
+
+api/modules/school/models/additionalEducation.js
+api/modules/school/models/additionalEducationSphere.js
 api/modules/school/models/school.js
+api/modules/school/models/schoolSpecializedClass.js
+api/modules/school/models/specializedClassType.js
+
 
 api/modules/school/services/exceptions/*.js
+
+api/modules/school/services/additionalEducation.js
+api/modules/school/services/profileAdminService.js
 api/modules/school/services/schoolAdminService.js
 api/modules/school/services/schoolComment.js
+api/modules/school/services/schoolSpecializedClass.js
+api/modules/school/services/specializedClasses.js
 
 api/modules/school/views/commentView.js
+api/modules/school/views/profileAdminView.js
+
+api/modules/study/models/olimpResult.js
+api/modules/study/services/exceptions/*.js
+api/modules/study/services/olimpResult.js
+api/modules/study/controllers/errors/*.js
+api/modules/study/controllers/olympiadAdminController.js
+app/modules/school/views/olympiadResultView.js
+
+api/modules/study/controllers/*.js
+api/modules/study/controllers/errors/*.js
+
+api/modules/study/models/giaResult.js
+api/modules/study/models/subject.js
+api/modules/study/models/egeResult.js
+
+api/modules/study/services/exceptions/*.js
+api/modules/study/services/profileAdminService.js
+api/modules/study/services/giaAdminService.js
+api/modules/study/services/examAdminService.js
+api/modules/study/services/egeAdminService.js
+api/modules/study/services/additionalClassAdminService.js
+
+api/modules/study/types/*.js
+
+api/modules/study/views/additionalClassAdminView.js
+api/modules/study/views/giaAdminView.js
+api/modules/study/views/egeAdminView.js
+
+api/modules/course/types/*.js
+api/modules/course/models/course.js
+api/modules/course/services/exceptions/*.js
+api/modules/course/services/coursePageMeta.js
+api/modules/course/controllers/coursePageMetaController.js
+api/modules/course/controllers/errors/PageMetaNotBelongToCourse.js
+api/modules/course/controllers/errors/CoursePageMetaAlreadyExists.js
+
+api/modules/entity/types/*.js
+api/modules/entity/models/pageMetaInformation.js
+api/modules/entity/services/pageMetaInformation.js
+api/modules/entity/services/exceptions/*.js
+api/modules/course/types/*.js
+
 
 api/modules/user/controllers/errors/*.js
 api/modules/user/controllers/adminUserController.js
@@ -93,6 +156,10 @@ api/modules/user/views/adminUserView.js
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
 
+
+console/one-off/shrinkOlympiadResults.js
 console/modules/geoTools/*.js
+console/modules/schoolSpecClasses/*.js
+console/importSchoolSpecClasses.js
 
 gulp/taskBackendLint.js

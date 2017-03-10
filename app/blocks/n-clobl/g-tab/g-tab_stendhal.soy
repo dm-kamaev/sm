@@ -3,6 +3,7 @@
 /**
  * Constructor
  * @extends cl.gTab.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @param? params {{
  *     data: {
@@ -20,6 +21,13 @@
  */
 {template .tab}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    tab
 {/template}
 
 /**

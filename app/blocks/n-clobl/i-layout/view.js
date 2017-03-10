@@ -55,8 +55,7 @@ goog.scope(function() {
     View.prototype.getAuthParams = function() {
         return {
             isUserAuthorzed: this.params.isUserAuthorzed,
-            authSocialLinks: this.params.authSocialLinks,
-            factoryType: this.getStylization()
+            authSocialLinks: this.params.authSocialLinks
         };
     };
 
