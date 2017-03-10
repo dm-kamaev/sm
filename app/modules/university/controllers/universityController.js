@@ -9,7 +9,7 @@ const soy = require('../../../components/soy'),
 const logger = require('../../../components/logger/logger').getLogger('app');
 
 const configView = require('../../common/views/configView'),
-    informationView = require('../views/informationView');
+    informationView = require('../views/informationViewLegacy');
 
 const pageName = require('../../common/enums/pageName'),
     entityType = require('../../../../api/modules/entity/enums/entityType.js');
