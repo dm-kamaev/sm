@@ -18,9 +18,9 @@ export type UserAttributes = {
 };
 
 export interface CommentUser {
-    name: string;
-    socialId: string;
-    socialType: string;
+    name?: string;
+    socialId?: string;
+    socialType?: string;
 }
 
 export interface DefaultRender {
@@ -29,6 +29,6 @@ export interface DefaultRender {
     lastName: string;
 }
 
-export interface SchoolRender extends DefaultRender{
+export interface SchoolRender extends DefaultRender {
     isCommented: boolean;
 }

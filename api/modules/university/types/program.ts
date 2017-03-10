@@ -31,10 +31,10 @@ export interface ProgramInstance
     getAddresses: Sequelize.BelongsToManyGetAssociationsMixin<
             AddressInstance
         >;
-    getCommentGroup:
-        Sequelize.BelongsToGetAssociationMixin<CommentGroupInstance>;
     setAddresses: Sequelize.BelongsToManyAddAssociationsMixin<
         AddressInstance, number, AddressAttribute>;
+    getCommentGroup:
+        Sequelize.BelongsToGetAssociationMixin<CommentGroupInstance>;
     programMajor: ProgramMajorInstance;
 }
 

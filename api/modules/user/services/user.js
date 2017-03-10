@@ -9,8 +9,9 @@ const services = require('../../../../app/components/services').all;
 
 const config = require('../../../../app/config').config;
 
-const USER_API = config.usercApi,
+const USER_API = config.userApi,
     GET_USER = '/user/',
+    GET_USERS = '/users/',
     AUTH_API = config.authApi,
     POST_AUTH = '/oauth/',
     REDIRECT_URI = config.redirectUri;
@@ -95,12 +96,11 @@ service.getUserById = async(function(id) {
 service.getUserByIds = async(function(ids) {
     const uniqueIds = lodashUniq(ids),
         formattedIds = uniqueIds.reduce(
-            (previous, id) => previous + `,${id}`,
-            ''
+            (previous, id) => previous + `,${id}`
         ),
         queryParams = `?id=${formattedIds}`;
 
-    return await(axios.get(USER_API + GET_USER + queryParams)).data;
+    return await(axios.get(USER_API + GET_USERS + queryParams)).data;
 });
 
 module.exports = service;

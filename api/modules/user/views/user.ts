@@ -33,14 +33,14 @@ class UserView {
 
     public renderCommentUser(user: UserAttributes): CommentUser {
         return {
-            name: user.firstName,
+            name: user.firstName || null,
             socialId: this.getSocialId_(user),
             socialType: this.getSocialType_(user)
         };
     }
 
-    private getSocialId_(user: UserAttributes): string {
-        return user.vkId || user.facebookId;
+    private getSocialId_(user: UserAttributes): string | null {
+        return user.vkId || user.facebookId || null;
     }
 
     private getSocialType_(user: UserAttributes): string {
@@ -53,7 +53,6 @@ class UserView {
 
         return result;
     }
-
 }
 
 export const userView = new UserView();
