@@ -23,12 +23,12 @@ import {ExamAdminController} from './ExamAdminController';
 const examAdminController = new ExamAdminController();
 
 import {EntranceStatisticController} from './EntranceStatisticController';
-const entranceStatisticController = new EntranceStatisticController();
+const entranceStatisticController: any = new EntranceStatisticController();
 
 import {
-    AdminUniversityCommentController
-} from '../../comment/controllers/AdminUniversityCommentController';
-const adminUniversityCommentController = new AdminUniversityCommentController();
+    EntranceStatisticAdminController
+} from './EntranceStatisticAdminController';
+const entranceStatisticAdminController = new EntranceStatisticAdminController();
 
 import {ProgramController} from './ProgramController';
 const programController: any = new ProgramController();
@@ -42,6 +42,11 @@ router.get(
 );
 
 router.get('/university/:alias', universityPageController.actionFindByAlias);
+
+router.get(
+    '/program/:id/statistic/last',
+    entranceStatisticController.actionGet
+);
 
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
@@ -80,38 +85,7 @@ initCrudRouting(
 initCrudRouting('/admin/program/:programId/exam', examAdminController);
 initCrudRouting(
     '/admin/program/:programId/statistic',
-    entranceStatisticController
-);
-initCrudRouting(
-    '/admin/program/:programId/comment',
-    adminUniversityCommentController
-);
-
-const initSimpleCrudRouting = function(route: string, controller: any): void {
-    router.post(
-        route,
-        checkToken,
-        controller.actionCreate
-    );
-    router.get(route, controller.actionList);
-    router.get(`${route}/:id`, controller.actionGet);
-    router.put(
-        `${route}/:id`,
-        checkToken,
-        controller.actionUpdate
-    );
-    if (controller.actionDelete) {
-        router.delete(route, checkToken, controller.actionDelete);
-    }
-};
-
-const UniversityCommentController =
-    require('../../comment/controllers/UniversityCommentController')
-        .UniversityCommentController;
-const universityCommentController = new UniversityCommentController();
-initSimpleCrudRouting(
-    '/program/:programId/comment',
-    universityCommentController
+    entranceStatisticAdminController
 );
 
 export {router};
