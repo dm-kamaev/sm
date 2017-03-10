@@ -54,7 +54,16 @@ api/modules/comment/types/**/*.js
 api/modules/comment/migrations/20170227134914-create-university-comments.js
 api/modules/comment/models/commentGroup.js
 api/modules/comment/models/UniversityComment.js
+api/modules/comment/models/Rating.js
 api/modules/comment/services/commentGroup.js
+api/modules/comment/services/rating.js
+api/modules/comment/services/universityComment.js
+api/modules/comment/services/exceptions/**/*.js
+api/modules/comment/controllers/errors/**/*.js
+api/modules/comment/controllers/AdminUniversityCommentController.js
+api/modules/comment/controllers/UniversityCommentController.js
+api/modules/comment/views/universityCommentView.js
+
 
 api/modules/entity/services/page.js
 
@@ -116,6 +125,9 @@ api/modules/user/models/userData.js
 api/modules/user/types/**/*.js
 api/modules/user/migrations/20170227191120-drop-user-data-user-type-enum.js
 api/modules/user/migrations/20170227193010-user-data-class-type-rename.js
+
+api/modules/user/services/userData.js
+api/modules/user/views/user.js
 
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
