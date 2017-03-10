@@ -60,7 +60,10 @@ const UniversityPage: UniversityPageModel = sequelize.define('UniversityPage', {
     tableName: 'university_page',
     classMethods: {
         associate: function(models) {
-
+            this.belongsTo(models.Page, {
+                foreignKey: 'page_id',
+                as: 'page'
+            });
         }
     }
 });

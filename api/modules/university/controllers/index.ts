@@ -28,10 +28,15 @@ const entranceStatisticController = new EntranceStatisticController();
 import {ProgramController} from './ProgramController';
 const programController: any = new ProgramController();
 
+import {UniversityPageController} from './UniversityPageController';
+const universityPageController: any = new UniversityPageController();
+
 router.get(
     '/program/:id',
     programController.actionProgramPage
 );
+
+router.get('/university/:alias', universityPageController.actionFindByAlias);
 
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(

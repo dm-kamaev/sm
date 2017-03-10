@@ -14,10 +14,13 @@ import {
     Model as UniversityPageModel,
     UniversityPageInstance
 } from '../models/UniversityPage';
+const pageModel = require('../../entity/models/page');
+
 import {service as universityService} from '../services/university';
 import {service as pageServices} from '../../entity/services/page';
 import {UniversityNameIsEmpty} from './exceptions/UniversityNameIsEmpty';
 import {UniversityAliasDuplicate} from './exceptions/UniversityAliasDuplicate';
+import {UniversityAliasNotFound} from './exceptions/UniversityAliasNotFound';
 
 type pageData = {
     entityId: number;
@@ -116,6 +119,24 @@ class UniversityPageService {
         const universityName: string = university.name,
         universityId: number = university.id;
         await pageServices.delete(universityId, entityTypies.UNIVERSITY);
+    }
+
+    public async getByAlias(alias: string): Promise<UniversityInstance> {
+        const universityPage = await UniversityPageModel.findOne({
+            include: [{
+                model: pageModel,
+                as: 'page',
+                where: {
+                    alias: alias
+                }
+            }]
+        });
+
+        if (!universityPage) {
+            throw new UniversityAliasNotFound(alias);
+        }
+
+        return universityPage;
     }
 }
 
