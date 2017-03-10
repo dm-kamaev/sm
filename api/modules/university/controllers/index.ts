@@ -25,6 +25,14 @@ const examAdminController = new ExamAdminController();
 import {EntranceStatisticController} from './EntranceStatisticController';
 const entranceStatisticController = new EntranceStatisticController();
 
+import {ProgramController} from './ProgramController';
+const programController: any = new ProgramController();
+
+router.get(
+    '/program/:id',
+    programController.actionProgramPage
+);
+
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
         route,

@@ -89,9 +89,9 @@ class UniversityPageService {
         if (!universityName) {
             throw new UniversityNameIsEmpty(universityName);
         }
-        const alias: string = services.urls.stringToURL(universityName.trim()),
-        universityId: number = university.id,
-        UNIVERSITY: string = entityTypies.UNIVERSITY;
+        const alias: string = services.urls.stringToURL(universityName.trim());
+        const universityId: number = university.id;
+        const UNIVERSITY: string = entityTypies.UNIVERSITY;
         let page = await pageServices.getOne(universityId, UNIVERSITY);
         if (!page) {
             await self.createPage(university);
@@ -120,4 +120,3 @@ class UniversityPageService {
 }
 
 export const service = new UniversityPageService();
-

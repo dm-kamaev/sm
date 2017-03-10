@@ -18,8 +18,7 @@ export interface UniversityPageInstance
 interface UniversityPageModel
     extends Sequelize.Model<UniversityPageInstance, UniversityPageAttribute> {}
 
-const UniversityPage: UniversityPageModel
-    = sequelize.define('UniversityPage', {
+const UniversityPage: UniversityPageModel = sequelize.define('UniversityPage', {
     id: {
         type: DataType.INTEGER,
         autoIncrement: true,
