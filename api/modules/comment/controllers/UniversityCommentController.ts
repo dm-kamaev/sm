@@ -106,6 +106,7 @@ class UniversityCommentController extends Controller {
             {
                 userType: reviewData.userType,
                 yearGraduate: reviewData.yearGraduate,
+                userId: reviewData.userId,
                 grade: reviewData.grade,
                 score: reviewData.score,
                 advice: reviewData.advice,

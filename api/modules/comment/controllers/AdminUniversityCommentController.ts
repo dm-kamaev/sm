@@ -4,13 +4,27 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {service as universityCommentService}
     from '../services/universityComment';
+
+import {universityCommentView} from '../views/universityCommentView';
 const userService = require('../../user/services/user');
+
+import {ProgramNotFound} from './errors/ProgramNotFound';
+import {UniversityCommentNotFound} from './errors/UniversityCommentNotFound';
+import {
+UniversityCommentNotBelongsToProgram
+} from './errors/UniversityCommentNotBelongsToProgram';
 
 class AdminUniversityCommentController extends Controller {
     constructor() {
         super();
 
-        this.errors = {};
+        this.errors = {
+
+            UniversityCommentNotFoundException: UniversityCommentNotFound,
+            ProgramNotFoundException: ProgramNotFound,
+            UniversityCommentNotBelongsToProgramException:
+                UniversityCommentNotBelongsToProgram
+        };
     }
 
     /**
@@ -50,7 +64,7 @@ class AdminUniversityCommentController extends Controller {
      */
 
     /**
-     * @api {get} /api/admin/university/program/:programId/comment
+     * @api {get} /api/admin/program/:programId/comment
      * @apiVersion 1.0.0
      * @apiName Get university comments by program
      *
@@ -91,14 +105,14 @@ class AdminUniversityCommentController extends Controller {
                 await universityCommentService.getAllByProgramIdWithFullData(
                     +programId
                 ),
-            userId = comments.map(comment => comment.userData.id),
-            users = await userService.getByIds(userId);
-
-        return comments;
+            userId = comments.map(comment => comment.userData.userId),
+            users = await userService.getUserByIds(userId);
+        console.log(users);
+        return universityCommentView.adminListRender(comments, users);
     }
 
     /**
-     * @api {get} /api/admin/university/program/:programId/comment/:commentId
+     * @api {get} /api/admin/program/:programId/comment/:commentId
      * @apiVersion 1.0.0
      * @apiName Get university comment
      *
@@ -143,13 +157,13 @@ class AdminUniversityCommentController extends Controller {
                 +programId,
                 +commentId
             ),
-            user = await userService.getById(comment.userData.userId);
+            user = await userService.getUserById(comment.userData.userId);
 
-        return comment;
+        return universityCommentView.adminRender(comment, user);
     }
 
     /**
-     * @api {post} /api/admin/university/program/:programId/comment
+     * @api {post} /api/admin/program/:programId/comment
      * @apiVersion 1.0.0
      */
     public async actionCreate(actionContext: any, programId: string) {
@@ -157,7 +171,7 @@ class AdminUniversityCommentController extends Controller {
     }
 
     /**
-     * @api {put} /api/admin/university/program/:programId/comment/:commentId
+     * @api {put} /api/admin/program/:programId/comment/:commentId
      *     Update only text in comment
      * @apiVersion 1.0.0
      * @apiName Update university comment
@@ -193,7 +207,7 @@ class AdminUniversityCommentController extends Controller {
     }
 
     /**
-     * @api {delete} /api/admin/university/program/:programId/comment/:commentId
+     * @api {delete} /api/admin/program/:programId/comment/:commentId
      *     Delete comment with user data and rating (if exists)
      * @apiVersion 1.0.0
      * @apiName Delete comment
