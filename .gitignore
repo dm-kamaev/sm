@@ -132,6 +132,17 @@ api/modules/user/views/user.js
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
 
+app/modules/university/index.js
+
+app/modules/university/controllers/errors/*.js
+app/modules/university/controllers/index.js
+app/modules/university/controllers/subscriptionController.js
+
+app/modules/university/services/exceptions/*.js
+app/modules/university/services/subscriptionService.js
+
+app/modules/university/services
+
 console/modules/geoTools/*.js
 
 gulp/taskBackendLint.js
