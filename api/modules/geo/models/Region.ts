@@ -43,10 +43,10 @@ const Region: RegionModel = db.define('Region', {
 
     classMethods: {
         associate: function(models) {
-            // this.hasMany(models.City, {
-            //     as: 'cities',
-            //     foreignKey: 'region_id'
-            // });
+            this.hasMany(models.City, {
+                as: 'cities',
+                foreignKey: 'region_id'
+            });
         }
     }
 });
