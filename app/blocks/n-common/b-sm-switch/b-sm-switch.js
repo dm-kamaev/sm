@@ -45,6 +45,13 @@ goog.scope(function() {
         View = sm.bSmSwitch.View;
 
     /**
+     * NAme of this element in factory
+     * @const {string}
+     */
+    Switch.NAME = sm.bSmSwitch.Template.NAME();
+
+
+    /**
      * Event enum
      * @enum {string}
      */
@@ -112,6 +119,20 @@ goog.scope(function() {
         Switch.base(this, 'decorateInternal', element);
 
         var links = this.getView().getDom().links;
-        this.items = this.decorateChildren('smLink', links);
+        this.items = this.decorateChildren(
+            sm.bSmLink.SmLink.NAME,
+            links
+        );
     };
+
+
+    /**
+     * Register control in factory
+     */
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        Switch.NAME, {
+            control: Switch,
+            view: View
+        }
+    );
 });  // goog.scope

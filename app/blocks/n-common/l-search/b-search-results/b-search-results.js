@@ -270,7 +270,7 @@ goog.scope(function() {
      * @public
      */
     SearchResults.prototype.isAnimationEnded = function() {
-        return this.getView().getAnimationPromise() ? true : false;
+        return !!this.getView().getAnimationPromise();
     };
 
 

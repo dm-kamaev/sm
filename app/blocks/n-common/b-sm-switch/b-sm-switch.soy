@@ -26,6 +26,7 @@
  *     config: sm.bSmSwitch.SmSwitch.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .switch}
@@ -96,6 +97,13 @@
             'items': $params.data.items
         ]/}
     {/call}"
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smSwitch
 {/template}
 
 
