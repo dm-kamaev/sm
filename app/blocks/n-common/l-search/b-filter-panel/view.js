@@ -3,6 +3,7 @@ goog.provide('sm.lSearch.bFilterPanel.View');
 goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
+goog.require('goog.style');
 
 
 
@@ -36,7 +37,9 @@ goog.scope(function() {
         COLLAPSER: 'b-filter-panel__collapser',
         CONTENT: 'b-filter-panel__content',
         FILTER: 'b-filter-panel__filter',
-        RESET: 'b-filter-panel__reset'
+        RESET: 'b-filter-panel__reset',
+        TOOLTIP: 'b-filter-panel__tooltip',
+        TOOLTIP_WRAP: 'b-filter-panel__tooltip-wrap'
     };
 
 
@@ -108,6 +111,16 @@ goog.scope(function() {
                 this.dom.reset,
                 cl.iUtils.Utils.CssClass.HIDDEN
             );
+    };
+
+
+     /**
+     * Set top offset for balloon
+     * @param {number} position
+     */
+    View.prototype.setTooltipPosition = function(position) {
+        var top = position + 'px';
+        goog.style.setStyle(this.dom.tooltipWrap, 'top', top);
     };
 
 
@@ -185,6 +198,12 @@ goog.scope(function() {
             ),
             reset: this.getElementByClass(
                 View.CssClass.RESET
+            ),
+            tooltip: this.getElementByClass(
+                View.CssClass.TOOLTIP
+            ),
+            tooltipWrap: this.getElementByClass(
+                View.CssClass.TOOLTIP_WRAP
             ),
             collapser: this.getElementByClass(
                 View.CssClass.COLLAPSER

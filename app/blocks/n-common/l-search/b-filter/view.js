@@ -134,6 +134,17 @@ goog.scope(function() {
 
 
     /**
+     * Get offset of option
+     * @param {Object} option
+     */
+    View.prototype.getOptionOffset = function(option) {
+        var element = option.getElement();
+        return element.offsetTop;
+
+    };
+
+
+    /**
      * Initializes options
      * @param {Element=} opt_element
      */

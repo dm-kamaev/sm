@@ -425,7 +425,8 @@ goog.scope(function() {
     Filter.prototype.dispatchEventCheckOption = function(option) {
         this.dispatchEvent({
             'type': Filter.Event.CHECK_OPTION,
-            'data': option.getData()
+            'data': option.getData(),
+            'position': this.getView().getOptionOffset(option)
         });
     };
 
@@ -438,7 +439,8 @@ goog.scope(function() {
     Filter.prototype.dispatchEventUncheckOption = function(option) {
         this.dispatchEvent({
             'type': Filter.Event.UNCHECK_OPTION,
-            'data': option.getData()
+            'data': option.getData(),
+            'position': this.getView().getOptionOffset(option)
         });
     };
 
