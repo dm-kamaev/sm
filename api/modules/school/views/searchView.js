@@ -6,7 +6,7 @@
 const egeResultView = require('../../study/views/egeResultView'),
     giaResultView = require('../../study/views/giaResultView'),
     subjectView = require('../../study/views/subjectView'),
-    userView = require('../../user/views/user'),
+    userView = require('../../user/views/user').userView,
     schoolView = require('./schoolView');
 
 const FilterPanel = require('../lib/SchoolFilterPanel'),
@@ -52,7 +52,7 @@ var searchView = {};
  * @return {Object}
  */
 searchView.render = function(data) {
-    let user = userView.default(data.user),
+    let user = userView.renderDefault(data.user),
         seoParams = data.seoParams || {};
 
     let aliasedSchools = schoolView.joinAliases(

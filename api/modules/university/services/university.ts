@@ -44,12 +44,9 @@ class UniversityService {
     }
 
     public async update(id: number, data: UniversityAttribute):
-            Promise<[number, Array<UniversityInstance>]> {
-        return UniversityModel.update(data, {
-            where: {
-                id: id
-            }
-        });
+            Promise<UniversityInstance> {
+        const university = await this.get(id);
+        return university.update(data);
     }
 
     public async delete(id: number): Promise<number> {

@@ -122,7 +122,7 @@ class UniversityAdminController extends Controller {
     public async actionCreate(actionContext: any) {
         const request = actionContext.request;
         const body = request.body;
-        const files = request.files;
+        const files = request.files || [];
         const universityData: UniversityAttribute = {
             name: body.name,
             abbreviation: body.abbreviation,
@@ -172,14 +172,27 @@ class UniversityAdminController extends Controller {
      * @apiParam {String}   created_at         Created at.
      * @apiParam {String}   updated_at         Updated at.
      *
-     * @apiSuccess {Array}  -    Response body.
-     * @apiSuccess {Number} -[0] Number of updated rows (Should be always 1).
-     *
-     * @apiSuccessExample {json} Example response:
-     *     HTTP/1.1 200 OK
-     *     [
-     *         1
-     *     ]
+     * @apiSuccess {Number}   id                 Id.
+     * @apiSuccess {String}   name               Name.
+     * @apiSuccess {String}   abbreviation       Abbreviation.
+     * @apiSuccess {String}   description        Description.
+     * @apiSuccess {String}   imageUrl           Url for university image.
+     * @apiSuccess {String}   relapImageUrl      Url for relap image.
+     *     It has {width} parameter in it, which should be replaced for required
+     *     width size in px.
+     *     It has {width} parameter in it, which should be replaced for required
+     *     width size in px.
+     * @apiSuccess {String[]} links              Array of links
+     *     (official site, facebook communities).
+     * @apiSuccess {Boolean}  militaryDepartment Military department.
+     * @apiSuccess {Boolean}  dormitory          Dormitory.
+     * @apiSuccess {Object}   city               City object.
+     * @apiSuccess {Number}   city.id            City's id.
+     * @apiSuccess {String}   city.name          City's name.
+     * @apiSuccess {String}   city.created_at    City's created at date.
+     * @apiSuccess {String}   city.updated_at    City's updated at date.
+     * @apiSuccess {String}   created_at         Created at.
+     * @apiSuccess {String}   updated_at         Updated at.
      */
     public async actionUpdate(actionContext: any, id: any) {
         const request = actionContext.request;

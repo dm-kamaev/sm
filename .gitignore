@@ -54,12 +54,25 @@ api/modules/comment/types/**/*.js
 api/modules/comment/migrations/20170227134914-create-university-comments.js
 api/modules/comment/models/commentGroup.js
 api/modules/comment/models/UniversityComment.js
+api/modules/comment/models/Rating.js
 api/modules/comment/services/commentGroup.js
+api/modules/comment/services/rating.js
+api/modules/comment/services/universityComment.js
+api/modules/comment/services/exceptions/**/*.js
+api/modules/comment/controllers/errors/**/*.js
+api/modules/comment/controllers/AdminUniversityCommentController.js
+api/modules/comment/controllers/UniversityCommentController.js
+api/modules/comment/views/universityCommentView.js
+
 
 api/modules/entity/services/page.js
 
 api/modules/course/controllers/middleware/**/*.js
 api/modules/course/models/courseBrand.js
+
+api/modules/geo/controllers/index.js
+api/modules/geo/controllers/CityAdminController.js
+api/modules/geo/controllers/errors/*.js
 
 api/modules/geo/interfaces/*.js
 api/modules/geo/models/address.js
@@ -67,12 +80,19 @@ api/modules/geo/models/area.js
 api/modules/geo/models/city.js
 api/modules/geo/models/department.js
 api/modules/geo/models/metro.js
+api/modules/geo/models/Region.js
 api/modules/geo/services/exceptions/*.js
 api/modules/geo/services/address.js
 api/modules/geo/services/city.js
 api/modules/geo/services/department.js
+api/modules/geo/services/region.js
 api/modules/geo/views/departmentView.js
+api/modules/geo/services/exceptions/*.js
 api/modules/geo/types/**/*.js
+
+api/modules/geo/migrations/20170309140000-create-region.js
+api/modules/geo/migrations/20170309144500-add-region-id-for-city.js
+api/modules/geo/migrations/20170310170002-add-composit-index-by-city-name-region-id.js
 
 api/modules/school/interfaces/*.js
 
@@ -111,9 +131,22 @@ api/modules/user/types/**/*.js
 api/modules/user/migrations/20170227191120-drop-user-data-user-type-enum.js
 api/modules/user/migrations/20170227193010-user-data-class-type-rename.js
 
+api/modules/user/services/userData.js
+api/modules/user/views/user.js
+
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
 
+app/modules/university/index.js
+
+app/modules/university/controllers/errors/*.js
+app/modules/university/controllers/index.js
+app/modules/university/controllers/subscriptionController.js
+
+app/modules/university/services/exceptions/*.js
+app/modules/university/services/subscriptionService.js
+
 console/modules/geoTools/*.js
+console/insertRegionForMoscow.js
 
 gulp/taskBackendLint.js

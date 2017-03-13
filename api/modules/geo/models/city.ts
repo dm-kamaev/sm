@@ -7,7 +7,20 @@ import {CityAttribute, CityInstance} from '../types/city';
 interface CityModel extends Sequelize.Model<CityInstance, CityAttribute> {}
 
 const City: CityModel = db.define('City', {
-    name: DataType.STRING,
+    name: {
+        unique: 'compositeIndex',
+        type: DataType.STRING,
+    },
+    regionId: {
+        unique: 'compositeIndex',
+        onUpdate: 'cascade',
+        type: DataType.INTEGER,
+        field: 'region_id',
+        references: {
+            model: 'region',
+            key: 'id'
+        }
+    }
 }, {
     underscored: true,
     tableName: 'city',
@@ -20,6 +33,10 @@ const City: CityModel = db.define('City', {
             City.hasMany(models.CityResult, {
                 as: 'cityResult',
                 foreignKey: 'city_id'
+            });
+            this.belongsTo(models.Region, {
+                as: 'region',
+                foreignKey: 'region_id'
             });
         }
     }

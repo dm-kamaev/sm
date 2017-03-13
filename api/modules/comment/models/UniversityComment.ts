@@ -64,7 +64,7 @@ const Model: UniversityCommentModel = sequelize.define('UniversityComment', {
     classMethods: {
         associate: function(models) {
             this.belongsTo(models.CommentGroup, {
-                as: 'universityComments',
+                as: 'commentGroup',
                 foreignKey: 'comment_group_id'
             });
             this.belongsTo(models.Rating, {

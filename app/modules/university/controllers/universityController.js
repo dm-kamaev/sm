@@ -382,8 +382,10 @@ controller.information = async(function(req, res, next) {
                 },
                 comments: {
                     header: 'Отзывы – Менеджмент (НИУ–ВШЭ)',
-                    items: [comment, comment, comment, comment, comment],
-                    itemType: 'smComment'
+                    list: {
+                        items: [comment, comment, comment, comment, comment],
+                        itemType: 'smComment'
+                    }
                 }
             },
             authSocialLinks: authSocialLinks,
@@ -419,6 +421,12 @@ controller.information = async(function(req, res, next) {
                         isSelected: true
                     }
                 }]
+            },
+            subscribeBoard: {
+                data: {
+                    entityId: 1,
+                    entityType: entityType.UNIVERSITY
+                }
             }
         });
 

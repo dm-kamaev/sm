@@ -1,3 +1,8 @@
+/**
+ * @fileOverview Service for make CRUD operations on program model
+ */
+import {CommentGroupInstance} from '../../comment/types/commentGroup';
+
 const sequelize = require('../../../../app/components/db');
 
 import {Model as ProgramModel} from '../models/Program';
@@ -89,6 +94,22 @@ class ProgramService {
         });
     }
 
+    public async getOne(programId: number): Promise<ProgramInstance> {
+        const instance = await this.silentGetOne_(programId);
+
+        if (!instance) {
+            throw new ProgramNotFound(programId);
+        }
+
+        return instance;
+    }
+
+    public async getCommentGroup(
+        programId: number): Promise<CommentGroupInstance> {
+        const program = await this.getOne(programId);
+        return await program.getCommentGroup();
+    }
+
     private async fullCreate(data: ProgramAdmin):
             Promise<ProgramInstance> {
         const commentGroup = await commentGroupService.create();
@@ -127,6 +148,10 @@ class ProgramService {
         }
 
         return updatedResult;
+    }
+
+    private async silentGetOne_(programId: number): Promise<ProgramInstance> {
+        return ProgramModel.findById(programId);
     }
 }
 

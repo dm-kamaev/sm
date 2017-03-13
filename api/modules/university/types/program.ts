@@ -2,6 +2,7 @@ import * as Sequelize from 'sequelize/v3';
 
 import {AddressAttribute, AddressInstance} from '../../geo/types/address';
 import {ProgramMajorInstance} from '../models/ProgramMajor';
+import {CommentGroupInstance} from '../../comment/types/commentGroup';
 
 export interface ProgramAttribute {
     id?: number;
@@ -16,7 +17,7 @@ export interface ProgramAttribute {
     employment?: number;
     salary?: number;
     extraExam?: Array<string>;
-    exchangeProgram?: boolean;
+    exchangeProgram?: string;
     programMajorId?: number;
     createdAt?: string;
     updatedAt?: string;
@@ -32,6 +33,8 @@ export interface ProgramInstance
         >;
     setAddresses: Sequelize.BelongsToManyAddAssociationsMixin<
         AddressInstance, number, AddressAttribute>;
+    getCommentGroup:
+        Sequelize.BelongsToGetAssociationMixin<CommentGroupInstance>;
     programMajor: ProgramMajorInstance;
 }
 

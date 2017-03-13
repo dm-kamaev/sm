@@ -6,7 +6,7 @@ const FilterPanel = require('../lib/CourseFilterPanel'),
     Subheader = require('../lib/CourseSubheader');
 
 const courseView = require('./courseView'),
-    userView = require('../../user/views/user'),
+    userView = require('../../user/views/user').userView,
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('./courseCategoryView'),
     searchViewEntity = require('../../entity/views/searchView'),
@@ -107,7 +107,7 @@ searchView.filterPanel = function(data) {
  * @return {Object}
  */
 searchView.render = function(data) {
-    let user = userView.default(data.user),
+    let user = userView.renderDefault(data.user),
         aliasedCourses = courseView.joinAliases(
             data.coursesList, data.aliases
         ),

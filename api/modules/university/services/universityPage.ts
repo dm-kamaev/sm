@@ -14,10 +14,13 @@ import {
     Model as UniversityPageModel,
     UniversityPageInstance
 } from '../models/UniversityPage';
+const pageModel = require('../../entity/models/page');
+
 import {service as universityService} from '../services/university';
 import {service as pageServices} from '../../entity/services/page';
 import {UniversityNameIsEmpty} from './exceptions/UniversityNameIsEmpty';
 import {UniversityAliasDuplicate} from './exceptions/UniversityAliasDuplicate';
+import {UniversityAliasNotFound} from './exceptions/UniversityAliasNotFound';
 
 type pageData = {
     entityId: number;
@@ -89,9 +92,9 @@ class UniversityPageService {
         if (!universityName) {
             throw new UniversityNameIsEmpty(universityName);
         }
-        const alias: string = services.urls.stringToURL(universityName.trim()),
-        universityId: number = university.id,
-        UNIVERSITY: string = entityTypies.UNIVERSITY;
+        const alias: string = services.urls.stringToURL(universityName.trim());
+        const universityId: number = university.id;
+        const UNIVERSITY: string = entityTypies.UNIVERSITY;
         let page = await pageServices.getOne(universityId, UNIVERSITY);
         if (!page) {
             await self.createPage(university);
@@ -117,7 +120,24 @@ class UniversityPageService {
         universityId: number = university.id;
         await pageServices.delete(universityId, entityTypies.UNIVERSITY);
     }
+
+    public async getByAlias(alias: string): Promise<UniversityInstance> {
+        const universityPage = await UniversityPageModel.findOne({
+            include: [{
+                model: pageModel,
+                as: 'page',
+                where: {
+                    alias: alias
+                }
+            }]
+        });
+
+        if (!universityPage) {
+            throw new UniversityAliasNotFound(alias);
+        }
+
+        return universityPage;
+    }
 }
 
 export const service = new UniversityPageService();
-

@@ -87,16 +87,12 @@
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
  * @protected
- * @ovveride
+ * @override
  */
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionData_ data="all" /}
-
-        {if $params.data.entityData.comments}
-            {call .sectionComments_ data="all" /}
-        {/if}
-
+        {call .sectionComments_ data="all" /}
         {call .sectionPrograms_ data="all" /}
         {call .sectionUsefulCourses_ data="all" /}
         {call .sectionModals_ data="all" /}
@@ -154,6 +150,16 @@
 
 /**
  * Section data
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             name: string
+ *          }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
  * @private
  */
 {template .sectionData_}
@@ -168,20 +174,35 @@
 
 /**
  * Section comments
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             comments: sm.bCommentList.Template.Params.Data
+ *         }
+ *     }
+ * }}
  * @private
- * @ovveride
  */
 {template .sectionComments_}
-    <div class="{call .rootClass/}__section{sp}
-        {call .rootClass/}__section_comments{sp}"
-    >
-        {call .comments_ data="all" /}
-    </div>
+    {if $params.data.entityData.comments}
+        <div class="{call .rootClass/}__section{sp}
+            {call .rootClass/}__section_comments{sp}"
+        >
+            {call .comments_ data="all" /}
+        </div>
+    {/if}
 {/template}
 
 
 /**
  * Section programs
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             similarPrograms: sm.bSmItemList.Template.Params.Data
+ *         }
+ *     }
+ * }}
  * @private
  */
 {template .sectionPrograms_}
@@ -195,6 +216,13 @@
 
 /**
  * Section courses
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             usefulCourses: sm.bSmItemList.Template.Params.Data
+ *         }
+ *     }
+ * }}
  * @private
  */
 {template .sectionUsefulCourses_}
@@ -613,8 +641,11 @@
  * @param params {{
  *     data: {
  *         entityData: {
- *             comments: Array<sm.bComment.Template.Params>
+ *             comments: sm.bCommentList.Template.Params.Data
  *         }
+ *     },
+ *     config: {
+ *         modifier: string
  *     }
  * }}
  * @private

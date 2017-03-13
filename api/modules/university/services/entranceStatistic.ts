@@ -1,3 +1,5 @@
+const sequelize = require('../../../../app/components/db');
+
 import {
     Model as EntranceStatisticModel,
     EntranceStatisticAttribute,
@@ -30,6 +32,16 @@ class EntranceStatisticService {
                 id: id
             }
         });
+    }
+
+    public async getLast(
+            programId: number): Promise<EntranceStatisticInstance> {
+        const entranceStatistics = await EntranceStatisticModel.findAll({
+            where: {programId},
+            order: [['year', 'DESC']],
+            limit: 1
+        });
+        return entranceStatistics[0];
     }
 
     public async create(data: EntranceStatisticAttribute):

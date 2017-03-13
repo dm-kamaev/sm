@@ -18,8 +18,7 @@ export interface UniversityPageInstance
 interface UniversityPageModel
     extends Sequelize.Model<UniversityPageInstance, UniversityPageAttribute> {}
 
-const UniversityPage: UniversityPageModel
-    = sequelize.define('UniversityPage', {
+const UniversityPage: UniversityPageModel = sequelize.define('UniversityPage', {
     id: {
         type: DataType.INTEGER,
         autoIncrement: true,
@@ -61,7 +60,10 @@ const UniversityPage: UniversityPageModel
     tableName: 'university_page',
     classMethods: {
         associate: function(models) {
-
+            this.belongsTo(models.Page, {
+                foreignKey: 'page_id',
+                as: 'page'
+            });
         }
     }
 });

@@ -22,8 +22,39 @@ const programAdminController = new ProgramAdminController();
 import {ExamAdminController} from './ExamAdminController';
 const examAdminController = new ExamAdminController();
 
+import {ExamController} from './ExamController';
+const examController: any = new ExamController();
+
 import {EntranceStatisticController} from './EntranceStatisticController';
-const entranceStatisticController = new EntranceStatisticController();
+const entranceStatisticController: any = new EntranceStatisticController();
+
+import {
+    EntranceStatisticAdminController
+} from './EntranceStatisticAdminController';
+const entranceStatisticAdminController = new EntranceStatisticAdminController();
+
+import {ProgramController} from './ProgramController';
+const programController: any = new ProgramController();
+
+import {UniversityPageController} from './UniversityPageController';
+const universityPageController: any = new UniversityPageController();
+
+router.get(
+    '/program/:id',
+    programController.actionProgramPage
+);
+
+router.get('/university/:alias', universityPageController.actionFindByAlias);
+
+router.get(
+    '/program/:id/statistic/last',
+    entranceStatisticController.actionGet
+);
+router.get(
+    '/program/:id/exam',
+    checkToken,
+    examController.actionList
+);
 
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
@@ -52,8 +83,8 @@ const initCrudRouting = function(route: string, controller: any): void {
         controller.actionDelete
     );
 };
-
 initCrudRouting('/admin/profile', profileAdminController);
+
 initCrudRouting('/admin/university', universityAdminController);
 initCrudRouting(
     '/admin/university/:universityId/program',
@@ -62,7 +93,7 @@ initCrudRouting(
 initCrudRouting('/admin/program/:programId/exam', examAdminController);
 initCrudRouting(
     '/admin/program/:programId/statistic',
-    entranceStatisticController
+    entranceStatisticAdminController
 );
 
 export {router};

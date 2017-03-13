@@ -80,8 +80,6 @@ goog.scope(function() {
      */
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
-
-        this.initButtonListeners_();
     };
 
 
@@ -107,33 +105,9 @@ goog.scope(function() {
 
 
     /**
-     * Init buttons listeners
-     * @private
-     */
-    View.prototype.initButtonListeners_ = function() {
-        this.getHandler().listen(
-            this.dom.showCommentsButton,
-            goog.events.EventType.CLICK,
-            this.onShowCommentButtonClick_
-        );
-    };
-
-
-    /**
-     * Click show button handler
-     * @private
-     */
-    View.prototype.onShowCommentButtonClick_ = function() {
-        this.dispatchEvent(View.Event.SHOW_BUTTON_CLICK);
-        this.hideShowCommentsButton_();
-    };
-
-
-    /**
      * Hide show comments button
-     * @private
      */
-    View.prototype.hideShowCommentsButton_ = function() {
+    View.prototype.hideShowCommentsButton = function() {
         goog.dom.classlist.add(
             this.dom.showCommentsButtonWrap,
             cl.iUtils.Utils.CssClass.HIDDEN

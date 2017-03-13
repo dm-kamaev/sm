@@ -1,10 +1,16 @@
-var DataType = require('sequelize');
+import * as Sequelize from 'sequelize/v3';
 
-var db = require('../../../../app/components/db');
+import {RatingAttributes, RatingInstance} from '../types/rating';
 
-var Rating = db.define('Rating', {
+interface RatingModel
+    extends Sequelize.Model<RatingInstance, RatingAttributes> {}
+
+const sequelize = require('sequelize');
+const db = require('../../../../app/components/db');
+
+const Model: RatingModel = db.define('Rating', {
     score: {
-        type: DataType.ARRAY(DataType.INTEGER),
+        type: sequelize.ARRAY(sequelize.INTEGER),
         validate: {
             isRightCount: function(value) {
                 if (value.length != 4) {
@@ -12,7 +18,7 @@ var Rating = db.define('Rating', {
                 }
             },
             isRightFormat: function(value) {
-                for (var i = 0; i < value.length; i++) {
+                for (let i = 0; i < value.length; i++) {
                     if (value[i] < 0 || value[i] > 5) {
                         throw new Error('Every number must be from 0 to 5');
                     }
@@ -21,7 +27,7 @@ var Rating = db.define('Rating', {
         }
     },
     totalScore: {
-        type: DataType.FLOAT,
+        type: sequelize.FLOAT,
         field: 'total_score'
     }
 }, {
@@ -30,13 +36,15 @@ var Rating = db.define('Rating', {
     classMethods: {
         associate: function(models) {
             this.hasOne(models.Comment, {
-                foreignKey: 'rating_id'
+                foreignKey: 'rating_id',
+                as: 'comment'
             });
             this.hasOne(models.UniversityComment, {
-                foreignKey: 'rating_id'
+                foreignKey: 'rating_id',
+                as: 'universityComment'
             });
         }
     }
 });
 
-module.exports = Rating;
+export {Model};

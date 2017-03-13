@@ -18,5 +18,11 @@
     },
     "universities": {},
     "carrotquestId": "6408-1ccff98844d996fc088fed318b4",
-    "facebookClientId": 525358880980041
+    "facebookClientId": 525358880980041,
+    "mailChimp": {
+        "dc": "us15",
+        "listId": "b41158399d",
+        "name": "dsavkin",
+        "password": "7f3fef4d11e2e5a6c0a5ceb47a8538f9-us15"
+    }
 }

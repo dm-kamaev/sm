@@ -1,9 +1,12 @@
+/**
+ * @fileOverview Exception, which occurs when program not found by id
+ */
 import {ServiceException} from '../../../../components/interface';
 
 const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
-export class ProgramNotFound extends Exception {
+class ProgramNotFound extends Exception {
     public readonly name: string;
 
     constructor(programId: number) {
@@ -12,3 +15,5 @@ export class ProgramNotFound extends Exception {
         this.name = 'ProgramNotFoundException';
     }
 }
+
+export {ProgramNotFound};
