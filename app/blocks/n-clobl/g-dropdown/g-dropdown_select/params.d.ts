@@ -1,33 +1,28 @@
-declare namespace Params {
+export namespace gDropdownSelect {
     /*
-     * sm.gDropdown.ParamsSelect.Data
+     * sm.gDropdownSelect.Params
      */
-    interface Data {
-        opener: (string|undefined),
-        defaultOpenerText: (string|undefined),
-        name: (string|undefined),
-        content: any,
-        contentConfig: (any|undefined)
-    }
+    export namespace Params {
+        /*
+         * sm.gDropdownSelect.Params.Data
+         */
+        export interface Data {
+            opener: (string|undefined),
+            defaultOpenerText: (string|undefined),
+            name: (string|undefined),
+            content: any,
+            contentConfig: (any|undefined)
+        }
 
-    /*
-     * sm.gDropdown.ParamsSelect.Config
-     */
-    interface Config {
-        stylizationModifier: string,
-        iconName: (string|undefined),
-        iconType: (string|undefined),
-        customClasses: (Array<string>|undefined),
-        theme: (string|undefined)
-    }
-
-    /*
-     * sm.gDropdown.ParamsSelect
-     */
-    interface Params {
-        data: Data;
-        config: Config;
+        /*
+         * sm.gDropdownSelect.Params.Config
+         */
+        export interface Config {
+            stylizationModifier: string,
+            iconName: (string|undefined),
+            iconType: (string|undefined),
+            customClasses: (Array<string>|undefined),
+            theme: (string|undefined)
+        }
     }
 }
-
-export = Params;

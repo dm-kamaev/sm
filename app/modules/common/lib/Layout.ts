@@ -1,4 +1,4 @@
-const Subheader = require('../../../../api/modules/entity/lib/Subheader');
+const SubHeader = require('../../../../api/modules/entity/lib/Subheader');
 
 const userView = require('../../../../api/modules/user/views/user'),
     headerView = require('../../../../api/modules/entity/views/headerView'),
@@ -9,21 +9,17 @@ const userView = require('../../../../api/modules/user/views/user'),
 const sideMenuView = require('../views/sideMenuView'),
     configView = require('../views/configView');
 
-import {LayoutTemplateConfig} from '../types/layoutConfig';
-import {Data} from '../views/i-params';
-
 import {
-    Data as bSmSubheaderParamsData
-} from '../../../blocks/n-common/b-sm-subheader/params';
+    iLayoutStendhal
+} from '../../../blocks/n-clobl/i-layout/params';
 
-type ParamsType = {
-    data: DataType,
+type Params = {
+    data: Data,
     config: AppConfig,
-    test: Data,
     request: any
 };
 
-type DataType = {
+type Data = {
     favorites: Array<{string: any}>
 };
 
@@ -43,27 +39,10 @@ type AppConfig = {
     facebookClientId: number
 };
 
-type UserType = {
+type User = {
     lastName: (string|undefined),
     firstName: (string|undefined)
 };
-
-type LayoutTemplateParams = {
-    data: LayoutTemplateData,
-    config: LayoutTemplateConfig
-};
-
-type LayoutTemplateData = {
-    openGraph: (OpenGraph|undefined),
-    seo?: Seo,
-    subheader: bSmSubheaderParamsData,
-    header: any,
-    sideMenu: any,
-    user?: UserType,
-    authSocialLinks: AuthSocialLinks,
-    footer: any
-};
-
 
 type OpenGraph = {
     url?: string,
@@ -86,8 +65,8 @@ type Seo = {
     metaDescription?: string
 };
 
-type SubheaderParams = {
-    user?: UserType,
+type SubHeader = {
+    user?: User,
     favoriteEntities?: Array<{string: any}>,
     listLinks?: Array<string>,
     isLogoRedirect: boolean,
@@ -103,7 +82,7 @@ type AuthSocialLinks = {
 export abstract class LayoutView {
     protected views: {
         header: any,
-        subheader: any
+        subHeader: any
     };
 
     protected entityType: string;
@@ -111,17 +90,17 @@ export abstract class LayoutView {
 
     protected openGraph?: OpenGraph;
     protected seo: Seo;
-    protected subheader: SubheaderParams;
+    protected subHeader: SubHeader;
 
-    protected params: LayoutTemplateParams;
+    protected params: iLayoutStendhal.Params;
 
     private authSocialLinks_: AuthSocialLinks;
-    private user_: UserType;
+    private user_: User;
 
     constructor() {
         this.views = {
             header: headerView,
-            subheader: Subheader
+            subHeader: SubHeader
         };
 
         this.authSocialLinks_ = {
@@ -131,7 +110,7 @@ export abstract class LayoutView {
     }
 
 
-    public render(params: ParamsType) {
+    public render(params: Params) {
         this.initUser_(params.request);
 
         this.setParams(params);
@@ -139,10 +118,10 @@ export abstract class LayoutView {
     }
 
 
-    protected setParams(params: ParamsType) {
+    protected setParams(params: Params) {
         this.setOpenGraph_(params.config, params.data);
         this.setHeader_(params.config);
-        this.setSubheader_(params.data);
+        this.setSubHeader_(params.data);
 
         this.setUser_();
         this.setAuthSocialLinks_();
@@ -157,7 +136,7 @@ export abstract class LayoutView {
     }
 
 
-    private setOpenGraph_(config: AppConfig, data: DataType) {
+    private setOpenGraph_(config: AppConfig, data: Data) {
         this.params.data.openGraph = {
             fbClientId: config.facebookClientId
         };
@@ -172,16 +151,16 @@ export abstract class LayoutView {
     }
 
 
-    private setSubheader_(data: DataType) {
-        const subheader = new this.views.subheader();
+    private setSubHeader_(data: Data) {
+        const subHeader = new this.views.subHeader();
 
-        const params = this.subheader;
+        const params = this.subHeader;
         params.user = this.user_;
         params.favoriteEntities = favoriteView.list(data.favorites);
 
-        subheader.init(params);
+        subHeader.init(params);
 
-        this.params.data.subheader = subheader.getParams();
+        this.params.data.subHeader = subHeader.getParams();
     }
 
     private initUser_(request: any) {
