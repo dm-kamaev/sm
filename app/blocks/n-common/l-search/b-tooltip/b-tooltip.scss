@@ -1,0 +1,76 @@
+.b-tooltip {
+    min-height: 48px;
+    min-width: 234px;
+    background-color: #fff;
+    box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.15);
+    position: relative;
+    line-height: 48px;
+    padding-left: 8px;
+    box-sizing: border-box;
+}
+
+.b-tooltip__triangle {
+    right: -18px;
+    top: 9px;
+    height: 34px;
+    position: relative;
+    width: 34px;
+    box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.15);
+    transform: rotate(45deg);
+    background-color: #fff;
+}
+
+.b-tooltip__triangle-wrap {
+    height: 52px;
+    width: 35px;
+    position: absolute;
+    left: -27px;
+    transform: scaleX(0.6);
+    overflow: hidden;
+    top: -2px;
+}
+
+.b-tooltip__text {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.b-tooltip__button-wrap {
+    margin-right: 8px;
+    margin-top: 8px;
+    height: 32px;
+    width: 97px;
+    line-height: 32px;
+    display: inline-block;
+    overflow: hidden;
+    float: right;
+}
+
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+        visibility: visible;
+    }
+    99% {
+        opacity: 0.01;
+        visibility: visible;
+    }
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+.b-tooltip_disappear_slow {
+    animation-name: disappear;
+    animation-duration: 0.5s;
+    animation-delay: 2s;
+    animation-fill-mode: forwards;
+}
+
+.b-tooltip_rounded-button-theme {
+    .b-tooltip__button-wrap {
+        border-radius: 100px;
+    }
+}

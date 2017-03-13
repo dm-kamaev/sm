@@ -12,6 +12,7 @@ goog.require('sm.lSearch.bFilter.FilterSwitch');
 goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
 goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bFilterPanel.View');
+goog.require('sm.lSearch.bTooltip.Tooltip');
 
 
 

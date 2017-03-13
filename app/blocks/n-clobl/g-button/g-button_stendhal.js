@@ -33,3 +33,12 @@ sm.iCloblFactory.FactoryStendhal.getInstance().register(
         control: sm.gButton.ButtonStendhal,
         view: cl.gButton.View
 });
+
+
+/**
+ * Event enum
+ * @enum {string}
+ */
+sm.gButton.ButtonStendhal.Event = {
+    CLICK: cl.gButton.Button.Event.CLICK
+};

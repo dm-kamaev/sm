@@ -34,6 +34,21 @@
     }
 }
 
+.g-button_carrot-theme {
+    height: 100%;
+    font-size: 12px;
+    line-height: inherit;
+    letter-spacing: 0.5px;
+    color: #fff;
+    background-color: #ed6327;
+    border: none;
+    padding: 0;
+
+    &:hover {
+        background-color: #ed6327;
+    }
+}
+
 .g-button_dark-theme.g-button_hoverable:hover {
     color: #e62424;
     border-color: #e62424;
