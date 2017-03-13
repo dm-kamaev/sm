@@ -29,7 +29,7 @@ class RatingService {
     }
 
     public async delete(ratingId: number): Promise<void> {
-        const instance = await RatingModel.findById(ratingId);;
+        const instance = await RatingModel.findById(ratingId);
 
         return await instance.destroy();
     }

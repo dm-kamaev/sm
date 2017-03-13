@@ -22,6 +22,9 @@ const programAdminController = new ProgramAdminController();
 import {ExamAdminController} from './ExamAdminController';
 const examAdminController = new ExamAdminController();
 
+import {ExamController} from './ExamController';
+const examController: any = new ExamController();
+
 import {EntranceStatisticController} from './EntranceStatisticController';
 const entranceStatisticController: any = new EntranceStatisticController();
 
@@ -46,6 +49,11 @@ router.get('/university/:alias', universityPageController.actionFindByAlias);
 router.get(
     '/program/:id/statistic/last',
     entranceStatisticController.actionGet
+);
+router.get(
+    '/program/:id/exam',
+    checkToken,
+    examController.actionList
 );
 
 const initCrudRouting = function(route: string, controller: any): void {
@@ -75,8 +83,8 @@ const initCrudRouting = function(route: string, controller: any): void {
         controller.actionDelete
     );
 };
-
 initCrudRouting('/admin/profile', profileAdminController);
+
 initCrudRouting('/admin/university', universityAdminController);
 initCrudRouting(
     '/admin/university/:universityId/program',
