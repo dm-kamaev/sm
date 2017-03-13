@@ -147,5 +147,6 @@ app/modules/university/services/exceptions/*.js
 app/modules/university/services/subscriptionService.js
 
 console/modules/geoTools/*.js
+console/insertRegionForMoscow.js
 
 gulp/taskBackendLint.js

@@ -43,6 +43,7 @@ require('./console/specializedClassesOperator').Command;
 require('./console/activityOperator').Command;
 require('./console/updateAnalytics').Command;
 require('./console/getCoordsForArea').Command;
+require('./console/insertRegionForMoscow').Command;
 
 /*
  * The line below initializes the interface on `node ./commander
