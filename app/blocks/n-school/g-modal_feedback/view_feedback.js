@@ -75,7 +75,9 @@ goog.scope(function() {
         var params = JSON.parse(goog.dom.dataset.get(element, 'params'));
 
         for (var paramName in params) {
-            this.params[paramName] = params[paramName];
+            if (params.hasOwnProperty(paramName)) {
+                this.params[paramName] = params[paramName];
+            }
         }
 
         return this;

@@ -3,8 +3,11 @@ goog.provide('sm.gModal.ModalSuccess');
 goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.TemplateSuccess');
 goog.require('sm.gModal.ViewSuccess');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -35,6 +38,15 @@ goog.scope(function() {
     var ModalSuccess = sm.gModal.ModalSuccess,
         View = sm.gModal.ViewSuccess;
 
+    /**
+     * Name of this element in factory
+     */
+    ModalSuccess.NAME = sm.gModal.TemplateSuccess.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(ModalSuccess.NAME, {
+        control: ModalSuccess,
+        view: View
+    });
 
     /**
      * @param {Element} element
@@ -89,7 +101,7 @@ goog.scope(function() {
      */
     ModalSuccess.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };

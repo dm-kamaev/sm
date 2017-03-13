@@ -2,6 +2,8 @@ goog.provide('sm.bDataBlock.DataBlockFeatures');
 
 goog.require('sm.bDataBlock.DataBlock');
 goog.require('sm.bDataBlock.DataBlockFeaturesView');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lSchool.bDataBlock.TemplateFeatures');
 
 
 
@@ -23,6 +25,17 @@ goog.scope(function() {
     var DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         DataBlockFeaturesView = sm.bDataBlock.DataBlockFeaturesView;
 
+    /**
+     * Name of this element in factory
+     */
+    DataBlockFeatures.NAME = sm.lSchool.bDataBlock.TemplateFeatures.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        DataBlockFeatures.NAME, {
+            control: DataBlockFeatures,
+            view: DataBlockFeaturesView
+        }
+    );
 
     /**
      * Event enum

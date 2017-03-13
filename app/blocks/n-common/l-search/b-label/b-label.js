@@ -1,6 +1,9 @@
 goog.provide('sm.lSearch.bLabel.Label');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmCheckbox.SmCheckbox');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lSearch.bLabel.Template');
 goog.require('sm.lSearch.bLabel.View');
 
 
@@ -31,6 +34,15 @@ goog.scope(function() {
     var Label = sm.lSearch.bLabel.Label,
         View = sm.lSearch.bLabel.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Label.NAME = sm.lSearch.bLabel.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Label.NAME, {
+        control: Label,
+        view: View
+    });
 
     /**
      * Event enum
@@ -94,7 +106,7 @@ goog.scope(function() {
      */
     Label.prototype.initCheckbox_ = function() {
         this.checkbox_ = this.decorateChild(
-            'smCheckbox',
+            sm.bSmCheckbox.SmCheckbox.NAME,
             this.getView().getDom().checkbox
         );
     };

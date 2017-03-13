@@ -93,9 +93,9 @@ goog.scope(function() {
      * @public
      */
     View.prototype.show = function() {
-        View.base(this, 'show');
-
         this.reduseHeightBody_();
+
+        View.base(this, 'show');
     };
 
 
@@ -189,7 +189,11 @@ goog.scope(function() {
      * @private
      */
     View.prototype.reduseHeightBody_ = function() {
-        var height = goog.dom.getViewportSize().height;
+        var height = Math.max(
+            goog.dom.getWindow().innerHeight,
+            goog.dom.getViewportSize().height,
+            goog.style.getSize(this.getElement()).height
+        );
         goog.style.setHeight(goog.dom.getDocument().body, height);
     };
 

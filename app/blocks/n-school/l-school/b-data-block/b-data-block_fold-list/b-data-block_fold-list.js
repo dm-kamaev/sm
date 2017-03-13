@@ -4,7 +4,8 @@ goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
-goog.require('sm.iFactory.FactoryStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lSchool.bFoldList.FoldList');
 
 
 
@@ -29,7 +30,7 @@ goog.inherits(sm.lSchool.bDataBlock.DataBlockFoldList, goog.ui.Component);
 
 goog.scope(function() {
     var DataBlockFoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
-        factory = sm.iFactory.FactoryStendhal.getInstance();
+        factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
 
     /**
@@ -59,8 +60,9 @@ goog.scope(function() {
      */
     DataBlockFoldList.prototype.initFoldList_ = function() {
         this.foldList_ = factory.decorate(
-            'fold-list',
+            sm.lSchool.bFoldList.FoldList.NAME,
             this.getElementByClass(sm.lSchool.bFoldList.View.CssClass.ROOT),
+            null,
             this
         );
         return this;

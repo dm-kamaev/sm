@@ -4,8 +4,11 @@
 goog.provide('sm.lCourse.bDepartment.Department');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lCourse.bDepartment.Event.EnrollButtonClick');
+goog.require('sm.lCourse.bDepartment.Template');
 goog.require('sm.lCourse.bDepartment.View');
+goog.require('sm.lCourse.bOption.Option');
 
 
 goog.scope(function() {
@@ -41,6 +44,15 @@ goog.scope(function() {
     goog.inherits(sm.lCourse.bDepartment.Department, cl.iControl.Control);
     var Department = sm.lCourse.bDepartment.Department;
 
+    /**
+     * Name of this element in factory
+     */
+    Department.NAME = sm.lCourse.bDepartment.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Department.NAME, {
+        control: Department,
+        view: View
+    });
 
     /**
      * @typedef {sm.lCourse.bDepartment.View.RenderParams}
@@ -164,7 +176,7 @@ goog.scope(function() {
      */
     Department.prototype.initOption_ = function(element) {
         return this.decorateChild(
-            'lCourse-option',
+            sm.lCourse.bOption.Option.NAME,
             element
         );
     };

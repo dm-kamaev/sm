@@ -14,6 +14,7 @@
  *     }
  * }
  * @extends cl.gAuthSocial.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -22,18 +23,19 @@
 {/template}
 
 /**
+ * @override
+ */
+{template .NAME}
+    auth-social
+{/template}
+
+/**
  * Before template
- * @param params {
- *     config: {
- *         stylizationModifier: ?string
- *     }
- * }
  */
 {template .before}
     <h3 class="{call .rootClass/}__title">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params.config.stylizationModifier,
                 'type': 'icon',
                 'renderParams': [
                     'data': [

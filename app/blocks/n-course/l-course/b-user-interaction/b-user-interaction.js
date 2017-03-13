@@ -1,7 +1,10 @@
 goog.provide('sm.lCourse.bUserInteraction.UserInteraction');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.gButton.ButtonStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iSmViewport.SmViewport');
+goog.require('sm.lCourse.bUserInteraction.Template');
 goog.require('sm.lCourse.bUserInteraction.View');
 
 
@@ -26,7 +29,7 @@ goog.scope(function() {
 
         /**
          * Instance button
-         * @type {cl.gButton.Button}
+         * @type {sm.gButton.ButtonStendhal}
          * @private
          */
         this.button_ = null;
@@ -40,6 +43,17 @@ goog.scope(function() {
 
     var Viewport = sm.iSmViewport.SmViewport;
 
+    /**
+     * Name of this element in factory
+     */
+    UserInteraction.NAME = sm.lCourse.bUserInteraction.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        UserInteraction.NAME, {
+            control: UserInteraction,
+            view: View
+        }
+    );
 
     /**
      * Css class enum
@@ -79,7 +93,7 @@ goog.scope(function() {
      */
     UserInteraction.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };

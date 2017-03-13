@@ -1,7 +1,6 @@
 var commander = require('commander');
 var https = require('https');
 var fs = require('fs');
-var colors = require('colors');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -45,7 +44,7 @@ var start = async(() => {
 
     adrChunks.forEach(chunk => {
         await(processChunk(chunk));
-        console.log(colors.blue('----------------'));
+        console.log('----------------');
     });
 });
 
@@ -70,8 +69,8 @@ var processChunk = async(adrChunk => {
         if (!(CACHING_ENABLED && isCached(address))) {
             await(processAddress(address));
         } else {
-            console.log('Metro stations for address ' +
-                colors.green(address.name) + ' adlready cached');
+            console.log('Metro stations for address ' + address.name +
+                ' adlready cached');
         }
     }));
 });
@@ -85,9 +84,8 @@ var processAddress = async(address => {
         var metroArr = await(getMetro(address));
         if (metroArr) {
             if (metroArr.length === 0) {
-                console.log('Found 0 stations for address ' +
-                    colors.yellow(address.name) + ' in range ' +
-                    colors.yellow(KM_RESTRIСTION + 'KM'));
+                console.log(`Found 0 stations for address ${address.name}` +
+                    ` in range ${KM_RESTRIСTION} KM`);
             } else {
                 await(services.address.setMetro(address, metroArr));
             }

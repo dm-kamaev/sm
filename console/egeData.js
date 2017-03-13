@@ -192,8 +192,7 @@ class MainParser {
     static getSchool(site) {
         site = site.replace(/http:\/\//g, ''); // remove 'http://'
         var instance = await(services.school.findBySite(site));
-       // if (!instance)
-       //      /console.log(colors.red('Cant find school for site ' + site));
+
         return instance;
     }
 

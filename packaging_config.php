@@ -29,5 +29,6 @@ $filemapping = [
         '- /bin/make-deb',
         '- /bin/deploy',
         '- /packaging_config.php',
+        '- /api-debug',
     ]
 ];

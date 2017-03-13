@@ -11,11 +11,16 @@ goog.require('goog.object');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmMap.SmMap');
 goog.require('sm.bSmSubheader.SmSubheader');
+goog.require('sm.gHint.HintStendhal');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
+goog.require('sm.lSearch.Template');
 goog.require('sm.lSearch.View');
+goog.require('sm.lSearch.bFilter.FilterLabels');
 goog.require('sm.lSearch.bFilterPanel.FilterPanel');
+goog.require('sm.lSearch.bSearchResults.SearchResults');
 goog.require('sm.lSearch.iAnalyticsSender.AnalyticsSender');
 goog.require('sm.lSearch.iSearchService.SearchService');
 goog.require('sm.lSearch.iUrlUpdater.UrlUpdater');
@@ -28,8 +33,7 @@ goog.scope(function() {
         UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater,
         Map = sm.bSmMap.SmMap,
         Analytics = sm.iAnalytics.Analytics,
-        AnalyticsSender = sm.lSearch.iAnalyticsSender.AnalyticsSender,
-        Balloon = sm.bSmBalloon.SmBalloon;
+        AnalyticsSender = sm.lSearch.iAnalyticsSender.AnalyticsSender;
 
 
 
@@ -121,8 +125,18 @@ goog.scope(function() {
         this.analyticsSender_ = null;
     };
     goog.inherits(sm.lSearch.Search, sm.iLayout.LayoutStendhal);
-    var Search = sm.lSearch.Search;
+    var Search = sm.lSearch.Search,
+        View = sm.lSearch.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Search.NAME = sm.lSearch.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Search.NAME, {
+        control: Search,
+        view: View
+    });
 
     /**
      * Defines item amount of one search request (one page) from list
@@ -834,7 +848,7 @@ goog.scope(function() {
         this.search_.decorate(this.getView().getDom().search);
 
         this.filterPanel_ = this.decorateChild(
-            'lSearch-filterPanel',
+            sm.lSearch.bFilterPanel.FilterPanel.NAME,
             this.getView().getDom().filterPanel
         );
 
@@ -849,7 +863,7 @@ goog.scope(function() {
      */
     Search.prototype.initSearchResultsInstance_ = function() {
         this.searchResults_ = this.decorateChild(
-            'lSearch-searchResults',
+            sm.lSearch.bSearchResults.SearchResults.NAME,
             this.getView().getDom().searchResults
         );
 
@@ -864,7 +878,7 @@ goog.scope(function() {
      */
     Search.prototype.initMap_ = function() {
         this.map_ = this.decorateChild(
-            'smMap',
+            sm.bSmMap.SmMap.NAME,
             this.getView().getDom().map
         );
 
@@ -944,14 +958,8 @@ goog.scope(function() {
  * creates sm.lSearch.Search instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lSearch.Search.NAME,
         sm.lSearch.View.CssClass.ROOT
     );
-
-    if (domElement) {
-        var view = new sm.lSearch.View();
-        var instance = new sm.lSearch.Search(view);
-
-        instance.decorate(domElement);
-    }
 });

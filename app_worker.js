@@ -10,17 +10,6 @@ const session = require('./app/components/session');
 const configurePassport = require('./app/components/configurePassport');
 const logger = require('./app/components/logger/logger');
 const soy = require('./node_modules/clobl/soy').setOptions({
-    templateFactory: [
-        path.join(
-            __dirname,
-            'app/blocks/n-clobl/i-factory/i-template-factory_stendhal.js'
-        ),
-        path.join(
-            __dirname,
-            'app/blocks/n-clobl/i-factory/i-factory_experimental/' +
-            'i-template-factory_experimental.js'
-        )
-    ],
     closureLibrary: path.join(
         __dirname,
         'node_modules/google-closure-library'
@@ -38,7 +27,8 @@ process.on('unhandledRejection', (reason, promise) => {
     logger
         .getLogger('app')
         .critical(
-            `Unhandled Rejection at: Promise ${promiseString} reason: ${reason}`
+            `Unhandled Rejection at: Promise ${promiseString}\n` +
+            `reason: ${reason.stack}`
         );
 });
 
@@ -117,6 +107,8 @@ app.use('/:subdomain/api', api.entity.router);
 
 async(function() {
     const paths = [
+        'app/blocks/n-clobl/i-clobl-factory/i-clobl-factory_stendhal.js',
+        'app/blocks/n-clobl/i-clobl-factory/i-clobl-factory_experimental.js',
         'build/compiledServerSoy/server.soy.concat.js',
         'node_modules/clobl/blocks/i-utils/i-utils.js',
         'node_modules/clobl/blocks/i-utils-legacy/i-utils.js'

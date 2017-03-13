@@ -1,6 +1,13 @@
 goog.provide('sm.gModal.ModalFeedback');
 
+goog.require('sm.gButton.ButtonStendhal');
+goog.require('sm.gDropdown.DropdownSelectLegacy');
+goog.require('sm.gInput.InputStendhal');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.TemplateFeedback');
+goog.require('sm.gModal.ViewFeedback');
+goog.require('sm.gTextarea.TextareaStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -27,8 +34,20 @@ goog.inherits(sm.gModal.ModalFeedback, sm.gModal.ModalStendhal);
 
 
 goog.scope(function() {
-    var ModalFeedback = sm.gModal.ModalFeedback;
+    var ModalFeedback = sm.gModal.ModalFeedback,
+        View = sm.gModal.ViewFeedback;
 
+    /**
+     * Name of this element in factory
+     */
+    ModalFeedback.NAME = sm.gModal.TemplateFeedback.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        ModalFeedback.NAME, {
+            control: ModalFeedback,
+            view: View
+        }
+    );
 
     /**
      * Validation error texts
@@ -218,13 +237,16 @@ goog.scope(function() {
         var domElements = this.getView().getDom();
         this.elements_ = {
             dropdown: this.decorateChild(
-                'dropdown-select-legacy', domElements.themeField
+                sm.gDropdown.DropdownSelectLegacy.NAME,
+                domElements.themeField
             ),
             submitButton: this.decorateChild(
-                'button', domElements.submitButton
+                sm.gButton.ButtonStendhal.NAME,
+                domElements.submitButton
             ),
             textarea: this.decorateChild(
-                'textarea', domElements.textArea
+                sm.gTextarea.TextareaStendhal.NAME,
+                domElements.textArea
             )
         };
 
@@ -240,8 +262,10 @@ goog.scope(function() {
         var view = this.getView();
         this.elements_.inputs = [];
 
-        for (var i = 0; input = view.getDom().inputs[i]; i++) {
-            this.elements_.inputs[i] = this.decorateChild('input', input);
+        for (var i = 0, input; input = view.getDom().inputs[i]; i++) {
+            this.elements_.inputs[i] = this.decorateChild(
+                sm.gInput.InputStendhal.NAME, input
+            );
         }
     };
 });  // goog.scope

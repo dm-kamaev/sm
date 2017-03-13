@@ -4,7 +4,9 @@ goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
 goog.require('sm.gInput.InputStendhal');
+goog.require('sm.gInput.TemplatePhone');
 goog.require('sm.gInput.ViewPhone');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -44,6 +46,15 @@ goog.scope(function() {
     goog.inherits(sm.gInput.InputPhone, sm.gInput.InputStendhal);
     var InputPhone = sm.gInput.InputPhone;
 
+    /**
+     * Name of this element in factory
+     */
+    InputPhone.NAME = sm.gInput.TemplatePhone.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(InputPhone.NAME, {
+        control: InputPhone,
+        view: View
+    });
 
     /**
      * Phone prefix value

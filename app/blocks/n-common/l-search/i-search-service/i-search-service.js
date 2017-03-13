@@ -310,7 +310,9 @@ goog.scope(function() {
 
     /**
      * Build api requiest for get requiest from given parameters and searchType
-     * @param {Object<string, (string|number|Array<(string|number)>)>} searchParams
+     * @param {Object<
+     *     string, (string|number|Array<(string|number)>)
+     * >} searchParams
      * @param {sm.lSearch.iSearchService.SearchService.DataType} searchType
      * @return {string}
      * @private
@@ -346,7 +348,9 @@ goog.scope(function() {
 
     /**
      * Build query params from given search parameters
-     * @param {Object<string, (string|number|Array<(string|number)>)>} searchParams
+     * @param {Object<
+     *     string, (string|number|Array<(string|number)>)
+     * >} searchParams
      * @return {string}
      * @private
      */

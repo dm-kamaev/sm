@@ -198,16 +198,14 @@
  */
 {template .userInformation_}
     <div class="b-comment__user-information">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': 'person'
-                    ],
-                    'config': [
-                        'customClasses': ['b-comment__user-avatar']
-                    ]
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'icon' /}
+            {param renderParams: [
+                'data': [
+                    'type': 'person'
+                ],
+                'config': [
+                    'customClasses': ['b-comment__user-avatar']
                 ]
             ]/}
         {/call}

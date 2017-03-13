@@ -1,6 +1,9 @@
 goog.provide('sm.lSearch.bFilter.Filter');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmCheckbox.SmCheckbox');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lSearch.bFilter.Template');
 goog.require('sm.lSearch.bFilter.View');
 
 
@@ -36,8 +39,18 @@ goog.inherits(sm.lSearch.bFilter.Filter, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Filter = sm.lSearch.bFilter.Filter;
+    var Filter = sm.lSearch.bFilter.Filter,
+        View = sm.lSearch.bFilter.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Filter.NAME = sm.lSearch.bFilter.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Filter.NAME, {
+        control: Filter,
+        view: View
+    });
 
     /**
      * Event enum
@@ -455,7 +468,7 @@ goog.scope(function() {
 
         for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(
-                'smCheckbox',
+                sm.bSmCheckbox.SmCheckbox.NAME,
                 elements[i]
             );
 

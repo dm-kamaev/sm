@@ -1,6 +1,9 @@
 goog.provide('sm.lCatalog.Catalog');
 
+goog.require('sm.gTab.TabStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
+goog.require('sm.lCatalog.Template');
 goog.require('sm.lCatalog.View');
 
 
@@ -28,9 +31,18 @@ goog.scope(function() {
     };
     goog.inherits(sm.lCatalog.Catalog, sm.iLayout.LayoutStendhal);
 
-    var Catalog = sm.lCatalog.Catalog;
+    var Catalog = sm.lCatalog.Catalog,
+        View = sm.lCatalog.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Catalog.NAME = sm.lCatalog.Template.NAME();
 
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Catalog.NAME, {
+        control: Catalog,
+        view: View
+    });
     /**
      * @param {Element} element
      * @override
@@ -48,7 +60,7 @@ goog.scope(function() {
      */
     Catalog.prototype.initTabsCatalog_ = function() {
         this.tabsCatalog_ = this.decorateChild(
-            'tab',
+            sm.gTab.TabStendhal.NAME,
             this.getView().getDom().tabsCatalog
         );
     };
@@ -59,12 +71,8 @@ goog.scope(function() {
  * creates sm.lCatalog.Catalog instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
-        sm.lCatalog.View.CssClass.ROOT
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lCatalog.Catalog,
+        sm.lCatalog.View
     );
-
-    var view = new sm.lCatalog.View(null, null, 'stendhal');
-    var instance = new sm.lCatalog.Catalog(view);
-
-    instance.decorate(domElement);
 });

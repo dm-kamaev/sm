@@ -18,6 +18,7 @@
  *         analyticsAction: ?string
  *     }
  * }
+ * @factory sm.iCloblFactory.FactoryStendhal
  */
 {template .base autoescape="strict" kind="html"}
     {let $analyticsAction: [
@@ -58,17 +59,14 @@
                         {/if}
                         {if length($school?.metro) > 0}
                             <div class="b-popular-schools__metro">
-                                {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                                    {param params: [
-                                        'factory': 'stendhal',
-                                        'type': 'icon-svg',
-                                        'renderParams': [
-                                            'data': [
-                                                'type': 'metro'
-                                            ],
-                                            'config': [
-                                                'customClasses': ['b-popular-schools__metro-icon']
-                                            ]
+                                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+                                    {param type: 'icon-svg' /}
+                                    {param renderParams: [
+                                        'data': [
+                                            'type': 'metro'
+                                        ],
+                                        'config': [
+                                            'customClasses': ['b-popular-schools__metro-icon']
                                         ]
                                     ]/}
                                 {/call}
@@ -87,4 +85,12 @@
             </div>
         {/foreach}
     </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    popular-schools
 {/template}

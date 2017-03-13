@@ -8,6 +8,9 @@ goog.require('cl.iControl.Control');
 goog.require('goog.Promise');
 goog.require('sm.bSmBalloon.SmBalloon');
 goog.require('sm.bSmMap.IPresetGenerator');
+goog.require('sm.bSmMap.Template');
+goog.require('sm.bSmMap.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 
 
@@ -82,14 +85,24 @@ goog.scope(function() {
         this.selectedPlacemarkId_ = null;
     };
     goog.inherits(sm.bSmMap.SmMap, cl.iControl.Control);
-    var Map = sm.bSmMap.SmMap;
+    var YMap = sm.bSmMap.SmMap,
+        View = sm.bSmMap.View;
 
+    /**
+     * Name of this element in factory
+     */
+    YMap.NAME = sm.bSmMap.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(YMap.NAME, {
+        control: YMap,
+        view: View
+    });
 
     /**
      * Possible events
      * @enum {string}
      */
-    Map.Event = {
+    YMap.Event = {
         READY: 'ready',
         BALLOON_OPEN: sm.bSmBalloon.SmBalloon.Event.OPEN
     };
@@ -100,7 +113,7 @@ goog.scope(function() {
     * represent center of Moscow
     * @type {Object}
     */
-    Map.defaultPosition = {
+    YMap.defaultPosition = {
         COORDS: [55.755768, 37.617671]
     };
 
@@ -109,7 +122,7 @@ goog.scope(function() {
      * Possible scales for map
      * @enum {number}
      */
-    Map.Scale = {
+    YMap.Scale = {
         CITY_CENTER: 13,
         DISTRICT: 12,
         METRO: 15,
@@ -121,7 +134,7 @@ goog.scope(function() {
      * Possible type of positioning of map
      * @enum {string}
      */
-    Map.PositionType = {
+    YMap.PositionType = {
         CITY_CENTER: 'cityCenter',
         DISTRICT: 'district',
         AREA: 'area',
@@ -133,7 +146,7 @@ goog.scope(function() {
      * Position of zoom control
      * @type {Object}
      */
-    Map.zoomControlPozition = {
+    YMap.zoomControlPozition = {
         TOP: '20px',
         RIGHT: '10px',
         LEFT: '10px'
@@ -166,7 +179,7 @@ goog.scope(function() {
      *     }
      * }}
      */
-    Map.GeoObject;
+    YMap.GeoObject;
 
 
     /**
@@ -189,20 +202,20 @@ goog.scope(function() {
      *     }>
      * }}
      */
-    Map.AddressItem;
+    YMap.AddressItem;
 
 
     /**
      * @typedef {sm.bSmMap.View.PositionParams}
      */
-    Map.PositionParams;
+    YMap.PositionParams;
 
 
     /**
      * @public
      * @override
      */
-    Map.prototype.decorateInternal = function(element) {
+    YMap.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
         this.initPresetGenerator_();
 
@@ -226,7 +239,7 @@ goog.scope(function() {
      * }>} itemGroups
      * @public
      */
-    Map.prototype.addItems = function(itemGroups) {
+    YMap.prototype.addItems = function(itemGroups) {
         if (this.objectManager_ && itemGroups.length > 0) {
             itemGroups.forEach(this.addItemGroup_.bind(this));
         }
@@ -241,7 +254,7 @@ goog.scope(function() {
      * }>} itemGroups
      * @public
      */
-    Map.prototype.replaceItems = function(itemGroups) {
+    YMap.prototype.replaceItems = function(itemGroups) {
         this.clear();
         this.addItems(itemGroups);
     };
@@ -252,7 +265,7 @@ goog.scope(function() {
      * reset placemarks id
      * @public
      */
-    Map.prototype.clear = function() {
+    YMap.prototype.clear = function() {
         if (this.objectManager_) {
             this.clearMapObjectsListeners_();
             this.objectManager_.removeAll();
@@ -268,7 +281,7 @@ goog.scope(function() {
      * @param {sm.bSmMap.SmMap.PositionParams=} opt_positionParams
      * @public
      */
-    Map.prototype.center = function(opt_positionParams) {
+    YMap.prototype.center = function(opt_positionParams) {
         var positionParams = opt_positionParams || {};
         if (positionParams['center']) {
             this.setMapCenterCoordinates_(positionParams);
@@ -284,12 +297,12 @@ goog.scope(function() {
      * @param {Element} balloonElement element balloon render to
      * @private
      */
-    Map.prototype.createBalloonComponent_ = function(params, balloonElement) {
+    YMap.prototype.createBalloonComponent_ = function(params, balloonElement) {
         var renderParams = sm.bSmBalloon.SmBalloon.getRenderParams(params);
 
         this.setBalloon_(
             this.renderChild(
-                'smBalloon',
+                sm.bSmBalloon.SmBalloon.NAME,
                 balloonElement,
                 renderParams
             )
@@ -302,7 +315,7 @@ goog.scope(function() {
      * @param {sm.bSmBalloon.SmBalloon} balloonInstance
      * @private
      */
-    Map.prototype.setBalloon_ = function(balloonInstance) {
+    YMap.prototype.setBalloon_ = function(balloonInstance) {
         this.balloon_ = balloonInstance;
     };
 
@@ -312,7 +325,7 @@ goog.scope(function() {
      * @return {sm.bSmBalloon.SmBalloon}
      * @private
      */
-    Map.prototype.getBalloon_ = function() {
+    YMap.prototype.getBalloon_ = function() {
         return this.balloon_;
     };
 
@@ -325,7 +338,7 @@ goog.scope(function() {
      * }} itemGroup
      * @private
      */
-    Map.prototype.addItemGroup_ = function(itemGroup) {
+    YMap.prototype.addItemGroup_ = function(itemGroup) {
         this.addMapObjects_(itemGroup['viewType'], itemGroup.items);
         this.clearMapObjectsListeners_();
         this.initMapObjectsListeners_();
@@ -339,7 +352,7 @@ goog.scope(function() {
      * @return {sm.bSmMap.SmMap.GeoObject}
      * @private
      */
-    Map.prototype.generateGeoObject_ = function(
+    YMap.prototype.generateGeoObject_ = function(
         viewType, item) {
         var id = this.geoObjectsAmount_++;
         var preset = this.generatePreset_(item, viewType);
@@ -365,7 +378,7 @@ goog.scope(function() {
      * @param {Array<sm.bSmMap.AddressItem>} items
      * @private
      */
-    Map.prototype.addMapObjects_ = function(viewType, items) {
+    YMap.prototype.addMapObjects_ = function(viewType, items) {
         goog.array.forEach(items, this.addMapObject_.bind(this, viewType));
     };
 
@@ -379,7 +392,7 @@ goog.scope(function() {
      * @param {sm.bSmMap.AddressItem} addressItem
      * @private
      */
-    Map.prototype.addMapObject_ = function(viewType, addressItem) {
+    YMap.prototype.addMapObject_ = function(viewType, addressItem) {
         var geoObject = this.find_(addressItem),
             hasItems = addressItem['items'] && addressItem['items'].length;
 
@@ -404,7 +417,7 @@ goog.scope(function() {
      * @param {sm.bSmMap.IPresetGenerator.PresetType} viewType
      * @private
      */
-    Map.prototype.updateViewType_ = function(geoObject, viewType) {
+    YMap.prototype.updateViewType_ = function(geoObject, viewType) {
         if (viewType == PresetGenerator.PresetType.PIN) {
             var preset =
                 this.generatePreset_(geoObject['properties'], viewType);
@@ -421,7 +434,7 @@ goog.scope(function() {
      * @param {sm.bSmMap.SmMap.AddressItem} addressItem
      * @private
      */
-    Map.prototype.extendGeoObject_ = function(geoObject, addressItem) {
+    YMap.prototype.extendGeoObject_ = function(geoObject, addressItem) {
         var extendedItems = goog.array.concat(
             geoObject['properties']['items'],
             addressItem['items']
@@ -445,7 +458,7 @@ goog.scope(function() {
      * @return {string}
      * @private
      */
-    Map.prototype.generatePreset_ = function(addressItem, viewType) {
+    YMap.prototype.generatePreset_ = function(addressItem, viewType) {
         var score = addressItem['score'];
 
         return this.presetGenerator_.generatePresetNameByEntityParameters(
@@ -458,7 +471,7 @@ goog.scope(function() {
      * Clear listeners from all map objects
      * @private
      */
-    Map.prototype.clearMapObjectsListeners_ = function() {
+    YMap.prototype.clearMapObjectsListeners_ = function() {
         this.objectManager_.objects.events.remove(
             'click',
             this.onPlacemarkClick_,
@@ -471,7 +484,7 @@ goog.scope(function() {
      * Initialize event listeners on map objects
      * @private
      */
-    Map.prototype.initMapObjectsListeners_ = function() {
+    YMap.prototype.initMapObjectsListeners_ = function() {
         this.objectManager_.objects.events.add(
             'click',
             this.onPlacemarkClick_,
@@ -486,7 +499,7 @@ goog.scope(function() {
      * @return {sm.bSmMap.SmMap.GeoObject}
      * @private
      */
-    Map.prototype.find_ = function(addressItem) {
+    YMap.prototype.find_ = function(addressItem) {
         var geoObjects = this.objectManager_.objects.getAll();
         return goog.array.find(geoObjects, function(geoObject) {
             return geoObject['addressId'] == addressItem['addressId'];
@@ -499,7 +512,7 @@ goog.scope(function() {
      * @param {sm.bSmMap.SmMap.PositionParams} position
      * @private
      */
-    Map.prototype.setMapCenterCoordinates_ = function(position) {
+    YMap.prototype.setMapCenterCoordinates_ = function(position) {
         var coordinates = position['center'],
             scale = this.generateScale_(position['type']);
 
@@ -522,21 +535,21 @@ goog.scope(function() {
      * @return {number}
      * @private
      */
-    Map.prototype.generateScale_ = function(positionType) {
+    YMap.prototype.generateScale_ = function(positionType) {
         var scale;
 
         switch (positionType) {
-            case Map.PositionType.METRO:
-                scale = Map.Scale.METRO;
+            case YMap.PositionType.METRO:
+                scale = YMap.Scale.METRO;
                 break;
-            case Map.PositionType.CITY_CENTER:
-                scale = Map.Scale.CITY_CENTER;
+            case YMap.PositionType.CITY_CENTER:
+                scale = YMap.Scale.CITY_CENTER;
                 break;
-            case Map.PositionType.DISTRICT:
-                scale = Map.Scale.DISTRICT;
+            case YMap.PositionType.DISTRICT:
+                scale = YMap.Scale.DISTRICT;
                 break;
             default:
-                scale = Map.Scale.DEFAULT;
+                scale = YMap.Scale.DEFAULT;
         }
 
         return scale;
@@ -547,7 +560,7 @@ goog.scope(function() {
      * Center map in according to objects on map
      * @private
      */
-    Map.prototype.setMapCenterObjects_ = function() {
+    YMap.prototype.setMapCenterObjects_ = function() {
         if (this.objectManager_) {
             var bounds = this.objectManager_.getBounds();
 
@@ -569,7 +582,7 @@ goog.scope(function() {
      * Check if the zoom of map is too small, the increase zoom
      * @private
      */
-    Map.prototype.checkZoom_ = function() {
+    YMap.prototype.checkZoom_ = function() {
         if (this.ymaps_.getZoom() > 16) {
             this.ymaps_.setZoom(16);
         }
@@ -581,7 +594,7 @@ goog.scope(function() {
      * @return {goog.Promise}
      * @private
      */
-    Map.prototype.getViewportPromise_ = function() {
+    YMap.prototype.getViewportPromise_ = function() {
         return new goog.Promise(function(resolve, reject) {
             this.onResize_.call(this, resolve);
 
@@ -599,7 +612,7 @@ goog.scope(function() {
      * @return {goog.Promise}
      * @private
      */
-    Map.prototype.getYmapsPromise_ = function() {
+    YMap.prototype.getYmapsPromise_ = function() {
         return new goog.Promise(function(resolve, reject) {
             ymaps.ready(resolve);
         }, this);
@@ -611,7 +624,7 @@ goog.scope(function() {
      * @param {Function} callback
      * @private
      */
-    Map.prototype.onResize_ = function(callback) {
+    YMap.prototype.onResize_ = function(callback) {
         var size = this.params['config']['sizeViewportShow'] || 'M',
             viewportSize = size.toUpperCase();
 
@@ -625,7 +638,7 @@ goog.scope(function() {
      * If map is shown there is no need to listen resize events from Viewport
      * @private
      */
-    Map.prototype.onShown_ = function() {
+    YMap.prototype.onShown_ = function() {
         this.getHandler().unlisten(
             Viewport.getInstance(),
             Viewport.Event.RESIZE
@@ -637,7 +650,7 @@ goog.scope(function() {
      * Handling all conditions readiness
      * @private
      */
-    Map.prototype.onReady_ = function() {
+    YMap.prototype.onReady_ = function() {
         this.initPresets_();
         this.initMap_();
         this.initObjectManager_();
@@ -648,7 +661,7 @@ goog.scope(function() {
         var position = this.params['data']['position'];
         this.center(position);
 
-        this.dispatchEvent(Map.Event.READY);
+        this.dispatchEvent(YMap.Event.READY);
     };
 
 
@@ -656,7 +669,7 @@ goog.scope(function() {
      * Object manager initialization
      * @private
      */
-    Map.prototype.initObjectManager_ = function() {
+    YMap.prototype.initObjectManager_ = function() {
         this.objectManager_ = new ymaps.ObjectManager({
             'geoObjectBalloonAutoPan': true,
             'geoObjectHideIconOnBalloonOpen': false,
@@ -676,10 +689,11 @@ goog.scope(function() {
      * @return {ymaps.Layout}
      * @private
      */
-    Map.prototype.generateBalloonLayout_ = function() {
+    YMap.prototype.generateBalloonLayout_ = function() {
         var mapInstance = this;
         var balloonContent = this.getView().generateBalloonHtmlContent();
 
+        /* eslint-disable quote-props */
         var CustomBalloonLayout = ymaps.templateLayoutFactory.createClass(
             balloonContent,
             {
@@ -760,7 +774,7 @@ goog.scope(function() {
                 }
             }
         );
-
+        /* eslint-enable quote-props */
         return CustomBalloonLayout;
     };
 
@@ -772,7 +786,7 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    Map.prototype.onPlacemarkClick_ = function(event) {
+    YMap.prototype.onPlacemarkClick_ = function(event) {
         var clickedPlacemarkId = event.get('objectId');
 
         if (this.selectedPlacemarkId_ != clickedPlacemarkId) {
@@ -792,7 +806,7 @@ goog.scope(function() {
      * @param  {Object} event
      * @private
      */
-    Map.prototype.onBalloonCloseClick_ = function(balloonInstance, event) {
+    YMap.prototype.onBalloonCloseClick_ = function(balloonInstance, event) {
         event.preventDefault();
         this.setPlacemarkDefaultState_(this.selectedPlacemarkId_);
         this.selectedPlacemarkId_ = null;
@@ -806,7 +820,7 @@ goog.scope(function() {
      * @param {Object} balloonInstance
      * @private
      */
-    Map.prototype.onBalloonListPageChange_ = function(balloonInstance) {
+    YMap.prototype.onBalloonListPageChange_ = function(balloonInstance) {
         var balloonElement = balloonInstance.element_;
         this.getView().setBalloonOffset(balloonElement);
         balloonInstance.events.fire('shapechange');
@@ -818,7 +832,7 @@ goog.scope(function() {
      * @param {number} placemarkId
      * @private
      */
-    Map.prototype.setPlacemarkDefaultState_ = function(placemarkId) {
+    YMap.prototype.setPlacemarkDefaultState_ = function(placemarkId) {
         var currentPlacemarkPreset = this.getPlacemarkPreset_(placemarkId);
         var newPlacemarkPreset =
             this.presetGenerator_.generateDefaultStatePresetName(
@@ -833,7 +847,7 @@ goog.scope(function() {
      * @param {number} placemarkId
      * @private
      */
-    Map.prototype.setPlacemarkActiveState_ = function(placemarkId) {
+    YMap.prototype.setPlacemarkActiveState_ = function(placemarkId) {
         var currentPlacemarkPreset = this.getPlacemarkPreset_(placemarkId);
         var newPlacemarkPreset =
             this.presetGenerator_.generateActiveStatePresetName(
@@ -849,7 +863,7 @@ goog.scope(function() {
      * @return {string}
      * @private
      */
-    Map.prototype.getPlacemarkPreset_ = function(placemarkId) {
+    YMap.prototype.getPlacemarkPreset_ = function(placemarkId) {
         var placemark = this.objectManager_.objects.getById(placemarkId);
         return placemark ? placemark.options.preset : null;
     };
@@ -860,7 +874,7 @@ goog.scope(function() {
      * @param {string} preset
      * @private
      */
-    Map.prototype.setPlacemarkPreset_ = function(placemarkId, preset) {
+    YMap.prototype.setPlacemarkPreset_ = function(placemarkId, preset) {
         this.objectManager_.objects.setObjectOptions(
             placemarkId,
             {
@@ -874,7 +888,7 @@ goog.scope(function() {
      * Preset creator initialization
      * @private
      */
-    Map.prototype.initPresetGenerator_ = function() {
+    YMap.prototype.initPresetGenerator_ = function() {
         this.presetGenerator_ = new PresetGenerator();
     };
 
@@ -883,7 +897,7 @@ goog.scope(function() {
      * Presets initialization
      * @private
      */
-    Map.prototype.initPresets_ = function() {
+    YMap.prototype.initPresets_ = function() {
         var presets = this.presetGenerator_.generate();
 
         this.addPresetsToMap_(presets);
@@ -895,7 +909,7 @@ goog.scope(function() {
      * @param {Array<sm.bSmMap.SmMap.Preset>} presets
      * @private
      */
-    Map.prototype.addPresetsToMap_ = function(presets) {
+    YMap.prototype.addPresetsToMap_ = function(presets) {
         presets.forEach(this.addPresetToMap_);
     };
 
@@ -905,7 +919,7 @@ goog.scope(function() {
      * @param {sm.bSmMap.SmMap.Preset} preset
      * @private
      */
-    Map.prototype.addPresetToMap_ = function(preset) {
+    YMap.prototype.addPresetToMap_ = function(preset) {
         ymaps.option.presetStorage.add(
             preset.name,
             preset.settings
@@ -918,7 +932,7 @@ goog.scope(function() {
      * controls to it
      * @private
      */
-    Map.prototype.initMap_ = function() {
+    YMap.prototype.initMap_ = function() {
         this.ymaps_ = new ymaps.Map(
             this.getElement(),
             this.generateMapState_()
@@ -932,7 +946,7 @@ goog.scope(function() {
      * Add zoom control to map at default position
      * @private
      */
-    Map.prototype.addZoomControl_ = function() {
+    YMap.prototype.addZoomControl_ = function() {
         var position = this.getZoomPosition_();
 
         var zoomControl = new ymaps.control.ZoomControl({
@@ -954,15 +968,15 @@ goog.scope(function() {
      * }}
      * @private
      */
-    Map.prototype.getZoomPosition_ = function() {
+    YMap.prototype.getZoomPosition_ = function() {
         var position = {
-            top: Map.zoomControlPozition.TOP
+            top: YMap.zoomControlPozition.TOP
         };
 
         if (this.params['config']['alignZoomControl'] == 'right') {
-            position.right = Map.zoomControlPozition.RIGHT;
+            position.right = YMap.zoomControlPozition.RIGHT;
         } else {
-            position.left = Map.zoomControlPozition.LEFT;
+            position.left = YMap.zoomControlPozition.LEFT;
         }
 
         return position;
@@ -979,7 +993,7 @@ goog.scope(function() {
      * }}
      * @private
      */
-    Map.prototype.generateMapState_ = function() {
+    YMap.prototype.generateMapState_ = function() {
         var positionParams = this.generatePositionParameters_();
 
         return {
@@ -996,7 +1010,7 @@ goog.scope(function() {
      * @return {Array<string>}
      * @private
      */
-    Map.prototype.generateBehaviors_ = function() {
+    YMap.prototype.generateBehaviors_ = function() {
         var behaviors = [
             'dblClickZoom',
             'drag',
@@ -1020,7 +1034,7 @@ goog.scope(function() {
      * }}
      * @private
      */
-    Map.prototype.generatePositionParameters_ = function() {
+    YMap.prototype.generatePositionParameters_ = function() {
         var positionType;
         var centerCoordinates;
 
@@ -1028,10 +1042,10 @@ goog.scope(function() {
             positionType = this.params['data']['position']['type'];
             centerCoordinates = this.params['data']['position']['center'] ?
                 this.params['data']['position']['center'] :
-                Map.defaultPosition.COORDS;
+                YMap.defaultPosition.COORDS;
         } else {
-            positionType = Map.PositionType.DEFAULT;
-            centerCoordinates = Map.defaultPosition.COORDS;
+            positionType = YMap.PositionType.DEFAULT;
+            centerCoordinates = YMap.defaultPosition.COORDS;
         }
 
         return {

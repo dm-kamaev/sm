@@ -3,7 +3,9 @@ goog.provide('sm.bSearchPanel.SearchPanel');
 goog.require('cl.iControl.Control');
 
 goog.require('sm.bSearch.Search');
+goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSearchPanel.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -33,6 +35,15 @@ goog.scope(function() {
         View = sm.bSearchPanel.View,
         Search = sm.bSearch.Search;
 
+    /**
+     * Name of this element in factory
+     */
+    SearchPanel.NAME = sm.bSearchPanel.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(SearchPanel.NAME, {
+        control: SearchPanel,
+        view: View
+    });
 
     /**
      * @param {Element} element

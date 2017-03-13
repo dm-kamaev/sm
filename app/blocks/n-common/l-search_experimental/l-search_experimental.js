@@ -5,7 +5,9 @@ goog.provide('sm.lSearch.SearchExperimental');
 
 
 goog.require('sm.bSmMap.SmMap');
+goog.require('sm.iCloblFactory.FactoryExperimental');
 goog.require('sm.lSearch.Search');
+goog.require('sm.lSearch.TemplateExperimental');
 goog.require('sm.lSearch.ViewExperimental');
 
 
@@ -27,6 +29,17 @@ goog.scope(function() {
     goog.inherits(sm.lSearch.SearchExperimental, sm.lSearch.Search);
     var SearchExperimental = sm.lSearch.SearchExperimental;
 
+    /**
+     * Name of this element in factory
+     */
+    SearchExperimental.NAME = sm.lSearch.TemplateExperimental.NAME();
+
+    sm.iCloblFactory.FactoryExperimental.getInstance().register(
+        SearchExperimental.NAME, {
+            control: SearchExperimental,
+            view: sm.lSearch.ViewExperimental
+        }
+    );
 
     /**
      * Map data load event handler
@@ -56,13 +69,8 @@ goog.scope(function() {
  * creates sm.lSearch.SearchExperimental instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lSearch.SearchExperimental.NAME,
         sm.lSearch.ViewExperimental.CssClass.ROOT
     );
-
-    if (domElement) {
-        var view = new sm.lSearch.ViewExperimental();
-        var instance = new sm.lSearch.SearchExperimental(view);
-        instance.decorate(domElement);
-    }
 });

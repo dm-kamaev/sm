@@ -8,6 +8,7 @@ goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bSearch.Template');
+goog.require('sm.gIcon.IconSvg');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAnimate.Animate');
 

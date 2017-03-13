@@ -13,20 +13,28 @@
 /**
  * Constructor
  * @param params {{
- *     data: sm.bSchoolListPaged.Template.Params.Data
+ *     data: sm.bSmFooter.Template.Params.Data
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .footer}
     {call .init data="all"/}
 {/template}
 
+/**
+ * @override
+ */
+{template .NAME}
+    smFooter
+{/template}
+
 
 /**
  * Body
  * @param params {{
- *     data: sm.bSchoolListPaged.Template.Params.Data
+ *     data: sm.bSmFooter.Template.Params.Data
  * }}
  * @override
  */

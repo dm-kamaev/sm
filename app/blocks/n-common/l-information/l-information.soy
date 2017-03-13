@@ -73,6 +73,7 @@
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -80,6 +81,12 @@
     {call .document data="all" /}
 {/template}
 
+/**
+ * @override
+ */
+{template .NAME}
+    lInformation
+{/template}
 
 /**
  * Content
@@ -329,13 +336,11 @@
  */
 {template .informationBoard_}
     <div class="{call .rootClass/}__information-board">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'lInformation-informationBoard',
-                'renderParams': [
-                    'data': $params.data.entityData.informationBoard
-                ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lInformation-informationBoard' /}
+            {param renderParams: [
+                'data': $params.data.entityData.informationBoard
             ]/}
         {/call}
     </div>
@@ -423,13 +428,11 @@
  */
 {template .feedbackBoard_}
     <div class="{call .rootClass/}-feedback-board">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'lInformation-feedbackBoard',
-                'renderParams': [
-                    'data': $params.data.entityData.feedbackBoard
-                ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lInformation-feedbackBoard' /}
+            {param renderParams: [
+                'data': $params.data.entityData.feedbackBoard
             ]/}
         {/call}
     </div>
