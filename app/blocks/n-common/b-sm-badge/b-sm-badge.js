@@ -1,7 +1,9 @@
 goog.provide('sm.bSmBadge.SmBadge');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBadge.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -38,6 +40,16 @@ goog.scope(function() {
     var Badge = sm.bSmBadge.SmBadge,
         View = sm.bSmBadge.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Badge.NAME = sm.bSmBadge.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Badge.NAME, {
+        control: Badge,
+        view: View
+    });
+
 
     /**
      * @typedef {sm.bSmBadge.View.RenderParams}
@@ -73,7 +85,7 @@ goog.scope(function() {
      */
     Badge.prototype.initItems_ = function() {
         this.items_ = this.decorateChildren(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().items
         );
     };
@@ -96,7 +108,7 @@ goog.scope(function() {
 
         if (link) {
             this.linkHint_ = this.decorateChild(
-                'smLink',
+                sm.bSmLink.SmLink.NAME,
                 link
             );
         }

@@ -3,10 +3,18 @@
 /**
  * Constructor
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .articleLinks kind="html"}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    article-links
 {/template}
 
 /**
@@ -60,9 +68,8 @@
     {/let}
 
     <div class="{call .rootClass/}__article {call .rootClass/}__article_first">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': 'stendhal',
                 'type': 'article-link',
                 'renderParams': [
                     'articleUrl': $articleUrl,
@@ -97,9 +104,8 @@
     {/let}
 
     <div class="{call .rootClass/}__article {call .rootClass/}__article_second">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': 'stendhal',
                 'type': 'article-link',
                 'renderParams': [
                     'articleUrl': $articleUrl,

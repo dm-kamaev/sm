@@ -4,6 +4,7 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events.EventType');
 goog.require('goog.ui.Component');
 goog.require('sm.bDiagram.Template');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -77,6 +78,10 @@ goog.scope(function() {
             sm.bDiagram.Template.base,
             {
                 params: this.params_
+            },
+            {
+                factoryIndex:
+                    sm.iCloblFactory.FactoryStendhal.getInstance().getIndex()
             }
         );
 

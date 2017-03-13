@@ -6,6 +6,9 @@
 goog.provide('sm.lCourse.bOption.Option');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmExpander.SmExpander');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lCourse.bOption.Template');
 goog.require('sm.lCourse.bOption.View');
 
 
@@ -51,6 +54,15 @@ goog.scope(function() {
     goog.inherits(sm.lCourse.bOption.Option, cl.iControl.Control);
     var Option = sm.lCourse.bOption.Option;
 
+    /**
+     * Name of this element in factory
+     */
+    Option.NAME = sm.lCourse.bOption.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Option.NAME, {
+        control: Option,
+        view: View
+    });
 
     /**
      * List of CSS classes
@@ -112,7 +124,7 @@ goog.scope(function() {
         Option.base(this, 'decorateInternal', element);
 
         this.expander_ = this.decorateChild(
-            'smExpander',
+            sm.bSmExpander.SmExpander.NAME,
             this.getView().getDom().expander
         );
     };

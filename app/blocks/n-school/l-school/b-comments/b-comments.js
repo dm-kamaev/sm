@@ -4,6 +4,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Template');
 
@@ -73,9 +74,16 @@ goog.scope(function() {
      * @public
      */
     Comments.prototype.createDom = function() {
-        var el = goog.soy.renderAsElement(sm.lSchool.bComments.Template.base, {
-            params: this.params_
-        });
+        var el = goog.soy.renderAsElement(
+            sm.lSchool.bComments.Template.base,
+            {
+                params: this.params_
+            },
+            {
+                factoryIndex:
+                    sm.iCloblFactory.FactoryStendhal.getInstance().getIndex()
+            }
+        );
 
         this.decorateInternal(el);
     };
@@ -192,11 +200,16 @@ goog.scope(function() {
      */
     Comments.prototype.addComment = function(params) {
         var comment = goog.soy.renderAsElement(
-                sm.lSchool.bComment.Template.base, {
-                    params: params
-                }
-            ),
-            commentInstance = new sm.lSchool.bComment.Comment(params);
+            sm.lSchool.bComment.Template.base,
+            {
+                params: params
+            },
+            {
+                factoryIndex:
+                    sm.iCloblFactory.FactoryStendhal.getInstance().getIndex()
+            }
+        ),
+        commentInstance = new sm.lSchool.bComment.Comment(params);
 
         this.addChild(commentInstance, true);
         this.comments_.push(commentInstance.getElement());

@@ -1,6 +1,9 @@
 goog.provide('sm.lSearch.bFilter.FilterInput');
 
+goog.require('sm.gInput.InputStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.TemplateInput');
 goog.require('sm.lSearch.bFilter.ViewInput');
 
 
@@ -23,6 +26,15 @@ goog.scope(function() {
     var FilterInput = sm.lSearch.bFilter.FilterInput,
         View = sm.lSearch.bFilter.ViewInput;
 
+    /**
+     * Name of this element in factory
+     */
+    FilterInput.NAME = sm.lSearch.bFilter.TemplateInput.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(FilterInput.NAME, {
+        control: FilterInput,
+        view: View
+    });
 
     /**
      * Checks refers element to this control
@@ -163,7 +175,7 @@ goog.scope(function() {
 
         for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(
-                'input',
+                sm.gInput.InputStendhal.NAME,
                 elements[i]
             );
             this.options.push(instance);

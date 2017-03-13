@@ -18,7 +18,7 @@ module.exports = function(error, request, response, next) {
         response.status(422);
         result = [{
             code: 'ValidationError',
-            validationErrors: error.errors
+            validationErrors: error.errors || [error.message]
         }];
         response.send(result);
     } else {

@@ -16,7 +16,6 @@ const searchViewEntity = require('../../entity/views/searchView');
 const mapViewType = require('../../entity/enums/mapViewType'),
     entityType = require('../../entity/enums/entityType');
 
-
 /**
  * @api {get} api/school Get school list
  * @apiVersion 0.0.0
@@ -525,15 +524,14 @@ exports.specializedClassType = async(function(req, res) {
  *     HTTP/1.1 200 OK
  *     [
  *         {
- *                "label": "Математика",
- *                "value":"1"
- *             },
- *             {
- *                "label": "Занимательная математика",
- *                "value":"2"
- *             }
+ *             "label": "Математика",
+ *             "value":"1"
+ *         },
+ *         {
+ *             "label": "Занимательная математика",
+ *             "value":"2"
+ *         }
  *     ]
- *
  * @apiError Error (Error 500)
  */
 exports.popularSpecializedClassType = async(function(req, res) {

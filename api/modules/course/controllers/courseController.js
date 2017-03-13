@@ -423,6 +423,7 @@ controller.get = async(function(req, res) {
     let result;
     try {
         let course = await(services.course.getById(req.params.id));
+
         result = courseView.render(course);
     } catch (error) {
         logger.error(error.message);
@@ -570,8 +571,8 @@ controller.getSearchCount = async(function(req, res) {
     try {
         let searchParams = searchView.initSearchParams(req.query);
         let courses = await(services.course.list(searchParams, {
-                limit: 1
-            }));
+            limit: 1
+        }));
 
         result = courses[0] && courses[0].countResults || 0;
         res.status(200);

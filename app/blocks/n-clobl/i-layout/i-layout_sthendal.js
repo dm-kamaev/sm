@@ -1,14 +1,19 @@
 goog.provide('sm.iLayout.LayoutStendhal');
 
 goog.require('cl.iControl.Control');
-goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
+goog.require('goog.json');
+goog.require('sm.bSmFooter.SmFooter');
+goog.require('sm.bSmHeader.SmHeader');
+goog.require('sm.bSmSubheader.SmSubheader');
+goog.require('sm.gAuthSocial.AuthSocialStendhal');
+goog.require('sm.gAuthSocialModal.AuthSocialModalStendhal');
+goog.require('sm.gButton.ButtonSocialStendhal');
+goog.require('sm.gButton.ButtonStendhal');
+goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
-goog.require('sm.iFactory.FactoryExperimental');
-goog.require('sm.iFactory.FactoryStendhal');
-goog.require('sm.iFactory.TemplateFactoryExperimental');
-goog.require('sm.iFactory.TemplateFactoryStendhal');
+goog.require('sm.iCloblFactory.FactoryExperimental');
 goog.require('sm.iLayout.ViewStendhal');
 goog.require('sm.iMetrika.Metrika');
 
@@ -61,6 +66,13 @@ goog.scope(function() {
     var Layout = sm.iLayout.LayoutStendhal;
 
     /**
+     * Parameter name in config in data params which corresponds
+     * to current factory name
+     * @const {string}
+     */
+    Layout.FactoryNameParameter = 'modifier';
+
+    /**
      * @override
      * @protected
      */
@@ -80,7 +92,7 @@ goog.scope(function() {
      */
     Layout.prototype.initSideMenu = function() {
         this.sideMenu = this.decorateChild(
-            'side-menu',
+            sm.gModal.ModalSideMenu.NAME,
             this.getView().getDom().sideMenu
         );
     };
@@ -91,7 +103,7 @@ goog.scope(function() {
      */
     Layout.prototype.initMainHeader = function() {
         this.mainHeader = this.decorateChild(
-            'smHeader',
+            sm.bSmHeader.SmHeader.NAME,
             this.getView().getDom().mainHeader
         );
     };
@@ -113,7 +125,7 @@ goog.scope(function() {
      */
     Layout.prototype.initSubheader = function() {
         this.subheader = this.decorateChild(
-            'smSubheader',
+            sm.bSmSubheader.SmSubheader.NAME,
             this.getView().getDom().subheader
         );
     };
@@ -124,7 +136,7 @@ goog.scope(function() {
      */
     Layout.prototype.initFooter = function() {
         this.footer = this.decorateChild(
-            'smFooter',
+            sm.bSmFooter.SmFooter.NAME,
             this.getView().getDom().footer
         );
     };
@@ -151,4 +163,28 @@ goog.scope(function() {
     Layout.prototype.onHamburgerMenuClick_ = function() {
         this.sideMenu.show();
     };
+
+
+    /**
+     * Init layout instance
+     * @param {string} LayoutName layout name in factory
+     * @param {string} RootCssClass layout root css class
+     * @public
+     */
+    Layout.autoInstance = function(LayoutName, RootCssClass) {
+        var domElement = goog.dom.getElementByClass(RootCssClass);
+
+        if (domElement) {
+            var params = goog.dom.dataset.get(domElement, 'params');
+            var factoryName =
+                goog.json.parse(params)[Layout.FactoryNameParameter];
+
+            var factory = factoryName == 'stendhal' ?
+                sm.iCloblFactory.FactoryStendhal :
+                sm.iCloblFactory.FactoryExperimental;
+
+            factory.getInstance().decorate(LayoutName, domElement);
+        }
+    };
+
 });  // goog.scope

@@ -2,6 +2,7 @@ goog.provide('sm.lSchool.bDataBlock.DataBlockRatings');
 
 goog.require('cl.gHint.View');
 goog.require('goog.ui.Component');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSchool.bDataBlock.TemplateRatings');
 
 
@@ -60,6 +61,10 @@ goog.scope(function() {
             sm.lSchool.bDataBlock.TemplateRatings.base,
             {
                 params: this.params_
+            },
+            {
+                factoryIndex:
+                    sm.iCloblFactory.FactoryStendhal.getInstance().getIndex()
             }
         );
 

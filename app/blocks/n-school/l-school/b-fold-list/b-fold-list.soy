@@ -14,10 +14,18 @@
  * Constructor
  * @param params sm.lSchool.bFoldList.Template.Params
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .foldList}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    fold-list
 {/template}
 
 
@@ -163,12 +171,9 @@
                {sp}{call .rootClass/}__item_default{/if}">
 
         {if $item?.data}
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': 'stendhal',
-                    'type': 'fold-list',
-                    'renderParams': $item
-                ]/}
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'fold-list' /}
+                {param renderParams: $item /}
             {/call}
         {else}
             &mdash; {$item}

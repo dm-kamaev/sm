@@ -2,6 +2,8 @@ goog.provide('sm.lInformation.bFeedbackBoard.FeedbackBoard');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lInformation.bFeedbackBoard.Template');
 goog.require('sm.lInformation.bFeedbackBoard.View');
 
 
@@ -26,4 +28,17 @@ goog.inherits(
 goog.scope(function() {
     var FeedbackBoard = sm.lInformation.bFeedbackBoard.FeedbackBoard,
         View = sm.lInformation.bFeedbackBoard.View;
+
+    /**
+     * Name of this element in factory
+     */
+    FeedbackBoard.NAME = sm.lInformation.bFeedbackBoard.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        FeedbackBoard.NAME, {
+            control: FeedbackBoard,
+            view: View
+        }
+    );
+
 });  // goog.scope

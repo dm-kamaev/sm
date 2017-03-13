@@ -1,9 +1,11 @@
 goog.provide('sm.lSearch.bSearchResults.SearchResults');
 
-goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSearchResults.View');
 
 
@@ -40,7 +42,7 @@ goog.scope(function() {
 
         /**
          * Show more button instance
-         * @type {cl.gButton.Button}
+         * @type {sm.gButton.ButtonStendhal}
          * @private
          */
         this.showMore_ = null;
@@ -48,6 +50,17 @@ goog.scope(function() {
     goog.inherits(sm.lSearch.bSearchResults.SearchResults, cl.iControl.Control);
     var SearchResults = sm.lSearch.bSearchResults.SearchResults;
 
+    /**
+     * Name of this element in factory
+     */
+    SearchResults.NAME = sm.lSearch.bSearchResults.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        SearchResults.NAME, {
+            control: SearchResults,
+            view: View
+        }
+    );
 
     /**
      * Css class enum
@@ -272,11 +285,20 @@ goog.scope(function() {
     SearchResults.prototype.initChildComponents_ = function() {
         var dom = this.getView().getDom();
 
-        this.itemList_ = this.decorateChild('smItemList', dom.itemList);
+        this.itemList_ = this.decorateChild(
+            sm.bSmItemList.SmItemList.NAME,
+            dom.itemList
+        );
 
-        this.sort_ = this.decorateChild('dropdown-list-links', dom.sort);
+        this.sort_ = this.decorateChild(
+            sm.gDropdown.DropdownListLinks.NAME,
+            dom.sort
+        );
 
-        this.showMore_ = this.decorateChild('button', dom.showMore);
+        this.showMore_ = this.decorateChild(
+            sm.gButton.ButtonStendhal.NAME,
+            dom.showMore
+        );
 
         return this;
     };

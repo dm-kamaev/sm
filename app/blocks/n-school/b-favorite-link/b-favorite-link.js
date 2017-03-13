@@ -1,9 +1,12 @@
 goog.provide('sm.bFavoriteLink.FavoriteLink');
 
+goog.require('cl.gIcon.Icon');
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bFavoriteLink.Event.FavoriteAdded');
+goog.require('sm.bFavoriteLink.Template');
 goog.require('sm.bFavoriteLink.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -40,6 +43,15 @@ goog.scope(function() {
         View = sm.bFavoriteLink.View,
         Event = sm.bFavoriteLink.Event;
 
+    /**
+     * Name of this element in factory
+     */
+    FavoriteLink.NAME = sm.bFavoriteLink.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(FavoriteLink.NAME, {
+        control: FavoriteLink,
+        view: View
+    });
 
     /**
      * Event enum
@@ -145,8 +157,7 @@ goog.scope(function() {
      * @private
      */
     FavoriteLink.prototype.onSuccessFavoriteAdd_ = function(data) {
-        var item = sm.bSchoolListItem.SchoolListItem.transformParams(data),
-            event = new Event.FavoriteAdded(item, this);
+        var event = new Event.FavoriteAdded(data, this);
         this.dispatchEvent(event);
     };
 
@@ -218,7 +229,7 @@ goog.scope(function() {
      */
     FavoriteLink.prototype.initIcon_ = function() {
         this.icon_ = this.decorateChild(
-            'icon',
+            cl.gIcon.Icon.NAME,
             this.getView().getDom().icon
         );
     };

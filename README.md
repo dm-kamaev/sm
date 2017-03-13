@@ -30,9 +30,17 @@
 
 ## Структура проекта ##
 Исходные файлы хранятся в соответствующих папках блоков в `app/blocks`.
-После пулла не забываем прописывать `npm install`. Сервер запускается командой
-`npm start`, галп - командой `gulp`.
-В продакшн проект собирается с ключом `--production`.
+После пулла не забываем прописывать `yarn install`. Сервер запускается командой
+`npm run start`, галп - командой `npm run gulp`.
+В продакшн проект собирается с ключом `npm run gulp build --env prod`.
+
+## Внешние зависимости ##
+Необходимый стек технологий написан здесь:
+https://wiki.cochanges.com/display/DEV/Node+js+technology+stack  
+Для старта проекта с нуля также понадобится `git-lfs`.
+Это расширение для git позволяет хранить большие файлы на удаленных серверах,
+а в самом репозитории хранятся лишь указатели на сами файлы.
+Установка этого пакета: https://git-lfs.github.com/.
 
 ## Type Script ##
 Для работы с Type Script требуется установить тайпинги
@@ -66,15 +74,13 @@
 `node commander -h` - список скриптов c описаниями  
 `node commander **scriptname**` - запуск скрипта  
 
-## Обновление места школы в рейтинге и поисковой таблицы ##
+## Обновление поисковой таблицы ##
 `node commander search`  
-`node commander ranks`  
 Чтобы добавить автоматическое обновление, нужно в терминале виртуалки набрать
 `crontab -e` и дописать в конец файла  
 `PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin`  
 `0 */12 * * * cd /home/gorod/l3_school-market/ &&
 ./console/cron/updateSearch.sh`  
-`0 */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateRank.sh`
 Для того, чтобы добавить автоматическую отправку уведомлений о новых
 комментариях необходимо дописать:
 `*/15 * * * * cd /home/gorod/l3_school-market/ &&
@@ -89,7 +95,8 @@ updateSearch - актуализация поисковой таблицы
 например: `node console/one-off/loadCourses.js`.  
 **Список скриптов:**  
 `loadCourses.js` – загрузка первоначальных курсов. Доступные аргументы:  
-\-\-path – путь к папке с xlsx файлами, по умолчанию `assets/coursesData`;  
+\-\-path – путь к папке с xlsx файлами, по умолчанию `assets/coursesData`.
+Для работы скрипта необходимо выполнить `npm i xlsx-to-json`;  
 `clearCourses.js` – удаление всех данных о курсах;  
 `categoryData.js` – загрузка метатегов для курсов. Доступные аргументы:  
 \-\-path – путь к папке с xlsx файлами, по умолчанию
@@ -235,4 +242,19 @@ gulp debug --layout l-doc
 или
 ```sh
 gulp debug --layout l-doc.js
+```
+
+## Локализация ##
+######Фронтенд:######
+В шаблонах для печати данных вместо `{$params.data.description}` используем
+функцию getText:
+```sh
+{call .getText}
+    {param message: $params.data.description /}
+{/call}
+```
+
+В контроле используем:
+```sh
+this.i18n.getText('какой-то текст');
 ```

@@ -11,6 +11,28 @@ const commentAdminController = new CommentAdminController();
 import {DepartmentAdminController} from './departmentAdminController';
 const departmentAdminController = new DepartmentAdminController();
 
+
+import {ProfileAdminController}
+    from './profileAdminController';
+const profileAdminController = new ProfileAdminController();
+
+import {GiaAdminController} from '../../study/controllers/giaAdminController';
+const giaAdminController = new GiaAdminController();
+
+import {ExamAdminController} from '../../study/controllers/examAdminController';
+const examAdminController = new ExamAdminController();
+
+import {EgeAdminController} from '../../study/controllers/egeAdminController';
+const egeAdminController = new EgeAdminController();
+
+import {AdditionalClassAdminController}
+    from '../../study/controllers/additionalClassAdminController';
+const additionalClassAdminController = new AdditionalClassAdminController();
+
+import {OlympiadAdminController}
+    from '../../study/controllers/olympiadAdminController';
+const olympiadAdminController = new OlympiadAdminController();
+
 import {adminUser} from '../../../../app/middleware/adminUser';
 import {
     middleware as superUserCheckAction
@@ -48,6 +70,42 @@ router.get('/school/:id', schoolController.view);
 
 router.post('/school/:id/comment', csrf, schoolController.createComment);
 
+
+router.get(
+    '/school/:schoolId/comment/:commentId',
+    commentAdminController.actionGet
+);
+router.get(
+    '/school/:schoolId/comment',
+    commentAdminController.actionList
+);
+router.put(
+    '/school/:schoolId/comment/:commentId',
+    checkToken,
+    commentAdminController.actionUpdate
+);
+router.delete(
+    '/school/:schoolId/comment/:commentId',
+    checkToken,
+    commentAdminController.actionDelete
+);
+
+router.get('/admin/school/:id', schoolAdminController.actionGet);
+router.get('/admin/school', schoolAdminController.actionList);
+router.post('/admin/school', checkToken, schoolAdminController.actionCreate);
+router.put(
+    '/admin/school/:schoolId',
+    checkToken,
+    schoolAdminController.actionUpdate
+);
+router.delete(
+    '/admin/school/:schoolId',
+    checkToken,
+    schoolAdminController.actionDelete
+);
+
+router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
+
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
         route,
@@ -83,7 +141,43 @@ router.get('/admin/schooltype', schoolAdminController.actionGetSchoolTypes);
 
 initCrudRouting(
     '/admin/school/:schoolId/department',
-    departmentAdminController
+    departmentAdminController,
+);
+
+initCrudRouting(
+    '/admin/school/:schoolId/profile',
+    profileAdminController,
+);
+
+router.get('/admin/schoolclasses', profileAdminController.actionListClasses);
+router.get('/admin/schoolprofiles', profileAdminController.actionListProfiles);
+
+initCrudRouting(
+    '/admin/school/:schoolId/gia',
+    giaAdminController,
+);
+
+initCrudRouting(
+    '/admin/school/:schoolId/olympiadResult',
+    olympiadAdminController
+);
+router.get('/admin/schoolsubject', examAdminController.actionGetListSubject);
+router.get('/admin/examyear', examAdminController.actionGetListExamYear);
+
+
+initCrudRouting(
+    '/admin/school/:schoolId/ege',
+    egeAdminController,
+);
+
+initCrudRouting(
+    '/admin/school/:schoolId/additionalclass',
+    additionalClassAdminController,
+);
+
+router.get(
+    '/admin/additionalclass/category',
+    additionalClassAdminController.actionListCategory
 );
 
 initCrudRouting(

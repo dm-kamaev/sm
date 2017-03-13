@@ -1,7 +1,9 @@
 goog.provide('sm.bSmRadioButton.SmRadioButton');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmRadioButton.Template');
 goog.require('sm.bSmRadioButton.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -30,6 +32,15 @@ goog.scope(function() {
     var RadioButton = sm.bSmRadioButton.SmRadioButton,
         View = sm.bSmRadioButton.View;
 
+    /**
+     * Name of this element in factory
+     */
+    RadioButton.NAME = sm.bSmRadioButton.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(RadioButton.NAME, {
+        control: RadioButton,
+        view: View
+    });
 
     /**
      * Event enum

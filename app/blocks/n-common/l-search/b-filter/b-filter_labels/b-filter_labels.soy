@@ -13,10 +13,18 @@
  * Constructor
  * @param params {sm.lSearch.bFilter.TemplateLabels.Params}
  * @extends sm.lSearch.bFilter.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .filter}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch-filterLabels
 {/template}
 
 
@@ -32,8 +40,7 @@
  *     },
  *     config: {
  *         hidden: (boolean|undefined),
- *         theme: (string|undefined),
- *         stylizationModifier: string
+ *         theme: (string|undefined)
  *     }
  * }}
  * @override
@@ -48,9 +55,8 @@
     {/let}
 
     <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params.config.stylizationModifier,
                 'type': 'lSearch-label',
                 'renderParams': [
                     'data': [

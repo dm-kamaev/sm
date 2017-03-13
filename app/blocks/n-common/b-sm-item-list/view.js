@@ -251,10 +251,12 @@ goog.scope(function() {
                         itemConfig: config
                     },
                     config: {
-                        type: this.params.itemType,
-                        stylizationModifier: this.getStylization()
+                        type: this.params.itemType
                     }
                 }
+            },
+            {
+                factoryIndex: this.getFactory().getIndex()
             }
         );
     };

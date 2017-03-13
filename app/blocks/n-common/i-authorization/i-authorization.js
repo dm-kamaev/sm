@@ -7,9 +7,10 @@
 
 goog.provide('sm.iAuthorization.Authorization');
 
-goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
 goog.require('goog.uri.utils');
+goog.require('sm.gAuthSocialModal.TemplateStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -60,19 +61,12 @@ goog.scope(function() {
          */
         this.unauthorizeUrl_ = '/unauthorize';
 
-
-        /**
-         * Factory type
-         * @type {string}
-         * @private
-         */
-        this.factoryType_ = '';
     };
     goog.addSingletonGetter(sm.iAuthorization.Authorization);
     var Authorization = sm.iAuthorization.Authorization;
 
 
-    var factoryManager = cl.iFactory.FactoryManager.getInstance();
+    var Factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
 
     /**
@@ -110,8 +104,6 @@ goog.scope(function() {
 
         this.authSocialLinks_.fb = params.authSocialLinks.fb;
         this.authSocialLinks_.vk = params.authSocialLinks.vk;
-
-        this.factoryType_ = params.factoryType;
     };
 
 
@@ -178,9 +170,8 @@ goog.scope(function() {
             }
         };
 
-        this.socialModal_ = factoryManager.render(
-            this.factoryType_,
-            'auth-social-modal',
+        this.socialModal_ = Factory.render(
+            sm.gAuthSocialModal.TemplateStendhal.NAME(),
             goog.dom.getDocument().body,
             params
         );

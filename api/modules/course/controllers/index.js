@@ -11,6 +11,9 @@ const courseController = require('./courseController'),
     typeController = require('./typeController'),
     filterController = require('./filterController'),
     courseSearchCatalogController = require('./courseSearchCatalogController'),
+    CoursePageMetaController =
+        require('../controllers/coursePageMetaController')
+            .CoursePageMetaController,
     csrf = require('../../../../app/middleware/csrf'),
     checkToken = require('../../../../app/middleware/checkToken'),
     fileHandler = require('../../../../app/middleware/fileHandler');
@@ -107,24 +110,30 @@ let initSuperUserCrudRouting = function(route, controller) {
     router.post(
         `${route}`,
         checkToken,
-        adminUser,
-        superUserCheckAction,
-        controller.create
+        // adminUser,
+        // superUserCheckAction,
+        controller.create || controller.actionCreate
     );
-    router.get(`${route}`, controller.list);
-    router.get(`${route}/:id`, controller.get);
+    router.get(
+        `${route}`,
+        controller.list || controller.actionList
+    );
+    router.get(
+        `${route}/:id`,
+        controller.get || controller.actionGet
+    );
     router.put(`${route}/:id`,
         checkToken,
-        adminUser,
-        superUserCheckAction,
-        controller.update
+        // adminUser,
+        // superUserCheckAction,
+        controller.update || controller.actionUpdate
     );
     router.delete(
         `${route}/:id`,
         checkToken,
         adminUser,
         superUserCheckAction,
-        controller.delete
+        controller.delete || controller.actionDelete
     );
 };
 
@@ -133,5 +142,11 @@ initSuperUserCrudRouting(
 );
 initSuperUserCrudRouting('/coursecategory', categoryController);
 initSuperUserCrudRouting('/coursetype', typeController);
+
+const coursePageMetaController = new CoursePageMetaController();
+initSuperUserCrudRouting(
+    '/course/:courseId/pagemeta',
+    coursePageMetaController
+);
 
 module.exports = router;

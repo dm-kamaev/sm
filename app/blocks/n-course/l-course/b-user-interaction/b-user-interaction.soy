@@ -25,10 +25,18 @@
  *     config: sm.lCourse.bUserInteraction.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .userInteraction}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lCourse-userInteraction
 {/template}
 
 

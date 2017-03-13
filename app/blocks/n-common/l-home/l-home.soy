@@ -38,6 +38,7 @@
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -45,6 +46,12 @@
     {call .document data="all" /}
 {/template}
 
+/**
+ * @override
+ */
+{template .NAME}
+    lHome
+{/template}
 
 /**
  * Add layout script to page
@@ -184,13 +191,11 @@
     {if $params.data.recommendations}
 
         {let $content kind="html"}
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smCatalog',
-                    'renderParams': [
-                        'data': $params.data.recommendations
-                    ]
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smCatalog' /}
+                {param renderParams: [
+                    'data': $params.data.recommendations
                 ] /}
             {/call}
         {/let}
@@ -290,15 +295,13 @@
  */
 {template .searchPanel_ kind="html"}
     <div class="{call .rootClass/}__search-panel">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smSearchPanel',
-                'renderParams': [
-                    'data': $params.data.searchPanel,
-                    'config': [
-                        'entityType': $params.config.entityType
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smSearchPanel' /}
+            {param renderParams: [
+                'data': $params.data.searchPanel,
+                'config': [
+                    'entityType': $params.config.entityType
                 ]
             ] /}
         {/call}

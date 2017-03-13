@@ -209,21 +209,15 @@
  * Main header template
  * @param params {{
  *     data: {
- *         header: sm.bSmHeader.Template.Params.Data,
- *         config: {
- *             modifier: string
- *         }
+ *         header: sm.bSmHeader.Template.Params.Data
  *     }
  * }}
  */
 {template .mainHeader_ kind="html"}
     <div class="{call .rootClass/}__header">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smHeader',
-                'renderParams': $params.data.header
-            ]/}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'smHeader' /}
+            {param renderParams: $params.data.header /}
         {/call}
     </div>
 {/template}
@@ -233,20 +227,14 @@
  * @param params {{
  *     data: {
  *         subHeader: sm.bSmSubheader.Template.Params
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
 {template .subHeader_ autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__sub-header">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smSubheader',
-                'renderParams': $params.data.subHeader
-            ]/}
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'smSubheader' /}
+            {param renderParams: $params.data.subHeader /}
         {/call}
     </div>
 {/template}
@@ -256,21 +244,15 @@
  * @param params {{
  *     data: {
  *         sideMenu: sm.bSmSideMenu.Template.Params
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
 {template .sideMenu_ kind="html"}
     <div class="{call .rootClass /}__side-menu">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'side-menu',
-                'renderParams': [
-                    'data': $params.data.sideMenu
-                ]
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'side-menu' /}
+            {param renderParams: [
+                'data': $params.data.sideMenu
             ]/}
         {/call}
     </div>
@@ -282,21 +264,15 @@
  * @param params {{
  *     data: {
  *         footer: sm.bSmFooter.Template.Params.Data
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
 {template .footer_ autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__footer">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smFooter',
-                'renderParams': [
-                    'data': $params.data.footer
-                ]
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'smFooter' /}
+            {param renderParams: [
+                'data': $params.data.footer
             ]/}
         {/call}
     </div>

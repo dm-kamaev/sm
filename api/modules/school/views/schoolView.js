@@ -12,10 +12,13 @@ const specializedClassesView = require('./specializedClassesView.js');
 const ratingView = require('./ratingView.js');
 const egeResultView = require('../../study/views/egeResultView.js');
 const giaResultView = require('../../study/views/giaResultView.js');
-const olimpResultView = require('../../study/views/olimpResultView.js');
+const olympiadResultsView =
+    require('../../../../app/modules/school/views/olympiadResultView')
+        .olympiadResultsView;
 const scoreView = require('../views/scoreView');
 const scoreEntityView = require('../../entity/views/scoreView');
 const seoView = require('./seoView.js');
+const departmentView = require('../../geo/views/departmentView').departmentView;
 const SubHeader = require('../lib/SchoolSubheader');
 
 const footerView = require('../../entity/views/footerView'),
@@ -47,19 +50,14 @@ schoolView.default = function(
             schoolInstance.addresses
         ),
         comments = commentView.school(schoolInstance.comments);
+
     var result = {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
         schoolDescr: schoolInstance.description,
         features: schoolInstance.features,
-        directorName: getDirectorName(schoolInstance.director),
-        extendedDayCost: getExtendedDayCost(schoolInstance.extendedDayCost),
-        dressCode: schoolInstance.dressCode || false,
-        classes: getEducationInterval(schoolInstance.educationInterval),
-        kindergarten: getKindergardenAvailability(
-            schoolInstance.educationInterval
-        ),
+        extra: getExtra(schoolInstance),
         social: [],
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
@@ -84,7 +82,7 @@ schoolView.default = function(
                 data.gia,
                 data.city
             ),
-            olymp: olimpResultView.transformResults(data.olymp)
+            olymp: olympiadResultsView.render(data.olymp)
         },
         authSocialLinks: data.authSocialLinks,
         reviewCount: schoolInstance.totalScore ?
@@ -162,6 +160,67 @@ var nearestMetro = function(addresses) {
 };
 
 /**
+ * @param  {Object}        school
+ * @param  {Array<Number>} school.educationInterval
+ * @param  {Array<Object>} school.addresses
+ * @param  {Object}        school.addresses.departments
+ * @param  {string}        school.extendedDayCost
+ * @return {string}
+ */
+const getExtra = function(school) {
+    let result = [];
+    const classes = getEducationInterval(school.addresses);
+    const kindergarten = getKindergardenAvailability(school.educationInterval);
+    const extendedDayCost = getExtendedDayCost(school.extendedDayCost);
+    const dressCode = school.dressCode;
+    const directorName = getDirector(school.director);
+    result = result
+        .concat(
+            classes,
+            kindergarten,
+            extendedDayCost,
+            dressCode
+        );
+    result = lodash.compact(result).join(', ');
+    result = result ? result + `. ${directorName}` : directorName;
+    return result;
+};
+
+/**
+ * @param  {Array<Object>} addresses
+ * @return {string}
+ */
+var getEducationInterval = function(addresses) {
+    const classes = departmentView.generalGrades(
+            addresses.reduce(
+                (previous, current) => previous.concat(current.departments),
+                []
+            )
+        )
+        .filter(grade => grade !== 0);
+    const classesLength = classes.length;
+    let res;
+
+    if (classesLength > 1) {
+        res = `Обучение с ${classes[0]} по ${classes[classesLength - 1]} класс`;
+    } else {
+        res = '';
+    }
+
+    return res;
+};
+
+
+/**
+ *  @param {array<number>} interval
+ *  @return {string}
+ */
+var getKindergardenAvailability = function(interval) {
+    return (interval && interval[0] === 0) ?
+        'при школе есть детский сад' : '';
+};
+
+/**
  * @param {string} cost
  * @return {string}
  */
@@ -189,44 +248,6 @@ var getExtendedDayCost = function(cost) {
 
     return res;
 };
-
-
-/**
- * @param {array<number>} interval
- * @return {string}
- */
-var getEducationInterval = function(interval) {
-    var res = 'Обучение с ';
-
-    if (interval) {
-        var begin = interval[0],
-            end = interval[interval.length - 1];
-
-        if (begin === 0) {
-            begin = interval[1];
-        }
-
-        res += begin;
-        res += ' по ';
-        res += end;
-        res += ' класс';
-    } else {
-        res += '1 по 11 класс';
-    }
-
-    return res;
-};
-
-
-/**
- *  @param {array<number>} interval
- *  @return {string}
- */
-var getKindergardenAvailability = function(interval) {
-    return (interval && interval[0] === 0) ?
-        'при школе есть детский сад' : '';
-};
-
 
 /**
  *  @param {string|array<string>} sites
@@ -275,15 +296,12 @@ var getContacts = function(addresses, opt_phones) {
  * @param {?string} name
  * @return {?string}
  */
-var getDirectorName = function(name) {
-    var result = '';
-    if (name) {
-        var nameWords = [];
-
-        name = name.trim();
-        nameWords = name.split(' ');
-        result = nameWords[1] + ' ' + nameWords[2] + ' ' + nameWords[0];
-    }
+var getDirector = function(name) {
+    var nameWords = [],
+        result = '';
+    name = name.trim();
+    nameWords = name.split(' ');
+    result = `Директор — ${nameWords[1]} ${nameWords[2]} ${nameWords[0]}`;
     return result;
 };
 

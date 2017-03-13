@@ -17,16 +17,14 @@
             {call .modal data="all"/}
         {/let}
 
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'modal',
-                'renderParams': [
-                    'data': [
-                        'content': $html
-                    ],
-                    'config': [
-                        'csrf': $params?.config?.csrf
-                    ]
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'modal' /}
+            {param renderParams: [
+                'data': [
+                    'content': $html
+                ],
+                'config': [
+                    'csrf': $params?.config?.csrf
                 ]
             ]/}
         {/call}
@@ -59,19 +57,17 @@
 
             <div class="b-feedback__section
                         b-feedback__section_textarea">
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'textarea',
-                        'renderParams': [
-                            'data': [
-                                'placeholder': 'Ваш комментарий',
-                                'name': 'text',
-                                'maxLength': 500
-                            ],
-                            'config': [
-                                'autoHeight': true,
-                                'showCounter': true
-                            ]
+                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+                    {param type: 'textarea' /}
+                    {param renderParams: [
+                        'data': [
+                            'placeholder': 'Ваш комментарий',
+                            'name': 'text',
+                            'maxLength': 500
+                        ],
+                        'config': [
+                            'autoHeight': true,
+                            'showCounter': true
                         ]
                     ]/}
                 {/call}
@@ -87,16 +83,14 @@
 
             <div class="b-feedback__section
                         b-feedback__section_submit">
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'button',
-                        'renderParams': [
-                            'data': [
-                                'content': 'Оставить отзыв'
-                            ],
-                            'config': [
-                                'theme': 'sienna'
-                            ]
+                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+                    {param type: 'button' /}
+                    {param renderParams: [
+                        'data': [
+                            'content': 'Оставить отзыв'
+                        ],
+                        'config': [
+                            'theme': 'sienna'
                         ]
                     ]/}
                 {/call}
@@ -119,23 +113,21 @@
                     b-feedback__text_header">Кто Вы?</span>
         <div class="b-feedback__control
                     b-feedback__control_user-type">
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'dropdown-select-legacy',
-                    'renderParams': [
-                        'data': [
-                            'defaultOpenerText': 'Выберите',
-                            'listItems': [
-                                ['label': 'Родитель ученика'],
-                                ['label': 'Выпускник'],
-                                ['label': 'Ученик']
-                            ]
-                        ],
-                        'config': [
-                            'usePlaceholder': true,
-                            'iconSprite': 'opener-arrow',
-                            'textSize': 'large'
+            {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+                {param type: 'dropdown-select-legacy' /}
+                {param renderParams: [
+                    'data': [
+                        'defaultOpenerText': 'Выберите',
+                        'listItems': [
+                            ['label': 'Родитель ученика'],
+                            ['label': 'Выпускник'],
+                            ['label': 'Ученик']
                         ]
+                    ],
+                    'config': [
+                        'usePlaceholder': true,
+                        'iconSprite': 'opener-arrow',
+                        'textSize': 'large'
                     ]
                 ]/}
             {/call}
@@ -180,29 +172,27 @@
             </span>
             <div class="b-feedback__control
                         b-feedback__control_class-type">
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'dropdown-select-legacy',
-                        'renderParams': [
-                            'data': [
-                                'listItems': [
-                                    ['label': '1'],
-                                    ['label': '2'],
-                                    ['label': '3'],
-                                    ['label': '4'],
-                                    ['label': '5'],
-                                    ['label': '6'],
-                                    ['label': '7'],
-                                    ['label': '8'],
-                                    ['label': '9'],
-                                    ['label': '10'],
-                                    ['label': '11']
-                                ]
-                            ],
-                            'config': [
-                                'iconSprite': 'opener-arrow',
-                                'textSize': 'large'
+                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+                    {param type: 'dropdown-select-legacy' /}
+                    {param renderParams: [
+                        'data': [
+                            'listItems': [
+                                ['label': '1'],
+                                ['label': '2'],
+                                ['label': '3'],
+                                ['label': '4'],
+                                ['label': '5'],
+                                ['label': '6'],
+                                ['label': '7'],
+                                ['label': '8'],
+                                ['label': '9'],
+                                ['label': '10'],
+                                ['label': '11']
                             ]
+                        ],
+                        'config': [
+                            'iconSprite': 'opener-arrow',
+                            'textSize': 'large'
                         ]
                     ]/}
                 {/call}
@@ -221,14 +211,12 @@
             </span>
             <div class="b-feedback__control
                         b-feedback__control_graduation-year">
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'digit-input',
-                        'renderParams': [
-                            'data': [
-                                'name': 'yearGraduate',
-                                'maxLength': 4
-                            ]
+                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+                    {param type: 'digit-input' /}
+                    {param renderParams: [
+                        'data': [
+                            'name': 'yearGraduate',
+                            'maxLength': 4
                         ]
                     ]/}
                 {/call}

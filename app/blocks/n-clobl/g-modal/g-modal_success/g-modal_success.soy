@@ -23,11 +23,19 @@
  *     config: sm.gModal.TemplateSuccess.Params.Config
  * }}
  * @extends sm.gModal.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .modal}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    modal-success
 {/template}
 
 

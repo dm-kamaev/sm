@@ -81,12 +81,16 @@ goog.scope(function() {
      */
     View.prototype.renderListErrors_ = function(errorMessages) {
         return goog.soy.renderAsElement(
-            sm.gModal.TemplateEnrollment.listErrors, {
+            sm.gModal.TemplateEnrollment.listErrors,
+            {
                 params: {
                     data: {
                         errors: errorMessages
                     }
                 }
+            },
+            {
+                factoryIndex: this.getFactory().getIndex()
             }
         );
     };
