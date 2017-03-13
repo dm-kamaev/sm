@@ -403,11 +403,6 @@
         {call .rootClass /}__sort-control
     {/let}
     <div class="{call .rootClass /}__sort">
-        {call .tab}
-            {param params: [
-                'data': $params.data.sort.content
-            ]/}
-        {/call}
         <div class="{call .rootClass /}__horizontal-line"></div>
         <div class="{call .rootClass /}__sort-control-wrap">
             {call .renderChild}
@@ -430,30 +425,6 @@
     </div>
 {/template}
 
-/**
- * @param params {{
-        data: sm.bSmSwitch.SmSwitch.Params.Data
-    }}
- */
-{template .tab}
-    {let $customClasses kind="html"}
-        {call .rootClass /}__sort-control2
-    {/let}
-
-    {call .renderChild}
-        {param params: [
-            'type': 'smSwitch',
-            'renderParams': [
-                'data': $params.data,
-                'config': [
-                    'customClasses': [$customClasses],
-                    'size': 'xxxl',
-                    'linksTheme': 'hoar'
-                ]
-            ]
-        ]/}
-    {/call}
-{/template}
 
 /**
  * Item list template

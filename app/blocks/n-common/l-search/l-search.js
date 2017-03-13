@@ -288,10 +288,6 @@ goog.scope(function() {
             this.onSortReleased_
         ).listen(
             this.searchResults_,
-            sm.bSmSwitch.SmSwitch.Event.ITEM_SELECT,
-            this.onSortReleased_
-        ).listen(
-            this.searchResults_,
             sm.lSearch.bSearchResults.SearchResults.Event.SHOW_MORE_CLICK,
             this.onShowMoreButtonClick_
         );

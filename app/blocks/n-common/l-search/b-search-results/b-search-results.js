@@ -4,7 +4,6 @@ goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.gButton.ButtonStendhal');
-goog.require('sm.bSmSwitch.SmSwitch');
 goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bSearchResults.Template');
@@ -42,12 +41,6 @@ goog.scope(function() {
          */
         this.sort_ = null;
 
-        /**
-         * Sort control (b-sm-tab-select) instance
-         * @type {sm.bSmSwitch.SmSwitch}
-         * @private
-         */
-        this.sort2_ = null;
 
         /**
          * Show more button instance
@@ -308,7 +301,6 @@ goog.scope(function() {
             sm.gButton.ButtonStendhal.NAME,
             dom.showMore
         );
-        this.sort2_ = this.decorateChild('smSwitch', dom.sort2);
 
         return this;
     };
