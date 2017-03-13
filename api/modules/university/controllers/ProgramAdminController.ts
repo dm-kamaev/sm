@@ -223,7 +223,7 @@ class ProgramAdminController extends Controller {
             links: body.links,
             addressName: body.addressName,
             programMajorId: Number(body.programMajorId),
-            exchangeProgram: body.exchangeProgram.trim()
+            exchangeProgram: body.exchangeProgram && body.exchangeProgram.trim()
         };
         return programService.create(programData);
     }
@@ -271,7 +271,7 @@ class ProgramAdminController extends Controller {
             links: body.links,
             addressName: body.addressName,
             programMajorId: Number(body.programMajorId),
-            exchangeProgram: body.exchangeProgram.trim()
+            exchangeProgram: body.exchangeProgram && body.exchangeProgram.trim()
         };
         return programService.update(Number(id), programData);
     }

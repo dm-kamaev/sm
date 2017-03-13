@@ -1,14 +1,14 @@
 const DataType = require('sequelize');
 const sequelize = require('../../../../app/components/db');
 
+import {service as programPageService} from '../services/programPage';
+
 import * as Sequelize from 'sequelize/v3';
 
 import {
     ProgramAttribute,
     ProgramInstance
 } from '../types/program';
-
-import {AddressInstance} from '../../geo/types/address';
 
 interface ProgramModel
     extends Sequelize.Model<ProgramInstance, ProgramAttribute> {}
@@ -80,6 +80,11 @@ const Program: ProgramModel = sequelize.define('Program', {
 }, {
     underscored: true,
     tableName: 'program',
+    hooks: {
+        afterCreate: programPageService.createPage.bind(programPageService),
+        afterUpdate: programPageService.updatePage.bind(programPageService),
+        afterDestroy: programPageService.deletePage
+    },
     classMethods: {
         associate: function(models) {
             this.belongsTo(models.University, {
@@ -91,7 +96,7 @@ const Program: ProgramModel = sequelize.define('Program', {
                 as: 'commentGroup'
             });
             this.belongsToMany(models.Page, {
-                as: 'page',
+                as: 'pages',
                 through: 'program_page',
                 foreignKey: 'program_id',
             });
@@ -116,5 +121,3 @@ const Program: ProgramModel = sequelize.define('Program', {
 });
 
 export {Program as Model};
-
-

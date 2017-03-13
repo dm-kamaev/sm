@@ -6,7 +6,7 @@ const async = require('asyncawait/async'),
     fs = require('fs'),
     minimist = require('minimist');
 
-const pageModel = require('../../api/modules/entity/models/page'),
+const pageModel = require('../../api/modules/entity/models/page').Model,
     courseModel = require('../../api/modules/course/models/course');
 
 const DEFAULT_IMAGES_FOLDER = path.resolve(

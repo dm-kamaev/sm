@@ -1,31 +1,37 @@
 'use strict';
 
-const Sequelize = require('sequelize');
+const DataType = require('sequelize');
+
+import * as Sequelize from 'sequelize/v3';
 
 const sequelize = require('../../../../app/components/db'),
     entityTypes = require('../enums/entityType');
 
-var Page = sequelize.define('Page', {
+import {PageIntstance, PageAttribute} from '../types/page';
+
+interface PageModel extends Sequelize.Model<PageIntstance, PageAttribute> {}
+
+const Page = sequelize.define('Page', {
     entityId: {
         field: 'entity_id',
-        type: Sequelize.INTEGER,
+        type: DataType.INTEGER,
         allowNull: false
     },
     entityType: {
         field: 'entity_type',
-        type: Sequelize.STRING,
+        type: DataType.STRING,
         unique: 'compositeIndex',
         validate: {
             isIn: [entityTypes.toArray()]
         }
     },
     alias: {
-        type: Sequelize.STRING,
+        type: DataType.STRING,
         allowNull: false,
         unique: 'compositeIndex'
     },
-    views: Sequelize.INTEGER,
-    description: Sequelize.STRING(300)
+    views: DataType.INTEGER,
+    description: DataType.STRING(300)
 }, {
     underscored: true,
     tableName: 'page',
@@ -45,4 +51,4 @@ var Page = sequelize.define('Page', {
     }
 });
 
-module.exports = Page;
+export {Page as Model};

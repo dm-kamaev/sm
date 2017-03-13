@@ -14,7 +14,7 @@ import {
     Model as UniversityPageModel,
     UniversityPageInstance
 } from '../models/UniversityPage';
-const pageModel = require('../../entity/models/page');
+const pageModel = require('../../entity/models/page').Model;
 
 import {service as universityService} from '../services/university';
 import {service as pageServices} from '../../entity/services/page';
