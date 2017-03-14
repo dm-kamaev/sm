@@ -127,7 +127,7 @@ class ProgramService {
         const university = await universityService.get(program.universityId);
 
         if (data.addressName) {
-            const address = await addressService.findOrCreateByName(
+            const address = await addressService.getOrCreateByName(
                 data.addressName,
                 university.cityId
             );
@@ -149,7 +149,7 @@ class ProgramService {
         const university = await universityService.get(program.universityId);
 
         if (data.addressName) {
-            const address = await addressService.findOrCreateByName(
+            const address = await addressService.getOrCreateByName(
                 data.addressName,
                 university.cityId
             );
