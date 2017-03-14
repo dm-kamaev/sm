@@ -55,6 +55,7 @@
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -62,6 +63,12 @@
     {call .document data="all" /}
 {/template}
 
+/**
+ * @override
+ */
+{template .NAME}
+    lCatalog
+{/template}
 
 /**
  * Add layout script to page
@@ -78,26 +85,6 @@
         {param path: '/static/l-catalog.js' /}
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
-{/template}
-
-
-/**
- * @param params {{
- *     data: sm.iLayout.TemplateStendhal.Params.Data,
- *     config: sm.iLayout.TemplateStendhal.Params.Config
- * }}
- * @override
- */
-{template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
-                {call .attributes data="all"/}>
-        <div class="{call .rootClass/}__wrapper-content">
-            {call .mainSubheader data="all" /}
-            {call .mainContent data="all" /}
-        </div>
-
-        {call .mainFooter data="all" /}
-    </div>
 {/template}
 
 
@@ -173,13 +160,11 @@
  */
 {template .sectionCatalog_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_catalog">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'tab-catalog',
-                'renderParams': [
-                    'data': $params.data.catalog
-                ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'tab-catalog' /}
+            {param renderParams: [
+                'data': $params.data.catalog
             ] /}
         {/call}
     </div>

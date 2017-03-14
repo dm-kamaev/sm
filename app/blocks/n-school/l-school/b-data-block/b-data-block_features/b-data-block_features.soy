@@ -8,6 +8,7 @@
  *     content: ?list<string>
  * }
  * @extends sm.lSchool.bDataBlock.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .base}
@@ -25,6 +26,12 @@
     {/call}
 {/template}
 
+/**
+ * @override
+ */
+{template .NAME}
+    data-block-features
+{/template}
 /**
  * Block init
  * @param params {

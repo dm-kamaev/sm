@@ -28,11 +28,19 @@
  *     config: sm.gTextarea.TemplateStendhal.Params.Config
  * }}
  * @extends cl.gTextarea.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .textarea}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    textarea
 {/template}
 
 /**

@@ -33,6 +33,13 @@ goog.scope(function() {
 
 
     /**
+     * Name of this element in factory
+     * @const {string}
+     */
+    Comment.NAME = sm.bSmComment.SmComment.Template.NAME();
+
+
+    /**
      * @protected
      * @override
      */

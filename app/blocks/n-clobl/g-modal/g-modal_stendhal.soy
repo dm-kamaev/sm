@@ -16,11 +16,19 @@
  *     }
  * }}
  * @extends cl.gModal.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .modal}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    modal
 {/template}
 
 /**
@@ -40,7 +48,7 @@
 /**
  * @param params {
  *     config: {
- *         stylizationModifier: string
+ *         size: string
  *     }
  * }
  */
@@ -86,17 +94,12 @@
 {/template}
 
 /**
- * @param params {
- *     config: {
- *         stylizationModifier: string
- *     }
- * }
+ *
  */
 {template .defaultIcons}
     <div class="{call .rootClass/}__close-icon">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params?.config?.stylizationModifier,
                 'type': 'icon',
                 'renderParams': [
                     'data': [
@@ -107,9 +110,8 @@
         {/call}
     </div>
     <div class="{call .rootClass/}__close-icon-hover">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params?.config?.stylizationModifier,
                 'type': 'icon',
                 'renderParams': [
                     'data': [
@@ -122,16 +124,11 @@
 {/template}
 
 /**
- * @param params {
- *     config: {
- *         stylizationModifier: string
- *     }
- * }
+ * Zzzz
  */
 {template .smallIcon}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+    {call .renderChild}
         {param params: [
-            'factory': $params?.config?.stylizationModifier,
             'type': 'icon',
             'renderParams': [
                 'data': [

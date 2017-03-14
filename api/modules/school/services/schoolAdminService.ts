@@ -129,6 +129,7 @@ class SchoolAdminService {
         return schoolType.toArray();
     }
 
+
     private async getSchoolInfo(schools): Promise<SchoolDataForView[]> {
         const schoolIds: number[] = schools.map(school => school.id);
         const addresses: any = await models.Address.findAll({

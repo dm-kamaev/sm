@@ -17,7 +17,6 @@ export interface SchoolAttribute {
     govermentKey?: number;
     cityId?: number;
     educationInterval?: Array<number>;
-    specializedClasses?: Array<string>;
     features?: Array<string>;
     extendedDayCost?: string;
     dressCode?: boolean;
@@ -82,10 +81,6 @@ const Model: SchoolModel = db.define('School', {
     educationInterval: {
         field: 'education_interval',
         type: DataType.ARRAY(DataType.INTEGER)
-    },
-    specializedClasses: {
-        field: 'specialized_classes',
-        type: DataType.ARRAY(DataType.STRING)
     },
     features: {
         field: 'features',
@@ -201,6 +196,10 @@ const Model: SchoolModel = db.define('School', {
                 as: 'favorite',
                 foreignKey: 'entity_id',
                 onDelete: 'cascade'
+            });
+            this.hasMany(models.SchoolSpecializedClass, {
+                as: 'specializedClasses',
+                foreignKey: 'school_id'
             });
         }
     }

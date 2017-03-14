@@ -3,7 +3,11 @@
  */
 goog.provide('sm.lErrorNotFound.ErrorNotFound');
 
+goog.require('sm.bSmItem.SmItemCompact');
+goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
+goog.require('sm.lErrorNotFound.Template');
 goog.require('sm.lErrorNotFound.View');
 
 
@@ -44,6 +48,13 @@ goog.scope(function() {
 
 
     /**
+     * Name of this element in factory
+     * @const {string}
+     */
+    ErrorNotFound.NAME = sm.lErrorNotFound.Template.NAME();
+
+
+    /**
      * @param {Element} element
      * @override
      * @protected
@@ -64,18 +75,25 @@ goog.scope(function() {
 
         if (dom.popular) {
             this.popular_ = this.decorateChild(
-                'smItemList',
+                sm.bSmItemList.SmItemList.NAME,
                 dom.popular
             );
         }
 
         if (dom.catalog) {
             this.catalog_ = this.decorateChild(
-                'smItemCompact',
+                sm.bSmItem.SmItemCompact.NAME,
                 dom.catalog
             );
         }
     };
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        ErrorNotFound.NAME, {
+            control: ErrorNotFound,
+            view: View
+        }
+    );
 });  // goog.scope
 
 
@@ -83,12 +101,8 @@ goog.scope(function() {
  * creates sm.lErrorNotFound.ErrorNotFound instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lErrorNotFound.ErrorNotFound.NAME,
         sm.lErrorNotFound.View.CssClass.ROOT
     );
-
-    var view = new sm.lErrorNotFound.View(null, null, 'stendhal');
-    var instance = new sm.lErrorNotFound.ErrorNotFound(view);
-
-    instance.decorate(domElement);
 });

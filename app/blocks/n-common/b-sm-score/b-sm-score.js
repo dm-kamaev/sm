@@ -5,7 +5,9 @@
 goog.provide('sm.bSmScore.SmScore');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmScore.Template');
 goog.require('sm.bSmScore.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 goog.scope(function() {
     var View = sm.bSmScore.View;
@@ -29,6 +31,15 @@ goog.scope(function() {
     goog.inherits(sm.bSmScore.SmScore, cl.iControl.Control);
     var Score = sm.bSmScore.SmScore;
 
+    /**
+     * Name of this element in factory
+     */
+    Score.NAME = sm.bSmScore.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Score.NAME, {
+        control: Score,
+        view: View
+    });
 
     /**
      * @typedef {sm.bSmScore.View.RenderParams}

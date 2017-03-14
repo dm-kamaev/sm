@@ -30,6 +30,7 @@
  *     config: sm.gDropdown.TemplateSelect.Params.Config
  * }}
  * @extends cl.gDropdown.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
@@ -37,6 +38,12 @@
     {call .init data="all" /}
 {/template}
 
+/**
+ * @override
+ */
+{template .NAME}
+    dropdown-select
+{/template}
 
 /**
  * Control for displaying content

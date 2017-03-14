@@ -10,8 +10,6 @@ abstract class Service {
 
     private axios: Axios.AxiosInstance;
 
-    abstract handleError(error: any): void;
-
     constructor() {
         this.axios = axios.create({
             headers
@@ -48,6 +46,8 @@ abstract class Service {
 
         return res;
     }
+
+    protected abstract handleError(error: any): void;
 }
 
 export {Service};

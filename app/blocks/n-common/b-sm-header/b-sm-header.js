@@ -1,6 +1,10 @@
 goog.provide('sm.bSmHeader.SmHeader');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmHeader.Template');
+goog.require('sm.bSmHeader.View');
+goog.require('sm.bSmLink.SmLink');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -27,8 +31,18 @@ goog.scope(function() {
         this.links_ = [];
     };
     goog.inherits(sm.bSmHeader.SmHeader, cl.iControl.Control);
-    var Header = sm.bSmHeader.SmHeader;
+    var Header = sm.bSmHeader.SmHeader,
+        View = sm.bSmHeader.View;
 
+    /**
+     * Name of this element in factory
+     */
+    Header.NAME = sm.bSmHeader.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Header.NAME, {
+        control: Header,
+        view: View
+    });
 
     /**
      * @override
@@ -57,6 +71,6 @@ goog.scope(function() {
      */
     Header.prototype.initLinks_ = function() {
         var links = this.getView().getLinks();
-        this.links_ = this.decorateChildren('smLink', links);
+        this.links_ = this.decorateChildren(sm.bSmLink.SmLink.NAME, links);
     };
 });  // goog.scope

@@ -46,10 +46,18 @@
  *     config: (sm.bSmItemList.Template.Params.Config|undefined)
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .itemList}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smItemList
 {/template}
 
 
@@ -209,9 +217,8 @@
     ) /}
 
     <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params?.config?.stylizationModifier,
                 'type': $params.config.type,
                 'renderParams': [
                     'data': $params.data.item,

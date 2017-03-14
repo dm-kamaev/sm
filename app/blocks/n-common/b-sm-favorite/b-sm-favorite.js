@@ -1,7 +1,12 @@
 goog.provide('sm.bSmFavorite.SmFavorite');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmFavorite.Template');
+goog.require('sm.bSmFavorite.View');
+goog.require('sm.bSmLink.SmLink');
+goog.require('sm.bSmListPaged.SmListPaged');
 goog.require('sm.iAuthorization.Authorization');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -39,6 +44,15 @@ goog.scope(function() {
         View = sm.bSmFavorite.View,
         Authorization = sm.iAuthorization.Authorization;
 
+    /**
+     * Name of this element in factory
+     */
+    Favorite.NAME = sm.bSmFavorite.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Favorite.NAME, {
+        control: Favorite,
+        view: View
+    });
 
     /**
      * Add given item to favorites
@@ -115,7 +129,7 @@ goog.scope(function() {
      */
     Favorite.prototype.initlistPaged_ = function() {
         this.listPaged_ = this.decorateChild(
-            'smListPaged',
+            sm.bSmListPaged.SmListPaged.NAME,
             this.getView().getDom().listPaged
         );
     };
@@ -127,7 +141,7 @@ goog.scope(function() {
      */
     Favorite.prototype.initAuthorizeLink_ = function() {
         this.authorizeLink_ = this.decorateChild(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().authorizeLink
         );
     };

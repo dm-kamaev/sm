@@ -13,10 +13,13 @@ goog.require('goog.array');
 goog.require('goog.dom.classlist');
 goog.require('sm.bSmComment.SmComment');
 goog.require('sm.bSmItem.SmItem');
+goog.require('sm.bSmItem.SmItemCompact');
 goog.require('sm.bSmItem.SmItemEntity');
+goog.require('sm.bSmItemList.Template');
 goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lCourse.bDepartment.Department');
 
 
@@ -54,6 +57,7 @@ sm.bSmItemList.SmItemList = function(view, opt_domHelper) {
 
     /**
      * Item config which item list rendered
+     * @type {Object}
      * @private
      */
     this.itemConfig_ = {};
@@ -63,7 +67,16 @@ goog.inherits(sm.bSmItemList.SmItemList, cl.iControl.Control);
 
 goog.scope(function() {
     var ItemList = sm.bSmItemList.SmItemList,
-        Analytics = sm.iAnalytics.Analytics;
+        View = sm.bSmItemList.View;
+
+    var Analytics = sm.iAnalytics.Analytics;
+
+
+    /**
+     * Name of this element in factory
+     * @const {string}
+     */
+    ItemList.NAME = sm.bSmItemList.Template.NAME();
 
 
     /**
@@ -92,12 +105,12 @@ goog.scope(function() {
      * @enum {string}
      */
     ItemList.ItemType = {
-        ITEM: 'smItem',
-        ITEM_ENTITY: 'smItemEntity',
-        ITEM_COMPACT: 'smItemCompact',
-        LINK: 'smLink',
-        DEPARTMENT: 'lCourse-department',
-        COMMENT: 'smComment'
+        ITEM: sm.bSmItem.SmItem.NAME,
+        ITEM_ENTITY: sm.bSmItem.SmItemEntity.NAME,
+        ITEM_COMPACT: sm.bSmItem.SmItemCompact.NAME,
+        LINK: sm.bSmLink.SmLink.NAME,
+        DEPARTMENT: sm.lCourse.bDepartment.Department.NAME,
+        COMMENT: sm.bSmComment.SmComment.NAME
     };
 
 
@@ -546,4 +559,9 @@ goog.scope(function() {
         var transformedParams = this.renderParamsTransformator_(rawItemConfig);
         this.itemConfig_ = transformedParams.config;
     };
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(ItemList.NAME, {
+        control: ItemList,
+        view: View
+    });
 });  // goog.scope

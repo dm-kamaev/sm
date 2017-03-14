@@ -1,6 +1,10 @@
 goog.provide('sm.bSmFooter.SmFooter');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmFooter.Template');
+goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmLink.SmLink');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -30,6 +34,16 @@ goog.scope(function() {
         View = sm.bSmFooter.View;
 
     /**
+     * Name of this element in factory
+     */
+    Footer.NAME = sm.bSmFooter.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Footer.NAME, {
+        control: Footer,
+        view: View
+    });
+
+    /**
      * @override
      */
     Footer.prototype.decorateInternal = function(element) {
@@ -45,7 +59,7 @@ goog.scope(function() {
      */
     Footer.prototype.initLinks_ = function() {
         this.links_ = this.decorateChildren(
-            'smLink',
+            sm.bSmLink.SmLink.NAME,
             this.getView().getDom().links
         );
     };

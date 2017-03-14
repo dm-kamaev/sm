@@ -1,6 +1,11 @@
 goog.provide('sm.lSearch.bFilter.FilterClasses');
 
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.FilterDropdown');
+goog.require('sm.lSearch.bFilter.FilterInput');
+goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
+goog.require('sm.lSearch.bFilter.TemplateClasses');
 goog.require('sm.lSearch.bFilter.ViewClasses');
 
 
@@ -40,6 +45,17 @@ goog.scope(function() {
     var FilterClasses = sm.lSearch.bFilter.FilterClasses,
         View = sm.lSearch.bFilter.ViewClasses;
 
+    /**
+     * Name of this element in factory
+     */
+    FilterClasses.NAME = sm.lSearch.bFilter.TemplateClasses.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        FilterClasses.NAME, {
+            control: FilterClasses,
+            view: View
+        }
+    );
 
     /**
      * Checks refers element to this control
@@ -73,7 +89,9 @@ goog.scope(function() {
      */
     FilterClasses.prototype.reset = function() {
         for (var key in this.options) {
-            this.options[key].reset();
+            if (this.options.hasOwnProperty(key)) {
+                this.options[key].reset();
+            }
         }
 
         this.collapse();
@@ -226,17 +244,17 @@ goog.scope(function() {
         this.options = {};
 
         this.options.optionList = this.decorateChild(
-            'lSearch-filterDropdown',
+            sm.lSearch.bFilter.FilterDropdown.NAME,
             dom.optionList
         );
 
         this.options.optionLabels = this.decorateChild(
-            'lSearch-filterSwitchLabels',
+            sm.lSearch.bFilter.FilterSwitchLabels.NAME,
             dom.optionLabels
         );
 
         this.options.optionKindergarten = this.decorateChild(
-            'lSearch-filter',
+            sm.lSearch.bFilter.Filter.NAME,
             dom.optionKindergarten
         );
     };

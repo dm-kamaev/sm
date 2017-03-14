@@ -33,6 +33,7 @@
  * }}
  * @constructor
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  */
 {template .expander}
     {let $config: augmentMap(
@@ -48,6 +49,13 @@
             'config': $config
         ] /}
     {/call}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+   smExpander
 {/template}
 
 

@@ -1,9 +1,13 @@
 goog.provide('sm.bSmItem.SmItemEntity');
 
 goog.require('sm.bFavoriteLink.FavoriteLink');
+goog.require('sm.bSmBadge.SmBadge');
 goog.require('sm.bSmItem.Event.FavoriteRemoved');
 goog.require('sm.bSmItem.SmItem');
+goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItem.ViewEntity');
+goog.require('sm.bSmScore.SmScoreBrief');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 
 
@@ -33,18 +37,35 @@ sm.bSmItem.SmItemEntity = function(view, opt_domHelper) {
      * @private
      */
     this.favoriteLink_ = null;
+
+
+    /**
+     * Badges instances
+     * @type {Array<sm.bSmBadge.Badge>}
+     * @private
+     */
+    this.badges_ = [];
 };
 goog.inherits(sm.bSmItem.SmItemEntity, sm.bSmItem.SmItem);
 
 
 goog.scope(function() {
-    var Item = sm.bSmItem.SmItemEntity;
-    var View = sm.bSmItem.ViewEntity;
+    var Item = sm.bSmItem.SmItemEntity,
+        View = sm.bSmItem.ViewEntity;
 
     var FavoriteLink = sm.bFavoriteLink.FavoriteLink;
     var Event = sm.bSmItem.Event;
     var Viewport = sm.iSmViewport.SmViewport;
 
+    /**
+     * Name of this element in factory
+     */
+    Item.NAME = sm.bSmItem.TemplateEntity.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Item.NAME, {
+        control: Item,
+        view: View
+    });
 
     /**
      * @typedef {sm.bSmItem.ViewEntity.RenderParams}
@@ -211,9 +232,28 @@ goog.scope(function() {
      */
     Item.prototype.initScore_ = function() {
         this.score_ = this.decorateChild(
-            'smScoreBrief',
+            sm.bSmScore.SmScoreBrief.NAME,
             this.getView().getDom().score
         );
+    };
+
+
+    /**
+     * Initializes badges instances
+     * @private
+     */
+    Item.prototype.initBadges_ = function() {
+        var badges = this.getView().getDom().badges,
+            instance;
+
+        for (var i = 0; i < badges.length; i++) {
+            instance = this.decorateChild(
+                sm.bSmBadge.SmBadge.NAME,
+                badges[i]
+            );
+
+            this.badges_.push(instance);
+        }
     };
 
 
@@ -223,7 +263,7 @@ goog.scope(function() {
      */
     Item.prototype.initFavoriteLink_ = function() {
         this.favoriteLink_ = this.decorateChild(
-            'favorite-link',
+            sm.bFavoriteLink.FavoriteLink.NAME,
             this.getView().getDom().favoriteLink
         );
     };

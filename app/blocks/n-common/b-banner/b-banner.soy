@@ -11,10 +11,18 @@
  *     config: ?sm.iLayout.Template.Params.Config
  * }
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .banner}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    banner
 {/template}
 
 /**
@@ -47,15 +55,12 @@
  * @param params {?}
  */
 {template .modal autoescape="strict" kind="html"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': $params.config.stylizationModifier,
-            'type': 'feedback-modal',
-            'renderParams': [
-                'config': [
-                    'url': '/api/user-feedback',
-                    'csrf': $params?.config?.csrf
-                ]
+    {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+        {param type: 'feedback-modal' /}
+        {param renderParams: [
+            'config': [
+                'url': '/api/user-feedback',
+                'csrf': $params?.config?.csrf
             ]
         ]/}
     {/call}

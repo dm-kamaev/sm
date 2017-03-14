@@ -51,13 +51,19 @@
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .course autoescape="strict" kind="html"}
     {call .document data="all" /}
 {/template}
-
+/**
+ * @override
+ */
+{template .NAME}
+    lCourse
+{/template}
 
 /**
  * Add layout script to page
@@ -168,9 +174,6 @@
  *         entityData: {
  *             departmentList: sm.lCourse.bDepartment.Template.Params.Data
  *         }
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
@@ -180,19 +183,17 @@
             {call .rootClass/}__department-list
         {/let}
 
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smItemList',
-                'renderParams': [
-                    'data': [
-                        'items': $params.data.entityData.departmentList,
-                        'itemConfig': [],
-                        'itemType': 'lCourse-department'
-                    ],
-                    'config': [
-                        'customClasses': [$customClasses]
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smItemList' /}
+            {param renderParams: [
+                'data': [
+                    'items': $params.data.entityData.departmentList,
+                    'itemConfig': [],
+                    'itemType': 'lCourse-department'
+                ],
+                'config': [
+                    'customClasses': [$customClasses]
                 ]
             ]/}
         {/call}
@@ -334,23 +335,18 @@
  *             videoId: ?string,
  *             imgUrl: ?string
  *         }
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
 {template .mediaContent_}
     {if $params.data.entityData.videoId}
         <div class="{call .rootClass /}__video">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smEmbed',
-                    'renderParams': [
-                        'data': [
-                            'videoId': $params.data.entityData.videoId 
-                        ]
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smEmbed' /}
+                {param renderParams: [
+                    'data': [
+                        'videoId': $params.data.entityData.videoId
                     ]
                 ]/}
             {/call}
@@ -397,25 +393,20 @@
  * @param params {{
  *     data: {
  *         map: sm.bSmMap.Template.Params.Data
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
 {template .map_}
     <div class="{call .rootClass/}__map">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smMap',
-                'renderParams': [
-                    'data': $params.data.map,
-                    'config': [
-                        'enableScrollZoom': true,
-                        'alignZoomControl': 'right',
-                        'sizeViewportShow': 'm'
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smMap' /}
+            {param renderParams: [
+                'data': $params.data.map,
+                'config': [
+                    'enableScrollZoom': true,
+                    'alignZoomControl': 'right',
+                    'sizeViewportShow': 'm'
                 ]
             ]/}
         {/call}
@@ -425,15 +416,11 @@
 
 /**
  * Template displaying that is only online course
- * @param params {{
- *     config: {
- *         modifier: string
- *     }
- * }}
+ * @param params
  */
 {template .online_}
     <div class="{call .rootClass/}__online">
-        {call .onlineIcon_ data="all"/}
+        {call .onlineIcon_ data="all" /}
         {call .onlineText_ /}
     </div>
 {/template}
@@ -441,23 +428,17 @@
 
 /**
  * Template online icon
- * @param params {{
- *     config: {
- *         modifier: string
- *     }
- * }}
+ * @param params
  */
 {template .onlineIcon_}
     <div class="{call .rootClass/}__icon {call .rootClass/}__icon_online">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'icon-svg',
-                'renderParams': [
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'icon-svg' /}
+            {param renderParams: [
                     'data': [
                         'type': 'cursor'
                     ]
-                ]
             ]/}
         {/call}
     </div>
@@ -499,16 +480,14 @@
             {/if}
         {/let}
 
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'lCourse-userInteraction',
-                'renderParams': [
-                    'data': [
-                        'description': $cost,
-                        'labelText': $params.data.priceLabelText,
-                        'actionText': $params.data.actionButtonText
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lCourse-userInteraction' /}
+            {param renderParams: [
+                'data': [
+                    'description': $cost,
+                    'labelText': $params.data.priceLabelText,
+                    'actionText': $params.data.actionButtonText
                 ]
             ]/}
         {/call}
@@ -520,8 +499,7 @@
  * Modal for user Enrollment
  * @param params {{
  *     config: {
- *         entityType: string,
- *         modifier: string
+ *         entityType: string
  *     }
  * }}
  */
@@ -530,20 +508,18 @@
         Оставьте свой номер и мы перезвоним в&nbsp;течении 24 часов
     {/let}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': $params.config.modifier,
-            'type': 'modal-enrollment',
-            'renderParams': [
-                'data': [
-                    'content': [
-                        'title': 'Заявка на курс',
-                        'description': $description
-                    ]
-                ],
-                'config': [
-                    'entityType': $params.config.entityType
+    {call .renderChildLayout}
+        {param params: $params /}
+        {param type: 'modal-enrollment' /}
+        {param renderParams: [
+            'data': [
+                'content': [
+                    'title': 'Заявка на курс',
+                    'description': $description
                 ]
+            ],
+            'config': [
+                'entityType': $params.config.entityType
             ]
         ]/}
     {/call}
@@ -552,26 +528,20 @@
 
 /**
  * Modal to show text successful
- * @param params {{
- *     config: {
- *         modifier: string
- *     }
- * }}
+ * @param params
  */
 {template .modalSuccess_}
     {let $textSuccess kind="html"}
         Ваша заявка принята, скоро с&nbsp;вами свяжется наш оператор.
     {/let}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': $params.config.modifier,
-            'type': 'modal-success',
-            'renderParams': [
-                'data': [
-                    'content': [
-                        'textSuccess': $textSuccess
-                    ]
+    {call .renderChildLayout}
+        {param params: $params /}
+        {param type: 'modal-success' /}
+        {param renderParams: [
+            'data': [
+                'content': [
+                    'textSuccess': $textSuccess
                 ]
             ]
         ]/}
@@ -652,60 +622,53 @@
  *         entityData: {
  *             score: sm.bSmScore.TemplateBrief.Params.Data
  *         }
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
 {template .score_}
     <div class="{call .rootClass/}__score {call .rootClass/}__score_xl">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smScoreBrief',
-                'renderParams': [
-                    'data': $params.data.entityData.score,
-                    'config': [
-                        'primaryMark': [
-                            'zeroSign': 'question-mark',
-                            'showMark': true
-                        ],
-                        'hintSecondaryMark': [
-                            'offset': 'left-l',
-                            'topOffset': 'xxl'
-                        ],
-                        'theme': 'light',
-                        'isActive': $params.data.entityData.score.marks.primary.value ?
-                            true :
-                            false
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smScoreBrief' /}
+            {param renderParams: [
+                'data': $params.data.entityData.score,
+                'config': [
+                    'primaryMark': [
+                        'zeroSign': 'question-mark',
+                        'showMark': true
+                    ],
+                    'hintSecondaryMark': [
+                        'offset': 'left-l',
+                        'topOffset': 'xxl'
+                    ],
+                    'theme': 'light',
+                    'isActive': $params.data.entityData.score.marks.primary.value ?
+                        true :
+                        false
                 ]
             ]/}
         {/call}
     </div>
 
     <div class="{call .rootClass/}__score {call .rootClass/}__score_s">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smScoreBrief',
-                'renderParams': [
-                    'data': $params.data.entityData.score,
-                    'config': [
-                        'primaryMark': [
-                            'display': 'inline',
-                            'zeroSign': 'nothing',
-                            'showMark': false
-                        ],
-                        'hintSecondaryMark': [
-                            'offset': 'left-m'
-                        ],
-                        'theme': 'light',
-                        'isActive': $params.data.entityData.score.marks.primary.value ?
-                            true :
-                            false
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smScoreBrief' /}
+            {param renderParams: [
+                'data': $params.data.entityData.score,
+                'config': [
+                    'primaryMark': [
+                        'display': 'inline',
+                        'zeroSign': 'nothing',
+                        'showMark': false
+                    ],
+                    'hintSecondaryMark': [
+                        'offset': 'left-m'
+                    ],
+                    'theme': 'light',
+                    'isActive': $params.data.entityData.score.marks.primary.value ?
+                        true :
+                        false
                 ]
             ]/}
         {/call}
@@ -778,28 +741,23 @@
  *                 fullText: (Array<string>|undefined)
  *             }
  *         }
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
 {template .fullDescription_}
     {if $params.data.entityData.fullDescription}
         <div class="{call .rootClass/}__full-description">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smCollapsedText',
-                    'renderParams': [
-                        'data': [
-                            'text': $params.data.entityData.fullDescription,
-                            'buttonTextExpand': 'Развернуть описание'
-                        ],
-                        'config': [
-                            'isButtonCollapse': true,
-                            'buttonFont': 'inherit'
-                        ]
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smCollapsedText' /}
+                {param renderParams: [
+                    'data': [
+                        'text': $params.data.entityData.fullDescription,
+                        'buttonTextExpand': 'Развернуть описание'
+                    ],
+                    'config': [
+                        'isButtonCollapse': true,
+                        'buttonFont': 'inherit'
                     ]
                 ]/}
             {/call}
@@ -815,21 +773,16 @@
  *         entityData: {
  *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
  *         }
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
 {template .generalOptions_}
     <div class="{call .rootClass/}__general-options">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'lCourse-informationBoard',
-                'renderParams': [
-                    'data': $params.data.entityData.generalOptions
-                ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lCourse-informationBoard' /}
+            {param renderParams: [
+                'data': $params.data.entityData.generalOptions
             ]/}
         {/call}
     </div>

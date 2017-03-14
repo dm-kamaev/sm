@@ -1,7 +1,6 @@
 'use strict';
 
-const colors = require('colors'),
-    async = require('asyncawait/async'),
+const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     lodash = require('lodash');
 
@@ -515,7 +514,7 @@ service.updateReviewCount = async(function(school) {
  */
 service.updateRanks = async(function() {
     /* Disable logging for this method cause its sloving down the server */
-    console.log(colors.green('Updating ranks'));
+    console.log('Updating ranks');
 
     var rankCounter = 0;
     var previousScore = -1;
@@ -540,7 +539,7 @@ service.updateRanks = async(function() {
         previousScore = school.totalScore;
     }));
     sequelize.options.logging = loggingState;
-    console.log(colors.green('Ranks updated'));
+    console.log('Ranks updated');
 });
 
 /**
@@ -721,6 +720,7 @@ service.viewOne = async(function(id) {
 
     var resultPromises = {
         activities: services.additionalEducation.findBySchoolId(id),
+        specializedClasses: services.schoolSpecializedClass.getBySchoolId(id),
         comments: services.comment.getComments(school.commentGroupId),
         addresses: services.address.getWithDepartmentsWithMetro(
             id,
@@ -736,6 +736,7 @@ service.viewOne = async(function(id) {
     school.comments = result.comments;
     school.activities = result.activities;
     school.addresses = result.addresses;
+    school.specializedClasses = result.specializedClasses;
 
     return school;
 });

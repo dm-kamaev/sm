@@ -4,12 +4,11 @@ const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const gulp = require('gulp');
 const path = require('path');
-const concat = require('gulp-concat');
 const util = require('gulp-util');
-const babel = require('gulp-babel');
 const apidoc = require('gulp-apidoc');
 const exec = require('child_process').exec;
 const minimist = require('minimist');
+const sassLint = require('gulp-sass-lint');
 
 const migrationWrapper = require('./app/components/migrationWrapper');
 
@@ -19,12 +18,13 @@ process.stdout.setMaxListeners(MAX_BUILD_FILE_AMOUNT);
 
 const config = require('./config.json');
 const gulpConfig = require('./app/config/base/config.json');
-const production = !!util.env.production;
+const cssLintConfig = require('./css-lint-config.json');
 const ROOT_DIR = './';
 const BLOCKS_DIR = '/app/blocks';
 const SHARED_STATIC_DIR = '/public/shared/static';
 
 const ENV = util.env.env ? util.env.env : 'dev';
+const IS_DEV = ENV === 'dev';
 
 const gulpHelper =
     require('./node_modules/clobl/gulp-helper.js')
@@ -65,13 +65,6 @@ gulp.task('rollback', async(function() {
     await(migrationWrapper.rollback(count));
 }));
 
-gulp.task('appES5', function() {
-    return gulp.src('app.js')
-        .pipe(babel())
-        .pipe(concat('appES5.js'))
-        .pipe(gulp.dest(''));
-});
-
 gulp.task('soy', function() {
     return gulpHelper.soy.build([]);
 });
@@ -88,7 +81,7 @@ gulp.task('styles', ['svgSprite', 'sprite'], function() {
             fileName: 'styles.css'
         }],
         dest: path.join(__dirname, SHARED_STATIC_DIR),
-        minify: production
+        minify: !IS_DEV
     });
 });
 
@@ -139,6 +132,10 @@ gulp.task('watch', function() {
         ['scripts']
     );
     gulp.watch(
+        [path.join(__dirname, BLOCKS_DIR, '**/*.s+(a|c)ss')],
+        ['lint-css']
+    );
+    gulp.watch(
         [path.join(__dirname, ROOT_DIR, '/**/*.ts')],
         ['tsCompile']
     );
@@ -179,6 +176,16 @@ gulp.task('localConfig', function() {
 
 gulp.task('backendLint', gulpTasks.backendLint);
 
+gulp.task('lint-css', function() {
+    return gulp
+        .src(path.join(__dirname, BLOCKS_DIR, '**/*.s+(a|c)ss'))
+        .pipe(sassLint(cssLintConfig))
+        .pipe(sassLint.format())
+        .pipe(sassLint.failOnError(result => {
+            console.log(result);
+        }));
+});
+
 const tasks = function(bool) {
     return bool ? [
         'createTimestamp',
@@ -203,6 +210,7 @@ const tasks = function(bool) {
         'images',
         'fonts',
         'styles',
+        // 'lint-css',
         'copySchools',
         'copyCourses',
         'localConfig',
@@ -211,7 +219,7 @@ const tasks = function(bool) {
 };
 
 gulp.task('build', tasks(true));
-gulp.task('default', tasks(production));
+gulp.task('default', tasks(false));
 
 
 gulp.task('scripts', ['soy', 'lint'], gulpTasks.scripts);

@@ -19,6 +19,7 @@ const config = require('../../../config').config;
 
 let controller = {};
 
+
 controller.generalError = async(function(req, res, next, entityType) {
     let html;
 

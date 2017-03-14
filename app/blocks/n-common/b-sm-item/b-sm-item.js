@@ -1,7 +1,10 @@
 goog.provide('sm.bSmItem.SmItem');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.View');
+goog.require('sm.bSmLink.SmLink');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -40,8 +43,18 @@ goog.inherits(sm.bSmItem.SmItem, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Item = sm.bSmItem.SmItem;
-    var View = sm.bSmItem.View;
+    var Item = sm.bSmItem.SmItem,
+        View = sm.bSmItem.View;
+
+    /**
+     * Name of this element in factory
+     */
+    Item.NAME = sm.bSmItem.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Item.NAME, {
+        control: Item,
+        view: View
+    });
 
     /**
      * @typedef {sm.bSmItem.View.RenderParams}
@@ -169,13 +182,18 @@ goog.scope(function() {
     Item.prototype.initLinks_ = function() {
         var dom = this.getView().getDom();
 
-        if (dom.nameLink) {
-            this.nameLink = this.decorateChild('smLink', dom.nameLink);
+        if (dom.descriptionLink) {
+            this.descriptionLink = this.decorateChild(
+                    sm.bSmLink.SmLink.NAME,
+                    dom.descriptionLink
+            );
         }
 
-        if (dom.descriptionLink) {
-            this.descriptionLink =
-                this.decorateChild('smLink', dom.descriptionLink);
+        if (dom.nameLink) {
+            this.nameLink = this.decorateChild(
+                sm.bSmLink.SmLink.NAME,
+                dom.nameLink
+            );
         }
     };
 });  // goog.scope

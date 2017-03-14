@@ -22,14 +22,14 @@
             depends="packaging.shared-folders,
                      packaging.supervisor.link,
                      schools.migrate,
-                     schools.update-search-cache,
                      schools.update-sitemap,
                      packaging.release.folder.link,
                      packaging.rollback-script,
                      packaging.supervisor.restart,
                      packaging.crontab.install,
                      packaging.initd.install,
-                     schools.change-owner"/>
+                     schools.change-owner,
+                     schools.change-permissions"/>
 
     <!-- Stop previous release -->
     <target name="packaging.release.clean"
@@ -58,12 +58,6 @@
         </exec>
     </target>
 
-    <target name="schools.update-search-cache">
-        <exec executable="node" dir="${basedir}">
-            <arg line="commander search"/>
-        </exec>
-    </target>
-
     <target name="schools.update-sitemap">
         <exec executable="node" dir="${basedir}">
             <arg line="commander sitemap"/>
@@ -73,6 +67,14 @@
     <target name="schools.change-owner">
         <exec executable="chown" dir="${basedir}">
             <arg line="-R schools ${basedir}"/>
+        </exec>
+    </target>
+
+    <target name="schools.change-permissions">
+        <exec executable="chmod" dir="${basedir}">
+            <arg line=
+                "644 ${project.node-modules.path}/tipograph/src/languages.js"
+            />
         </exec>
     </target>
 

@@ -5,6 +5,7 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bStars.Template');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -86,9 +87,16 @@ goog.scope(function() {
      * @public
      */
     Stars.prototype.createDom = function() {
-        var el = goog.soy.renderAsElement(sm.bStars.Template.base, {
-            params: this.params_
-        });
+        var el = goog.soy.renderAsElement(
+            sm.bStars.Template.base,
+            {
+                params: this.params_
+            },
+            {
+                factoryIndex:
+                    sm.iCloblFactory.FactoryStendhal.getInstance().getIndex()
+            }
+        );
         this.decorateInternal(el);
     };
 

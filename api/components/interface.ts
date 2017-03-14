@@ -3,7 +3,7 @@
  */
 export interface ServiceException {
     new(message: string): ServiceException;
-    message: string;
+    message?: string;
 }
 
 export interface ControllerError {

@@ -3,6 +3,11 @@ goog.provide('sm.lSearch.bSuggestFilter.SuggestFilter');
 goog.require('cl.iControl.Control');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
+goog.require('sm.gButton.ButtonStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.FilterLabels');
+goog.require('sm.lSearch.bSuggestFilter.Template');
 goog.require('sm.lSearch.bSuggestFilter.View');
 
 
@@ -44,7 +49,7 @@ sm.lSearch.bSuggestFilter.SuggestFilter = function(view, opt_domHelper) {
 
     /**
      * Instance button
-     * @type {cl.gButton.Button}
+     * @type {sm.gButton.ButtonStendhal}
      * @private
      */
     this.button_ = null;
@@ -67,6 +72,17 @@ goog.scope(function() {
         UIInstanceStorage = gorod.iUIInstanceStorage.UIInstanceStorage,
         Suggest = gorod.gSuggest.Suggest;
 
+    /**
+     * Name of this element in factory
+     */
+    SuggestFilter.NAME = sm.lSearch.bSuggestFilter.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        SuggestFilter.NAME, {
+            control: SuggestFilter,
+            view: View
+        }
+    );
 
     /**
      * Event enum
@@ -367,7 +383,7 @@ goog.scope(function() {
      */
     SuggestFilter.prototype.initFilter_ = function() {
         this.filter_ = this.decorateChild(
-            'lSearch-filter',
+            sm.lSearch.bFilter.Filter.NAME,
             this.getView().getDom().filter
         );
     };
@@ -379,7 +395,7 @@ goog.scope(function() {
      */
     SuggestFilter.prototype.initSelected_ = function() {
         this.selected_ = this.decorateChild(
-            'lSearch-filterLabels',
+            sm.lSearch.bFilter.FilterLabels.NAME,
             this.getView().getDom().selected
         );
     };
@@ -391,7 +407,7 @@ goog.scope(function() {
      */
     SuggestFilter.prototype.initButton_ = function() {
         this.button_ = this.decorateChild(
-            'button',
+            sm.gButton.ButtonStendhal.NAME,
             this.getView().getDom().button
         );
     };

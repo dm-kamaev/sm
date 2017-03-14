@@ -2,7 +2,10 @@ goog.provide('sm.gDropdown.DropdownSelect');
 
 goog.require('cl.gDropdown.Dropdown');
 goog.require('sm.gDropdown.Event.ItemSelect');
+goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gDropdown.ViewSelect');
+goog.require('sm.gList.ListStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -55,6 +58,15 @@ goog.scope(function() {
 
     var Event = sm.gDropdown.Event;
 
+    /**
+     * Name of this element in factory
+     */
+    Dropdown.NAME = sm.gDropdown.TemplateSelect.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Dropdown.NAME, {
+        control: Dropdown,
+        view: View
+    });
 
     /**
      * @typedef {sm.gDropdown.ViewSelect.Params}
@@ -261,7 +273,7 @@ goog.scope(function() {
      */
     Dropdown.prototype.initList = function() {
         this.list = this.decorateChild(
-            'list',
+            sm.gList.ListStendhal.NAME,
             this.getView().getDom().list
         );
     };

@@ -3,24 +3,28 @@
  */
 goog.provide('sm.lSchool.School');
 
-goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bDataBlock.DataBlockFeatures');
 goog.require('sm.bMap.Map');
+goog.require('sm.bPopularSchools.PopularSchools');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
-goog.require('sm.bSmFooter.View');
-goog.require('sm.bSmHeader.View');
+goog.require('sm.bSmFooter.SmFooter');
+goog.require('sm.bSmHeader.SmHeader');
 goog.require('sm.bSmSubheader.SmSubheader');
+goog.require('sm.gAuthSocial.AuthSocialStendhal');
+goog.require('sm.gAuthSocialModal.AuthSocialModalStendhal');
+goog.require('sm.gButton.ButtonSocialStendhal');
+goog.require('sm.gButton.ButtonStendhal');
+goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iCarrotquest.Carrotquest');
-goog.require('sm.iFactory.FactoryStendhal');
-goog.require('sm.iFactory.TemplateFactoryStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
@@ -153,14 +157,6 @@ sm.lSchool.School = function() {
      * @private
      */
     this.sideMenu_ = null;
-
-
-    /**
-     * Current factory name
-     * @type {string}
-     * @private
-     */
-    this.factory_ = 'stendhal';
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -179,7 +175,7 @@ goog.scope(function() {
         Utils = cl.iUtils.Utils;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance(),
-        factory = sm.iFactory.FactoryStendhal.getInstance();
+        Factory = sm.iCloblFactory.FactoryStendhal.getInstance();
 
 
     /**
@@ -210,9 +206,15 @@ goog.scope(function() {
     School.prototype.createDom = function() {
         goog.base(this, 'createDom');
 
-        var element = goog.soy.renderAsElement(sm.lSchool.Template.base, {
-            params: this.params_
-        });
+        var element = goog.soy.renderAsElement(
+            sm.lSchool.Template.base,
+            {
+                params: this.params_
+            },
+            {
+                factoryIndex: Factory.getIndex()
+            }
+        );
         this.decorateInternal(element);
     };
 
@@ -265,8 +267,7 @@ goog.scope(function() {
             authSocialLinks: {
                 fb: dataParams['authSocialLinks']['fb'],
                 vk: dataParams['authSocialLinks']['vk']
-            },
-            factoryType: this.factory_
+            }
         };
 
         this.params_ = {
@@ -600,9 +601,10 @@ goog.scope(function() {
      */
     School.prototype.initBouton_ = function() {
         if (!this.isCommented_()) {
-            this.bouton_ = factory.decorate(
-                'button',
+            this.bouton_ = Factory.decorate(
+                sm.gButton.ButtonStendhal.NAME,
                 this.elements_.bouton,
+                null,
                 this
             );
         }
@@ -698,9 +700,10 @@ goog.scope(function() {
      * @private
      */
     School.prototype.initModalInaccuracy_ = function() {
-        this.modalInaccuracy_ = factory.decorate(
-            'feedback-modal',
+        this.modalInaccuracy_ = Factory.decorate(
+            sm.gModal.ModalFeedback.NAME,
             this.getElementByClass(sm.gModal.ViewFeedback.CssClass.ROOT),
+            null,
             this
         );
 
@@ -757,9 +760,10 @@ goog.scope(function() {
             sm.bPopularSchools.View.CssClass.ROOT
         );
 
-        this.popularSchools_ = factory.decorate(
-            'popular-schools',
+        this.popularSchools_ = Factory.decorate(
+            sm.bPopularSchools.PopularSchools.NAME,
             bPopularSchools,
+            null,
             this
         );
 
@@ -776,9 +780,10 @@ goog.scope(function() {
         var bDataBlockFeatures = this.getElementByClass(
             sm.bDataBlock.DataBlockFeaturesView.CssClass.ROOT
         );
-        this.dataBlockFeatures_ = factory.decorate(
-            'data-block-features',
+        this.dataBlockFeatures_ = Factory.decorate(
+            sm.bDataBlock.DataBlockFeatures.NAME,
             bDataBlockFeatures,
+            null,
             this
         );
         return this;
@@ -796,10 +801,10 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'smHeader',
+        this.subHeader_ = Factory.decorate(
+            sm.bSmHeader.SmHeader.NAME,
             header,
+            null,
             this
         );
 
@@ -818,10 +823,10 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.subHeader_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'smSubheader',
+        this.subHeader_ = Factory.decorate(
+            sm.bSmSubheader.SmSubheader.NAME,
             subHeader,
+            null,
             this
         );
 
@@ -840,10 +845,10 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.sideMenu_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'side-menu',
+        this.sideMenu_ = Factory.decorate(
+            sm.gModal.ModalSideMenu.NAME,
             sideMenu,
+            null,
             this
         );
 
@@ -862,10 +867,10 @@ goog.scope(function() {
             goog.dom.getDocument()
         );
 
-        this.footer_ = cl.iFactory.FactoryManager.getInstance().decorate(
-            this.factory_,
-            'smFooter',
+        this.footer_ = Factory.decorate(
+            sm.bSmFooter.SmFooter.NAME,
             footer,
+            null,
             this
         );
 

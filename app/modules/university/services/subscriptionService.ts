@@ -47,7 +47,7 @@ class SubscriptionService extends Service {
         return response;
     }
 
-    handleError(error: any): void {
+    protected handleError(error: any): void {
         switch (error.data.title) {
         case INVALID_RESOURSE_ERROR:
             throw new InvalidEmail();

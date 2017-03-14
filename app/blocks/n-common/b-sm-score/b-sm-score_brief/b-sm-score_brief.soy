@@ -60,9 +60,17 @@
  * }}
  * @constructor
  * @extends sm.bSmScore.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  */
 {template .score}
     {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smScoreBrief
 {/template}
 
 
