@@ -1,7 +1,6 @@
 const SubHeader = require('../../../../api/modules/entity/lib/Subheader');
 
-const userView = require('../../../../api/modules/user/views/user'),
-    headerView = require('../../../../api/modules/entity/views/headerView'),
+const headerView = require('../../../../api/modules/entity/views/headerView'),
     footerView = require('../../../../api/modules/entity/views/footerView'),
     favoriteView =
             require('../../../../api/modules/favorite/views/favoriteView');
@@ -9,39 +8,24 @@ const userView = require('../../../../api/modules/user/views/user'),
 const sideMenuView = require('../views/sideMenuView'),
     configView = require('../views/configView');
 
-import {
-    iLayoutStendhal
-} from '../../../blocks/n-clobl/i-layout/params';
+import {userView} from '../../user/views/user';
+
+import {iLayoutStendhal} from '../../../blocks/n-clobl/i-layout/params';
+import {BackendUser, UserData} from '../../user/types/user';
+import {AppConfig} from '../types/layout';
 
 type Params = {
     data: Data,
     config: AppConfig,
-    request: any
+    requestData: {
+        user: BackendUser,
+        csrf: string,
+        query: any
+    }
 };
 
 type Data = {
     favorites: Array<{string: any}>
-};
-
-type AppConfig = {
-    schools: {
-        analyticsId: string,
-        yandexMetrikaId: number,
-        host: string
-    },
-    courses: {
-        analyticsId: string,
-        yandexMetrikaId: number,
-        host: string,
-        experimentId?: string
-    },
-    universities: {},
-    facebookClientId: number
-};
-
-type User = {
-    lastName: (string|undefined),
-    firstName: (string|undefined)
 };
 
 type OpenGraph = {
@@ -61,12 +45,12 @@ type OpenGraph = {
 };
 
 type Seo = {
-    metaTitle: string,
+    metaTitle?: string,
     metaDescription?: string
 };
 
 type SubHeader = {
-    user?: User,
+    user?: UserData,
     favoriteEntities?: Array<{string: any}>,
     listLinks?: Array<string>,
     isLogoRedirect: boolean,
@@ -79,7 +63,7 @@ type AuthSocialLinks = {
     fb: string
 };
 
-export abstract class LayoutView {
+abstract class LayoutView {
     protected views: {
         header: any,
         subHeader: any
@@ -89,18 +73,22 @@ export abstract class LayoutView {
     protected pageName: string;
 
     protected openGraph?: OpenGraph;
-    protected seo: Seo;
+    protected seo?: Seo;
     protected subHeader: SubHeader;
 
     protected params: iLayoutStendhal.Params;
 
     private authSocialLinks_: AuthSocialLinks;
-    private user_: User;
+    private user_: UserData;
 
     constructor() {
         this.views = {
             header: headerView,
             subHeader: SubHeader
+        };
+
+        this.params = {
+            data: {}
         };
 
         this.authSocialLinks_ = {
@@ -111,7 +99,7 @@ export abstract class LayoutView {
 
 
     public render(params: Params) {
-        this.initUser_(params.request);
+        this.initUser_(params.requestData);
 
         this.setParams(params);
         return this.getParams();
@@ -120,6 +108,8 @@ export abstract class LayoutView {
 
     protected setParams(params: Params) {
         this.setOpenGraph_(params.config, params.data);
+        this.setSeo_();
+
         this.setHeader_(params.config);
         this.setSubHeader_(params.data);
 
@@ -127,12 +117,18 @@ export abstract class LayoutView {
         this.setAuthSocialLinks_();
         this.sideMenu_(params.config);
         this.setFooter_();
-        this.setConfig_(params.config, params.request);
+
+        this.setConfig_(params.config, params.requestData);
     }
 
 
     protected getParams() {
         return this.params;
+    }
+
+
+    private setSeo_() {
+        this.params.data.seo = this.seo;
     }
 
 
@@ -144,10 +140,10 @@ export abstract class LayoutView {
 
 
     private setHeader_(config: AppConfig) {
-        this.params.data.header = this.views.header.render({
-            entityType: this.entityType,
-            config: config
-        });
+        this.params.data.header = this.views.header.render(
+            config,
+            this.entityType
+        );
     }
 
 
@@ -156,16 +152,18 @@ export abstract class LayoutView {
 
         const params = this.subHeader;
         params.user = this.user_;
-        params.favoriteEntities = favoriteView.list(data.favorites);
+
+        params.favoriteEntities = data.favorites ?
+            favoriteView.list(data.favorites) :
+            {};
 
         subHeader.init(params);
 
         this.params.data.subHeader = subHeader.getParams();
     }
 
-    private initUser_(request: any) {
-        const user = request.user || {};
-        this.user_ = userView.default(user);
+    private initUser_(requestData: any) {
+        this.user_ = userView.render(requestData.user);
     }
 
 
@@ -188,17 +186,19 @@ export abstract class LayoutView {
 
 
     private setFooter_() {
-        footerView.render();
+        this.params.data.footer = footerView.render();
     }
 
 
-    private setConfig_(config: AppConfig, request: any) {
+    private setConfig_(config: AppConfig, requestData: any) {
         this.params.config = configView.render({
             entityType: this.entityType,
             pageName: this.pageName,
-            query: request.query,
-            csrf: request.csrfToken(),
+            query: requestData.query,
+            csrf: requestData.csrf,
             config: config
         });
     }
 }
+
+export {LayoutView};

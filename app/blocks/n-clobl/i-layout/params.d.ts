@@ -11,23 +11,23 @@ export namespace iLayoutStendhal {
          * sm.iLayoutStendhal.Params.Data
          */
         export interface Data {
-            openGraph: (any|undefined),
-            seo: {
-                metaTitle: string,
-                metaDescription: (string|undefined)
+            openGraph?: (any|undefined),
+            seo?: {
+                metaTitle?: string,
+                metaDescription?: (string|undefined)
             },
-            subHeader: bSmSubheader.Params.Data,
-            header: any,
-            sideMenu: any,
+            subHeader?: bSmSubheader.Params.Data,
+            header?: any,
+            sideMenu?: any,
             user?: {
                 firstName: (string|undefined),
                 lastName: (string|undefined)
             },
-            authSocialLinks: {
+            authSocialLinks?: {
                 vk: (string|undefined),
                 fb: (string|undefined)
             },
-            footer: any
+            footer?: any
         }
 
         /*
@@ -51,8 +51,8 @@ export namespace iLayoutStendhal {
      * sm.iLayoutStendhal.Params
      */
     export interface Params {
-        data: Params.Data,
-        config: Params.Config
+        data?: Params.Data,
+        config?: Params.Config
     }
 }
 
