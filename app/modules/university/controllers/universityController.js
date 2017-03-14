@@ -3,16 +3,15 @@
 const async = require('asyncawait/async');
 // await = require('asyncawait/await');
 
-const soy = require('../../../components/soy'),
-    services = require('../../../components/services').all;
+const soy = require('../../../components/soy');
+// services = require('../../../components/services').all;
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 
-const configView = require('../../common/views/configView'),
-    informationView = require('../views/informationViewLegacy');
+const informationView = require('../views/informationView').informationView;
 
-const pageName = require('../../common/enums/pageName'),
-    entityType = require('../../../../api/modules/entity/enums/entityType.js');
+const entityType =
+    require('../../../../api/modules/entity/enums/entityType.js');
 
 const config = require('../../../config').config;
 
@@ -20,9 +19,6 @@ let controller = {};
 
 controller.information = async(function(req, res, next) {
     try {
-        let authSocialLinks = services.auth.getAuthSocialUrl(),
-            user = req.user || {};
-
         const description = `Программа для тех, кто хочет стать профессионалом
             в сфере маркетинга, управления персонала,
             бизнес–планирования и проектирования, тех, кто хочет
@@ -91,359 +87,353 @@ controller.information = async(function(req, res, next) {
             }]
         };
 
-        let templateData = informationView.render({
-            user: user,
-            entityData: {
-                id: 1,
-                name: `Национальный исследовательский университет –
-                    Высшая школа экономики (НИУ–ВШЭ)`,
-                subunitType: 'Специальность',
-                subunitName: 'Менеджмент',
-                description: description,
-                cutDescription:
-                    informationView.formatFullDescription(description),
-                descriptionList: {
-                    items: [{
-                        data: {
-                            header: 'Вступительные испытания',
-                            subitems: [
-                                'Русский язык (ЕГЭ)',
-                                'Математика (ЕГЭ)',
-                                'Обществознание (ЕГЭ)',
-                                'Английский язык (ЕГЭ)',
-                                'Портфолио (до 12 баллов)',
-                                'нормы ГТО (до 2 баллов)'
-                            ]
-                        },
-                        config: {
-                            inline: true
-                        }
-                    }, {
-                        data: {
-                            header: 'Полезные ссылки',
-                            subitems: [{
-                                url: 'http://www.hse.ru',
-                                content: 'www.hse.ru'
-                            }, {
-                                url: 'http://vk.com/hse_university',
-                                content: 'vk.com/hse_university'
-                            }, {
-                                url: 'http://facebook.com/hse.ru',
-                                content: 'facebook.com/hse.ru'
-                            }]
-                        },
-                        config: {
-                            inline: false
-                        }
-                    }, {
-                        data: {
-                            header: 'Специализации',
-                            subitems: [
-                                'Логистика и управление цепями поставок',
-                                'Международный бизнес',
-                                'Управление проектами',
-                                'Менеджмент фабрик'
-                            ]
-                        },
-                        config: {
-                            inline: false
-                        }
-                    }]
-                },
-                summaryBoard: {
-                    list: [{
-                        header: 'Главное',
+        let templateParams = informationView.render({
+            data: {
+                entityData: {
+                    id: 1,
+                    name: `Национальный исследовательский университет –
+                        Высшая школа экономики (НИУ–ВШЭ)`,
+                    subunitType: 'Специальность',
+                    subunitName: 'Менеджмент',
+                    description: description,
+                    cutDescription: null,
+                    descriptionList: {
                         items: [{
                             data: {
-                                header: '245 баллов',
-                                description: 'за 4 экзамена'
+                                header: 'Вступительные испытания',
+                                subitems: [
+                                    'Русский язык (ЕГЭ)',
+                                    'Математика (ЕГЭ)',
+                                    'Обществознание (ЕГЭ)',
+                                    'Английский язык (ЕГЭ)',
+                                    'Портфолио (до 12 баллов)',
+                                    'нормы ГТО (до 2 баллов)'
+                                ]
+                            },
+                            config: {
+                                inline: true
+                            }
+                        }, {
+                            data: {
+                                header: 'Полезные ссылки',
+                                subitems: [{
+                                    url: 'http://www.hse.ru',
+                                    content: 'www.hse.ru'
+                                }, {
+                                    url: 'http://vk.com/hse_university',
+                                    content: 'vk.com/hse_university'
+                                }, {
+                                    url: 'http://facebook.com/hse.ru',
+                                    content: 'facebook.com/hse.ru'
+                                }]
+                            },
+                            config: {
+                                inline: false
+                            }
+                        }, {
+                            data: {
+                                header: 'Специализации',
+                                subitems: [
+                                    'Логистика и управление цепями поставок',
+                                    'Международный бизнес',
+                                    'Управление проектами',
+                                    'Менеджмент фабрик'
+                                ]
+                            },
+                            config: {
+                                inline: false
+                            }
+                        }]
+                    },
+                    summaryBoard: {
+                        list: [{
+                            header: 'Главное',
+                            items: [{
+                                data: {
+                                    header: '245 баллов',
+                                    description: 'за 4 экзамена'
+                                },
+                                config: {
+                                    theme: 'neptune'
+                                }
+                            }, {
+                                data: {
+                                    header: '30',
+                                    description: 'бюджетных мест'
+                                }
+                            }, {
+                                data: {
+                                    header: '100',
+                                    description: 'платных мест'
+                                }
+                            }, {
+                                data: {
+                                    header: '7',
+                                    description: 'человек на место'
+                                },
+                                config: {
+                                    iconType: 'people'
+                                }
+                            }]
+                        }],
+                        item: {
+                            data: {
+                                header: 'Стоимость / год',
+                                description: '350 000 ₽',
+                                buttonLink: {
+                                    data: {
+                                        url: 'http://yandex.ru',
+                                        content: 'Проконсультироваться'
+                                    },
+                                    config: {
+                                        theme: 'neptune',
+                                        size: 'xxl'
+                                    }
+                                }
                             },
                             config: {
                                 theme: 'neptune'
                             }
-                        }, {
-                            data: {
-                                header: '30',
-                                description: 'бюджетных мест'
-                            }
-                        }, {
-                            data: {
-                                header: '100',
-                                description: 'платных мест'
-                            }
-                        }, {
-                            data: {
-                                header: '7',
-                                description: 'человек на место'
-                            },
-                            config: {
-                                iconType: 'people'
-                            }
-                        }]
-                    }],
-                    item: {
+                        }
+                    },
+                    banner: {
                         data: {
-                            header: 'Стоимость / год',
-                            description: '350 000 ₽',
+                            header: 'Сомневаешься?',
+                            description: 'Поможем с выбором и поступлением',
                             buttonLink: {
                                 data: {
                                     url: 'http://yandex.ru',
-                                    content: 'Проконсультироваться'
+                                    content: 'Подробнее'
                                 },
                                 config: {
-                                    theme: 'neptune',
+                                    theme: 'neptune-reverse',
                                     size: 'xxl'
                                 }
                             }
                         },
                         config: {
-                            theme: 'neptune'
-                        }
-                    }
-                },
-                banner: {
-                    data: {
-                        header: 'Сомневаешься?',
-                        description: 'Поможем с выбором и поступлением',
-                        buttonLink: {
-                            data: {
-                                url: 'http://yandex.ru',
-                                content: 'Подробнее'
-                            },
-                            config: {
-                                theme: 'neptune-reverse',
-                                size: 'xxl'
-                            }
+                            theme: 'neptune-compact'
                         }
                     },
-                    config: {
-                        theme: 'neptune-compact'
-                    }
-                },
-                entityRelation: {
-                    data: {
+                    entityRelation: {
+                        data: {
+                            items: [{
+                                data: {
+                                    content: 'ВУЗ'
+                                }
+                            }, {
+                                data: {
+                                    url: 'http://yandex.ru',
+                                    content: 'ТОП 50'
+                                },
+                                config: {
+                                    theme: 'neptune',
+                                    size: 's'
+                                }
+                            }, {
+                                data: {
+                                    content: 'Москва'
+                                }
+                            }]
+                        }
+                    },
+                    similarPrograms: {
+                        header: 'Похожие программы',
+                        countItemsPerPage: 4,
                         items: [{
-                            data: {
-                                content: 'ВУЗ'
-                            }
-                        }, {
-                            data: {
-                                url: 'http://yandex.ru',
-                                content: 'ТОП 50'
+                            id: 1,
+                            type: 'university',
+                            name: {
+                                light: 'Менеджер СПБГУ'
                             },
-                            config: {
+                            description: ' ',
+                            additionalLink: {
+                                content: 'Специальность',
+                                url: 'http://yandex.ru',
                                 theme: 'neptune',
-                                size: 's'
+                                size: 'xl'
+                            },
+                            buttonLink: {
+                                data: {
+                                    icon: 'arrow-circle',
+                                    iconType: 'svg',
+                                    url: 'http://yandex.ru'
+                                }
                             }
                         }, {
-                            data: {
-                                content: 'Москва'
+                            id: 2,
+                            type: 'university',
+                            name: {
+                                light: 'Социология НИУ-ВШЭ'
+                            },
+                            description: ' ',
+                            additionalLink: {
+                                content: 'Специальность',
+                                url: 'http://yandex.ru',
+                                theme: 'neptune',
+                                size: 'xl'
+                            },
+                            buttonLink: {
+                                data: {
+                                    icon: 'arrow-circle',
+                                    iconType: 'svg',
+                                    url: 'http://yandex.ru'
+                                }
                             }
-                        }]
-                    }
-                },
-                similarPrograms: {
-                    header: 'Похожие программы',
-                    countItemsPerPage: 4,
-                    items: [{
-                        id: 1,
-                        type: 'university',
-                        name: {
-                            light: 'Менеджер СПБГУ'
-                        },
-                        description: ' ',
-                        additionalLink: {
-                            content: 'Специальность',
-                            url: 'http://yandex.ru',
-                            theme: 'neptune',
-                            size: 'xl'
-                        },
-                        buttonLink: {
-                            data: {
-                                icon: 'arrow-circle',
-                                iconType: 'svg',
-                                url: 'http://yandex.ru'
+                        }, {
+                            id: 3,
+                            type: 'university',
+                            name: {
+                                light: 'Менеджер МГУ'
+                            },
+                            description: ' ',
+                            additionalLink: {
+                                content: 'Специальность',
+                                url: 'http://yandex.ru',
+                                theme: 'neptune',
+                                size: 'xl'
+                            },
+                            buttonLink: {
+                                data: {
+                                    icon: 'arrow-circle',
+                                    iconType: 'svg',
+                                    url: 'http://yandex.ru'
+                                }
                             }
-                        }
-                    }, {
-                        id: 2,
-                        type: 'university',
-                        name: {
-                            light: 'Социология НИУ-ВШЭ'
-                        },
-                        description: ' ',
-                        additionalLink: {
-                            content: 'Специальность',
-                            url: 'http://yandex.ru',
-                            theme: 'neptune',
-                            size: 'xl'
-                        },
-                        buttonLink: {
-                            data: {
-                                icon: 'arrow-circle',
-                                iconType: 'svg',
-                                url: 'http://yandex.ru'
+                        }, {
+                            id: 4,
+                            type: 'university',
+                            name: {
+                                light: 'Логистика НИУ-ВШЭ'
+                            },
+                            description: ' ',
+                            additionalLink: {
+                                content: 'Специальность',
+                                url: 'http://yandex.ru',
+                                theme: 'neptune',
+                                size: 'xl'
+                            },
+                            buttonLink: {
+                                data: {
+                                    icon: 'arrow-circle',
+                                    iconType: 'svg',
+                                    url: 'http://yandex.ru'
+                                }
                             }
-                        }
-                    }, {
-                        id: 3,
-                        type: 'university',
-                        name: {
-                            light: 'Менеджер МГУ'
+                        }],
+                        itemType: 'smItemCompact',
+                        itemConfig: {
+                            theme: 'neptune'
                         },
-                        description: ' ',
-                        additionalLink: {
-                            content: 'Специальность',
-                            url: 'http://yandex.ru',
-                            theme: 'neptune',
-                            size: 'xl'
-                        },
-                        buttonLink: {
-                            data: {
-                                icon: 'arrow-circle',
-                                iconType: 'svg',
-                                url: 'http://yandex.ru'
-                            }
-                        }
-                    }, {
-                        id: 4,
-                        type: 'university',
-                        name: {
-                            light: 'Логистика НИУ-ВШЭ'
-                        },
-                        description: ' ',
-                        additionalLink: {
-                            content: 'Специальность',
-                            url: 'http://yandex.ru',
-                            theme: 'neptune',
-                            size: 'xl'
-                        },
-                        buttonLink: {
-                            data: {
-                                icon: 'arrow-circle',
-                                iconType: 'svg',
-                                url: 'http://yandex.ru'
-                            }
-                        }
-                    }],
-                    itemType: 'smItemCompact',
-                    itemConfig: {
                         theme: 'neptune'
                     },
-                    theme: 'neptune'
+                    usefulCourses: {
+                        header: 'Полезные курсы',
+                        countItemsPerPage: 3,
+                        items: [{
+                            id: 1,
+                            type: 'course',
+                            name: {
+                                light: 'Английский язык'
+                            },
+                            description: `Подготовка к ЕГЭ по английскому
+                                языку English First`,
+                            imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
+                                'facebook/000/839/199/8a9.jpg',
+                            url: 'http://yandex.ru',
+                            nameLinkUrl: 'http://google.com'
+                        }, {
+                            id: 2,
+                            type: 'course',
+                            name: {
+                                light: 'Профориентация'
+                            },
+                            description: 'Система Выбор Smart Course',
+                            imageUrl: 'http://lamcdn.net/lookatme.ru/' +
+                                'post_image-image/vePw1jo6HLFVfp7JIU5_' +
+                                'Qg-article.jpg',
+                            url: 'http://yandex.ru',
+                            nameLinkUrl: 'http://google.com'
+                        }, {
+                            id: 3,
+                            type: 'course',
+                            name: {
+                                light: 'Профориентация'
+                            },
+                            description: `Пропуск в профессию. Индивидуальная
+                                траектория Proekt Pro`,
+                            imageUrl: 'http://cs8.pikabu.ru/post_img/2016/' +
+                                '01/14/12/1452803883198482683.png',
+                            url: 'http://yandex.ru',
+                            nameLinkUrl: 'http://google.com'
+                        }],
+                        itemType: 'smItemCompact',
+                        itemConfig: {
+                            theme: 'neptune-imaged',
+                            enableCover: true,
+                            isDescriptionLink: true,
+                            nameLinkSize: 'xl'
+                        },
+                        theme: 'neptune'
+                    },
+                    comments: {
+                        header: 'Отзывы – Менеджмент (НИУ–ВШЭ)',
+                        list: {
+                            items: [comment, comment, comment,
+                                comment, comment],
+                            itemType: 'smComment'
+                        }
+                    }
                 },
-                usefulCourses: {
-                    header: 'Полезные курсы',
-                    countItemsPerPage: 3,
+                navigationPanel: {
                     items: [{
-                        id: 1,
-                        type: 'course',
-                        name: {
-                            light: 'Английский язык'
+                        data: {
+                            url: 'http://yandex.ru',
+                            content: 'ВУЗы'
                         },
-                        description: `Подготовка к ЕГЭ по английскому
-                            языку English First`,
-                        imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
-                            'facebook/000/839/199/8a9.jpg',
-                        url: 'http://yandex.ru',
-                        nameLinkUrl: 'http://google.com'
+                        config: {
+                            theme: 'sky',
+                            size: 'xl'
+                        }
                     }, {
-                        id: 2,
-                        type: 'course',
-                        name: {
-                            light: 'Профориентация'
+                        data: {
+                            url: 'http://yandex.ru',
+                            content: 'НИУ-ВШЭ'
                         },
-                        description: 'Система Выбор Smart Course',
-                        imageUrl: 'http://lamcdn.net/lookatme.ru/post_image-' +
-                            'image/vePw1jo6HLFVfp7JIU5_Qg-article.jpg',
-                        url: 'http://yandex.ru',
-                        nameLinkUrl: 'http://google.com'
+                        config: {
+                            theme: 'sky',
+                            size: 'xl'
+                        }
                     }, {
-                        id: 3,
-                        type: 'course',
-                        name: {
-                            light: 'Профориентация'
+                        data: {
+                            url: 'http://yandex.ru',
+                            content: 'Менеджмент'
                         },
-                        description: `Пропуск в профессию. Индивидуальная
-                            траектория Proekt Pro`,
-                        imageUrl: 'http://cs8.pikabu.ru/post_img/2016/01/14/' +
-                            '12/1452803883198482683.png',
-                        url: 'http://yandex.ru',
-                        nameLinkUrl: 'http://google.com'
-                    }],
-                    itemType: 'smItemCompact',
-                    itemConfig: {
-                        theme: 'neptune-imaged',
-                        enableCover: true,
-                        isDescriptionLink: true,
-                        nameLinkSize: 'xl'
-                    },
-                    theme: 'neptune'
+                        config: {
+                            theme: 'sky',
+                            size: 'xl',
+                            isSelected: true
+                        }
+                    }]
                 },
-                comments: {
-                    header: 'Отзывы – Менеджмент (НИУ–ВШЭ)',
-                    list: {
-                        items: [comment, comment, comment, comment, comment],
-                        itemType: 'smComment'
+                subscribeBoard: {
+                    data: {
+                        entityId: 1,
+                        entityType: entityType.UNIVERSITY
                     }
                 }
             },
-            authSocialLinks: authSocialLinks,
-            entityType: entityType.UNIVERSITY,
             config: config,
-            navigationPanel: {
-                items: [{
-                    data: {
-                        url: 'http://yandex.ru',
-                        content: 'ВУЗы'
-                    },
-                    config: {
-                        theme: 'sky',
-                        size: 'xl'
-                    }
-                }, {
-                    data: {
-                        url: 'http://yandex.ru',
-                        content: 'НИУ-ВШЭ'
-                    },
-                    config: {
-                        theme: 'sky',
-                        size: 'xl'
-                    }
-                }, {
-                    data: {
-                        url: 'http://yandex.ru',
-                        content: 'Менеджмент'
-                    },
-                    config: {
-                        theme: 'sky',
-                        size: 'xl',
-                        isSelected: true
-                    }
-                }]
+            requestData: {
+                user: req.user,
+                query: req.query,
+                csrf: req.csrfToken()
             },
-            subscribeBoard: {
-                data: {
-                    entityId: 1,
-                    entityType: entityType.UNIVERSITY
-                }
-            }
-        });
-
-        let templateConfig = configView.render({
-            entityType: entityType.UNIVERSITY,
-            pageName: pageName.INFORMATION,
-            query: req.query,
-            csrf: req.csrfToken(),
-            config: config
         });
 
         let html = soy.render(
             'sm.lUniversity.Template.university', {
-                params: {
-                    data: templateData,
-                    config: templateConfig
-                }
+                params: templateParams
             }
         );
 
