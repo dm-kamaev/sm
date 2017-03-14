@@ -3,6 +3,7 @@ import * as Sequelize from 'sequelize/v3';
 import {AddressAttribute, AddressInstance} from '../../geo/types/address';
 import {ProgramMajorInstance} from '../models/ProgramMajor';
 import {CommentGroupInstance} from '../../comment/types/commentGroup';
+import {PageAttribute, PageIntstance} from '../../entity/types/page';
 
 export interface ProgramAttribute {
     id?: number;
@@ -35,6 +36,8 @@ export interface ProgramInstance
         AddressInstance, number, AddressAttribute>;
     getCommentGroup:
         Sequelize.BelongsToGetAssociationMixin<CommentGroupInstance>;
+    setPages: Sequelize.BelongsToManySetAssociationsMixin<
+        PageIntstance, number, PageAttribute>;
     programMajor: ProgramMajorInstance;
 }
 

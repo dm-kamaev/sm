@@ -90,7 +90,8 @@ class ProgramService {
         return ProgramModel.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 
@@ -108,6 +109,13 @@ class ProgramService {
         programId: number): Promise<CommentGroupInstance> {
         const program = await this.getOne(programId);
         return await program.getCommentGroup();
+    }
+
+    public async getByUniversityId(
+            universityId: number): Promise<Array<ProgramInstance>> {
+        return ProgramModel.findAll({
+            where: {universityId}
+        });
     }
 
     private async fullCreate(data: ProgramAdmin):
@@ -134,7 +142,8 @@ class ProgramService {
         const updatedResult = await ProgramModel.update(data, {
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
         const program = await ProgramModel.findById(id);
         const university = await universityService.get(program.universityId);
