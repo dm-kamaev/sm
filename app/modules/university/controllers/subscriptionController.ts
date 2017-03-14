@@ -44,9 +44,9 @@ class SubscriptionController extends Controller {
         ));
 
         return {
-            id: result.id,
-            email: result['email_address'],
-            status: result.status
+            id: result.data.id,
+            email: result.data['email_address'],
+            status: result.data.status
         };
     }
 }

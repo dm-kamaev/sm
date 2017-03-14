@@ -1,4 +1,3 @@
-const axios = require('axios');
 const mailChimp: any = require('../../../config/config.json').mailChimp;
 
 const mailChimpUrl: string = `https://${mailChimp.dc}.api.mailchimp.com/3.0` +
@@ -10,59 +9,53 @@ const EMAIL_EXIST_ERROR: string = 'Member Exists';
 
 import {EmailAlreadyExist} from './exceptions/EmailAlreadyExist';
 import {InvalidEmail} from './exceptions/InvalidEmail';
+import {Service} from '../../common/services/service';
 
 interface Isubscriber {
-    id: string; //"id": 1
-    email: string; //"email": "dmitrsavk@yandex.ru"
+    id?: string; //"id": "1dasd23"
+    email_address: string; //"email_address": "dmitrsavk@yandex.ru"
     status: string; //"status": "subscribed"
 }
 
-interface IsubscriptionConfig {
-    auth: {
-        name: string;
-        password: string;
-    };
-}
-
-interface IsubscriptionData {
-    email_address: string;
-    status: string;
-}
-
-class SubscriptionService {
+class SubscriptionService extends Service {
     public readonly name: string = 'subscriptionService';
+
+    constructor() {
+        super();
+    }
 
     public async create(
         id: number,
         email: string
-    ): Promise<Isubscriber> {
-        let response: Isubscriber;
+    ): Promise<Axios.AxiosXHR<Isubscriber>> {
+        let response: Axios.AxiosXHR<Isubscriber>;
 
-        const data: IsubscriptionData = {
+        const data: Isubscriber = {
             email_address: email,
             status: 'subscribed',
         };
 
-        const config: IsubscriptionConfig = {
+        const config: Axios.AxiosXHRConfigBase<Isubscriber> = {
             auth: {
-                name: mailChimp.name,
+                username: mailChimp.name,
                 password: mailChimp.password
             }
         };
 
-        try {
-            response = await(axios.post(mailChimpUrl, data, config));
-        } catch (error) {
-            switch (error.data.title) {
-            case INVALID_RESOURSE_ERROR:
-                throw new InvalidEmail(email);
-            case EMAIL_EXIST_ERROR:
-                throw new EmailAlreadyExist(email);
-            default:
-                throw error;
-            }
-        }
+        response = await(this.post(mailChimpUrl, data, config));
+
         return response;
+    }
+
+    handleError(error: any): void {
+        switch (error.data.title) {
+        case INVALID_RESOURSE_ERROR:
+            throw new InvalidEmail();
+        case EMAIL_EXIST_ERROR:
+            throw new EmailAlreadyExist();
+        default:
+            throw error;
+        }
     }
 }
 

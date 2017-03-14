@@ -8,8 +8,8 @@ const Exception: ServiceException =
 class EmailAlreadyExist extends Exception {
     private name_: string;
 
-    constructor(email: string) {
-        const message: string = `Email ${email} already exist.`;
+    constructor() {
+        const message: string = `Email already exist.`;
 
         super(message);
 

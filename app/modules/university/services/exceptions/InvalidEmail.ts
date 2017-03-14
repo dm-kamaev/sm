@@ -8,8 +8,8 @@ const Exception: ServiceException =
 class InvalidEmail extends Exception {
     private name_: string;
 
-    constructor(email: string) {
-        const message: string = `Email ${email} is invalid.`;
+    constructor() {
+        const message: string = `Email is invalid.`;
 
         super(message);
 
