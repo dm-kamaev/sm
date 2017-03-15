@@ -1,6 +1,6 @@
 import * as Sequelize from 'sequelize/v3';
 
-import {UniversityCommentInstance} from './UniversityComment';
+import {ProgramCommentInstance} from './programComment';
 
 export interface CommentGroupAttributes {
     id?: number;
@@ -11,5 +11,5 @@ export interface CommentGroupAttributes {
 export interface CommentGroupInstance
     extends Sequelize.Instance<CommentGroupAttributes>, CommentGroupAttributes {
 
-    universityComments?: Array<UniversityCommentInstance>;
+    programComments?: Array<ProgramCommentInstance>;
 }

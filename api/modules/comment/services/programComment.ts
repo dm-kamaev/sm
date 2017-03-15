@@ -29,8 +29,8 @@ import {CommentNotBelongsToProgram}
 
 import {Model as ProgramCommentModel} from '../models/ProgramComment';
 
-class UniversityCommentService {
-    public readonly name: string = 'universityComment';
+class ProgramCommentService {
+    public readonly name: string = 'programComment';
 
     public async create(
             data: ProgramCommentAttributes
@@ -205,4 +205,4 @@ class UniversityCommentService {
     }
 }
 
-export const service = new UniversityCommentService();
+export const service = new ProgramCommentService();

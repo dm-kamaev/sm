@@ -9,8 +9,8 @@ import {Model as ProgramModel} from '../models/Program';
 import {Model as ProgramMajor} from '../models/ProgramMajor';
 import {Model as CommentGroupModel} from '../../comment/models/commentGroup';
 import {
-    Model as UniversityCommentModel
-} from '../../comment/models/UniversityComment';
+    Model as ProgramCommentModel
+} from '../../comment/models/ProgramComment';
 import {Model as EntranceStatisticModel} from '../models/EntranceStatistic';
 import {
     ProgramInstance,
@@ -46,8 +46,8 @@ class ProgramService {
                 model: CommentGroupModel,
                 as: 'commentGroup',
                 include: [{
-                    model: UniversityCommentModel,
-                    as: 'universityComments'
+                    model: ProgramCommentModel,
+                    as: 'programComments'
                 }]
             }, {
                 model: EntranceStatisticModel,

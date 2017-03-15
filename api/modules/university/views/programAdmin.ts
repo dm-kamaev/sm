@@ -14,7 +14,7 @@ class ProgramAdminView {
         return {
             id: program.id,
             name: program.name,
-            commentCount: program.commentGroup.universityComments.length,
+            commentCount: program.commentGroup.programComments.length,
             passScore: lastEntranceStatistic &&
                 lastEntranceStatistic.egePassScore,
             updatedAt: program.updatedAt

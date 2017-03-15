@@ -11,13 +11,13 @@ import {
 const DataType = require('sequelize');
 const sequelize = require('../../../../app/components/db');
 
-interface UniversityCommentModel
+interface ProgramCommentModel
     extends Sequelize.Model<
         ProgramCommentInstance,
         ProgramCommentAttributes
     > {}
 
-const Model: UniversityCommentModel = sequelize.define('ProgramComment', {
+const Model: ProgramCommentModel = sequelize.define('ProgramComment', {
     id: {
         allowNull: false,
         autoIncrement: true,

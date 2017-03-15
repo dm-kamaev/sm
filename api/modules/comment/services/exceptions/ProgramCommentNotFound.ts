@@ -9,8 +9,8 @@ const Exception: ServiceException =
 class ProgramCommentNotFound extends Exception {
     public readonly name: string;
 
-    constructor(universityCommentId: number) {
-        super(`Program comment with id = ${universityCommentId} not found`);
+    constructor(programCommentId: number) {
+        super(`Program comment with id = ${programCommentId} not found`);
 
         this.name = 'ProgramCommentNotFoundException';
     }
