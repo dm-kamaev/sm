@@ -201,6 +201,10 @@ api/modules/user/views/user.js
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
 
+app/modules/common/lib/Header.js
+app/modules/common/lib/Layout.js
+app/modules/common/lib/SubHeader.js
+
 app/modules/university/index.js
 
 app/modules/university/controllers/errors/*.js
