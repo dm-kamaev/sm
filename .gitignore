@@ -209,6 +209,9 @@ app/modules/university/controllers/subscriptionController.js
 
 app/modules/university/services/exceptions/*.js
 app/modules/university/services/subscriptionService.js
+app/modules/university/views/*.js
+
+app/modules/user/**/*.js
 
 app/modules/common/services/*.js
 

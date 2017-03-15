@@ -28,53 +28,56 @@ type Data = {
     favorites: Array<{string: any}>
 };
 
-type OpenGraph = {
-    url?: string,
-    siteName?: string,
-    title?: string,
-    type?: string,
-    description?: string,
-    image?: string,
-    fbClientId?: number,
-    twitterCardType?: string,
-    twitterSiteName?: string,
-    imageWidth?: string,
-    imageHeight?: string,
-    relapTag?: string,
-    relapImage?: string
-};
-
-type Seo = {
-    metaTitle?: string,
-    metaDescription?: string
-};
-
-type SubHeader = {
-    user?: UserData,
-    favoriteEntities?: Array<{string: any}>,
-    listLinks?: Array<string>,
-    isLogoRedirect: boolean,
-    isSearchRedirect: boolean,
-    isBottomLine: boolean
-};
-
 type AuthSocialLinks = {
     vk: string,
     fb: string
 };
 
 abstract class LayoutView {
-    protected views: {
-        header: any,
-        subHeader: any
-    };
-
     protected entityType: string;
+
     protected pageName: string;
 
-    protected openGraph?: OpenGraph;
-    protected seo?: Seo;
-    protected subHeader: SubHeader;
+    protected openGraph?: {
+        url?: string,
+        siteName?: string,
+        title?: string,
+        type?: string,
+        description?: string,
+        image?: string,
+        fbClientId?: number,
+        twitterCardType?: string,
+        twitterSiteName?: string,
+        imageWidth?: string,
+        imageHeight?: string,
+        relapTag?: string,
+        relapImage?: string
+    };
+
+    protected seo?: {
+        metaTitle?: string,
+        metaDescription?: string
+    };
+
+    /*
+     * Views that can be overridden if necessary
+     */
+    protected views: {
+        header: any,
+        subHeader: any,
+        sideMenu: any,
+        favorite: any,
+        footer: any
+    };
+
+    protected subHeader: {
+        user?: UserData,
+        favoriteEntities?: Array<{string: any}>,
+        listLinks?: Array<string>,
+        isLogoRedirect: boolean,
+        isSearchRedirect: boolean,
+        isBottomLine: boolean
+    };
 
     protected params: iLayoutStendhal.Params;
 
@@ -84,7 +87,10 @@ abstract class LayoutView {
     constructor() {
         this.views = {
             header: headerView,
-            subHeader: SubHeader
+            subHeader: SubHeader,
+            sideMenu: sideMenuView,
+            favorite: favoriteView,
+            footer: footerView
         };
 
         this.params = {
@@ -98,7 +104,7 @@ abstract class LayoutView {
     }
 
 
-    public render(params: Params) {
+    public render(params: Params): iLayoutStendhal.Params {
         this.initUser_(params.requestData);
 
         this.setParams(params);
@@ -122,7 +128,7 @@ abstract class LayoutView {
     }
 
 
-    protected getParams() {
+    protected getParams(): iLayoutStendhal.Params {
         return this.params;
     }
 
@@ -148,18 +154,15 @@ abstract class LayoutView {
 
 
     private setSubHeader_(data: Data) {
-        const subHeader = new this.views.subHeader();
-
         const params = this.subHeader;
         params.user = this.user_;
 
         params.favoriteEntities = data.favorites ?
-            favoriteView.list(data.favorites) :
+            this.views.favorite.list(data.favorites) :
             {};
 
-        subHeader.init(params);
-
-        this.params.data.subHeader = subHeader.getParams();
+        const subHeaderView = new this.views.subHeader();
+        this.params.data.subHeader = subHeaderView.render(params);
     }
 
     private initUser_(requestData: any) {
@@ -178,7 +181,7 @@ abstract class LayoutView {
 
 
     private sideMenu_(config: AppConfig) {
-        this.params.data.sideMenu = sideMenuView.render(
+        this.params.data.sideMenu = this.views.sideMenu.render(
             config,
             this.entityType
         );
@@ -186,7 +189,7 @@ abstract class LayoutView {
 
 
     private setFooter_() {
-        this.params.data.footer = footerView.render();
+        this.params.data.footer = this.views.footer.render();
     }
 
 

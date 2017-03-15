@@ -1,11 +1,11 @@
 const headerView = require('../../../../api/modules/entity/views/headerView'),
-    SubHeader = require('../lib/UniversitySubheader'),
     FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
 
 const pageName = require('../../common/enums/pageName');
 import {entityType} from '../../common/enums/entityType';
 
 import {LayoutView} from '../../common/lib/Layout';
+import {UniversitySubHeader} from './UniversitySubHeader';
 
 import {AppConfig} from '../../common/types/layout';
 import {lUniversity} from '../../../blocks/n-university/l-university/params';
@@ -37,10 +37,8 @@ class InformationView extends LayoutView {
     constructor() {
         super();
 
-        this.views = {
-            header: headerView,
-            subHeader: SubHeader
-        };
+        this.views.header = headerView;
+        this.views.subHeader = UniversitySubHeader;
 
         this.entityType = entityType.UNIVERSITY;
         this.pageName = pageName.INFORMATION;
