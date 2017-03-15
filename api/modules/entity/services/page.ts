@@ -1,8 +1,7 @@
 'use strict';
 
 import * as Sequelize from 'sequelize/v3';
-const models = require('../../../../app/components/models').all;
-const PageModel = require('../models/page');
+const PageModel = require('../models/page').Model;
 
 class PageService {
     public readonly name: string = 'page';
@@ -19,7 +18,7 @@ class PageService {
     }
 
      public async getAll() {
-        return models.Page.findAll();
+        return PageModel.findAll();
     }
 
     public async getOne(entityId: number, entityType: string) {
