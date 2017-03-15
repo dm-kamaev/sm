@@ -3,19 +3,19 @@
  */
 
 import {
-    UniversityCommentInstance,
-    AdminUniversityComment,
-    BackendUniversityComment
-} from '../types/universityComment';
+    ProgramCommentInstance,
+    AdminProgramComment,
+    BackendProgramComment
+} from '../types/programComment';
 
 import {userView} from '../../user/views/user';
 
 import {UserAttributes} from '../../user/types/user';
 
-class UniversityCommentView {
+class ProgramCommentView {
     public render(
-            universityComment: UniversityCommentInstance
-    ): BackendUniversityComment {
+            universityComment: ProgramCommentInstance
+    ): BackendProgramComment {
         const userData = universityComment.userData;
         return {
             id: universityComment.id,
@@ -32,15 +32,15 @@ class UniversityCommentView {
     }
 
     public renderList(
-            universityComments: Array<UniversityCommentInstance>
-    ): Array<BackendUniversityComment> {
+            universityComments: Array<ProgramCommentInstance>
+    ): Array<BackendProgramComment> {
         return universityComments.map(comment => this.render(comment));
     }
 
     public adminRender(
-            universityComment: UniversityCommentInstance,
+            universityComment: ProgramCommentInstance,
             user: UserAttributes
-    ): AdminUniversityComment {
+    ): AdminProgramComment {
         const userData = universityComment.userData;
         const renderedUser = userView.renderCommentUser(user);
         return {
@@ -59,9 +59,9 @@ class UniversityCommentView {
     }
 
     public adminListRender(
-        universityComments: Array<UniversityCommentInstance>,
+        universityComments: Array<ProgramCommentInstance>,
         users: Array<UserAttributes>
-    ): Array<AdminUniversityComment> {
+    ): Array<AdminProgramComment> {
         return universityComments.map(comment => {
             const user = users.find(
                 userData => userData.id === comment.userData.userId
@@ -72,14 +72,14 @@ class UniversityCommentView {
     }
 
     private renderTotalScore_(
-            universityComment: UniversityCommentInstance): number | null {
+            universityComment: ProgramCommentInstance): number | null {
         return universityComment.rating ?
             universityComment.rating.totalScore :
             null;
     }
 
     private renderScore_(
-            universityComment: UniversityCommentInstance
+            universityComment: ProgramCommentInstance
     ): Array<number> | null {
         return universityComment.rating ?
             universityComment.rating.score :
@@ -87,4 +87,4 @@ class UniversityCommentView {
     }
 }
 
-export const universityCommentView = new UniversityCommentView();
+export const programCommentView = new ProgramCommentView();

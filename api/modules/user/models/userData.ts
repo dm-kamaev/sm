@@ -47,8 +47,8 @@ const Model: UserDataModel = sequelize.define('UserData', {
                 as: 'comment',
                 foreignKey: 'user_data_id'
             });
-            this.hasOne(models.UniversityComment, {
-                as: 'universityComment',
+            this.hasOne(models.ProgramComment, {
+                as: 'programComment',
                 foreignKey: 'user_data_id'
             });
         }

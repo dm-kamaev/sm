@@ -8,11 +8,11 @@ const entityType = require('../../../api/modules/entity/enums/entityType');
 const config = require('../../../app/config/config.json');
 
 import {
-    service as universityCommentService
-} from '../../../api/modules/comment/services/universityComment';
+    service as programCommentService
+} from '../../../api/modules/comment/services/programComment';
 import {
-    UniversityCommentAttributes
-} from '../../../api/modules/comment/types/universityComment';
+    ProgramCommentAttributes
+} from '../../../api/modules/comment/types/programComment';
 
 import {
     service as programService
@@ -31,12 +31,12 @@ class UniversityNewCommentNotifier extends NewCommentNotifier {
     }
 
     protected async getNotNotifiedComments():
-            Promise<UniversityCommentAttributes> {
-        return await universityCommentService.getNotNotified();
+            Promise<ProgramCommentAttributes> {
+        return await programCommentService.getNotNotified();
     }
 
     protected async getEntityByComment(
-        comment: UniversityCommentAttributes): Promise<ProgramAttribute> {
+        comment: ProgramCommentAttributes): Promise<ProgramAttribute> {
         return await programService.getByCommentGroup(comment.commentGroupId);
     };
 
@@ -47,7 +47,7 @@ class UniversityNewCommentNotifier extends NewCommentNotifier {
     }
 
     protected getFormattedCommentText(
-            comment: UniversityCommentAttributes): string {
+            comment: ProgramCommentAttributes): string {
         let formattedText = '';
 
         if (comment.pros) {
@@ -66,19 +66,19 @@ class UniversityNewCommentNotifier extends NewCommentNotifier {
     }
 
     protected getCommentEditLink(
-            comment: UniversityCommentAttributes, entity: ProgramAttribute
+            comment: ProgramCommentAttributes, entity: ProgramAttribute
     ): string {
         return `http://link%to%comment`;
     }
 
     protected async setSentNotificationState(
-            comment: UniversityCommentAttributes): Promise<void> {
-        await universityCommentService.updateById(comment.id, {
+            comment: ProgramCommentAttributes): Promise<void> {
+        await programCommentService.updateById(comment.id, {
             isNoticeSend: true
         });
     }
 
-    protected getRawCommentText(comment: UniversityCommentAttributes): string {
+    protected getRawCommentText(comment: ProgramCommentAttributes): string {
         return `${comment.pros} ${comment.cons} ${comment.advice}`;
     }
 }

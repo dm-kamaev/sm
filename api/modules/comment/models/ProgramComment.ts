@@ -4,20 +4,20 @@
 import * as Sequelize from 'sequelize/v3';
 
 import {
-    UniversityCommentAttributes,
-    UniversityCommentInstance
-} from '../types/universityComment';
+    ProgramCommentAttributes,
+    ProgramCommentInstance
+} from '../types/programComment';
 
 const DataType = require('sequelize');
 const sequelize = require('../../../../app/components/db');
 
 interface UniversityCommentModel
     extends Sequelize.Model<
-        UniversityCommentInstance,
-        UniversityCommentAttributes
+        ProgramCommentInstance,
+        ProgramCommentAttributes
     > {}
 
-const Model: UniversityCommentModel = sequelize.define('UniversityComment', {
+const Model: UniversityCommentModel = sequelize.define('ProgramComment', {
     id: {
         allowNull: false,
         autoIncrement: true,
@@ -60,7 +60,7 @@ const Model: UniversityCommentModel = sequelize.define('UniversityComment', {
     }
 }, {
     underscored: true,
-    tableName: 'university_comment',
+    tableName: 'program_comment',
     classMethods: {
         associate: function(models) {
             this.belongsTo(models.CommentGroup, {

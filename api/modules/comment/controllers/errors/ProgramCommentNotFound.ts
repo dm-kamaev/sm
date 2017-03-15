@@ -3,7 +3,7 @@ import {ControllerError} from '../../../../components/interface';
 
 const Error: ControllerError = require('nodules/controller/ControllerError');
 
-class UniversityCommentNotFound extends Error {
+class ProgramCommentNotFound extends Error {
     public code: string;
     public status: number;
     public message: string;
@@ -11,10 +11,10 @@ class UniversityCommentNotFound extends Error {
     constructor(exception: ServiceException) {
         super(exception);
 
-        this.code = 'UniversityCommentNotFound';
+        this.code = 'ProgramCommentNotFound';
         this.status = 404;
         this.message = exception.message;
     }
 }
 
-export {UniversityCommentNotFound};
+export {ProgramCommentNotFound};

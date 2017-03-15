@@ -7,16 +7,16 @@ import {ServiceException} from '../../../../components/interface';
 const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
-class UniversityCommentNotBelongsToProgram extends Exception {
+class CommentNotBelongsToProgram extends Exception {
     public readonly name: string;
 
     constructor(programId: number, commentId: number) {
-        const message = `University comment with id = ${commentId}` +
+        const message = `Program comment with id = ${commentId}` +
             ` not belongs to program with id = ${programId}`;
         super(message);
 
-        this.name = 'UniversityCommentNotBelongsToProgramException';
+        this.name = 'CommentNotBelongsToProgramException';
     }
 }
 
-export {UniversityCommentNotBelongsToProgram};
+export {CommentNotBelongsToProgram};

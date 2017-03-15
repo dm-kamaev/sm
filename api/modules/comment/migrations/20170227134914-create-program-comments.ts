@@ -1,6 +1,6 @@
 module.exports = {
     up: function(queryInterface, Sequelize) {
-        return queryInterface.createTable('university_comment', {
+        return queryInterface.createTable('program_comment', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -56,6 +56,6 @@ module.exports = {
         });
     },
     down: function(queryInterface, Sequelize) {
-        return queryInterface.dropTable('university_comment');
+        return queryInterface.dropTable('program_comment');
     }
 };

@@ -3,26 +3,25 @@ import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {
-    service as universityCommentService
-} from '../services/universityComment';
+    service as programCommentService
+} from '../services/programComment';
 
-import {universityCommentView} from '../views/universityCommentView';
+import {programCommentView} from '../views/programCommentView';
 
 import {ProgramNotFound} from './errors/ProgramNotFound';
-import {UniversityCommentNotFound} from './errors/UniversityCommentNotFound';
+import {ProgramCommentNotFound} from './errors/ProgramCommentNotFound';
 import {
-    UniversityCommentNotBelongsToProgram
-} from './errors/UniversityCommentNotBelongsToProgram';
+    CommentNotBelongsToProgram
+} from './errors/CommentNotBelongsToProgram';
 
-class UniversityCommentController extends Controller {
+class ProgramCommentController extends Controller {
     constructor() {
         super();
 
         this.errors = {
-            UniversityCommentNotFoundException: UniversityCommentNotFound,
+            ProgramCommentNotFoundException: ProgramCommentNotFound,
             ProgramNotFoundException: ProgramNotFound,
-            UniversityCommentNotBelongsToProgramException:
-                UniversityCommentNotBelongsToProgram
+            CommentNotBelongsToProgramException: CommentNotBelongsToProgram
         };
     }
 
@@ -38,27 +37,27 @@ class UniversityCommentController extends Controller {
      */
 
     /**
-     * @apiDefine UniversityCommentNotFoundError
-     * @apiError (404) UniversityCommentNotFound University comment not found
+     * @apiDefine ProgramCommentNotFoundError
+     * @apiError (404) ProgramCommentNotFound University comment not found
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 404 Not Found
      *      {
-     *           "code": "UniversityCommentNotFound",
-     *           "message": "University comment with given id not found"
+     *           "code": "ProgramCommentNotFound",
+     *           "message": "Program comment with id = 20 not found"
      *      }
      */
 
     /**
-     * @apiDefine UniversityCommentNotBelongsToProgramError
-     * @apiError (422) UniversityCommentNotBelongsToProgram
+     * @apiDefine ProgramCommentNotBelongsToProgramError
+     * @apiError (422) ProgramCommentNotBelongsToProgram
      *     University comment not belongs to program
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 422 Not Found
      *      {
-     *           "code": "UniversityCommentNotBelongsToProgram",
+     *           "code": "CommentNotBelongsToProgram",
      *           "message":
-     *               "University comment with given id not not belongs
-     *               to program"
+     *               "Program comment with id = 20
+     *                not belongs to program with id = 126"
      *      }
      */
 
@@ -67,30 +66,30 @@ class UniversityCommentController extends Controller {
      * @api {get} /api/university/program/:programId/comment
      *     Get university comments by program
      * @apiVersion 1.0.0
-     * @apiGroup UniversityComment
-     * @apiName GetUniversityComments
+     * @apiGroup ProgramComment
+     * @apiName GetProgramComments
      *
-     * @apiSuccess universityComment              {Object[]}
+     * @apiSuccess ProgramComment              {Object[]}
      *     Requested university comment object
-     * @apiSuccess universityComment.id           {Number}
+     * @apiSuccess ProgramComment.id           {Number}
      *     Id of university comment
-     * @apiSuccess universityComment.userType     {String="Student", "Graduate"}
+     * @apiSuccess ProgramComment.userType     {String="Student", "Graduate"}
      *     Selected type of user
-     * @apiSuccess universityComment.grade        {Number}
+     * @apiSuccess ProgramComment.grade        {Number}
      *     Current grade of user, if it is student
-     * @apiSuccess universityComment.yearGraduate {Number}
+     * @apiSuccess ProgramComment.yearGraduate {Number}
      *    Graduation year of user if it already graduate university
-     * @apiSuccess universityComment.userId       {Number}
+     * @apiSuccess ProgramComment.userId       {Number}
      *     Id of user, who place comment
-     * @apiSuccess universityComment.pros         {String}
+     * @apiSuccess ProgramComment.pros         {String}
      *     Pros of study in university
-     * @apiSuccess universityComment.cons         {String}
+     * @apiSuccess ProgramComment.cons         {String}
      *     Cons of study in university
-     * @apiSuccess universityComment.advice       {String}
+     * @apiSuccess ProgramComment.advice       {String}
      *     Advice for enrollees
-     * @apiSuccess universityComment.score        {Number[]}
+     * @apiSuccess ProgramComment.score        {Number[]}
      *    Score of comment
-     * @apiSuccess universityComment.totalScore   {Number}
+     * @apiSuccess ProgramComment.totalScore   {Number}
      *     Total score of comment, calculated from score
      *
      * @apiSuccessExample Success-Response:
@@ -112,41 +111,41 @@ class UniversityCommentController extends Controller {
      */
     public async actionList(actionContext: any, programId: string) {
         const comments =
-            await universityCommentService.getAllByProgramIdWithFullData(
+            await programCommentService.getAllByProgramIdWithFullData(
                 +programId
             );
 
-        return universityCommentView.renderList(comments);
+        return programCommentView.renderList(comments);
     }
 
     /**
      * @api {get} /api/program/:programId/comment/:commentId
      *     Get university comment by program
      * @apiVersion 1.0.0
-     * @apiGroup UniversityComment
-     * @apiName GetUniversityComment
+     * @apiGroup ProgramComment
+     * @apiName GetProgramComment
      *
-     * @apiSuccess universityComment              {Object}
+     * @apiSuccess ProgramComment              {Object}
      *     Requested university comment object
-     * @apiSuccess universityComment.id           {Number}
+     * @apiSuccess ProgramComment.id           {Number}
      *     Id of university comment
-     * @apiSuccess universityComment.userType     {String="Student", "Graduate"}
+     * @apiSuccess ProgramComment.userType     {String="Student", "Graduate"}
      *     Selected type of user
-     * @apiSuccess universityComment.grade        {Number}
+     * @apiSuccess ProgramComment.grade        {Number}
      *     Current grade of user, if it is student
-     * @apiSuccess universityComment.yearGraduate {Number}
+     * @apiSuccess ProgramComment.yearGraduate {Number}
      *    Graduation year of user if it already graduate university
-     * @apiSuccess universityComment.userId       {Number}
+     * @apiSuccess ProgramComment.userId       {Number}
      *     Id of user, who place comment
-     * @apiSuccess universityComment.pros         {String}
+     * @apiSuccess ProgramComment.pros         {String}
      *     Pros of study in university
-     * @apiSuccess universityComment.cons         {String}
+     * @apiSuccess ProgramComment.cons         {String}
      *     Cons of study in university
-     * @apiSuccess universityComment.advice       {String}
+     * @apiSuccess ProgramComment.advice       {String}
      *     Advice for enrollees
-     * @apiSuccess universityComment.score        {Number[]}
+     * @apiSuccess ProgramComment.score        {Number[]}
      *    Score of comment
-     * @apiSuccess universityComment.totalScore   {Number}
+     * @apiSuccess ProgramComment.totalScore   {Number}
      *     Total score of comment, calculated from score
      *
      * @apiSuccessExample Success-Response:
@@ -165,25 +164,25 @@ class UniversityCommentController extends Controller {
      *     }
      *
      * @apiUse ProgramNotFoundError
-     * @apiUse UniversityCommentNotFoundError
-     * @apiUse UniversityCommentNotBelongsToProgramError
+     * @apiUse ProgramCommentNotFoundError
+     * @apiUse CommentNotBelongsToProgramError
      */
     public async actionGet(
             actionContext: any, programId: string, commentId: string) {
-        const  comment = await universityCommentService.getOneWithFullData(
+        const  comment = await programCommentService.getOneWithFullData(
             +programId,
             +commentId
         );
 
-        return universityCommentView.render(comment);
+        return programCommentView.render(comment);
     }
 
 
     /**
      * @api {post} /api/program/:programId/comment Create university comment
      * @apiVersion 1.0.0
-     * @apiGroup UniversityComment
-     * @apiName CreateUniversityComment
+     * @apiGroup ProgramComment
+     * @apiName CreateProgramComment
      *
      * @apiParam {Object}   comment      Review object
      * @apiParam {String}   comment.userType     Type of user, who wrote review
@@ -213,7 +212,7 @@ class UniversityCommentController extends Controller {
      */
     public async actionCreate(actionContext: any, programId: string) {
         const reviewData = actionContext.data;
-        return await universityCommentService.fullCreate(
+        return await programCommentService.fullCreate(
             +programId,
             {
                 userType: reviewData.userType,
@@ -232,8 +231,8 @@ class UniversityCommentController extends Controller {
      * @api {put} /api/program/:programId/comment/:commentId
      *     Update only text in comment
      * @apiVersion 1.0.0
-     * @apiGroup UniversityComment
-     * @apiName UpdateUniversityComment
+     * @apiGroup ProgramComment
+     * @apiName UpdateProgramComment
      *
      * @apiParam {Object}   comment      Review object
      * @apiParam {String}   comment.userType     Type of user, who wrote review
@@ -260,13 +259,13 @@ class UniversityCommentController extends Controller {
      *     HTTP/1.1 203 OK
      *
      * @apiUse ProgramNotFoundError
-     * @apiUse UniversityCommentNotFoundError
-     * @apiUse UniversityCommentNotBelongsToProgramError
+     * @apiUse ProgramCommentNotFoundError
+     * @apiUse CommentNotBelongsToProgramError
      */
     public async actionUpdate(
             actionContext: any, programId: number, commentId: number) {
         const reviewData = actionContext.data;
-        return await universityCommentService.fullUpdate(
+        return await programCommentService.fullUpdate(
             +programId,
             +commentId,
             {
@@ -283,4 +282,4 @@ class UniversityCommentController extends Controller {
     }
 }
 
-export {UniversityCommentController};
+export {ProgramCommentController};

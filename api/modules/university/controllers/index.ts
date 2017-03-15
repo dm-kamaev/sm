@@ -40,14 +40,14 @@ import {UniversityPageController} from './UniversityPageController';
 const universityPageController: any = new UniversityPageController();
 
 import {
-    AdminUniversityCommentController
-} from '../../comment/controllers/AdminUniversityCommentController';
-const adminUniversityCommentController = new AdminUniversityCommentController();
+    AdminProgramCommentController
+} from '../../comment/controllers/AdminProgramCommentController';
+const adminProgramCommentController = new AdminProgramCommentController();
 
-const UniversityCommentController =
-    require('../../comment/controllers/UniversityCommentController')
-        .UniversityCommentController;
-const universityCommentController = new UniversityCommentController();
+import {
+    ProgramCommentController
+} from '../../comment/controllers/ProgramCommentController';
+const programCommentController = new ProgramCommentController();
 
 router.get(
     '/program/:id',
@@ -107,7 +107,7 @@ initCrudRouting(
 );
 initCrudRouting(
     '/admin/program/:programId/comment',
-    adminUniversityCommentController
+    adminProgramCommentController
 );
 
 const initSimpleCrudRouting = function(route: string, controller: any): void {
@@ -130,7 +130,7 @@ const initSimpleCrudRouting = function(route: string, controller: any): void {
 
 initSimpleCrudRouting(
     '/program/:programId/comment',
-    universityCommentController
+    programCommentController
 );
 
 export {router};

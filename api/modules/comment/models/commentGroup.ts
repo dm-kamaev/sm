@@ -16,8 +16,8 @@ const Model: CommentGroupModel = sequelize.define('CommentGroup', {}, {
             this.hasMany(models.Comment, {
                 as: 'comment', foreignKey: 'comment_group_id'
             });
-            this.hasMany(models.UniversityComment, {
-                as: 'universityComment',
+            this.hasMany(models.ProgramComment, {
+                as: 'programComment',
                 foreignKey: 'comment_group_id'
             });
         }

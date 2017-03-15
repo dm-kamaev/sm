@@ -3,7 +3,7 @@ import {ControllerError} from '../../../../components/interface';
 
 const Error: ControllerError = require('nodules/controller/ControllerError');
 
-class UniversityCommentNotBelongsToProgram extends Error {
+class CommentNotBelongsToProgram extends Error {
     public code: string;
     public status: number;
     public message: string;
@@ -11,10 +11,10 @@ class UniversityCommentNotBelongsToProgram extends Error {
     constructor(exception: ServiceException) {
         super(exception);
 
-        this.code = 'UniversityCommentNotBelongsToProgram';
+        this.code = 'CommentNotBelongsToProgram';
         this.status = 422;
         this.message = exception.message;
     }
 }
 
-export {UniversityCommentNotBelongsToProgram};
+export {CommentNotBelongsToProgram };

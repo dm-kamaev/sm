@@ -6,14 +6,14 @@ import {ServiceException} from '../../../../components/interface';
 const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
-class UniversityCommentNotFound extends Exception {
+class ProgramCommentNotFound extends Exception {
     public readonly name: string;
 
     constructor(universityCommentId: number) {
-        super(`University comment with id = ${universityCommentId} not found`);
+        super(`Program comment with id = ${universityCommentId} not found`);
 
-        this.name = 'UniversityCommentNotFoundException';
+        this.name = 'ProgramCommentNotFoundException';
     }
 }
 
-export {UniversityCommentNotFound};
+export {ProgramCommentNotFound};

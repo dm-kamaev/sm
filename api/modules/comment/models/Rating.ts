@@ -39,9 +39,9 @@ const Model: RatingModel = db.define('Rating', {
                 foreignKey: 'rating_id',
                 as: 'comment'
             });
-            this.hasOne(models.UniversityComment, {
+            this.hasOne(models.ProgramComment, {
                 foreignKey: 'rating_id',
-                as: 'universityComment'
+                as: 'programComment'
             });
         }
     }

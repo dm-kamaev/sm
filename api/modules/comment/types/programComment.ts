@@ -4,7 +4,7 @@ import {UserDataAttributes, UserDataInstance} from '../../user/types/userData';
 import {RatingInstance} from './rating';
 import {CommentGroupInstance} from './commentGroup';
 
-export interface UniversityCommentAttributes {
+export interface ProgramCommentAttributes {
     id?: number;
     pros?: string;
     cons?: string;
@@ -19,9 +19,9 @@ export interface UniversityCommentAttributes {
     userData?: UserDataInstance;
 }
 
-export interface UniversityCommentInstance
-    extends Sequelize.Instance<UniversityCommentAttributes>,
-            UniversityCommentAttributes {
+export interface ProgramCommentInstance
+    extends Sequelize.Instance<ProgramCommentAttributes>,
+            ProgramCommentAttributes {
     setRating: Sequelize.BelongsToSetAssociationMixin<RatingInstance, number>;
     setUserData:
         Sequelize.BelongsToSetAssociationMixin<UserDataInstance, number>;
@@ -29,7 +29,7 @@ export interface UniversityCommentInstance
         Sequelize.BelongsToSetAssociationMixin<CommentGroupInstance, number>;
 }
 
-export interface UniversityCommentFullCreateAttributes {
+export interface ProgramCommentFullCreateAttributes {
     pros: string;
     cons: string;
     advice: string;
@@ -41,7 +41,7 @@ export interface UniversityCommentFullCreateAttributes {
     score: Array<number>;
 }
 
-export type AdminUniversityComment = {
+export type AdminProgramComment = {
     id: number;
     pros: string;
     cons: string;
@@ -55,7 +55,7 @@ export type AdminUniversityComment = {
     socialType: string;
 };
 
-export type BackendUniversityComment = {
+export type BackendProgramComment = {
     id: number;
     pros: string;
     cons: string;

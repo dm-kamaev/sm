@@ -17,30 +17,30 @@ import {Model as UserDataModel} from '../../user/models/userData';
 import {service as programService} from '../../university/services/program';
 
 import {
-    UniversityCommentInstance,
-    UniversityCommentAttributes,
-    UniversityCommentFullCreateAttributes
-} from '../types/universityComment';
+    ProgramCommentInstance,
+    ProgramCommentAttributes,
+    ProgramCommentFullCreateAttributes
+} from '../types/programComment';
 
-import {UniversityCommentNotFound}
-    from './exceptions/UniversityCommentNotFound';
-import {UniversityCommentNotBelongsToProgram}
-    from './exceptions/UniversityCommentNotBelongsToProgram';
+import {ProgramCommentNotFound}
+    from './exceptions/ProgramCommentNotFound';
+import {CommentNotBelongsToProgram}
+    from './exceptions/CommentNotBelongsToProgram';
 
-import {Model as UniversityCommentModel} from '../models/UniversityComment';
+import {Model as ProgramCommentModel} from '../models/ProgramComment';
 
 class UniversityCommentService {
     public readonly name: string = 'universityComment';
 
     public async create(
-            data: UniversityCommentAttributes
-    ): Promise<UniversityCommentInstance> {
-        return await UniversityCommentModel.create(data);
+            data: ProgramCommentAttributes
+    ): Promise<ProgramCommentInstance> {
+        return await ProgramCommentModel.create(data);
     }
 
     public async fullCreate(
         programId: number,
-        data: UniversityCommentFullCreateAttributes
+        data: ProgramCommentFullCreateAttributes
     ): Promise<void> {
         return await db.transaction(async() => {
             await this.fullCreate_(programId, data);
@@ -51,15 +51,15 @@ class UniversityCommentService {
 
     public async getOne(
             programId: number, commentId: number
-    ): Promise<UniversityCommentInstance> {
+    ): Promise<ProgramCommentInstance> {
         const commentInstance = await this.silentGetOne_(commentId);
         if (!commentInstance) {
-            throw new UniversityCommentNotFound(commentId);
+            throw new ProgramCommentNotFound(commentId);
         }
 
         const commentGroup = await programService.getCommentGroup(programId);
         if (commentGroup.id !== commentInstance.commentGroupId) {
-            throw new UniversityCommentNotBelongsToProgram(
+            throw new CommentNotBelongsToProgram(
                 programId, commentId
             );
         }
@@ -69,7 +69,7 @@ class UniversityCommentService {
 
     public async getOneWithFullData(
             programId: number, commentId: number
-    ): Promise<UniversityCommentInstance> {
+    ): Promise<ProgramCommentInstance> {
         const comment = await this.getOne(programId, commentId);
 
         comment.userData = await userDataService.getOne(comment.userDataId);
@@ -81,9 +81,9 @@ class UniversityCommentService {
     }
 
     public async getAllByProgramIdWithFullData(
-            programId: number): Promise<Array<UniversityCommentInstance>> {
+            programId: number): Promise<Array<ProgramCommentInstance>> {
         const commentGroup = await programService.getCommentGroup(programId);
-        return await UniversityCommentModel.findAll({
+        return await ProgramCommentModel.findAll({
             where: {
                 commentGroupId: commentGroup.id
             },
@@ -106,8 +106,8 @@ class UniversityCommentService {
     public async update(
             programId: number,
             commentId: number,
-            data: UniversityCommentAttributes
-    ): Promise<UniversityCommentInstance> {
+            data: ProgramCommentAttributes
+    ): Promise<ProgramCommentInstance> {
         const instance = await this.getOne(programId, commentId);
 
         return await instance.update(data);
@@ -115,8 +115,8 @@ class UniversityCommentService {
 
     public async updateById(
             commentId: number,
-            data: UniversityCommentAttributes
-    ): Promise<UniversityCommentInstance> {
+            data: ProgramCommentAttributes
+    ): Promise<ProgramCommentInstance> {
         const instance = await this.silentGetOne_(commentId);
 
         return await instance.update(data);
@@ -125,7 +125,7 @@ class UniversityCommentService {
     public async fullUpdate(
             programId: number,
             commentId: number,
-            data: UniversityCommentFullCreateAttributes): Promise<void> {
+            data: ProgramCommentFullCreateAttributes): Promise<void> {
         return await db.transaction(async() => {
             await this.fullUpdate_(programId, commentId, data);
         }).catch((error) => {
@@ -142,8 +142,8 @@ class UniversityCommentService {
         });
     }
 
-    public async getNotNotified(): Promise<Array<UniversityCommentInstance>> {
-        return UniversityCommentModel.findAll({
+    public async getNotNotified(): Promise<Array<ProgramCommentInstance>> {
+        return ProgramCommentModel.findAll({
             where: {
                 isNoticeSend: false
             }
@@ -163,7 +163,7 @@ class UniversityCommentService {
 
     private async fullCreate_(
             programId: number,
-            data: UniversityCommentFullCreateAttributes): Promise<void> {
+            data: ProgramCommentFullCreateAttributes): Promise<void> {
         const commentInstance = await this.create(data),
             userDataInstance = await userDataService.create(data),
             commentGroup =
@@ -180,7 +180,7 @@ class UniversityCommentService {
     private async fullUpdate_(
             programId: number,
             commentId: number,
-            data: UniversityCommentFullCreateAttributes
+            data: ProgramCommentFullCreateAttributes
     ): Promise<void> {
         const commentInstance = await this.update(programId, commentId, data);
 
@@ -193,15 +193,15 @@ class UniversityCommentService {
     }
 
     private async createCommentRating_(
-            comment: UniversityCommentInstance,
-            data: UniversityCommentFullCreateAttributes): Promise<void> {
+            comment: ProgramCommentInstance,
+            data: ProgramCommentFullCreateAttributes): Promise<void> {
         const ratingInstance = await ratingService.create(data.score);
         await comment.setRating(ratingInstance);
     }
 
     private async silentGetOne_(
-            commentId: number): Promise<UniversityCommentInstance> {
-        return await UniversityCommentModel.findById(commentId);
+            commentId: number): Promise<ProgramCommentInstance> {
+        return await ProgramCommentModel.findById(commentId);
     }
 }
 
