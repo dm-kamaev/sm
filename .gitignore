@@ -220,6 +220,9 @@ app/modules/user/**/*.js
 app/modules/common/services/*.js
 
 console/modules/geoTools/*.js
+console/modules/newCommentNotifier/**/*.js
+console/executable/sendNewCommentNotifications.js
+
 console/insertRegionForMoscow.js
 
 console/one-off/shrinkOlympiadResults.js
