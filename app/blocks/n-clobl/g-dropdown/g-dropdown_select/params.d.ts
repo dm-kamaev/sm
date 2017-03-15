@@ -7,11 +7,11 @@ export namespace gDropdownSelect {
          * sm.gDropdownSelect.Params.Data
          */
         export interface Data {
-            opener: (string|undefined),
-            defaultOpenerText: (string|undefined),
-            name: (string|undefined),
-            content: any,
-            contentConfig: (any|undefined)
+            opener?: string,
+            defaultOpenerText?: string,
+            name?: (string|undefined),
+            content?: any,
+            contentConfig?: any
         }
 
         /*

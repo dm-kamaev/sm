@@ -11,21 +11,21 @@ export namespace bSmSubheader {
          * sm.bSmSubheader.Params.Data
          */
         export interface Data {
-            logo: {
+            logo?: {
                 imgUrl: string,
                 altText?: string,
                 linkUrl?: string
             },
-            listLinks: gDropdownSelect.Params.Data,
-            contacts: any,
-            links: ({
+            listLinks?: gDropdownSelect.Params.Data,
+            contacts?: any,
+            links?: ({
                 nameL: string,
                 nameM: string,
-                nameS: (string|undefined),
+                nameS?: (string|undefined),
                 url: string,
-                theme: (string|undefined)
+                theme?: (string|undefined)
             }|undefined),
-            search: {
+            search?: {
                 placeholder: (string|undefined),
                 redirect: boolean,
                 pageAlias: string
@@ -34,18 +34,26 @@ export namespace bSmSubheader {
                 firstName: (string|undefined),
                 lastName: (string|undefined)
             },
-            favorites: any
+            favorites?: any
         }
 
         /*
          * sm.bSmSubheader.Params.Config
          */
         export interface Config {
-            entityType: string,
+            entityType?: string,
             bottomLine?: boolean,
-            theme: (string|undefined),
-            stylizationModifier: string
+            theme?: (string|undefined),
+            stylizationModifier?: string
         }
+    }
+
+    /*
+     * sm.bSmSubheader.Params
+     */
+    export interface Params {
+        data: Params.Data,
+        config: Params.Config
     }
 }
 

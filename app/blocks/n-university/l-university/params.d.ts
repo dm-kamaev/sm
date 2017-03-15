@@ -18,7 +18,7 @@ export namespace lUniversity {
                 metaTitle: string,
                 metaDescription: (string|undefined)
             },
-            subHeader: bSmSubheader.Params.Data,
+            subHeader: bSmSubheader.Params,
             header: any,
             sideMenu: any,
             user?: {
