@@ -1,6 +1,5 @@
-import {
-    bSmSubheader
-} from '../../n-common/b-sm-subheader/params';
+import {bSmHeader} from '../../n-common/b-sm-header/params';
+import {bSmSubheader} from '../../n-common/b-sm-subheader/params';
 
 export namespace iLayoutStendhal {
     /*
@@ -17,7 +16,7 @@ export namespace iLayoutStendhal {
                 metaDescription?: (string|undefined)
             },
             subHeader?: bSmSubheader.Params,
-            header?: any,
+            header?: bSmHeader.Params,
             sideMenu?: any,
             user?: {
                 firstName: (string|undefined),

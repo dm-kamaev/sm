@@ -5,8 +5,10 @@ const headerView = require('../../../../api/modules/entity/views/headerView'),
 const sideMenuView = require('../views/sideMenuView'),
     configView = require('../views/configView');
 
-import {userView} from '../../user/views/user';
 import {SubHeader} from './SubHeader';
+import {Header} from './Header';
+
+import {userView} from '../../user/views/user';
 import {footerView} from '../views/footerView';
 
 import {iLayoutStendhal} from '../../../blocks/n-clobl/i-layout/params';
@@ -85,7 +87,7 @@ abstract class LayoutView {
 
     constructor() {
         this.views = {
-            header: headerView,
+            header: Header,
             subHeader: SubHeader,
             sideMenu: sideMenuView,
             favorite: favoriteView,
@@ -145,10 +147,12 @@ abstract class LayoutView {
 
 
     private setHeader_(config: AppConfig) {
-        this.params.data.header = this.views.header.render(
-            config,
-            this.entityType
-        );
+        const headerView = new this.views.header();
+
+        this.params.data.header = headerView.render({
+            entityType: this.entityType,
+            config: config
+        });
     }
 
 

@@ -1,5 +1,4 @@
-const headerView = require('../../../../api/modules/entity/views/headerView'),
-    FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
+const FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
 
 const pageName = require('../../common/enums/pageName');
 import {entityType} from '../../common/enums/entityType';
@@ -37,7 +36,6 @@ class InformationView extends LayoutView {
     constructor() {
         super();
 
-        this.views.header = headerView;
         this.views.subHeader = UniversitySubHeader;
 
         this.entityType = entityType.UNIVERSITY;
