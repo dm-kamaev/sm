@@ -102,7 +102,7 @@ class AddressService {
         return address;
     }
 
-    public async findOrCreateByName(name: string, cityId?: number):
+    public async getOrCreateByName(name: string, cityId?: number):
             Promise<AddressInstance> {
         cityId = cityId || DEFAULT_CITY_ID;
         let address = await AddressModel.findOne({
@@ -213,8 +213,8 @@ class AddressService {
         }
     }
 
-    public async setMetro(address, metroArr) {
-        metroArr.forEach(async metro => {
+    public async setMetro(address, metroArr): Promise<any> {
+        return Promise.all(metroArr.map(async metro => {
             const ourMetro = await models.Metro.findOne({
                 where: {
                     name: metro.name,
@@ -231,7 +231,7 @@ class AddressService {
                     cityId: metro.cityId
                 });
             }
-        });
+        }));
     }
 
     /**
