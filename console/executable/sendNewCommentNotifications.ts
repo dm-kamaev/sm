@@ -3,8 +3,8 @@
  * programs
  */
 import {
-    UniversityNewCommentNotifier
-} from '../modules/newCommentNotifier/UniversityNewCommentNotifier';
+    ProgramNewCommentNotifier
+} from '../modules/newCommentNotifier/ProgramNewCommentNotifier';
 import {
     SchoolNewCommentNotifier
 } from '../modules/newCommentNotifier/SchoolNewCommentNotifier';
@@ -17,7 +17,7 @@ const start = async() => {
         const initialLogging = db.options.logging;
         db.options.logging = false;
 
-        const universityNotifier = new UniversityNewCommentNotifier(),
+        const universityNotifier = new ProgramNewCommentNotifier(),
             schoolNotifier = new SchoolNewCommentNotifier();
 
         await universityNotifier.start();

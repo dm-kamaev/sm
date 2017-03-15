@@ -22,7 +22,7 @@ import {
     ProgramAttribute
 } from '../../../api/modules/university/types/program';
 
-class UniversityNewCommentNotifier extends NewCommentNotifier {
+class ProgramNewCommentNotifier extends NewCommentNotifier {
     constructor() {
         super();
 
@@ -88,4 +88,4 @@ class UniversityNewCommentNotifier extends NewCommentNotifier {
     }
 }
 
-export {UniversityNewCommentNotifier};
+export {ProgramNewCommentNotifier};
