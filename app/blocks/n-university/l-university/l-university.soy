@@ -54,11 +54,20 @@
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
  */
 {template .university autoescape="strict" kind="html"}
     {call .document data="all" /}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    lUniversity
 {/template}
 
 
@@ -270,34 +279,30 @@
 {template .sketchData_}
     <div class="{call .rootClass/}__data_sketch">
         <div class="{call .rootClass/}__entity-relation">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'entity-relation',
-                    'renderParams': $params.data.entityData.entityRelation
-                ]/}
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'entity-relation' /}
+                {param renderParams: $params.data.entityData.entityRelation /}
             {/call}
         </div>
 
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smSketch',
-                'renderParams': [
-                    'data': [
-                        'description': $params.data.entityData.name,
-                        'image': [
-                            'url': 'http://muzuz.ru/uploads/images/p/r/o/progulshiki_hse_nelaskovaja_vshe.jpg',
-                            'altText': 'HSE'
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smSketch' /}
+            {param renderParams: [
+                'data': [
+                    'description': $params.data.entityData.name,
+                    'image': [
+                        'url': 'http://muzuz.ru/uploads/images/p/r/o/progulshiki_hse_nelaskovaja_vshe.jpg',
+                        'altText': 'HSE'
+                    ],
+                    'button': [
+                        'data': [
+                            'content': 'Оставить отзыв'
                         ],
-                        'button': [
-                            'data': [
-                                'content': 'Оставить отзыв'
-                            ],
-                            'config': [
-                                'theme': 'neptune',
-                                'borderRoundSize': 'xl'
-                            ]
+                        'config': [
+                            'theme': 'neptune',
+                            'borderRoundSize': 'xl'
                         ]
                     ]
                 ]
@@ -339,15 +344,13 @@
  */
 {template .navigationPanel_}
     <div class="{call .rootClass/}__navigation-panel">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smRowLinks',
-                'renderParams': [
-                    'data': $params.data.navigationPanel,
-                    'config': [
-                        'theme': 'breadcrumbs'
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smRowLinks' /}
+            {param renderParams: [
+                'data': $params.data.navigationPanel,
+                'config': [
+                    'theme': 'breadcrumbs'
                 ]
             ]/}
         {/call}
@@ -380,20 +383,18 @@
         </div>
 
         <div class="{call .rootClass/}__description_cut">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smCollapsedText',
-                    'renderParams': [
-                        'data': [
-                            'text': $params.data.entityData.cutDescription,
-                            'buttonTextExpand': 'Развернуть описание'
-                        ],
-                        'config': [
-                            'isButtonCollapse': true,
-                            'buttonFont': 'inherit',
-                            'buttonTheme': 'neptune'
-                        ]
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smCollapsedText' /}
+                {param renderParams: [
+                    'data': [
+                        'text': $params.data.entityData.cutDescription,
+                        'buttonTextExpand': 'Развернуть описание'
+                    ],
+                    'config': [
+                        'isButtonCollapse': true,
+                        'buttonFont': 'inherit',
+                        'buttonTheme': 'neptune'
                     ]
                 ]/}
             {/call}
@@ -419,13 +420,11 @@
  */
 {template .descriptionList_}
     <div class="{call .rootClass/}__description-list">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'lUniversity-descriptionList',
-                'renderParams': [
-                    'data': $params.data.entityData.descriptionList
-                ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lUniversity-descriptionList' /}
+            {param renderParams: [
+                'data': $params.data.entityData.descriptionList
             ]/}
         {/call}
     </div>
@@ -451,24 +450,20 @@
     <div class="{call .rootClass/}__board-wrap">
 
         <div class="{call .rootClass/}__summary-board">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'summary-board',
-                    'renderParams': [
-                        'data': $params.data.entityData.summaryBoard
-                    ]
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'summary-board' /}
+                {param renderParams: [
+                    'data': $params.data.entityData.summaryBoard
                 ]/}
             {/call}
         </div>
 
         <div class="{call .rootClass/}__banner">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smBanner',
-                    'renderParams': $params.data.entityData.banner
-                ]/}
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smBanner' /}
+                {param renderParams: $params.data.entityData.banner /}
             {/call}
         </div>
 
@@ -490,12 +485,10 @@
  */
 {template .subscribeBoard_}
     <div class="{call .rootClass/}__subscribe-board">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smSubscribeBoard',
-                'renderParams': $params.data.subscribeBoard
-            ]/}
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smSubscribeBoard' /}
+            {param renderParams: $params.data.subscribeBoard /}
         {/call}
     </div>
 {/template}
@@ -517,12 +510,10 @@
  */
 {template .bannerSizeXS_}
     <div class="{call .rootClass/}__banner_size_xs">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smBanner',
-                'renderParams': $params.data.entityData.banner
-            ]/}
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smBanner' /}
+            {param renderParams: $params.data.entityData.banner /}
         {/call}
     </div>
 {/template}
@@ -551,18 +542,16 @@
             {$params.data.entityData.similarPrograms.header}
         </div>
         <div class="{call .rootClass/}__similar-programs-list">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smItemList',
-                    'renderParams': [
-                        'data': $params.data.entityData.similarPrograms,
-                        'config': [
-                            'theme': 'inline',
-                            'customClasses': [$customClasses]
-                        ]
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smItemList' /}
+                {param renderParams: [
+                    'data': $params.data.entityData.similarPrograms,
+                    'config': [
+                        'theme': 'inline',
+                        'customClasses': [$customClasses]
                     ]
-                ]/}
+                ] /}
             {/call}
         </div>
     </div>
@@ -592,19 +581,17 @@
             {$params.data.entityData.usefulCourses.header}
         </div>
         <div class="{call .rootClass/}__useful-courses-list">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                {param params: [
-                    'factory': $params.config.modifier,
-                    'type': 'smItemList',
-                    'renderParams': [
-                        'data': $params.data.entityData.usefulCourses,
-                        'config': [
-                            'enableCover': true,
-                            'theme': 'inline',
-                            'customClasses': [$customClasses]
-                        ]
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smItemList' /}
+                {param renderParams: [
+                    'data': $params.data.entityData.usefulCourses,
+                    'config': [
+                        'enableCover': true,
+                        'theme': 'inline',
+                        'customClasses': [$customClasses]
                     ]
-                ]/}
+                ] /}
             {/call}
         </div>
     </div>
@@ -623,13 +610,14 @@
  */
 {template .modalComment_}
     <div class="{call .rootClass/}__modal {call .rootClass/}__modal_comment">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'modal-interaction',
-                'renderParams': [
-                    'data': $params.data.modalComment
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'modal-interaction' /}
+            {param renderParams: [
+                'data': $params.data.modalComment,
+                'config': [
+                    'stylizationModifier': $params.config.modifier
+                ]
             ]/}
         {/call}
     </div>
@@ -656,17 +644,15 @@
     {/let}
 
     <div class="{call .rootClass/}__comment-list">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'lUniversity-commentList',
-                'renderParams': [
-                    'data': $params.data.entityData.comments,
-                    'config': [
-                        'theme': 'neptune',
-                        'customClasses': [$customClasses],
-                        'countShownItems': 2
-                    ]
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lUniversity-commentList' /}
+            {param renderParams: [
+                'data': $params.data.entityData.comments,
+                'config': [
+                    'theme': 'neptune',
+                    'customClasses': [$customClasses],
+                    'countShownItems': 2
                 ]
             ]/}
         {/call}

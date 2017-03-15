@@ -30,10 +30,19 @@
  *     config: sm.bSmBanner.Template.Params.Config
  * }}
  * @constructor
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @extends cl.iControl.Template
  */
 {template .banner}
     {call .init data="all" /}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smBanner
 {/template}
 
 
@@ -54,7 +63,7 @@
  * @param params {{
  *     data: {
  *         header: string,
- *         description: string 
+ *         description: string
  *     }
  * }}
  * @override

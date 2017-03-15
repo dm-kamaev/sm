@@ -4,6 +4,7 @@ goog.require('cl.gButton.Button');
 goog.require('cl.iRequest.Request');
 goog.require('sm.bSmInteractionForm.SmInteractionForm');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.TemplateInteraction');
 goog.require('sm.gModal.ViewInteraction');
 
 
@@ -43,6 +44,20 @@ goog.scope(function() {
     var ModalInteraction = sm.gModal.ModalInteraction,
         View = sm.gModal.ViewInteraction,
         Request = cl.iRequest.Request;
+
+
+    /**
+     * Name of this element in factory
+     */
+    ModalInteraction.NAME = sm.gModal.TemplateInteraction.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        ModalInteraction.NAME,
+        {
+            control: ModalInteraction,
+            view: View
+        }
+    );
 
 
     /**

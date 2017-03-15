@@ -1,10 +1,12 @@
 goog.provide('sm.bSmInteractionForm.SmInteractionFormComment');
 
 goog.require('sm.bSmInteractionForm.SmInteractionForm');
+goog.require('sm.bSmInteractionForm.TemplateComment');
 goog.require('sm.bSmInteractionForm.ViewComment');
 goog.require('sm.bSmStars.SmStars');
 goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.gInput.InputStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -63,6 +65,20 @@ goog.scope(function() {
     );
     var InteractionForm = sm.bSmInteractionForm.SmInteractionFormComment,
         View = sm.bSmInteractionForm.ViewComment;
+
+
+    /**
+     * Name of this element in factory
+     */
+    InteractionForm.NAME = sm.bSmInteractionForm.TemplateComment.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        InteractionForm.NAME,
+        {
+            control: InteractionForm,
+            view: View
+        }
+    );
 
 
     /**
@@ -260,7 +276,7 @@ goog.scope(function() {
      */
     InteractionForm.prototype.initEvaluations_ = function() {
         this.stars_ = this.decorateChildren(
-            'smStars',
+            sm.bSmStars.SmStars.NAME,
             this.getView().getDom().stars
         );
     };

@@ -8,7 +8,7 @@
  *              content: string
  *          }
  *     }|sm.bButtonLink.Template.Params)>
- * }} 
+ * }}
  * sm.bEntityRelation.Template.Params.Data
  */
 
@@ -27,10 +27,18 @@
  *     config: sm.bEntityRelation.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .entityRelation}
     {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    entity-relation
 {/template}
 
 

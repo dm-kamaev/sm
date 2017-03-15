@@ -1,6 +1,10 @@
 goog.provide('sm.lUniversity.bDescriptionList.DescriptionList');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmLink.SmLink');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lUniversity.bDescriptionList.Template');
+goog.require('sm.lUniversity.bDescriptionList.View');
 
 
 
@@ -24,7 +28,22 @@ goog.inherits(
 
 
 goog.scope(function() {
-    var DescriptionList = sm.lUniversity.bDescriptionList.DescriptionList;
+    var DescriptionList = sm.lUniversity.bDescriptionList.DescriptionList,
+        View = sm.lUniversity.bDescriptionList.View;
+
+    /**
+     * Name of this element in factory
+     */
+    DescriptionList.NAME =
+        sm.lUniversity.bDescriptionList.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        DescriptionList.NAME,
+        {
+            control: DescriptionList,
+            view: View
+        }
+    );
 
 
     /**
@@ -36,7 +55,7 @@ goog.scope(function() {
         var dom = this.getView().getDom();
         if (dom.links) {
             this.decorateChildren(
-                'smLink',
+                sm.bSmLink.SmLink.NAME,
                 dom.links
             );
         }

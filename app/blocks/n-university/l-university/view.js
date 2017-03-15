@@ -61,7 +61,8 @@ goog.scope(function() {
         COURSES: 'l-university__courses',
         COMMENTS: 'l-university__comments',
         NAVIGATION_PANEL: sm.bSmRowLinks.View.CssClass.ROOT,
-        SUBSCRIBE_BOARD: sm.bSmSubscribeBoard.View.CssClass.ROOT
+        SUBSCRIBE_BOARD: sm.bSmSubscribeBoard.View.CssClass.ROOT,
+        ENTITY_RELATION: sm.bEntityRelation.View.CssClass.ROOT
     };
 
 
@@ -121,6 +122,9 @@ goog.scope(function() {
                 ),
                 subscribeBoard: this.getElementByClass(
                     View.CssClass.SUBSCRIBE_BOARD
+                ),
+                entityRelation: this.getElementByClass(
+                    View.CssClass.ENTITY_RELATION
                 )
             }
         );

@@ -4,6 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.bSmRowLinks.Template');
 goog.require('sm.bSmRowLinks.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -32,7 +33,23 @@ sm.bSmRowLinks.SmRowLinks = function(view, opt_params, opt_domHelper) {
 goog.inherits(sm.bSmRowLinks.SmRowLinks, cl.iControl.Control);
 
 goog.scope(function() {
-    var RowLinks = sm.bSmRowLinks.SmRowLinks;
+    var RowLinks = sm.bSmRowLinks.SmRowLinks,
+        View = sm.bSmRowLinks.View;
+
+
+    /**
+     * Name of this element in factory
+     */
+    RowLinks.NAME = sm.bSmRowLinks.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        RowLinks.NAME,
+        {
+            control: RowLinks,
+            view: View
+        }
+    );
+
 
     /**
      * @param {Element} element

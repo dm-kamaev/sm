@@ -30,10 +30,19 @@
  *     config: sm.lUniversity.bDescriptionList.Template.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .descriptionList}
     {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    lUniversity-descriptionList
 {/template}
 
 
@@ -62,9 +71,7 @@
         <div class="{call .rootClass/}__item">
 
             <div class="{call .rootClass/}__item-header">
-                {call .getText}
-                    {param message: $item.data.header /} 
-                {/call}
+                {$item.data.header}
             </div>
 
             <div class="{call .rootClass/}__item-description">
@@ -76,7 +83,7 @@
                 {/call}
             </div>
 
-        </div>        
+        </div>
     {/foreach}
 {/template}
 
@@ -85,7 +92,7 @@
  * Item description
  * @param params {
  *     subitems: (Array<string>|Array<sm.bSmLink.Template.Params.Data>)
- *     inline: boolean    
+ *     inline: boolean
  * }
  * @private
  */
@@ -183,9 +190,7 @@
  * @private
  */
 {template .string_}
-    {call .getText}
-        {param message: $item /} 
-    {/call}
+    {$item}
 {/template}
 
 

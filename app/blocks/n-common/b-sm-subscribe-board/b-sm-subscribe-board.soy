@@ -23,10 +23,19 @@
  *     config: sm.bSmSubscribeBoard.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .board}
     {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smSubscribeBoard
 {/template}
 
 

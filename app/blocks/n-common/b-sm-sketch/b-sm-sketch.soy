@@ -34,10 +34,19 @@
  *     config: sm.bSmSketch.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .sketch}
     {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smSketch
 {/template}
 
 
@@ -103,7 +112,7 @@
 {template .description_}
     <div class="{call .rootClass/}__description">
         {call .getText}
-            {param message: $params.data.description /} 
+            {param message: $params.data.description /}
         {/call}
     </div>
 {/template}

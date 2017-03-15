@@ -1,7 +1,9 @@
 goog.provide('sm.bSmComment.SmComment');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmComment.Template');
 goog.require('sm.bSmComment.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -22,6 +24,21 @@ goog.scope(function() {
     var Comment = sm.bSmComment.SmComment,
         View = sm.bSmComment.View;
 
+
+    /**
+     * Name of this element in factory
+     * @const {string}
+     */
+    Comment.NAME = sm.bSmComment.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        Comment.NAME, {
+            control: Comment,
+            view: View
+        }
+    );
+
+
     /**
      * Event enum
      * @enum {string}
@@ -30,13 +47,6 @@ goog.scope(function() {
     Comment.Event = {
         CLICK: View.Event.CLICK
     };
-
-
-    /**
-     * Name of this element in factory
-     * @const {string}
-     */
-    Comment.NAME = sm.bSmComment.SmComment.Template.NAME();
 
 
     /**

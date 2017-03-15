@@ -5,7 +5,7 @@
  * @typedef {{
  *     list: Array<{
  *         header: string,
- *         items: Array<{ 
+ *         items: Array<{
  *             data: {
  *                 header: string,
  *                 description: string
@@ -43,6 +43,7 @@
  *     config: sm.bSummaryBoard.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .summaryBoard}
@@ -65,6 +66,14 @@
 
 
 /**
+ * @override
+ */
+{template .NAME}
+    summary-board
+{/template}
+
+
+/**
  * Root css class
  * @override
  */
@@ -79,7 +88,7 @@
  *     data: {
  *         list: Array<{
  *             header: string,
- *             items: Array<{ 
+ *             items: Array<{
  *                 data: {
  *                     header: string,
  *                     description: string
@@ -99,7 +108,7 @@
         {foreach $list in $params.data.list}
             {call .listItem_}
                 {param listItem: $list/}
-            {/call}   
+            {/call}
         {/foreach}
     </div>
 {/template}
@@ -109,7 +118,7 @@
  * List item
  * @param listItem {{
  *     header: string,
- *     items: Array<{ 
+ *     items: Array<{
  *         data: {
  *             header: string,
  *             description: string
@@ -132,7 +141,7 @@
         {foreach $item in $listItem.items}
             {call .listSubitem_}
                 {param subitem: $item/}
-            {/call}   
+            {/call}
         {/foreach}
     </div>
 {/template}
@@ -194,7 +203,7 @@
 /**
  * Content
  * @param params {{
- *     data: { 
+ *     data: {
  *         item: {
  *             data: {
  *                 header: string,

@@ -2,6 +2,9 @@ goog.provide('sm.bSmSketch.SmSketch');
 
 goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmSketch.Template');
+goog.require('sm.bSmSketch.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -19,7 +22,18 @@ goog.inherits(sm.bSmSketch.SmSketch, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Sketch = sm.bSmSketch.SmSketch;
+    var Sketch = sm.bSmSketch.SmSketch,
+        View = sm.bSmSketch.View;
+
+    /**
+     * Name of this element in factory
+     */
+    Sketch.NAME = sm.bSmSketch.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(Sketch.NAME, {
+        control: Sketch,
+        view: View
+    });
 
 
     /**
@@ -39,7 +53,7 @@ goog.scope(function() {
         Sketch.base(this, 'decorateInternal', element);
 
         this.decorateChild(
-            'button',
+            cl.gButton.Button.NAME,
             this.getView().getDom().button
         );
     };

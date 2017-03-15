@@ -2,7 +2,11 @@ goog.provide('sm.bSmInteractionForm.SmInteractionForm');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.object');
+goog.require('sm.bSmInteractionForm.Template');
 goog.require('sm.bSmInteractionForm.View');
+goog.require('sm.gInput.InputStendhal');
+goog.require('sm.gTextarea.TextareaStendhal');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 goog.scope(function() {
@@ -31,6 +35,20 @@ goog.scope(function() {
     goog.inherits(sm.bSmInteractionForm.SmInteractionForm, cl.iControl.Control);
     var InteractionForm = sm.bSmInteractionForm.SmInteractionForm,
         View = sm.bSmInteractionForm.View;
+
+
+    /**
+     * Name of this element in factory
+     */
+    InteractionForm.NAME = sm.bSmInteractionForm.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        InteractionForm.NAME,
+        {
+            control: InteractionForm,
+            view: View
+        }
+    );
 
 
     /**

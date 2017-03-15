@@ -184,8 +184,8 @@ goog.scope(function() {
 
         if (dom.descriptionLink) {
             this.descriptionLink = this.decorateChild(
-                    sm.bSmLink.SmLink.NAME,
-                    dom.descriptionLink
+                sm.bSmLink.SmLink.NAME,
+                dom.descriptionLink
             );
         }
 

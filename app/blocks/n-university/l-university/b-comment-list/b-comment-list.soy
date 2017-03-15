@@ -28,10 +28,19 @@
  *     config: sm.lUniversity.bCommentList.Template.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .commentList}
     {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    lUniversity-commentList
 {/template}
 
 

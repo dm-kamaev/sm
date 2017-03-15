@@ -1,6 +1,9 @@
 goog.provide('sm.bSummaryBoard.SummaryBoard');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSummaryBoard.Template');
+goog.require('sm.bSummaryBoard.View');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
 
@@ -20,5 +23,16 @@ goog.inherits(sm.bSummaryBoard.SummaryBoard, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var SummaryBoard = sm.bSummaryBoard.SummaryBoard;
+    var SummaryBoard = sm.bSummaryBoard.SummaryBoard,
+        View = sm.bSummaryBoard.View;
+
+    /**
+     * Name of this element in factory
+     */
+    SummaryBoard.NAME = sm.bSummaryBoard.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(SummaryBoard.NAME, {
+        control: SummaryBoard,
+        view: View
+    });
 });  // goog.scope

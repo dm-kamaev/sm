@@ -2,6 +2,7 @@ goog.provide('sm.bSmSubscribeBoard.SmSubscribeBoard');
 
 goog.require('cl.iControl.Control');
 goog.require('cl.iRequest.Request');
+goog.require('sm.bSmSubscribeBoard.Template');
 goog.require('sm.bSmSubscribeBoard.View');
 goog.require('sm.gInput.InputStendhal');
 
@@ -41,6 +42,20 @@ goog.scope(function() {
     var SubscribeBoard = sm.bSmSubscribeBoard.SmSubscribeBoard,
         View = sm.bSmSubscribeBoard.View,
         Request = cl.iRequest.Request;
+
+
+    /**
+     * Name of this element in factory
+     */
+    SubscribeBoard.NAME = sm.bSmSubscribeBoard.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        SubscribeBoard.NAME,
+        {
+            control: SubscribeBoard,
+            view: View
+        }
+    );
 
 
     /**

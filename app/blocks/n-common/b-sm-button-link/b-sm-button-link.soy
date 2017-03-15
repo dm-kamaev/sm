@@ -8,7 +8,7 @@
  *     icon: ?string,
  *     iconType: ?string,
  *     content: ?string
- * }} 
+ * }}
  * sm.bButtonLink.Template.Params.Data
  */
 
@@ -31,10 +31,19 @@
  *     config: sm.bButtonLink.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  */
 {template .buttonLink}
     {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smButtonLink
 {/template}
 
 

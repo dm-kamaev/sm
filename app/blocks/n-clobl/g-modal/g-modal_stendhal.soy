@@ -80,9 +80,8 @@
  * }
  */
 {template .customizableIcon}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+    {call .renderChild}
         {param params: [
-            'factory': $params?.config?.stylizationModifier,
             'type': $params.data.closer.iconType ?: 'icon',
             'renderParams': [
                 'data': [

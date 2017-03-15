@@ -1,11 +1,25 @@
 goog.provide('sm.lUniversity.University');
 
+goog.require('sm.bEntityRelation.EntityRelation');
+goog.require('sm.bSmBanner.SmBanner');
+goog.require('sm.bSmButtonLink.SmButtonLink');
+goog.require('sm.bSmCollapsedText.SmCollapsedText');
+goog.require('sm.bSmInteractionForm.SmInteractionForm');
+goog.require('sm.bSmInteractionForm.SmInteractionFormComment');
+goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.bSmRowLinks.SmRowLinks');
+goog.require('sm.bSmSketch.SmSketch');
 goog.require('sm.bSmSubscribeBoard.SmSubscribeBoard');
+goog.require('sm.bSummaryBoard.SummaryBoard');
 goog.require('sm.gModal.ModalInteraction');
 goog.require('sm.iAuthorization.Authorization');
+goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iLayout.LayoutStendhal');
+goog.require('sm.lUniversity.Template');
 goog.require('sm.lUniversity.View');
 goog.require('sm.lUniversity.bCommentList.CommentList');
+goog.require('sm.lUniversity.bCommentList.CommentList');
+goog.require('sm.lUniversity.bDescriptionList.DescriptionList');
 
 
 goog.scope(function() {
@@ -53,6 +67,17 @@ goog.scope(function() {
         View = sm.lUniversity.View;
 
     var Authorization = sm.iAuthorization.Authorization;
+
+
+    /**
+     * Name of this element in factory
+     */
+    University.NAME = sm.lUniversity.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(University.NAME, {
+        control: University,
+        view: View
+    });
 
 
     /**
@@ -149,9 +174,16 @@ goog.scope(function() {
      * @private
      */
     University.prototype.initSketch_ = function() {
+        var dom = this.getView().getDom();
+
         this.sketch_ = this.decorateChild(
-            'smSketch',
-            this.getView().getDom().sketch
+            sm.bSmSketch.SmSketch.NAME,
+            dom.sketch
+        );
+
+        this.decorateChild(
+            sm.bEntityRelation.EntityRelation.NAME,
+            dom.entityRelation
         );
     };
 
@@ -161,7 +193,7 @@ goog.scope(function() {
      */
     University.prototype.initSummaryBoard_ = function() {
         this.decorateChild(
-            'summary-board',
+            sm.bSummaryBoard.SummaryBoard.NAME,
             this.getView().getDom().summaryBoard
         );
     };
@@ -172,7 +204,7 @@ goog.scope(function() {
      */
     University.prototype.initDescriptionList_ = function() {
         this.decorateChild(
-            'lUniversity-descriptionList',
+            sm.lUniversity.bDescriptionList.DescriptionList.NAME,
             this.getView().getDom().descriptionList
         );
     };
@@ -184,7 +216,7 @@ goog.scope(function() {
      */
     University.prototype.initCutDescription_ = function() {
         this.decorateChild(
-            'smCollapsedText',
+            sm.bSmCollapsedText.SmCollapsedText.NAME,
             this.getView().getDom().cutDescription
         );
     };
@@ -196,7 +228,7 @@ goog.scope(function() {
      */
     University.prototype.initPrograms_ = function() {
         this.decorateChild(
-            'smItemList',
+            sm.bSmItemList.SmItemList.NAME,
             this.getView().getDom().programs
         );
     };
@@ -208,7 +240,7 @@ goog.scope(function() {
      */
     University.prototype.initCourses_ = function() {
         this.decorateChild(
-            'smItemList',
+            sm.bSmItemList.SmItemList.NAME,
             this.getView().getDom().courses
         );
     };
@@ -220,7 +252,7 @@ goog.scope(function() {
      */
     University.prototype.initModals_ = function() {
         this.modalComment_ = this.decorateChild(
-            'modal-interaction',
+            sm.gModal.ModalInteraction.NAME,
             this.getView().getDom().modalComment
         );
     };
@@ -232,7 +264,7 @@ goog.scope(function() {
      */
     University.prototype.initComments_ = function() {
         this.commentList_ = this.decorateChild(
-            'lUniversity-commentList',
+            sm.lUniversity.bCommentList.CommentList.NAME,
             this.getView().getDom().comments
         );
     };
@@ -244,7 +276,7 @@ goog.scope(function() {
      */
     University.prototype.initNavigationPanel_ = function() {
         this.decorateChild(
-            'smRowLinks',
+            sm.bSmRowLinks.SmRowLinks.NAME,
             this.getView().getDom().navigationPanel
         );
     };
@@ -256,7 +288,7 @@ goog.scope(function() {
      */
     University.prototype.initSubscribeBoard_ = function() {
         this.decorateChild(
-            'smSubscribeBoard',
+            sm.bSmSubscribeBoard.SmSubscribeBoard.NAME,
             this.getView().getDom().subscribeBoard
         );
     };
@@ -267,12 +299,8 @@ goog.scope(function() {
  * creates sm.lUniversity.University instance
  */
 jQuery(function() {
-    var domElement = goog.dom.getElementByClass(
+    sm.iLayout.LayoutStendhal.autoInstance(
+        sm.lUniversity.University.NAME,
         sm.lUniversity.View.CssClass.ROOT
     );
-
-    var view = new sm.lUniversity.View();
-    var instance = new sm.lUniversity.University(view);
-
-    instance.decorate(domElement);
 });

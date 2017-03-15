@@ -3,6 +3,8 @@ goog.provide('sm.lUniversity.bCommentList.CommentList');
 goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lUniversity.bCommentList.Template');
 goog.require('sm.lUniversity.bCommentList.View');
 
 
@@ -48,6 +50,17 @@ goog.inherits(
 goog.scope(function() {
     var CommentList = sm.lUniversity.bCommentList.CommentList,
         View = sm.lUniversity.bCommentList.View;
+
+
+    /**
+     * Name of this element in factory
+     */
+    CommentList.NAME = sm.lUniversity.bCommentList.Template.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(CommentList.NAME, {
+        control: CommentList,
+        view: View
+    });
 
 
     /**
