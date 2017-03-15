@@ -30,20 +30,10 @@ class UniversityAdminController extends Controller {
      * @apiSuccess {Number}   -.id                 Id.
      * @apiSuccess {String}   -.name               Name.
      * @apiSuccess {String}   -.abbreviation       Abbreviation.
-     * @apiSuccess {String}   -.description        Description.
-     * @apiSuccess {String}   -.imageUrl           Url for university image.
-     *     It has {width} parameter in it, which should be replaced for required
-     *     width size in px.
-     * @apiSuccess {String}   -.relapImageUrl      Url for relap image.
-     *     It has {width} parameter in it, which should be replaced for required
-     *     width size in px.
-     * @apiSuccess {String[]} -.links              Array of links
-     *     (official site, facebook communities).
-     * @apiSuccess {Boolean}  -.militaryDepartment Military department.
-     * @apiSuccess {Boolean}  -.dormitory          Dormitory.
-     * @apiSuccess {Object}   -.cityId             City's id.
-     * @apiSuccess {String}   -.created_at         Created at.
-     * @apiSuccess {String}   -.updated_at         Updated at.
+     * @apiSuccess {String}   -.cityName           Name of university's city.
+     * @apiSuccess {Number}   -.programCount
+     *     Number of university's programs.
+     * @apiSuccess {String}   -.updatedAt          Updated at.
      */
     public async actionList(actionContext: any) {
         return universityService.getAll();

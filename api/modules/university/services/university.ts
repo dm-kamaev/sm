@@ -1,22 +1,44 @@
+const squel = require('squel');
+
+const sequelize = require('../../../../app/components/db');
+
 import {
     Model as UniversityModel,
     UniversityInstance,
     UniversityAttribute
 } from '../models/University';
 
-import {Model as CityModel} from '../../geo/models/city';
+import {UniversityAdminList} from '../types/university';
 
+import {Model as CityModel} from '../../geo/models/city';
+import {Model as ProgramModel} from '../models/Program';
 
 import {UniversityPageInstance} from '../models/UniversityPage';
 import {UniversityNotFound} from './exceptions/UniversityNotFound';
 
 class UniversityService {
-    public async getAll(): Promise<Array<UniversityInstance>> {
-        return UniversityModel.findAll({
-            attributes: {
-                exclude: ['city_id']
-            }
-        });
+    public async getAll(): Promise<Array<UniversityAdminList>> {
+        const university = 'university';
+        const city = 'city';
+        const program = 'program';
+        const query = squel.select()
+            .from(university)
+            .field(`${university}.id`)
+            .field(`${university}.name`)
+            .field(`${university}.abbreviation`)
+            .field(`${city}.name`, 'cityName')
+            .field(`COUNT(${program}.id)`, 'programCount')
+            .field(`${university}.updated_at`, 'updatedAt')
+            .left_join(city, null, `${university}.city_id = ${city}.id`)
+            .left_join(
+                program,
+                null,
+                `${university}.id = ${program}.university_id`
+            )
+            .group(`${university}.id`)
+            .group(`${city}.name`)
+            .toString();
+        return sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
     }
 
     public async get(id: number): Promise<UniversityInstance> {
