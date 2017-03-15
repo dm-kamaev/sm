@@ -17,6 +17,9 @@
         "analyticsViewId": "ga:130670455",
         "experimentId": "130670455-19"
     },
+    "universities": {
+        "host": "courses.mel.fm"
+    },
     "carrotquestId": "6408-1ccff98844d996fc088fed318b4",
     "facebookClientId": 1463878833939061
 }

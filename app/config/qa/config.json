@@ -1,6 +1,7 @@
 {
-    "emailNotifier": {
-        "email": "easyrider377@yandex.ru"
+    "commentNotifications": {
+        "schools": "easyrider377@yandex.ru",
+        "universities": "easyrider377@yandex.ru"
     },
     "port": 3000,
     "environment": "development",
@@ -19,6 +20,9 @@
         "host": "courses.qa.lan",
         "analyticsViewId": "ga:134372507",
         "experimentId": "134372507-21"
+    },
+    "universities": {
+        "host": "courses.qa.lan"
     },
     "carrotquestId": "6408-1ccff98844d996fc088fed318b4",
     "facebookClientId": 525358880980041

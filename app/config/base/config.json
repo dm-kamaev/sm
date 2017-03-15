@@ -1,8 +1,9 @@
 {
-    "admin-token": "123qwe",
-    "emailNotifier": {
-        "email": "schools@mel.fm"
+    "commentNotifications": {
+        "schools": "schools@mel.fm",
+        "universities": "vuz@mel.fm"
     },
+    "admin-token": "123qwe",
     "deleteMailbox": {
         "email": "delete@mel.fm",
         "password": "123qwek^3;3C<",
