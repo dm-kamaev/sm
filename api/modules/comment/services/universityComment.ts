@@ -113,6 +113,14 @@ class UniversityCommentService {
         return await instance.update(data);
     }
 
+    public async updateById(
+            commentId: number,
+            data: UniversityCommentAttributes
+    ): Promise<UniversityCommentInstance> {
+        const instance = await this.silentGetOne_(commentId);
+
+        return await instance.update(data);
+    }
 
     public async fullUpdate(
             programId: number,
@@ -131,6 +139,14 @@ class UniversityCommentService {
             await this.fullDelete_(programId, commentId);
         }).catch((error) => {
             throw error;
+        });
+    }
+
+    public async getNotNotified(): Promise<Array<UniversityCommentInstance>> {
+        return UniversityCommentModel.findAll({
+            where: {
+                isNoticeSend: false
+            }
         });
     }
 

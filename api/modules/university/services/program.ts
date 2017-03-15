@@ -118,6 +118,15 @@ class ProgramService {
         });
     }
 
+    public async getByCommentGroup(
+            commentGroupId: number): Promise<ProgramInstance> {
+        return await ProgramModel.findOne({
+            where: {
+                commentGroupId: commentGroupId
+            }
+        });
+    }
+
     private async fullCreate(data: ProgramAdmin):
             Promise<ProgramInstance> {
         const commentGroup = await commentGroupService.create();
