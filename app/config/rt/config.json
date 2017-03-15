@@ -4,7 +4,7 @@
     "protocol": "http",
     "authApi": "http://pablo-mel.qa.lan:49611",
     "userApi": "http://pablo-mel.qa.lan:20348",
-    "commentNotifications": {
+    "notifications": {
         "schools": "easyrider377@yandex.ru",
         "universities": "easyrider377@yandex.ru"
     },

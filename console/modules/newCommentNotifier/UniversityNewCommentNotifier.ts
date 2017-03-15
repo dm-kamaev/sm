@@ -25,7 +25,7 @@ class UniversityNewCommentNotifier extends NewCommentNotifier {
     constructor() {
         super();
 
-        this.email = config.commentNotifications.universities;
+        this.email = config.notifications.universities;
 
         this.entityType = entityType.UNIVERSITY;
     }
