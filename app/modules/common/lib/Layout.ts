@@ -1,7 +1,4 @@
-const SubHeader = require('../../../../api/modules/entity/lib/Subheader');
-
 const headerView = require('../../../../api/modules/entity/views/headerView'),
-    footerView = require('../../../../api/modules/entity/views/footerView'),
     favoriteView =
             require('../../../../api/modules/favorite/views/favoriteView');
 
@@ -9,6 +6,8 @@ const sideMenuView = require('../views/sideMenuView'),
     configView = require('../views/configView');
 
 import {userView} from '../../user/views/user';
+import {SubHeader} from './SubHeader';
+import {footerView} from '../views/footerView';
 
 import {iLayoutStendhal} from '../../../blocks/n-clobl/i-layout/params';
 import {BackendUser, UserData} from '../../user/types/user';
