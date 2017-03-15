@@ -49,6 +49,11 @@ import {
 } from '../../comment/controllers/ProgramCommentController';
 const programCommentController = new ProgramCommentController();
 
+import {
+    ProgramMajorController
+} from './ProgramMajorController';
+const programMajorController = new ProgramMajorController();
+
 router.get(
     '/program/:id',
     programController.actionProgramPage
@@ -65,6 +70,8 @@ router.get(
     checkToken,
     examController.actionList
 );
+
+router.get('/programmajor/search', programMajorController.actionSearch);
 
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
