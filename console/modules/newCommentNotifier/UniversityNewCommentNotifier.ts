@@ -6,6 +6,7 @@ import {NewCommentNotifier} from './NewCommentNotifier';
 
 const entityType = require('../../../api/modules/entity/enums/entityType');
 const config = require('../../../app/config/config.json');
+const adminConfig = require('../../../app/config/admin.json');
 
 import {
     service as programCommentService
@@ -38,12 +39,15 @@ class UniversityNewCommentNotifier extends NewCommentNotifier {
     protected async getEntityByComment(
         comment: ProgramCommentAttributes): Promise<ProgramAttribute> {
         return await programService.getByCommentGroup(comment.commentGroupId);
-    };
+    }
+
+    protected async getEntityAlias(entity: ProgramAttribute): Promise<string> {
+        return await programService.getUrl(entity);
+    }
 
     protected async getEntityLink(entity: ProgramAttribute): Promise<string> {
         const alias = await this.getEntityAlias(entity);
-        return `${config.protocol}://${config.universities.host}/` +
-            `link%to%program/${alias}`;
+        return `${config.protocol}://${config.universities.host}/${alias}`;
     }
 
     protected getFormattedCommentText(
@@ -68,7 +72,8 @@ class UniversityNewCommentNotifier extends NewCommentNotifier {
     protected getCommentEditLink(
             comment: ProgramCommentAttributes, entity: ProgramAttribute
     ): string {
-        return `http://link%to%comment`;
+        return `${config.protocol}://${adminConfig.host}/universities/` +
+            `programs/${entity.id}/comments/${comment.id}/update`;
     }
 
     protected async setSentNotificationState(

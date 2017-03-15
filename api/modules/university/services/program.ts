@@ -9,7 +9,7 @@ import {Model as ProgramModel} from '../models/Program';
 import {Model as ProgramMajor} from '../models/ProgramMajor';
 import {
     ProgramInstance,
-    ProgramAdmin
+    ProgramAdmin, ProgramAttribute
 } from '../types/program';
 
 import {
@@ -17,6 +17,8 @@ import {
 } from '../../comment/services/commentGroup';
 import {service as addressService} from '../../geo/services/address';
 import {service as universityService} from './university';
+import {service as pageService} from '../../entity/services/page';
+const entityType = require('../../entity/enums/entityType');
 
 import {ProgramNotFound} from './exceptions/ProgramNotFound';
 
@@ -125,6 +127,17 @@ class ProgramService {
                 commentGroupId: commentGroupId
             }
         });
+    }
+
+    public async getUrl(program: ProgramAttribute): Promise<string> {
+        const programPage = await pageService.getOne(
+                program.id, entityType.PROGRAM
+            ),
+            universityPage = await pageService.getOne(
+                program.universityId, entityType.UNIVERSITY
+            );
+
+        return `vuz/${universityPage.alias}/specialnost/${programPage.alias}`;
     }
 
     private async fullCreate(data: ProgramAdmin):
