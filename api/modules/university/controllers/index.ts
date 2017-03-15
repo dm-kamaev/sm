@@ -39,6 +39,16 @@ const programController: any = new ProgramController();
 import {UniversityPageController} from './UniversityPageController';
 const universityPageController: any = new UniversityPageController();
 
+import {
+    AdminUniversityCommentController
+} from '../../comment/controllers/AdminUniversityCommentController';
+const adminUniversityCommentController = new AdminUniversityCommentController();
+
+const UniversityCommentController =
+    require('../../comment/controllers/UniversityCommentController')
+        .UniversityCommentController;
+const universityCommentController = new UniversityCommentController();
+
 router.get(
     '/program/:id',
     programController.actionProgramPage
@@ -94,6 +104,33 @@ initCrudRouting('/admin/program/:programId/exam', examAdminController);
 initCrudRouting(
     '/admin/program/:programId/statistic',
     entranceStatisticAdminController
+);
+initCrudRouting(
+    '/admin/program/:programId/comment',
+    adminUniversityCommentController
+);
+
+const initSimpleCrudRouting = function(route: string, controller: any): void {
+    router.post(
+        route,
+        checkToken,
+        controller.actionCreate
+    );
+    router.get(route, controller.actionList);
+    router.get(`${route}/:id`, controller.actionGet);
+    router.put(
+        `${route}/:id`,
+        checkToken,
+        controller.actionUpdate
+    );
+    if (controller.actionDelete) {
+        router.delete(route, checkToken, controller.actionDelete);
+    }
+};
+
+initSimpleCrudRouting(
+    '/program/:programId/comment',
+    universityCommentController
 );
 
 export {router};
