@@ -7,6 +7,11 @@ const sequelize = require('../../../../app/components/db');
 
 import {Model as ProgramModel} from '../models/Program';
 import {Model as ProgramMajor} from '../models/ProgramMajor';
+import {Model as CommentGroupModel} from '../../comment/models/commentGroup';
+import {
+    Model as UniversityCommentModel
+} from '../../comment/models/UniversityComment';
+import {Model as EntranceStatisticModel} from '../models/EntranceStatistic';
 import {
     ProgramInstance,
     ProgramAdmin, ProgramAttribute
@@ -38,9 +43,15 @@ class ProgramService {
                 exclude: EXCLUDE_FIELDS
             },
             include: [{
-                attributes: ['id', 'name'],
-                model: ProgramMajor,
-                as: 'programMajor'
+                model: CommentGroupModel,
+                as: 'commentGroup',
+                include: [{
+                    model: UniversityCommentModel,
+                    as: 'universityComments'
+                }]
+            }, {
+                model: EntranceStatisticModel,
+                as: 'entranceStatistics'
             }],
         });
         return programs;

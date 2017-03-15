@@ -21,7 +21,7 @@ class UniversityService {
         const university = 'university';
         const city = 'city';
         const program = 'program';
-        const query = squel.select()
+        const query: string = squel.select()
             .from(university)
             .field(`${university}.id`)
             .field(`${university}.name`)
@@ -29,11 +29,11 @@ class UniversityService {
             .field(`${city}.name`, 'cityName')
             .field(`COUNT(${program}.id)`, 'programCount')
             .field(`${university}.updated_at`, 'updatedAt')
-            .left_join(city, null, `${university}.city_id = ${city}.id`)
+            .left_join(city, null, `${university}.${city}_id = ${city}.id`)
             .left_join(
                 program,
                 null,
-                `${university}.id = ${program}.university_id`
+                `${university}.id = ${program}.${university}_id`
             )
             .group(`${university}.id`)
             .group(`${city}.name`)

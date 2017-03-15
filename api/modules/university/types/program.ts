@@ -4,6 +4,7 @@ import {AddressAttribute, AddressInstance} from '../../geo/types/address';
 import {ProgramMajorInstance} from '../models/ProgramMajor';
 import {CommentGroupInstance} from '../../comment/types/commentGroup';
 import {PageAttribute, PageIntstance} from '../../entity/types/page';
+import {EntranceStatisticInstance} from '../models/EntranceStatistic';
 
 export interface ProgramAttribute {
     id?: number;
@@ -26,6 +27,10 @@ export interface ProgramAttribute {
 
 export interface ProgramInstance
         extends Sequelize.Instance<ProgramAttribute>, ProgramAttribute {
+    programMajor?: ProgramMajorInstance;
+    commentGroup?: CommentGroupInstance;
+    entranceStatistics?: Array<EntranceStatisticInstance>;
+
     addAddress: Sequelize.BelongsToManyAddAssociationsMixin<
             AddressInstance, number, AddressAttribute
         >;
@@ -38,9 +43,10 @@ export interface ProgramInstance
         Sequelize.BelongsToGetAssociationMixin<CommentGroupInstance>;
     setPages: Sequelize.BelongsToManySetAssociationsMixin<
         PageIntstance, number, PageAttribute>;
-    programMajor: ProgramMajorInstance;
 }
 
 export interface ProgramAdmin extends ProgramAttribute {
     addressName?: string;
+    commentCount?: number;
+    passScore?: number;
 }

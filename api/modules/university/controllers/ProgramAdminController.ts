@@ -3,6 +3,7 @@ import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {service as programService} from '../services/program';
+import {programAdminView} from '../views/programAdmin';
 
 import {ProgramAdmin} from '../types/program';
 
@@ -26,59 +27,24 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Object[]} -                 Response body.
      * @apiSuccess {Number}   -.id              Id.
      * @apiSuccess {String}   -.name            Name.
-     * @apiSuccess {String}   -.universityId    University's id.
-     * @apiSuccess {String}   -.description     Description.
-     * @apiSuccess {String}   -.commentGroupId  Comment group's id.
-     * @apiSuccess {String}   -.category        Program's category.
-     * @apiSuccess {String[]} -.links           Array of links
-     *     (official site, facebook communities).
-     * @apiSuccess {String[]} -.specializations Array of specializations.
-     * @apiSuccess {Number}   -.duration        Number of studying years.
-     * @apiSuccess {Number}   -.employment      Percent of employment.
-     * @apiSuccess {Number}   -.salary          Salary after graduation.
-     * @apiSuccess {String[]} -.extraExam       Array of extra exams.
-     * @apiSuccess {Object} -.programMajor    Major program for program
-     * @apiSuccess {Number}   -.programMajor.id   Major program id
-     * @apiSuccess {String}   -.programMajor.name Major program name
-     * @apiSuccess {String} -.exchangeProgram Exchange program
-     * @apiSuccess {String} -.createdAt       Created at.
-     * @apiSuccess {String} -.updatedAt       Updated at.
+     * @apiSuccess {Number}   -.commentCount    Number of comments.
+     * @apiSuccess {Number}   -.passScore       Ege pass score.
+     * @apiSuccess {String}   -.updatedAt       Updated at.
+     *
      * @apiSuccessExample {json} Success-Response:
-     *    [
-     *        {
-     *            "id": 5,
-     *            "name": "Прикладная математика",
-     *            "universityId": 62,
-     *            "description": "lalala",
-     *            "commentGroupId": 369,
-     *            "category": "sadadasdsadsad",
-     *            "links": [
-     *                "http://yandex.ru",
-     *                "http://yandex1.ru"
-     *            ],
-     *            "specializations": [
-     *                "прикладная математика",
-     *                "химия"
-     *            ],
-     *            "duration": 1,
-     *            "employment": 1.2,
-     *            "salary": 12000,
-     *            "extraExam": [
-     *                "100 отжимагий",
-     *                "рисование"
-     *            ],
-     *            "exchangeProgram": true,
-     *            "createdAt": "2017-03-07T06:59:52.220Z",
-     *            "updatedAt": "2017-03-07T06:59:52.220Z",
-     *            "programMajor": {
-     *                "id": 1,
-     *                "name": "экономист"
-     *            }
-     *        }
-     *    ]
+     *     [
+     *         {
+     *             "id": 5,
+     *             "name": "Прикладная математика",
+     *             "commentCount": 14,
+     *             "passScore": 256,
+     *             "updatedAt": "2017-03-07T06:59:52.220Z"
+     *         }
+     *     ]
      */
     public async actionList(actionContext: any, universityId: string) {
-        return programService.getAll();
+        const programs = await programService.getAll();
+        return programAdminView.renderList(programs);
     }
 
     /**
