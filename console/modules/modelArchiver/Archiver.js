@@ -127,7 +127,7 @@ class Archiver {
 
         this.decompress(fileDir);
 
-        this.copyToTable_(table, filePath, delimiter);
+        this.copyToTable(table, filePath, delimiter);
 
         this.deleteUnarchivedFile(fileDir);
     }
@@ -152,7 +152,7 @@ class Archiver {
         await(this.cloneToTempTable_(table, headers));
 
         var tmpTable = TMP_TABLE_PREFIX + table;
-        await(this.copyToTable_(tmpTable, filePath, delimiter));
+        await(this.copyToTable(tmpTable, filePath, delimiter));
         // remove temporary file
         this.deleteUnarchivedFile(fileDir);
 
@@ -298,9 +298,9 @@ class Archiver {
      * @param {string} table
      * @param {string} tmpFilePath
      * @param {string} delimiter
-     * @private
+     * @public
      */
-    copyToTable_(table, tmpFilePath, delimiter) {
+    copyToTable(table, tmpFilePath, delimiter) {
         var sqlQuery = 'COPY ' + table + '(' +
             this.getHeaders_(tmpFilePath, delimiter) + ') FROM \'' +
             tmpFilePath + '\' WITH CSV HEADER DELIMITER \'' +

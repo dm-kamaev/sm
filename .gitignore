@@ -225,6 +225,7 @@ console/modules/newCommentNotifier/**/*.js
 console/executable/sendNewCommentNotifications.js
 
 console/insertRegionForMoscow.js
+console/one-off/loadPrograms.js
 
 console/one-off/shrinkOlympiadResults.js
 console/modules/geoTools/*.js

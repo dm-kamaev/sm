@@ -34,7 +34,7 @@ const Program: ProgramModel = sequelize.define('Program', {
             key: 'id'
         }
     },
-    description: DataType.STRING,
+    description: DataType.TEXT,
     commentGroupId: {
         allowNull: false,
         onUpdate: 'cascade',
