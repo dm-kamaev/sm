@@ -27,7 +27,7 @@ goog.scope(function() {
         sm.bSmInteractionForm.ViewComment,
         sm.bSmInteractionForm.View
     );
-    View = sm.bSmInteractionForm.ViewComment;
+    var View = sm.bSmInteractionForm.ViewComment;
 
 
     /**
