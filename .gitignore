@@ -222,6 +222,7 @@ app/modules/user/**/*.js
 app/modules/common/services/*.js
 
 console/modules/geoTools/*.js
+console/modules/modelArchiver/Archiver.js
 console/modules/newCommentNotifier/**/*.js
 console/executable/sendNewCommentNotifications.js
 
