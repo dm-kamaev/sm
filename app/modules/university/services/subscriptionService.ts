@@ -9,13 +9,7 @@ const EMAIL_EXIST_ERROR: string = 'Member Exists';
 
 import {EmailAlreadyExist} from './exceptions/EmailAlreadyExist';
 import {InvalidEmail} from './exceptions/InvalidEmail';
-import {Service} from '../../common/services/service';
-
-interface Isubscriber {
-    id?: string; //"id": "1dasd23"
-    email_address: string; //"email_address": "dmitrsavk@yandex.ru"
-    status: string; //"status": "subscribed"
-}
+import {Service, RequestParams} from '../../common/services/Service';
 
 class SubscriptionService extends Service {
     public readonly name: string = 'subscriptionService';
@@ -27,27 +21,24 @@ class SubscriptionService extends Service {
     public async create(
         id: number,
         email: string
-    ): Promise<Axios.AxiosXHR<Isubscriber>> {
-        let response: Axios.AxiosXHR<Isubscriber>;
-
-        const data: Isubscriber = {
-            email_address: email,
-            status: 'subscribed',
-        };
-
-        const config: Axios.AxiosXHRConfigBase<Isubscriber> = {
+    ): Promise<any> {
+        const params: RequestParams = {
+            url: mailChimpUrl,
+            method: 'post',
+            data: {
+                email_address: email,
+                status: 'subscribed'
+            },
             auth: {
                 username: mailChimp.name,
                 password: mailChimp.password
             }
         };
 
-        response = await(this.post(mailChimpUrl, data, config));
-
-        return response;
+        return await(this.send(params));
     }
 
-    protected handleError(error: any): void {
+    protected handleError(error) {
         switch (error.data.title) {
         case INVALID_RESOURSE_ERROR:
             throw new InvalidEmail();
