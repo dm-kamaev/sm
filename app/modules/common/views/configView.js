@@ -41,7 +41,7 @@ configView.render = function(params) {
 
     let subdomain = subdomains[params.entityType],
         config = params.config;
-    console.log(contentExperiment.getFactoryByQuery(params.query));
+
     return {
         modifier: contentExperiment.getFactoryByQuery(params.query),
         entityType: params.entityType,
