@@ -16,8 +16,6 @@ class ProgramMajorController extends Controller {
      * @apiSuccess {String} name       Name.
      * @apiSuccess {String} createdAt  Created at.
      * @apiSuccess {String} updatedAt  Updated at.
-     * @apiSuccess {String} created_at Created at.
-     * @apiSuccess {String} updated_at Updated at.
      */
     public async actionSearch(actionContext: any) {
         return programMajorService.search(actionContext.request.query.name);

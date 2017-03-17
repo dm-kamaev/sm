@@ -49,10 +49,13 @@ import {
 } from '../../comment/controllers/ProgramCommentController';
 const programCommentController = new ProgramCommentController();
 
-import {
-    ProgramMajorController
-} from './ProgramMajorController';
+import {ProgramMajorController} from './ProgramMajorController';
 const programMajorController = new ProgramMajorController();
+
+
+
+import {ProgramMajorAdminController} from './ProgramMajorAdminController';
+const programMajorAdminController = new ProgramMajorAdminController();
 
 router.get(
     '/program/:id',
@@ -116,6 +119,8 @@ initCrudRouting(
     '/admin/program/:programId/comment',
     adminProgramCommentController
 );
+
+initCrudRouting('/admin/programmajor', programMajorAdminController);
 
 const initSimpleCrudRouting = function(route: string, controller: any): void {
     router.post(
