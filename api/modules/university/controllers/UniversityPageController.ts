@@ -19,7 +19,7 @@ class UniversityPageController extends Controller {
      * @api {get} /api/university/:alias Get university
      * @apiVersion 1.0.0
      * @apiName getUniversityByAlias
-     * @apiGroup University
+     * @apiGroup University Page
      *
      * @apiSuccess {Number} universityId University's id with given alias.
      */

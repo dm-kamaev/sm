@@ -39,6 +39,9 @@ const programController: any = new ProgramController();
 import {UniversityPageController} from './UniversityPageController';
 const universityPageController: any = new UniversityPageController();
 
+import {UniversityController} from './UniversityController';
+const universityController: any = new UniversityController();
+
 import {
     AdminProgramCommentController
 } from '../../comment/controllers/AdminProgramCommentController';
@@ -53,6 +56,8 @@ import {
     ProgramMajorController
 } from './ProgramMajorController';
 const programMajorController = new ProgramMajorController();
+
+router.get('/university/:id', universityController.actionGet);
 
 router.get(
     '/program/:id',
