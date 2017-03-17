@@ -560,17 +560,26 @@ exports.popularSpecializedClassType = async(function(req, res) {
  * @apiGroup School
  *
  * @apiSuccess {Object[]} types of school
- [{
-    "id": 1,
-    "name": "Школы и центры образования",
-    "values": ["SCHOOL", "EDUCATION_CENTER"],
-    "alias": "school-or-center"
- },{
-    "id": 4,
-    "name": "Коррекционные",
-    "values": ["CORRECTIONAL_SCHOOL", "CORRECTIONAL_SCHOOL_INTERNAT"],
-    "alias": "correctional"
- }]
+ *  [
+ *      {
+ *          "id": 1,
+ *          "name": "Школы и центры образования",
+ *          "values": [
+ *              "SCHOOL",
+ *              "EDUCATION_CENTER"
+ *          ],
+ *          "alias": "school-or-center"
+ *      },
+ *      {
+ *          "id": 4,
+ *          "name": "Коррекционные",
+ *          "values": [
+ *              "CORRECTIONAL_SCHOOL",
+ *              "CORRECTIONAL_SCHOOL_INTERNAT"
+ *          ],
+ *          "alias": "correctional"
+ *      }
+ *  ]
  *
  */
 exports.getAllTypes = async(function(req, res) {
