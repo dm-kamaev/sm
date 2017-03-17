@@ -89,7 +89,7 @@ view.render = function(data) {
 view.subheader = function(data) {
     let subheader = new Subheader();
 
-    subheader.init({
+    return subheader.render({
         isLogoRedirect: false,
         listLinks: data.listLinks,
         isSearchRedirect: true,
@@ -97,8 +97,6 @@ view.subheader = function(data) {
         favoriteEntities: data.favoriteEntities,
         bottomLine: false
     });
-
-    return subheader.getParams();
 };
 
 

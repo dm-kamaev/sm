@@ -1,10 +1,11 @@
 'use strict';
 
-const Subheader = require('../../entity/lib/Subheader');
+const SubHeader =
+    require('../../../../app/modules/common/lib/SubHeader').SubHeader;
 
 const entityType = require('../../entity/enums/entityType');
 
-class CourseSubheader extends Subheader {
+class CourseSubheader extends SubHeader {
 
     /**
      * Init params for subheader
@@ -40,21 +41,20 @@ class CourseSubheader extends Subheader {
          * @protected
          * @override
          */
-        this.listLinks = {
-            opener: 'Все курсы',
-            content: {
-                items: []
+        this.dropdownLinks = {
+            data: {
+                opener: 'Все курсы'
             }
         };
 
 
         /**
-         * Links data
+         * Link data
          * @type {Object<string, string>}
          * @protected
          * @override
          */
-        this.links = {
+        this.link = {
             nameL: 'Все курсы, кружки и секции',
             nameM: 'Все курсы',
             url: '/search'

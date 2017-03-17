@@ -145,7 +145,7 @@ view.actualizeMetaInformation = function(information, actualInformation) {
 view.subheader = function(data) {
     let subheader = new Subheader();
 
-    subheader.init({
+    return subheader.render({
         isLogoRedirect: true,
         listLinks: data.listLinks,
         isSearchRedirect: true,
@@ -153,8 +153,6 @@ view.subheader = function(data) {
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-
-    return subheader.getParams();
 };
 
 module.exports = view;

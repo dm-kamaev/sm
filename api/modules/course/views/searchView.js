@@ -268,7 +268,7 @@ searchView.header = function(entityType, links) {
 searchView.subheader = function(data) {
     let subheader = new Subheader();
 
-    subheader.init({
+    return subheader.render({
         isLogoRedirect: true,
         listLinks: data.listLinks,
         isSearchRedirect: data.pageAlias != COMMON_PAGE_ALIAS,
@@ -276,7 +276,6 @@ searchView.subheader = function(data) {
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-    return subheader.getParams();
 };
 
 module.exports = searchView;
