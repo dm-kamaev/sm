@@ -74,14 +74,13 @@ view.subheader = function(data) {
 
     let subheader = new Subheader[data.entityType]();
 
-    subheader.init({
+    return subheader.render({
         isLogoRedirect: true,
         isSearchRedirect: true,
         user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-    return subheader.getParams();
 };
 
 
