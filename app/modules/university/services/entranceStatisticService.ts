@@ -1,7 +1,8 @@
 import {Service, RequestParams} from '../../common/services/Service';
+const host: string =
+    require('../../../config/config').universities.host;
 
-const url =
-    'http://universities.www73.lan/api/program/';
+const url = `http://${host}/api/program/`;
 
 class EntranceStatisticService extends Service {
     public readonly name: string = 'entranceStatisticService';

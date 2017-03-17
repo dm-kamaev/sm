@@ -1,7 +1,10 @@
 import {Service, RequestParams} from '../../common/services/Service';
 import {ProgramNotFound} from './exceptions/ProgramNotFound';
 
-const url = 'http://universities.www73.lan/api/program/';
+const host: string =
+    require('../../../config/config').universities.host;
+
+const url = `http://${host}/api/program/`;
 
 class ProgramService extends Service {
     public readonly name: string = 'programService';
