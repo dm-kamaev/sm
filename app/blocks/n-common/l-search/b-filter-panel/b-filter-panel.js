@@ -240,10 +240,16 @@ goog.scope(function() {
     };
 
 
-    FilterPanel.prototype.onOption_ = function(event){
+    /**
+     * checkOption/uncheckOption handler
+     * @param {Object} event
+     * @private
+     */
+    FilterPanel.prototype.onOption_ = function(event) {
         this.tooltipPosition_ = event.position;
-        this.dispatchEvent(FilterPanel.Event.CHANGE)
+        this.dispatchEvent(FilterPanel.Event.CHANGE);
     };
+
 
     /**
      * Initializes listeners for balloon

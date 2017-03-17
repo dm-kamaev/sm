@@ -136,6 +136,7 @@ goog.scope(function() {
     /**
      * Get offset of option
      * @param {Object} option
+     * @return {number}
      */
     View.prototype.getOptionOffset = function(option) {
         var element = option.getElement();

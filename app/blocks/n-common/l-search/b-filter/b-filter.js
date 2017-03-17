@@ -419,7 +419,7 @@ goog.scope(function() {
 
     /**
      * Dispatch event if check option
-     * @param {sm.bSmCheckbox.SmCheckbox} option
+     * @param {Object} option
      * @protected
      */
     Filter.prototype.dispatchEventCheckOption = function(option) {
@@ -433,7 +433,7 @@ goog.scope(function() {
 
     /**
      * Dispatch event if uncheck option
-     * @param {sm.bSmCheckbox.SmCheckbox} option
+     * @param {Object} option
      * @protected
      */
     Filter.prototype.dispatchEventUncheckOption = function(option) {
