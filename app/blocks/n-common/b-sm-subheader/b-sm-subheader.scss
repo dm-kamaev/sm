@@ -224,12 +224,34 @@
 }
 /* school */
 
+
+/* type entity university */
+.b-sm-subheader_entity-type_university {
+    .b-sm-subheader__logo-img {
+        height: 31px;
+    }
+
+    .b-sm-subheader__section_search {
+        text-align: right;
+    }
+
+    .b-sm-subheader__search.b-sm-subheader__search_visible_l {
+        max-width: 315px;
+    }
+
+    .b-sm-subheader__search-links_dropdown {
+        display: none;
+    }
+}
+/* university */
+
 @include media-xl {
     .b-sm-subheader__body {
         box-sizing: border-box;
         width: 100%;
         padding: 0 40px;
     }
+
     .b-sm-subheader__section_logo {
         z-index: 3;
 
@@ -237,6 +259,7 @@
         margin-right: 40px;
         padding-right: 0;
     }
+
     .b-sm-subheader__section_links {
         z-index: 2;
         left: 0;
@@ -244,17 +267,22 @@
         width: auto;
         padding: 0;
     }
+
     .b-sm-subheader__link-search {
         left: 40px;
     }
+
     .b-sm-subheader__logo-img {
         width: 215px;
     }
+
+    /* type entity school */
     .b-sm-subheader_entity-type_school {
         .b-sm-subheader__logo-img {
             width: 227px;
         }
     }
+    /* school */
 }
 
 @include media-l {
@@ -426,6 +454,7 @@
             vertical-align: middle;
         }
     }
+
     .b-sm-subheader__user-control {
         height: 30px;
         padding-left: 12px;
@@ -433,19 +462,16 @@
             padding-right: 0;
         }
     }
+
     .b-sm-subheader__user-control_authorization {
         border-left: none;
     }
+
     .b-sm-subheader__logo-img {
         width: 186px;
         margin-top: 12px;
     }
-    .b-sm-subheader_entity-type_school {
-        .b-sm-subheader__logo-img {
-            width: 207px;
-            margin-top: 4px;
-        }
-    }
+
     .b-sm-subheader__section_contacts {
         display: block;
 
@@ -453,12 +479,15 @@
 
         border-bottom: 1px solid #e5e5e5;
     }
+
     .b-sm-subheader__section_hamburger-menu {
         display: inline-block;
     }
+
     .b-sm-subheader__section_logo {
         text-align: center;
     }
+
     /* header animation disable polyfill */
     .b-sm-subheader_mode_search.b-sm-subheader_animation_off {
         .b-sm-subheader__section.b-sm-subheader__section_logo,
@@ -466,6 +495,7 @@
             visibility: visible;
         }
     }
+
     /* end header animation disable polyfill */
     /* header animation */
     .b-sm-subheader_mode_search.b-sm-subheader_animation_on {
@@ -474,6 +504,7 @@
             animation-name: none;
         }
     }
+
     .b-sm-subheader_mode_default.b-sm-subheader_animation_on {
         .b-sm-subheader__section.b-sm-subheader__section_logo,
         .b-sm-subheader__section.b-sm-subheader__section_links {
@@ -481,4 +512,35 @@
         }
     }
     /* header animation end */
+
+
+    /* type entity school */
+    .b-sm-subheader_entity-type_school {
+        .b-sm-subheader__logo-img {
+            width: 207px;
+            margin-top: 4px;
+        }
+    }
+    /* end school */
+
+    .b-sm-subheader__body {
+        height: auto;
+    }
+
+
+    /* type entity university */
+    .b-sm-subheader_entity-type_university {
+        .b-sm-subheader__logo-img {
+            height: 31px;
+        }
+
+        .b-sm-subheader__search-links_row {
+            display: none;
+        }
+
+        .b-sm-subheader__search-links_dropdown {
+            display: inline-block;
+        }
+    }
+    /* end university */
 }

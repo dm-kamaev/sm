@@ -7,6 +7,7 @@ goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmFavorite.SmFavorite');
 goog.require('sm.bSmLink.SmLink');
+goog.require('sm.bSmRowLinks.SmRowLinks');
 goog.require('sm.bSmSubheader.SearchSubmitEvent');
 goog.require('sm.bSmSubheader.Template');
 goog.require('sm.bSmSubheader.View');
@@ -70,11 +71,27 @@ sm.bSmSubheader.SmSubheader = function(view, opt_domHelper) {
 
 
     /**
-     * links instance
-     * @type {sm.bSmLink.SmLink}
+     * links instances
+     * @type {?Array<sm.bSmLink.SmLink>}
      * @private
      */
-    this.links_ = [];
+    this.iconLinks_ = null;
+
+
+    /**
+     * Row link instance
+     * @type {sm.bSmRowLink.SmRowLink}
+     * @private
+     */
+    this.rowLinks_ = null;
+
+
+    /**
+     * Dropdown List Links instance
+     * @type {?sm.gDropdown.DropdownListLinks}
+     * @private
+     */
+    this.dropdownLinks_ = null;
 };
 goog.inherits(sm.bSmSubheader.SmSubheader, cl.iControl.Control);
 
@@ -200,7 +217,6 @@ goog.scope(function() {
         this.initAuthorizationLink_();
         this.initFavorite_();
         this.initLinks_();
-        this.initListLinks_();
     };
 
 
@@ -428,31 +444,26 @@ goog.scope(function() {
      * @private
      */
     Subheader.prototype.initLinks_ = function() {
-        var links = this.getView().getDom().links,
-            instance;
+        var dom = this.getView().getDom();
 
-        for (var i = 0; i < links.length; i++) {
-            instance = this.decorateChild(
+        if (dom.iconLinks) {
+            this.iconLinks_ = this.decorateChildren(
                 sm.bSmLink.SmLink.NAME,
-                links[i]
+                dom.iconLinks
             );
-
-            this.links_.push(instance);
         }
-    };
 
-
-    /**
-     * Initializes list of links instance
-     * @private
-     */
-    Subheader.prototype.initListLinks_ = function() {
-        var listLinks = this.getView().getDom().listLinks;
-
-        if (listLinks) {
-            this.listLinks_ = this.decorateChild(
+        if (dom.dropdownLinks) {
+            this.dropdownLinks_ = this.decorateChild(
                 sm.gDropdown.DropdownListLinks.NAME,
-                listLinks
+                dom.dropdownLinks
+            );
+        }
+
+        if (dom.rowLinks) {
+            this.rowLinks_ = this.decorateChild(
+                sm.bSmRowLinks.SmRowLinks.NAME,
+                dom.rowLinks
             );
         }
     };
