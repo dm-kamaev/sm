@@ -11,6 +11,9 @@ import {UserNotLoggedIn} from './errors/UserNotLoggedIn';
 import {ProgramNotFound} from './errors/ProgramNotFound';
 import {ProgramCommentNotFound} from './errors/ProgramCommentNotFound';
 import {CommentNotBelongsToProgram} from './errors/CommentNotBelongsToProgram';
+import {
+    UserAlreadyCommentedProgram
+} from './errors/UserAlreadyCommentedProgram';
 
 class ProgramCommentController extends Controller {
     constructor() {
@@ -21,7 +24,8 @@ class ProgramCommentController extends Controller {
             UserNotLoggedInException: UserNotLoggedIn,
             ProgramNotFoundException: ProgramNotFound,
             ProgramCommentNotFoundException: ProgramCommentNotFound,
-            CommentNotBelongsToProgramException: CommentNotBelongsToProgram
+            CommentNotBelongsToProgramException: CommentNotBelongsToProgram,
+            UserAlreadyCommentedProgramException: UserAlreadyCommentedProgram
         };
     }
 
@@ -65,43 +69,52 @@ class ProgramCommentController extends Controller {
      * @apiError (403) UserNotLoggedIn User not logged in
      * @apiErrorExample {json} Error-Response:
      *     HTTP/1.1 403 Forbidden
-     *     {
+     *     [{
      *         "code": "UserNotLoggedIn",
      *         "message": "Необходимо войти"
-     *     }
+     *     }]
      *
      * @apiError (422) RequiredFieldsNotFilled Some of required fields are empty
      * @apiErrorExample {json} Error-Response:
      *     HTTP/1.1 422 Unprocessable Entity
-     *     {
+     *     [{
      *         "code": "RequiredFieldsNotFilled",
      *         "message": "Оставьте оценку или комментарий"
-     *     }
+     *     }]
      *
      * @apiError (422) CommentNotBelongToProgram Comment with given id not
      * belongs to program with given id
      *     HTTP/1.1 422 Unprocessable Entity
-     *     {
+     *     [{
      *         "code": "CommentNotBelongToProgram",
      *         "message": "Комментарий, который вы хотите отредактировать
      *            не принадлежит к программе с данным id"
-     *     }
+     *     }]
      *
      * @apiError (404) ProgramCommentNotFound Program comment not found
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 404 Not Found
-     *      {
+     *      [{
      *           "code": "ProgramCommentNotFound",
      *           "message": "Комментарий с данным id не найден"
-     *      }
+     *      }]
      *
      * @apiError (404) ProgramNotFound Program not found
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 404 Not Found
-     *      {
+     *      [{
      *           "code": "ProgramNotFound",
      *           "message": "Программа с данным id не найдена"
-     *      }
+     *      }]
+     *
+     * @apiError (403) UserAlreadyCommentedProgram User with given id
+     *     already commented program with given id
+     * @apiErrorExample {json} Error-Response:
+     *      HTTP/1.1 403 Forbidden
+     *      [{
+     *           "code": "UserAlreadyCommentedProgram",
+     *           "message": "Вы уже оставляли комментарий у этой программы"
+     *      }]
      */
     public async actionChange(actionContext: any, programId: string) {
         const programCommentService =

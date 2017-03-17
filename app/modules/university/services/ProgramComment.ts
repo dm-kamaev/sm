@@ -22,6 +22,9 @@ import {ProgramCommentNotFound} from './exceptions/ProgramCommentNotFound';
 import {
     CommentNotBelongsToProgram
 } from './exceptions/CommentNotBelongsToProgram';
+import {
+    UserAlreadyCommentedProgram
+} from './exceptions/UserAlreadyCommentedProgram';
 
 class ProgramCommentService extends Service {
     private baseUrl_: string;
@@ -115,6 +118,8 @@ class ProgramCommentService extends Service {
                         throw new ProgramCommentNotFound();
                     case 'CommentNotBelongsToProgram':
                         throw new CommentNotBelongsToProgram();
+                    case 'UserAlreadyCommentedProgram':
+                        throw new UserAlreadyCommentedProgram();
                 }
             });
         }

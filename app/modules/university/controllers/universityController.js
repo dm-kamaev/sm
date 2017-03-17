@@ -1,7 +1,7 @@
 'use strict';
 
 const async = require('asyncawait/async');
-// const await = require('asyncawait/await');
+    // await = require('asyncawait/await');
 
 const soy = require('../../../components/soy');
 // services = require('../../../components/services').all;
