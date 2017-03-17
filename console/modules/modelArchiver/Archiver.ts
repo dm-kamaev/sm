@@ -1,13 +1,10 @@
-'use strict';
 const fs = require('fs-extra');
 const targz = require('tar.gz');
 const Decompress = require('decompress');
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
 const common = require('../../common');
 const path = require('path');
 const sequelize = require('../../../app/components/db');
-const lodash = require('lodash');
+import * as lodash from 'lodash';
 
 
 /**
@@ -32,6 +29,10 @@ const lodash = require('lodash');
 const TMP_TABLE_PREFIX = 'tmp_';
 
 class Archiver {
+    private path_: string;
+    private archiveFolder_: string;
+    private tmpName_: string;
+
     /**
      * @public
      * @param {string} fullPath
@@ -47,11 +48,11 @@ class Archiver {
      * @param {string} csvData
      * @param {string} filepath
      */
-    static archive(csvData, filepath) {
-        var archiver = new Archiver(filepath);
+    public static archive(csvData, filepath) {
+        const archiver = new Archiver(filepath);
 
         archiver.compress(csvData);
-    };
+    }
 
     /**
      * @return {string}
@@ -62,20 +63,21 @@ class Archiver {
 
     /**
      * @public
-     * @param {string=} opt_outputFilePath
+     * @param {string=} outputFilePath
      * @return {string}
      */
-    decompress(opt_outputFilePath) {
+    public async decompress(outputFilePath?: string) {
         if (!common.fileExists(this.path_)) {
             throw new Error('Can\'t find archive ' + this.path_);
         }
 
-        var archiveFolder = opt_outputFilePath || this.archiveFolder_;
-
+        const archiveFolder = outputFilePath || this.archiveFolder_;
         try {
             fs.emptyDirSync(this.archiveFolder_);
-            await(this.decompressPromise_(opt_outputFilePath));
-            var res = common.readText(path.join(archiveFolder, this.tmpName_));
+            await this.decompressPromise_(outputFilePath);
+            const res = common.readText(
+                path.join(archiveFolder, this.tmpName_)
+            );
             return res;
         } catch (e) {
             console.log(e.message);
@@ -89,26 +91,23 @@ class Archiver {
      * @param {string} text
      * @param {string} path
      */
-    compress(text) {
-        let that = this;
-        let asyncWrap = async(function() {
-            try {
-                that.prepareArchive_(text);
-                await(that.compressPromise_());
-            } catch (e) {
-                console.log(e.message);
-            } finally {
-                that.cleanFolder_();
-            }
-        });
-        asyncWrap();
+    public async compress(text) {
+        const that = this;
+        try {
+            that.prepareArchive_(text);
+            await that.compressPromise_();
+        } catch (e) {
+            console.log(e.message);
+        } finally {
+            that.cleanFolder_();
+        }
     }
 
     /**
      * @public
      * @param {string} directory
      */
-    deleteUnarchivedFile(directory) {
+    public deleteUnarchivedFile(directory) {
         try {
             fs.removeSync(path.join(directory, this.tmpName_));
         } catch (e) {}
@@ -120,16 +119,16 @@ class Archiver {
      * @param {string} table
      * @param {string} delimiter
      */
-    fillTable(table, delimiter) {
-        var fileLocation = path.parse(this.path_),
+    public async fillTable(table, delimiter) {
+        const fileLocation = path.parse(this.path_),
             fileDir = fileLocation.dir,
             filePath = path.join(fileDir, this.tmpName_);
 
-        this.decompress(fileDir);
+        await this.decompress(fileDir);
 
-        this.copyToTable_(table, filePath, delimiter);
+        await this.copyToTable_(table, filePath, delimiter);
 
-        this.deleteUnarchivedFile(fileDir);
+        await this.deleteUnarchivedFile(fileDir);
     }
 
 
@@ -142,33 +141,33 @@ class Archiver {
      * @param {Array<string>} fieldsToMatch
      * @public
      */
-    updateTable(table, delimiter, fieldsToMatch) {
-        var fileLocation = path.parse(this.path_),
+    public async updateTable(table, delimiter, fieldsToMatch) {
+        const fileLocation = path.parse(this.path_),
             fileDir = fileLocation.dir,
             filePath = path.join(fileDir, this.tmpName_);
         this.decompress(fileDir);
-        var headers = this.getHeaders_(filePath, delimiter);
+        const headers = this.getHeaders_(filePath, delimiter);
 
-        await(this.cloneToTempTable_(table, headers));
+        await this.cloneToTempTable_(table, headers);
 
-        var tmpTable = TMP_TABLE_PREFIX + table;
-        await(this.copyToTable_(tmpTable, filePath, delimiter));
+        const tmpTable = TMP_TABLE_PREFIX + table;
+        await this.copyToTable_(tmpTable, filePath, delimiter);
         // remove temporary file
         this.deleteUnarchivedFile(fileDir);
 
-        var dbFieldsToMatch = fieldsToMatch.map(this.formatHeader_),
+        const dbFieldsToMatch = fieldsToMatch.map(this.formatHeader_),
             dbFieldsToUpdate = headers.filter((fieldName) => {
                 return dbFieldsToMatch.indexOf(fieldName) == -1;
             });
 
-        await(this.updateTableFromTmpTable_(
+        await this.updateTableFromTmpTable_(
             table,
             dbFieldsToMatch,
             dbFieldsToUpdate
-        ));
+        );
 
         // remove temporary table
-        await(this.destroyTmpTable_(table));
+        await this.destroyTmpTable_(table);
     }
 
 
@@ -178,18 +177,18 @@ class Archiver {
      * @param {Array<string>} fields
      * @private
      */
-    cloneToTempTable_(tableName, fields) {
-        var queryFields = fields.toString(),
+    private async cloneToTempTable_(tableName, fields) {
+        const queryFields = fields.toString(),
             tmpTableName = TMP_TABLE_PREFIX + tableName,
             cloneQuery =
                 'CREATE TABLE ' + tmpTableName +
                 ' AS SELECT ' + queryFields + ' FROM ' + tableName + ' LIMIT 0';
-        await(sequelize.query(
+        await sequelize.query(
             cloneQuery,
             {
                 type: sequelize.QueryTypes.CREATE
             }
-        ));
+        );
     }
 
     /**
@@ -197,16 +196,16 @@ class Archiver {
      * @param {string} tableName
      * @private
      */
-    destroyTmpTable_(tableName) {
-        var tmpTableName = TMP_TABLE_PREFIX + tableName,
+    private async destroyTmpTable_(tableName) {
+        const tmpTableName = TMP_TABLE_PREFIX + tableName,
             dropQuery = 'DROP TABLE ' + tmpTableName;
 
-        await(sequelize.query(
+        await sequelize.query(
             dropQuery,
             {
                 type: sequelize.QueryTypes.DROP
             }
-        ));
+        );
     }
 
 
@@ -218,8 +217,9 @@ class Archiver {
      * @param {Array<string>} fieldsToUpdate
      * @private
      */
-    updateTableFromTmpTable_(table, fieldsToMatch, fieldsToUpdate) {
-        var tmpTable = TMP_TABLE_PREFIX + table,
+    private async updateTableFromTmpTable_(
+            table, fieldsToMatch, fieldsToUpdate) {
+        const tmpTable = TMP_TABLE_PREFIX + table,
             expressions = this.generateExpressions_(tmpTable, fieldsToUpdate),
             conditions = this.generateConditions_(
                 table, tmpTable, fieldsToMatch
@@ -229,12 +229,12 @@ class Archiver {
                 ' FROM ' + tmpTable +
                 ' WHERE ' + conditions;
 
-        await(sequelize.query(
+        await sequelize.query(
             updateQuery,
             {
                 type: sequelize.QueryTypes.UPDATE
             }
-        ));
+        );
     }
 
     /**
@@ -244,10 +244,10 @@ class Archiver {
      * @return {string}
      * @private
      */
-    generateExpressions_(sourceTableName, fields) {
-        var targetFields = '(',
-            sourceFields = '(',
-            fieldsAmount = fields.length;
+    private generateExpressions_(sourceTableName, fields) {
+        let targetFields = '(',
+            sourceFields = '(';
+        const fieldsAmount = fields.length;
 
 
         fields.forEach((field, index) => {
@@ -274,11 +274,11 @@ class Archiver {
      * @return {string}
      * @private
      */
-    generateConditions_(targetTableName, sourceTableName, fields) {
+    private generateConditions_(targetTableName, sourceTableName, fields) {
         return fields.reduce(
             (previousValue, currentValue, index, array) => {
-                var length = array.length;
-                var result = previousValue.concat(
+                const length = array.length;
+                let result = previousValue.concat(
                     targetTableName + '.' + currentValue +
                     ' = ' +
                     sourceTableName + '.' + currentValue);
@@ -298,28 +298,28 @@ class Archiver {
      * @param {string} table
      * @param {string} tmpFilePath
      * @param {string} delimiter
-     * @private
+     * @public
      */
-    copyToTable_(table, tmpFilePath, delimiter) {
-        var sqlQuery = 'COPY ' + table + '(' +
+    private async copyToTable_(table, tmpFilePath, delimiter) {
+        const sqlQuery = 'COPY ' + table + '(' +
             this.getHeaders_(tmpFilePath, delimiter) + ') FROM \'' +
             tmpFilePath + '\' WITH CSV HEADER DELIMITER \'' +
             delimiter + '\';';
 
-        await(sequelize.query(sqlQuery));
+        await sequelize.query(sqlQuery);
     }
 
 
     /**
      * @private
      * @param {string} filePath
-     * @param {string=} opt_delimiter
+     * @param {string=} delimiter
      * @return {Array<string>}
      */
-    getHeaders_(filePath, opt_delimiter) {
-        var file = fs.readFileSync(filePath, {encoding: 'utf8'}),
-            headers = file.slice(0, file.indexOf('\n')),
-            delimiter = opt_delimiter || '|';
+    private getHeaders_(filePath, delimiter?: string) {
+        const file = fs.readFileSync(filePath, {encoding: 'utf8'}),
+            headers = file.slice(0, file.indexOf('\n'));
+        delimiter = delimiter || '|';
 
         return headers.split(delimiter)
             .map(header => this.formatHeader_(header));
@@ -330,18 +330,18 @@ class Archiver {
      * @param {string} header
      * @return {string}
      */
-    formatHeader_(header) {
+    private formatHeader_(header) {
         return lodash.snakeCase(header.replace(/("")/g, ''));
     }
 
     /**
      * @private
-     * @param {string=} opt_outputFilePath
+     * @param {string=} outputFilePath
      * @return {promise}
      */
-    decompressPromise_(opt_outputFilePath) {
-        var filePath = this.path_;
-        var archiveFolder = opt_outputFilePath || this.archiveFolder_;
+    private async decompressPromise_(outputFilePath?: string) {
+        const filePath = this.path_;
+        const archiveFolder = outputFilePath || this.archiveFolder_;
         return new Promise(function(resolve, reject) {
             new Decompress()
                 .src(filePath)
@@ -360,9 +360,9 @@ class Archiver {
      * @private
      * @return {promise}
      */
-    compressPromise_() {
-        var filePath = this.path_;
-        var archiveFolder = this.archiveFolder_;
+    private compressPromise_() {
+        const filePath = this.path_;
+        const archiveFolder = this.archiveFolder_;
         return new Promise(function(resolve, reject) {
             targz().compress(archiveFolder, filePath, function(err) {
                 if (err) {
@@ -377,7 +377,7 @@ class Archiver {
      * @private
      * @param {string} text
      */
-    prepareArchive_(text) {
+    private prepareArchive_(text) {
         fs.emptyDirSync(this.archiveFolder_);
         fs.writeFileSync(this.archiveFolder_ + this.tmpName_, text);
     }
@@ -385,7 +385,7 @@ class Archiver {
     /**
      * @private
      */
-    cleanFolder_() {
+    private cleanFolder_() {
         try {
             fs.removeSync(this.archiveFolder_);
         } catch (e) {} // error if there is no dir

@@ -1,5 +1,5 @@
 import * as express from 'express';
-import {SubscriptionController} from './subscriptionController';
+import {SubscriptionController} from './SubscriptionController';
 const csrf = require('../../../middleware/csrf');
 
 const router = express.Router();

@@ -11,7 +11,7 @@ var modules = {
     GEO: 'geo',
     SCHOOL: 'school',
     STUDY: 'study',
-    UNIVER: 'univer',
+    UNIVER: 'university',
     COMMENT: 'comment',
     USER: 'user'
 };
@@ -41,6 +41,7 @@ var modelModules = {
 
     University: modules.UNIVER,
     SchoolUniversity: modules.UNIVER,
+    ProgramMajor: modules.UNIVER,
 
     UserData: modules.USER
 };
@@ -49,6 +50,9 @@ var start = async(function() {
     var options = {};
     var modelKeys = Object.keys(modelModules);
     var index = readlineSync.keyInSelect(modelKeys, 'Choose model to archive');
+    if (!~index) {
+        return;
+    }
     var selectedModel = modelKeys[index];
     options.model = models[selectedModel];
     options.isCustomName = readlineSync.keyInYN(

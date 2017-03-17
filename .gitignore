@@ -211,9 +211,11 @@ app/modules/university/index.js
 app/modules/university/controllers/errors/*.js
 app/modules/university/controllers/index.js
 app/modules/university/controllers/subscriptionController.js
+app/modules/university/controllers/programController.js
 
 app/modules/university/services/exceptions/*.js
-app/modules/university/services/subscriptionService.js
+app/modules/university/services/*.js
+
 app/modules/university/views/*.js
 
 app/modules/user/**/*.js
@@ -221,10 +223,12 @@ app/modules/user/**/*.js
 app/modules/common/services/*.js
 
 console/modules/geoTools/*.js
+console/modules/modelArchiver/Archiver.js
 console/modules/newCommentNotifier/**/*.js
 console/executable/sendNewCommentNotifications.js
 
 console/insertRegionForMoscow.js
+console/one-off/loadPrograms.js
 
 console/one-off/shrinkOlympiadResults.js
 console/modules/geoTools/*.js
