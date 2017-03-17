@@ -15,6 +15,9 @@
  *     stylizationModifier: string,
  *     customClasses: (Array<string>|undefined),
  *     openerSize: ('m'|'xl'|undefined),
+ *     openerTheme: (string|undefined),
+ *     iconName: (string|undefined),
+ *     iconType: ('icon-svg'|undefined)
  *     contentSize: ('m'|'l'|undefined),
  *     theme: ('dense'|undefined)
  * }} sm.gDropdown.TemplateListLinks.Params.Config
@@ -52,7 +55,8 @@
  *         defaultOpenerText: (string|undefined)
  *     },
  *     config: {
- *         openerSize: ('m'|'xl'|undefined)
+ *         openerSize: ('m'|'xl'|undefined),
+ *         openerTheme: (string|undefined)
  *     }
  * }}
  * @override
@@ -76,7 +80,7 @@
                 'config': [
                     'size': $params.config.openerSize,
                     'customClasses': [$customClasses],
-                    'theme': 'dark'
+                    'theme': $params.config.openerTheme ?: 'dark'
                 ]
             ]
         ]/}
@@ -86,16 +90,22 @@
 
 /**
  * Icon of opener
+ * @param params {{
+ *     config: {
+ *         iconName: (string|undefined),
+ *         iconType: ('icon-svg'|undefined)
+ *     }
+ * }}
  * @override
  */
 {template .openerIcon}
     <div class="{call .rootClass/}__opener-icon">
         {call .renderChild}
             {param params: [
-                'type': 'icon',
+                'type': $params.config.iconType ?: 'icon',
                 'renderParams': [
                     'data': [
-                        'type': 'small-opener-arrow'
+                        'type': $params.config.iconName ?: 'small-opener-arrow'
                     ]
                 ]
             ]/}
