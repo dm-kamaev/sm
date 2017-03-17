@@ -46,25 +46,25 @@ service.getUserByCode = async(function(data, baseUrl) {
 /**
  * @param  {string} id
  * @return {Object}
- *{
- *  id: 1,
-    facebookId: '177546869304808',
-    vkId: null,
-    okId: null,
-    googleId: null,
-    twitterId: null,
-    firstName: 'Eero',
-    lastName: 'Ettala',
-    gender: 'm',
-    phone: '',
-    email: 'easy2rider2@gmail.com',
-    password: null,
-    photoUrl: 'http://image.mel.fm/i/L/LzA3Yylxmd/128.jpg',
-    status: 'active',
-    birthDate: null,
-    created_at: '2016-08-12',
-    updated_at: '2016-11-03'
-  }
+ *  {
+ *      "id": 1,
+ *      "facebookId": "177546869304808",
+ *      "vkId": null,
+ *      "okId": null,
+ *      "googleId": null,
+ *      "twitterId": null,
+ *      "firstName": "Eero",
+ *      "lastName": "Ettala",
+ *      "gender": "m",
+ *      "phone": "",
+ *      "email": "easy2rider2@gmail.com",
+ *      "password": null,
+ *      "photoUrl": "http://image.mel.fm/i/L/LzA3Yylxmd/128.jpg",
+ *      "status": "active",
+ *      "birthDate": null,
+ *      "created_at": "2016-08-12",
+ *      "updated_at": "2016-11-03"
+ *  }
  */
 service.getUserById = async(function(id) {
     return await(axios.get(USER_API + GET_USER + id)).data;
