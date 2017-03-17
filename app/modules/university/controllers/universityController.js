@@ -1,7 +1,7 @@
 'use strict';
 
 const async = require('asyncawait/async');
-//const await = require('asyncawait/await');
+// const await = require('asyncawait/await');
 
 const soy = require('../../../components/soy');
 // services = require('../../../components/services').all;
@@ -22,7 +22,8 @@ let controller = {};
 // const entranceStatisticService =
 //     require('../services/entranceStatisticService').entranceStatisticService;
 
-// const universityService = require('../services/universityService').universityService;
+// const universityService =
+//    require('../services/universityService').universityService;
 
 controller.information = async(function(req, res, next) {
     try {
