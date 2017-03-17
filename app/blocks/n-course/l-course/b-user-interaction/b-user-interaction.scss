@@ -51,6 +51,16 @@
     font-weight: 700;
 }
 
+
+@include media-s {
+    .b-user-interaction__description {
+        margin-bottom: 5px;
+
+        font-size: 19px;
+    }
+}
+
+
 @include media-xs {
     .b-user-interaction {
         display: inline-block;
@@ -79,11 +89,5 @@
 
     .b-user-interaction__action-text {
         display: block;
-    }
-
-    .b-user-interaction__description {
-        margin-bottom: 5px;
-
-        font-size: 19px;
     }
 }
