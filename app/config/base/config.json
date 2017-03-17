@@ -1,4 +1,11 @@
 {
+    "backendApiHeaders": {
+        "token": {
+            "name": "api-token",
+            "value": "7YTVzQw9TfL1"
+        }
+    },
+    "backendApi": "http://localhost:3000",
     "notifications": {
         "schools": "schools@mel.fm",
         "universities": "vuz@mel.fm"
