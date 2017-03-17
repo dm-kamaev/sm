@@ -10,7 +10,7 @@ class ProgramNotFound extends Exception {
     public readonly name: string;
 
     constructor() {
-        super(`Program not found`);
+        super(`Program with given id not found`);
 
         this.name = 'ProgramNotFoundException';
     }
