@@ -1,7 +1,7 @@
 'use strict';
 
-const async = require('asyncawait/async');
-// await = require('asyncawait/await');
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await');
 
 const soy = require('../../../components/soy');
 // services = require('../../../components/services').all;
@@ -17,8 +17,20 @@ const config = require('../../../config').config;
 
 let controller = {};
 
+const programService = require('../services/programService').programService;
+
+const entranceStatisticService =
+    require('../services/entranceStatisticService').entranceStatisticService;
+
 controller.information = async(function(req, res, next) {
     try {
+        // const programId = 2;
+
+        // const program = await(programService.getById(programId));
+        // const entranceStatistic =
+        //     await(entranceStatisticService.getById(programId));
+
+
         const description = `Программа для тех, кто хочет стать профессионалом
             в сфере маркетинга, управления персонала,
             бизнес–планирования и проектирования, тех, кто хочет

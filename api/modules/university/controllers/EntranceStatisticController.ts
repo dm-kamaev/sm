@@ -8,7 +8,7 @@ import {
 
 class EntranceStatisticController extends Controller {
     /**
-     * @api {get} /api/admin/program/:programId/statistic/last
+     * @api {get} /api/program/:programId/statistic/last
      *     Get program's statistic
      * @apiVersion 1.0.0
      * @apiName getProgramStatistic

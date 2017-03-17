@@ -211,6 +211,7 @@ app/modules/university/index.js
 app/modules/university/controllers/errors/*.js
 app/modules/university/controllers/index.js
 app/modules/university/controllers/subscriptionController.js
+app/modules/university/controllers/programController.js
 
 app/modules/university/services/exceptions/*.js
 app/modules/university/services/*.js
