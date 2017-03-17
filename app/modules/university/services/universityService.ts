@@ -1,10 +1,12 @@
 import {Service, RequestParams} from '../../common/services/Service';
+import {UniversityNotFound} from './exceptions/UniversityNotFound';
+
 const host: string =
     require('../../../config/config').universities.host;
 
-const url = `http://${host}/api/program/`;
+const url = `http://${host}/api/university/`;
 
-class EntranceStatisticService extends Service {
+class UniversityService extends Service {
 
     constructor() {
         super();
@@ -14,7 +16,7 @@ class EntranceStatisticService extends Service {
         id: number
     ): Promise<any> {
         const params: RequestParams = {
-            url: url + id + '/statistic/last',
+            url: url + id,
             method: 'get'
         };
 
@@ -22,7 +24,13 @@ class EntranceStatisticService extends Service {
     }
 
     protected handleError(error: any): void {
+        switch (error.status) {
+        case 404:
+            throw new UniversityNotFound();
+        default:
+            throw error;
+        }
     }
 }
 
-export const entranceStatisticService = new EntranceStatisticService();
+export const universityService = new UniversityService();

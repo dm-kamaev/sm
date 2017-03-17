@@ -7,7 +7,6 @@ const host: string =
 const url = `http://${host}/api/program/`;
 
 class ProgramService extends Service {
-    public readonly name: string = 'programService';
 
     constructor() {
         super();
