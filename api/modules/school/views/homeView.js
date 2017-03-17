@@ -58,15 +58,13 @@ homeView.render = function(data) {
 homeView.subHeader = function(data) {
     let subHeader = new SubHeader();
 
-    subHeader.init({
+    return subHeader.render({
         isLogoRedirect: false,
         isSearchRedirect: true,
         user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: false
     });
-
-    return subHeader.getParams();
 };
 
 module.exports = homeView;

@@ -115,15 +115,13 @@ schoolView.default = function(
 schoolView.subHeader = function(data) {
     let subHeader = new SubHeader();
 
-    subHeader.init({
+    return subHeader.render({
         isLogoRedirect: true,
         isSearchRedirect: true,
         user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-
-    return subHeader.getParams();
 };
 
 

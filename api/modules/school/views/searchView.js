@@ -251,15 +251,13 @@ searchView.filterPanel = function(data) {
 searchView.subheader = function(data) {
     let subheader = new Subheader();
 
-    subheader.init({
+    return subheader.render({
         isLogoRedirect: true,
         isSearchRedirect: false,
         user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-
-    return subheader.getParams();
 };
 
 module.exports = searchView;
