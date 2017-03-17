@@ -3,7 +3,7 @@ import {ControllerError} from '../../../../../api/components/interface';
 
 const Error: ControllerError = require('nodules/controller/ControllerError');
 
-class ProgramCommentNotFound extends Error {
+class RequiredFieldsNotFilled extends Error {
     public code: string;
     public status: number;
     public message: string;
@@ -11,10 +11,10 @@ class ProgramCommentNotFound extends Error {
     constructor(exception: ServiceException) {
         super(exception);
 
-        this.code = 'ProgramCommentNotFound';
-        this.status = 404;
-        this.message = 'Комментарий с данным id не найден';
+        this.code = 'RequiredFieldsNotFilled';
+        this.status = 422;
+        this.message = 'Оставьте оценку или комментарий';
     }
 }
 
-export {ProgramCommentNotFound};
+export {RequiredFieldsNotFilled};

@@ -1,5 +1,5 @@
-import {ServiceException} from '../../../../components/interface';
-import {ControllerError} from '../../../../components/interface';
+import {ServiceException} from '../../../../../api/components/interface';
+import {ControllerError} from '../../../../../api/components/interface';
 
 const Error: ControllerError = require('nodules/controller/ControllerError');
 
@@ -13,7 +13,7 @@ class ProgramNotFound extends Error {
 
         this.code = 'ProgramNotFound';
         this.status = 404;
-        this.message = exception.message;
+        this.message = 'Программа с данным id не найдена';
     }
 }
 
