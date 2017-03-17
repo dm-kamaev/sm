@@ -13,6 +13,9 @@ import {ProgramCommentNotFound} from './errors/ProgramCommentNotFound';
 import {
     CommentNotBelongsToProgram
 } from './errors/CommentNotBelongsToProgram';
+import {
+    UserAlreadyCommentedProgram
+} from './errors/UserAlreadyCommentedProgram';
 
 class ProgramCommentController extends Controller {
     constructor() {
@@ -21,7 +24,8 @@ class ProgramCommentController extends Controller {
         this.errors = {
             ProgramCommentNotFoundException: ProgramCommentNotFound,
             ProgramNotFoundException: ProgramNotFound,
-            CommentNotBelongsToProgramException: CommentNotBelongsToProgram
+            CommentNotBelongsToProgramException: CommentNotBelongsToProgram,
+            UserAlreadyCommentedProgramException: UserAlreadyCommentedProgram
         };
     }
 
@@ -30,10 +34,10 @@ class ProgramCommentController extends Controller {
      * @apiError (404) ProgramNotFound Program not found
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 404 Not Found
-     *      {
+     *      [{
      *           "code": "ProgramNotFound",
      *           "message": "Program with given id not found"
-     *      }
+     *      }]
      */
 
     /**
@@ -41,10 +45,10 @@ class ProgramCommentController extends Controller {
      * @apiError (404) ProgramCommentNotFound University comment not found
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 404 Not Found
-     *      {
+     *      [{
      *           "code": "ProgramCommentNotFound",
      *           "message": "Program comment with id = 20 not found"
-     *      }
+     *      }]
      */
 
     /**
@@ -53,12 +57,25 @@ class ProgramCommentController extends Controller {
      *     University comment not belongs to program
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 422 Not Found
-     *      {
+     *      [{
      *           "code": "CommentNotBelongsToProgram",
      *           "message":
      *               "Program comment with id = 20
      *                not belongs to program with id = 126"
-     *      }
+     *      }]
+     */
+
+    /**
+     * @apiDefine UserAlreadyCommentedProgramError
+     * @apiError (403) UserAlreadyCommentedProgram User with given id
+     *     already commented program with given id
+     * @apiErrorExample {json} Error-Response:
+     *      HTTP/1.1 403 Forbidden
+     *      [{
+     *           "code": "UserAlreadyCommentedProgram",
+     *           "message": "User with id = 10 already place comment to
+     *               program with id = 2"
+     *      }]
      */
 
 
@@ -212,6 +229,7 @@ class ProgramCommentController extends Controller {
      */
     public async actionCreate(actionContext: any, programId: string) {
         const reviewData = actionContext.data;
+
         return await programCommentService.fullCreate(
             +programId,
             {

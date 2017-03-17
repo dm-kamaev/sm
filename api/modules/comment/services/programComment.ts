@@ -26,6 +26,8 @@ import {ProgramCommentNotFound}
     from './exceptions/ProgramCommentNotFound';
 import {CommentNotBelongsToProgram}
     from './exceptions/CommentNotBelongsToProgram';
+import {UserAlreadyCommentedProgram}
+    from './exceptions/UserAlreadyCommentedProgram';
 
 import {Model as ProgramCommentModel} from '../models/ProgramComment';
 
@@ -164,6 +166,13 @@ class ProgramCommentService {
     private async fullCreate_(
             programId: number,
             data: ProgramCommentFullCreateAttributes): Promise<void> {
+        const userId = data.userId,
+            isUserCommented =
+                await this.checkIfCommented_(programId, userId);
+        if (isUserCommented) {
+            throw new UserAlreadyCommentedProgram(programId, userId);
+        }
+
         const commentInstance = await this.create(data),
             userDataInstance = await userDataService.create(data),
             commentGroup =
@@ -175,6 +184,38 @@ class ProgramCommentService {
 
         await commentInstance.setUserData(userDataInstance);
         await commentInstance.setCommentGroup(commentGroup);
+    }
+
+    private async checkIfCommented_(
+            programId: number, userId: number): Promise<boolean> {
+        const commentGroup = await programService.getCommentGroup(programId),
+            comment = await ProgramCommentModel.findAll({
+                where: {
+                    commentGroupId: commentGroup.id
+                },
+                include: [{
+                    model: UserDataModel,
+                    attributes: [
+                        'userType',
+                        'grade',
+                        'yearGraduate',
+                        'userId',
+                        'username'
+                    ],
+                    where: {
+                        userId: userId
+                    },
+                    as: 'userData'
+                }, {
+                    model: RatingModel,
+                    attributes: [
+                        'score', 'totalScore'
+                    ],
+                    as: 'rating'
+                }]
+            });
+
+        return Boolean(comment.length);
     }
 
     private async fullUpdate_(
