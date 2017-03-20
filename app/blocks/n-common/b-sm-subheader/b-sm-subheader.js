@@ -3,7 +3,6 @@ goog.provide('sm.bSmSubheader.SmSubheader');
 goog.require('cl.iControl.Control');
 goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
-goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmFavorite.SmFavorite');
 goog.require('sm.bSmLink.SmLink');
@@ -52,14 +51,6 @@ sm.bSmSubheader.SmSubheader = function(view, opt_domHelper) {
      * @private
      */
     this.search_ = null;
-
-
-    /**
-     * Authorization Link instance
-     * @type {sm.bAuthorizationLink.AuthorizationLink}
-     * @private
-     */
-    this.authorizationLink_ = null;
 
 
     /**
@@ -214,7 +205,6 @@ goog.scope(function() {
         Subheader.base(this, 'decorateInternal', element);
 
         this.initSearch_();
-        this.initAuthorizationLink_();
         this.initFavorite_();
         this.initLinks_();
     };
@@ -412,18 +402,6 @@ goog.scope(function() {
             this.addChild(this.search_);
             this.search_.decorate(domElements.search);
         }
-    };
-
-
-    /**
-     * Initializes authorization Link instance
-     * @private
-     */
-    Subheader.prototype.initAuthorizationLink_ = function() {
-        this.authorizationLink_ = this.decorateChild(
-            sm.bAuthorizationLink.AuthorizationLink.NAME,
-            this.getView().getDom().authorizationLink
-        );
     };
 
 

@@ -121,7 +121,6 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initSearch_();
-        this.initAuthorizationLink_();
         this.initFavorite_();
         this.initLinks_();
         this.detectAnimationSupportion_();
@@ -194,17 +193,6 @@ goog.scope(function() {
 
         this.dom.search = this.getElementByClass(
             View.CssClass.SEARCH
-        );
-    };
-
-
-    /**
-     * Initializes dom elements
-     * @private
-     */
-    View.prototype.initAuthorizationLink_ = function() {
-        this.dom.authorizationLink = this.getElementByClass(
-            sm.bAuthorizationLink.View.CssClass.ROOT
         );
     };
 

@@ -23,10 +23,6 @@
  *         redirect: boolean,
  *         pageAlias: string
  *     },
- *     user: ?{
- *         firstName: ?string,
- *         lastName: ?string
- *     },
  *     favorites: sm.bSmFavorite.Template.Params.Data
  * }} sm.bSmSubheader.Template.Params.Data
  */
@@ -197,10 +193,6 @@
  *             url: string,
  *             theme: (string|undefined)
  *         }|undefined),
- *         user: ?{
- *             firstName: ?string,
- *             lastName: ?string
- *         },
  *         favorites: sm.bSmFavorite.Template.Params.Data
  *     }
  * }}
@@ -371,10 +363,6 @@
  * Links for authorization and favorite
  * @param params {{
  *     data: {
- *         user: ?{
- *             firstName: ?string,
- *             lastName: ?string
- *         },
  *         favorites: sm.bSmFavorite.Template.Params.Data
  *     }
  * }}
@@ -382,41 +370,7 @@
 {template .userControls_}
     <div class="{call .rootClass/}__user-controls{sp}
                 {cl.iUtils.Utils.CssClass.HIDDEN}">
-        {call .linkAuthorization_ data="all" /}
         {call .favorite_ data="all" /}
-    </div>
-{/template}
-
-
-/**
- * link Authorization template
- * @param params {{
- *     data: {
- *        user: ?{
- *            firstName: ?string,
- *            lastName: ?string
- *        }
- *     }
- * }}
- */
-{template .linkAuthorization_}
-    <div class="{call .rootClass/}__user-control
-                {sp}{call .rootClass/}__user-control_authorization">
-        <div class="{call .rootClass/}__authorization-content">
-            {call .renderChild}
-                {param params: [
-                    'type': 'authorization-link',
-                    'renderParams': [
-                        'data': [
-                            'user': $params?.data?.user
-                        ],
-                        'config': [
-                            'hintOffset': 'xs'
-                        ]
-                    ]
-                ]/}
-            {/call}
-        </div>
     </div>
 {/template}
 

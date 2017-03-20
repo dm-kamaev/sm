@@ -200,13 +200,6 @@
     padding-right: 0;
 }
 
-.b-sm-subheader__authorization-content {
-    display: inline-block;
-
-    width: 30px;
-    height: 30px;
-}
-
 .b-sm-subheader__favorite-content {
     display: inline-block;
 
@@ -458,13 +451,6 @@
     .b-sm-subheader__user-control {
         height: 30px;
         padding-left: 12px;
-        &.b-sm-subheader__user-control_authorization {
-            padding-right: 0;
-        }
-    }
-
-    .b-sm-subheader__user-control_authorization {
-        border-left: none;
     }
 
     .b-sm-subheader__logo-img {

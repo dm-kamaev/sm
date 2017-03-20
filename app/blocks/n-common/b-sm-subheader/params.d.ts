@@ -24,18 +24,14 @@ export namespace bSmSubheader {
             link?: ({
                 nameL: string,
                 nameM: string,
-                nameS?: (string|undefined),
+                nameS?: string,
                 url: string,
-                theme?: (string|undefined)
+                theme?: string
             }|undefined),
             search?: {
-                placeholder: (string|undefined),
+                placeholder?: string,
                 redirect: boolean,
                 pageAlias: string
-            },
-            user?: {
-                firstName: (string|undefined),
-                lastName: (string|undefined)
             },
             favorites?: any
         }
