@@ -12,7 +12,6 @@ import {InvalidEmail} from './exceptions/InvalidEmail';
 import {Service, RequestParams} from '../../common/services/Service';
 
 class SubscriptionService extends Service {
-    public readonly name: string = 'subscriptionService';
 
     constructor() {
         super();

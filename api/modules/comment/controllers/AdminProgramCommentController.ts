@@ -39,7 +39,7 @@ class AdminProgramCommentController extends Controller {
 
     /**
      * @apiDefine ProgramCommentNotFoundError
-     * @apiError (404) ProgramCommentNotFound University comment not found
+     * @apiError (404) ProgramCommentNotFound Program comment not found
      * @apiErrorExample {json} Error-Response:
      *      HTTP/1.1 404 Not Found
      *      {
@@ -53,7 +53,7 @@ class AdminProgramCommentController extends Controller {
      * @apiError (422) ProgramCommentNotBelongsToProgram
      *     University comment not belongs to program
      * @apiErrorExample {json} Error-Response:
-     *      HTTP/1.1 422 Not Found
+     *      HTTP/1.1 422 Unprocessable Entity
      *      {
      *           "code": "CommentNotBelongsToProgram",
      *           "message":

@@ -25,7 +25,7 @@ class ProgramController extends Controller {
      * @apiSuccess {String}   name              Name.
      * @apiSuccess {String}   universityId      University's id.
      * @apiSuccess {String}   description       Description.
-     * @apiSuccess {String}   commentGroupId    Comment group's id.
+     * @apiSuccess {Number}   commentGroupId    Comment group's id.
      * @apiSuccess {String}   category          Program's category.
      * @apiSuccess {String[]} links             Array of links
      *     (official site, facebook communities).

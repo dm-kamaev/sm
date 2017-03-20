@@ -1,19 +1,19 @@
 /**
- * @fileOverview Exception, which occurs when program not found by id
+ * @fileOverview Exception, which occurs
  */
 import {ServiceException} from '../../../../../api/components/interface';
 
 const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
-class ProgramNotFound extends Exception {
+class UserNotLoggedInException extends Exception {
     public readonly name: string;
 
     constructor() {
-        super(`Program with given id not found`);
+        super(`User not logged in`);
 
-        this.name = 'ProgramNotFoundException';
+        this.name = 'UserNotLoggedInException';
     }
 }
 
-export {ProgramNotFound};
+export {UserNotLoggedInException};

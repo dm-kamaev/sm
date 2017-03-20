@@ -50,6 +50,7 @@ class UniversityService {
                 id: id
             },
             include: [{
+                attributes: ['id', 'name', 'regionId'],
                 model: CityModel,
                 as: 'city'
             }]

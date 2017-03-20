@@ -3,6 +3,9 @@ import * as express from 'express';
 const router = express.Router();
 
 const checkToken = require('../../../../app/middleware/checkToken');
+import {
+    middleware as checkApiToken
+} from '../../../../app/middleware/checkApiToken';
 const fileHandler = require('../../../../app/middleware/fileHandler');
 const fileStorage = fileHandler.any();
 import {adminUser} from '../../../../app/middleware/adminUser';
@@ -39,6 +42,9 @@ const programController: any = new ProgramController();
 import {UniversityPageController} from './UniversityPageController';
 const universityPageController: any = new UniversityPageController();
 
+import {UniversityController} from './UniversityController';
+const universityController: any = new UniversityController();
+
 import {
     AdminProgramCommentController
 } from '../../comment/controllers/AdminProgramCommentController';
@@ -52,10 +58,10 @@ const programCommentController = new ProgramCommentController();
 import {ProgramMajorController} from './ProgramMajorController';
 const programMajorController = new ProgramMajorController();
 
-
-
 import {ProgramMajorAdminController} from './ProgramMajorAdminController';
 const programMajorAdminController = new ProgramMajorAdminController();
+
+router.get('/university/:id', universityController.actionGet);
 
 router.get(
     '/program/:id',
@@ -125,18 +131,18 @@ initCrudRouting('/admin/programmajor', programMajorAdminController);
 const initSimpleCrudRouting = function(route: string, controller: any): void {
     router.post(
         route,
-        checkToken,
+        checkApiToken,
         controller.actionCreate
     );
     router.get(route, controller.actionList);
     router.get(`${route}/:id`, controller.actionGet);
     router.put(
         `${route}/:id`,
-        checkToken,
+        checkApiToken,
         controller.actionUpdate
     );
     if (controller.actionDelete) {
-        router.delete(route, checkToken, controller.actionDelete);
+        router.delete(route, checkApiToken, controller.actionDelete);
     }
 };
 

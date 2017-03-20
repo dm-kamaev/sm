@@ -6,14 +6,14 @@ import {ServiceException} from '../../../../../api/components/interface';
 const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
-class ProgramNotFound extends Exception {
+class UniversityNotFound extends Exception {
     public readonly name: string;
 
     constructor() {
-        super(`Program with given id not found`);
+        super(`Program not found`);
 
-        this.name = 'ProgramNotFoundException';
+        this.name = 'UniversityNotFoundException';
     }
 }
 
-export {ProgramNotFound};
+export {UniversityNotFound};
