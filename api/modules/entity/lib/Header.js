@@ -38,6 +38,11 @@ class Header {
      *         schools: {
      *             host: string
      *         }
+     *     },
+     *     user: ?{
+     *         firstName: string,
+     *         lastName: string,
+     *         photoUrl?: string
      *     }
      * }} data
      * @public
@@ -47,6 +52,7 @@ class Header {
 
         this.initParams()
             .setContacts()
+            .setUser(data.user)
             .setMenuItems(data);
     }
 
@@ -98,6 +104,23 @@ class Header {
 
         let contactsGenerator = new ContactsGenerator(data);
         this.params_.data.contacts = contactsGenerator.params;
+
+        return this;
+    }
+
+
+    /**
+     * Set user data
+     * @return {Header}
+     * @param {{
+     *     firstName: string,
+     *     lastName: string,
+     *     photoUrl?: string
+     * }} user
+     * @protected
+     */
+    setUser(user) {
+        this.params_.data.user = user;
 
         return this;
     }

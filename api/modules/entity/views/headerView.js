@@ -13,14 +13,20 @@ const headerView = {};
  *     schoolsHost: string
  * }} config
  * @param {string} entityType
+ * @param ?{{
+ *     firstName: string,
+ *     lastName: string,
+ *     photoUrl: ?string
+ * }} user
  * @return {Object<string, (string|Object)>}
  */
-headerView.render = function(config, entityType) {
+headerView.render = function(config, entityType, user) {
     let header = new Header();
 
     header.generateParams({
         entityType: entityType,
-        config: config
+        config: config,
+        user: user
     });
 
     return header.params;

@@ -126,7 +126,7 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
-        header: headerView.render(data.config, data.entityType),
+        header: headerView.render(data.config, data.entityType, user),
         sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: searchView.subheader({
             listLinks: courseCategoryView.listLinks(

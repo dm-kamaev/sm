@@ -88,7 +88,7 @@ schoolView.default = function(
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
         user: user,
-        header: headerView.render(config, entityType.SCHOOL),
+        header: headerView.render(config, entityType.SCHOOL, user),
         sideMenu: sideMenuView.render(config, entityType.SCHOOL),
         subHeader: schoolView.subHeader({
             user: user,

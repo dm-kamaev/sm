@@ -42,7 +42,7 @@ view.render = function(data) {
             user: user,
             entityType: data.entityType
         }),
-        header: headerView.render(data.config, data.entityType),
+        header: headerView.render(data.config, data.entityType, user),
         sideMenu: sideMenuView.render(data.config, data.entityType),
         user: user,
         authSocialLinks: data.authSocialLinks,

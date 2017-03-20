@@ -151,6 +151,7 @@ abstract class LayoutView {
 
         this.params.data.header = headerView.render({
             entityType: this.entityType,
+            user: this.user_,
             config: config
         });
     }

@@ -51,7 +51,7 @@ view.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
-        header: headerView.render(data.config, data.entityType),
+        header: headerView.render(data.config, data.entityType, user),
         sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: view.subheader({
             listLinks: courseCategoryView.listLinks(

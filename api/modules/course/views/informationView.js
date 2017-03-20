@@ -79,7 +79,7 @@ view.render = function(data) {
     return {
         seo: metaInformation.seo,
         openGraph: metaInformation.openGraph,
-        header: headerView.render(data.config, data.entityType),
+        header: headerView.render(data.config, data.entityType, user),
         sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: view.subheader({
             listLinks: courseCategoryView.listLinks(
