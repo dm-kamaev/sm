@@ -1,6 +1,7 @@
 goog.provide('sm.bSmHeader.SmHeader');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bSmHeader.Template');
 goog.require('sm.bSmHeader.View');
 goog.require('sm.bSmLink.SmLink');
@@ -29,6 +30,14 @@ goog.scope(function() {
          * @private
          */
         this.links_ = [];
+
+
+        /**
+         * Authorization Link instance
+         * @type {sm.bAuthorizationLink.AuthorizationLink}
+         * @private
+         */
+        this.authorizationLink_ = null;
     };
     goog.inherits(sm.bSmHeader.SmHeader, cl.iControl.Control);
     var Header = sm.bSmHeader.SmHeader,
@@ -62,6 +71,7 @@ goog.scope(function() {
         Header.base(this, 'decorateInternal', element);
 
         this.initLinks_();
+        this.initAuthorizationLink_();
     };
 
 
@@ -72,5 +82,17 @@ goog.scope(function() {
     Header.prototype.initLinks_ = function() {
         var links = this.getView().getLinks();
         this.links_ = this.decorateChildren(sm.bSmLink.SmLink.NAME, links);
+    };
+
+
+    /**
+     * Authorization Link instanse initialization
+     * @private
+     */
+    Header.prototype.initAuthorizationLink_ = function() {
+        this.authorizationLink_ = this.decorateChild(
+            sm.bAuthorizationLink.AuthorizationLink.NAME,
+            this.getView().getDom().authorizationLink
+        );
     };
 });  // goog.scope

@@ -79,5 +79,9 @@ goog.scope(function() {
         this.dom.links = this.getElementsByClass(
             View.CssClass.HEADER_LINKS
         );
+
+        this.dom.authorizationLink = this.getElementByClass(
+            sm.bAuthorizationLink.View.CssClass.ROOT
+        );
     };
 });  // goog.scope

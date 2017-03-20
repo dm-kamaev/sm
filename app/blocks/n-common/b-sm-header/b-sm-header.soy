@@ -109,6 +109,7 @@
     <div class="{call .rootClass /}__section
         {sp}{call .rootClass /}__section_contacts">
         {call .contacts_ data="all" /}
+        {call .authorization_ data="all" /}
     </div>
 {/template}
 
@@ -210,6 +211,31 @@
             {/call}
         </div>
     {/if}
+{/template}
+
+
+/**
+ * Contacts template
+ * @param params {{
+ *     data: {
+ *         contacts: sm.bSmContacts.Template.Params.Data
+ *     }
+ * }}
+ * @private
+ */
+{template .authorization_ kind="html"}
+    <div class="{call .rootClass /}__authorization">
+        {call .renderChild}
+            {param params: [
+                'type': 'authorization-link',
+                'renderParams': [
+                    'data': [
+                        'user': $params.data.user
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
 {/template}
 
 

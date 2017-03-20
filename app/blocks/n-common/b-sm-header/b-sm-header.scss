@@ -2,12 +2,15 @@
 
 .b-sm-header {
     position: relative;
+    overflow: auto;
 
+    height: 64px;
     width: 100%;
 
     border-bottom: 1px solid #eee;
 
     font-size: 20px;
+    line-height: 64px;
 }
 
 .b-sm-header__body {
@@ -26,12 +29,21 @@
 
     font-family: Proxima, sans-serif;
     font-weight: 800;
+    line-height: 60px;
 }
 
 .b-sm-header__section_contacts {
     float: right;
+}
 
-    margin-top: 25px;
+.b-sm-header__contacts {
+    display: inline-block;
+}
+
+.b-sm-header__authorization {
+    display: inline-block;
+
+    margin-left: 25px;
 }
 
 .b-sm-header__menu-item {
@@ -39,7 +51,6 @@
 
     height: 100%;
     margin-right: 30px;
-    padding: 25px 0 25px 0;
 }
 
 .b-sm-header__menu-item_active-course {
@@ -65,6 +76,10 @@
 }
 
 @include media-xs {
+    .b-sm-header {
+        height: auto;
+    }
+
     .b-sm-header__main-menu {
         display: none;
     }

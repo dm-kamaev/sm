@@ -13,7 +13,12 @@ export namespace bSmHeader {
                 type: string,
                 isSelected: boolean
             }>,
-            contacts?: any
+            contacts?: any,
+            user?: {
+                firstName: string,
+                lastName: string,
+                photoUrl?: string
+            }
         }
 
         /*
