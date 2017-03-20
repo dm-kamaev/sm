@@ -15,6 +15,7 @@ interface RequestParams {
 }
 
 abstract class Service {
+    protected baseUrl: string;
 
     public async send(params: RequestParams): Promise<any|Array<any>> {
         this.log(params);

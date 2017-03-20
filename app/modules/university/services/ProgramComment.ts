@@ -27,12 +27,10 @@ import {
 } from './exceptions/UserAlreadyCommentedProgram';
 
 class ProgramCommentService extends Service {
-    private baseUrl_: string;
-
     constructor(programId: number) {
         super();
 
-        this.baseUrl_ =
+        this.baseUrl =
             `${apiAddress}/universities/api/program/${programId}/comment`;
     }
 
@@ -45,7 +43,7 @@ class ProgramCommentService extends Service {
 
     public async getComments(): Promise<Array<BackendProgramComment>> {
         const params = {
-            url: this.baseUrl_,
+            url: this.baseUrl,
             method: 'get',
             headers: {
                 [headers.token.name]: headers.token.value
@@ -73,7 +71,7 @@ class ProgramCommentService extends Service {
         }
 
         const params = {
-            url: this.baseUrl_,
+            url: this.baseUrl,
             method: 'post',
             data: this.makeBackendCommentData(data, user),
             headers: {
@@ -93,7 +91,7 @@ class ProgramCommentService extends Service {
         }
 
         const params = {
-            url: `${this.baseUrl_}/${commentId}`,
+            url: `${this.baseUrl}/${commentId}`,
             method: 'put',
             data: this.makeBackendCommentData(data, user),
             headers: {

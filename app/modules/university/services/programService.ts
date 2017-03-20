@@ -1,31 +1,43 @@
 import {Service, RequestParams} from '../../common/services/Service';
 import {ProgramNotFound} from './exceptions/ProgramNotFound';
+import {BackendProgram} from '../types/program';
 
-const host: string =
-    require('../../../config/config').universities.host;
+const config = require('../../../config/config.json');
+const logger = require('../../../components/logger/logger').getLogger('app');
 
-const url = `http://${host}/api/program/`;
+const apiAddress = config.backendApi;
 
 class ProgramService extends Service {
-
     constructor() {
         super();
+
+        this.baseUrl = `${apiAddress}/universities/api/program`;
     }
 
-    public async getById(
-        id: number
-    ): Promise<any> {
+    public async getById(id: number): Promise<BackendProgram> {
         const params: RequestParams = {
-            url: url + id,
+            url: `${this.baseUrl}/${id}`,
             method: 'get'
         };
 
-        return await(this.send(params));
+        const response = await this.send(params);
+        return response.data;
+    }
+
+    public async getIdByAlias(alias: string): Promise<number> {
+        const requestParams: RequestParams = {
+            url: `${this.baseUrl}/${alias}`,
+            method: 'get'
+        };
+
+        const response = await this.send(requestParams);
+        return response.data;
     }
 
     protected handleError(error: any): void {
         switch (error.status) {
         case 404:
+            logger.critical(error.data);
             throw new ProgramNotFound();
         default:
             throw error;

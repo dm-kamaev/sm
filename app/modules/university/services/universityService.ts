@@ -1,31 +1,43 @@
 import {Service, RequestParams} from '../../common/services/Service';
 import {UniversityNotFound} from './exceptions/UniversityNotFound';
+import {BackendUniversity} from '../types/university';
 
-const host: string =
-    require('../../../config/config').universities.host;
+const config = require('../../../config/config.json');
+const logger = require('../../../components/logger/logger').getLogger('app');
 
-const url = `http://${host}/api/university/`;
+const apiAddress = config.backendApi;
 
 class UniversityService extends Service {
-
     constructor() {
         super();
+
+        this.baseUrl = `${apiAddress}/universities/api/university`;
     }
 
-    public async getById(
-        id: number
-    ): Promise<any> {
-        const params: RequestParams = {
-            url: url + id,
+    public async getById(id: number): Promise<BackendUniversity> {
+        const requestParams: RequestParams = {
+            url: `${this.baseUrl}/${id}`,
             method: 'get'
         };
 
-        return await(this.send(params));
+        const response = await this.send(requestParams);
+        return response.data;
+    }
+
+    public async getIdByAlias(alias: string): Promise<number> {
+        const requestParams: RequestParams = {
+            url: `${this.baseUrl}/${alias}`,
+            method: 'get'
+        };
+
+        const response = await this.send(requestParams);
+        return response.data;
     }
 
     protected handleError(error: any): void {
         switch (error.status) {
         case 404:
+            logger.critical(error.data);
             throw new UniversityNotFound();
         default:
             throw error;
