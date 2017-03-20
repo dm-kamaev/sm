@@ -1,21 +1,23 @@
 @import "../i-media/i-media";
-/** default layout **/
+
 .b-authorization-link {
-    display: inline-block;
+    color: #000;
 
-    width: 100%;
-    height: 100%;
+    vertical-align: middle;
 
-    text-align: center;
+    font-size: 16px;
 }
 
-.b-authorization-link__icon-wrap {
+.b-authorization-link__logout {
+    display: none;
+}
+
+.b-authorization-link__user {
     display: inline-block;
 
-    width: 100%;
-    height: 100%;
+    margin-right: 10px;
 
-    cursor: pointer;
+    vertical-align: middle;
 
     &:before {
         display: inline-block;
@@ -28,70 +30,48 @@
     }
 }
 
-.b-authorization-link__icon {
+.b-authorization-link__user-name {
     display: inline-block;
+
+    margin-right: 15px;
+
+    vertical-align: middle;
+}
+
+.b-authorization-link__user-photo {
+    height: 32px;
+    width: 32px;
+    margin-right: 10px;
 
     vertical-align: middle;
 
-    opacity: 0.6;
+    border-radius: 50%;
 }
 
-.b-authorization-link__name {
-    margin-bottom: 15px;
-    padding-bottom: 15px;
+.b-authorization-link__user-icon {
+    display: inline-block;
 
-    white-space: nowrap;
-
-    color: #808080;
-    border-bottom: 1px solid #e5e5e5;
-
-    font-family: Arial, sans-serif;
-    font-size: 13px;
-    line-height: 18px;
+    vertical-align: middle;
 }
 
-.b-authorization-link__hint-content {
-    padding: 15px 28px 15px 28px;
+.b-authorization-link__link {
+    display: inline-block;
+
+    vertical-align: middle;
 }
 
-.b-authorization-link__hint-content_logged {
-    display: none;
-}
-/** default layout end **/
-
-/** Possible states **/
 .b-authorization-link_logged {
-    .b-authorization-link__hint-content_logged {
+    .b-authorization-link__login {
+        display: none;
+    }
+
+    .b-authorization-link__logout {
         display: block;
     }
-    
-    .b-authorization-link__hint-content_logged-out {
+}
+
+@include media-m {
+    .b-authorization-link__user-name {
         display: none;
     }
 }
-
-.b-authorization-link_hoverable {
-    .b-authorization-link__icon-wrap:hover
-    .b-authorization-link__icon {
-        opacity: 1;
-    }
-}
-
-.b-authorization-link_opened {
-    .b-authorization-link__icon {
-        opacity: 1;
-    }
-}
-/** end possible states **/
-
-@include media-xs {
-    .b-authorization-link {
-        position: static;
-
-        .b-authorization-link__hint {
-            top: 165px;
-        }
-    }
-
-}
-
