@@ -97,11 +97,11 @@ abstract class SubHeader {
 
 
     protected setDropdownLinks(links) {
-        let data = this.dropdownLinks.data || {};
+        const data = this.dropdownLinks.data || {};
         data.content = data.content || {};
         data.content.items = links;
 
-        let config = this.dropdownLinks.config || {};
+        const config = this.dropdownLinks.config || {};
         config.openerSize = config.openerSize || 'xl';
         config.contentSize = config.contentSize || 'l';
 
@@ -113,14 +113,14 @@ abstract class SubHeader {
 
 
     protected setRowLinks(links) {
-        let linksParams = links.map(link => {
+        const linksParams = links.map(link => {
             return {
                 data: {
                     url: link.url,
                     content: link.label
                 },
                 config: this.rowLinks.linkConfig
-            }
+            };
         });
 
         this.params.data.rowLinks  = {

@@ -1,8 +1,19 @@
 .b-sm-row-links__link-wrap {
     display: inline-block;
 }
+
 .b-sm-row-links__divider {
     display: inline-block;
     margin: 0 20px;
     color: #7f7f7f;
+}
+
+.b-sm-row-links_size_xl {
+    .b-sm-row-links__link-wrap {
+        margin-right: 40px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
 }

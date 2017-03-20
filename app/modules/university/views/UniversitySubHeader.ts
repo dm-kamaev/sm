@@ -26,7 +26,9 @@ class UniversitySubHeader extends SubHeader {
                 theme: 'neptune',
                 size: 'xxl'
             },
-            listConfig: {}
+            listConfig: {
+                size: 'xl'
+            }
         };
 
         this.dropdownLinks = {
@@ -45,7 +47,7 @@ class UniversitySubHeader extends SubHeader {
                 iconType: 'icon-svg',
                 iconName: 'blue-arrow',
             }
-        }
+        };
 
         this.search = {
             placeholder: 'ВУЗ, специальность',
@@ -55,7 +57,7 @@ class UniversitySubHeader extends SubHeader {
     }
 
     protected setLinks(listLinks) {
-        let links = [
+        const links = [
             {
                 url: '/',
                 label: 'Программы обучения',
@@ -77,7 +79,7 @@ class UniversitySubHeader extends SubHeader {
     }
 
     protected setDropdownLinks(links) {
-        let link = links.find(link => link.isSelected);
+        const link = links.find(link => link.isSelected);
 
         this.dropdownLinks.data.opener = link.label;
 

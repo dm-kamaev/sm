@@ -16,7 +16,8 @@ export namespace bSmRowLinks {
          * sm.bSmRowLinks.Params.Config
          */
         export interface Config {
-            theme?: string
+            theme?: string,
+            size?: string
         }
     }
 
