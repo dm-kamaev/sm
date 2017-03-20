@@ -108,7 +108,7 @@ class SchoolAdminService {
                 as: 'commentGroup',
                 include: {
                     model: models.Comment,
-                    as: 'comments',
+                    as: 'comments'
                 }
             }
         });

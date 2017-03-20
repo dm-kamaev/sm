@@ -14,7 +14,7 @@ const Model: CommentGroupModel = sequelize.define('CommentGroup', {}, {
     classMethods: {
         associate: function(models) {
             this.hasMany(models.Comment, {
-                as: 'comment', foreignKey: 'comment_group_id'
+                as: 'comments', foreignKey: 'comment_group_id'
             });
             this.hasMany(models.ProgramComment, {
                 as: 'programComments',
