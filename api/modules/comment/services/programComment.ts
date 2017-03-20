@@ -15,6 +15,7 @@ import {Model as RatingModel} from '../models/Rating';
 import {service as userDataService} from '../../user/services/userData';
 import {Model as UserDataModel} from '../../user/models/userData';
 import {service as programService} from '../../university/services/program';
+import {RatingChanger} from '../lib/RatingChanger';
 
 import {
     ProgramCommentInstance,
@@ -30,6 +31,7 @@ import {UserAlreadyCommentedProgram}
     from './exceptions/UserAlreadyCommentedProgram';
 
 import {Model as ProgramCommentModel} from '../models/ProgramComment';
+import {Model as ProgramModel} from '../../university/models/Program';
 
 class ProgramCommentService {
     public readonly name: string = 'programComment';
@@ -161,6 +163,8 @@ class ProgramCommentService {
         if (commentInstance.ratingId) {
             await ratingService.delete(commentInstance.ratingId);
         }
+
+        await this.updateRating_(commentInstance.commentGroupId);
     }
 
     private async fullCreate_(
@@ -184,6 +188,8 @@ class ProgramCommentService {
 
         await commentInstance.setUserData(userDataInstance);
         await commentInstance.setCommentGroup(commentGroup);
+
+        await this.updateRating_(commentGroup.id);
     }
 
     private async checkIfCommented_(
@@ -231,6 +237,8 @@ class ProgramCommentService {
                 await this.createCommentRating_(commentInstance, data);
         }
         await userDataService.update(commentInstance.userDataId, data);
+
+        await this.updateRating_(commentInstance.commentGroupId);
     }
 
     private async createCommentRating_(
@@ -243,6 +251,16 @@ class ProgramCommentService {
     private async silentGetOne_(
             commentId: number): Promise<ProgramCommentInstance> {
         return await ProgramCommentModel.findById(commentId);
+    }
+
+
+    private updateRating_(commentGroupId: number): Promise<any> {
+        const programTableName: any = ProgramModel.getTableName();
+        const programCommentTableName: any = ProgramCommentModel.getTableName();
+        const ratingChanger = new RatingChanger(
+            programTableName, commentGroupId, programCommentTableName
+        );
+        return ratingChanger.update();
     }
 }
 

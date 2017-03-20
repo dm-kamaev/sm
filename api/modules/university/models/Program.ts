@@ -69,6 +69,19 @@ const Program: ProgramModel = sequelize.define('Program', {
             key: 'id'
         }
     },
+    totalScore: {
+        field: 'total_score',
+        type: DataType.INTEGER
+    },
+    score: DataType.ARRAY(DataType.INTEGER),
+    scoreCount: {
+        field: 'score_count',
+        type: DataType.ARRAY(DataType.INTEGER)
+    },
+    reviewCount: {
+        field: 'review_count',
+        type: DataType.ARRAY(DataType.INTEGER)
+    },
     createdAt: {
         field: 'created_at',
         type: DataType.DATE

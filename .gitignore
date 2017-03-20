@@ -51,19 +51,20 @@ typings
 #builded typescript files ignore
 api/components/interface.js
 
-api/modules/comment/types/**/*.js
+api/modules/comment/controllers/errors/**/*.js
+api/modules/comment/controllers/AdminProgramCommentController.js
+api/modules/comment/controllers/ProgramCommentController.js
+api/modules/comment/lib/**/*.js
 api/modules/comment/migrations/20170227134914-create-program-comments.js
 api/modules/comment/models/commentGroup.js
 api/modules/comment/models/ProgramComment.js
 api/modules/comment/models/Rating.js
-api/modules/comment/services/commentGroup.js
-api/modules/comment/services/rating.js
-api/modules/comment/services/programComment.js
 api/modules/comment/services/exceptions/**/*.js
-api/modules/comment/controllers/errors/**/*.js
-api/modules/comment/controllers/AdminProgramCommentController.js
-api/modules/comment/controllers/ProgramCommentController.js
+api/modules/comment/services/commentGroup.js
+api/modules/comment/services/programComment.js
+api/modules/comment/services/rating.js
 api/modules/comment/views/programCommentView.js
+api/modules/comment/types/**/*.js
 
 
 api/modules/entity/models/page.js

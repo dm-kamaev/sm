@@ -62,8 +62,11 @@ class UniversityAdminController extends Controller {
      * @apiSuccess {Object}   city               City object.
      * @apiSuccess {Number}   city.id            City's id.
      * @apiSuccess {String}   city.name          City's name.
-     * @apiSuccess {String}   city.created_at    City's created at date.
-     * @apiSuccess {String}   city.updated_at    City's updated at date.
+     * @apiSuccess {Number}   city.regionId      Id of city's region.
+     * @apiSuccess {Number}   totalScore         Total score.
+     * @apiSuccess {Number[]} score              Array of scores.
+     * @apiSuccess {Number[]} scoreCount         Array of scores' count.
+     * @apiSuccess {Number}   reviewCount        Number of reviews.
      * @apiSuccess {String}   created_at         Created at.
      * @apiSuccess {String}   updated_at         Updated at.
      *
@@ -79,9 +82,9 @@ class UniversityAdminController extends Controller {
      * @apiName createUniversity
      * @apiGroup Admin University
      *
-     * @apiParam {File}     image              File should be send using
+     * @apiParam {File}     imageUrl           File should be send using
      *    multipart/form-data.
-     * @apiParam {File}     relapImage         File should be send using
+     * @apiParam {File}     relapImageUrl      File should be send using
      *    multipart/form-data.
      * @apiParam {String}   name               Name.
      * @apiParam {String}   abbreviation       Abbreviation.
@@ -106,6 +109,10 @@ class UniversityAdminController extends Controller {
      * @apiSuccess {Boolean}  militaryDepartment Military department.
      * @apiSuccess {Boolean}  dormitory          Dormitory.
      * @apiSuccess {Object}   cityId             City's id.
+     * @apiSuccess {Number}   totalScore         Total score.
+     * @apiSuccess {Number[]} score              Array of scores.
+     * @apiSuccess {Number[]} scoreCount         Array of scores' count.
+     * @apiSuccess {Number}   reviewCount        Number of reviews.
      * @apiSuccess {String}   created_at         Created at.
      * @apiSuccess {String}   updated_at         Updated at.
      */
@@ -164,23 +171,20 @@ class UniversityAdminController extends Controller {
      *
      * @apiSuccess {Number}   id                 Id.
      * @apiSuccess {String}   name               Name.
-     * @apiSuccess {String}   abbreviation       Abbreviation.
-     * @apiSuccess {String}   description        Description.
      * @apiSuccess {String}   imageUrl           Url for university image.
      * @apiSuccess {String}   relapImageUrl      Url for relap image.
      *     It has {width} parameter in it, which should be replaced for required
      *     width size in px.
      *     It has {width} parameter in it, which should be replaced for required
      *     width size in px.
-     * @apiSuccess {String[]} links              Array of links
-     *     (official site, facebook communities).
-     * @apiSuccess {Boolean}  militaryDepartment Military department.
-     * @apiSuccess {Boolean}  dormitory          Dormitory.
      * @apiSuccess {Object}   city               City object.
      * @apiSuccess {Number}   city.id            City's id.
      * @apiSuccess {String}   city.name          City's name.
-     * @apiSuccess {String}   city.created_at    City's created at date.
-     * @apiSuccess {String}   city.updated_at    City's updated at date.
+     * @apiSuccess {Number}   city.regionId      Id of city's region.
+     * @apiSuccess {Number}   totalScore         Total score.
+     * @apiSuccess {Number[]} score              Array of scores.
+     * @apiSuccess {Number[]} scoreCount         Array of scores' count.
+     * @apiSuccess {Number}   reviewCount        Number of reviews.
      * @apiSuccess {String}   created_at         Created at.
      * @apiSuccess {String}   updated_at         Updated at.
      */
