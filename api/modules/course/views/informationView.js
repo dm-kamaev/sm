@@ -86,8 +86,7 @@ view.render = function(data) {
                 data.categories,
                 data.categoryAliases
             ),
-            favoriteEntities: favoriteView.list(data.favorites),
-            user: user
+            favoriteEntities: favoriteView.list(data.favorites)
         }),
         user: user,
         authSocialLinks: data.authSocialLinks,
@@ -149,7 +148,6 @@ view.subheader = function(data) {
         isLogoRedirect: true,
         listLinks: data.listLinks,
         isSearchRedirect: true,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });

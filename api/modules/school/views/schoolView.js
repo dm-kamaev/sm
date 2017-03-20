@@ -91,7 +91,6 @@ schoolView.default = function(
         header: headerView.render(config, entityType.SCHOOL, user),
         sideMenu: sideMenuView.render(config, entityType.SCHOOL),
         subHeader: schoolView.subHeader({
-            user: user,
             favoriteEntities: []
         }),
         seoDescription: data.page.description,
@@ -107,7 +106,6 @@ schoolView.default = function(
 /**
  * Sub header params init
  * @param {{
- *      user: Object,
  *      favoriteEntities: Array<Object>
  * }} data
  * @return {Object}
@@ -118,7 +116,6 @@ schoolView.subHeader = function(data) {
     return subHeader.render({
         isLogoRedirect: true,
         isSearchRedirect: true,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });

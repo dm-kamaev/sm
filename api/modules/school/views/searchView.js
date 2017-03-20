@@ -92,8 +92,7 @@ searchView.render = function(data) {
         header: headerView.render(data.config, data.entityType, user),
         sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: searchView.subheader({
-            favoriteEntities: favoriteView.list(data.favorites),
-            user: user
+            favoriteEntities: favoriteView.list(data.favorites)
         }),
         user: user,
         authSocialLinks: data.authSocialLinks,
@@ -254,7 +253,6 @@ searchView.subheader = function(data) {
     return subheader.render({
         isLogoRedirect: true,
         isSearchRedirect: false,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });

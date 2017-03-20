@@ -39,7 +39,6 @@ view.render = function(data) {
         },
         subHeader: view.subheader({
             favoriteEntities: favoriteView.list(data.favorites),
-            user: user,
             entityType: data.entityType
         }),
         header: headerView.render(data.config, data.entityType, user),
@@ -77,7 +76,6 @@ view.subheader = function(data) {
     return subheader.render({
         isLogoRedirect: true,
         isSearchRedirect: true,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });

@@ -58,8 +58,7 @@ view.render = function(data) {
                 data.categories,
                 data.categoryAliases
             ),
-            favoriteEntities: favoriteView.list(data.favorites),
-            user: user
+            favoriteEntities: favoriteView.list(data.favorites)
         }),
         image: {
             imageUrl: '/static/images/n-common/l-home/images/main-courses.svg',
@@ -93,7 +92,6 @@ view.subheader = function(data) {
         isLogoRedirect: false,
         listLinks: data.listLinks,
         isSearchRedirect: true,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         bottomLine: false
     });

@@ -36,8 +36,7 @@ homeView.render = function(data) {
         header: headerView.render(data.config, data.entityType, user),
         sideMenu: sideMenuView.render(data.config, data.entityType),
         subHeader: homeView.subHeader({
-            favoriteEntities: favoriteEntities,
-            user: user
+            favoriteEntities: favoriteEntities
         }),
         user: user,
         authSocialLinks: data.authSocialLinks,
@@ -61,7 +60,6 @@ homeView.subHeader = function(data) {
     return subHeader.render({
         isLogoRedirect: false,
         isSearchRedirect: true,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: false
     });

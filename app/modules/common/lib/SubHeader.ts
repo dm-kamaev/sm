@@ -6,7 +6,6 @@ import {
 } from '../../../blocks/n-clobl/g-dropdown/g-dropdown_list-links/params';
 import {bSmRowLinks} from '../../../blocks/n-common/b-sm-row-links/params';
 import {bSmLink} from '../../../blocks/n-common/b-sm-link/params';
-import {UserData} from '../../user/types/user';
 
 
 type Data = {
@@ -14,7 +13,6 @@ type Data = {
     listLinks?: Array<{[index: string]: string}>,
     isSearchRedirect?: boolean,
     pageAlias: string,
-    user: UserData,
     favoriteEntities: Array<{string: any}>,
     isBottomLine?: boolean
 };
@@ -71,11 +69,9 @@ abstract class SubHeader {
     protected setParams(data: Data) {
         this.setLogo_(data.isLogoRedirect);
         this.setContacts_();
-
         this.setLinks(data.listLinks);
 
         this.setSearch_(data.isSearchRedirect, data.pageAlias);
-        this.setUser_(data.user);
         this.setFavorites_(data.favoriteEntities);
 
         this.setConfig_(data.isBottomLine);
@@ -161,11 +157,6 @@ abstract class SubHeader {
 
         this.params.data.search.redirect = isRedirect;
         this.params.data.search.pageAlias = pageAlias || this.search.pageAlias;
-    }
-
-
-    private setUser_(user) {
-        this.params.data.user = user;
     }
 
 
