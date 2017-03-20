@@ -201,10 +201,17 @@ api/modules/user/views/user.js
 
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
+app/middleware/checkApiToken.js
 
 app/modules/common/lib/Header.js
 app/modules/common/lib/Layout.js
+app/modules/common/types/layout.js
 app/modules/common/lib/SubHeader.js
+
+app/modules/common/views/footerView.js
+
+app/modules/common/enums/entityType.js
+
 
 app/modules/university/index.js
 
@@ -215,6 +222,9 @@ app/modules/university/controllers/programController.js
 
 app/modules/university/services/exceptions/*.js
 app/modules/university/services/*.js
+app/modules/university/controllers/ProgramCommentController.js
+app/modules/university/types/programComment.js
+
 
 app/modules/university/views/*.js
 
