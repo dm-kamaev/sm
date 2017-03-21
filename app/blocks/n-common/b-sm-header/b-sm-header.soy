@@ -8,13 +8,19 @@
  *         type: string,
  *         isSelected: boolean
  *     }>,
- *     contacts: sm.bSmContacts.Template.Params.Data
+ *     contacts: sm.bSmContacts.Template.Params.Data,
+ *     user?: {
+ *         firstName: string,
+ *         lastName: string,
+ *         photoUrl?: string
+ *     }
  * }} sm.bSmHeader.Template.Params.Data
  */
 
 
 /**
  * @typedef {{
+ *     entityType?: string,
  *     theme: string,
  *     customClasses: Array<string>
  * }} sm.bSmHeader.Template.Params.Config
@@ -100,7 +106,15 @@
  * Contacts section
  * @param params {{
  *     data: {
- *         contacts: sm.bSmContacts.Template.Params.Data
+ *         contacts: sm.bSmContacts.Template.Params.Data,
+ *         user?: {
+ *             firstName: string,
+ *             lastName: string,
+ *             photoUrl?: string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
  *     }
  * }}
  * @private
@@ -218,7 +232,14 @@
  * Contacts template
  * @param params {{
  *     data: {
- *         contacts: sm.bSmContacts.Template.Params.Data
+ *         user?: {
+ *             firstName: string,
+ *             lastName: string,
+ *             photoUrl?: string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
  *     }
  * }}
  * @private
@@ -231,6 +252,9 @@
                 'renderParams': [
                     'data': [
                         'user': $params.data.user
+                    ],
+                    'config': [
+                        'entityType': $params.config.entityType
                     ]
                 ]
             ] /}

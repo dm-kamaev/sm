@@ -27,15 +27,19 @@ class Header {
         return this.getParams();
     }
 
+
     protected setParams(params: Params) {
         this.setContacts_(params.entityType);
         this.setMenuItems_(params);
         this.setUser_(params.user);
+        this.setConfig_(params.entityType);
     }
+
 
     protected getParams(): bSmHeader.Params {
         return this.params;
     }
+
 
     private setContacts_(entityType) {
         const data = {
@@ -45,6 +49,7 @@ class Header {
         const contactsGenerator = new ContactsGenerator(data);
         this.params.data.contacts = contactsGenerator.params;
     }
+
 
     private setMenuItems_(params) {
         const menuData = {
@@ -56,8 +61,14 @@ class Header {
         this.params.data.menuItems = menu.params;
     }
 
+
     private setUser_(user) {
         this.params.data.user = user;
+    }
+
+
+    private setConfig_(entityType) {
+        this.params.config.entityType = this.entityType || entityType;
     }
 }
 

@@ -13,9 +13,9 @@
  */
 
 
- /**
+/**
  * @typedef {{
- *     theme: (string|undefined)
+ *     entityType?: string
  * }} sm.bAuthorizationLink.Params.Config
  */
 
@@ -60,7 +60,9 @@
  * Login
  * @param params {{
  *     data: sm.bAuthorizationLink.Params.Data,
- *     config: sm.bAuthorizationLink.Params.Config
+ *     config: {
+ *         entityType?: string
+ *     }
  * }}
  */
 {template .login_}
@@ -80,8 +82,7 @@
                 ],
                 'config': [
                     'modifier': 'login',
-                    'theme': 'neptune',
-                    'size': 'xxl'
+                    'entityType': $params.config.entityType
                 ]
             ]/}
         {/call}
@@ -93,7 +94,9 @@
  * Logout
  * @param params {{
  *     data: sm.bAuthorizationLink.Params.Data,
- *     config: sm.bAuthorizationLink.Params.Config
+ *     config: {
+ *         entityType?: string
+ *     }
  * }}
  */
 {template .logout_}
@@ -113,8 +116,7 @@
                 ],
                 'config': [
                     'modifier': 'logout',
-                    'theme': 'neptune',
-                    'size': 'xxl'
+                    'entityType': $params.config.entityType
                 ]
             ]/}
         {/call}
@@ -171,7 +173,10 @@
  * Link
  * @param params {{
  *     data: sm.bSmLink.Template.Params.Data,
- *     config: sm.bSmLink.Template.Params.Config
+ *     config: {
+ *         modifier: string,
+ *         entityType?: string
+ *     }
  * }}
  */
 {template .link_}
@@ -181,7 +186,11 @@
 
     {let $config: augmentMap(
         [
-            'customClasses': [$customClasses]
+            'customClasses': [$customClasses],
+            'size': 'xxl',
+            'theme': $params.config.entityType == 'university' ?
+                'neptune' :
+                'default'
         ],
         $params.config
     ) /}

@@ -13,7 +13,7 @@ const headerView = {};
  *     schoolsHost: string
  * }} config
  * @param {string} entityType
- * @param ?{{
+ * @param {{
  *     firstName: string,
  *     lastName: string,
  *     photoUrl: ?string

@@ -25,6 +25,7 @@ export namespace bSmHeader {
          * sm.bSmHeader.Params.Config
          */
         export interface Config {
+            entityType?: string,
             theme?: string,
             customClasses?: Array<string>
         }
