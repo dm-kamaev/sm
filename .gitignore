@@ -216,9 +216,12 @@ app/modules/common/enums/entityType.js
 
 app/modules/university/index.js
 
+app/modules/university/types/**/*.js
+
 app/modules/university/controllers/errors/*.js
 app/modules/university/controllers/index.js
 app/modules/university/controllers/SubscriptionController.js
+app/modules/university/controllers/UniversityController.js
 app/modules/university/controllers/programController.js
 
 app/modules/university/services/exceptions/*.js
