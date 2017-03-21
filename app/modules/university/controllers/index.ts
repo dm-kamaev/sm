@@ -2,7 +2,10 @@ import * as express from 'express';
 
 const router = express.Router();
 
-const universityController = require('./universityController');
+const legasyUniversityController = require('./universityController');
+
+import {UniversityController} from './UniversityController';
+const universityController: any = new UniversityController();
 
 import {SubscriptionController} from './SubscriptionController';
 const subscriptionController = new SubscriptionController();
@@ -10,7 +13,12 @@ const subscriptionController = new SubscriptionController();
 import {ProgramCommentController} from './ProgramCommentController';
 const programCommentController: any = new ProgramCommentController();
 
-router.get('/university', universityController.information);
+router.get('/university', legasyUniversityController.information);
+
+router.get(
+    '/vuz/:universityAlias/specialnost/:programAlias',
+    universityController.actionGetInformation
+);
 
 router.post(
     '/university/subscribe',
