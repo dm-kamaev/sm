@@ -16,6 +16,7 @@ import {service as userDataService} from '../../user/services/userData';
 import {Model as UserDataModel} from '../../user/models/userData';
 import {service as programService} from '../../university/services/program';
 import {RatingChanger} from '../lib/RatingChanger';
+import {UniversityRatingChanger} from '../lib/UniversityRatingChanger';
 
 import {
     ProgramCommentInstance,
@@ -165,6 +166,7 @@ class ProgramCommentService {
         }
 
         await this.updateRating_(commentInstance.commentGroupId);
+        await this.updateUniversityRating_(commentInstance.commentGroupId);
     }
 
     private async fullCreate_(
@@ -190,6 +192,7 @@ class ProgramCommentService {
         await commentInstance.setCommentGroup(commentGroup);
 
         await this.updateRating_(commentGroup.id);
+        await this.updateUniversityRating_(commentGroup.id);
     }
 
     private async checkIfCommented_(
@@ -239,6 +242,7 @@ class ProgramCommentService {
         await userDataService.update(commentInstance.userDataId, data);
 
         await this.updateRating_(commentInstance.commentGroupId);
+        await this.updateUniversityRating_(commentInstance.commentGroupId);
     }
 
     private async createCommentRating_(
@@ -254,13 +258,19 @@ class ProgramCommentService {
     }
 
 
-    private updateRating_(commentGroupId: number): Promise<any> {
+    private async updateRating_(commentGroupId: number): Promise<any> {
         const programTableName: any = ProgramModel.getTableName();
         const programCommentTableName: any = ProgramCommentModel.getTableName();
         const ratingChanger = new RatingChanger(
             programTableName, commentGroupId, programCommentTableName
         );
         return ratingChanger.update();
+    }
+
+    private async updateUniversityRating_(
+            commentGroupId: number): Promise<any> {
+        const universityRatingChanger = new UniversityRatingChanger();
+        return universityRatingChanger.update(commentGroupId);
     }
 }
 
