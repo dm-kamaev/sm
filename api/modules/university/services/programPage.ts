@@ -1,8 +1,16 @@
 import {ProgramInstance} from '../types/program';
 
+import {Model as PageModel} from '../../entity/models/page';
+import {
+    ProgramPageInstance,
+    Model as ProgramPageModel
+} from '../models/ProgramPage';
+
 import {service as programService} from './program';
 import {service as pageService} from '../../entity/services/page';
 const urlsService = require('../../entity/services/urls');
+
+import {ProgramAliasNotFound} from './exceptions/ProgramAliasNotFound';
 
 const entityType = require('../../entity/enums/entityType');
 const PROGRAM_TYPE = entityType.PROGRAM;
@@ -31,6 +39,24 @@ class ProgramPageService {
 
     public async deletePage(program: ProgramInstance): Promise<void> {
         pageService.delete(program.id, PROGRAM_TYPE);
+    }
+
+    public async getByAlias(alias: string): Promise<ProgramPageInstance> {
+        const programPage = await ProgramPageModel.findOne({
+                include: [{
+                    model: PageModel,
+                    as: 'page',
+                    where: {
+                        alias: alias
+                    }
+                }]
+            });
+
+        if (!programPage) {
+            throw new ProgramAliasNotFound(alias);
+        }
+
+        return programPage;
     }
 
     private async getAlias(
