@@ -2,8 +2,7 @@
 
 import * as Sequelize from 'sequelize/v3';
 import {PageIntstance, PageAttribute} from '../types/page';
-import {Model as PageModel} from '../models/page'
-// const PageModel = require('../models/page').Model;
+import {Model as PageModel} from '../models/page';
 
 class PageService {
     public readonly name: string = 'page';
