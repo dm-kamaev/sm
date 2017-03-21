@@ -2,7 +2,6 @@
 
 .b-sm-header {
     position: relative;
-    overflow: auto;
 
     height: 64px;
     width: 100%;
@@ -16,6 +15,8 @@
 .b-sm-header__body {
     max-width: 1200px;
     margin: 0 auto;
+
+    line-height: 62px;
 }
 
 .b-sm-header__section {
@@ -29,7 +30,6 @@
 
     font-family: Proxima, sans-serif;
     font-weight: 800;
-    line-height: 60px;
 }
 
 .b-sm-header__section_contacts {
@@ -72,6 +72,18 @@
 @include media-xl {
     .b-sm-header__body {
         padding: 0 40px;
+    }
+}
+
+@include media-m {
+    .b-sm-header {
+        height: 70px;
+
+        line-height: 70px;
+    }
+
+    .b-sm-header__body {
+        line-height: 68px;
     }
 }
 

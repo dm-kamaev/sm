@@ -42,10 +42,11 @@ class UniversitySubHeader extends SubHeader {
                 }
             },
             config: {
-                openerTheme: 'neptune',
+                openerTheme: 'neptune-block',
                 openerSize: 'xxl',
                 iconType: 'icon-svg',
                 iconName: 'blue-arrow',
+                theme: 'wide'
             }
         };
 
