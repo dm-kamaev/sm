@@ -1,7 +1,7 @@
 const squel = require('squel');
 
 const sequelize = require('../../../../app/components/db');
-
+const services = require('../../../../app/components/services').all;
 import {
     Model as UniversityModel,
     UniversityInstance,
@@ -27,6 +27,10 @@ import {
 
 import {UniversityPageInstance} from '../models/UniversityPage';
 import {UniversityNotFound} from './exceptions/UniversityNotFound';
+import {
+    UniversityNameIsEmptyException,
+    UniversityAliasDuplicateException
+} from './exceptions/index';
 
 class UniversityService {
     public async getAll(): Promise<Array<UniversityAdminList>> {
@@ -120,7 +124,20 @@ class UniversityService {
     public async create(
         data: UniversityAttribute,
         profileIds: Array<number>
-    ): Promise<UniversityInstance |void> {
+    ): Promise<UniversityInstance> {
+        const universityName: string = data.name;
+        if (!universityName) {
+            throw new UniversityNameIsEmptyException(universityName);
+        }
+        const alias: string = services.urls.stringToURL(universityName.trim());
+        const duplicate = await pageService.getByAlias(
+            alias,
+            entityTypes.UNIVERSITY
+        );
+        if (duplicate) {
+            throw new UniversityAliasDuplicateException(alias, duplicate);
+        }
+
         const university: UniversityInstance
             = await UniversityModel.create(data);
         profileIds = await profileService.filterNotExistProfileId(profileIds);
@@ -143,6 +160,20 @@ class UniversityService {
         data: UniversityAttribute,
         profileIds: Array<number>
     ): Promise<UniversityInstance | null> {
+        const universityName: string = data.name;
+        if (!universityName) {
+            throw new UniversityNameIsEmptyException(universityName);
+        }
+        const alias: string = services.urls.stringToURL(universityName.trim());
+        const duplicate = await pageService.searchDuplicateAlias({
+            entityId: data.id,
+            entityType: entityTypes.UNIVERSITY,
+            alias
+        });
+        if (duplicate) {
+            throw new UniversityAliasDuplicateException(alias, duplicate);
+        }
+
         profileIds = await profileService.filterNotExistProfileId(profileIds);
         let universityProfiles: UniversityProfileInstance[];
         universityProfiles = await universityProfileService.getAllByData({
