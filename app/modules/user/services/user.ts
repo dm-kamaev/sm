@@ -58,18 +58,24 @@ class UserService extends Service {
 
     private async getAllByIds_(
             ids: Array<number>): Promise<Array<BackendUser>> {
-        const uniqueIds = lodashUniq(ids),
-            formattedIds = uniqueIds.reduce(
+        const uniqueIds = lodashUniq(ids);
+        let result = [];
+
+        if (uniqueIds.length > 0) {
+            const formattedIds = uniqueIds.reduce(
                 (previous, id) => `${previous},${id}`,
                 String(uniqueIds[0])
-            ),
-            requestParams: RequestParams = {
-                url: `${this.baseUrl}/users/&id=${formattedIds}`,
-                method: 'get'
-            };
+                ),
+                requestParams: RequestParams = {
+                    url: `${this.baseUrl}/users/&id=${formattedIds}`,
+                    method: 'get'
+                };
 
-        const response = await this.send(requestParams);
-        return response.data;
+            const response = await this.send(requestParams);
+            result = response.data;
+        }
+
+        return result;
     }
 }
 

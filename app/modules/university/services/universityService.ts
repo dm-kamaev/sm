@@ -26,12 +26,12 @@ class UniversityService extends Service {
 
     public async getIdByAlias(alias: string): Promise<number> {
         const requestParams: RequestParams = {
-            url: `${this.baseUrl}/${alias}`,
+            url: `${this.baseUrl}/alias/${encodeURI(alias)}`,
             method: 'get'
         };
 
         const response = await this.send(requestParams);
-        return response.data;
+        return response.data.universityId;
     }
 
     protected handleError(error: any): void {

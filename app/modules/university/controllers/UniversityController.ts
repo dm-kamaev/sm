@@ -43,18 +43,17 @@ class UniversityController extends Controller {
             entranceStatistic = programData[2],
             comments = programData[3],
             userComment = programCommentService.getUserComment(user, comments);
-
         const users =
             await userService.getById(comments.map(comment => comment.userId));
 
-        return {
+        return JSON.stringify({
             program,
             university,
             entranceStatistic,
             comments,
             userComment,
             users
-        };
+        }, null, 4);
     }
 }
 
