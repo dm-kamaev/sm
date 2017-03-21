@@ -22,9 +22,11 @@ if (config.environment != 'production') {
     //         .replace(/SELECT/, '\nSELECT')
     //         .replace(/INSERT/, '\nINSERT')
     //         .replace(/UPDATE/, '\nUPDATE')
-    //         .replace(/FROM/, '\nFROM')
-    //         .replace(/LEFT OUTER JOIN/g, '\nLEFT OUTER JOIN')
-    //         .replace(/WHERE/g, '\nWHERE')
+    //         .replace(/(FROM)/, '\n$1')
+    //         .replace(/(LEFT OUTER JOIN)/g, '\n$1')
+    //         .replace(/(WHERE)/g, '\n$1')
+    //         .replace(/(VALUES)/g, '\n$1\n')
+    //         .replace(/(ARRAY)/g, '\n$1')
     //     );
     // };
 }

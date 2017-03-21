@@ -15,6 +15,7 @@ export interface UniversityAttribute {
     militaryDepartment?: boolean;
     dormitory?: boolean;
     cityId?: number;
+    profileIds?: Array<number>;
 }
 
 export interface UniversityInstance
@@ -91,7 +92,9 @@ const University: UniversityModel = sequelize.define('University', {
                 as: 'city'
             });
             this.belongsToMany(models.Profile, {
-                through: 'university_profile'
+                as: 'profiles',
+                through: 'university_profile',
+                foreignKey: 'university_id',
             });
             this.belongsToMany(models.Page, {
                 as: 'page',

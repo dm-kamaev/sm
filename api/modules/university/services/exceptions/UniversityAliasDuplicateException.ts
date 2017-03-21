@@ -3,7 +3,7 @@ import {ServiceException} from '../../../../components/interface';
 const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
-export class UniversityAliasDuplicate extends Exception {
+export class UniversityAliasDuplicateException extends Exception {
     public readonly name: string;
 
     constructor(alias: string, duplicate) {
@@ -12,6 +12,6 @@ export class UniversityAliasDuplicate extends Exception {
           `page=${JSON.stringify(duplicate, null, 2)}`
         );
 
-        this.name = 'UniversityAliasDuplicate';
+        this.name = 'UniversityAliasDuplicateException';
     }
 }

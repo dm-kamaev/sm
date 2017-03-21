@@ -3,7 +3,7 @@ import {ServiceException} from '../../../../components/interface';
 const Exception: ServiceException =
     require('nodules/controller/ServiceException');
 
-export class UniversityAliasNotFound extends Exception {
+export class UniversityAliasNotFoundException extends Exception {
     public readonly name: string;
 
     constructor(universityAlias: string) {

@@ -13,6 +13,18 @@ import {UniversityAdminList} from '../types/university';
 import {Model as CityModel} from '../../geo/models/city';
 import {Model as ProgramModel} from '../models/Program';
 
+import {ProfileInstance, Model as ProfileModel} from '../models/Profile';
+import {service as profileService} from '../services/profile';
+import {
+    service as universityProfileService
+} from '../services/universityProfile';
+import {service as pageService} from '../../entity/services/page';
+const entityTypes = require('../../entity/enums/entityType.js');
+import {
+    UniversityProfileInstance,
+    Model as UniversityProfileModel
+} from '../models/UniversityProfile';
+
 import {UniversityPageInstance} from '../models/UniversityPage';
 import {UniversityNotFound} from './exceptions/UniversityNotFound';
 
@@ -38,13 +50,53 @@ class UniversityService {
             .group(`${university}.id`)
             .group(`${city}.name`)
             .toString();
-        return sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
+
+        const universityProfile = 'university_profile';
+        const profile = 'profile';
+        const queryProfile: string = squel.select()
+            .from(universityProfile)
+            .field(`${universityProfile}.university_id`)
+            .field(`${profile}.id`)
+            .field(`${profile}.name`)
+            .left_join(profile,
+                null,
+                `${universityProfile}.profile_id = ${profile}.id`
+            ).toString();
+        const profiles = await sequelize.query(
+            queryProfile,
+            {type: sequelize.QueryTypes.SELECT, raw: true}
+        );
+        const hashProfile: {
+            [key: string]: Array<{id: number, name: string}>
+        } = {};
+        profiles.forEach(profile => {
+            const listProfile = hashProfile[profile.university_id];
+            if (listProfile) {
+                listProfile.push({
+                    id: profile.id,
+                    name: profile.name
+                });
+            } else {
+                hashProfile[profile.university_id] = [
+                    {id: profile.id, name: profile.name}
+                ];
+            }
+        });
+
+        const universities: UniversityAdminList[]
+            = await sequelize.query(query,
+                {type: sequelize.QueryTypes.SELECT, raw: true}
+        );
+        universities.forEach((university: UniversityAdminList) => {
+            university.profiles = hashProfile[university.id] || null;
+        });
+        return universities;
     }
 
     public async get(id: number): Promise<UniversityInstance> {
         const university: UniversityInstance = await UniversityModel.findOne({
             attributes: {
-                exclude: ['city_id']
+                exclude: ['city_id', 'university_profile']
             },
             where: {
                 id: id
@@ -53,6 +105,10 @@ class UniversityService {
                 attributes: ['id', 'name', 'regionId'],
                 model: CityModel,
                 as: 'city'
+            }, {
+                attributes: ['id', 'name'],
+                model: ProfileModel,
+                as: 'profiles'
             }]
         });
         if (!university) {
@@ -61,24 +117,71 @@ class UniversityService {
         return university;
     }
 
-    public async create(data: UniversityAttribute):
-            Promise<UniversityInstance> {
-        return UniversityModel.create(data);
+    public async create(
+        data: UniversityAttribute,
+        profileIds: Array<number>
+    ): Promise<UniversityInstance |void> {
+        const university: UniversityInstance
+            = await UniversityModel.create(data);
+        profileIds = await profileService.filterNotExistProfileId(profileIds);
+        const universityProfiles: Array<{
+            universityId: number,
+            profileId: number
+        }> = profileIds.map((profileId: number) => {
+            return {
+                universityId: university.id,
+                profileId
+            };
+        });
+        await UniversityProfileModel.bulkCreate(universityProfiles);
+        return university;
     }
 
-    public async update(id: number, data: UniversityAttribute):
-            Promise<UniversityInstance> {
-        const university = await this.get(id);
-        return university.update(data);
-    }
 
-    public async delete(id: number): Promise<number> {
-        return UniversityModel.destroy({
+    public async update(
+        universityId: number,
+        data: UniversityAttribute,
+        profileIds: Array<number>
+    ): Promise<UniversityInstance | null> {
+        profileIds = await profileService.filterNotExistProfileId(profileIds);
+        let universityProfiles: UniversityProfileInstance[];
+        universityProfiles = await universityProfileService.getAllByData({
             where: {
-                id: id
+                universityId,
+                profileId: {
+                    $in: profileIds
+                }
             }
         });
+        await universityProfileService.deleteByData({where: {universityId}});
+
+        let newProfiles: Array<{profileId: number, universityId: number}>;
+        newProfiles = profileIds.map((profileId: number) => {
+            return {profileId, universityId};
+        });
+        await UniversityProfileModel.bulkCreate(newProfiles);
+
+        const university: [number, UniversityInstance[]]
+            = await UniversityModel.update(data, {
+            where: {
+                id: universityId
+            },
+            returning: true,
+        });
+        return (university && university[1]) ? university[1][0] : null;
     }
+
+    public async delete(universityId: number): Promise<number> {
+        const res: number = await UniversityModel.destroy({
+            where: {
+                id: universityId
+            }
+        });
+        await universityProfileService.deleteByData({where: {universityId}});
+        await pageService.delete(universityId, entityTypes.UNIVERSITY);
+        return res;
+    }
+
 }
 
 export const service = new UniversityService();
