@@ -2,6 +2,7 @@ goog.provide('sm.bSmHeader.SmHeader');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bAuthorizationLink.AuthorizationLink');
+goog.require('sm.bSmContacts.SmContacts');
 goog.require('sm.bSmHeader.Template');
 goog.require('sm.bSmHeader.View');
 goog.require('sm.bSmLink.SmLink');
@@ -30,6 +31,14 @@ goog.scope(function() {
          * @private
          */
         this.links_ = [];
+
+
+        /**
+         * Contacts block instance
+         * @type {sm.bSmContacts.SmContacts}
+         * @private
+         */
+        this.contacts_ = null;
 
 
         /**
@@ -71,6 +80,7 @@ goog.scope(function() {
         Header.base(this, 'decorateInternal', element);
 
         this.initLinks_();
+        this.initContacts_();
         this.initAuthorizationLink_();
     };
 
@@ -93,6 +103,18 @@ goog.scope(function() {
         this.authorizationLink_ = this.decorateChild(
             sm.bAuthorizationLink.AuthorizationLink.NAME,
             this.getView().getDom().authorizationLink
+        );
+    };
+
+
+    /**
+     * Contacts instanse initialization
+     * @private
+     */
+    Header.prototype.initContacts_ = function() {
+        this.contacts_ = this.decorateChild(
+            sm.bSmContacts.SmContacts.NAME,
+            this.getView().getDom().contacts
         );
     };
 });  // goog.scope

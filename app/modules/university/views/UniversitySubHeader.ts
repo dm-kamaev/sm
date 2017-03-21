@@ -15,8 +15,8 @@ class UniversitySubHeader extends SubHeader {
         };
 
         this.link = {
-            nameL: 'Подобрать ВУЗ',
-            nameM: 'Подобрать ВУЗ',
+            nameL: 'Подобрать Вуз',
+            nameM: 'Подобрать Вуз',
             url: '/search',
             theme: 'neptune'
         };
@@ -68,7 +68,7 @@ class UniversitySubHeader extends SubHeader {
                 label: 'Профессия'
             }, {
                 url: '/',
-                label: 'ВУЗ'
+                label: 'Вуз'
             }
         ];
 
@@ -80,11 +80,19 @@ class UniversitySubHeader extends SubHeader {
     }
 
     protected setDropdownLinks(links) {
-        const link = links.find(link => link.isSelected);
+        let opener = null;
 
-        this.dropdownLinks.data.opener = link.label;
+        const listLinks = links.filter(link => {
+            if (link.isSelected) {
+                opener = link.label;
+            } else {
+                return link;
+            }
+        });
 
-        super.setDropdownLinks(links);
+        this.dropdownLinks.data.opener = opener;
+
+        super.setDropdownLinks(listLinks);
     }
 };
 

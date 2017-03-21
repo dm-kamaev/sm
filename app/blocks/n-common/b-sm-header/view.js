@@ -68,20 +68,24 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initDom();
+        this.initDom_();
     };
 
     /**
      * Dom initialization
-     * @protected
+     * @private
      */
-    View.prototype.initDom = function() {
+    View.prototype.initDom_ = function() {
         this.dom.links = this.getElementsByClass(
             View.CssClass.HEADER_LINKS
         );
 
         this.dom.authorizationLink = this.getElementByClass(
             sm.bAuthorizationLink.View.CssClass.ROOT
+        );
+
+        this.dom.contacts = this.getElementByClass(
+            sm.bSmContacts.View.CssClass.ROOT
         );
     };
 });  // goog.scope

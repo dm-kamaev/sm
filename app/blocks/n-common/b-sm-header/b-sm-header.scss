@@ -9,14 +9,13 @@
     border-bottom: 1px solid #eee;
 
     font-size: 20px;
-    line-height: 64px;
 }
 
 .b-sm-header__body {
     max-width: 1200px;
     margin: 0 auto;
 
-    line-height: 62px;
+    line-height: 61px;
 }
 
 .b-sm-header__section {
@@ -51,6 +50,10 @@
 
     height: 100%;
     margin-right: 30px;
+
+    &:last-child {
+        margin-right: 0px;
+    }
 }
 
 .b-sm-header__menu-item_active-course {
@@ -78,14 +81,28 @@
 @include media-m {
     .b-sm-header {
         height: 70px;
-
-        line-height: 70px;
     }
 
     .b-sm-header__body {
-        line-height: 68px;
+        line-height: 67px;
     }
 }
+
+
+@include media-s {
+    .b-sm-header__authorization {
+        margin-left: 10px;
+    }
+
+    .b-sm-header__menu-item {
+        margin-right: 20px;
+
+        &:last-child {
+            margin-right: 0px;
+        }
+    }
+}
+
 
 @include media-xs {
     .b-sm-header {

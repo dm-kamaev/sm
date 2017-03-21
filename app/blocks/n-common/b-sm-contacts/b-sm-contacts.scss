@@ -14,6 +14,10 @@
     padding-right: 10px;
 
     vertical-align: middle;
+
+    &:last-child {
+        padding-right: 0;
+    }
 }
 
 .b-sm-contacts__helper_text {
@@ -55,12 +59,22 @@
 }
 
 @include media-l {
-    .b-sm-contacts__helper {
+    .b-sm-contacts__helper_text {
+        display: none;
+    }
+}
+
+@include media-s {
+    .b-sm-contacts__phone-icon {
         display: none;
     }
 }
 
 @include media-xs {
+    .b-sm-contacts__phone-icon {
+        display: inline-block;
+    }
+
     .b-sm-contacts__number_desktop {
         display: none;
     }

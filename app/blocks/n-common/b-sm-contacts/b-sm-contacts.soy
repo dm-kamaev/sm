@@ -2,9 +2,11 @@
 
 /**
  * @typedef {{
- *     phone: string,
+ *     phone: ?string,
  *     helper: {
- *         text: string
+ *         text: string,
+ *         url: (srting|undefined),
+ *         theme: (string|undefined)
  *     }
  * }} sm.bSmContacts.Template.Params.Data
  */
@@ -46,14 +48,54 @@
  * @param params {{
  *     data: {
  *         helper: {
- *             text: string
+ *             text: string,
+ *             url: (srting|undefined),
+ *             theme: (string|undefined)
  *         }
  *     }
  * }}
  * @private
  */
 {template .helper_ kind="html"}
-    {call .helperText_ data="all" /}
+    {if $params.data.helper.url}
+        {call .helperLink_ data="all" /}
+    {else}
+        {call .helperText_ data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * Helper text
+ * @param params {{
+ *     data: {
+ *         helper: {
+ *             text: string,
+ *             url: (srting|undefined),
+ *             theme: (string|undefined)
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .helperLink_ kind="html"}
+    <div class="{call .rootClass/}__helper {call .rootClass/}__helper_link">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.helper.text,
+                        'url': $params.data.helper.url
+                    ],
+                    'config': [
+                        'theme': $params.data.helper.theme,
+                        'size': 'xxl'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 
@@ -79,16 +121,18 @@
  * Phone with icon template
  * @param params {{
  *     data: {
- *         phone: string
+ *         phone: ?string
  *     }
  * }}
  * @private
  */
 {template .phone_ kind="html"}
-    <div class="{call .rootClass/}__phone">
-        {call .phoneIcon_ /}
-        {call .phoneNumber_ data="all" /}
-    </div>
+    {if $params.data.phone}
+        <div class="{call .rootClass/}__phone">
+            {call .phoneIcon_ /}
+            {call .phoneNumber_ data="all" /}
+        </div>
+    {/if}
 {/template}
 
 

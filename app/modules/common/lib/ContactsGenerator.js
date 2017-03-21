@@ -40,7 +40,7 @@ class ContactsGenerator {
          *         url: (string|undefined),
          *         theme: (string|undefined)
          *     },
-         *     phone: string
+         *     phone: ?string
          * }}
          * @private
          */
@@ -66,7 +66,7 @@ class ContactsGenerator {
     generateParams() {
         return {
             helper: this.generateHelper(),
-            phone: this.phone_
+            phone: this.getPhone()
         };
     }
 
@@ -88,7 +88,7 @@ class ContactsGenerator {
             break;
         case entityTypeEnum.UNIVERSITY:
             helper = {
-                text: 'Поможем выбрать ВУЗ!',
+                text: 'Поможем выбрать',
                 url: '/university',
                 theme: 'neptune'
             };
@@ -96,6 +96,22 @@ class ContactsGenerator {
         }
 
         return helper;
+    }
+
+
+    /**
+     * Get phone
+     * @return {?string}
+     * @protected
+     */
+    getPhone() {
+        let phone;
+
+        if (this.entityType_ != entityTypeEnum.UNIVERSITY) {
+            phone = this.phone_;
+        }
+
+        return phone;
     }
 
 }
