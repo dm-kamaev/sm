@@ -1,7 +1,7 @@
 module.exports = {
     up: function(queryInterface, Sequelize) {
         return queryInterface.addColumn(
-            'university', 'total_score', Sequelize.INTEGER
+            'university', 'total_score', Sequelize.FLOAT
         );
     },
     down: function(queryInterface, Sequelize) {
