@@ -39,6 +39,9 @@ const entranceStatisticAdminController = new EntranceStatisticAdminController();
 import {ProgramController} from './ProgramController';
 const programController: any = new ProgramController();
 
+import {ProgramPageController} from './ProgramPageController';
+const programPageController: any = new ProgramPageController();
+
 import {UniversityPageController} from './UniversityPageController';
 const universityPageController: any = new UniversityPageController();
 
@@ -63,11 +66,19 @@ const programMajorController = new ProgramMajorController();
 router.get('/university/:id', universityController.actionGet);
 
 router.get(
+    '/university/alias/:alias',
+    universityPageController.actionFindByAlias
+);
+
+router.get(
     '/program/:id',
     programController.actionProgramPage
 );
 
-router.get('/university/:alias', universityPageController.actionFindByAlias);
+router.get(
+    '/program/alias/:alias',
+    programPageController.actionGet
+);
 
 router.get(
     '/program/:id/statistic/last',
