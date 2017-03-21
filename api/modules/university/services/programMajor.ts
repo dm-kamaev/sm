@@ -6,7 +6,7 @@ import {
 
 import {ProgramMajorAdmin} from '../types/programMajor';
 
-const CourseTypeModel = require('../../course/models/courseType');
+const CourseTypeModel = require('../../course/models/CourseType').Model;
 
 const EXCLUDE_ATTRIBUTES = ['created_at', 'updated_at'];
 
