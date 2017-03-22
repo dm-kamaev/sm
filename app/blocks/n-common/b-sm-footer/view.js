@@ -49,6 +49,12 @@ goog.scope(function() {
         this.dom = {
             links: this.getElementsByClass(
                 sm.bSmLink.View.CssClass.ROOT
+            ),
+            headedLists: this.getElementsByClass(
+                sm.bSmHeadedList.View.CssClass.ROOT
+            ),
+            itemLists: this.getElementsByClass(
+                sm.bSmItemList.View.CssClass.ROOT
             )
         };
     };

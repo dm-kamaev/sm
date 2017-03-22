@@ -5,15 +5,29 @@
  * @typedef {{
  *     copyright: string,
  *     contactLinks: Array<sm.bSmLink.Template.Params.Data>,
- *     seoLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined)
+ *     seoLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined),
+ *     columnList: (Array<sm.bSmHeadedList.Template.Params>|
+ *         Array<sm.bSmItemList.Template.Params>|undefined),
+ *     logotypes: Array<{
+ *         type: string,
+ *         url: (string|undefined)
+ *     }>
  * }} sm.bSmFooter.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {({
+ *     theme: (string|undefined)
+ * }|undefined)} sm.bSmFooter.Template.Params.Config
  */
 
 
 /**
  * Constructor
  * @param params {{
- *     data: sm.bSmFooter.Template.Params.Data
+ *     data: sm.bSmFooter.Template.Params.Data,
+ *     config: sm.bSmFooter.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
  * @factory sm.iCloblFactory.FactoryStendhal
@@ -40,9 +54,115 @@
  */
 {template .body}
     <div class="{call .rootClass/}__body">
+        {call .sectionColumns_ data="all" /}
+        {call .sectionLogotypes_ data="all" /}
         {call .sectionCopyright_ data="all" /}
         {call .sectionLinks_ data="all" /}
     </div>
+{/template}
+
+
+/**
+ * Section columns
+ * @param params {{
+ *     data: {
+ *         columnList: (Array<sm.bSmHeadedList.Template.Params>|
+ *             Array<sm.bSmItemList.Template.Params>|undefined)
+ *     }
+ * }}
+ */
+{template .sectionColumns_}
+    {if $params.data.columnList}
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_columns"
+        >
+            {foreach $column in $params.data.columnList}
+                {call .column_}
+                    {param column: $column /}
+                {/call}
+            {/foreach}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Column
+ * @param column {
+ *     sm.bSmHeadedList.Template.Params|sm.bSmItemList.Template.Params
+ * }
+ */
+{template .column_}
+    {let $type: $column.data.header ?
+        'smHeadedList' : 'smItemList'/}
+
+    {let $class kind="text"}
+        {if $column.data.header}
+            {call .rootClass/}__column_headed-list
+        {else}
+            {call .rootClass/}__column_item-list
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__column {$class}">
+        {call .renderChild}
+            {param params: [
+                'type': $type,
+                'renderParams': $column
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section logotypes
+ * @param params {{
+ *     data: {
+ *         logotypes: Array<{
+ *             type: string,
+ *             url: (string|undefined)
+ *         }>
+ * }}
+ */
+{template .sectionLogotypes_}
+    {if $params.data.logotypes}
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_logotypes">
+            <div class="{call .rootClass/}__logotypes">
+                {foreach $logo in $params.data.logotypes}
+                    {call .logotype_}
+                        {param logo: $logo /}
+                    {/call}
+                {/foreach}
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Logotype
+ * @param logo {{
+ *     type: string,
+ *     url: (string|undefined)
+ * }}
+ */
+{template .logotype_}
+    <a class="{call .rootClass /}__logo"
+        href="{$logo.url}"
+    >
+        {call .renderChild}
+            {param params: [
+                'type': 'icon-svg',
+                'renderParams': [
+                    'data': [
+                        'type': $logo.type
+                    ]
+                ]
+            ]/}
+        {/call}
+    </a>
 {/template}
 
 
@@ -74,11 +194,13 @@
  * }}
  */
 {template .sectionLinks_}
-    <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_links">
-        {call .seoLinks_ data="all" /}
-        {call .contactLinks_ data="all" /}
-    </div>
+    {if $params.data.contactLinks or $params.data.seoLinks}
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_links">
+            {call .seoLinks_ data="all" /}
+            {call .contactLinks_ data="all" /}
+        </div>
+    {/if}
 {/template}
 
 

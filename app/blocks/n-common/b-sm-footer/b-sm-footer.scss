@@ -55,6 +55,62 @@
     }
 }
 
+.b-sm-footer__section_logotypes {
+    padding-left: 5px;
+}
+
+.b-sm-footer__logotypes {
+    margin-bottom: 35px;
+}
+
+.b-sm-footer__logo {
+    display: inline-block;
+    vertical-align: bottom;
+    margin-left: 43px;
+
+    &:first-child {
+        margin-left: 0;
+        margin-right: 13px;
+    }
+}
+
+.b-sm-footer__section_columns {
+    margin-bottom: 62px;
+}
+
+.b-sm-footer__column {
+    display: inline-block;
+    width: 292px;
+    padding-right: 20px;
+    vertical-align: top;
+
+    &:last-child {
+        padding-right: 0;
+    }
+}
+
+.b-sm-footer__column_item-list {
+    position: relative;
+    top: 45px;
+}
+
+/** Overcast them start */
+.b-sm-footer_overcast-theme {
+    background-color: #282828;
+
+    .b-sm-footer__copyright {
+        color: #bdbdbd;
+        font-size: 16px;
+        line-height: 32px;
+    }
+
+    .b-sm-footer__body {
+        padding-top: 46px;
+    }
+}
+/** Overcast them end */
+
+
 @include media-xl {
     .b-sm-footer__body {
         width: 100%;
@@ -62,6 +118,37 @@
         padding-bottom: 73px;
         padding-left: 40px;
     }
+
+    /** Overcast them start */
+    .b-sm-footer_overcast-theme {
+        .b-sm-footer__column {
+            width: 287px;
+        }
+    }
+    /** Overcast them end */
+}
+
+@include media-m {
+    /** Overcast them start */
+    .b-sm-footer_overcast-theme {
+        .b-sm-footer__column {
+            box-sizing: border-box;
+            width: 33.33%;
+            padding-right: 30px;
+            padding-left: 30px;
+
+            &:first-child {
+                padding-right: 60px;
+                padding-left: 0;
+            }
+
+            &:last-child {
+                padding-right: 0;
+                padding-left: 60px;
+            }
+        }
+    }
+    /** Overcast them end */
 }
 
 @include media-s {
@@ -78,6 +165,10 @@
     .b-sm-footer__section_links {
         padding-left: 0;
     }
+
+    .b-sm-footer__section_columns {
+        margin-bottom: 42px;
+    }
 }
 
 @include media-xs {
@@ -88,4 +179,42 @@
     .b-sm-footer__link {
         margin-bottom: 10px;
     }
+
+    .b-sm-footer__logo {
+        display: block;
+        margin-left: 0;
+        margin-bottom: 30px;
+
+        &:first-child {
+            margin-left: 0;
+            margin-right: 0px;
+        }
+
+        &:last-child {
+            position: relative;
+            top: 0;
+        }
+    }
+
+    .b-sm-footer__section_columns {
+        margin-bottom: 40px;
+    }
+
+    /** Overcast them start */
+    .b-sm-footer_overcast-theme {
+        .b-sm-footer__column {
+            position: static;
+            width: 100%;
+            padding-right: 0;
+            padding-left: 0;
+
+            &:last-child {
+                margin-top: 42px;
+                padding-left: 0;
+            }
+        }
+
+    }
+
+    /** Overcast them end */
 }
