@@ -141,6 +141,7 @@ goog.scope(function() {
      */
     ModalInteraction.prototype.onSuccess_ = function(response) {
         this.hide();
+        location.reload();
     };
 
 
