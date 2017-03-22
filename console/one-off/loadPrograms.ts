@@ -55,20 +55,17 @@ module.exports = async function(pathFolder) {
         `;
         await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
     } catch (error) {
-        logger.critical(JSON.stringify(error, null, 2));
+        logger.critical(error);
+        logger.critical(
+            'Insert comment_group and city: ' +
+            JSON.stringify(error, null, 2)
+        );
     }
 
     const insert = asyncLegacy(function() {
         try {
             const archiver = new Archiver(pathFolder);
             const DELIMITER = '|';
-            awaitLegacy(
-                archiver.copyToTable(
-                    'program_major',
-                    pathFolder + 'programMajor.csv',
-                    DELIMITER
-                )
-            );
             awaitLegacy(
                 archiver.copyToTable(
                     'university',
@@ -84,7 +81,10 @@ module.exports = async function(pathFolder) {
                 )
             );
         } catch (error) {
-            logger.critical(JSON.stringify(error, null, 2));
+            logger.critical(error);
+            logger.critical(
+                'Insert: ' + JSON.stringify(error, null, 2)
+            );
         }
     });
     await insert();
