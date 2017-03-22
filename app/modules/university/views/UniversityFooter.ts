@@ -75,7 +75,7 @@ class UniversityFooter extends Footer {
         }, {
             type: 'course-logo_white',
             url: 'http://courses.mel.fm'
-        }]
+        }];
     }
 };
 
