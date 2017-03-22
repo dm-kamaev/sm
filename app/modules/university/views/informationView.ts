@@ -193,37 +193,37 @@ class InformationView extends LayoutView {
             }
         };
 
-        const listItems = []
-            .push({
-                data: {
-                    header: `${data.entranceStatistic.egePassScore} баллов`,
-                    description: `за ${data.egeExams.length} экзамена`
-                },
-                config: {
-                    theme: 'neptune'
-                }
-            })
-            .push({
-                data: {
-                    header: data.entranceStatistic.budgetPlaces,
-                    description: 'бюджетных мест'
-                }
-            })
-            .push({
-                data: {
-                    header: data.entranceStatistic.commercialPlaces,
-                    description: 'платных мест'
-                }
-            })
-            .push({
-                data: {
-                    header: data.entranceStatistic.competition,
-                    description: 'человек на место'
-                },
-                config: {
-                    iconType: 'people'
-                }
-            });
+        const listItems = [];
+        listItems.push({
+            data: {
+                header: `${data.entranceStatistic.egePassScore} баллов`,
+                description: `за ${data.egeExams.length} экзамена`
+            },
+            config: {
+                theme: 'neptune'
+            }
+        });
+        listItems.push({
+            data: {
+                header: data.entranceStatistic.budgetPlaces,
+                description: 'бюджетных мест'
+            }
+        });
+        listItems.push({
+            data: {
+                header: data.entranceStatistic.commercialPlaces,
+                description: 'платных мест'
+            }
+        });
+        listItems.push({
+            data: {
+                header: data.entranceStatistic.competition,
+                description: 'человек на место'
+            },
+            config: {
+                iconType: 'people'
+            }
+        });
 
         const list = [{
             header: 'Главное',
