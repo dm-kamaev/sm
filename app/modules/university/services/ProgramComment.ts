@@ -133,10 +133,10 @@ class ProgramCommentService extends Service {
     }
 
     private validateData(data: ProgramCommentData): boolean {
-        const hasText = !!(data.pros || data.cons || data.advice),
-            hasScore = !!data.score;
+        const hasText = Boolean(data.pros || data.cons || data.advice),
+            hasScore = Boolean(data.score) && Boolean(data.score.length);
 
-        return hasScore && hasText;
+        return hasScore || hasText;
     }
 }
 
