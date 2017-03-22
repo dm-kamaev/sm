@@ -52,7 +52,7 @@ class UniversityController extends Controller {
             university = programData[1],
             entranceStatistic = programData[2],
             comments = programData[3],
-            egeExams = programData[4],
+            // egeExams = programData[4],
             userComment = programCommentService.getUserComment(user, comments);
         const users =
             await userService.getById(comments.map(comment => comment.userId));
@@ -131,12 +131,12 @@ class UniversityController extends Controller {
                 university,
                 entranceStatistic,
                 comments,
-                egeExams,
+                // egeExams,
                 userComment,
                 users,
                 favorites: [],
                 entityData: {
-                    id: 1,
+                    id: program.id,
                     name: `Национальный исследовательский университет –
                         Высшая школа экономики (НИУ–ВШЭ)`,
                     subunitType: 'Специальность',
