@@ -63,20 +63,35 @@ class UniversityService {
 
     public async create(data: UniversityAttribute):
             Promise<UniversityInstance> {
-        return UniversityModel.create(data);
+        // hook is used on university create
+        return sequelize.transaction(async t => {
+            return UniversityModel.create(data);
+        }).catch(error => {
+            throw error;
+        });
     }
 
     public async update(id: number, data: UniversityAttribute):
             Promise<UniversityInstance> {
-        const university = await this.get(id);
-        return university.update(data);
+        // hook is used on university update
+        return sequelize.transaction(async t => {
+            const university = await this.get(id);
+            return university.update(data);
+        }).catch(error => {
+            throw error;
+        });
     }
 
     public async delete(id: number): Promise<number> {
-        return UniversityModel.destroy({
-            where: {
-                id: id
-            }
+        // hook is used on university delete
+        return sequelize.transaction(async t => {
+            return UniversityModel.destroy({
+                where: {
+                    id: id
+                }
+            });
+        }).catch(error => {
+            throw error;
         });
     }
 }
