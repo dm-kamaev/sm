@@ -54,6 +54,7 @@ goog.scope(function() {
 
         this.initState_();
         this.initDom_();
+        this.initSelectedStars_();
     };
 
 

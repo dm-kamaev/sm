@@ -30,7 +30,7 @@ class ProgramCommentController extends Controller {
     }
 
     /**
-     * @api {post} /api/program/:programId/comment/
+     * @api {post} /program/:programId/comment
      * @apiVersion 1.0.0
      * @apiName changeProgramComment
      * @apiGroup ProgramComment

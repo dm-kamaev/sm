@@ -29,7 +29,8 @@
  *         title: string,
  *         items: Array<{
  *            name: string,
- *            description: string
+ *            description: string,
+ *            selectedAmount: (number|undefined)
  *         }>
  *     },
  *     id: ?(number|undefined)
@@ -128,7 +129,8 @@
  *             title: string,
  *             items: Array<{
  *                name: string,
- *                description: string
+ *                description: string,
+ *                selectedAmount: (number|undefined)
  *             }>
  *         }
  *     }
@@ -289,7 +291,8 @@
  *             title: string,
  *             items: Array<{
  *                name: string,
- *                description: string
+ *                description: string,
+ *                selectedAmount: (number|undefined)
  *             }>
  *         }
  *     }
@@ -313,7 +316,8 @@
  * @param params {{
  *     data: {
  *         name: string,
- *         description: string
+ *         description: string,
+ *         selectedAmount: (number|undefined)
  *     }
  * }}
  */
@@ -329,7 +333,8 @@
                     'type': 'smStars',
                     'renderParams': [
                         'data': [
-                            'amount': 5
+                            'amount': 5,
+                            'selectedAmount': $params.data.selectedAmount
                         ],
                         'config': [
                             'isActive': true,

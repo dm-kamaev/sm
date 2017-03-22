@@ -72,7 +72,7 @@ class InformationView extends LayoutView {
         this.setEntityData_(params.data);
         this.setSubscribeBoard_(params.data);
         this.setNavigationPanel_(params.data);
-        this.setModals_();
+        this.setModals_(params.data.program.id);
     }
 
 
@@ -119,11 +119,12 @@ class InformationView extends LayoutView {
         this.params.data.navigationPanel = data.navigationPanel;
     }
 
-    private setModals_() {
+    private setModals_(programId: number) {
         this.params.data.modalComment = {
             header: {
                 text: 'Оставьте ваш отзыв'
             },
+            api: `/program/${programId}/comment`,
             content: {
                 userFields: {
                     userType: {

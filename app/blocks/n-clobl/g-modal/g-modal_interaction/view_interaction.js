@@ -1,6 +1,7 @@
 goog.provide('sm.gModal.ViewInteraction');
 
 goog.require('sm.gModal.ViewStendhal');
+goog.require('sm.gModal.TemplateInteraction');
 
 
 goog.scope(function() {
@@ -31,7 +32,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'g-modal_interaction',
-        ERROR_SECTION: 'g-modal__section_error',
+        ERRORS_SECTION: 'g-modal__section_errors',
         ERROR: 'g-modal__error'
     };
 
@@ -44,17 +45,20 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.dom.button = this.getElementByClass(
-            cl.gButton.View.CssClass.ROOT
-        );
+        this.initDom();
+    };
 
-        this.dom.errorSection = this.getElementByClass(
-            View.CssClass.ERROR_SECTION
-        );
 
-        this.dom.error = this.getElementByClass(
-            View.CssClass.ERROR
-        );
+    /**
+     * Show error messages
+     * @param {Array<string>} errorMessages
+     * @public
+     */
+    View.prototype.showErrors = function(errorMessages) {
+        var listErrors = this.renderListErrors_(errorMessages);
+
+        goog.dom.removeChildren(this.dom.errorsSection);
+        goog.dom.appendChild(this.dom.errorsSection, listErrors);
     };
 
 
@@ -68,31 +72,44 @@ goog.scope(function() {
 
 
     /**
-     * Show error message
-     * @param {string} errorMessage
-     * @public
+     * Init dom elements
+     * @protected
      */
-    View.prototype.showError = function(errorMessage) {
-        goog.dom.setTextContent(this.dom.error, errorMessage);
+    View.prototype.initDom = function() {
+        this.dom.button = this.getElementByClass(
+            cl.gButton.View.CssClass.ROOT
+        );
 
-        goog.dom.classes.remove(
-            this.dom.errorSection,
-            cl.iUtils.Utils.CssClass.HIDDEN
+        this.dom.errorsSection = this.getElementByClass(
+            View.CssClass.ERRORS_SECTION
+        );
+
+        this.dom.error = this.getElementByClass(
+            View.CssClass.ERROR
         );
     };
 
 
     /**
-     * Hide error message
-     * @public
+     * Render list error messages
+     * @param {Array<string>} errorMessages
+     * @return {Element}
+     * @private
      */
-    View.prototype.hideError = function() {
-        goog.dom.classes.add(
-            this.dom.errorSection,
-            cl.iUtils.Utils.CssClass.HIDDEN
+    View.prototype.renderListErrors_ = function(errorMessages) {
+        return goog.soy.renderAsElement(
+            sm.gModal.TemplateInteraction.listErrors,
+            {
+                params: {
+                    data: {
+                        errors: errorMessages
+                    }
+                }
+            },
+            {
+                factoryIndex: this.getFactory().getIndex()
+            }
         );
-
-        goog.dom.setTextContent(this.dom.error, '');
     };
 
 
@@ -105,8 +122,9 @@ goog.scope(function() {
      */
     View.prototype.transformParams = function(rawParams) {
         return {
-            contentName: rawParams['contentName'],
-            api: rawParams['api']
+            id: rawParams['id'],
+            api: rawParams['api'],
+            contentName: rawParams['contentName']
         };
     };
 });  // goog.scope

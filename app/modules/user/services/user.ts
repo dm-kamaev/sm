@@ -67,7 +67,7 @@ class UserService extends Service {
                 String(uniqueIds[0])
                 ),
                 requestParams: RequestParams = {
-                    url: `${this.baseUrl}/users/&id=${formattedIds}`,
+                    url: `${this.baseUrl}/users/?id=${formattedIds}`,
                     method: 'get'
                 };
 

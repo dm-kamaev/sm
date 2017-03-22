@@ -61,21 +61,12 @@ goog.scope(function() {
 
 
     /**
-     * Show error message
-     * @param {string} errorMessage
+     * Show error messages
+     * @param {Array<string>} messages
      * @public
      */
-    ModalInteraction.prototype.showError = function(errorMessage) {
-        this.getView().showError(errorMessage);
-    };
-
-
-    /**
-     * Hide error message
-     * @public
-     */
-    ModalInteraction.prototype.hideError = function() {
-        this.getView().hideError();
+    ModalInteraction.prototype.showErrors = function(messages) {
+        this.getView().showErrors(messages);
     };
 
 
@@ -150,23 +141,25 @@ goog.scope(function() {
      */
     ModalInteraction.prototype.onSuccess_ = function(response) {
         this.hide();
-        this.content_.clear();
     };
 
 
     /**
      * Handler of server response error
      * @param {{
-     *     data: {
-     *         message: string
-     *     }
-     * }} error
+     *     data: Array<{
+     *         message: string,
+     *         code: string
+     *     }>
+     * }} errors
      * @private
      */
-    ModalInteraction.prototype.onError_ = function(error) {
-        var message = JSON.parse(error.data.message);
+    ModalInteraction.prototype.onError_ = function(errors) {
+        var errorMessages = errors.data.map(function(error) {
+            return error.message;
+        });
 
-        this.showError(message);
+        this.showErrors(errorMessages);
     };
 
 
@@ -187,36 +180,21 @@ goog.scope(function() {
 
     /**
      * Build query params
-     * @return {string}
+     * @return {Object}
      * @private
      */
     ModalInteraction.prototype.buildQueryParams_ = function() {
-        var notNullParams = goog.object.filter(
-            this.content_.getData(),
-            this.isNotEmptyParameter_
-        );
-
-        var defaultParams = {
-            '_csrf': window['ctx']['csrf']
+        var queryParams = {
+            '_csrf': window['ctx']['csrf'],
+            'id': this.params.id
         };
 
         goog.object.extend(
-            notNullParams,
-            defaultParams
+            queryParams,
+            this.content_.getData()
         );
 
-        return notNullParams;
-    };
-
-
-    /**
-     * Check whether parameter is not empty
-     * @param {string|number|Array} parameter
-     * @return {boolean}
-     * @private
-     */
-    ModalInteraction.prototype.isNotEmptyParameter_ = function(parameter) {
-        return goog.isDefAndNotNull(parameter) && parameter !== '';
+        return queryParams;
     };
 
 
