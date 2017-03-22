@@ -25,6 +25,9 @@ module.exports = {
                     key: 'id'
                 }
             },
+            keywords: {
+                type: Sequelize.TEXT,
+            },
             createdAt: {
                 field: 'created_at',
                 type: Sequelize.DATE
