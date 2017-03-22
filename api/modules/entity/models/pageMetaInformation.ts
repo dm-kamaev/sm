@@ -59,6 +59,11 @@ const Model: PageMetaInformationModel = db.define('PageMetaInformation', {
                 through: 'course_page_meta_information',
                 foreignKey: 'page_meta_information_id'
             });
+            this.belongsToMany(models.Program, {
+                as: 'programs',
+                through: 'program_page_meta_information',
+                foreignKey: 'page_meta_information_id',
+            });
         }
     }
 });
