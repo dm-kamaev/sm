@@ -6,6 +6,7 @@ import {programService} from '../services/programService';
 import {universityService} from '../services/universityService';
 import {EntranceStatisticService} from '../services/EntranceStatisticService';
 import {userService} from '../../user/services/user';
+import {EgeExamService} from '../services/EgeExamService';
 import {ProgramCommentService} from '../services/ProgramComment';
 
 import {informationView} from '../views/informationView';
@@ -37,18 +38,21 @@ class UniversityController extends Controller {
 
         const entranceStatisticService =
             new EntranceStatisticService(programId),
-            programCommentService = new ProgramCommentService(programId);
+            programCommentService = new ProgramCommentService(programId),
+            egeExamService = new EgeExamService(programId);
 
         const programData  = await Promise.all([
             programService.getById(programId),
             universityService.getById(universityId),
             entranceStatisticService.getLast(),
-            programCommentService.getComments()
+            programCommentService.getComments(),
+            egeExamService.getExams
         ]);
         const program = programData[0],
             university = programData[1],
             entranceStatistic = programData[2],
             comments = programData[3],
+            egeExams = programData[4],
             userComment = programCommentService.getUserComment(user, comments);
         const users =
             await userService.getById(comments.map(comment => comment.userId));
@@ -123,6 +127,13 @@ class UniversityController extends Controller {
 
         const templateParams = informationView.render({
             data: {
+                program,
+                university,
+                entranceStatistic,
+                comments,
+                egeExams,
+                userComment,
+                users,
                 favorites: [],
                 entityData: {
                     id: 1,

@@ -9,7 +9,11 @@ import {UniversitySubHeader} from './UniversitySubHeader';
 import {AppConfig} from '../../common/types/layout';
 import {lUniversity} from '../../../blocks/n-university/l-university/params';
 import {BackendUser} from '../../user/types/user';
-
+import {BackendProgram} from '../types/program';
+import {BackendProgramComment} from '../types/programComment';
+import {BackendUniversity} from '../types/university';
+import {BackendEgeExam} from '../types/egeExam';
+import {BackendEntranceStatistic} from '../types/entranceStatistic';
 
 type Params = {
     data: Data,
@@ -22,6 +26,13 @@ type Params = {
 };
 
 type Data = {
+    program: BackendProgram,
+    university: BackendUniversity,
+    entranceStatistic: BackendEntranceStatistic,
+    comments: Array<BackendProgramComment>,
+    egeExams: BackendEgeExam,
+    userComment: BackendProgramComment,
+    users: Array<BackendUser>,
     favorites: Array<{string: any}>,
     entityData: any,
     subscribeBoard: string,
