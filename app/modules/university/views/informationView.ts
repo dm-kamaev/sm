@@ -15,6 +15,14 @@ import {BackendUniversity} from '../types/university';
 import {BackendEgeExam} from '../types/egeExam';
 import {BackendEntranceStatistic} from '../types/entranceStatistic';
 
+import {
+    bDescriptionList
+} from '../../../blocks/n-university/l-university/b-description-list/params';
+import {
+    bSummaryBoard
+} from '../../../blocks/n-university/b-summary-board/params';
+import {bSmBanner} from '../../../blocks/n-common/b-sm-banner/params';
+
 type Params = {
     data: Data,
     config: AppConfig,
@@ -30,7 +38,7 @@ type Data = {
     university: BackendUniversity,
     entranceStatistic: BackendEntranceStatistic,
     comments: Array<BackendProgramComment>,
-    egeExams: BackendEgeExam,
+    egeExams: Array<BackendEgeExam>,
     userComment: BackendProgramComment,
     users: Array<BackendUser>,
     favorites: Array<{string: any}>,
@@ -77,10 +85,16 @@ class InformationView extends LayoutView {
 
 
     private setEntityData_(data: Data) {
-        this.params.data.entityData = data.entityData;
-        this.params.data.entityData.cutDescription = this.getCutDescription_(
-            data.entityData.description
-        );
+        this.params.data.entityData = {
+            id: data.program.id,
+            name: data.university.name,
+            subunitName: data.program.name,
+            subunitType: 'Специальность',
+            description: data.program.description,
+            cutDescription: this.getCutDescription_(data.program.description),
+            descriptionList: this.getDescriptionListParams_(data),
+            summaryBoard: this.getSummaryBoardParams_(data)
+        };
     }
 
     private getCutDescription_(text: string) {
@@ -110,6 +124,136 @@ class InformationView extends LayoutView {
         return result;
     }
 
+    private getDescriptionListParams_(
+            data: Data): bDescriptionList.Params.Data {
+        const result: bDescriptionList.Params.Data = {
+            items: []
+        };
+
+        const egeTests = data.egeExams.map(exam => exam.subjectName);
+        const entranceTests = egeTests.concat(data.program.extraExam);
+
+        result.items.push({
+            data: {
+                header: 'Вступительные испытания',
+                subitems: entranceTests
+            },
+            config: {
+                inline: true
+            }
+        });
+
+        const links = data.program.links.map(link => ({
+            url: link,
+            content: link
+        }));
+
+        result.items.push({
+            data: {
+                header: 'Полезные ссылки',
+                subitems: links
+            },
+            config: {
+                inline: false
+            }
+        });
+
+        result.items.push({
+            data: {
+                header: 'Специализации',
+                subitems: data.program.specializations
+            },
+            config: {
+                inline: false
+            }
+        });
+
+        return result;
+    }
+
+    private getSummaryBoardParams_(data: Data): bSummaryBoard.Params.Data {
+        const neptuneTheme = 'neptune';
+        const item = {
+            data: {
+                header: 'Стоимость / год',
+                description: `${data.program.salary} ₽`,
+                buttonLink: {
+                    data: {
+                        url: '',
+                        content: 'Проконсультироваться'
+                    },
+                    config: {
+                        theme: neptuneTheme,
+                        size: 'xxl'
+                    }
+                }
+            },
+            config: {
+                theme: neptuneTheme
+            }
+        };
+
+        const listItems = []
+            .push({
+                data: {
+                    header: `${data.entranceStatistic.egePassScore} баллов`,
+                    description: `за ${data.egeExams.length} экзамена`
+                },
+                config: {
+                    theme: 'neptune'
+                }
+            })
+            .push({
+                data: {
+                    header: data.entranceStatistic.budgetPlaces,
+                    description: 'бюджетных мест'
+                }
+            })
+            .push({
+                data: {
+                    header: data.entranceStatistic.commercialPlaces,
+                    description: 'платных мест'
+                }
+            })
+            .push({
+                data: {
+                    header: data.entranceStatistic.competition,
+                    description: 'человек на место'
+                },
+                config: {
+                    iconType: 'people'
+                }
+            });
+
+        const list = [{
+            header: 'Главное',
+            items: listItems
+        }];
+
+        return {item, list};
+    }
+
+    private getBannerParams_(data: Data): bSmBanner.Params {
+        return {
+            data: {
+                header: 'Сомневаешься?',
+                    description: 'Поможем с выбором и поступлением',
+                    buttonLink: {
+                    data: {
+                        url: '',
+                        content: 'Подробнее'
+                    },
+                    config: {
+                        theme: 'neptune-reverse',
+                        size: 'xxl'
+                    }
+                }
+            },
+            config: {
+                theme: 'neptune-compact'
+            }
+        };
+    }
 
     private setSubscribeBoard_(data: Data) {
         this.params.data.subscribeBoard = data.subscribeBoard;
