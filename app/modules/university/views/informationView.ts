@@ -9,6 +9,8 @@ import {UniversitySubHeader} from './UniversitySubHeader';
 import {AppConfig} from '../../common/types/layout';
 import {lUniversity} from '../../../blocks/n-university/l-university/params';
 import {BackendUser} from '../../user/types/user';
+import {UniversityFooter} from './UniversityFooter';
+
 
 
 type Params = {
@@ -37,6 +39,7 @@ class InformationView extends LayoutView {
         super();
 
         this.views.subHeader = UniversitySubHeader;
+        this.views.footer = UniversityFooter;
 
         this.entityType = entityType.UNIVERSITY;
         this.pageName = pageName.INFORMATION;

@@ -9,7 +9,7 @@ import {SubHeader} from './SubHeader';
 import {Header} from './Header';
 
 import {userView} from '../../user/views/user';
-import {footerView} from '../views/footerView';
+import {Footer} from './Footer';
 
 import {iLayoutStendhal} from '../../../blocks/n-clobl/i-layout/params';
 import {BackendUser, UserData} from '../../user/types/user';
@@ -91,7 +91,7 @@ abstract class LayoutView {
             subHeader: SubHeader,
             sideMenu: sideMenuView,
             favorite: favoriteView,
-            footer: footerView
+            footer: Footer
         };
 
         this.params = {
@@ -193,7 +193,8 @@ abstract class LayoutView {
 
 
     private setFooter_() {
-        this.params.data.footer = this.views.footer.render();
+        const footerView = new this.views.footer();
+        this.params.data.footer = footerView.render();
     }
 
 
