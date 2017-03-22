@@ -15,6 +15,7 @@ type Rating = {
 
 const SCORE_COUNT = 4;
 const MIN_REVIEW_COUNT = 5;
+const MIN_SCORE_COUNT = 3;
 
 export class UniversityRatingChanger {
     public async update(commentGroupId: number): Promise<any> {
@@ -23,6 +24,12 @@ export class UniversityRatingChanger {
 
         const overallRating: Rating = await this.getOverallRating(
             universityId
+        );
+
+        overallRating.score = overallRating.score.map((grade, i) =>
+            overallRating.scoreCount[i] >= MIN_SCORE_COUNT ?
+                Number(grade) :
+                0
         );
 
         if (overallRating.score.every(grade => !!grade) &&
