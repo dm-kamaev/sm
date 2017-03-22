@@ -5,7 +5,7 @@
 }
 
 .l-university__body {
-    margin: 0 auto 60px;
+    margin: 0 auto 45px;
 
     color: #000;
 }
@@ -254,6 +254,10 @@
 
 
 @include media-xs {
+    .l-university__body {
+        margin-bottom: 30px;
+    }
+
     .l-university__section_data {
         padding-right: 25px;
         padding-left: 25px;

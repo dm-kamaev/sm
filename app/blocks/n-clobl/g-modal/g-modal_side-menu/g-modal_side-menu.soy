@@ -9,8 +9,10 @@
  *             name: string
  *         }>,
  *         footerItems: {
- *             contactLinks: Array<sm.bSmLink.Template.Params.Data>,
- *             copyright: string
+ *             data: {
+ *                 contactLinks: Array<sm.bSmLink.Template.Params.Data>,
+ *                 copyright: string
+ *             }
  *         }
  *     }
  * }} sm.gModal.TemplateSideMenu.Params.Data
@@ -118,7 +120,9 @@
  *     data: {
  *          content: {
  *              footerItems: {
- *                  contactLinks: Array<sm.bSmLink.Template.Params.Data>
+ *                  data: {
+ *                      contactLinks: Array<sm.bSmLink.Template.Params.Data>
+ *                  }
  *              }
  *          }
  *     }
@@ -128,7 +132,7 @@
 {template .footer_}
     <div class="{call .rootClass /}__footer">
         <ul class="{call .rootClass /}__footer-items">
-            {foreach $item in $params.data.content.footerItems.contactLinks}
+            {foreach $item in $params.data.content.footerItems.data.contactLinks}
                 {call .footerItem_}
                     {param item: $item /}
                 {/call}
@@ -146,7 +150,9 @@
  *     data: {
  *          content: {
  *              footerItems: {
- *                  copyright: string
+ *                  data: {
+ *                      copyright: string
+ *                  }
  *              }
  *          }
  *     }
@@ -156,7 +162,7 @@
 {template .copyright_}
     <li class="{call .rootClass /}__footer-item">
         <span class="{call .rootClass /}__copyright">
-            {$params.data.content.footerItems.copyright}
+            {$params.data.content.footerItems.data.copyright}
         </span>
     </li>
 {/template}

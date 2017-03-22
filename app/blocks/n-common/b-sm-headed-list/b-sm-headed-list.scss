@@ -23,6 +23,25 @@
     font-weight: 800;
 }
 
+/** Overcast theme start */
+.b-sm-headed-list_overcast-theme {
+    .b-sm-headed-list__header {
+        padding-bottom: 20px;
+    }
+
+    .b-sm-headed-list__header-title {
+        color: #ffffff;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        font-weight: 800;
+    }
+
+    .b-sm-headed-list__list {
+        font-family: Arial, serif;
+    }
+}
+/** Overcast theme end */
+
 @include media-xs {
     .b-sm-headed-list__header-title {
         width: 100%;

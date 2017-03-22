@@ -36,7 +36,7 @@
  *             imageWidth: ?string,
  *             imageHeight: ?string
  *         },
- *         footer: sm.bSmFooter.Template.Params.Data
+ *         footer: sm.bSmFooter.Template.Params
  *     },
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
@@ -285,7 +285,7 @@
  * Footer
  * @param params {{
  *     data: {
- *         footer: sm.bSmFooter.Template.Params.Data
+ *         footer: sm.bSmFooter.Template.Params
  *     }
  * }}
  */
@@ -293,9 +293,7 @@
     <div class="{call .rootClass/}__footer">
         {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'smFooter' /}
-            {param renderParams: [
-                'data': $params.data.footer
-            ]/}
+            {param renderParams: $params.data.footer /}
         {/call}
     </div>
 {/template}

@@ -26,7 +26,7 @@
  *         vk: (string|undefined),
  *         fb: (string|undefined)
  *     },
- *     footer: sm.bSmFooter.Template.Params.Data
+ *     footer: sm.bSmFooter.Template.Params
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
@@ -444,7 +444,7 @@
  * Footer
  * @param params {
  *     data: {
- *         footer: sm.bSmFooter.Template.Params.Data
+ *         footer: sm.bSmFooter.Template.Params
  *     }
  * }
  * @protected
@@ -454,9 +454,7 @@
         {call .renderChildLayout}
             {param params: $params /}
             {param type: 'smFooter' /}
-            {param renderParams: [
-                'data': $params.data.footer
-            ]/}
+            {param renderParams: $params.data.footer /}
         {/call}
     </div>
 {/template}
