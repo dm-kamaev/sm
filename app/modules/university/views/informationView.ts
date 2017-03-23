@@ -15,6 +15,8 @@ import {BackendUniversity} from '../types/university';
 import {BackendEgeExam} from '../types/egeExam';
 import {BackendEntranceStatistic} from '../types/entranceStatistic';
 
+import {programCommentView} from '../../comment/views/programCommentView';
+
 import {
     bDescriptionList
 } from '../../../blocks/n-university/l-university/b-description-list/params';
@@ -92,7 +94,7 @@ class InformationView extends LayoutView {
         this.setEntityData_(params.data);
         this.setSubscribeBoard_(params.data);
         this.setNavigationPanel_(params.data);
-        this.setModals_(params.data.program.id, params.data.userComment);
+        this.setModalComment_(params.data.program.id, params.data.userComment);
     }
 
 
@@ -275,193 +277,14 @@ class InformationView extends LayoutView {
         this.params.data.navigationPanel = data.navigationPanel;
     }
 
-    private setModals_(programId: number, userComment) {
-        const comment = userComment || {};
-
-        let userTypes: Array<UserType> = [{
-            label: 'Выпускник',
-            value: 'Graduate'
-        },
-        {
-            label: 'Студент',
-            value: 'Student'
-        }];
-
-        userTypes = userTypes.map(item => {
-            item.isSelected = item.value == comment.userType ? true : false;
-            return item;
+    private setModalComment_(
+        programId: number,
+        userComment: BackendProgramComment
+    ) {
+        this.params.data.modalComment = programCommentView.renderModal({
+            programId: programId,
+            comment: userComment
         });
-
-        let grades: Array<Grade> = [{
-            label: 1,
-            value: 1
-        },
-        {
-            label: 2,
-            value: 2
-        },
-        {
-            label: 3,
-            value: 3
-        },
-        {
-            label: 4,
-            value: 4
-        },
-        {
-            label: 5,
-            value: 5
-        },
-        {
-            label: 6,
-            value: 6
-        }];
-
-        grades = grades.map(grade => {
-            grade.isSelected = grade.value == comment.grade ? true : false;
-            return grade;
-        });
-
-        const textareaConfig = {
-            showCounter: true,
-            autoHeight: true,
-            theme: 'thin',
-            minHeight: 'large'
-        };
-
-        const dropdownConfig = {
-            iconName: 'blue-arrow',
-            iconType: 'icon-svg',
-            theme: 'light'
-        };
-
-        this.params.data.modalComment = {
-            header: {
-                text: 'Оставьте ваш отзыв'
-            },
-            id: comment.id,
-            api: `/program/${programId}/comment`,
-            content: {
-                userFields: {
-                    userType: {
-                        data: {
-                            name: 'userType',
-                            defaultOpenerText: 'Кто вы?',
-                            content: {
-                                items: userTypes
-                            },
-                            contentConfig: {
-                                size: 'm'
-                            }
-                        },
-                        config: dropdownConfig,
-                        controlName: 'dropdown-select'
-                    },
-                    yearGraduate: {
-                        data: {
-                            name: 'yearGraduate',
-                            placeholder: 'Укажите год выпуска',
-                            value: comment.yearGraduate
-                        },
-                        config: {
-                            theme: 'thin',
-                            validations: ['notEmpty']
-                        },
-                        controlName: 'input'
-                    },
-                    grade: {
-                        data: {
-                            name: 'grade',
-                            defaultOpenerText: 'Укажите курс',
-                            content: {
-                                items: grades
-                            },
-                            contentConfig: {
-                                size: 'm'
-                            }
-                        },
-                        config: dropdownConfig,
-                        controlName: 'dropdown-select'
-                    }
-                },
-                fields: [{
-                    data: {
-                        title: 'Что понравилось',
-                        name: 'pros',
-                        placeholder: 'Ваш комментарий',
-                        maxLength: 500,
-                        value: comment.pros
-                    },
-                    config: textareaConfig,
-                    controlName: 'textarea'
-                }, {
-                    data: {
-                        title: 'Не понравилось',
-                        name: 'cons',
-                        placeholder: 'Ваш комментарий',
-                        maxLength: 500,
-                        value: comment.cons
-                    },
-                    config: textareaConfig,
-                    controlName: 'textarea'
-                }, {
-                    data: {
-                        title: 'Какой совет можешь дать поступающим?',
-                        name: 'advice',
-                        placeholder: 'Ваш комментарий',
-                        maxLength: 500,
-                        value: comment.advice
-                    },
-                    config: textareaConfig,
-                    controlName: 'textarea'
-                }],
-                evaluations: {
-                    title: 'Ваши оценки',
-                    items: [{
-                        name: 'Образование',
-                        selectedAmount: comment.score[0],
-                        description: `Достигают ли ученики высоких
-                            результатов на государственных экзаменах,
-                            олимпиадах и вступительных испытаниях в ВУЗах?`
-                    }, {
-                        name: 'Преподаватели',
-                        selectedAmount: comment.score[1],
-                        description: `Являются ли учителя квалифицированными
-                            специалистами, которые любят свою работу, хорошо
-                            общаются с детьми и помогают им получать
-                            отличные знания?`
-                    }, {
-                        name: 'Атмосфера',
-                        selectedAmount: comment.score[2],
-                        description: `Созданы ли в школе комфортная для
-                            получения знаний атмосфера и доверительные
-                            отношения между учениками, учителями,
-                            родителями и администрацией?`
-                    }, {
-                        name: 'Инфраструктура',
-                        selectedAmount: comment.score[3],
-                        description: `Хорошо ли оборудована школа, есть ли
-                            в ней всё для комфортного обучения и
-                            всестороннего развития детей?`
-                    }]
-                },
-            },
-            contentName: 'smInteractionFormComment',
-            button: {
-                data: {
-                    content: 'Оставить отзыв'
-                },
-                config: {
-                    theme: 'neptune-reverse',
-                    borderRoundSize: 'xl',
-                    size: 'xl'
-                }
-            },
-            closer: {
-                iconName: 'blue-close',
-                iconType: 'icon-svg'
-            }
-        };
     }
 }
 
