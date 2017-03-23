@@ -24,6 +24,9 @@ import {
     bSummaryBoard
 } from '../../../blocks/n-university/b-summary-board/params';
 import {bSmBanner} from '../../../blocks/n-common/b-sm-banner/params';
+import {
+    bEntityRelation
+} from '../../../blocks/n-university/b-entity-relation/params';
 
 type Params = {
     data: Data;
@@ -43,10 +46,7 @@ type Data = {
     egeExams: Array<BackendEgeExam>,
     userComment: BackendProgramComment,
     users: Array<BackendUser>,
-    favorites: Array<{string: any}>,
-    entityData: any,
-    subscribeBoard: string,
-    navigationPanel: string
+    favorites: Array<{string: any}>
 };
 
 type Grade = {
@@ -99,6 +99,10 @@ class InformationView extends LayoutView {
 
 
     private setEntityData_(data: Data) {
+        /*this.params.data.entityData = data.entityData;
+        this.params.data.entityData.cutDescription = this.getCutDescription_(
+            data.entityData.description
+        );*/
         this.params.data.entityData = {
             id: data.program.id,
             name: data.university.name,
@@ -107,7 +111,9 @@ class InformationView extends LayoutView {
             description: data.program.description,
             cutDescription: this.getCutDescription_(data.program.description),
             descriptionList: this.getDescriptionListParams_(data),
-            summaryBoard: this.getSummaryBoardParams_(data)
+            summaryBoard: this.getSummaryBoardParams_(data),
+            banner: this.getBannerParams_(data),
+            entityRelation: this.getEntityRelationParams_()
         };
     }
 
@@ -144,7 +150,7 @@ class InformationView extends LayoutView {
             items: []
         };
 
-        const egeTests = data.egeExams.map(exam => exam.subjectName);
+        const egeTests = data.egeExams.map(exam => `${exam.subjectName} (ЕГЭ)`);
         const entranceTests = egeTests.concat(data.program.extraExam);
 
         result.items.push({
@@ -207,28 +213,56 @@ class InformationView extends LayoutView {
             }
         };
 
-        const listItems = [];
+        const listItems = [],
+            formatUtils = new FormatUtils();
+        let phrase = formatUtils.declensionPrint(
+            data.egeExams.length,
+            {
+                'nom': 'экзамен',
+                'gen': 'экзамена',
+                'plu': 'экзаменов'
+            }
+        );
         listItems.push({
             data: {
                 header: `${data.entranceStatistic.egePassScore} баллов`,
-                description: `за ${data.egeExams.length} экзамена`
+                description: `за ${data.egeExams.length} ${phrase}`
             },
             config: {
                 theme: 'neptune'
             }
         });
+
+        phrase = formatUtils.declensionPrint(
+            data.entranceStatistic.budgetPlaces,
+            {
+                'nom': 'бюджетное место',
+                'gen': 'бюджетных места',
+                'plu': 'бюджетных мест'
+            }
+        );
         listItems.push({
             data: {
                 header: data.entranceStatistic.budgetPlaces,
-                description: 'бюджетных мест'
+                description: phrase
             }
         });
+
+        phrase = formatUtils.declensionPrint(
+            data.entranceStatistic.budgetPlaces,
+            {
+                'nom': 'платное место',
+                'gen': 'платных места',
+                'plu': 'платных мест'
+            }
+        );
         listItems.push({
             data: {
                 header: data.entranceStatistic.commercialPlaces,
-                description: 'платных мест'
+                description: phrase
             }
         });
+
         listItems.push({
             data: {
                 header: data.entranceStatistic.competition,
@@ -269,12 +303,63 @@ class InformationView extends LayoutView {
         };
     }
 
+    private getEntityRelationParams_(): bEntityRelation.Params {
+        return {
+            data: {
+                items: [{
+                    data: {
+                        content: 'ВУЗ'
+                    }
+                }, {
+                    data: {
+                        content: 'Москва'
+                    }
+                }]
+            }
+        };
+    }
+
     private setSubscribeBoard_(data: Data) {
-        this.params.data.subscribeBoard = data.subscribeBoard;
+        this.params.data.subscribeBoard = {
+            data: {
+                entityId: data.university.id,
+                entityType: entityType.UNIVERSITY
+            }
+        };
     }
 
     private setNavigationPanel_(data: Data) {
-        this.params.data.navigationPanel = data.navigationPanel;
+        this.params.data.navigationPanel = {
+            items: [{
+                data: {
+                    url: 'http://yandex.ru',
+                    content: 'ВУЗы'
+                },
+                config: {
+                    theme: 'sky',
+                    size: 'xl'
+                }
+            }, {
+                data: {
+                    url: 'http://yandex.ru',
+                    content: 'НИУ-ВШЭ'
+                },
+                config: {
+                    theme: 'sky',
+                    size: 'xl'
+                }
+            }, {
+                data: {
+                    url: 'http://yandex.ru',
+                    content: 'Менеджмент'
+                },
+                config: {
+                    theme: 'sky',
+                    size: 'xl',
+                    isSelected: true
+                }
+            }]
+        };
     }
 
     private setModalComment_(

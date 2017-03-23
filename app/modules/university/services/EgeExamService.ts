@@ -29,6 +29,8 @@ class EgeExamService extends Service {
     }
 
     protected handleError(error: any): void {
+        logger.critical(error);
+        throw error;
     }
 }
 
