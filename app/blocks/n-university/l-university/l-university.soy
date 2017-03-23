@@ -2,55 +2,14 @@
 
 
 /**
- * typedef {{
- *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
- *     seo: {
- *         metaTitle: string,
- *         metaDescription: (string|undefined),
- *         image: (string|undefined),
- *         relapTag: (string|undefined),
- *         relapImage: (string|undefined),
- *         fbClientId: (string|undefined)
- *     },
- *     user: {
- *         firstName: (string|undefined),
- *         lastName: (string|undefined),
- *         isCommented: boolean
- *     },
- *     authSocialLinks: {
- *         vk: (string|undefined),
- *         fb: (string|undefined)
- *     },
- *     entityData: {
- *         id: number,
- *         name: string,
- *         subunitType: string,
- *         subunitName: string,
- *         description: string,
- *         cutDescription: {
- *             cutText: Array<string>,
- *             fullText: (Array<string>|undefined)
- *         },
- *         descriptionList:
- *              sm.lUniversity.bDescriptionList.Template.Params,
- *         summaryBoard: sm.bSummaryBoard.Template.Params,
- *         banner: sm.bSmBanner.Template.Params,
- *         entityRelation: sm.bEntityRelation.Template.Params,
- *         similarPrograms: sm.bSmItemList.Template.Params.Data,
- *         usefulCourses: sm.bSmItemList.Template.Params.Data,
- *         comments: sm.bCommentList.Template.Params.Data
- *     },
- *     subscribeBoard: sm.bSmSubscribeBoard.Template.Params,
- *     modalComment: sm.gModal.TemplateInteraction.Data,
- *     navigationPanel: sm.bSmRowLinks.Template.Params.Data
- * }} sm.lUniversity.Template.Data
+ * typedef {sm.lUniversity.Template.Params} sm.lUniversity.Template.Params.Data
  */
 
 
 /**
  * Page university information
  * @param params {{
- *     data: sm.lUniversity.Template.Data,
+ *     data: sm.lUniversity.Template.Params.Data,
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
@@ -285,27 +244,11 @@
                 {param renderParams: $params.data.entityData.entityRelation /}
             {/call}
         </div>
-
         {call .renderChildLayout}
             {param params: $params /}
             {param type: 'smSketch' /}
             {param renderParams: [
-                'data': [
-                    'description': $params.data.entityData.name,
-                    'image': [
-                        'url': 'http://muzuz.ru/uploads/images/p/r/o/progulshiki_hse_nelaskovaja_vshe.jpg',
-                        'altText': 'HSE'
-                    ],
-                    'button': [
-                        'data': [
-                            'content': 'Оставить отзыв'
-                        ],
-                        'config': [
-                            'theme': 'neptune',
-                            'borderRoundSize': 'xl'
-                        ]
-                    ]
-                ]
+                'data': $params.data.entityData.sketch
             ]/}
         {/call}
     </div>

@@ -10,6 +10,7 @@ import {bDescriptionList} from './b-description-list/params';
 import {bSmItemList} from '../../n-common/b-sm-item-list/params';
 import {bSmSubscribeBoard} from '../../n-common/b-sm-subscribe-board/params';
 import {bSmRowLinks} from '../../n-common/b-sm-row-links/params';
+import {bSmSketch} from '../../n-common/b-sm-sketch/params';
 
 export namespace lUniversity {
     /*
@@ -26,6 +27,7 @@ export namespace lUniversity {
                 subunitName: string,
                 subunitType: string,
                 description: string,
+                sketch: bSmSketch.Params.Data;
                 cutDescription: {
                     cutText?: string,
                     fullText?: string;

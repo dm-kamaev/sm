@@ -27,6 +27,8 @@ import {bSmBanner} from '../../../blocks/n-common/b-sm-banner/params';
 import {
     bEntityRelation
 } from '../../../blocks/n-university/b-entity-relation/params';
+import {bSmSketch} from '../../../blocks/n-common/b-sm-sketch/params';
+
 
 type Params = {
     data: Data;
@@ -99,21 +101,38 @@ class InformationView extends LayoutView {
 
 
     private setEntityData_(data: Data) {
-        /*this.params.data.entityData = data.entityData;
-        this.params.data.entityData.cutDescription = this.getCutDescription_(
-            data.entityData.description
-        );*/
         this.params.data.entityData = {
             id: data.program.id,
             name: data.university.name,
             subunitName: data.program.name,
             subunitType: 'Специальность',
             description: data.program.description,
+            sketch: this.getSketchParams_(data),
             cutDescription: this.getCutDescription_(data.program.description),
             descriptionList: this.getDescriptionListParams_(data),
             summaryBoard: this.getSummaryBoardParams_(data),
             banner: this.getBannerParams_(data),
             entityRelation: this.getEntityRelationParams_()
+        };
+    }
+
+    private getSketchParams_(data: Data): bSmSketch.Params.Data {
+        const universityName: string = data.university.name;
+        return {
+            description: universityName,
+            image: {
+                url: data.university.imageUrl,
+                altText: universityName
+            },
+            button: {
+                data: {
+                    content: 'Оставить отзыв'
+                },
+                config: {
+                    theme: 'neptune',
+                    borderRoundSize: 'xl'
+                }
+            }
         };
     }
 
