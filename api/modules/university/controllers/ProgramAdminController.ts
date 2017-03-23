@@ -43,7 +43,9 @@ class ProgramAdminController extends Controller {
      *     ]
      */
     public async actionList(actionContext: any, universityId: string) {
-        const programs = await programService.getAll();
+        const programs = await programService.getByUniversityId(
+            Number(universityId)
+        );
         return programAdminView.renderList(programs);
     }
 
