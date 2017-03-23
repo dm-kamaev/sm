@@ -60,6 +60,7 @@ const programMajorController = new ProgramMajorController();
 
 import {ProgramMajorAdminController} from './ProgramMajorAdminController';
 const programMajorAdminController = new ProgramMajorAdminController();
+import {ProgramMetaAdminController} from './ProgramMetaAdminController';
 
 router.get('/university/:id', universityController.actionGet);
 
@@ -149,6 +150,13 @@ const initSimpleCrudRouting = function(route: string, controller: any): void {
 initSimpleCrudRouting(
     '/program/:programId/comment',
     programCommentController
+);
+
+// /universities/api/admin/program/:id/pagemeta/
+const programMetaAdminController: any = new ProgramMetaAdminController();
+router.get(
+    '/admin/program/:id/pagemeta',
+    programMetaAdminController.actionGet
 );
 
 export {router};

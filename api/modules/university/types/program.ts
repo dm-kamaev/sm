@@ -50,3 +50,11 @@ export interface ProgramAdmin extends ProgramAttribute {
     commentCount?: number;
     passScore?: number;
 }
+
+export interface ProgramMeta extends ProgramAttribute {
+    pages?: any,
+    pageMetaInformations?: any
+    // addressName?: string;
+    // commentCount?: number;
+    // passScore?: number;
+}

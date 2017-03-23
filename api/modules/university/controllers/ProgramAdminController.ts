@@ -99,7 +99,7 @@ class ProgramAdminController extends Controller {
      *            "100 отжимагий",
      *            "рисование"
      *        ],
-     *        "exchangeProgram": true,
+     *        "exchangeProgram": "да",
      *        "createdAt": "2017-03-07T06:59:52.220Z",
      *        "updatedAt": "2017-03-07T06:59:52.220Z",
      *        "programMajor": {
@@ -171,7 +171,7 @@ class ProgramAdminController extends Controller {
      *        "specializations": null,
      *        "createdAt": "2017-03-07T10:43:42.034Z",
      *        "updatedAt": "2017-03-07T10:43:42.034Z",
-     *        "exchangeProgram": 'да'
+     *        "exchangeProgram": "да"
      *    }
      */
     public async actionCreate(actionContext: any, universityId: string) {
