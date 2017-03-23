@@ -129,9 +129,8 @@ class ProgramCommentView {
     }
 
     public renderModal(
-        params: ModalRenderParams
+            params: ModalRenderParams
     ): gModalInteraction.Params.Data {
-
         const button: gButtonStendhal.Params = {
             data: {
                 content: 'Оставить отзыв'
@@ -160,9 +159,8 @@ class ProgramCommentView {
     }
 
     private getModalContent_(
-        comment?: BackendProgramComment
+            comment?: BackendProgramComment
     ): (bSmInteractionForm.Params.Data|any) {
-
         return {
             userFields: {
                 userType: this.getDropdownParams_({
@@ -213,9 +211,7 @@ class ProgramCommentView {
 
         if (params.selectedValue) {
             items = items.map(item => {
-                item.isSelected = item.value == params.selectedValue ?
-                    true :
-                    false;
+                item.isSelected = item.value == params.selectedValue;
 
                 return item;
             });
@@ -293,6 +289,6 @@ class ProgramCommentView {
             items: items
         };
     };
-};
+}
 
 export const programCommentView = new ProgramCommentView();

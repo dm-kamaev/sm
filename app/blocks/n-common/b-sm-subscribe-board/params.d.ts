@@ -1,5 +1,3 @@
-import {gInput} from '../../n-clobl/g-input/params';
-
 export namespace bSmSubscribeBoard {
     /*
      * sm.bSmSubscribeBoard.Template.Params

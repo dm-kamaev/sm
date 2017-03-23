@@ -38,7 +38,9 @@ class ProgramCommentService extends Service {
             user: BackendUser,
             comments: Array<BackendProgramComment>
     ): BackendProgramComment {
-        return comments.find(comment => comment.userId == user.id);
+        const userComment = comments.find(comment => comment.userId == user.id);
+
+        return userComment || {};
     }
 
     public async getComments(): Promise<Array<BackendProgramComment>> {

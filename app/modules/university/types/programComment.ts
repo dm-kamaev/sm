@@ -1,6 +1,6 @@
 export interface ProgramCommentData {
     id?: number;
-    userType: string;
+    userType?: string;
     grade?: number;
     yearGraduate?: number;
     pros?: string;
@@ -11,5 +11,5 @@ export interface ProgramCommentData {
 
 export interface BackendProgramComment extends ProgramCommentData {
     totalScore?: number;
-    userId: number;
+    userId?: number;
 }
