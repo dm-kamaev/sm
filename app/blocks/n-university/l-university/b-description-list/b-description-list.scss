@@ -22,4 +22,16 @@
 
     font-size: 15px;
     line-height: 22px;
+
+    &.b-description-list__item-description_inline {
+        .b-description-list__subitem {
+            display: inline-block;
+        }
+    }
+}
+
+.b-description-list__subitem_string {
+    &:first-letter {
+        text-transform: uppercase;
+    }
 }
