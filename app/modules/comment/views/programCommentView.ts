@@ -47,7 +47,7 @@ interface Textarea extends gTextareaStendhal.Params {
         value?: string;
         name?: string;
         maxLength?: number;
-    },
+    };
     config: gTextareaStendhal.Params.Config;
     controlName: string;
 }
@@ -204,7 +204,7 @@ class ProgramCommentView {
                 })
             ],
             evaluations: this.getEvaluations_(comment.score)
-        }
+        };
     };
 
 
@@ -238,7 +238,7 @@ class ProgramCommentView {
                 theme: 'light'
             },
             controlName: 'dropdown-select'
-        }
+        };
     };
 
 
@@ -285,7 +285,7 @@ class ProgramCommentView {
             items = items.map((item, index) => {
                 item.selectedAmount = score[index];
                 return item;
-            })
+            });
         }
 
         return {
