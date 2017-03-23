@@ -3,11 +3,13 @@ import {
 } from '../../n-common/b-sm-subheader/params';
 
 import {iLayoutStendhal} from '../../n-clobl/i-layout/params';
-import {bSmCollapsedText} from '../../n-common/b-sm-collapsed-text/params';
 import {bSummaryBoard} from '../b-summary-board/params';
 import {bEntityRelation} from '../b-entity-relation/params';
 import {bSmBanner} from '../../n-common/b-sm-banner/params';
 import {bDescriptionList} from './b-description-list/params';
+import {bSmItemList} from '../../n-common/b-sm-item-list/params';
+import {bSmSubscribeBoard} from '../../n-common/b-sm-subscribe-board/params';
+import {bSmRowLinks} from '../../n-common/b-sm-row-links/params';
 
 export namespace lUniversity {
     /*
@@ -30,14 +32,14 @@ export namespace lUniversity {
                 },
                 descriptionList: bDescriptionList.Params.Data,
                 summaryBoard: bSummaryBoard.Params.Data,
-                banner?: bSmBanner.Params,
-                entityRelation?: bEntityRelation.Params,
-                similarPrograms?: any,
-                usefulCourses?: any,
+                banner: bSmBanner.Params,
+                entityRelation: bEntityRelation.Params,
+                similarPrograms?: bSmItemList.Params.Data,
+                usefulCourses?: bSmItemList.Params.Data,
                 comments?: any
             };
-            subscribeBoard: any;
-            navigationPanel: any;
+            subscribeBoard: bSmSubscribeBoard.Params;
+            navigationPanel: bSmRowLinks.Params.Data;
             modalComment: any;
         }
 

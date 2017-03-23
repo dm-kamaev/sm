@@ -29,7 +29,7 @@ export namespace bEntityRelation {
      */
     export interface Params {
         data: Params.Data;
-        config: Params.Config;
+        config?: Params.Config;
     }
 }
 
