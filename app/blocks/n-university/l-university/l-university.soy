@@ -534,27 +534,29 @@
  * @private
  */
 {template .programs_}
-    <div class="{call .rootClass/}__similar-programs-content">
-        {let $customClasses kind="html"}
-            {call .rootClass/}__programs
-        {/let}
-        <div class="{call .rootClass/}__similar-programs-header">
-            {$params.data.entityData.similarPrograms.header}
+    {if $params.data.entityData.similarPrograms}
+        <div class="{call .rootClass/}__similar-programs-content">
+            {let $customClasses kind="html"}
+                {call .rootClass/}__programs
+            {/let}
+            <div class="{call .rootClass/}__similar-programs-header">
+                {$params.data.entityData.similarPrograms.header}
+            </div>
+            <div class="{call .rootClass/}__similar-programs-list">
+                {call .renderChildLayout}
+                    {param params: $params /}
+                    {param type: 'smItemList' /}
+                    {param renderParams: [
+                        'data': $params.data.entityData.similarPrograms,
+                        'config': [
+                            'theme': 'inline',
+                            'customClasses': [$customClasses]
+                        ]
+                    ] /}
+                {/call}
+            </div>
         </div>
-        <div class="{call .rootClass/}__similar-programs-list">
-            {call .renderChildLayout}
-                {param params: $params /}
-                {param type: 'smItemList' /}
-                {param renderParams: [
-                    'data': $params.data.entityData.similarPrograms,
-                    'config': [
-                        'theme': 'inline',
-                        'customClasses': [$customClasses]
-                    ]
-                ] /}
-            {/call}
-        </div>
-    </div>
+    {/if}
 {/template}
 
 
@@ -573,28 +575,30 @@
  * @private
  */
 {template .courses_}
-    <div class="{call .rootClass/}__useful-courses-content">
-        {let $customClasses kind="html"}
-            {call .rootClass/}__courses
-        {/let}
-        <div class="{call .rootClass/}__useful-courses-header">
-            {$params.data.entityData.usefulCourses.header}
+    {if $params.data.entityData.usefulCourses}
+        <div class="{call .rootClass/}__useful-courses-content">
+            {let $customClasses kind="html"}
+                {call .rootClass/}__courses
+            {/let}
+            <div class="{call .rootClass/}__useful-courses-header">
+                {$params.data.entityData.usefulCourses.header}
+            </div>
+            <div class="{call .rootClass/}__useful-courses-list">
+                {call .renderChildLayout}
+                    {param params: $params /}
+                    {param type: 'smItemList' /}
+                    {param renderParams: [
+                        'data': $params.data.entityData.usefulCourses,
+                        'config': [
+                            'enableCover': true,
+                            'theme': 'inline',
+                            'customClasses': [$customClasses]
+                        ]
+                    ] /}
+                {/call}
+            </div>
         </div>
-        <div class="{call .rootClass/}__useful-courses-list">
-            {call .renderChildLayout}
-                {param params: $params /}
-                {param type: 'smItemList' /}
-                {param renderParams: [
-                    'data': $params.data.entityData.usefulCourses,
-                    'config': [
-                        'enableCover': true,
-                        'theme': 'inline',
-                        'customClasses': [$customClasses]
-                    ]
-                ] /}
-            {/call}
-        </div>
-    </div>
+    {/if}
 {/template}
 
 

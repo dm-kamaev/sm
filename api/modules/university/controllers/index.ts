@@ -84,11 +84,7 @@ router.get(
     '/program/:id/statistic/last',
     entranceStatisticController.actionGet
 );
-router.get(
-    '/program/:id/exam',
-    checkToken,
-    examController.actionList
-);
+router.get('/program/:id/exam', examController.actionList);
 
 router.get('/programmajor/search', programMajorController.actionSearch);
 
