@@ -6,6 +6,7 @@ import {UniversityAttribute} from '../models/University';
 
 import {service as universityService} from '../services/university';
 const imageService = require('../../entity/services/image');
+import {universityAdminView} from '../views/universityAdmin';
 
 import {UniversityImageSize} from '../constants/UniversityImageSize';
 
@@ -93,8 +94,8 @@ class UniversityAdminController extends Controller {
      * @apiSuccess {String}   name               Name.
      * @apiSuccess {String}   abbreviation       Abbreviation.
      * @apiSuccess {String}   description        Description.
-     * @apiSuccess {String}   imageUrl           Url for university image.
-     * @apiSuccess {String}   relapImageUrl      Url for relap image.
+     * @apiSuccess {String}   image              Url for university image.
+     * @apiSuccess {String}   relapImage         Url for relap image.
      *     It has {width} parameter in it, which should be replaced for required
      *     width size in px.
      *     It has {width} parameter in it, which should be replaced for required
@@ -103,22 +104,19 @@ class UniversityAdminController extends Controller {
      *     (official site, facebook communities).
      * @apiSuccess {Boolean}  militaryDepartment Military department.
      * @apiSuccess {Boolean}  dormitory          Dormitory.
-     * @apiSuccess {String}   created_at         Created at.
-     * @apiSuccess {String}   updated_at         Updated at.
-     * @apiSuccess {Object}   city               City object.
-     * @apiSuccess {Number}   city.id            City's id.
-     * @apiSuccess {String}   city.name          City's name.
-     * @apiSuccess {Number}   city.regionId      Id of city's region.
      * @apiSuccess {Number}   totalScore         Total score.
      * @apiSuccess {Number[]} score              Array of scores.
      * @apiSuccess {Number[]} scoreCount         Array of scores' count.
      * @apiSuccess {Number}   reviewCount        Number of reviews.
-     * @apiSuccess {String}   created_at         Created at.
-     * @apiSuccess {String}   updated_at         Updated at.
-     * @apiSuccess {Number}   city.regionId      City's region id.
-     * @apiSuccess {Object[]} -.profiles         University's profiles
-     * @apiSuccess {Number}     -.profiles.id    Profile id
-     * @apiSuccess {String}     -.profiles.name  Profile name
+     * @apiSuccess {String}   createdAt          Created at.
+     * @apiSuccess {String}   updatedAt          Updated at.
+     * @apiSuccess {Object}   city               City object.
+     * @apiSuccess {Number}   city.id            City's id.
+     * @apiSuccess {String}   city.name          City's name.
+     * @apiSuccess {Number}   city.regionId      Id of city's region.
+     * @apiSuccess {Object[]} profiles           University's profiles.
+     * @apiSuccess {Number}   profiles.id        Profile id.
+     * @apiSuccess {String}   profiles.name      Profile name.
      *
      * @apiSuccessExample {json} Success-Response:
      *    {
@@ -154,7 +152,8 @@ class UniversityAdminController extends Controller {
      * @apiError (404) UniversityNotFound University with given Id not found.
      */
     public async actionGet(actionContext: any, id: any) {
-        return universityService.get(id);
+        const university = await universityService.get(id);
+        return universityAdminView.render(university);
     }
 
     /**
@@ -181,7 +180,7 @@ class UniversityAdminController extends Controller {
      *
      * @apiParam {File}     image              File should be send using
      *    multipart/form-data.
-     * @apiParam {File}     relapImageUrl      File should be send using
+     * @apiParam {File}     relapImage         File should be send using
      *    multipart/form-data.
      * @apiParam {String}   name               Name.
      * @apiParam {String}   abbreviation       Abbreviation.

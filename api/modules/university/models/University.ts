@@ -4,6 +4,9 @@ const sequelize = require('../../../../app/components/db');
 import {service as universityPageService} from '../services/universityPage';
 import * as Sequelize from 'sequelize/v3';
 
+import {CityInstance} from '../../geo/types/city';
+import {UniversityProfileInstance} from '../models/UniversityProfile';
+
 export interface UniversityAttribute {
     id?: number;
     name?: string;
@@ -15,11 +18,20 @@ export interface UniversityAttribute {
     militaryDepartment?: boolean;
     dormitory?: boolean;
     cityId?: number;
-    profileIds?: Array<number>;
+    city?: CityInstance;
+    totalScore?: number;
+    score?: Array<number>;
+    scoreCount?: Array<number>;
+    reviewCount?: number;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface UniversityInstance
-    extends Sequelize.Instance<UniversityAttribute>, UniversityAttribute {}
+    extends Sequelize.Instance<UniversityAttribute>, UniversityAttribute {
+
+    profiles?: Array<UniversityProfileInstance>;
+}
 
 interface UniversityModel
     extends Sequelize.Model<UniversityInstance, UniversityAttribute> {}
