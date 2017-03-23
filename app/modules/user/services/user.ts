@@ -63,8 +63,8 @@ class UserService extends Service {
 
         if (uniqueIds.length > 0) {
             const formattedIds = uniqueIds.reduce(
-                (previous, id) => `${previous},${id}`,
-                String(uniqueIds[0])
+                    (previous, id) => `${previous},${id}`,
+                    String(uniqueIds[0])
                 ),
                 requestParams: RequestParams = {
                     url: `${this.baseUrl}/users/?id=${formattedIds}`,
