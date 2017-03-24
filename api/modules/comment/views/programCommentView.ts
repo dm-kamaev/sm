@@ -34,9 +34,7 @@ class ProgramCommentView {
     public renderList(
             programComments: Array<ProgramCommentInstance>
     ): Array<BackendProgramComment> {
-        return programComments.filter(
-                comment => this.isEmptyCommentText_(comment))
-           .map(comment => this.render(comment));
+        return programComments.map(comment => this.render(comment));
     }
 
     public adminRender(
@@ -86,13 +84,6 @@ class ProgramCommentView {
         return programComment.rating ?
             programComment.rating.score :
             null;
-    }
-
-    private isEmptyCommentText_(
-            programComment: ProgramCommentInstance): boolean {
-        return Boolean(programComment.pros ||
-            programComment.cons ||
-            programComment.advice);
     }
 }
 
