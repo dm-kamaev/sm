@@ -65,13 +65,13 @@ api/modules/comment/services/programComment.js
 api/modules/comment/types/**/*.js
 api/modules/comment/views/programCommentView.js
 
-api/modules/course/controllers/errors/PageMetaNotBelongToCourse.js
 api/modules/course/controllers/errors/CoursePageMetaAlreadyExists.js
+api/modules/course/controllers/errors/PageMetaNotBelongToCourse.js
 api/modules/course/controllers/middleware/**/*.js
 api/modules/course/controllers/coursePageMetaController.js
 api/modules/course/models/course.js
 api/modules/course/models/courseBrand.js
-api/modules/course/models/courseType.js
+api/modules/course/models/CourseType.js
 api/modules/course/services/exceptions/*.js
 api/modules/course/services/coursePageMeta.js
 api/modules/course/types/*.js
