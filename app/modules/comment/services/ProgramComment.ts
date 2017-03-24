@@ -130,8 +130,16 @@ class ProgramCommentService extends Service {
     private makeBackendCommentData(
             data: ProgramCommentData,
             user: BackendUser): BackendProgramComment {
-        const userId = user.id;
-        return Object.assign({}, data, {userId});
+        return {
+            userType: data.userType,
+            yearGraduate: data.yearGraduate || null,
+            grade: data.grade || null,
+            pros: data.pros,
+            cons: data.cons,
+            advice: data.advice,
+            score: data.score,
+            userId: user.id
+        };
     }
 
     private validateData(data: ProgramCommentData): boolean {
