@@ -235,6 +235,7 @@ app/modules/university/views/*.js
 app/modules/user/**/*.js
 
 app/modules/common/services/*.js
+app/modules/comment/**/*.js
 
 console/modules/geoTools/*.js
 console/modules/modelArchiver/Archiver.js

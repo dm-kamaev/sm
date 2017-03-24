@@ -11,8 +11,14 @@ import {
     bSmInteractionForm
 } from '../../../blocks/n-common/b-sm-interaction-form/params';
 
+import {
+    bCommentList
+} from '../../../blocks/n-university/l-university/b-comment-list/params';
+import {bSmComment} from '../../../blocks/n-common/b-sm-comment/params';
+
 
 import {BackendProgramComment} from '../../university/types/programComment';
+import {BackendUser} from '../../user/types/user';
 
 import {userType} from '../enums/userType';
 
@@ -44,7 +50,7 @@ interface Textarea extends gTextareaStendhal.Params {
     data: {
         title?: string;
         placeholder?: string;
-        value?: string;
+        value?: (string|number);
         name?: string;
         maxLength?: number;
     };
@@ -57,15 +63,50 @@ type Evaluations = {
     items: Array<EvaluationItem>;
 };
 
+type DropdownData = {
+    name: string;
+    defaultOpenerText: string;
+    contentItems: Array<DropdownItem>;
+    selectedValue?: (string|number);
+};
+
+type InputData = {
+    name: string;
+    placeholder?: string;
+    value?: (string|number);
+};
+
+type TextareaData = {
+    title: string;
+    name: string;
+    value?: (string|number)
+};
+
 type ModalRenderParams = {
     programId: number;
     comment?: BackendProgramComment;
+};
+
+type CommentsListParams = {
+    comments: Array<BackendProgramComment>;
+    users: Array<BackendUser>;
+};
+
+type CommentParams = {
+    comment: BackendProgramComment;
+    user: BackendUser;
 };
 
 class ProgramCommentView {
     private userTypes_: Array<DropdownItem>;
     private grades_: Array<DropdownItem>;
     private evaluationItems_: Array<EvaluationItem>;
+
+    private commentHeaders_: {
+        pros: string;
+        cons: string;
+        advice: string;
+    };
 
     constructor() {
         this.userTypes_ = [{
@@ -126,6 +167,12 @@ class ProgramCommentView {
                 в ней всё для комфортного обучения и
                 всестороннего развития детей?`
         }];
+
+        this.commentHeaders_ = {
+            pros: 'Что понравилось',
+            cons: 'Не понравилось',
+            advice: 'Какой совет можешь дать поступающим?'
+        };
     }
 
     public renderModal(
@@ -156,7 +203,75 @@ class ProgramCommentView {
                 iconType: 'icon-svg'
             }
         };
-    }
+    };
+
+
+    public renderComment(params: CommentParams): bSmComment.Params.Data {
+        const userTypeData: DropdownItem = this.userTypes_.find(item => {
+            return item.value == params.comment.userType;
+        });
+
+        const userStatus: string = `${userTypeData.label} ` +
+            params.comment.yearGraduate ||
+            `${params.comment.grade} курса`;
+
+        const textItems = [];
+
+        params.comment.pros ? textItems.push({
+            header: this.commentHeaders_.pros,
+            description: params.comment.pros
+        }) :
+        null;
+
+        params.comment.cons ? textItems.push({
+            header: this.commentHeaders_.cons,
+            description: params.comment.cons
+        }) :
+        null;
+
+        params.comment.advice ? textItems.push({
+            header: this.commentHeaders_.advice,
+            description: params.comment.advice
+        }) :
+        null;
+
+        return {
+            author: {
+                photoUrl: params.user ? params.user.photoUrl : null,
+                name: params.user ? params.user.firstName : null,
+                status: userStatus
+            },
+            score: params.comment.totalScore,
+            text: textItems
+        };
+    };
+
+
+    public renderCommentsList(
+        params: CommentsListParams
+    ): bCommentList.Params.Data {
+
+        const items = params.comments ? params.comments.map(comment => {
+            const userData = params.users ?
+                params.users.find(user => user.id == comment.userId) :
+                null;
+
+            return this.renderComment({
+                comment: comment || {},
+                user: userData
+            });
+        }) :
+        null;
+
+        return {
+            header: 'Отзывы – Менеджмент (НИУ–ВШЭ)',
+            list: {
+                items: items,
+                itemType: 'smComment'
+            }
+        };
+    };
+
 
     private getModalContent_(
             comment?: BackendProgramComment
@@ -183,21 +298,18 @@ class ProgramCommentView {
             },
             fields: [
                 this.getTextareaParams_({
-                    title: 'Что понравилось',
+                    title: this.commentHeaders_.pros,
                     name: 'pros',
-                    placeholder: 'Ваш комментарий',
                     value: comment.pros
                 }),
                 this.getTextareaParams_({
-                    title: 'Не понравилось',
+                    title: this.commentHeaders_.cons,
                     name: 'cons',
-                    placeholder: 'Ваш комментарий',
                     value: comment.cons
                 }),
                 this.getTextareaParams_({
-                    title: 'Какой совет можешь дать поступающим?',
+                    title: this.commentHeaders_.advice,
                     name: 'advice',
-                    placeholder: 'Ваш комментарий',
                     value: comment.advice
                 })
             ],
@@ -206,7 +318,7 @@ class ProgramCommentView {
     };
 
 
-    private getDropdownParams_(params): Dropdown {
+    private getDropdownParams_(params: DropdownData): Dropdown {
         let items = params.contentItems;
 
         if (params.selectedValue) {
@@ -238,7 +350,7 @@ class ProgramCommentView {
     };
 
 
-    private getInputParams_(params): Input {
+    private getInputParams_(params: InputData): Input {
         return {
             data: {
                 name: params.name,
@@ -254,12 +366,12 @@ class ProgramCommentView {
     };
 
 
-    private getTextareaParams_(params): Textarea {
+    private getTextareaParams_(params: TextareaData): Textarea {
         return {
             data: {
                 title: params.title,
                 name: params.name,
-                placeholder: params.placeholder,
+                placeholder: 'Ваш комментарий',
                 maxLength: 500,
                 value: params.value
             },

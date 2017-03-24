@@ -28,6 +28,9 @@ import {
     bEntityRelation
 } from '../../../blocks/n-university/b-entity-relation/params';
 import {bSmSketch} from '../../../blocks/n-common/b-sm-sketch/params';
+import {
+    bCommentList
+} from '../../../blocks/n-university/l-university/b-comment-list/params';
 
 
 type Params = {
@@ -112,7 +115,8 @@ class InformationView extends LayoutView {
             descriptionList: this.getDescriptionListParams_(data),
             summaryBoard: this.getSummaryBoardParams_(data),
             banner: this.getBannerParams_(data),
-            entityRelation: this.getEntityRelationParams_()
+            entityRelation: this.getEntityRelationParams_(),
+            comments: this.getComments_(data)
         };
     }
 
@@ -336,6 +340,13 @@ class InformationView extends LayoutView {
                 }]
             }
         };
+    }
+
+    private getComments_(data: Data): bCommentList.Params.Data {
+        return programCommentView.renderCommentsList({
+            comments: data.comments,
+            users: data.users
+        });
     }
 
     private setSubscribeBoard_(data: Data) {
