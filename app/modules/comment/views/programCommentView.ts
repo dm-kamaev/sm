@@ -16,8 +16,7 @@ import {
 } from '../../../blocks/n-university/l-university/b-comment-list/params';
 import {bSmComment} from '../../../blocks/n-common/b-sm-comment/params';
 
-
-import {BackendProgramComment} from '../../university/types/programComment';
+import {BackendProgramComment} from '../types/programComment';
 import {BackendUser} from '../../user/types/user';
 
 import {userType} from '../enums/userType';
@@ -50,11 +49,10 @@ interface Textarea extends gTextareaStendhal.Params {
     data: {
         title?: string;
         placeholder?: string;
-        value?: (string|number);
+        value?: string;
         name?: string;
         maxLength?: number;
     };
-    config: gTextareaStendhal.Params.Config;
     controlName: string;
 }
 
@@ -79,7 +77,7 @@ type InputData = {
 type TextareaData = {
     title: string;
     name: string;
-    value?: (string|number)
+    value?: string;
 };
 
 type ModalRenderParams = {

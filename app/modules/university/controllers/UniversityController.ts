@@ -7,7 +7,7 @@ import {universityService} from '../services/universityService';
 import {EntranceStatisticService} from '../services/EntranceStatisticService';
 import {userService} from '../../user/services/user';
 import {EgeExamService} from '../services/EgeExamService';
-import {ProgramCommentService} from '../services/ProgramComment';
+import {ProgramCommentService} from '../../comment/services/ProgramComment';
 
 import {informationView} from '../views/informationView';
 

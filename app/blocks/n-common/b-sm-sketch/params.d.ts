@@ -32,7 +32,7 @@ export namespace bSmSketch {
     }
 
     /*
-     * sm.bSmSketch.Template.Template.Params
+     * sm.bSmSketch.Params
      */
     export interface Params {
         data: Params.Data;

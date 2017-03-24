@@ -10,7 +10,9 @@ const universityController: any = new UniversityController();
 import {SubscriptionController} from './SubscriptionController';
 const subscriptionController = new SubscriptionController();
 
-import {ProgramCommentController} from './ProgramCommentController';
+import {
+    ProgramCommentController
+} from '../../comment/controllers/ProgramCommentController';
 const programCommentController: any = new ProgramCommentController();
 
 router.get('/university', legasyUniversityController.information);
