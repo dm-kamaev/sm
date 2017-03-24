@@ -7,5 +7,3 @@ module.exports = new Enum('courseImageSize', {
     MEDIUM: [648, 426],
     LARGE: [880, 579]
 });
-
-console.log(module.exports.toArray());
