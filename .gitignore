@@ -125,6 +125,7 @@ api/modules/school/models/additionalEducationSphere.js
 api/modules/school/models/school.js
 api/modules/school/models/schoolSpecializedClass.js
 api/modules/school/models/specializedClassType.js
+api/school/services/specializedClasses.js
 
 
 api/modules/school/services/exceptions/*.js
