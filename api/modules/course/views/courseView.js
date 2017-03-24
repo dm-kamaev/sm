@@ -438,7 +438,7 @@ view.getListCourse = function(course) {
         ),
         imageUrl: course.imageUrl ? course.imageUrl.replace(
             '{width}',
-            courseImageSize.DEFAULT[1]
+            courseImageSize.SMALL[0]
         ) :
         null,
         type: entityType.COURSE,

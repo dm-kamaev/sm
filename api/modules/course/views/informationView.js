@@ -42,7 +42,7 @@ view.render = function(data) {
     let imageOpenGraph = entityData.imageUrl ?
         entityData.imageUrl.replace(
             '{width}',
-            courseImageSize.DEFAULT[0]
+            courseImageSize.MEDIUM[0]
         ) :
         null;
 

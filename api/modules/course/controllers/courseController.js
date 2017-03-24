@@ -470,7 +470,7 @@ controller.create = async(function(req, res) {
         if (req.files) {
             let imageUrls = await(services.image.upload(
                 req.files,
-                [courseImageSize.DEFAULT, courseImageSize.SMALL]
+                courseImageSize.toArray()
             ));
             courseData.imageUrl = imageUrls[0];
         }
@@ -509,7 +509,7 @@ controller.update = async(function(req, res) {
         if (req.files) {
             let imageUrls = await(services.image.upload(
                 req.files,
-                [courseImageSize.DEFAULT, courseImageSize.SMALL]
+                courseImageSize.toArray()
             ));
             courseData.imageUrl = imageUrls[0];
         }

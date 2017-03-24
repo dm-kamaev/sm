@@ -107,8 +107,8 @@ let initSuperUserCrudRouting = function(route, controller) {
     router.post(
         `${route}`,
         checkToken,
-        // adminUser,
-        // superUserCheckAction,
+        adminUser,
+        superUserCheckAction,
         controller.create || controller.actionCreate
     );
     router.get(
@@ -121,8 +121,8 @@ let initSuperUserCrudRouting = function(route, controller) {
     );
     router.put(`${route}/:id`,
         checkToken,
-        // adminUser,
-        // superUserCheckAction,
+        adminUser,
+        superUserCheckAction,
         controller.update || controller.actionUpdate
     );
     router.delete(
