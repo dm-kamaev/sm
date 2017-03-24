@@ -104,7 +104,8 @@ class ProgramCommentService {
                     'score', 'totalScore'
                 ],
                 as: 'rating'
-            }]
+            }],
+            order: [['createdAt', 'DESC']]
         });
     }
 
