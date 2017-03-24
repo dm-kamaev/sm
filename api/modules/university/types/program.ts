@@ -52,9 +52,7 @@ export interface ProgramAdmin extends ProgramAttribute {
 }
 
 export interface ProgramMeta extends ProgramAttribute {
-    pages?: any,
-    pageMetaInformations?: any
-    // addressName?: string;
-    // commentCount?: number;
-    // passScore?: number;
+    pages?: any;
+    pageMetaInformations?: any;
+
 }

@@ -130,7 +130,6 @@ class ProgramMetaAdminController extends Controller {
     //         links: body.links,
     //         addressName: body.addressName,
     //         programMajorId: Number(body.programMajorId),
-    //         exchangeProgram: body.exchangeProgram && body.exchangeProgram.trim()
     //     };
     //     return programService.update(Number(id), programData);
     // }
