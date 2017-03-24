@@ -2,8 +2,8 @@ import {LegacyController} from '../../../components/interface';
 
 const Controller: LegacyController = require('nodules/controller').Controller;
 
-import {programMetaService} from '../services/programMeta';
-import {programMetaView} from '../views/programMeta';
+// import {programMetaService} from '../services/programMeta';
+// import {programMetaView} from '../views/programMeta';
 
 // import {ProgramAdmin} from '../types/program';
 
@@ -81,9 +81,9 @@ class ProgramMetaAdminController extends Controller {
      *    }
      */
     public async actionGet(actionContext: any, programId: string) {
-        const res = await programMetaService.get(parseInt(programId, 10));
-        console.log('HERE=', programMetaView.render(res));
-        return res;
+        // const res = await programMetaService.get(parseInt(programId, 10));
+        // console.log('HERE=', programMetaView.render(res));
+        // return res;
     }
 
 
