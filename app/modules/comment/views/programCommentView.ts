@@ -249,18 +249,19 @@ class ProgramCommentView {
         params: CommentsListParams
     ): bCommentList.Params.Data {
 
-        const items = params.comments ? params.comments.map(comment => {
-            const userData = params.users ?
-                params.users.find(user => user.id == comment.userId) :
-                null;
+        const items = params.comments ? params.comments
+            .filter(comment => this.isEmptyCommentText_(comment))
+            .map(comment => {
+                const userData = params.users ?
+                    params.users.find(user => user.id == comment.userId) :
+                    null;
 
-            return this.renderComment({
-                comment: comment || {},
-                user: userData
-            });
+                return this.renderComment({
+                    comment: comment || {},
+                    user: userData
+                });
         }) :
         null;
-
         return {
             header: 'Отзывы – Менеджмент (НИУ–ВШЭ)',
             list: {
@@ -270,6 +271,12 @@ class ProgramCommentView {
         };
     };
 
+    private isEmptyCommentText_(
+        programComment: BackendProgramComment): boolean {
+        return Boolean(programComment.pros ||
+            programComment.cons ||
+            programComment.advice);
+    }
 
     private getModalContent_(
             comment?: BackendProgramComment
