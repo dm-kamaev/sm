@@ -130,20 +130,12 @@ goog.scope(function() {
                 this.onShowCommentButtonClick_
             );
         }
-    };
 
-
-    /**
-     * Init item list
-     * @private
-     */
-    CommentList.prototype.initItemList_ = function() {
-        var dom = this.getView().getDom();
-
-        if (dom.itemList) {
-            this.list_ = this.decorateChild(
-                'smItemList',
-                this.getView().getDom().itemList
+        if (this.leaveCommentButton_) {
+            this.getHandler().listen(
+                this.leaveCommentButton_,
+                cl.gButton.Button.Event.CLICK,
+                this.onLeaveCommentButtonClick_
             );
         }
     };
@@ -160,5 +152,30 @@ goog.scope(function() {
             this.params.countShownItems,
             this.list_.getCountItems()
         );
+    };
+
+
+    /**
+     * Click leave comment button handler
+     * @private
+     */
+    CommentList.prototype.onLeaveCommentButtonClick_ = function() {
+        this.dispatchEvent(CommentList.Event.LEAVE_COMMENT_CLICK);
+    };
+
+
+    /**
+     * Init item list
+     * @private
+     */
+    CommentList.prototype.initItemList_ = function() {
+        var dom = this.getView().getDom();
+
+        if (dom.itemList) {
+            this.list_ = this.decorateChild(
+                'smItemList',
+                this.getView().getDom().itemList
+            );
+        }
     };
 });  // goog.scope

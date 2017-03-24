@@ -11,6 +11,10 @@ import {bSmItemList} from '../../n-common/b-sm-item-list/params';
 import {bSmSubscribeBoard} from '../../n-common/b-sm-subscribe-board/params';
 import {bSmRowLinks} from '../../n-common/b-sm-row-links/params';
 import {bSmSketch} from '../../n-common/b-sm-sketch/params';
+import {bCommentList} from './b-comment-list/params';
+import {
+    gModalInteraction
+} from '../../n-clobl/g-modal/g-modal_interaction/params';
 
 export namespace lUniversity {
     /*
@@ -32,17 +36,17 @@ export namespace lUniversity {
                     cutText?: string,
                     fullText?: string;
                 },
-                descriptionList: bDescriptionList.Params.Data,
-                summaryBoard: bSummaryBoard.Params.Data,
-                banner: bSmBanner.Params,
-                entityRelation: bEntityRelation.Params,
-                similarPrograms?: bSmItemList.Params.Data,
-                usefulCourses?: bSmItemList.Params.Data,
-                comments?: any
+                descriptionList: bDescriptionList.Params.Data;
+                summaryBoard: bSummaryBoard.Params.Data;
+                banner: bSmBanner.Params;
+                entityRelation: bEntityRelation.Params;
+                similarPrograms?: bSmItemList.Params.Data;
+                usefulCourses?: bSmItemList.Params.Data;
+                comments?: bCommentList.Params.Data;
             };
             subscribeBoard: bSmSubscribeBoard.Params;
             navigationPanel: bSmRowLinks.Params.Data;
-            modalComment: any;
+            modalComment: gModalInteraction.Params.Data;
         }
 
         /*

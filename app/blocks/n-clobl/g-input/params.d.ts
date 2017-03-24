@@ -13,7 +13,7 @@ export namespace gInputStendhal {
          */
         export interface Data {
             placeholder?: (string|undefined),
-            value?: (string|undefined),
+            value?: (string|number),
             name?: (string|undefined),
             maxLength?: (number|undefined)
         }

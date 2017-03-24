@@ -8,7 +8,7 @@ export namespace gTextareaStendhal {
          */
         export interface Data {
             placeholder?: string,
-            value?: string,
+            value?: (string|number),
             name?: string,
             maxLength?: number
         }
