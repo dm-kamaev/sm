@@ -229,6 +229,7 @@ app/modules/university/services/*.js
 app/modules/university/controllers/ProgramCommentController.js
 app/modules/university/types/programComment.js
 
+app/modules/comment/**/*.js
 
 app/modules/university/views/*.js
 
