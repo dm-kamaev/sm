@@ -19,14 +19,16 @@ if (config.environment != 'production') {
     options.logging = logger.debug.bind(logger);
     // options.logging = function(query) {
     //     logger.debug(query
-    //         .replace(/SELECT/, '\nSELECT')
-    //         .replace(/INSERT/, '\nINSERT')
-    //         .replace(/UPDATE/, '\nUPDATE')
-    //         .replace(/(FROM)/, '\n$1')
-    //         .replace(/(LEFT OUTER JOIN)/g, '\n$1')
-    //         .replace(/(WHERE)/g, '\n$1')
-    //         .replace(/(VALUES)/g, '\n$1\n')
-    //         .replace(/(ARRAY)/g, '\n$1')
+            // .replace(/(,)/g, '\n$1')
+            // .replace(/SELECT/, '\nSELECT')
+            // .replace(/INSERT/, '\nINSERT')
+            // .replace(/UPDATE/, '\nUPDATE')
+            // .replace(/(FROM)/, '\n$1')
+            // .replace(/(LEFT OUTER JOIN)/g, '\n$1')
+            // .replace(/(LEFT JOIN)/g, '\n$1')
+            // .replace(/(WHERE)/g, '\n$1')
+            // .replace(/(VALUES)/g, '\n$1\n')
+            // .replace(/(ARRAY)/g, '\n$1')
     //     );
     // };
 }

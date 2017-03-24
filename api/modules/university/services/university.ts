@@ -34,18 +34,29 @@ import {
 
 class UniversityService {
     public async getAll(): Promise<Array<UniversityAdminList>> {
-        const university = 'university';
-        const city = 'city';
-        const program = 'program';
+        const university = 'university',
+        city = 'city', program = 'program',
+        profile = 'profile', universityProfile = 'university_profile';
         const query: string = squel.select()
             .from(university)
             .field(`${university}.id`)
             .field(`${university}.name`)
             .field(`${university}.abbreviation`)
             .field(`${city}.name`, 'cityName')
+            .field(`${profile}.name`, 'profileName')
             .field(`COUNT(${program}.id)`, 'programCount')
             .field(`${university}.updated_at`, 'updatedAt')
             .left_join(city, null, `${university}.${city}_id = ${city}.id`)
+            .left_join(
+                universityProfile,
+                null,
+                `${universityProfile}.university_id = ${university}.id`
+            )
+            .left_join(
+                profile,
+                null,
+                `${universityProfile}.profile_id = profile.id`
+             )
             .left_join(
                 program,
                 null,
@@ -53,47 +64,31 @@ class UniversityService {
             )
             .group(`${university}.id`)
             .group(`${city}.name`)
+            .group(`${profile}.name`)
             .toString();
 
-        const universityProfile = 'university_profile';
-        const profile = 'profile';
-        const queryProfile: string = squel.select()
-            .from(universityProfile)
-            .field(`${universityProfile}.university_id`)
-            .field(`${profile}.id`)
-            .field(`${profile}.name`)
-            .left_join(profile,
-                null,
-                `${universityProfile}.profile_id = ${profile}.id`
-            ).toString();
-        const profiles = await sequelize.query(
-            queryProfile,
-            {type: sequelize.QueryTypes.SELECT, raw: true}
-        );
-        const hashProfile: {
-            [key: string]: Array<{id: number, name: string}>
-        } = {};
-        profiles.forEach(profile => {
-            const listProfile = hashProfile[profile.university_id];
-            if (listProfile) {
-                listProfile.push({
-                    id: profile.id,
-                    name: profile.name
-                });
-            } else {
-                hashProfile[profile.university_id] = [
-                    {id: profile.id, name: profile.name}
-                ];
-            }
-        });
+        const queryWithProfiles: string = squel.select()
+            .field(`${university}.id`,  'id')
+            .field(`${university}.name`, 'name')
+            .field(`${university}.abbreviation`, 'abbreviation')
+            .field(`${university}."cityName"`, 'cityName')
+            .field(`${university}."programCount"`, 'programCount')
+            .field(`${university}."updatedAt"`, 'updatedAt')
+            .field(
+                `string_agg(${university}."profileName", ',') as "profileName"`
+            )
+            .from(`(${query}) as ${university}`)
+            .group(`${university}.id`)
+            .group(`${university}.name`)
+            .group(`${university}.abbreviation`)
+            .group(`${university}."cityName"`)
+            .group(`${university}."programCount"`)
+            .group(`${university}."updatedAt"`).toString();
 
         const universities: UniversityAdminList[]
-            = await sequelize.query(query,
+            = await sequelize.query(queryWithProfiles,
                 {type: sequelize.QueryTypes.SELECT, raw: true}
         );
-        universities.forEach((university: UniversityAdminList) => {
-            university.profiles = hashProfile[university.id] || null;
-        });
         return universities;
     }
 
@@ -115,6 +110,7 @@ class UniversityService {
                 as: 'profiles'
             }]
         });
+
         if (!university) {
             throw new UniversityNotFound(id);
         }
