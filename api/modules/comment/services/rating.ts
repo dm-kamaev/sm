@@ -17,7 +17,10 @@ class RatingService {
 
     public async update(ratingId: number, data: RatingAttributes) {
         const instance = await this.getById(ratingId);
-        return await(instance.update(data));
+        return await(instance.update({
+            score: data.score,
+            totalScore: this.calculateTotalScore(data.score)
+        }));
     }
 
     public async getAll() {
@@ -35,15 +38,15 @@ class RatingService {
     }
 
     public calculateTotalScore(score: Array<number>): number {
-        const notEmptyScore = score.every(scoreGrade => !!scoreGrade);
+        const notEmptyScore = score.filter(scoreGrade => Boolean(scoreGrade));
         let result = 0;
 
-        if (notEmptyScore) {
+        if (Boolean(notEmptyScore.length)) {
             const sum = score.reduce(
                 (total, current) => total + current,
                 0
             );
-            result = sum / score.length;
+            result = sum / notEmptyScore.length;
         }
 
         return result;
