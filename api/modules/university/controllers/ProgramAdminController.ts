@@ -72,6 +72,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {String}   exchangeProgram Exchange program
      * @apiSuccess {Number}       -.programMajor.id   Major program id
      * @apiSuccess {String}       -.programMajor.name Major program name
+     * @apiSuccess {String}   phone           Phone number.
      * @apiSuccess {String}   createdAt       Created at.
      * @apiSuccess {String}   updatedAt       Updated at.
      *
@@ -100,6 +101,7 @@ class ProgramAdminController extends Controller {
      *            "рисование"
      *        ],
      *        "exchangeProgram": "да",
+     *        "phone": "+7 125 367 23 41",
      *        "createdAt": "2017-03-07T06:59:52.220Z",
      *        "updatedAt": "2017-03-07T06:59:52.220Z",
      *        "programMajor": {
@@ -131,6 +133,7 @@ class ProgramAdminController extends Controller {
      *     (official site, facebook communities).
      * @apiParam {Number}   programMajorId Program major Id
      * @apiParam {String} -.exchangeProgram Exchange program
+     * @apiParam {String}   phone       Phone number.
      *
      *
      * @apiSuccess {Number}   id              Id.
@@ -148,6 +151,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Number}   programMajorId  Program major Id
      * @apiSuccess {String[]} extraExam       Array of extra exams.
      * @apiSuccess {String} -.exchangeProgram Exchange program
+     * @apiSuccess {String}   phone           Phone number.
      * @apiSuccess {String}   createdAt       Created at.
      * @apiSuccess {String}   updatedAt       Updated at.
      * @apiSuccess {String}   created_at      Created at.
@@ -166,6 +170,7 @@ class ProgramAdminController extends Controller {
      *        "links": [],
      *        "programMajorId": 1,
      *        "commentGroupId": 372,
+     *        "phone": "+7 125 167 45 31",
      *        "updated_at": "2017-03-07T10:43:42.034Z",
      *        "created_at": "2017-03-07T10:43:42.034Z",
      *        "specializations": null,
@@ -189,6 +194,7 @@ class ProgramAdminController extends Controller {
             links: body.links,
             addressName: body.addressName,
             programMajorId: Number(body.programMajorId),
+            phone: body.phone,
             exchangeProgram: body.exchangeProgram && body.exchangeProgram.trim()
         };
         return programService.create(programData);
@@ -211,6 +217,7 @@ class ProgramAdminController extends Controller {
      * @apiParam {String[]} links       Array of links
      *     (official site, facebook communities).
      * @apiParam {Number}   programMajorId Program major Id
+     * @apiParam {String}   phone       Phone number.
      *
      * @apiSuccess {Array}  -    Response body.
      * @apiSuccess {Number} -[0] Number of updated rows (Should be always 1).
@@ -237,6 +244,7 @@ class ProgramAdminController extends Controller {
             links: body.links,
             addressName: body.addressName,
             programMajorId: Number(body.programMajorId),
+            phone: body.phone,
             exchangeProgram: body.exchangeProgram && body.exchangeProgram.trim()
         };
         return programService.update(Number(id), programData);

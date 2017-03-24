@@ -20,6 +20,7 @@ export interface ProgramAttribute {
     salary?: number;
     extraExam?: Array<string>;
     exchangeProgram?: string;
+    phone?: string;
     programMajorId?: number;
     createdAt?: string;
     updatedAt?: string;

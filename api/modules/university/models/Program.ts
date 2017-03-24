@@ -68,6 +68,7 @@ const Program: ProgramModel = sequelize.define('Program', {
             key: 'id'
         }
     },
+    phone: DataType.STRING,
     createdAt: {
         field: 'created_at',
         type: DataType.DATE
