@@ -200,6 +200,8 @@ api/modules/user/migrations/20170227193010-user-data-class-type-rename.js
 api/modules/user/services/userData.js
 api/modules/user/views/user.js
 
+api/modules/entity/enums/entityRoutes.js
+
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
 app/middleware/checkApiToken.js

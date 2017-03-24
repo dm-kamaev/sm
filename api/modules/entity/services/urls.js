@@ -5,6 +5,8 @@ const async = require('asyncawait/async'),
     url = require('url'),
     translit = require('translitit-cyrillic-russian-to-latin');
 
+const routes = require('../enums/entityRoutes').routes;
+
 const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 
@@ -256,9 +258,31 @@ service.getEntityByUrl = async(function(alias, entityType) {
 service.addSubdomain = function(uri, baseUrl) {
     let parsedUri = url.parse(uri),
         host = parsedUri.host;
-    parsedUri.host = baseUrl.replace('/', '') + '.' + host;
+    parsedUri.host = `${this.getHost(baseUrl)}.${host}`;
 
     return url.format(parsedUri);
+};
+
+/**
+ * Get host by base url
+ * @param {string} baseUrl
+ * @return {(string|undefined)}
+ */
+service.getHost = function(baseUrl) {
+    let result;
+
+    switch (baseUrl) {
+    case routes.COURSE.route:
+        result = routes.COURSE.hostName;
+        break;
+    case routes.SCHOOL.route:
+        result = routes.SCHOOL.route;
+        break;
+    case routes.UNIVERSITY.route:
+        result = routes.UNIVERSITY.hostName;
+    }
+
+    return result;
 };
 
 module.exports = service;
