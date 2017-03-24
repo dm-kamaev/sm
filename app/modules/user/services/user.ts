@@ -10,6 +10,10 @@ import {uniq as lodashUniq} from 'lodash';
 
 const config = require('../../../config/config.json');
 
+type getUserFromRequestParams = {
+    checkIsLoggedIn?: boolean | undefined;
+};
+
 class UserService extends Service {
     constructor() {
         super();
@@ -17,9 +21,13 @@ class UserService extends Service {
         this.baseUrl = config.userApi;
     }
 
-    public getUserFromRequest(request: any): BackendUser {
-        const user = request.user;
-        if (!user) {
+    public getUserFromRequest(
+            request: any,
+            params?: getUserFromRequestParams
+    ): BackendUser | null {
+        params = params || {};
+        const user = request.user || null;
+        if (!user && params.checkIsLoggedIn) {
             throw new UserNotLoggedInException();
         }
 
@@ -62,9 +70,10 @@ class UserService extends Service {
         let result = [];
 
         if (uniqueIds.length > 0) {
-            const formattedIds = uniqueIds.reduce(
-                    (previous, id) => `${previous},${id}`,
-                    String(uniqueIds[0])
+            const formattedIds = uniqueIds
+                .map(id => String(id))
+                .reduce(
+                    (previous, id) => `${previous},${id}`
                 ),
                 requestParams: RequestParams = {
                     url: `${this.baseUrl}/users/?id=${formattedIds}`,

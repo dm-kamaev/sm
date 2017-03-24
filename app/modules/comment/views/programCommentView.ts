@@ -357,7 +357,7 @@ class ProgramCommentView {
             },
             config: {
                 theme: 'thin',
-                validations: ['notEmpty']
+                validations: ['notEmpty', 'digits']
             },
             controlName: 'input'
         };

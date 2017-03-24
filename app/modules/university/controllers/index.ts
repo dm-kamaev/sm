@@ -2,8 +2,6 @@ import * as express from 'express';
 
 const router = express.Router();
 
-const legasyUniversityController = require('./universityController');
-
 import {UniversityController} from './UniversityController';
 const universityController: any = new UniversityController();
 
@@ -14,8 +12,6 @@ import {
     ProgramCommentController
 } from '../../comment/controllers/ProgramCommentController';
 const programCommentController: any = new ProgramCommentController();
-
-router.get('/university', legasyUniversityController.information);
 
 router.get(
     '/vuz/:universityAlias/specialnost/:programAlias',
