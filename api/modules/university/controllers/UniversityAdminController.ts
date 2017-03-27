@@ -41,7 +41,7 @@ class UniversityAdminController extends Controller {
      * @apiSuccess {Number}   -.programCount
      *     Number of university's programs.
      * @apiSuccess {String}   -.updatedAt      Updated at.
-     * @apiSuccess {Object[]} -.profileName    Array profiles
+     * @apiSuccess {Object[]} -.profilesName   Array profiles
      *
      * @apiSuccessExample {json} Success-Response:
      *    [
@@ -52,7 +52,7 @@ class UniversityAdminController extends Controller {
      *            "cityName": "санкт петербург",
      *            "programCount": "0",
      *            "updatedAt": "2017-03-15T09:46:35.010Z",
-     *            "profileName": "высшая математика,экономика"
+     *            "profilesName": "высшая математика,экономика"
      *        },
      *        {
      *            "id": 62,
@@ -63,12 +63,13 @@ class UniversityAdminController extends Controller {
      *            "cityName": "москва",
      *            "programCount": "0",
      *            "updatedAt": "2017-03-15T09:46:35.010Z",
-     *            "profileName": null
+     *            "profilesName": null
      *        }
      *    ]
      */
     public async actionList(actionContext: any) {
-        return universityService.getAll();
+        const res = await universityService.getAll();
+        return universityAdminView.renderAll(res);
     }
 
     /**

@@ -64,32 +64,25 @@ class UniversityService {
             )
             .group(`${university}.id`)
             .group(`${city}.name`)
-            .group(`${profile}.name`)
+            .group(`"profileName"`)
             .toString();
+        console.log(query
+           .replace(/(,)/g, '$1\n')
+           .replace(/SELECT/, 'SELECT\n')
+           .replace(/(INSERT)/, '$1\n')
+           .replace(/(UPDATE)/, '$1\n')
+           .replace(/(FROM)/, '\n$1')
+           .replace(/(LEFT OUTER JOIN)/g, '\n$1')
+           .replace(/(LEFT JOIN)/g, '\n$1')
+           .replace(/(WHERE)/g, '\n$1')
+           .replace(/(VALUES)/g, '\n$1\n')
+           .replace(/(ARRAY)/g, '\n$1')
+           .replace(/(GROUP BY)/g, '\n$1\n')
+        );
 
-        const queryWithProfiles: string = squel.select()
-            .field(`${university}.id`,  'id')
-            .field(`${university}.name`, 'name')
-            .field(`${university}.abbreviation`, 'abbreviation')
-            .field(`${university}."cityName"`, 'cityName')
-            .field(`${university}."programCount"`, 'programCount')
-            .field(`${university}."updatedAt"`, 'updatedAt')
-            .field(
-                `string_agg(${university}."profileName", ',') as "profileName"`
-            )
-            .from(`(${query}) as ${university}`)
-            .group(`${university}.id`)
-            .group(`${university}.name`)
-            .group(`${university}.abbreviation`)
-            .group(`${university}."cityName"`)
-            .group(`${university}."programCount"`)
-            .group(`${university}."updatedAt"`).toString();
-
-        const universities: UniversityAdminList[]
-            = await sequelize.query(queryWithProfiles,
+        return await sequelize.query(query,
                 {type: sequelize.QueryTypes.SELECT, raw: true}
         );
-        return universities;
     }
 
     public async get(id: number): Promise<UniversityInstance> {
