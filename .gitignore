@@ -203,10 +203,11 @@ app/modules/common/lib/SubHeader.js
 app/modules/common/lib/Footer.js
 
 app/modules/common/enums/entityType.js
+app/modules/common/views/footerView.js
+app/modules/common/views/sideMenuView.js
+app/modules/common/views/generalDataView.js
 
 app/modules/school/views/olympiadResultView.js
-app/modules/common/views/footerView.js
-app/modules/common/enums/entityType.js
 
 app/modules/university/index.js
 

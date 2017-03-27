@@ -1,5 +1,3 @@
-const ContactsGenerator = require('./ContactsGenerator.js');
-
 import {bSmSubheader} from '../../../blocks/n-common/b-sm-subheader/params';
 import {
     gDropdownListLinks
@@ -68,7 +66,6 @@ abstract class SubHeader {
 
     protected setParams(data: Data) {
         this.setLogo_(data.isLogoRedirect);
-        this.setContacts_();
         this.setLinks(data.listLinks);
 
         this.setSearch_(data.isSearchRedirect, data.pageAlias);
@@ -134,16 +131,6 @@ abstract class SubHeader {
         if (!isLogoRedirect) {
             this.params.data.logo.linkUrl = null;
         }
-    }
-
-
-    private setContacts_() {
-        const data = {
-            entityType: this.entityType
-        };
-
-        const contactsGenerator = new ContactsGenerator(data);
-        this.params.data.contacts = contactsGenerator.params;
     }
 
 

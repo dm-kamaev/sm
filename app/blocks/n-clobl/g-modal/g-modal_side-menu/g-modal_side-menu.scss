@@ -61,6 +61,12 @@
     .g-modal__copyright {
         color: #000;
     }
+
+    .g-modal__close-button_hover_enable.g-modal__close-button:hover {
+        .g-modal__close-icon {
+            display: block;
+        }
+    }
 }
 
 @include media-s {

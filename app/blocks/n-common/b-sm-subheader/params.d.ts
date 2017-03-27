@@ -18,7 +18,6 @@ export namespace bSmSubheader {
                 altText?: string,
                 linkUrl?: string
             },
-            contacts?: any,
             rowLinks?: bSmRowLinks.Params,
             dropdownLinks?: gDropdownListLinks.Params,
             link?: ({
