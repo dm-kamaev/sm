@@ -1,5 +1,7 @@
 const ContactsGenerator = require('./ContactsGenerator.js');
 
+import {generalDataView} from '../views/generalDataView';
+
 import {bSmFooter} from '../../../blocks/n-common/b-sm-footer/params';
 import {bSmLink} from '../../../blocks/n-common/b-sm-link/params';
 import {bSmHeadedList} from '../../../blocks/n-common/b-sm-headed-list/params';
@@ -49,18 +51,17 @@ abstract class Footer {
         return this.getParams();
     }
 
-
     protected setParams() {
-        this.setCopyright();
+        this.setCopyright_();
 
         if (this.config.contactLinks) {
-            this.setContactLinks();
+            this.setContactLinks_();
         }
 
-        this.setSeoLinks();
-        this.setColumnList();
-        this.setLogotypes();
-        this.setConfig();
+        this.setSeoLinks_();
+        this.setColumnList_();
+        this.setLogotypes_();
+        this.setConfig_();
     }
 
 
@@ -68,34 +69,27 @@ abstract class Footer {
         return this.params;
     }
 
-    private setCopyright() {
-        this.params.data.copyright =
-            this.copyright || `© Маркет Мела ${new Date().getFullYear()}`;
+    private setCopyright_() {
+        return this.copyright || generalDataView.getCopyright();
     }
 
-    private setContactLinks() {
-        this.params.data.contactLinks = [{
-            content: 'Сотрудничество',
-            url: 'mailto:vs@mel.fm'
-        }, {
-            content: 'Пользовательское соглашение',
-            url: 'http://mel.fm/terms-of-use'
-        }];
+    private setContactLinks_() {
+        return this.contactLinks || generalDataView.getContactLinks();
     }
 
-    private setSeoLinks() {
+    private setSeoLinks_() {
         this.params.data.seoLinks = this.seoLinks;
     }
 
-    private setLogotypes() {
+    private setLogotypes_() {
         this.params.data.logotypes = this.logotypes;
     }
 
-    private setConfig() {
+    private setConfig_() {
         this.params.config = this.config;
     }
 
-    private setColumnList() {
+    private setColumnList_() {
         this.params.data.columnList =
             this.columnList.items
                 .map(column => column.type == 'smHeadedList' ?
