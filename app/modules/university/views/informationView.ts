@@ -1,6 +1,7 @@
 /* tslint:disable:max-file-line-count */
 // Made by anedashkovsky for store some params in view
 // TODO: enable this rule
+import {and} from "sequelize/v3";
 const FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
 
 const pageName = require('../../common/enums/pageName');
@@ -231,10 +232,19 @@ class InformationView extends LayoutView {
 
     private getSummaryBoardParams_(data: Data): bSummaryBoard.Params.Data {
         const neptuneTheme = 'neptune';
+
+        let itemHeader,
+            itemDescription;
+        const cost = data.entranceStatistic.cost;
+        if (cost) {
+            itemHeader = 'Стоимость / год';
+            itemDescription = `${cost} ₽`;
+        }
+
         const item = {
             data: {
-                header: 'Стоимость / год',
-                description: `${data.program.salary} ₽`,
+                header: itemHeader,
+                description: itemDescription,
                 buttonLink: {
                     data: {
                         url: '',
@@ -252,65 +262,85 @@ class InformationView extends LayoutView {
         };
 
         const listItems = [],
-            formatUtils = new FormatUtils();
-        let phrase = formatUtils.declensionPrint(
-            data.egeExams.length,
-            {
-                'nom': 'экзамен',
-                'gen': 'экзамена',
-                'plu': 'экзаменов'
+            formatUtils = new FormatUtils(),
+            egePassScore = data.entranceStatistic.egePassScore;
+        let phrase;
+        if (egePassScore) {
+            const egeExamsAmount = data.egeExams.length;
+            let description;
+            if (egeExamsAmount) {
+                phrase = formatUtils.declensionPrint(
+                    egeExamsAmount,
+                    {
+                        'nom': 'экзамен',
+                        'gen': 'экзамена',
+                        'plu': 'экзаменов'
+                    }
+                );
+                description = `за ${egeExamsAmount} ${phrase}`;
+            } else {
+                description = 'По сумме всех экзаменов';
             }
-        );
-        listItems.push({
-            data: {
-                header: `${data.entranceStatistic.egePassScore} баллов`,
-                description: `за ${data.egeExams.length} ${phrase}`
-            },
-            config: {
-                theme: 'neptune'
-            }
-        });
 
-        phrase = formatUtils.declensionPrint(
-            data.entranceStatistic.budgetPlaces,
-            {
-                'nom': 'бюджетное место',
-                'gen': 'бюджетных места',
-                'plu': 'бюджетных мест'
-            }
-        );
-        listItems.push({
-            data: {
-                header: data.entranceStatistic.budgetPlaces,
-                description: phrase
-            }
-        });
+            listItems.push({
+                data: {
+                    header: `${data.entranceStatistic.egePassScore} баллов`,
+                    description: description
+                },
+                config: {
+                    theme: 'neptune'
+                }
+            });
+        }
 
+        const budgetPlaces = data.entranceStatistic.budgetPlaces;
+        if (budgetPlaces >= 0 && budgetPlaces !== null) {
+            phrase = formatUtils.declensionPrint(
+                budgetPlaces,
+                {
+                    'nom': 'бюджетное место',
+                    'gen': 'бюджетных места',
+                    'plu': 'бюджетных мест'
+                }
+            );
+            listItems.push({
+                data: {
+                    header: budgetPlaces,
+                    description: phrase
+                }
+            });
+        }
 
-        phrase = formatUtils.declensionPrint(
-            data.entranceStatistic.budgetPlaces,
-            {
-                'nom': 'платное место',
-                'gen': 'платных места',
-                'plu': 'платных мест'
-            }
-        );
-        listItems.push({
-            data: {
-                header: data.entranceStatistic.commercialPlaces,
-                description: phrase
-            }
-        });
+        const commercialPlaces = data.entranceStatistic.commercialPlaces;
 
-        listItems.push({
-            data: {
-                header: data.entranceStatistic.competition,
-                description: 'человек на место'
-            },
-            config: {
-                iconType: 'people'
-            }
-        });
+        if (commercialPlaces >= 0 && commercialPlaces !== null) {
+            phrase = formatUtils.declensionPrint(
+                commercialPlaces,
+                {
+                    'nom': 'платное место',
+                    'gen': 'платных места',
+                    'plu': 'платных мест'
+                }
+            );
+            listItems.push({
+                data: {
+                    header: commercialPlaces,
+                    description: phrase
+                }
+            });
+        }
+
+        if (budgetPlaces) {
+            listItems.push({
+                data: {
+                    header: data.entranceStatistic.competition,
+                    description: 'человек на место'
+                },
+                config: {
+                    iconType: 'people'
+                }
+            });
+        }
 
         const list = [{
             header: 'Главное',
