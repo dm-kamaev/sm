@@ -309,7 +309,10 @@ module.exports = class {
             maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
             totalCost: this.formatTotalCost_(option.totalCost),
             costPerHour: this.formatCostPerHour_(option.costPerHour),
-            regularity: this.formatRegularity_(option.schedule),
+            regularity: this.formatRegularity_(
+                 option.openSchedule,
+                 option.schedule
+            ),
             online: this.formatOnline_(option.online),
             duration: this.formatDuration_(option.duration),
             startDate: this.formatStartDate_(option.startDate),
