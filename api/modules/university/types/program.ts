@@ -52,6 +52,7 @@ export interface ProgramAdmin extends ProgramAttribute {
     passScore?: number;
 }
 
+
 export interface ProgramMeta extends ProgramAttribute {
     pages?: any;
     pageMetaInformations?: any;
