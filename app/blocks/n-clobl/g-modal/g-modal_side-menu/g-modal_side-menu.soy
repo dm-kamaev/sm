@@ -2,27 +2,10 @@
 
 
 /**
- * @typedef {{
- *     content: {
- *         menuItems: Array<{
- *             url: string,
- *             name: string
- *         }>,
- *         footerItems: {
- *             data: {
- *                 contactLinks: Array<sm.bSmLink.Template.Params.Data>,
- *                 copyright: string
- *             }
- *         }
- *     }
- * }} sm.gModal.TemplateSideMenu.Params.Data
- */
-
-
-/**
  * Modal template
  * @param params {{
- *     data: sm.gModal.TemplateSideMenu.Params.Data
+ *     data: sm.gModalSideMenu.Params.Data,
+ *     config: sm.gModalSideMenu.Params.Config
  * }}
  * @extends sm.gModal.TemplateStendhal
  * @factory sm.iCloblFactory.FactoryStendhal
@@ -43,12 +26,18 @@
 
 /**
  * Content
+ * @param params {{
+ *     data: sm.gModalSideMenu.Params.Data,
+ *     config: sm.gModalSideMenu.Params.Config
+ * }}
  * @override
  * @protected
  */
 {template .content}
     {call .header_/}
     {call .menu_ data="all"/}
+    {call .contacts_ data="all" /}
+    {call .authorization_ data="all" /}
     {call .footer_ data="all" /}
 {/template}
 
@@ -94,7 +83,7 @@
  *         content: {
  *              menuItems: Array<{
  *                  url: string,
- *                  name: string
+ *                  content: string
  *              }>
  *          }
  *     }
@@ -110,6 +99,68 @@
                 {/call}
             {/foreach}
         </ul>
+    </div>
+{/template}
+
+
+/**
+ * Contacts
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             contacts: bSmContacts.Params.Data
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .contacts_}
+    <div class="{call .rootClass/}__contacts">
+        {call .renderChild}
+            {param params: [
+                'type': 'smContacts',
+                'renderParams': [
+                    'data': $params.data.content.contacts
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Authorization
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             user?: {
+ *                 firstName: string,
+ *                 lastName: string,
+ *                 photoUrl?: string
+ *             }
+ *         }
+ *     },
+ *     config: {
+ *         entityType?: string
+ *     }
+ * }}
+ * @private
+ */
+{template .authorization_}
+    <div class="{call .rootClass /}__authorization">
+        {call .renderChild}
+            {param params: [
+                'type': 'authorization-link',
+                'renderParams': [
+                    'data': [
+                        'user': $params.data.content.user
+                    ],
+                    'config': [
+                        'entityType': $params.config.entityType
+                    ]
+                ]
+            ] /}
+        {/call}
     </div>
 {/template}
 
@@ -178,13 +229,14 @@
         {call .rootClass /}__footer-link
     {/let}
 
-    <li class="{call .rootClass /}__footer-item">
+    <li class="{call .rootClass /}__link {call .rootClass /}__link_footer">
         {call .renderChild}
             {param params: [
                 'type': 'smLink',
                 'renderParams': [
                     'data': $item,
                     'config': [
+                        'size': 'xxl',
                         'theme': 'default',
                         'customClasses': [$customClasses]
                     ]
@@ -218,7 +270,7 @@
                         'content': $item.name
                     ],
                     'config': [
-                        'size': 'xxxl',
+                        'size': '8xl',
                         'theme': 'dark',
                         'customClasses': [$customClasses],
                         'target': $item.target or '',

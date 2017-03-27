@@ -75,3 +75,9 @@
         display: none;
     }
 }
+
+@include media-xs {
+    .b-authorization-link__user-name {
+        display: inline-block;
+    }
+}

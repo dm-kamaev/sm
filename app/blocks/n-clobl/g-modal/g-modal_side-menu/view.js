@@ -66,5 +66,13 @@ goog.scope(function() {
         this.dom.footerLinks = this.getElementsByClass(
             View.CssClass.FOOTER_LINK
         );
+
+        this.dom.authorizationLink = this.getElementByClass(
+            sm.bAuthorizationLink.View.CssClass.ROOT
+        );
+
+        this.dom.contacts = this.getElementByClass(
+            sm.bSmContacts.View.CssClass.ROOT
+        );
     };
 });  // goog.scope

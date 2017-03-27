@@ -9,22 +9,22 @@
  *         lastName: ?string,
  *         photoUrl: ?string
  *     }
- * }} sm.bAuthorizationLink.Params.Data
+ * }} sm.bAuthorizationLink.Template.Params.Data
  */
 
 
 /**
  * @typedef {{
  *     entityType?: string
- * }} sm.bAuthorizationLink.Params.Config
+ * }} sm.bAuthorizationLink.Template.Params.Config
  */
 
 
 /**
  * Constructor
  * @param params {{
- *     data: sm.bAuthorizationLink.Params.Data,
- *     config: sm.bAuthorizationLink.Params.Config
+ *     data: sm.bAuthorizationLink.Template.Params.Data,
+ *     config: sm.bAuthorizationLink.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
  * @factory sm.iCloblFactory.FactoryStendhal
@@ -45,8 +45,8 @@
 /**
  * Body
  * @param params {{
- *     data: sm.bAuthorizationLink.Params.Data,
- *     config: sm.bAuthorizationLink.Params.Config
+ *     data: sm.bAuthorizationLink.Template.Params.Data,
+ *     config: sm.bAuthorizationLink.Template.Params.Config
  * }}
  * @override
  */
@@ -59,7 +59,7 @@
 /**
  * Login
  * @param params {{
- *     data: sm.bAuthorizationLink.Params.Data,
+ *     data: sm.bAuthorizationLink.Template.Params.Data,
  *     config: {
  *         entityType?: string
  *     }
@@ -81,8 +81,7 @@
                     'content': $linkText
                 ],
                 'config': [
-                    'modifier': 'login',
-                    'entityType': $params.config.entityType
+                    'modifier': 'login'
                 ]
             ]/}
         {/call}
@@ -93,7 +92,7 @@
 /**
  * Logout
  * @param params {{
- *     data: sm.bAuthorizationLink.Params.Data,
+ *     data: sm.bAuthorizationLink.Template.Params.Data,
  *     config: {
  *         entityType?: string
  *     }
@@ -115,8 +114,7 @@
                     'content': $linkText
                 ],
                 'config': [
-                    'modifier': 'logout',
-                    'entityType': $params.config.entityType
+                    'modifier': 'logout'
                 ]
             ]/}
         {/call}
@@ -187,10 +185,7 @@
     {let $config: augmentMap(
         [
             'customClasses': [$customClasses],
-            'size': 'xxl',
-            'theme': $params.config.entityType == 'university' ?
-                'neptune' :
-                'default'
+            'size': 'xxl'
         ],
         $params.config
     ) /}
