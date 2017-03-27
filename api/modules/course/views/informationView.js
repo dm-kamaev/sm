@@ -9,7 +9,9 @@ const courseView = require('./courseView'),
 
 const footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
-    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+    sideMenuView = require(
+        '../../../../app/modules/common/views/sideMenuView'
+    ).sideMenuView;
 
 const Subheader = require('../lib/CourseSubheader');
 
@@ -80,7 +82,11 @@ view.render = function(data) {
         seo: metaInformation.seo,
         openGraph: metaInformation.openGraph,
         header: headerView.render(data.config, data.entityType, user),
-        sideMenu: sideMenuView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render({
+            config: data.config,
+            user: user,
+            entityType: data.entityType
+        }),
         subHeader: view.subheader({
             listLinks: courseCategoryView.listLinks(
                 data.categories,

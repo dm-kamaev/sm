@@ -23,7 +23,9 @@ const SubHeader = require('../lib/SchoolSubheader');
 
 const footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
-    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+    sideMenuView = require(
+        '../../../../app/modules/common/views/sideMenuView'
+    ).sideMenuView;
 
 const commentView = require('../../comment/views/commentView');
 
@@ -89,7 +91,11 @@ schoolView.default = function(
             schoolInstance.reviewCount : 0,
         user: user,
         header: headerView.render(config, entityType.SCHOOL, user),
-        sideMenu: sideMenuView.render(config, entityType.SCHOOL),
+        sideMenu: sideMenuView.render({
+            config: config,
+            user: user,
+            entityType: entityType.SCHOOL
+        }),
         subHeader: schoolView.subHeader({
             favoriteEntities: []
         }),

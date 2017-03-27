@@ -16,7 +16,9 @@ const searchViewEntity = require('../../entity/views/searchView'),
     favoriteView = require('../../favorite/views/favoriteView'),
     footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
-    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+    sideMenuView = require(
+        '../../../../app/modules/common/views/sideMenuView'
+    ).sideMenuView;
 
 const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
@@ -90,7 +92,11 @@ searchView.render = function(data) {
             fbClientId: data.fbClientId,
         },
         header: headerView.render(data.config, data.entityType, user),
-        sideMenu: sideMenuView.render(data.config, data.entityType),
+        sideMenu: sideMenuView.render({
+            config: data.config,
+            user: user,
+            entityType: data.entityType
+        }),
         subHeader: searchView.subheader({
             favoriteEntities: favoriteView.list(data.favorites)
         }),

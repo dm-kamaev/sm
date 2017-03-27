@@ -21,7 +21,7 @@
  *         content: string,
  *         header: sm.bSmHeader.Template.Params,
  *         subHeader: sm.bSmSubheader.Template.Params,
- *         sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
+ *         sideMenu: sm.gModal.TemplateSideMenu.Params,
  *         landingScript: string,
  *         openGraph: ?{
  *             url: ?string,
@@ -273,9 +273,7 @@
     <div class="{call .rootClass /}__side-menu">
         {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'side-menu' /}
-            {param renderParams: [
-                'data': $params.data.sideMenu
-            ]/}
+            {param renderParams: $params.data.sideMenu/}
         {/call}
     </div>
 {/template}
