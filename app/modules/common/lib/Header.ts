@@ -1,4 +1,4 @@
-const Menu = require('../lib/Menu'),
+const Menu = require('./Menu'),
     ContactsGenerator = require('./ContactsGenerator');
 
 import {bSmHeader} from '../../../blocks/n-common/b-sm-header/params';

@@ -89,8 +89,7 @@ class ContactsGenerator {
         case entityTypeEnum.UNIVERSITY:
             helper = {
                 text: 'Поможем выбрать',
-                url: '/university',
-                theme: 'neptune'
+                url: '/university'
             };
             break;
         }
