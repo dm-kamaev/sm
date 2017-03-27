@@ -54,17 +54,8 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.dom.counterCustomTextSymbols = this.getElementByClass(
-            View.CssClass.COUNTER_CUSTOM_TEXT_SYMBOLS
-        );
-
-        this.dom.counterCustomTextLeft = this.getElementByClass(
-            View.CssClass.COUNTER_CUSTOM_TEXT_LEFT
-        );
-
-        this.dom.field = this.getElementByClass(
-            View.CssClass.TEXTAREA
-        );
+        this.initDom_();
+        this.initValue_();
     };
 
 
@@ -135,6 +126,36 @@ goog.scope(function() {
         goog.dom.classes.remove(
             this.getElement(),
             View.CssClass.NOT_VALID
+        );
+    };
+
+
+    /**
+     * Init value (need if value set from params)
+     * @private
+     */
+    View.prototype.initValue_ = function() {
+        if (this.params.maxLength) {
+            this.checkAndUpdateLength();
+        }
+    };
+
+
+    /**
+     * Init dom elements
+     * @private
+     */
+    View.prototype.initDom_ = function() {
+        this.dom.counterCustomTextSymbols = this.getElementByClass(
+            View.CssClass.COUNTER_CUSTOM_TEXT_SYMBOLS
+        );
+
+        this.dom.counterCustomTextLeft = this.getElementByClass(
+            View.CssClass.COUNTER_CUSTOM_TEXT_LEFT
+        );
+
+        this.dom.field = this.getElementByClass(
+            View.CssClass.TEXTAREA
         );
     };
 });  // goog.scope
