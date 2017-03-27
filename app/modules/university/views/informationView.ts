@@ -1,3 +1,6 @@
+/* tslint:disable:max-file-line-count */
+// Made by anedashkovsky for store some params in view
+// TODO: enable this rule
 const FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
 
 const pageName = require('../../common/enums/pageName');
@@ -116,6 +119,8 @@ class InformationView extends LayoutView {
             summaryBoard: this.getSummaryBoardParams_(data),
             banner: this.getBannerParams_(data),
             entityRelation: this.getEntityRelationParams_(),
+            similarPrograms: this.getSimilarProgramsParams_(),
+            usefulCourses: this.getUsefulCoursesParams_(),
             comments: this.getComments_(data)
         };
     }
@@ -173,43 +178,53 @@ class InformationView extends LayoutView {
             items: []
         };
 
-        const egeTests = data.egeExams.map(exam => `${exam.subjectName} (ЕГЭ)`);
-        const entranceTests = egeTests.concat(data.program.extraExam);
+        if ((data.egeExams && data.egeExams.length > 0) ||
+                (data.program.extraExam && data.program.extraExam.length > 0)) {
+            const egeTests =
+                data.egeExams.map(exam => `${exam.subjectName} (ЕГЭ)`);
+            const entranceTests = egeTests.concat(data.program.extraExam);
 
-        result.items.push({
-            data: {
-                header: 'Вступительные испытания',
-                subitems: entranceTests
-            },
-            config: {
-                inline: true
-            }
-        });
+            result.items.push({
+                data: {
+                    header: 'Вступительные испытания',
+                    subitems: entranceTests
+                },
+                config: {
+                    inline: true
+                }
+            });
+        }
 
-        const links = data.program.links.map(link => ({
-            url: link,
-            content: link
-        }));
 
-        result.items.push({
-            data: {
-                header: 'Полезные ссылки',
-                subitems: links
-            },
-            config: {
-                inline: false
-            }
-        });
+        if (data.program.links && data.program.links.length > 0) {
+            const links = data.program.links.map(link => ({
+                url: link,
+                content: link
+            }));
 
-        result.items.push({
-            data: {
-                header: 'Специализации',
-                subitems: data.program.specializations
-            },
-            config: {
-                inline: false
-            }
-        });
+            result.items.push({
+                data: {
+                    header: 'Полезные ссылки',
+                    subitems: links
+                },
+                config: {
+                    inline: false
+                }
+            });
+        }
+
+        if (data.program.specializations &&
+                data.program.specializations.length > 0) {
+            result.items.push({
+                data: {
+                    header: 'Специализации',
+                    subitems: data.program.specializations
+                },
+                config: {
+                    inline: false
+                }
+            });
+        }
 
         return result;
     }
@@ -270,6 +285,7 @@ class InformationView extends LayoutView {
                 description: phrase
             }
         });
+
 
         phrase = formatUtils.declensionPrint(
             data.entranceStatistic.budgetPlaces,
@@ -339,6 +355,151 @@ class InformationView extends LayoutView {
                     }
                 }]
             }
+        };
+    }
+
+    private getSimilarProgramsParams_() {
+        return {
+            header: 'Похожие программы',
+                countItemsPerPage: 4,
+                items: [{
+                id: 1,
+                type: 'university',
+                name: {
+                    light: 'Менеджер СПБГУ'
+                },
+                description: ' ',
+                additionalLink: {
+                    content: 'Специальность',
+                    url: 'http://yandex.ru',
+                    theme: 'neptune',
+                    size: 'xl'
+                },
+                buttonLink: {
+                    data: {
+                        icon: 'arrow-circle',
+                        iconType: 'svg',
+                        url: 'http://yandex.ru'
+                    }
+                }
+            }, {
+                id: 2,
+                type: 'university',
+                name: {
+                    light: 'Социология НИУ-ВШЭ'
+                },
+                description: ' ',
+                additionalLink: {
+                    content: 'Специальность',
+                    url: 'http://yandex.ru',
+                    theme: 'neptune',
+                    size: 'xl'
+                },
+                buttonLink: {
+                    data: {
+                        icon: 'arrow-circle',
+                        iconType: 'svg',
+                        url: 'http://yandex.ru'
+                    }
+                }
+            }, {
+                id: 3,
+                type: 'university',
+                name: {
+                    light: 'Менеджер МГУ'
+                },
+                description: ' ',
+                additionalLink: {
+                    content: 'Специальность',
+                    url: 'http://yandex.ru',
+                    theme: 'neptune',
+                    size: 'xl'
+                },
+                buttonLink: {
+                    data: {
+                        icon: 'arrow-circle',
+                        iconType: 'svg',
+                        url: 'http://yandex.ru'
+                    }
+                }
+            }, {
+                id: 4,
+                type: 'university',
+                name: {
+                    light: 'Логистика НИУ-ВШЭ'
+                },
+                description: ' ',
+                additionalLink: {
+                    content: 'Специальность',
+                    url: 'http://yandex.ru',
+                    theme: 'neptune',
+                    size: 'xl'
+                },
+                buttonLink: {
+                    data: {
+                        icon: 'arrow-circle',
+                        iconType: 'svg',
+                        url: 'http://yandex.ru'
+                    }
+                }
+            }],
+                itemType: 'smItemCompact',
+                itemConfig: {
+                theme: 'neptune'
+            },
+            theme: 'neptune'
+        };
+    }
+
+    private getUsefulCoursesParams_() {
+        return {
+            header: 'Полезные курсы',
+                countItemsPerPage: 3,
+                items: [{
+                id: 1,
+                type: 'course',
+                name: {
+                    light: 'Английский язык'
+                },
+                description: `Подготовка к ЕГЭ по английскому
+                                языку English First`,
+                imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
+                'facebook/000/839/199/8a9.jpg',
+                url: 'http://yandex.ru',
+                nameLinkUrl: 'http://google.com'
+            }, {
+                id: 2,
+                type: 'course',
+                name: {
+                    light: 'Профориентация'
+                },
+                description: 'Система Выбор Smart Course',
+                imageUrl: 'http://lamcdn.net/lookatme.ru/' +
+                'post_image-image/vePw1jo6HLFVfp7JIU5_' +
+                'Qg-article.jpg',
+                url: 'http://yandex.ru',
+                nameLinkUrl: 'http://google.com'
+            }, {
+                id: 3,
+                type: 'course',
+                name: {
+                    light: 'Профориентация'
+                },
+                description: `Пропуск в профессию. Индивидуальная
+                                траектория Proekt Pro`,
+                imageUrl: 'http://cs8.pikabu.ru/post_img/2016/' +
+                '01/14/12/1452803883198482683.png',
+                url: 'http://yandex.ru',
+                nameLinkUrl: 'http://google.com'
+            }],
+                itemType: 'smItemCompact',
+                itemConfig: {
+                theme: 'neptune-imaged',
+                    enableCover: true,
+                    isDescriptionLink: true,
+                    nameLinkSize: 'xl'
+            },
+            theme: 'neptune'
         };
     }
 
