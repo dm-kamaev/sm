@@ -4,7 +4,8 @@ import {UniversityProfileInstance} from '../models/UniversityProfile';
 export interface UniversityAdminList extends UniversityAttribute {
     cityName?: string;
     programCount?: number;
-    profiles?: Array<{id: number, name: string}>;
+    profileName?: string;
+    profilesName?: string;
 }
 
 export interface UniversityAdmin extends UniversityAttribute {

@@ -17,11 +17,11 @@ import {
 } from '../../n-clobl/g-modal/g-modal_interaction/params';
 
 export namespace lUniversity {
-    /*
+    /**
      * sm.lUniversity.Params
      */
     export namespace Params {
-        /*
+        /**
          * sm.lUniversity.Params.Data
          */
         export interface Data extends iLayoutStendhal.Params.Data {
@@ -49,7 +49,7 @@ export namespace lUniversity {
             modalComment: gModalInteraction.Params.Data;
         }
 
-        /*
+        /**
          * sm.lUniversity.Params.Config
          */
         export interface Config extends iLayoutStendhal.Params.Config {
@@ -57,7 +57,7 @@ export namespace lUniversity {
     }
 
 
-    /*
+    /**
      * sm.lUniversity.Params
      */
     export interface Params {
