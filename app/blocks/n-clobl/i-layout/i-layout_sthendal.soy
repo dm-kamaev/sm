@@ -16,7 +16,7 @@
  *     },
  *     subHeader: sm.bSmSubHeader.Template.Params,
  *     header: sm.bSmHeader.Template.Params,
- *     sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
+ *     sideMenu: sm.gModal.TemplateSideMenu.Params,
  *     user: {
  *         id: (number|undefined),
  *         firstName: (string|undefined),
@@ -382,9 +382,7 @@
         {call .renderChildLayout}
             {param params: $params /}
             {param type: 'side-menu' /}
-            {param renderParams: [
-                'data': $params.data.sideMenu
-            ]/}
+            {param renderParams: $params.data.sideMenu /}
         {/call}
     </div>
 {/template}

@@ -2,14 +2,15 @@ const headerView = require('../../../../api/modules/entity/views/headerView'),
     favoriteView =
             require('../../../../api/modules/favorite/views/favoriteView');
 
-const sideMenuView = require('../views/sideMenuView'),
-    configView = require('../views/configView');
+const configView = require('../views/configView');
 
 import {SubHeader} from './SubHeader';
 import {Header} from './Header';
 
-import {userView} from '../../user/views/user';
 import {Footer} from './Footer';
+
+import {sideMenuView} from '../views/sideMenuView';
+import {userView} from '../../user/views/user';
 
 import {iLayoutStendhal} from '../../../blocks/n-clobl/i-layout/params';
 import {BackendUser, UserData} from '../../user/types/user';
@@ -122,7 +123,7 @@ abstract class LayoutView {
 
         this.setUser_();
         this.setAuthSocialLinks_();
-        this.sideMenu_(params.config);
+        this.setSideMenu_(params.config);
         this.setFooter_();
 
         this.setConfig_(params.config, params.requestData);
@@ -184,11 +185,12 @@ abstract class LayoutView {
     }
 
 
-    private sideMenu_(config: AppConfig) {
-        this.params.data.sideMenu = this.views.sideMenu.render(
-            config,
-            this.entityType
-        );
+    private setSideMenu_(config: AppConfig) {
+        this.params.data.sideMenu = this.views.sideMenu.render({
+            config: config,
+            user: this.user_,
+            entityType: this.entityType
+        });
     }
 
 
