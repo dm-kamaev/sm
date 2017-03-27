@@ -50,11 +50,15 @@ export interface ProgramAdmin extends ProgramAttribute {
     addressName?: string;
     commentCount?: number;
     passScore?: number;
+    programUrl?: string;
 }
-
 
 export interface ProgramMeta extends ProgramAttribute {
     pages?: any;
     pageMetaInformations?: any;
+}
 
+export interface ProgramUrl {
+    id: number;
+    url: string;
 }

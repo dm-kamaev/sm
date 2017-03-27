@@ -29,6 +29,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {String}   -.name            Name.
      * @apiSuccess {Number}   -.commentCount    Number of comments.
      * @apiSuccess {Number}   -.passScore       Ege pass score.
+     * @apiSuccess {String}   -.programUrl      Program's URL.
      * @apiSuccess {String}   -.updatedAt       Updated at.
      *
      * @apiSuccessExample {json} Success-Response:
@@ -38,13 +39,15 @@ class ProgramAdminController extends Controller {
      *             "name": "Прикладная математика",
      *             "commentCount": 14,
      *             "passScore": 256,
+     *             "programUrl": "/vuz/msu/program/managment",
      *             "updatedAt": "2017-03-07T06:59:52.220Z"
      *         }
      *     ]
      */
     public async actionList(actionContext: any, universityId: string) {
         const programs = await programService.getAll();
-        return programAdminView.renderList(programs);
+        const programUrls = await programService.getUrls(programs);
+        return programAdminView.renderList(programs, programUrls);
     }
 
     /**

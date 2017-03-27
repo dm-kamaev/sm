@@ -14,7 +14,9 @@ import {
 import {Model as EntranceStatisticModel} from '../models/EntranceStatistic';
 import {
     ProgramInstance,
-    ProgramAdmin, ProgramAttribute
+    ProgramAdmin,
+    ProgramAttribute,
+    ProgramUrl
 } from '../types/program';
 
 import {
@@ -24,6 +26,7 @@ import {service as addressService} from '../../geo/services/address';
 import {service as universityService} from './university';
 import {service as pageService} from '../../entity/services/page';
 const entityType = require('../../entity/enums/entityType');
+import {UrlTemplate} from '../constants/UrlTemplate';
 
 import {ProgramNotFound} from './exceptions/ProgramNotFound';
 
@@ -148,7 +151,40 @@ class ProgramService {
                 program.universityId, entityType.UNIVERSITY
             );
 
-        return `vuz/${universityPage.alias}/specialnost/${programPage.alias}`;
+        return this.convertToUrl(universityPage.alias, programPage.alias);
+    }
+
+    public async getUrls(
+            programs: Array<ProgramInstance>): Promise<Array<ProgramUrl>> {
+        const pages = await Promise.all([
+            pageService.getAllAliases(entityType.PROGRAM),
+            pageService.getAllAliases(entityType.UNIVERSITY)
+        ]);
+        const programPages = pages[0];
+        const universityPages = pages[1];
+
+        return programs.map(program => {
+            const programAlias = programPages
+                .find(programPage => programPage.entityId === program.id)
+                .alias;
+            const universityAlias = universityPages
+                .find(universityPage =>
+                    universityPage.entityId === program.universityId)
+                .alias;
+            return {
+                id: program.id,
+                url: this.convertToUrl(
+                    universityAlias,
+                    programAlias
+                )
+            };
+        });
+    }
+
+    private convertToUrl(universityAlias, programAlias) {
+        return UrlTemplate.PROGRAM
+            .replace('${universityAlias}', universityAlias)
+            .replace('${programAlias}', programAlias);
     }
 
     private async fullCreate(data: ProgramAdmin):
