@@ -210,8 +210,7 @@ class ProgramCommentView {
         });
 
         const userStatus: string = `${userTypeData.label} ` +
-            params.comment.yearGraduate ||
-            `${params.comment.grade} курса`;
+            (params.comment.yearGraduate || `${params.comment.grade} курса`);
 
         const textItems = [];
 
