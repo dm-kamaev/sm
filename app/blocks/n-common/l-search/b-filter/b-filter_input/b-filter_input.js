@@ -32,7 +32,8 @@ goog.inherits(sm.lSearch.bFilter.FilterInput, sm.lSearch.bFilter.Filter);
 goog.scope(function() {
     var FilterInput = sm.lSearch.bFilter.FilterInput,
         View = sm.lSearch.bFilter.ViewInput,
-        OptionChangeEvent = sm.lSearch.bFilter.OptionChangeEvent;
+        CheckOptionEvent = sm.lSearch.bFilter.CheckOptionEvent,
+        UncheckOptionEvent = sm.lSearch.bFilter.UncheckOptionEvent;
 
     /**
      * Name of this element in factory
@@ -196,12 +197,11 @@ goog.scope(function() {
      * @protected
      */
     FilterInput.prototype.dispatchEventCheckOption = function(option) {
-        var optionCheckEvent = new OptionChangeEvent({
-            'type': sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
-            'data': option.getValue(),
-            'position': this.getView().getOptionOffset(option)
+        var checkOptionEvent = new CheckOptionEvent({
+            data: option.getValue(),
+            position: this.getView().getOptionOffset(option)
         });
-        this.dispatchEvent(optionCheckEvent);
+        this.dispatchEvent(checkOptionEvent);
     };
 
 
@@ -212,13 +212,11 @@ goog.scope(function() {
      * @protected
      */
     FilterInput.prototype.dispatchEventUncheckOption = function(option) {
-        var optionUncheckEvent = new OptionChangeEvent(
-        {
-            'type': sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
-            'data': option.getValue(),
-            'position': this.getView().getOptionOffset(option)
+        var uncheckOptionEvent = new UncheckOptionEvent({
+            data: option.getValue(),
+            position: this.getView().getOptionOffset(option)
         });
-        this.dispatchEvent(optionUncheckEvent);
+        this.dispatchEvent(uncheckOptionEvent);
     };
 
 
