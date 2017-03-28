@@ -94,19 +94,10 @@
     color: #0a5bff;
 }
 
-.b-sm-link_neptune-block-theme {
-    width: 100%;
-    height: 100%;
-
-    color: #0a5bff;
-
-    line-height: inherit;
-}
-
 .b-sm-link_sky-theme {
-    color: #0a60ff;
+    color: #356fc4;
 
-    &.b-sm-link_selected, &.b-sm-link_hoverable:hover {
+    &.b-sm-link_selected {
         color: #7f7f7f;
     }
 }

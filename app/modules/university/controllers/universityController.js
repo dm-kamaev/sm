@@ -266,7 +266,7 @@ controller.information = async(function(req, res, next) {
                             additionalLink: {
                                 content: 'Специальность',
                                 url: 'http://yandex.ru',
-                                theme: 'neptune',
+                                theme: 'default',
                                 size: 'xl'
                             },
                             buttonLink: {
@@ -286,7 +286,7 @@ controller.information = async(function(req, res, next) {
                             additionalLink: {
                                 content: 'Специальность',
                                 url: 'http://yandex.ru',
-                                theme: 'neptune',
+                                theme: 'default',
                                 size: 'xl'
                             },
                             buttonLink: {
@@ -306,7 +306,7 @@ controller.information = async(function(req, res, next) {
                             additionalLink: {
                                 content: 'Специальность',
                                 url: 'http://yandex.ru',
-                                theme: 'neptune',
+                                theme: 'default',
                                 size: 'xl'
                             },
                             buttonLink: {
@@ -326,7 +326,7 @@ controller.information = async(function(req, res, next) {
                             additionalLink: {
                                 content: 'Специальность',
                                 url: 'http://yandex.ru',
-                                theme: 'neptune',
+                                theme: 'default',
                                 size: 'xl'
                             },
                             buttonLink: {

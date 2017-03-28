@@ -17,13 +17,11 @@ class UniversitySubHeader extends SubHeader {
         this.link = {
             nameL: 'Подобрать Вуз',
             nameM: 'Подобрать Вуз',
-            url: '/search',
-            theme: 'neptune'
+            url: '/search'
         };
 
         this.rowLinks = {
             linkConfig: {
-                theme: 'neptune',
                 size: 'xxl'
             },
             listConfig: {
@@ -36,13 +34,12 @@ class UniversitySubHeader extends SubHeader {
                 content: {
                     items: [],
                     itemConfig: {
-                        theme: 'neptune',
                         size: 'xxl'
                     }
                 }
             },
             config: {
-                openerTheme: 'neptune-block',
+                openerTheme: 'block',
                 openerSize: 'xxl',
                 iconType: 'icon-svg',
                 iconName: 'blue-arrow',
