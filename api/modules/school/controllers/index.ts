@@ -163,6 +163,8 @@ initCrudRouting(
 );
 router.get('/admin/schoolsubject', examAdminController.actionGetListSubject);
 router.get('/admin/examyear', examAdminController.actionGetListExamYear);
+router.get('/admin/awardetype', olympiadAdminController.actionGetAwardeTypes);
+router.get('/admin/olymptype', olympiadAdminController.actionGetOlimpTypes);
 
 
 initCrudRouting(
