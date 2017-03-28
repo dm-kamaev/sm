@@ -158,5 +158,10 @@ router.get(
     '/admin/program/:id/pagemeta',
     programMetaAdminController.actionGet
 );
+router.put(
+    '/admin/program/:id/pagemeta',
+    checkApiToken,
+    programMetaAdminController.actionUpdate
+);
 
 export {router};

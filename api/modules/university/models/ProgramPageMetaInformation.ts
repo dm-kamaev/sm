@@ -33,6 +33,7 @@ const ProgramPageMetaInformation: ProgramPageMetaInformationModel
             key: 'id'
         }
     },
+    keywords: DataType.TEXT,
     tabTitle: {
         field: 'tab_title',
         type: DataType.STRING
