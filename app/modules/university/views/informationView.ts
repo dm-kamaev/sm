@@ -1,7 +1,6 @@
 /* tslint:disable:max-file-line-count */
 // Made by anedashkovsky for store some params in view
 // TODO: enable this rule
-import {and} from "sequelize/v3";
 const FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
 
 const pageName = require('../../common/enums/pageName');

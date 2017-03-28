@@ -175,10 +175,10 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.buildRequestData_ = function() {
         return {
-            'url': this.buildApiAddress_(),
-            'type': 'POST',
-            'data': this.buildQueryParams_(),
-            'isJSON': true
+            url: this.buildApiAddress_(),
+            type: 'POST',
+            data: this.buildQueryParams_(),
+            isJSON: true
         };
     };
 
