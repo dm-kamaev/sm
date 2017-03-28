@@ -31,6 +31,10 @@ import {UserAlreadyCommentedProgram}
 
 import {Model as ProgramCommentModel} from '../models/ProgramComment';
 
+type SequelizeOrder = Array<
+    Array<string | {model: Sequelize.Model<any, any>, as?: string}>
+>;
+
 class ProgramCommentService {
     public readonly name: string = 'programComment';
 
@@ -83,8 +87,10 @@ class ProgramCommentService {
     }
 
     public async getAllByProgramIdWithFullData(
-            programId: number): Promise<Array<ProgramCommentInstance>> {
+            programId: number, orderType?: number
+    ): Promise<Array<ProgramCommentInstance>> {
         const commentGroup = await programService.getCommentGroup(programId);
+        const order = this.getCommentsOrder_(orderType);
         return await ProgramCommentModel.findAll({
             where: {
                 commentGroupId: commentGroup.id
@@ -101,7 +107,8 @@ class ProgramCommentService {
                     'score', 'totalScore'
                 ],
                 as: 'rating'
-            }]
+            }],
+            order: order
         });
     }
 
@@ -243,6 +250,33 @@ class ProgramCommentService {
     private async silentGetOne_(
             commentId: number): Promise<ProgramCommentInstance> {
         return await ProgramCommentModel.findById(commentId);
+    }
+
+    private getCommentsOrder_(orderType: number) {
+        const order: SequelizeOrder = [];
+        switch (orderType) {
+            case 1:
+                order.push([
+                    {model: RatingModel, as: 'rating'},
+                    'totalScore',
+                    'DESC'
+                ]);
+                break;
+            case 2:
+                order.push([
+                    {model: RatingModel, as: 'rating'},
+                    'totalScore',
+                    'ASC'
+                ]);
+                break;
+            default:
+                order.push([
+                    'createdAt',
+                    'DESC'
+                ]);
+                break;
+        }
+        return order;
     }
 }
 

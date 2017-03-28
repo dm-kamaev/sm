@@ -86,6 +86,9 @@ class ProgramCommentController extends Controller {
      * @apiGroup ProgramComment
      * @apiName GetProgramComments
      *
+     * @apiParam {Number} orderType
+     *     0 - new first, 1 - by total score desc, 2 - by total score asc
+     *
      * @apiSuccess ProgramComment              {Object[]}
      *     Requested university comment object
      * @apiSuccess ProgramComment.id           {Number}
@@ -116,9 +119,9 @@ class ProgramCommentController extends Controller {
      *         "userType": "Student",
      *         "grade": 4,
      *         "yearGraduate": 2016,
-     *         "pros": 'Очень хороший университет',
-     *         "cons": 'Общежитие отвратительное',
-     *         "advice": 'Поступайте все!',
+     *         "pros": "Очень хороший университет",
+     *         "cons": "Общежитие отвратительное",
+     *         "advice": "Поступайте все!",
      *         "totalScore": 4.8,
      *         "score": [1, 2, 2, 4],
      *         "userId": 12
@@ -127,9 +130,11 @@ class ProgramCommentController extends Controller {
      * @apiUse ProgramNotFoundError
      */
     public async actionList(actionContext: any, programId: string) {
+        const orderType: number = +actionContext.data.orderType || 0;
         const comments =
             await programCommentService.getAllByProgramIdWithFullData(
-                +programId
+                +programId,
+                orderType
             );
 
         return programCommentView.renderList(comments);
@@ -214,13 +219,13 @@ class ProgramCommentController extends Controller {
      *
      * @apiParamExample {json} Request-Example:
      *     {
-     *           "userType": 'Student',
-     *           "yearGraduate": 2015,
-     *           "score": [5, 4, 4, 2],
-     *           "advice": 'Поступайте все!',
-     *           "pros": 'Очень хороший университет',
-     *           "cons": 'Общежитие отвратительное'
-     *      }
+     *         "userType": "Student",
+     *         "yearGraduate": 2015,
+     *         "score": [5, 4, 4, 2],
+     *         "advice": "Поступайте все!",
+     *         "pros": "Очень хороший университет",
+     *         "cons": "Общежитие отвратительное"
+     *     }
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 203 OK
