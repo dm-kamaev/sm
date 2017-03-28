@@ -56,10 +56,10 @@ goog.scope(function() {
 
 
     /**
-     * Speed of show/hide enum
+     * Animate classes
      * @enum {string}
      */
-    Tooltip.Speed = View.Speed;
+    Tooltip.Animation = View.Animation;
 
 
     /**
