@@ -166,17 +166,17 @@ goog.scope(function() {
 
     /**
      * show balloon with value
-     * @param {string} value
+     * @param {string|number} value
      * @public
      */
     FilterPanel.prototype.showTooltip = function(value) {
         this.getView().setTooltipPosition(this.tooltipPosition_);
-        if (value==0) {
+        if (value) {
+            this.tooltip_.setText('Найдено: ' + value);
+            this.tooltip_.showButton();
+        } else {
             this.tooltip_.setText();
             this.tooltip_.hideButton();
-        } else {
-            this.tooltip_.setText('Найдено: '+value);
-            this.tooltip_.showButton();
         }
         this.tooltip_.display(sm.lSearch.bTooltip.Tooltip.Speed.SLOW);
     };
@@ -242,7 +242,7 @@ goog.scope(function() {
 
     /**
      * checkOption/uncheckOption handler
-     * @param {Object} event
+     * @param {sm.lSearch.bFilter.OptionChangeEvent} event
      * @private
      */
     FilterPanel.prototype.onOption_ = function(event) {

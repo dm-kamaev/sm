@@ -25,7 +25,7 @@ goog.scope(function() {
 
             /**
              * Loaded data
-             * @type {Object}
+             * @type {number}
              */
             this.data = data;
         };

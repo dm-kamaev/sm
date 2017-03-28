@@ -135,13 +135,12 @@ goog.scope(function() {
 
     /**
      * Get offset of option
-     * @param {Object} option
+     * @param {sm.bSmCheckbox.SmCheckbox} option
      * @return {number}
      */
     View.prototype.getOptionOffset = function(option) {
         var element = option.getElement();
         return element.offsetTop;
-
     };
 
 

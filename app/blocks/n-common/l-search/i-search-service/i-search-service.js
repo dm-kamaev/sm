@@ -154,7 +154,7 @@ goog.scope(function() {
     SearchService.DataType = {
         SEARCH: 'search',
         MAP_POINTS: 'searchMapPoints',
-        COUNT: 'count'
+        SEARCH_COUNT: 'count'
     };
 
 
@@ -220,7 +220,7 @@ goog.scope(function() {
         if (!this.isSearchCountDataPending()) {
             this.searchCountDataPromise_ = this.send_(
                 searchParams,
-                SearchService.DataType.COUNT
+                SearchService.DataType.SEARCH_COUNT
             );
 
             this.searchCountDataPromise_.then(
@@ -292,11 +292,12 @@ goog.scope(function() {
 
     /**
      * Search count data loaded callback
-     * @param {number} data
+     * @param {Object} data server response
      * @private
      */
     SearchService.prototype.onSearchCountDataLoaded_ = function(data) {
-        var searchCountDataLoadedEvent = new SearchCountDataLoadedEvent(data);
+        var searchCountDataLoadedEvent =
+            new SearchCountDataLoadedEvent(data.data);
         this.dispatchEvent(searchCountDataLoadedEvent);
         this.resetSearchCountDataRequest_();
     };
@@ -425,7 +426,7 @@ goog.scope(function() {
             case SearchService.DataType.MAP_POINTS:
                 apiAddress = this.searchMapApi_;
                 break;
-            case SearchService.DataType.COUNT:
+            case SearchService.DataType.SEARCH_COUNT:
                 apiAddress = this.searchCountApi_;
                 break;
         }

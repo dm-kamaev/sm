@@ -22,15 +22,17 @@ sm.lSearch.bFilter.FilterInput = function(view, opt_domHelper) {
     /**
      * id of setTimeout
      * @type {?number}
+     * @private
      */
-    this.inputTimer = null;
+    this.timeoutId_ = null;
 };
 goog.inherits(sm.lSearch.bFilter.FilterInput, sm.lSearch.bFilter.Filter);
 
 
 goog.scope(function() {
     var FilterInput = sm.lSearch.bFilter.FilterInput,
-        View = sm.lSearch.bFilter.ViewInput;
+        View = sm.lSearch.bFilter.ViewInput,
+        OptionChangeEvent = sm.lSearch.bFilter.OptionChangeEvent;
 
     /**
      * Name of this element in factory
@@ -189,31 +191,34 @@ goog.scope(function() {
 
     /**
      * Dispatch event if check option
-     * @param {Object} option
+     * @param {sm.gInput.InputStendhal} option
      * @override
      * @protected
      */
     FilterInput.prototype.dispatchEventCheckOption = function(option) {
-        this.dispatchEvent({
+        var optionCheckEvent = new OptionChangeEvent({
             'type': sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
             'data': option.getValue(),
             'position': this.getView().getOptionOffset(option)
         });
+        this.dispatchEvent(optionCheckEvent);
     };
 
 
     /**
      * Dispatch event if uncheck option
-     * @param {Object} option
+     * @param {sm.gInput.InputStendhal} option
      * @override
      * @protected
      */
     FilterInput.prototype.dispatchEventUncheckOption = function(option) {
-        this.dispatchEvent({
+        var optionUncheckEvent = new OptionChangeEvent(
+        {
             'type': sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
             'data': option.getValue(),
             'position': this.getView().getOptionOffset(option)
         });
+        this.dispatchEvent(optionUncheckEvent);
     };
 
 
@@ -224,14 +229,17 @@ goog.scope(function() {
      */
     FilterInput.prototype.onOptionInput_ = function(option) {
         this.getView().setButtonResetVisibility(this.isChecked());
-
-        clearTimeout(this.inputTimer);
-        this.inputTimer = setTimeout(
-            this.onOptionInputCompleted_.bind(this, option),
-            500
-        );
-
+        this.onOptionInputCompleted_(option);
         this.dispatchEventChangeOptions();
+    };
+
+
+    FilterInput.prototype.onOptionInputCompleted_ = function(option) {
+        clearTimeout(this.timeoutId_);
+        this.timeoutId_ = setTimeout(
+            this.dispatchEventChangeOption_.bind(this, option),
+            400
+        );
     };
 
 
@@ -240,11 +248,11 @@ goog.scope(function() {
      * @param {sm.gInput.InputStendhal} option
      * @private
      */
-    FilterInput.prototype.onOptionInputCompleted_ = function(option) {
-        if (option.getValue() == '') {
-            this.dispatchEventUncheckOption(option);
-        } else {
+    FilterInput.prototype.dispatchEventChangeOption_ = function(option) {
+        if (option.getValue()) {
             this.dispatchEventCheckOption(option);
+        } else {
+            this.dispatchEventUncheckOption(option);
         }
     };
 

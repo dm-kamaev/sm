@@ -3,6 +3,7 @@ goog.provide('sm.lSearch.bFilter.Filter');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lSearch.bFilter.OptionChangeEvent');
 goog.require('sm.lSearch.bFilter.Template');
 goog.require('sm.lSearch.bFilter.View');
 
@@ -40,7 +41,8 @@ goog.inherits(sm.lSearch.bFilter.Filter, cl.iControl.Control);
 
 goog.scope(function() {
     var Filter = sm.lSearch.bFilter.Filter,
-        View = sm.lSearch.bFilter.View;
+        View = sm.lSearch.bFilter.View,
+        OptionChangeEvent = sm.lSearch.bFilter.OptionChangeEvent;
 
     /**
      * Name of this element in factory
@@ -57,8 +59,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Filter.Event = {
-        CHECK_OPTION: goog.events.getUniqueId('check_on'),
-        UNCHECK_OPTION: goog.events.getUniqueId('uncheck_on'),
+        CHECK_OPTION: OptionChangeEvent.Type.CHECK_OPTION,
+        UNCHECK_OPTION: OptionChangeEvent.Type.UNCHECK_OPTION,
         CHECK: goog.events.getUniqueId('check'),
         UNCHECK: goog.events.getUniqueId('uncheck'),
         SUBMIT: goog.events.getUniqueId('submit')
@@ -419,29 +421,31 @@ goog.scope(function() {
 
     /**
      * Dispatch event if check option
-     * @param {Object} option
+     * @param {sm.bSmCheckbox.SmCheckbox} option
      * @protected
      */
     Filter.prototype.dispatchEventCheckOption = function(option) {
-        this.dispatchEvent({
+        var optionCheckEvent = new OptionChangeEvent({
             'type': Filter.Event.CHECK_OPTION,
             'data': option.getData(),
             'position': this.getView().getOptionOffset(option)
         });
+        this.dispatchEvent(optionCheckEvent);
     };
 
 
     /**
      * Dispatch event if uncheck option
-     * @param {Object} option
+     * @param {sm.bSmCheckbox.SmCheckbox} option
      * @protected
      */
     Filter.prototype.dispatchEventUncheckOption = function(option) {
-        this.dispatchEvent({
+        var optionUncheckEvent = new OptionChangeEvent({
             'type': Filter.Event.UNCHECK_OPTION,
             'data': option.getData(),
             'position': this.getView().getOptionOffset(option)
         });
+        this.dispatchEvent(optionUncheckEvent);
     };
 
 
