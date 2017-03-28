@@ -45,7 +45,6 @@ const Program: ProgramModel = sequelize.define('Program', {
             key: 'id'
         }
     },
-    category: DataType.STRING,
     links: DataType.ARRAY(DataType.STRING),
     specializations: DataType.ARRAY(DataType.STRING),
     duration: DataType.INTEGER,

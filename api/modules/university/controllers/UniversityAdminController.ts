@@ -276,8 +276,7 @@ class UniversityAdminController extends Controller {
      * @apiParam {Boolean}  militaryDepartment Military department.
      * @apiParam {Boolean}  dormitory          Dormitory.
      * @apiParam {Number}   cityId             City's id.
-     * @apiParam {String}   created_at         Created at.
-     * @apiParam {String}   updated_at         Updated at.
+     *
      *
      * @apiSuccess {Number}   id                 Id.
      * @apiSuccess {String}   name               Name.
@@ -299,7 +298,7 @@ class UniversityAdminController extends Controller {
      *     (official site, facebook communities).
      * @apiSuccess {Boolean}  militaryDepartment Military department.
      * @apiSuccess {Boolean}  dormitory          Dormitory.
-     * @apiSuccess {Number}   cityId             City's id.
+     * @apiSuccess {Number}   city_id            City's id.
      * @apiSuccess {String}   created_at         Created at.
      * @apiSuccess {String}   updated_at         Updated at.
      *

@@ -56,26 +56,27 @@ class ProgramAdminController extends Controller {
      * @apiName getProgram
      * @apiGroup Admin Program
      *
-     * @apiSuccess {Number}   id              Id.
-     * @apiSuccess {String}   name            Name.
-     * @apiSuccess {String}   universityId    University's id.
-     * @apiSuccess {String}   description     Description.
-     * @apiSuccess {String}   commentGroupId  Comment group's id.
-     * @apiSuccess {String}   category        Program's category.
-     * @apiSuccess {String[]} links           Array of links
-     *     (official site, facebook communities).
-     * @apiSuccess {String[]} specializations Array of specializations.
-     * @apiSuccess {Number}   duration        Number of studying years.
-     * @apiSuccess {Number}   employment      Percent of employment.
-     * @apiSuccess {Number}   salary          Salary after graduation.
-     * @apiSuccess {String[]} extraExam       Array of extra exams.
-     * @apiSuccess {String}   addressName     Name of address.
-     * @apiSuccess {Object}   programMajor    Major program for program
-     * @apiSuccess {String}   exchangeProgram Exchange program
-     * @apiSuccess {Number}       -.programMajor.id   Major program id
-     * @apiSuccess {String}       -.programMajor.name Major program name
-     * @apiSuccess {String}   createdAt       Created at.
-     * @apiSuccess {String}   updatedAt       Updated at.
+     * @apiSuccess {Number}   id                  Id.
+     * @apiSuccess {String}   name                Name.
+     * @apiSuccess {String}   universityId        University's id.
+     * @apiSuccess {String}   description         Description.
+     * @apiSuccess {String}   commentGroupId      Comment group's id.
+     * @apiSuccess {String}   category            Program's category.
+     * @apiSuccess {String[]} links               Array of links
+     *  (official site, facebook communities).
+     * @apiSuccess {String[]} specializations     Array of specializations.
+     * @apiSuccess {Number}   duration            Number of studying years.
+     * @apiSuccess {Number}   employment          Percent of employment.
+     * @apiSuccess {Number}   salary              Salary after graduation.
+     * @apiSuccess {String[]} extraExam           Array of extra exams.
+     * @apiSuccess {String}   addressName         Name of address.
+     * @apiSuccess {String}   exchangeProgram
+     * Array country for exchange program
+     * @apiSuccess {Object}   programMajor        Major program
+     * @apiSuccess {Number}   -.id                Major program id
+     * @apiSuccess {String}   -.name              Major program name
+     * @apiSuccess {String}   createdAt           Created at.
+     * @apiSuccess {String}   updatedAt           Updated at.
      *
      * @apiError (404) ProgramNotFound Program with given Id not found.
      * @apiSuccessExample {json} Success-Response:
