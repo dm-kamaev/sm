@@ -1,64 +1,79 @@
 .b-tooltip {
-    min-height: 48px;
+    position: relative;
+
+    box-sizing: border-box;
     min-width: 234px;
+    min-height: 48px;
+    padding-left: 8px;
+
     background-color: #fff;
     box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.15);
-    position: relative;
+
     line-height: 48px;
-    padding-left: 8px;
-    box-sizing: border-box;
 }
 
 .b-tooltip__triangle {
-    right: -18px;
-    top: 9px;
-    height: 34px;
     position: relative;
+    top: 9px;
+    right: -18px;
+
     width: 34px;
-    box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.15);
+    height: 34px;
+
     transform: rotate(45deg);
+
     background-color: #fff;
+    box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.15);
 }
 
 .b-tooltip__triangle-wrap {
-    height: 52px;
-    width: 35px;
     position: absolute;
-    left: -27px;
-    transform: scaleX(0.6);
-    overflow: hidden;
     top: -2px;
+    left: -27px;
+
+    overflow: hidden;
+
+    width: 35px;
+    height: 52px;
+
+    transform: scaleX(0.6);
 }
 
 .b-tooltip__text {
     display: inline-block;
+
     margin-right: 8px;
 }
 
 .b-tooltip__button-wrap {
-    margin-right: 8px;
-    margin-top: 8px;
-    height: 32px;
-    width: 97px;
-    line-height: 32px;
     display: inline-block;
-    overflow: hidden;
     float: right;
+    overflow: hidden;
+
+    width: 97px;
+    height: 32px;
+    margin-top: 8px;
+    margin-right: 8px;
+
+    line-height: 32px;
 }
 
 
 @keyframes disappear {
     from {
-        opacity: 1;
         visibility: visible;
+
+        opacity: 1;
     }
     99% {
-        opacity: 0.01;
         visibility: visible;
+
+        opacity: 0.01;
     }
     to {
-        opacity: 0;
         visibility: hidden;
+
+        opacity: 0;
     }
 }
 
@@ -66,6 +81,7 @@
     animation-name: disappear;
     animation-duration: 0.5s;
     animation-delay: 2s;
+
     animation-fill-mode: forwards;
 }
 

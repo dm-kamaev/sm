@@ -178,7 +178,9 @@ goog.scope(function() {
             this.tooltip_.setText();
             this.tooltip_.hideButton();
         }
-        this.tooltip_.display(sm.lSearch.bTooltip.Tooltip.Speed.SLOW);
+        this.tooltip_.display(
+            sm.lSearch.bTooltip.Tooltip.Animation.DISAPPEAR_SLOW
+        );
     };
 
 

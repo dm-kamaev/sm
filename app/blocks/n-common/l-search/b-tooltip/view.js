@@ -25,7 +25,7 @@ sm.lSearch.bTooltip.View =
          * @type {?sm.lSearch.bTooltip.View.CssClass}
          * @private
          */
-        this.lastSpeed_ = null;
+        this.lastAnimationType_ = null;
     };
 goog.inherits(sm.lSearch.bTooltip.View, cl.iControl.View);
 
@@ -50,26 +50,23 @@ goog.scope(function() {
      * Css class enum for speed of show/hide
      * @enum {string}
      */
-    View.Speed = {
-        SLOW: 'b-tooltip_disappear_slow'
+    View.Animation = {
+        DISAPPEAR_SLOW: 'b-tooltip_disappear_slow'
     };
 
 
     /**
      * show root element for specified time
-     * @param {?View.Speed} speed
+     * @param {View.Animation=} opt_animationType
      * @public
      */
-    View.prototype.display = function(speed) {
+    View.prototype.display = function(opt_animationType) {
         this.removeDefaultState_();
-        goog.dom.classlist.remove(this.getElement(), this.lastSpeed_);
-        goog.style.getPageOffset(this.getElement()); //magic for restart animate
+        this.clearAnimation_();
 
-        if (speed) {
-            goog.dom.classlist.add(this.getElement(), speed);
+        if (opt_animationType) {
+            this.playAnimation_(opt_animationType);
         }
-
-        this.lastSpeed_ = speed;
     };
 
 
@@ -78,7 +75,7 @@ goog.scope(function() {
      * @public
      */
     View.prototype.showButton = function() {
-        goog.dom.classlist.remove(this.dom.button_wrap, View.CssClass.HIDDEN);
+        goog.dom.classlist.remove(this.dom.buttonWrap, View.CssClass.HIDDEN);
     };
 
 
@@ -87,7 +84,7 @@ goog.scope(function() {
      * @public
      */
     View.prototype.hideButton = function() {
-        goog.dom.classlist.add(this.dom.button_wrap, View.CssClass.HIDDEN);
+        goog.dom.classlist.add(this.dom.buttonWrap, View.CssClass.HIDDEN);
     };
 
 
@@ -112,19 +109,46 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.dom.button = goog.dom.getElementByClass(View.CssClass.BUTTON);
-        this.dom.text = goog.dom.getElementByClass(View.CssClass.TEXT);
-        this.dom.button_wrap =
-            goog.dom.getElementByClass(View.CssClass.BUTTON_WRAP);
+        this.dom.button = this.getElementByClass(View.CssClass.BUTTON);
+        this.dom.text = this.getElementByClass(View.CssClass.TEXT);
+        this.dom.buttonWrap = this.getElementByClass(View.CssClass.BUTTON_WRAP);
     };
 
 
     /**
-     * Remove default class for hide this element
+     * Remove default class, that hides this element
      * @private
      */
     View.prototype.removeDefaultState_ = function() {
         goog.dom.classlist.remove(this.getElement(), View.CssClass.HIDDEN);
     };
+
+
+    /**
+     * clear animate class from this element
+     * @private
+     */
+    View.prototype.clearAnimation_ = function() {
+        goog.dom.classlist.remove(this.getElement(), this.lastAnimationType_);
+
+        /** all manipulation with dom, that written side by side is compressed
+         into one command. it's necessary to call repaint/reflow to separate
+         this commands. */
+        goog.style.getPageOffset(this.getElement());
+
+        this.lastAnimationType_ = null;
+    };
+
+
+    /**
+     * add animate class
+     * @param {View.Animation} animateType
+     * @private
+     */
+    View.prototype.playAnimation_ = function(animateType) {
+        goog.dom.classlist.add(this.getElement(), animateType);
+        this.lastAnimationType_ = animateType;
+    };
+
 
 }); // goog.scope
