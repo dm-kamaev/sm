@@ -153,8 +153,12 @@
 
     /** Compact theme start **/
     .b-sm-banner_neptune-compact-theme {
-        padding-right: 0;
-        padding-left: 0;
+        padding-right: 25px;
+        padding-left: 25px;
+
+        .b-sm-banner__button-link {
+            width: 100%;
+        }
     }
     /** Compact theme end **/
 }
