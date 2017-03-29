@@ -4,15 +4,15 @@
  */
 const routes = {
     UNIVERSITY: {
-        route: '/universities',
+        route: 'universities',
         hostName: 'vuz'
     },
     SCHOOL: {
-        route: '/schools',
+        route: 'schools',
         hostName: 'schools'
     },
     COURSE: {
-        route: '/courses',
+        route: 'courses',
         hostName: 'courses'
     }
 };

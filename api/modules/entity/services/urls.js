@@ -270,8 +270,9 @@ service.addSubdomain = function(uri, baseUrl) {
  */
 service.getHost = function(baseUrl) {
     let result;
+    const urlPath = baseUrl.replace('/', '');
 
-    switch (baseUrl) {
+    switch (urlPath) {
     case routes.COURSE.route:
         result = routes.COURSE.hostName;
         break;
