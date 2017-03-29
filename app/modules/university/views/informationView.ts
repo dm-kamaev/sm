@@ -400,7 +400,7 @@ class InformationView extends LayoutView {
                 countItemsPerPage: 4,
                 items: [{
                     id: 1,
-                    type: 'university',
+                    type: entityType.UNIVERSITY,
                     name: {
                         light: 'Менеджер СПБГУ'
                     },
@@ -408,7 +408,6 @@ class InformationView extends LayoutView {
                     additionalLink: {
                         content: 'Специальность',
                         url: 'http://yandex.ru',
-                        theme: 'neptune',
                         size: 'xl'
                     },
                     buttonLink: {
@@ -420,7 +419,7 @@ class InformationView extends LayoutView {
                     }
                 }, {
                     id: 2,
-                    type: 'university',
+                    type: entityType.UNIVERSITY,
                     name: {
                         light: 'Социология НИУ-ВШЭ'
                     },
@@ -428,7 +427,6 @@ class InformationView extends LayoutView {
                     additionalLink: {
                         content: 'Специальность',
                         url: 'http://yandex.ru',
-                        theme: 'neptune',
                         size: 'xl'
                     },
                     buttonLink: {
@@ -440,7 +438,7 @@ class InformationView extends LayoutView {
                     }
                 }, {
                     id: 3,
-                    type: 'university',
+                    type: entityType.UNIVERSITY,
                     name: {
                         light: 'Менеджер МГУ'
                     },
@@ -448,7 +446,6 @@ class InformationView extends LayoutView {
                     additionalLink: {
                         content: 'Специальность',
                         url: 'http://yandex.ru',
-                        theme: 'neptune',
                         size: 'xl'
                     },
                     buttonLink: {
@@ -460,7 +457,7 @@ class InformationView extends LayoutView {
                     }
                 }, {
                     id: 4,
-                    type: 'university',
+                    type: entityType.UNIVERSITY,
                     name: {
                         light: 'Логистика НИУ-ВШЭ'
                     },
@@ -468,7 +465,6 @@ class InformationView extends LayoutView {
                     additionalLink: {
                         content: 'Специальность',
                         url: 'http://yandex.ru',
-                        theme: 'neptune',
                         size: 'xl'
                     },
                     buttonLink: {
@@ -481,7 +477,8 @@ class InformationView extends LayoutView {
                 }],
                 itemType: 'smItemCompact',
                 itemConfig: {
-                    theme: 'neptune'
+                    theme: 'neptune',
+                    isNameNotLink: true
                 }
             }
         };
@@ -531,10 +528,11 @@ class InformationView extends LayoutView {
                 }],
                 itemType: 'smItemCompact',
                 itemConfig: {
-                theme: 'neptune-imaged',
+                    theme: 'neptune-imaged',
                     enableCover: true,
                     isDescriptionLink: true,
-                    nameLinkSize: 'xl'
+                    nameLinkSize: 'xl',
+                    nameLinkTheme: 'default'
                 }
             }
         };
