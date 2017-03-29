@@ -249,7 +249,6 @@ class InformationView extends LayoutView {
                 theme: neptuneTheme
             }
         };
-        console.log(item);
 
         const buttonLink = {
             data: {
