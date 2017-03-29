@@ -52,4 +52,9 @@
     .b-sm-subscribe-board__header_size_xs {
         display: block;
     }
+
+    .b-sm-subscribe-board__input {
+        width: calc(100% + 10px);
+        left: -25px;
+    }
 }
