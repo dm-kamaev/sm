@@ -5,7 +5,7 @@ import {
     ProgramPageMetaInformationInstance,
     ProgramMetaAdmin,
 } from
-'../types/programPageMetaInformation'
+'../types/programPageMetaInformation';
 
 import {
     ProgramAttribute,
@@ -13,7 +13,7 @@ import {
 } from '../types/program';
 
 
-import {service as pageService} from '../../entity/services/page'
+import {service as pageService} from '../../entity/services/page';
 const entityTypes = require('../../entity/enums/entityType.js');
 
 import {
@@ -21,7 +21,7 @@ import {
 } from '../models/ProgramPageMetaInformation';
 import {Model as ProgramModel} from '../models/Program';
 
-import {ProgramNotFound} from './exceptions/ProgramNotFound'
+import {ProgramNotFound} from './exceptions/ProgramNotFound';
 
 
 const EXCLUDE_ATTRIBUTES = ['created_at', 'updated_at', 'program_id'];
@@ -38,7 +38,7 @@ class ProgramMeta {
             }
         });
         if (!program) {
-            throw new ProgramNotFound(programId)
+            throw new ProgramNotFound(programId);
         }
         return await ProgramPageMetaInformationModel.findOne({
             attributes: {

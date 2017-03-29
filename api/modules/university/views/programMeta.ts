@@ -2,7 +2,7 @@ import {
     ProgramPageMetaInformationInstance,
     ProgramMetaAdmin,
 } from
-'../types/programPageMetaInformation'
+'../types/programPageMetaInformation';
 
 
 class ProgramMetaView {

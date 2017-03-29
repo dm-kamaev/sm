@@ -4,15 +4,14 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {programMetaService} from '../services/programMeta';
 import {programMetaView} from '../views/programMeta';
-import {service as pageService} from '../../entity/services/page'
-import {PageIntstance, PageAttribute} from '../../entity/types/page'
+import {service as pageService} from '../../entity/services/page';
+import {PageIntstance, PageAttribute} from '../../entity/types/page';
 import {
     ProgramPageMetaInformationInstance,
     ProgramMetaAdmin,
-} from
-'../types/programPageMetaInformation'
+} from '../types/programPageMetaInformation';
 const entityTypes = require('../../entity/enums/entityType.js');
-import {ProgramNotFound} from './errors/ProgramNotFound'
+import {ProgramNotFound} from './errors/ProgramNotFound';
 
 class ProgramMetaAdminController extends Controller {
     constructor() {
@@ -24,7 +23,7 @@ class ProgramMetaAdminController extends Controller {
     }
 
     /**
-     * @api {get} /api/admin/program/:id/pagemeta/
+     * @api {get} /api/admin/program/:id/pagemeta
      *     Get program meta by program id
      * @apiVersion 1.0.0
      * @apiName getProgramMeta
@@ -135,7 +134,10 @@ class ProgramMetaAdminController extends Controller {
             seoDescription: body.seoDescription,
             openGraphDescription: body.openGraphDescription,
         };
-        return await programMetaService.updateOrCreate(programId, programMetaData);
+        return await programMetaService.updateOrCreate(
+            programId,
+            programMetaData
+        );
     }
 
 
