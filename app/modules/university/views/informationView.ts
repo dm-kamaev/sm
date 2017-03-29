@@ -1,3 +1,6 @@
+/* tslint:disable:max-file-line-count */
+// Made by anedashkovsky for store some params in view
+// TODO: enable this rule
 const FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
 
 const pageName = require('../../common/enums/pageName');
@@ -11,23 +14,61 @@ import {lUniversity} from '../../../blocks/n-university/l-university/params';
 import {BackendUser} from '../../user/types/user';
 import {UniversityFooter} from './UniversityFooter';
 
+import {BackendProgram} from '../types/program';
+import {BackendProgramComment} from '../../comment/types/programComment';
+import {BackendUniversity} from '../types/university';
+import {BackendEgeExam} from '../types/egeExam';
+import {BackendEntranceStatistic} from '../types/entranceStatistic';
+
+import {programCommentView} from '../../comment/views/programCommentView';
+
+import {
+    bDescriptionList
+} from '../../../blocks/n-university/l-university/b-description-list/params';
+import {
+    bSummaryBoard
+} from '../../../blocks/n-university/b-summary-board/params';
+import {bSmBanner} from '../../../blocks/n-common/b-sm-banner/params';
+import {
+    bEntityRelation
+} from '../../../blocks/n-university/b-entity-relation/params';
+import {bSmSketch} from '../../../blocks/n-common/b-sm-sketch/params';
+import {
+    bCommentList
+} from '../../../blocks/n-university/l-university/b-comment-list/params';
 
 
 type Params = {
-    data: Data,
-    config: AppConfig,
+    data: Data;
+    config: AppConfig;
     requestData: {
-        user: BackendUser,
-        csrf: string,
-        query: any
+        user: BackendUser;
+        csrf: string;
+        query: any;
     }
 };
 
 type Data = {
-    favorites: Array<{string: any}>,
-    entityData: any,
-    subscribeBoard: string,
-    navigationPanel: string
+    program: BackendProgram,
+    university: BackendUniversity,
+    entranceStatistic: BackendEntranceStatistic,
+    comments: Array<BackendProgramComment>,
+    egeExams: Array<BackendEgeExam>,
+    userComment: BackendProgramComment,
+    users: Array<BackendUser>,
+    favorites: Array<{string: any}>
+};
+
+type Grade = {
+    label: number;
+    value: number;
+    isSelected?: boolean;
+};
+
+type UserType = {
+    label: string;
+    value: string;
+    isSelected?: boolean;
 };
 
 class InformationView extends LayoutView {
@@ -64,15 +105,46 @@ class InformationView extends LayoutView {
         this.setEntityData_(params.data);
         this.setSubscribeBoard_(params.data);
         this.setNavigationPanel_(params.data);
-        this.setModals_();
+        this.setComments_(params.data);
+        this.setSimilarPrograms_();
+        this.setUsefulCourses_();
+        this.setModalComment_(params.data.program.id, params.data.userComment);
     }
 
-
     private setEntityData_(data: Data) {
-        this.params.data.entityData = data.entityData;
-        this.params.data.entityData.cutDescription = this.getCutDescription_(
-            data.entityData.description
-        );
+        this.params.data.entityData = {
+            id: data.program.id,
+            name: data.university.name,
+            subunitName: data.program.name,
+            subunitType: 'Специальность',
+            description: data.program.description,
+            sketch: this.getSketchParams_(data),
+            cutDescription: this.getCutDescription_(data.program.description),
+            descriptionList: this.getDescriptionListParams_(data),
+            summaryBoard: this.getSummaryBoardParams_(data),
+            banner: this.getBannerParams_(data),
+            entityRelation: this.getEntityRelationParams_(),
+        };
+    }
+
+    private getSketchParams_(data: Data): bSmSketch.Params.Data {
+        const universityName: string = data.university.name;
+        return {
+            description: universityName,
+            image: {
+                url: data.university.imageUrl,
+                altText: universityName
+            },
+            button: {
+                data: {
+                    content: 'Оставить отзыв'
+                },
+                config: {
+                    theme: 'neptune',
+                    borderRoundSize: 'xl'
+                }
+            }
+        };
     }
 
     private getCutDescription_(text: string) {
@@ -102,186 +174,427 @@ class InformationView extends LayoutView {
         return result;
     }
 
+    private getDescriptionListParams_(
+            data: Data): bDescriptionList.Params.Data {
+        const result: bDescriptionList.Params.Data = {
+            items: []
+        };
+
+        if ((data.egeExams && data.egeExams.length > 0) ||
+                (data.program.extraExam && data.program.extraExam.length > 0)) {
+            const egeTests =
+                data.egeExams.map(exam => `${exam.subjectName} (ЕГЭ)`);
+            const entranceTests = egeTests.concat(data.program.extraExam);
+
+            result.items.push({
+                data: {
+                    header: 'Вступительные испытания',
+                    subitems: entranceTests
+                },
+                config: {
+                    inline: true
+                }
+            });
+        }
+
+
+        if (data.program.links && data.program.links.length > 0) {
+            const links = data.program.links.map(link => ({
+                url: link,
+                content: link
+            }));
+
+            result.items.push({
+                data: {
+                    header: 'Полезные ссылки',
+                    subitems: links
+                },
+                config: {
+                    inline: false
+                }
+            });
+        }
+
+        if (data.program.specializations &&
+                data.program.specializations.length > 0) {
+            result.items.push({
+                data: {
+                    header: 'Специализации',
+                    subitems: data.program.specializations
+                },
+                config: {
+                    inline: false
+                }
+            });
+        }
+
+        return result;
+    }
+
+    private getSummaryBoardParams_(data: Data): bSummaryBoard.Params.Data {
+        const neptuneTheme = 'neptune';
+
+        let itemHeader,
+            itemDescription;
+        const cost = data.entranceStatistic.cost;
+        if (cost) {
+            itemHeader = 'Стоимость / год';
+            itemDescription = `${cost} ₽`;
+        }
+
+
+        const item = {
+            data: {
+                header: itemHeader,
+                description: itemDescription
+            },
+            config: {
+                theme: neptuneTheme
+            }
+        };
+
+        const buttonLink = {
+            data: {
+                url: '',
+                content: 'Проконсультироваться'
+            },
+            config: {
+                theme: neptuneTheme,
+                size: 'xxl',
+                borderRoundSize: 'm'
+            }
+        };
+
+        const listItems = [],
+            formatUtils = new FormatUtils(),
+            egePassScore = data.entranceStatistic.egePassScore;
+        let phrase;
+        if (egePassScore) {
+            const egeExamsAmount = data.egeExams.length;
+            let description;
+            if (egeExamsAmount) {
+                phrase = formatUtils.declensionPrint(
+                    egeExamsAmount,
+                    {
+                        'nom': 'экзамен',
+                        'gen': 'экзамена',
+                        'plu': 'экзаменов'
+                    }
+                );
+                description = `за ${egeExamsAmount} ${phrase}`;
+            } else {
+                description = 'По сумме всех экзаменов';
+            }
+
+            listItems.push({
+                data: {
+                    header: `${data.entranceStatistic.egePassScore} баллов`,
+                    description: description
+                },
+                config: {
+                    theme: 'neptune'
+                }
+            });
+        }
+
+        const budgetPlaces = data.entranceStatistic.budgetPlaces;
+        if (budgetPlaces >= 0 && budgetPlaces !== null) {
+            phrase = formatUtils.declensionPrint(
+                budgetPlaces,
+                {
+                    'nom': 'бюджетное место',
+                    'gen': 'бюджетных места',
+                    'plu': 'бюджетных мест'
+                }
+            );
+            listItems.push({
+                data: {
+                    header: budgetPlaces,
+                    description: phrase
+                }
+            });
+        }
+
+        const commercialPlaces = data.entranceStatistic.commercialPlaces;
+
+        if (commercialPlaces >= 0 && commercialPlaces !== null) {
+            phrase = formatUtils.declensionPrint(
+                commercialPlaces,
+                {
+                    'nom': 'платное место',
+                    'gen': 'платных места',
+                    'plu': 'платных мест'
+                }
+            );
+            listItems.push({
+                data: {
+                    header: commercialPlaces,
+                    description: phrase
+                }
+            });
+        }
+
+        if (budgetPlaces) {
+            listItems.push({
+                data: {
+                    header: data.entranceStatistic.competition,
+                    description: 'человек на место'
+                },
+                config: {
+                    iconType: 'people'
+                }
+            });
+        }
+
+        const list = [{
+            header: 'Главное',
+            items: listItems
+        }];
+
+        return {item, list, buttonLink};
+    }
+
+    private getBannerParams_(data: Data): bSmBanner.Params {
+        return {
+            data: {
+                header: 'Сомневаешься?',
+                    description: 'Поможем с выбором и поступлением',
+                    buttonLink: {
+                    data: {
+                        url: '',
+                        content: 'Подробнее'
+                    },
+                    config: {
+                        theme: 'neptune-reverse',
+                        size: 'xxl'
+                    }
+                }
+            },
+            config: {
+                theme: 'neptune-compact'
+            }
+        };
+    }
+
+    private getEntityRelationParams_(): bEntityRelation.Params {
+        return {
+            data: {
+                items: [{
+                    data: {
+                        content: 'ВУЗ'
+                    }
+                }, {
+                    data: {
+                        content: 'Москва'
+                    }
+                }]
+            }
+        };
+    }
+
+    private setComments_(data: Data) {
+        this.params.data.comments = programCommentView.renderCommentsList({
+            comments: data.comments,
+            users: data.users
+        });
+    }
+
+    private setSimilarPrograms_() {
+        this.params.data.similarPrograms = {
+            header: 'Похожие программы',
+            data: {
+                countItemsPerPage: 4,
+                items: [{
+                    id: 1,
+                    type: entityType.UNIVERSITY,
+                    name: {
+                        light: 'Менеджер СПБГУ'
+                    },
+                    description: ' ',
+                    additionalLink: {
+                        content: 'Специальность',
+                        url: 'http://yandex.ru',
+                        size: 'xl'
+                    },
+                    buttonLink: {
+                        data: {
+                            icon: 'arrow-circle',
+                            iconType: 'svg',
+                            url: 'http://yandex.ru'
+                        }
+                    }
+                }, {
+                    id: 2,
+                    type: entityType.UNIVERSITY,
+                    name: {
+                        light: 'Социология НИУ-ВШЭ'
+                    },
+                    description: ' ',
+                    additionalLink: {
+                        content: 'Специальность',
+                        url: 'http://yandex.ru',
+                        size: 'xl'
+                    },
+                    buttonLink: {
+                        data: {
+                            icon: 'arrow-circle',
+                            iconType: 'svg',
+                            url: 'http://yandex.ru'
+                        }
+                    }
+                }, {
+                    id: 3,
+                    type: entityType.UNIVERSITY,
+                    name: {
+                        light: 'Менеджер МГУ'
+                    },
+                    description: ' ',
+                    additionalLink: {
+                        content: 'Специальность',
+                        url: 'http://yandex.ru',
+                        size: 'xl'
+                    },
+                    buttonLink: {
+                        data: {
+                            icon: 'arrow-circle',
+                            iconType: 'svg',
+                            url: 'http://yandex.ru'
+                        }
+                    }
+                }, {
+                    id: 4,
+                    type: entityType.UNIVERSITY,
+                    name: {
+                        light: 'Логистика НИУ-ВШЭ'
+                    },
+                    description: ' ',
+                    additionalLink: {
+                        content: 'Специальность',
+                        url: 'http://yandex.ru',
+                        size: 'xl'
+                    },
+                    buttonLink: {
+                        data: {
+                            icon: 'arrow-circle',
+                            iconType: 'svg',
+                            url: 'http://yandex.ru'
+                        }
+                    }
+                }],
+                itemType: 'smItemCompact',
+                itemConfig: {
+                    theme: 'neptune',
+                    isNameNotLink: true
+                }
+            }
+        };
+    }
+
+    private setUsefulCourses_() {
+        this.params.data.usefulCourses = {
+            header: 'Полезные курсы',
+            data: {
+                countItemsPerPage: 3,
+                items: [{
+                    id: 1,
+                    type: 'course',
+                    name: {
+                        light: 'Английский язык'
+                    },
+                    description: `Подготовка к ЕГЭ по английскому
+                                    языку English First`,
+                    imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
+                    'facebook/000/839/199/8a9.jpg',
+                    url: 'http://yandex.ru',
+                    nameLinkUrl: 'http://google.com'
+                }, {
+                    id: 2,
+                    type: 'course',
+                    name: {
+                        light: 'Профориентация'
+                    },
+                    description: 'Система Выбор Smart Course',
+                    imageUrl: 'http://lamcdn.net/lookatme.ru/' +
+                    'post_image-image/vePw1jo6HLFVfp7JIU5_' +
+                    'Qg-article.jpg',
+                    url: 'http://yandex.ru',
+                    nameLinkUrl: 'http://google.com'
+                }, {
+                    id: 3,
+                    type: 'course',
+                    name: {
+                        light: 'Профориентация'
+                    },
+                    description: `Пропуск в профессию. Индивидуальная
+                                    траектория Proekt Pro`,
+                    imageUrl: 'http://cs8.pikabu.ru/post_img/2016/' +
+                    '01/14/12/1452803883198482683.png',
+                    url: 'http://yandex.ru',
+                    nameLinkUrl: 'http://google.com'
+                }],
+                itemType: 'smItemCompact',
+                itemConfig: {
+                    theme: 'neptune-imaged',
+                    enableCover: true,
+                    isDescriptionLink: true,
+                    nameLinkSize: 'xl',
+                    nameLinkTheme: 'default'
+                }
+            }
+        };
+    }
 
     private setSubscribeBoard_(data: Data) {
-        this.params.data.subscribeBoard = data.subscribeBoard;
+        this.params.data.subscribeBoard = {
+            data: {
+                entityId: data.university.id,
+                entityType: entityType.UNIVERSITY
+            }
+        };
     }
 
     private setNavigationPanel_(data: Data) {
-        this.params.data.navigationPanel = data.navigationPanel;
-    }
-
-    private setModals_() {
-        this.params.data.modalComment = {
-            header: {
-                text: 'Оставьте ваш отзыв'
-            },
-            content: {
-                userFields: {
-                    userType: {
-                        data: {
-                            name: 'userType',
-                            defaultOpenerText: 'Кто вы?',
-                            content: {
-                                items: [{
-                                    label: 'Выпускник',
-                                    value: 'Graduate'
-                                },
-                                {
-                                    label: 'Студент',
-                                    value: 'Student'
-                                }]
-                            },
-                            contentConfig: {
-                                size: 'm'
-                            }
-                        },
-                        config: {
-                            iconName: 'blue-arrow',
-                            iconType: 'icon-svg',
-                            theme: 'light'
-                        },
-                        controlName: 'dropdown-select'
-                    },
-                    yearGraduate: {
-                        data: {
-                            name: 'yearGraduate',
-                            placeholder: 'Укажите год выпуска'
-                        },
-                        config: {
-                            theme: 'thin',
-                            validations: ['notEmpty']
-                        },
-                        controlName: 'input'
-                    },
-                    grade: {
-                        data: {
-                            name: 'grade',
-                            defaultOpenerText: 'Укажите курс',
-                            content: {
-                                items: [{
-                                    label: 1,
-                                    value: 1
-                                },
-                                {
-                                    label: 2,
-                                    value: 2
-                                },
-                                {
-                                    label: 3,
-                                    value: 3
-                                },
-                                {
-                                    label: 4,
-                                    value: 4
-                                },
-                                {
-                                    label: 5,
-                                    value: 5
-                                },
-                                {
-                                    label: 6,
-                                    value: 6
-                                }]
-                            },
-                            contentConfig: {
-                                size: 'm'
-                            }
-                        },
-                        config: {
-                            iconName: 'blue-arrow',
-                            iconType: 'icon-svg',
-                            theme: 'light'
-                        },
-                        controlName: 'dropdown-select'
-                    }
-                },
-                fields: [{
-                    data: {
-                        title: 'Что понравилось',
-                        name: 'pros',
-                        placeholder: 'Ваш комментарий',
-                        maxLength: 500
-                    },
-                    config: {
-                        showCounter: true,
-                        autoHeight: true,
-                        theme: 'thin',
-                        minHeight: 'large'
-                    },
-                    controlName: 'textarea'
-                }, {
-                    data: {
-                        title: 'Не понравилось',
-                        name: 'cons',
-                        placeholder: 'Ваш комментарий',
-                        maxLength: 500
-                    },
-                    config: {
-                        showCounter: true,
-                        autoHeight: true,
-                        theme: 'thin',
-                        minHeight: 'large'
-                    },
-                    controlName: 'textarea'
-                }, {
-                    data: {
-                        title: 'Какой совет можешь дать поступающим?',
-                        name: 'advice',
-                        placeholder: 'Ваш комментарий',
-                        maxLength: 500
-                    },
-                    config: {
-                        showCounter: true,
-                        autoHeight: true,
-                        theme: 'thin',
-                        minHeight: 'large'
-                    },
-                    controlName: 'textarea'
-                }],
-                evaluations: {
-                    title: 'Ваши оценки',
-                    items: [{
-                        name: 'Образование',
-                        description: `Достигают ли ученики высоких
-                            результатов на государственных экзаменах,
-                            олимпиадах и вступительных испытаниях в ВУЗах?`
-                    }, {
-                        name: 'Преподаватели',
-                        description: `Являются ли учителя квалифицированными
-                            специалистами, которые любят свою работу, хорошо
-                            общаются с детьми и помогают им получать
-                            отличные знания?`
-                    }, {
-                        name: 'Атмосфера',
-                        description: `Созданы ли в школе комфортная для
-                            получения знаний атмосфера и доверительные
-                            отношения между учениками, учителями,
-                            родителями и администрацией?`
-                    }, {
-                        name: 'Инфраструктура',
-                        description: `Хорошо ли оборудована школа, есть ли
-                            в ней всё для комфортного обучения и
-                            всестороннего развития детей?`
-                    }]
-                },
-            },
-            contentName: 'smInteractionFormComment',
-            button: {
+        this.params.data.navigationPanel = {
+            items: [{
                 data: {
-                    content: 'Оставить отзыв'
+                    url: 'http://yandex.ru',
+                    content: 'ВУЗы'
                 },
                 config: {
-                    theme: 'neptune-reverse',
-                    borderRoundSize: 'xl',
+                    theme: 'sky',
                     size: 'xl'
                 }
-            },
-            closer: {
-                iconName: 'blue-close',
-                iconType: 'icon-svg'
-            }
+            }, {
+                data: {
+                    url: 'http://yandex.ru',
+                    content: 'НИУ-ВШЭ'
+                },
+                config: {
+                    theme: 'sky',
+                    size: 'xl'
+                }
+            }, {
+                data: {
+                    url: 'http://yandex.ru',
+                    content: 'Менеджмент'
+                },
+                config: {
+                    theme: 'sky',
+                    size: 'xl',
+                    isSelected: true
+                }
+            }]
         };
+    }
+
+    private setModalComment_(
+        programId: number,
+        userComment: BackendProgramComment
+    ) {
+        this.params.data.modalComment = programCommentView.renderModal({
+            programId: programId,
+            comment: userComment
+        });
     }
 }
 

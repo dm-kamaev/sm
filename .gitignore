@@ -54,14 +54,15 @@ api/components/interface.js
 api/modules/comment/controllers/errors/**/*.js
 api/modules/comment/controllers/AdminProgramCommentController.js
 api/modules/comment/controllers/ProgramCommentController.js
-api/modules/comment/migrations/20170227134914-create-program-comments.js
+api/modules/comment/lib/**/*.js
+api/modules/comment/migrations/*.js
 api/modules/comment/models/commentGroup.js
 api/modules/comment/models/ProgramComment.js
 api/modules/comment/models/Rating.js
 api/modules/comment/services/exceptions/**/*.js
 api/modules/comment/services/commentGroup.js
-api/modules/comment/services/rating.js
 api/modules/comment/services/programComment.js
+api/modules/comment/services/rating.js
 api/modules/comment/types/**/*.js
 api/modules/comment/views/programCommentView.js
 
@@ -134,6 +135,7 @@ api/modules/school/models/additionalEducationSphere.js
 api/modules/school/models/school.js
 api/modules/school/models/schoolSpecializedClass.js
 api/modules/school/models/specializedClassType.js
+api/school/services/specializedClasses.js
 
 api/modules/school/services/exceptions/*.js
 api/modules/school/services/additionalEducation.js
@@ -192,6 +194,8 @@ api/modules/user/migrations/20170227193010-user-data-class-type-rename.js
 api/modules/user/services/userData.js
 api/modules/user/views/user.js
 
+api/modules/entity/enums/entityRoutes.js
+
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
 app/middleware/checkApiToken.js
@@ -211,9 +215,12 @@ app/modules/school/views/olympiadResultView.js
 
 app/modules/university/index.js
 
+app/modules/university/types/**/*.js
+
 app/modules/university/controllers/errors/*.js
 app/modules/university/controllers/index.js
 app/modules/university/controllers/SubscriptionController.js
+app/modules/university/controllers/UniversityController.js
 app/modules/university/controllers/programController.js
 
 app/modules/university/services/exceptions/*.js
@@ -221,12 +228,14 @@ app/modules/university/services/*.js
 app/modules/university/controllers/ProgramCommentController.js
 app/modules/university/types/programComment.js
 
+app/modules/comment/**/*.js
 
 app/modules/university/views/*.js
 
 app/modules/user/**/*.js
 
 app/modules/common/services/*.js
+app/modules/comment/**/*.js
 
 console/modules/geoTools/*.js
 console/modules/modelArchiver/Archiver.js

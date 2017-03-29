@@ -27,25 +27,25 @@ import {
 } from './exceptions/UserAlreadyCommentedProgram';
 
 class ProgramCommentService extends Service {
-    private baseUrl_: string;
-
     constructor(programId: number) {
         super();
 
-        this.baseUrl_ =
+        this.baseUrl =
             `${apiAddress}/universities/api/program/${programId}/comment`;
     }
 
     public getUserComment(
-            user: BackendUser,
+            user: BackendUser | null,
             comments: Array<BackendProgramComment>
     ): BackendProgramComment {
-        return comments.find(comment => comment.userId == user.id);
+        return user ?
+            comments.find(comment => comment.userId == user.id) || {} :
+            {};
     }
 
     public async getComments(): Promise<Array<BackendProgramComment>> {
         const params = {
-            url: this.baseUrl_,
+            url: this.baseUrl,
             method: 'get',
             headers: {
                 [headers.token.name]: headers.token.value
@@ -73,7 +73,7 @@ class ProgramCommentService extends Service {
         }
 
         const params = {
-            url: this.baseUrl_,
+            url: this.baseUrl,
             method: 'post',
             data: this.makeBackendCommentData(data, user),
             headers: {
@@ -93,7 +93,7 @@ class ProgramCommentService extends Service {
         }
 
         const params = {
-            url: `${this.baseUrl_}/${commentId}`,
+            url: `${this.baseUrl}/${commentId}`,
             method: 'put',
             data: this.makeBackendCommentData(data, user),
             headers: {
@@ -130,15 +130,23 @@ class ProgramCommentService extends Service {
     private makeBackendCommentData(
             data: ProgramCommentData,
             user: BackendUser): BackendProgramComment {
-        const userId = user.id;
-        return Object.assign({}, data, {userId});
+        return {
+            userType: data.userType,
+            yearGraduate: data.yearGraduate || null,
+            grade: data.grade || null,
+            pros: data.pros,
+            cons: data.cons,
+            advice: data.advice,
+            score: data.score,
+            userId: user.id
+        };
     }
 
     private validateData(data: ProgramCommentData): boolean {
-        const hasText = !!(data.pros || data.cons || data.advice),
-            hasScore = !!data.score;
+        const hasText = Boolean(data.pros || data.cons || data.advice),
+            hasScore = Boolean(data.score) && Boolean(data.score.length);
 
-        return hasScore && hasText;
+        return hasScore || hasText;
     }
 }
 

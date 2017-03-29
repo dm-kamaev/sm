@@ -1,7 +1,8 @@
 'use strict';
 
 import * as Sequelize from 'sequelize/v3';
-const PageModel = require('../models/page').Model;
+import {PageIntstance, PageAttribute} from '../types/page';
+import {Model as PageModel} from '../models/page';
 
 class PageService {
     public readonly name: string = 'page';
@@ -38,7 +39,7 @@ class PageService {
         entityId: number,
         entityType: string,
         alias: string
-    }) {
+    }): Promise<PageIntstance> {
         const entityId: number = data.entityId,
         entityType: string = data.entityType,
         alias: string = data.alias;
@@ -90,7 +91,7 @@ class PageService {
         });
     }
 
-    public async getByAlias(alias, entityType) {
+    public async getByAlias(alias, entityType): Promise<PageIntstance> {
         return PageModel.findOne({
             attributes: ['entityId', 'alias'],
             where: {

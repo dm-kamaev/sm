@@ -1,34 +1,35 @@
 export namespace bSmLink {
     /*
-     * sm.bSmLink.Params
+     * sm.bSmLink.Template.Params
      */
     export namespace Params {
         /*
-         * sm.bSmLink.Params.Data
+         * sm.bSmLink.Template.Params.Data
          */
         export interface Data {
-            id?: number,
-            url?: (string|undefined),
-            content?: (string|undefined)
+            id?: number;
+            url?: (string|undefined);
+            content?: (string|undefined);
         }
 
         /*
-         * sm.bSmLink.Params.Config
+         * sm.bSmLink.Template.Params.Config
          */
         export interface Config {
-            target?: (string|undefined),
-            disableHover?: boolean,
-            size?: string,
-            theme?: string,
-            isSelected?: boolean
+            target?: (string|undefined);
+            disableHover?: boolean;
+            size?: string;
+            theme?: string;
+            isSelected?: boolean;
         }
     }
 
+
     /*
-     * sm.bSmLink.Params
+     * sm.bSmLink.Template.Params
      */
     export interface Params {
-        data: Params.Data,
-        config?: Params.Config
+        data: Params.Data;
+        config?: Params.Config;
     }
 }

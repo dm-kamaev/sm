@@ -18,9 +18,11 @@ const pageModel = require('../../entity/models/page').Model;
 
 import {service as universityService} from '../services/university';
 import {service as pageServices} from '../../entity/services/page';
-import {UniversityNameIsEmpty} from './exceptions/UniversityNameIsEmpty';
-import {UniversityAliasDuplicate} from './exceptions/UniversityAliasDuplicate';
-import {UniversityAliasNotFound} from './exceptions/UniversityAliasNotFound';
+import {
+    UniversityNameIsEmptyException,
+    UniversityAliasDuplicateException,
+    UniversityAliasNotFoundException,
+} from './exceptions/index';
 
 type pageData = {
     entityId: number;
@@ -48,7 +50,7 @@ class UniversityPageService {
         const self: this = this;
         const universityName: string = university.name;
         if (!universityName) {
-            throw new UniversityNameIsEmpty(universityName);
+            throw new UniversityNameIsEmptyException(universityName);
         }
         const alias: string = services.urls.stringToURL(universityName.trim());
         const universityId: number = university.id;
@@ -60,7 +62,7 @@ class UniversityPageService {
         };
         const duplicate = await pageServices.searchDuplicateAlias(data);
         if (duplicate) {
-            throw new UniversityAliasDuplicate(alias, duplicate);
+            throw new UniversityAliasDuplicateException(alias, duplicate);
         }
         return sequelize.transaction(function(t: Sequelize.Transaction) {
             return pageServices.create({
@@ -90,7 +92,7 @@ class UniversityPageService {
         const self: this = this;
         const universityName: string = university.name;
         if (!universityName) {
-            throw new UniversityNameIsEmpty(universityName);
+            throw new UniversityNameIsEmptyException(universityName);
         }
         const alias: string = services.urls.stringToURL(universityName.trim());
         const universityId: number = university.id;
@@ -107,7 +109,7 @@ class UniversityPageService {
         };
         const duplicate = await pageServices.searchDuplicateAlias(data);
         if (duplicate) {
-            throw new UniversityAliasDuplicate(alias, duplicate);
+            throw new UniversityAliasDuplicateException(alias, duplicate);
         // if new university name
         } else if (page.alias !== alias) {
             await pageServices.update({ id: page.id }, data);
@@ -133,7 +135,7 @@ class UniversityPageService {
         });
 
         if (!universityPage) {
-            throw new UniversityAliasNotFound(alias);
+            throw new UniversityAliasNotFoundException(alias);
         }
 
         return universityPage;

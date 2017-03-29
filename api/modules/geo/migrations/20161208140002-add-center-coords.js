@@ -7,7 +7,7 @@ module.exports = {
         );
     },
     down: function(queryInterface, Sequelize) {
-        return queryInterface.dropColumn(
+        return queryInterface.removeColumn(
             'area',
             'center_coords'
         );

@@ -45,20 +45,10 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-comment-list',
-        SHOW_COMMENTS_BUTTON: 'b-comment-list__show-comments-button',
-        SHOW_COMMENTS_BUTTON_WRAP: 'b-comment-list__show-comments-button-wrap',
         LEAVE_COMMENT_BUTTON: 'b-comment-list__leave-comment-button',
-        ITEM_LIST: 'b-comment-list__item-list'
-    };
-
-
-    /**
-     * Event enum
-     * @enum {string}
-     * @const
-     */
-    View.Event = {
-        SHOW_BUTTON_CLICK: goog.events.getUniqueId('show-button-click')
+        ITEM_LIST: 'b-comment-list__item-list',
+        SHOW_COMMENTS_BUTTON: 'b-comment-list__show-comments-button',
+        SHOW_COMMENTS_BUTTON_WRAP: 'b-comment-list__show-comments-button-wrap'
     };
 
 
@@ -88,17 +78,17 @@ goog.scope(function() {
      */
     View.prototype.initDom = function() {
         this.dom = {
-            showCommentsButton: this.getElementByClass(
-                View.CssClass.SHOW_COMMENTS_BUTTON
-            ),
-            showCommentsButtonWrap: this.getElementByClass(
-                View.CssClass.SHOW_COMMENTS_BUTTON_WRAP
-            ),
             leaveCommentButton: this.getElementByClass(
                 View.CssClass.LEAVE_COMMENT_BUTTON
             ),
             itemList: this.getElementByClass(
                 View.CssClass.ITEM_LIST
+            ),
+            showCommentsButton: this.getElementsByClass(
+                View.CssClass.SHOW_COMMENTS_BUTTON
+            ),
+            showCommentsButtonWrap: this.getElementsByClass(
+                View.CssClass.SHOW_COMMENTS_BUTTON_WRAP
             )
         };
     };
@@ -109,7 +99,11 @@ goog.scope(function() {
      */
     View.prototype.hideShowCommentsButton = function() {
         goog.dom.classlist.add(
-            this.dom.showCommentsButtonWrap,
+            this.dom.showCommentsButtonWrap[0],
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+        goog.dom.classlist.add(
+            this.dom.showCommentsButtonWrap[1],
             cl.iUtils.Utils.CssClass.HIDDEN
         );
     };

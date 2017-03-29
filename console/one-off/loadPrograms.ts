@@ -55,20 +55,17 @@ module.exports = async function(pathFolder) {
         `;
         await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
     } catch (error) {
-        logger.critical(JSON.stringify(error, null, 2));
+        logger.critical(error);
+        logger.critical(
+            'Insert comment_group and city: ' +
+            JSON.stringify(error, null, 2)
+        );
     }
 
     const insert = asyncLegacy(function() {
         try {
             const archiver = new Archiver(pathFolder);
             const DELIMITER = '|';
-            awaitLegacy(
-                archiver.copyToTable(
-                    'program_major',
-                    pathFolder + 'programMajor.csv',
-                    DELIMITER
-                )
-            );
             awaitLegacy(
                 archiver.copyToTable(
                     'university',
@@ -83,8 +80,39 @@ module.exports = async function(pathFolder) {
                     DELIMITER
                 )
             );
+            awaitLegacy(
+                archiver.copyToTable(
+                    'entrance_statistic',
+                    pathFolder + 'entranceStatistic.csv',
+                    DELIMITER
+                )
+            );
+            awaitLegacy(
+                archiver.copyToTable(
+                    'page',
+                    pathFolder + 'page.csv',
+                    DELIMITER
+                )
+            );
+            awaitLegacy(
+                archiver.copyToTable(
+                    'university_page',
+                    pathFolder + 'universityPage.csv',
+                    DELIMITER
+                )
+            );
+            awaitLegacy(
+                archiver.copyToTable(
+                    'program_page',
+                    pathFolder + 'programPage.csv',
+                    DELIMITER
+                )
+            );
         } catch (error) {
-            logger.critical(JSON.stringify(error, null, 2));
+            logger.critical(error);
+            logger.critical(
+                'Insert: ' + JSON.stringify(error, null, 2)
+            );
         }
     });
     await insert();
@@ -96,3 +124,11 @@ if (!module.parent) {
     module.exports(args.path);
 }
 
+// SELECT * FROM page WHERE
+// id IN(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011)
+
+// DELETE FROM university
+// DELETE FROM page
+// WHERE id IN(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011)
+// DELETE FROM comment_group WHERE id IN(368, 369, 370, 371, 372, 373, 374)
+// DELETE FROM city WHERE id=3

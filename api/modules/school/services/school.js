@@ -17,7 +17,7 @@ const sequelize = require('../../../../app/components/db'),
     redis = require('../../../../app/components/redis'),
     CsvConverter =
         require('../../../../console/modules/modelArchiver/CsvConverter'),
-    RatingChanger = require('../../comment/lib/RatingChanger');
+    RatingChanger = require('../../comment/lib/RatingChanger').RatingChanger;
 
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');

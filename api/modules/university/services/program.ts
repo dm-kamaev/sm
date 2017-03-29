@@ -55,7 +55,7 @@ class ProgramService {
             }, {
                 model: EntranceStatisticModel,
                 as: 'entranceStatistics'
-            }],
+            }]
         });
         return programs;
     }
@@ -130,7 +130,21 @@ class ProgramService {
     public async getByUniversityId(
             universityId: number): Promise<Array<ProgramInstance>> {
         return ProgramModel.findAll({
-            where: {universityId}
+            where: {universityId},
+            attributes: {
+                exclude: EXCLUDE_FIELDS
+            },
+            include: [{
+                model: CommentGroupModel,
+                as: 'commentGroup',
+                include: [{
+                    model: ProgramCommentModel,
+                    as: 'programComments'
+                }]
+            }, {
+                model: EntranceStatisticModel,
+                as: 'entranceStatistics'
+            }]
         });
     }
 

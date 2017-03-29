@@ -4,20 +4,13 @@
     margin-bottom: 15px;
 
     font-family: 'Proxima', Arial, sans-serif;
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 20.4px;
+    font-weight: 700;
     line-height: 24px;
 }
 
 .b-sm-subscribe-board__header_size_xs {
     display: none;
-
-    margin-bottom: 15px;
-
-    font-family: 'Proxima', Arial, sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 24px;
 }
 
 .b-sm-subscribe-board__description {
@@ -52,11 +45,16 @@
 
 
 @include media-xs {
-    .b-sm-subscribe-board__header {
+    .b-sm-subscribe-board__header_size_l {
         display: none;
     }
 
     .b-sm-subscribe-board__header_size_xs {
         display: block;
+    }
+
+    .b-sm-subscribe-board__input {
+        width: calc(100% + 10px);
+        left: -25px;
     }
 }

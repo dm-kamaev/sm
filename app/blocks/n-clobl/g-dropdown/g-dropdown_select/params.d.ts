@@ -18,11 +18,11 @@ export namespace gDropdownSelect {
          * sm.gDropdownSelect.Params.Config
          */
         export interface Config {
-            stylizationModifier: string,
-            iconName: (string|undefined),
-            iconType: (string|undefined),
-            customClasses: (Array<string>|undefined),
-            theme: (string|undefined)
+            stylizationModifier?: string,
+            iconName?: string,
+            iconType?: string,
+            customClasses?: (Array<string>|undefined),
+            theme?: (string|undefined)
         }
     }
 

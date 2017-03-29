@@ -7,8 +7,8 @@
     padding-left: 310px;
 
     font-family: 'Proxima', Arial, sans-serif;
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 20.3px;
+    font-weight: 700;
     line-height: 24px;
 }
 
@@ -26,10 +26,14 @@
 .b-comment-list__show-comments-button-wrap {
     display: inline-block;
 
-    width: 230px;
+    width: 250px;
     margin-right: 20px;
 
     font-family: 'Proxima', Arial, sans-serif;
+}
+
+.b-comment-list__show-comments-button-wrap_size_l {
+    display: none;
 }
 
 .b-comment-list__leave-comment-button-wrap {
@@ -39,6 +43,9 @@
 }
 
 .b-comment-list__placeholder {
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin: 0 auto;
     padding-bottom: 30px;
     padding-left: 310px;
 
@@ -63,12 +70,24 @@
         padding-right: 40px;
         padding-left: 350px;
     }
+
+    .b-comment-list__placeholder {
+        width: auto;
+        box-sizing: content-box;
+        padding-right: 40px;
+        padding-left: 350px;
+    }
 }
 
 
 @include media-l {
     .b-comment-list__show-comments-button-wrap {
-        width: 150px;
+        display: none;
+    }
+
+    .b-comment-list__show-comments-button-wrap_size_l {
+        display: inline-block;
+        width: 170px;
     }
 
     .b-comment-list__header {
@@ -76,6 +95,10 @@
     }
 
     .b-comment-list__control-panel {
+        padding-left: 40px;
+    }
+
+    .b-comment-list__placeholder {
         padding-left: 40px;
     }
 }
@@ -101,6 +124,11 @@
     }
 
     .b-comment-list__control-panel {
+        padding-right: 25px;
+        padding-left: 25px;
+    }
+
+    .b-comment-list__placeholder {
         padding-right: 25px;
         padding-left: 25px;
     }

@@ -12,7 +12,7 @@ class EntranceStatisticController extends Controller {
      *     Get program's statistic
      * @apiVersion 1.0.0
      * @apiName getProgramStatistic
-     * @apiGroup Admin Program Statistic
+     * @apiGroup Program Statistic
      *
      * @apiSuccess {Number}  id               Id.
      * @apiSuccess {Number}  programId        Program's id.

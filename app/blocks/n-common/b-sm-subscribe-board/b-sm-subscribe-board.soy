@@ -4,8 +4,7 @@
 /**
  * @typedef {{
  *      entityId: number,
- *      entityType: string,
- *      input: cl.gInput.Template.Params
+ *      entityType: string
  * }} sm.bSmSubscribeBoard.Template.Params.Data
  */
 
@@ -70,13 +69,13 @@
         Подписка на новости:
     {/let}
 
-    <div class="{call .rootClass/}__header">
+    <div class="{call .rootClass/}__header {call .rootClass/}__header_size_l">
         {call .getText}
             {param message: $text /}
         {/call}
     </div>
 
-    <div class="{call .rootClass/}__header_size_xs">
+    <div class="{call .rootClass/}__header {call .rootClass/}__header_size_xs">
         {call .getText}
             {param message: $textSizeXs /}
         {/call}

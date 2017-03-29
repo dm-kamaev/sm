@@ -74,7 +74,14 @@
                 {$item.data.header}
             </div>
 
-            <div class="{call .rootClass/}__item-description">
+            {let $classes kind="text"}
+                {call .rootClass /}__item-description{sp}
+                {if $item.config.inline}
+                    {call .rootClass /}__item-description_inline
+                {/if}
+            {/let}
+
+            <div class="{$classes}">
                 {call .itemDescription_}
                     {param params: [
                         'subitems': $item.data.subitems,
@@ -113,8 +120,8 @@
  * @private
  */
 {template .inlineSubtems_}
-    {foreach $item in $params.subitems}
 
+    {foreach $item in $params.subitems}
         {if $item.url}
             {call .link_}
                 {param item: $item /}
@@ -129,7 +136,6 @@
             ,{sp}
         {else}
         {/if}
-
     {/foreach}
 {/template}
 
@@ -143,19 +149,15 @@
  */
 {template .blockSubtems_}
     {foreach $item in $params.subitems}
-        <div class="{call .rootClass/}__subitem">
-
-            {if $item.url}
-                {call .link_}
-                    {param item: $item /}
-                {/call}
-            {else}
-                {call .string_ data="all"}
-                    {param item: $item /}
-                {/call}
-            {/if}
-
-        </div>
+        {if $item.url}
+            {call .link_}
+                {param item: $item /}
+            {/call}
+        {else}
+            {call .string_ data="all"}
+                {param item: $item /}
+            {/call}
+        {/if}
     {/foreach}
 {/template}
 
@@ -166,20 +168,25 @@
  * @private
  */
 {template .link_}
-    {call .renderChild}
-        {param params: [
-            'type': 'smLink',
-            'renderParams': [
-                'data': [
-                    'url': $item.url,
-                    'content': $item.content
-                ],
-                'config': [
-                    'size': 'xl'
+    <div class="{call .rootClass/}__subitem
+            {sp}{call .rootClass /}__subitem_link">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'url': $item.url,
+                        'content': $item.content
+                    ],
+                    'config': [
+                        'size': 'xl',
+                        'theme': 'neptune',
+                        'target': '_blank'
+                    ]
                 ]
-            ]
-        ]/}
-    {/call}
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 
@@ -189,7 +196,10 @@
  * @private
  */
 {template .string_}
-    {$item}
+    <div class="{call .rootClass/}__subitem
+                {sp}{call .rootClass /}__subitem_string">
+        {$item}
+    </div>
 {/template}
 
 

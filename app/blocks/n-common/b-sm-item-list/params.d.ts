@@ -1,9 +1,10 @@
 export namespace bSmItemList {
-    /**
-     * sm.bSmItemList.Params
+    /*
+     * sm.bSmItemList.Template.Params
      */
     export namespace Params {
-        /**
+        /*
+         * sm.bSmItemList.Template.Params.Data
          * sm.bSmItemList.Params.Data
          */
         export interface Data {
@@ -13,8 +14,8 @@ export namespace bSmItemList {
             itemConfig?: any;
         }
 
-
-        /**
+        /*
+         * sm.bSmItemList.Template.Params.Config
          * sm.bSmItemList.Params.Config
          */
         export interface Config {
@@ -26,7 +27,8 @@ export namespace bSmItemList {
         }
     }
 
-    /**
+    /*
+     * sm.bSmItemList.Template.Params
      * sm.bSmItemList.Params
      */
     export interface Params {
@@ -34,4 +36,3 @@ export namespace bSmItemList {
         config?: Params.Config;
     }
 }
-

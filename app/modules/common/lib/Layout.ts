@@ -27,6 +27,7 @@ type Params = {
 };
 
 type Data = {
+    [name: string]: any,
     favorites: Array<{string: any}>
 };
 

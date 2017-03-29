@@ -224,10 +224,12 @@ goog.scope(function() {
         if (userType == InteractionForm.UserType.GRADUATE) {
             var yearFieldName = this.yearField_.getName();
             data[yearFieldName] = this.yearField_.getValue();
+            data[gradeFieldName] = null;
         }
         else if (userType == InteractionForm.UserType.STUDENT) {
             var gradeFieldName = this.gradeField_.getName();
             data[gradeFieldName] = this.gradeField_.getValue();
+            data[yearFieldName] = null;
         }
 
         return data;

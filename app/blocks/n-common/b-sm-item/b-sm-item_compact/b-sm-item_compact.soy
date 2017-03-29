@@ -36,8 +36,16 @@
 
 
 /**
- * @typedef {sm.bSmItem.Template.Params.Config}
- * sm.bSmItem.TemplateCompact.Params.Config
+ * @typedef {{
+ *     enableCover: boolean,
+ *     stylizationModifier: string,
+ *     customClasses: ?Array<string>,
+ *     theme: ?string,
+ *     nameLinkSize: ?string,
+ *     nameLinkTheme: ?string,
+ *     isNameNotLink: ?boolean,
+ *     isDescriptionLink: ?string
+ * }} sm.bSmItem.TemplateCompact.Params.Config
  */
 
 
@@ -132,7 +140,9 @@
  *         nameLinkUrl: ?string
  *     },
  *     config: {
- *         theme: string
+ *         nameLinkTheme: ?string,
+ *         isNameNotLink: ?boolean,
+ *         nameLinkSize: ?string
  *     }
  * }}
  * @protected
@@ -148,7 +158,9 @@
         {/let}
 
         {let $url kind="html"}
-            {if $params.data.url}
+            {if $params.data.nameLinkUrl}
+                {$params.data.nameLinkUrl}
+            {elseif $params.data.url}
                 {$params.data.url}
             {else}
                 /{$params.data.alias}
@@ -159,23 +171,7 @@
             {call .rootClass/}__link-name
         {/let}
 
-        {let $theme kind="html"}
-            {if $params.config.theme}
-                {$params.config.theme}
-            {else}
-                dark
-            {/if}
-        {/let}
-
-        {let $size kind="html"}
-            {if $params.config.nameLinkSize}
-                {$params.config.nameLinkSize}
-            {else}
-                xxl
-            {/if}
-        {/let}
-
-        {if $params.data.nameLinkUrl}
+        {if $url and not $params.config.isNameNotLink}
             {call .renderChild}
                 {param params: [
                     'type': 'smLink',
@@ -183,12 +179,12 @@
                         'data': [
                             'id': $params.data.id,
                             'content': $name,
-                            'url': $params.data.nameLinkUrl
+                            'url': $url
                         ],
                         'config': [
                             'customClasses': [$customClasses],
-                            'theme': $theme,
-                            'size': $size
+                            'theme': $params.config.nameLinkTheme ?: 'dark',
+                            'size': $params.config.nameLinkSize ?: 'xxl'
                         ]
                     ]
                 ]/}
@@ -393,7 +389,8 @@
                         'config': [
                             'customClasses': [$customClasses],
                             'size': $params.data?.additionalLink?.size,
-                            'theme': $params.data?.additionalLink?.theme
+                            'theme': $params.data?.additionalLink?.theme ?:
+                                'default'
                         ]
                     ]
                 ]/}

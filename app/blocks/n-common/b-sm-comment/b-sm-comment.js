@@ -3,6 +3,7 @@ goog.provide('sm.bSmComment.SmComment');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmComment.Template');
 goog.require('sm.bSmComment.View');
+goog.require('sm.bSmStars.SmStars');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
@@ -55,6 +56,8 @@ goog.scope(function() {
      */
     Comment.prototype.decorateInternal = function(element) {
         Comment.base(this, 'decorateInternal', element);
+
+        this.initStars_();
     };
 
 
@@ -65,5 +68,17 @@ goog.scope(function() {
      */
     Comment.getRenderParams = function(rawParams) {
         return View.getRenderParams(rawParams);
+    };
+
+
+    /**
+     * Init score stars
+     * @private
+     */
+    Comment.prototype.initStars_ = function() {
+        this.decorateChild(
+            sm.bSmStars.SmStars.NAME,
+            this.getView().getDom().stars
+        );
     };
 });  // goog.scope

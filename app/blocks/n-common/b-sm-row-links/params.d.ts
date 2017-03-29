@@ -2,30 +2,30 @@ import {bSmLink} from '../b-sm-link/params';
 
 export namespace bSmRowLinks {
     /*
-     * sm.bSmRowLinks.Params
+     * sm.bSmRowLinks.Template.Params
      */
     export namespace Params {
         /*
-         * sm.bSmRowLinks.Params.Data
+         * sm.bSmRowLinks.Template.Params.Data
          */
         export interface Data {
-            items: bSmLink.Params
+            items: Array<bSmLink.Params>;
         }
 
         /*
-         * sm.bSmRowLinks.Params.Config
+         * sm.bSmRowLinks.Template.Params.Config
          */
         export interface Config {
-            theme?: string,
-            size?: string
+            theme?: string;
+            size?: string;
         }
     }
 
     /*
-     * sm.bSmRowLinks.Params
+     * sm.bSmSubscribeBoard.Template.Params
      */
     export interface Params {
-        data: Params.Data,
-        config?: Params.Config
+        data: Params.Data;
+        config?: Params.Config;
     }
 }

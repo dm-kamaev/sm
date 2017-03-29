@@ -3,6 +3,7 @@
 
 /**
  * @typedef {{
+ *     id: (number|undefined),
  *     header: ({
  *         text: ?string
  *     }|undefined),
@@ -16,9 +17,7 @@
  *         data: sm.gButton.TemplateStendhal.Params.Data,
  *         config: sm.gButton.TemplateStendhal.Params.Config
  *     },
- *     error: ({
- *         text: ?string
- *     }|undefined),
+ *     errors: (Array<string>|undefined),
  *     closer: ({
  *         iconName: ?string,
  *         iconType: ?string
@@ -83,7 +82,7 @@
     {call .sectionHeader_ data="all" /}
     {call .sectionContent_ data="all" /}
     {call .sectionButton_ data="all" /}
-    {call .sectionError_ data="all" /}
+    {call .sectionErrors_ data="all" /}
 {/template}
 
 /**
@@ -105,8 +104,9 @@
  * Attributes
  * @param params {{
  *     data: {
- *         contentName: ('smInteractionForm'|'smInteractionFormComment'),
- *         url: string
+ *         id: (number|undefined),
+ *         api: string,
+ *         contentName: ('smInteractionForm'|'smInteractionFormComment')
  *     }
  * }}
  * @override
@@ -115,8 +115,9 @@
     data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: [
+                'id': $params.data.id ?: '',
+                'api': $params.data.api,
                 'contentName': $params.data.contentName,
-                'api': $params.data.api
             ]/}
         {/call}"
 {/template}
@@ -205,32 +206,34 @@
  * Section for error message
  * @param params {{
  *     data: {
- *         error: ({
- *             text: ?string
- *         }|undefined)
+ *         errors: (Array<string>|undefined)
  *     }
  * }}
  */
-{template .sectionError_}
-    {let $text: (($params.data.error and $params.data.error.text) ?
-        $params.data.error.text :
-        null)
-    /}
-
-    {let $classes kind="html"}
-        {call .rootClass/}__section{sp}
-        {call .rootClass/}__section_error
-
-        {if not $text}
-            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+{template .sectionErrors_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_errors">
+        {if $params.data.errors and length($params.data.errors)}
+            {call .listErrors data="all" /}
         {/if}
-    {/let}
-
-    <div class="{$classes}">
-        <div class="{call .rootClass/}__error">
-            {$text}
-        </div>
     </div>
+{/template}
+
+
+/**
+ * List error messages
+ * @param params {{
+ *     data: {
+ *         errors: Array<string>
+ *     }
+ * }}
+ * @public
+ */
+{template .listErrors}
+    {for $i in range(length($params.data.errors))}
+        <div class="{call .rootClass/}__error">
+            {$params.data.errors[$i]}
+        </div>
+    {/for}
 {/template}
 
 

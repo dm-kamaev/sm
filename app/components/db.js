@@ -17,21 +17,6 @@ var options = {
 if (config.environment != 'production') {
     options.benchmark = true;
     options.logging = logger.debug.bind(logger);
-    // options.logging = function(query) {
-    //     logger.debug(query
-    //        .replace(/(,)/g, '$1\n')
-    //        .replace(/SELECT/, 'SELECT\n')
-    //        .replace(/(INSERT)/, '$1\n')
-    //        .replace(/(UPDATE)/, '$1\n')
-    //        .replace(/(FROM)/, '\n$1')
-    //        .replace(/(LEFT OUTER JOIN)/g, '\n$1')
-    //        .replace(/(LEFT JOIN)/g, '\n$1')
-    //        .replace(/(WHERE)/g, '\n$1')
-    //        .replace(/(VALUES)/g, '\n$1\n')
-    //        .replace(/(ARRAY)/g, '\n$1')
-    //        .replace(/(GROUP BY)/g, '\n$1\n')
-    //     );
-    // };
 }
 
 

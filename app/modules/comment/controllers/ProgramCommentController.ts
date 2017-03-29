@@ -30,7 +30,7 @@ class ProgramCommentController extends Controller {
     }
 
     /**
-     * @api {post} /api/program/:programId/comment/
+     * @api {post} /program/:programId/comment
      * @apiVersion 1.0.0
      * @apiName changeProgramComment
      * @apiGroup ProgramComment
@@ -130,7 +130,12 @@ class ProgramCommentController extends Controller {
                 advice: requestData.advice,
                 score: requestData.score
             },
-            user = userService.getUserFromRequest(actionContext.request);
+            user = userService.getUserFromRequest(
+                actionContext.request,
+                {
+                    checkIsLoggedIn: true
+                }
+            );
 
         await programCommentService.changeComment(data, user);
         actionContext.status = 204;

@@ -227,10 +227,13 @@ goog.scope(function() {
      * @private
      */
     University.prototype.initPrograms_ = function() {
-        this.decorateChild(
-            sm.bSmItemList.SmItemList.NAME,
-            this.getView().getDom().programs
-        );
+        var element = this.getView().getDom().programs;
+        if (element) {
+            this.decorateChild(
+                sm.bSmItemList.SmItemList.NAME,
+                element
+            );
+        }
     };
 
 
@@ -239,10 +242,14 @@ goog.scope(function() {
      * @private
      */
     University.prototype.initCourses_ = function() {
-        this.decorateChild(
-            sm.bSmItemList.SmItemList.NAME,
-            this.getView().getDom().courses
-        );
+        var element = this.getView().getDom().courses;
+        if (element) {
+            this.decorateChild(
+                sm.bSmItemList.SmItemList.NAME,
+                element
+            );
+        }
+
     };
 
 

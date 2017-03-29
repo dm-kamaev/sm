@@ -206,7 +206,7 @@ class ProgramCommentController extends Controller {
      * @apiGroup ProgramComment
      * @apiName CreateProgramComment
      *
-     * @apiParam {Object}   comment      Review object
+     * @apiParam {Object}   comment              Review object
      * @apiParam {String}   comment.userType     Type of user, who wrote review
      * @apiParam {Number}   comment.grade        Current grade of user, if it is
      *     student

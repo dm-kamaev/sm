@@ -1,41 +1,51 @@
 'use strict';
 
-const await = require('asyncawait/await');
 const squel = require('squel').useFlavour('postgres');
 
-const sequelize = require('../../../../app/components/db'),
-    ratingService = require('../services/rating').service;
+const sequelize = require('../../../../app/components/db');
 
-const SCORE_COUNT = 4, // number of score positions
-    MIN_SCORE_COUNT = 3, // minimum number of each score
-    MIN_REVIEW_COUNT = 5; // minimum number of reviews
+import {service as ratingService} from '../services/rating';
 
-module.exports = class RatingChanger {
+const SCORE_COUNT = 4; // number of score positions
+const MIN_SCORE_COUNT = 3; // minimum number of each score
+const MIN_REVIEW_COUNT = 5; // minimum number of reviews
+const DEFAULT_COMMENT_TABLE = 'comment';
+
+export class RatingChanger {
+    private tableName: string;
+    private commentGroupId: number;
+    private commentTableName: string;
+
     /**
      * @constructor
      * @param {string} tableName
      * @param {number} commentGroupId
      */
-    constructor(tableName, commentGroupId) {
+    constructor(
+            tableName: string,
+            commentGroupId: number,
+            commentTableName?: string
+    ) {
         /**
          * @private
          * @type {string}
          */
-        this.tableName_ = tableName;
+        this.tableName = tableName;
 
         /**
          * @private
          * @type {number}
          */
-        this.commentGroupId_ = commentGroupId;
+        this.commentGroupId = commentGroupId;
+
+        this.commentTableName = commentTableName || DEFAULT_COMMENT_TABLE;
     }
 
     /**
      * Update rating in entity table
      */
-    update() {
-        console.log(ratingService);
-        let totalRating = this.getTotalRating_();
+    public async update() {
+        const totalRating = await this.getTotalRating_();
 
         totalRating.score = totalRating.score.map((grade, i) =>
             totalRating.scoreCount[i] >= MIN_SCORE_COUNT ?
@@ -53,7 +63,7 @@ module.exports = class RatingChanger {
             totalRating.totalScore = 0;
         }
 
-        this.updateTable_(totalRating);
+        return this.updateTable_(totalRating);
     }
 
     /**
@@ -64,8 +74,8 @@ module.exports = class RatingChanger {
      *     scoreCount: Array<number>
      * }}
      */
-    getTotalRating_() {
-        let totalRatingQuery = squel
+    private async getTotalRating_() {
+        const totalRatingQuery = squel
             .select({autoQuoteAliasNames: true})
             .from('comment_group')
             .field(
@@ -76,24 +86,25 @@ module.exports = class RatingChanger {
             .field(this.aggregateScores_('avg'), 'score')
             .field(this.aggregateScores_('count'), 'scoreCount')
             .left_join(
-                'comment',
+                this.commentTableName,
                 null,
-                'comment_group.id = comment.comment_group_id'
+                `comment_group.id = ${this.commentTableName}.comment_group_id`
             )
             .left_join(
                 'rating',
                 null,
-                'comment.rating_id = rating.id AND rating.id is not null'
+                `${this.commentTableName}.rating_id = rating.id AND ` +
+                    'rating.id is not null'
             )
-            .where(`comment_group.id = ${this.commentGroupId_}`)
+            .where(`comment_group.id = ${this.commentGroupId}`)
             .group('comment_group.id')
             .toString();
 
-        let result = await(sequelize.query(
+        const result = await sequelize.query(
             totalRatingQuery, {
                 type: sequelize.QueryTypes.SELECT
             }
-        ));
+        );
 
         return result[0];
     }
@@ -103,8 +114,8 @@ module.exports = class RatingChanger {
      * @param  {string} aggregateFunctionName
      * @return {string}
      */
-    aggregateScores_(aggregateFunctionName) {
-        let scoreAggregations = [];
+    private aggregateScores_(aggregateFunctionName) {
+        const scoreAggregations = [];
         for (let i = 1; i <= SCORE_COUNT; i++) {
             scoreAggregations.push(
                 `${aggregateFunctionName}(rating.score[${i}]) ` +
@@ -119,7 +130,7 @@ module.exports = class RatingChanger {
      * @param  {number} scorePosition
      * @return {string}
      */
-    getFilterCondition_(scorePosition) {
+    private getFilterCondition_(scorePosition) {
         return `FILTER (WHERE rating.score[${scorePosition}] > 0)`;
     }
 
@@ -132,20 +143,20 @@ module.exports = class RatingChanger {
      *     totalScore: number
      * }} rating
      */
-    updateTable_(rating) {
-        let updateQuery = squel.update()
-            .table(this.tableName_)
+    private async updateTable_(rating) {
+        const updateQuery = squel.update()
+            .table(this.tableName)
             .set('review_count', rating.reviewCount)
             .set('score', `{${rating.score.join(', ')}}`)
             .set('score_count', `{${rating.scoreCount.join(', ')}}`)
             .set('total_score', rating.totalScore)
-            .where(`comment_group_id = ${this.commentGroupId_}`)
+            .where(`comment_group_id = ${this.commentGroupId}`)
             .toString();
 
-        await(sequelize.query(
+        return await sequelize.query(
             updateQuery, {
                 type: sequelize.QueryTypes.UPDATE
             }
-        ));
+        );
     }
 };

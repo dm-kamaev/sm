@@ -71,11 +71,12 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Number}   salary          Salary after graduation.
      * @apiSuccess {String[]} extraExam       Array of extra exams.
      * @apiSuccess {String}   addressName     Name of address.
-     * @apiSuccess {Object}   programMajor    Major program for program
-     * @apiSuccess {String}   exchangeProgram Exchange program
-     * @apiSuccess {Number}       -.programMajor.id   Major program id
-     * @apiSuccess {String}       -.programMajor.name Major program name
      * @apiSuccess {String}   phone           Phone number.
+     * @apiSuccess {String}   exchangeProgram
+     * Array country for exchange program
+     * @apiSuccess {Object}   programMajor    Major program for program
+     * @apiSuccess {Number}   -.id            Major program id
+     * @apiSuccess {String}   -.name          Major program name
      * @apiSuccess {String}   createdAt       Created at.
      * @apiSuccess {String}   updatedAt       Updated at.
      *
@@ -134,53 +135,62 @@ class ProgramAdminController extends Controller {
      * @apiParam {Number}   salary      Salary after graduation.
      * @apiParam {String[]} links       Array of links
      *     (official site, facebook communities).
-     * @apiParam {Number}   programMajorId Program major Id
-     * @apiParam {String} -.exchangeProgram Exchange program
      * @apiParam {String}   phone       Phone number.
+     * @apiParam {Number}   programMajorId Program major Id
+     * @apiParam {String}   exchangeProgram Exchange program
      *
      *
      * @apiSuccess {Number}   id              Id.
      * @apiSuccess {String}   name            Name.
      * @apiSuccess {String}   universityId    University's id.
      * @apiSuccess {String}   description     Description.
-     * @apiSuccess {String}   commentGroupId  Comment group's id.
+     * @apiSuccess {String[]} extraExam       Array of extra exams.
      * @apiSuccess {String}   category        Program's category.
-     * @apiSuccess {String[]} links           Array of links
-     *     (official site, facebook communities).
-     * @apiSuccess {String[]} specializations Array of specializations.
      * @apiSuccess {Number}   duration        Number of studying years.
      * @apiSuccess {Number}   employment      Percent of employment.
      * @apiSuccess {Number}   salary          Salary after graduation.
+     * @apiSuccess {String[]} links           Array of links
+     *     (official site, facebook communities).
      * @apiSuccess {Number}   programMajorId  Program major Id
-     * @apiSuccess {String[]} extraExam       Array of extra exams.
-     * @apiSuccess {String} -.exchangeProgram Exchange program
      * @apiSuccess {String}   phone           Phone number.
+     * @apiSuccess {String}   exchangeProgram Exchange program
+     * @apiSuccess {String}   commentGroupId  Comment group's id.
+     * @apiSuccess {String[]} specializations Array of specializations.
+     * @apiSuccess {Number}   totalScore      Total score.
+     * @apiSuccess {Number[]} score           Array of scores.
+     * @apiSuccess {Number[]} scoreCount      Array of scores' count.
+     * @apiSuccess {Number}   reviewCount     Number of reviews.
      * @apiSuccess {String}   createdAt       Created at.
      * @apiSuccess {String}   updatedAt       Updated at.
      * @apiSuccess {String}   created_at      Created at.
      * @apiSuccess {String}   updated_at      Updated at.
+     *
      * @apiSuccessExample {json} Success-Response:
-     *    {
-     *        "id": 8,
-     *        "name": "кибернетика",
-     *        "universityId": 62,
-     *        "description": "вуз номер ",
-     *        "extraExam": [],
-     *        "category": "something",
-     *        "duration": 4,
-     *        "employment": 1.9,
-     *        "salary": 80000,
-     *        "links": [],
-     *        "programMajorId": 1,
-     *        "commentGroupId": 372,
-     *        "phone": "+7 125 167 45 31",
-     *        "updated_at": "2017-03-07T10:43:42.034Z",
-     *        "created_at": "2017-03-07T10:43:42.034Z",
-     *        "specializations": null,
-     *        "createdAt": "2017-03-07T10:43:42.034Z",
-     *        "updatedAt": "2017-03-07T10:43:42.034Z",
-     *        "exchangeProgram": "да"
-     *    }
+     *     {
+     *         "id": 8,
+     *         "name": "кибернетика",
+     *         "universityId": 62,
+     *         "description": "вуз номер ",
+     *         "extraExam": [],
+     *         "category": "something",
+     *         "duration": 4,
+     *         "employment": 1.9,
+     *         "salary": 80000,
+     *         "links": [],
+     *         "programMajorId": 1,
+     *         "exchangeProgram": "да",
+     *         "commentGroupId": 372,
+     *         "phone": "+7 125 167 45 31",
+     *         "updated_at": "2017-03-07T10:43:42.034Z",
+     *         "created_at": "2017-03-07T10:43:42.034Z",
+     *         "specializations": null,
+     *         "createdAt": "2017-03-07T10:43:42.034Z",
+     *         "updatedAt": "2017-03-07T10:43:42.034Z",
+     *         "totalScore": 3,
+     *         "score": [3, 3, 3, 3],
+     *         "scoreCount": [10, 10, 10, 10],
+     *         "reviewCount": 14
+     *     }
      */
     public async actionCreate(actionContext: any, universityId: string) {
         const request = actionContext.request;
@@ -222,13 +232,35 @@ class ProgramAdminController extends Controller {
      * @apiParam {Number}   programMajorId Program major Id
      * @apiParam {String}   phone       Phone number.
      *
-     * @apiSuccess {Array}  -    Response body.
-     * @apiSuccess {Number} -[0] Number of updated rows (Should be always 1).
+     * @apiSuccess {Array}    -    Response body.
+     * @apiSuccess {Number}   -[0] Number of updated rows (Should be always 1).
+     * @apiSuccess {Object[]} -[1] Array of updated programs.
      *
      * @apiSuccessExample {json} Example response:
      *     HTTP/1.1 200 OK
      *     [
-     *         1
+     *         1,
+     *         [
+     *             {
+     *                 "id": 1,
+     *                 "name": "Менеджмент",
+     *                 "universityId": 1,
+     *                 "commentGroupId": 382,
+     *                 "specializations": null,
+     *                 "programMajorId": 3,
+     *                 "totalScore": null,
+     *                 "score": null,
+     *                 "scoreCount": null,
+     *                 "reviewCount": null,
+     *                 "createdAt": "2017-03-20T16:15:22.915Z",
+     *                 "updatedAt": "2017-03-20T16:15:22.915Z",
+     *                 "created_at": "2017-03-20T16:15:22.915Z",
+     *                 "updated_at": "2017-03-20T16:25:56.292Z",
+     *                 "university_id": 1,
+     *                 "comment_group_id": 382,
+     *                 "program_major_id": 3
+     *             }
+     *         ]
      *     ]
      */
     public async actionUpdate(

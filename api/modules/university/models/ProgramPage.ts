@@ -59,7 +59,10 @@ const ProgramPage: ProgramPageModel = sequelize.define('ProgramPage', {
     tableName: 'program_page',
     classMethods: {
         associate: function(models) {
-
+            this.belongsTo(models.Page, {
+                foreignKey: 'page_id',
+                as: 'page'
+            });
         }
     }
 });

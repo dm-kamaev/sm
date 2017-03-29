@@ -33,7 +33,9 @@ const Profile: ProfileModel = sequelize.define('Profile', {
     classMethods: {
         associate: function(models) {
             this.belongsToMany(models.University, {
-                through: 'university_profile'
+                as: 'universities',
+                through: 'university_profile',
+                foreignKey: 'profile_id',
             });
         }
     }
