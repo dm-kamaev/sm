@@ -49,6 +49,8 @@
 /** Compact theme start **/
 .b-sm-banner_neptune-compact-theme {
     padding: 35px;
+    background-image: url("/static/images/n-common/b-sm-banner/default.png");
+    background-size: cover;
 
     .b-sm-banner__description-wrap {
         padding: 7px 35px 23px;
@@ -75,6 +77,10 @@
         width: 245px;
         height: 46px;
         margin: 0 auto;
+    }
+
+    @include pixel-ratio-2x {
+        background-image: url("/static/images/n-common/b-sm-banner/default@2x.png");
     }
 }
 /** Compact theme end **/
