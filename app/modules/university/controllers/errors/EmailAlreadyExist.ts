@@ -14,7 +14,7 @@ class EmailAlreadyExist extends Error {
     constructor(exception: ServiceException) {
         super(exception);
         this.code = 'EmailAlreadyExist';
-        this.status = 400;
+        this.status = 409;
         this.message = String(exception);
     }
 

@@ -9,7 +9,7 @@ class EmailAlreadyExist extends Exception {
     private name_: string;
 
     constructor() {
-        const message: string = `Email already exist.`;
+        const message: string = `Данный email уже зарегистрирован`;
 
         super(message);
 
