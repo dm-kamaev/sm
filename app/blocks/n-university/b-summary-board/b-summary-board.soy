@@ -19,13 +19,13 @@
  *     item: {
  *         data: {
  *             header: string,
- *             description: string,
- *             buttonLink: sm.bButtonLink.Template.Params
+ *             description: string
  *         },
  *         config: ({
  *             theme: string
  *         }|undefined)
  *     }
+ *     buttonLink: sm.bButtonLink.Template.Params
  * }} sm.bSummaryBoard.Template.Params.Data
  */
 
@@ -61,7 +61,8 @@
  */
 {template .body}
     {call .list_ data="all" /}
-    {call .content_ data="all" /}
+    {call .item_ data="all" /}
+    {call .button_ data="all" /}
 {/template}
 
 
@@ -199,16 +200,14 @@
 {/template}
 
 
-
 /**
- * Content
+ * Item content template
  * @param params {{
  *     data: {
  *         item: {
  *             data: {
  *                 header: string,
- *                 description: string,
- *                 buttonLink: sm.bButtonLink.Template.Params
+ *                 description: string
  *             },
  *             config: ({
  *                 theme: string
@@ -216,41 +215,49 @@
  *         }
  *     }
  * }}
- * @override
+ * @private
  */
-{template .content_}
-    {let $class kind="text"}
-        {if $params.data.item.config and $params.data.item.config.theme}
-            {call .rootClass/}__item_{$params.data.item.config.theme}-theme
-        {/if}
-    {/let}
+{template .item_ kind="html"}
+    {if $params.data?.item?.data?.header and
+            $params.data?.item?.data?.description}
+        {let $classes kind="text"}
+            {call .rootClass/}__item
+            {if $params.data.item.config and $params.data.item.config.theme}
+                {sp}{call .rootClass/}__item_{$params.data.item.config.theme}-theme
+            {/if}
+        {/let}
 
-    <div class="{call .rootClass/}__item {$class}">
-        <div class="{call .rootClass/}__item-header">
-            {call .getText}
-                {param message: $params.data.item.data.header /}
-            {/call}
+        <div class="{$classes}">
+            <div class="{call .rootClass/}__item-header">
+                {call .getText}
+                    {param message: $params.data.item.data.header /}
+                {/call}
+            </div>
+
+            <div class="{call .rootClass/}__item-description">
+                {call .getText}
+                    {param message: $params.data.item.data.description /}
+                {/call}
+            </div>
         </div>
+    {/if}
+{/template}
 
-        <div class="{call .rootClass/}__item-description">
-            {call .getText}
-                {param message: $params.data.item.data.description /}
-            {/call}
-        </div>
-    </div>
 
+/**
+ * @param params {{
+ *     data: {
+ *         buttonLink: buttonLink: sm.bButtonLink.Template.Params
+ *     }
+ * }}
+ * @private
+ */
+{template .button_ kind="html"}
     <div class="{call .rootClass/}__link">
         {call .renderChild}
             {param params: [
                 'type': 'smButtonLink',
-                'renderParams': [
-                    'data': $params.data.item.data.buttonLink.data,
-                    'config': [
-                        'theme': $params.data.item.data.buttonLink.config.theme,
-                        'size': $params.data.item.data.buttonLink.config.size,
-                        'borderRoundSize': 'm'
-                    ]
-                ]
+                'renderParams': $params.data.buttonLink
             ]/}
         {/call}
     </div>

@@ -1,3 +1,6 @@
+import {
+    bSmButtonLink
+} from '../../n-common/b-sm-button-link/params';
 export namespace bSummaryBoard {
     /*
      * sm.bSummaryBoard.Template.Params
@@ -23,13 +26,13 @@ export namespace bSummaryBoard {
             item: {
                 data: {
                     header: string,
-                    description: string,
-                    buttonLink: any
+                    description: string
                 },
                 config?: {
                     theme?: string
                 }
             };
+            buttonLink: bSmButtonLink.Params;
         }
 
         /*

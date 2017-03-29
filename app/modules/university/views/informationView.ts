@@ -239,23 +239,27 @@ class InformationView extends LayoutView {
             itemDescription = `${cost} ₽`;
         }
 
+
         const item = {
             data: {
                 header: itemHeader,
-                description: itemDescription,
-                buttonLink: {
-                    data: {
-                        url: '',
-                        content: 'Проконсультироваться'
-                    },
-                    config: {
-                        theme: neptuneTheme,
-                        size: 'xxl'
-                    }
-                }
+                description: itemDescription
             },
             config: {
                 theme: neptuneTheme
+            }
+        };
+        console.log(item);
+
+        const buttonLink = {
+            data: {
+                url: '',
+                content: 'Проконсультироваться'
+            },
+            config: {
+                theme: neptuneTheme,
+                size: 'xxl',
+                borderRoundSize: 'm'
             }
         };
 
@@ -345,7 +349,7 @@ class InformationView extends LayoutView {
             items: listItems
         }];
 
-        return {item, list};
+        return {item, list, buttonLink};
     }
 
     private getBannerParams_(data: Data): bSmBanner.Params {
