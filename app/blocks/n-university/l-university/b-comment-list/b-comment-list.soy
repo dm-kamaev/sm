@@ -144,14 +144,14 @@
  */
 {template .controlPanel_}
     <div class="{call .rootClass /}__control-panel">
-        {call .showCommentsButton_ data="all" /}
+        {call .showCommentsButtons_ data="all" /}
         {call .leaveCommentButton_ data="all" /}
     </div>
 {/template}
 
 
 /**
- * Button show comment
+ * Show comments buttons
  * @param params {{
  *     data: {
  *         list: {
@@ -163,33 +163,98 @@
  *     }
  * }}
  */
-{template .showCommentsButton_}
+{template .showCommentsButtons_}
     {if $params.data.list?.items and
-        $params.data.list.items.length > $params.config?.countShownItems}
-
-        {let $customClasses kind="html"}
-            {call .rootClass /}__show-comments-button
-        {/let}
+            $params.data.list.items.length > $params.config?.countShownItems
+    }
+        {let $count: $params.data.list.items.length - $params.config.countShownItems /}
 
         <div class="{call .rootClass /}__show-comments-button-wrap">
-            {call .renderChild}
+            {call .showCommentsButton_}
                 {param params: [
-                    'type': 'button',
-                    'renderParams': [
-                        'data': [
-                            'content': 'Все отзывы'
-                        ],
-                        'config': [
-                            'customClasses': [$customClasses],
-                            'theme': 'neptune-reverse',
-                            'borderRoundSize': 'xl',
-                            'size': 'm'
-                        ]
-                    ]
-                ]/}
+                    'count': $count
+                ] /}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass /}__show-comments-button-wrap
+            {sp}{call .rootClass /}__show-comments-button-wrap_size_l"
+        >
+            {call .showCommentsButtonSizeL_}
+                {param params: [
+                    'count': $count
+                ] /}
             {/call}
         </div>
     {/if}
+{/template}
+
+
+/**
+ * Show comments button
+ * @param params {{
+ *     count: number
+ * }}
+ */
+{template .showCommentsButton_}
+    {let $content kind="text"}
+        Загрузить все отзывы {$params.count}
+    {/let}
+
+    {let $customClasses kind="text"}
+        {call .rootClass /}__show-comments-button
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'button',
+            'renderParams': [
+                'data': [
+                    'content': $content
+                ],
+                'config': [
+                    'customClasses': [$customClasses],
+                    'theme': 'neptune-reverse',
+                    'borderRoundSize': 'xl',
+                    'size': 'm'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Show comments button size l
+ * @param params {{
+ *     count: number
+ * }}
+ */
+{template .showCommentsButtonSizeL_}
+    {let $content kind="text"}
+        Все отзывы {$params.count}
+    {/let}
+
+    {let $customClasses kind="text"}
+        {call .rootClass /}__show-comments-button
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'button',
+            'renderParams': [
+                'data': [
+                    'content': $content
+                ],
+                'config': [
+                    'customClasses': [$customClasses],
+                    'theme': 'neptune-reverse',
+                    'borderRoundSize': 'xl',
+                    'size': 'm'
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 

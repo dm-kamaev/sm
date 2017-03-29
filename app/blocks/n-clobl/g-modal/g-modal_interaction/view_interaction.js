@@ -1,7 +1,7 @@
 goog.provide('sm.gModal.ViewInteraction');
 
-goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gModal.TemplateInteraction');
+goog.require('sm.gModal.ViewStendhal');
 
 
 goog.scope(function() {

@@ -63,13 +63,6 @@ goog.scope(function() {
 
 
     /**
-     * @protected
-     */
-    View.prototype.initDom = function() {
-    };
-
-
-    /**
      * Transform raw params to compressed ones
      * @param {Object<string, (string|number|Object)>} rawParams
      * @return {sm.bSmItem.View.RenderParams}
@@ -79,4 +72,15 @@ goog.scope(function() {
         return {};
     };
 
+
+    /**
+     * @protected
+     */
+    View.prototype.initDom = function() {
+        this.dom = {
+            stars: this.getElementByClass(
+                sm.bSmStars.View.CssClass.ROOT
+            )
+        };
+    };
 });  // goog.scope

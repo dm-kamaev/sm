@@ -26,10 +26,14 @@
 .b-comment-list__show-comments-button-wrap {
     display: inline-block;
 
-    width: 230px;
+    width: 250px;
     margin-right: 20px;
 
     font-family: 'Proxima', Arial, sans-serif;
+}
+
+.b-comment-list__show-comments-button-wrap_size_l {
+    display: none;
 }
 
 .b-comment-list__leave-comment-button-wrap {
@@ -78,7 +82,12 @@
 
 @include media-l {
     .b-comment-list__show-comments-button-wrap {
-        width: 150px;
+        display: none;
+    }
+
+    .b-comment-list__show-comments-button-wrap_size_l {
+        display: inline-block;
+        width: 170px;
     }
 
     .b-comment-list__header {

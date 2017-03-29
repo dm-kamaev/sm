@@ -1,8 +1,8 @@
 goog.provide('sm.lUniversity.bCommentList.CommentList');
 
-goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lUniversity.bCommentList.Template');
 goog.require('sm.lUniversity.bCommentList.View');
@@ -22,15 +22,15 @@ sm.lUniversity.bCommentList.CommentList = function(view, opt_domHelper) {
     );
 
     /**
-     * Show comments button instance
-     * @type {cl.gButton.Button}
+     * Show comments buttons instance
+     * @type {Array<sm.gButton.ButtonStendhal>}
      * @private
      */
-    this.showCommentsButton_ = null;
+    this.showCommentsButtons_ = [];
 
     /**
      * Leave comment button instance
-     * @type {cl.gButton.Button}
+     * @type {sm.gButton.ButtonStendhal}
      * @private
      */
     this.leaveCommentButton_ = null;
@@ -102,17 +102,17 @@ goog.scope(function() {
     CommentList.prototype.initControlPanel_ = function() {
         var dom = this.getView().getDom();
 
-        if (dom.showCommentsButton) {
-            this.showCommentsButton_ = this.decorateChild(
-                'button',
-                this.getView().getDom().showCommentsButton
+        if (dom.leaveCommentButton) {
+            this.leaveCommentButton_ = this.decorateChild(
+                sm.gButton.ButtonStendhal.NAME,
+                dom.leaveCommentButton
             );
         }
 
-        if (dom.leaveCommentButton) {
-            this.leaveCommentButton_ = this.decorateChild(
-                'button',
-                this.getView().getDom().leaveCommentButton
+        if (dom.showCommentsButton) {
+            this.showCommentsButtons_ = this.decorateChildren(
+                sm.gButton.ButtonStendhal.NAME,
+                dom.showCommentsButton
             );
         }
     };
@@ -123,19 +123,25 @@ goog.scope(function() {
      * @private
      */
     CommentList.prototype.initButtonsListeners_ = function() {
-        if (this.showCommentsButton_) {
-            this.getHandler().listen(
-                this.showCommentsButton_,
-                cl.gButton.Button.Event.CLICK,
-                this.onShowCommentButtonClick_
-            );
-        }
-
         if (this.leaveCommentButton_) {
             this.getHandler().listen(
                 this.leaveCommentButton_,
                 cl.gButton.Button.Event.CLICK,
                 this.onLeaveCommentButtonClick_
+            );
+        }
+
+        if (this.showCommentsButtons_) {
+            this.getHandler().listen(
+                this.showCommentsButtons_[0],
+                cl.gButton.Button.Event.CLICK,
+                this.onShowCommentButtonClick_
+            );
+
+            this.getHandler().listen(
+                this.showCommentsButtons_[1],
+                cl.gButton.Button.Event.CLICK,
+                this.onShowCommentButtonClick_
             );
         }
     };

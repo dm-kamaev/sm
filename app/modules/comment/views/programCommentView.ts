@@ -236,7 +236,8 @@ class ProgramCommentView {
             author: {
                 photoUrl: params.user ? params.user.photoUrl : null,
                 name: params.user ? params.user.firstName : null,
-                status: userStatus
+                status: userStatus,
+                grade: params.comment.grade
             },
             score: params.comment.totalScore,
             text: textItems

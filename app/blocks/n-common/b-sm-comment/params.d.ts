@@ -8,7 +8,8 @@ export namespace bSmComment {
             author: {
                 photoUrl?: string,
                 name: string,
-                status: string
+                status: string,
+                grade?: number
             },
             score?: number,
             text: Array<{

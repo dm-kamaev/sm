@@ -6,7 +6,8 @@
  *     author: {
  *         photoUrl: string,
  *         name: string,
- *         status: string
+ *         status: string,
+ *         grade: (number|undefined)
  *     },
  *     score: number,
  *     text: Array<{
@@ -73,7 +74,8 @@
  *         author: {
  *             photoUrl: string,
  *             name: string,
- *             status: string
+ *             status: string,
+ *             grade: (number|undefined)
  *         },
  *         score: number
  *     }
@@ -87,12 +89,14 @@
                     src="{$params.data.author.photoUrl}"
                 />
             {else}
+                {let $icon: $params.data.author.grade ? 'student' : 'graduate' /}
+
                 {call .renderChild}
                     {param params: [
                         'type': 'icon-svg',
                         'renderParams': [
                             'data': [
-                                'type': 'graduate'
+                                'type': $icon
                             ]
                         ]
                     ]/}
@@ -108,11 +112,44 @@
             <div class="{call .rootClass /}__author-status">
                 , {$params.data.author.status}
             </div>
+
+            <div class="{call .rootClass /}__score">
+                {call .score_ data="all" /}
+            </div>
         </div>
 
-        <div class="{call .rootClass /}__score">
-            // {call .score_ data="all"}
-        </div>
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         score: number
+ *     }
+ * }}
+ */
+{template .score_}
+    <div class="{call .rootClass /}__score-title">
+        {call .getText}
+            {param message: 'Оценивает' /}
+        {/call}
+    </div>
+    <div class="{call .rootClass /}__stars">
+        {call .renderChild}
+            {param params: [
+                'type': 'smStars',
+                'renderParams': [
+                    'data': [
+                        'selectedAmount': $params.data.score
+                    ],
+                    'config': [
+                        'size': 's',
+                        'theme': 'neptune'
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
