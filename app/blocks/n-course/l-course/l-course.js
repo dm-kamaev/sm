@@ -107,6 +107,14 @@ goog.scope(function() {
          * @private
          */
         this.analyticsSender_ = null;
+
+        /**
+         * indicator. it's true, if data has been sent before
+         * @type {boolean}
+         * @private
+         */
+        this.enrollmentSend_ = false;
+
     };
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course,
@@ -148,6 +156,7 @@ goog.scope(function() {
     Course.prototype.enterDocument = function() {
         Course.base(this, 'enterDocument');
 
+        this.initViewListeners_();
         this.initUserInteractionsListeners_();
         this.initDepartmentListListeners_();
         this.initModalsListeners_();
@@ -155,6 +164,31 @@ goog.scope(function() {
         this.initSideMenuListeners_();
 
         this.analyticsSender_.sendPageview();
+    };
+
+
+    /**
+     * Initializes listeners for view
+     * @private
+     */
+    Course.prototype.initViewListeners_ = function() {
+        this.viewListen(
+            goog.events.EventType.BEFOREUNLOAD,
+            this.onBeforeunload_
+        );
+    };
+
+
+    /**
+     * Before close page
+     * @private
+     */
+    Course.prototype.onBeforeunload_ = function() {
+        if ((!this.enrollmentSend_) &&
+                this.modalEnrollment_.isPhoneOrEmailValid()) {
+            var data = this.modalEnrollment_.buildRequestData();
+            cl.iRequest.Request.getInstance().send(data);
+        }
     };
 
 
@@ -290,6 +324,7 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.onSendEnrollmentSuccess_ = function(event) {
+        this.enrollmentSend_ = true;
         this.modalSuccess_.show();
         this.sendAnalyticsSuccessEnrollment_(event.data);
     };

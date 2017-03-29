@@ -171,6 +171,16 @@ goog.scope(function() {
 
 
     /**
+     * Return true, if phone or email is valid
+     * @return {boolean}
+     * @public
+     */
+    ModalEnrollment.prototype.isPhoneOrEmailValid = function() {
+        return (this.phoneField_.validate() || this.emailField_.validate());
+    };
+
+
+    /**
      * Initializes listeners for button
      * @private
      */
@@ -216,7 +226,7 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.sendRequest_ = function() {
-        var data = this.buildRequestData_();
+        var data = this.buildRequestData();
 
         this.dispatchEvent(ModalEnrollment.Event.SEND_REQUEST);
 
@@ -293,9 +303,9 @@ goog.scope(function() {
     /**
      * Build and get data for request
      * @return {Object}
-     * @private
+     * @public
      */
-    ModalEnrollment.prototype.buildRequestData_ = function() {
+    ModalEnrollment.prototype.buildRequestData = function() {
         return {
             url: this.buildApiAddress_(),
             type: 'POST',
@@ -338,10 +348,10 @@ goog.scope(function() {
 
         return {
             '_csrf': window['ctx']['csrf'],
-            'name': this.nameField_.getValue(),
-            'phone': this.phoneField_.getValue(),
-            'email': this.emailField_.getValue(),
-            'comment': this.commentField_.getValue(),
+            'name': this.nameField_.getValue() || 'Данные не указаны',
+            'phone': this.phoneField_.getValue() || 'Данные не указаны',
+            'email': this.emailField_.getValue() || 'Данные не указаны',
+            'comment': this.commentField_.getValue() || 'Данные не указаны',
             'link': window.location.href,
             'department': department
         };
