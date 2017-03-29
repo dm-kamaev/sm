@@ -5,6 +5,7 @@ export namespace bSmItemList {
     export namespace Params {
         /*
          * sm.bSmItemList.Template.Params.Data
+         * sm.bSmItemList.Params.Data
          */
         export interface Data {
             items: Array<any>;
@@ -15,6 +16,7 @@ export namespace bSmItemList {
 
         /*
          * sm.bSmItemList.Template.Params.Config
+         * sm.bSmItemList.Params.Config
          */
         export interface Config {
             stylizationModifier?: string;
@@ -27,6 +29,7 @@ export namespace bSmItemList {
 
     /*
      * sm.bSmItemList.Template.Params
+     * sm.bSmItemList.Params
      */
     export interface Params {
         data: Params.Data;

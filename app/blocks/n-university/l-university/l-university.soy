@@ -2,15 +2,15 @@
 
 
 /**
- * typedef {sm.lUniversity.Template.Params} sm.lUniversity.Template.Params.Data
+ * typedef {sm.lUniversity.Params} sm.lUniversity.Template.Params
  */
 
 
 /**
  * Page university information
  * @param params {{
- *     data: sm.lUniversity.Template.Params.Data,
- *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ *     data: sm.lUniversity.Params.Data,
+ *     config: ?sm.lUniversity.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
  * @factory sm.iCloblFactory.FactoryStendhal
@@ -51,8 +51,8 @@
 /**
  * Content
  * @param params {{
- *     data: sm.lUniversity.Template.Data,
- *     config: ?sm.iLayout.Template.Params.Config
+ *     data: sm.lUniversity.Params.Data,
+ *     config: ?sm.lUniversity.Params.Config
  * }}
  * @protected
  * @override
@@ -144,15 +144,13 @@
  * Section comments
  * @param params {{
  *     data: {
- *         entityData: {
- *             comments: sm.bCommentList.Template.Params.Data
- *         }
+ *         comments: sm.bCommentList.Template.Params.Data
  *     }
  * }}
  * @private
  */
 {template .sectionComments_}
-    {if $params.data.entityData.comments}
+    {if $params.data.comments}
         <div class="{call .rootClass/}__section{sp}
             {call .rootClass/}__section_comments{sp}"
         >
@@ -166,8 +164,9 @@
  * Section programs
  * @param params {{
  *     data: {
- *         entityData: {
- *             similarPrograms: sm.bSmItemList.Template.Params.Data
+ *         similarPrograms: {
+ *             header: string,
+ *             data: sm.bSmItemList.Template.Params.Data
  *         }
  *     }
  * }}
@@ -186,8 +185,9 @@
  * Section courses
  * @param params {{
  *     data: {
- *         entityData: {
- *             usefulCourses: sm.bSmItemList.Template.Params.Data
+ *         usefulCourses: {
+ *             header: string,
+ *             data: sm.bSmItemList.Template.Params.Data
  *         }
  *     }
  * }}
@@ -466,8 +466,9 @@
  * Similar programs block
  * @param params {{
  *     data: {
- *         entityData: {
- *             similarPrograms: sm.bSmItemList.Template.Params.Data
+ *         similarPrograms: {
+ *              header: string,
+ *              data: sm.bSmItemList.Template.Params.Data
  *         }
  *     },
  *     config: {
@@ -477,20 +478,20 @@
  * @private
  */
 {template .programs_}
-    {if $params.data.entityData.similarPrograms}
+    {if $params.data.similarPrograms}
         <div class="{call .rootClass/}__similar-programs-content">
             {let $customClasses kind="html"}
                 {call .rootClass/}__programs
             {/let}
             <div class="{call .rootClass/}__similar-programs-header">
-                {$params.data.entityData.similarPrograms.header}
+                {$params.data.similarPrograms.header}
             </div>
             <div class="{call .rootClass/}__similar-programs-list">
                 {call .renderChildLayout}
                     {param params: $params /}
                     {param type: 'smItemList' /}
                     {param renderParams: [
-                        'data': $params.data.entityData.similarPrograms,
+                        'data': $params.data.similarPrograms.data,
                         'config': [
                             'theme': 'inline',
                             'customClasses': [$customClasses]
@@ -507,8 +508,9 @@
  * Similar programs block
  * @param params {{
  *     data: {
- *         entityData: {
- *             usefulCourses: sm.bSmItemList.Template.Params.Data
+ *         usefulCourses: {
+ *             header: string,
+ *             data: sm.bSmItemList.Template.Params.Data
  *         }
  *     },
  *     config: {
@@ -518,20 +520,20 @@
  * @private
  */
 {template .courses_}
-    {if $params.data.entityData.usefulCourses}
+    {if $params.data.usefulCourses}
         <div class="{call .rootClass/}__useful-courses-content">
             {let $customClasses kind="html"}
                 {call .rootClass/}__courses
             {/let}
             <div class="{call .rootClass/}__useful-courses-header">
-                {$params.data.entityData.usefulCourses.header}
+                {$params.data.usefulCourses.header}
             </div>
             <div class="{call .rootClass/}__useful-courses-list">
                 {call .renderChildLayout}
                     {param params: $params /}
                     {param type: 'smItemList' /}
                     {param renderParams: [
-                        'data': $params.data.entityData.usefulCourses,
+                        'data': $params.data.usefulCourses.data,
                         'config': [
                             'enableCover': true,
                             'theme': 'inline',
@@ -575,9 +577,7 @@
  * Comments block
  * @param params {{
  *     data: {
- *         entityData: {
- *             comments: sm.bCommentList.Template.Params.Data
- *         }
+ *         comments: sm.bCommentList.Template.Params.Data
  *     },
  *     config: {
  *         modifier: string
@@ -595,7 +595,7 @@
             {param params: $params /}
             {param type: 'lUniversity-commentList' /}
             {param renderParams: [
-                'data': $params.data.entityData.comments,
+                'data': $params.data.comments,
                 'config': [
                     'theme': 'neptune',
                     'customClasses': [$customClasses],

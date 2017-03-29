@@ -102,9 +102,11 @@ class InformationView extends LayoutView {
         this.setEntityData_(params.data);
         this.setSubscribeBoard_(params.data);
         this.setNavigationPanel_(params.data);
+        this.setComments_(params.data);
+        this.setSimilarPrograms_();
+        this.setUsefulCourses_();
         this.setModalComment_(params.data.program.id, params.data.userComment);
     }
-
 
     private setEntityData_(data: Data) {
         this.params.data.entityData = {
@@ -119,9 +121,6 @@ class InformationView extends LayoutView {
             summaryBoard: this.getSummaryBoardParams_(data),
             banner: this.getBannerParams_(data),
             entityRelation: this.getEntityRelationParams_(),
-            similarPrograms: this.getSimilarProgramsParams_(),
-            usefulCourses: this.getUsefulCoursesParams_(),
-            comments: this.getComments_(data)
         };
     }
 
@@ -387,156 +386,158 @@ class InformationView extends LayoutView {
         };
     }
 
-    private getSimilarProgramsParams_() {
-        return {
+    private setComments_(data: Data) {
+        this.params.data.comments = programCommentView.renderCommentsList({
+            comments: data.comments,
+            users: data.users
+        });
+    }
+
+    private setSimilarPrograms_() {
+        this.params.data.similarPrograms = {
             header: 'Похожие программы',
+            data: {
                 countItemsPerPage: 4,
                 items: [{
-                id: 1,
-                type: 'university',
-                name: {
-                    light: 'Менеджер СПБГУ'
-                },
-                description: ' ',
-                additionalLink: {
-                    content: 'Специальность',
-                    url: 'http://yandex.ru',
-                    theme: 'neptune',
-                    size: 'xl'
-                },
-                buttonLink: {
-                    data: {
-                        icon: 'arrow-circle',
-                        iconType: 'svg',
-                        url: 'http://yandex.ru'
+                    id: 1,
+                    type: 'university',
+                    name: {
+                        light: 'Менеджер СПБГУ'
+                    },
+                    description: ' ',
+                    additionalLink: {
+                        content: 'Специальность',
+                        url: 'http://yandex.ru',
+                        theme: 'neptune',
+                        size: 'xl'
+                    },
+                    buttonLink: {
+                        data: {
+                            icon: 'arrow-circle',
+                            iconType: 'svg',
+                            url: 'http://yandex.ru'
+                        }
                     }
-                }
-            }, {
-                id: 2,
-                type: 'university',
-                name: {
-                    light: 'Социология НИУ-ВШЭ'
-                },
-                description: ' ',
-                additionalLink: {
-                    content: 'Специальность',
-                    url: 'http://yandex.ru',
-                    theme: 'neptune',
-                    size: 'xl'
-                },
-                buttonLink: {
-                    data: {
-                        icon: 'arrow-circle',
-                        iconType: 'svg',
-                        url: 'http://yandex.ru'
+                }, {
+                    id: 2,
+                    type: 'university',
+                    name: {
+                        light: 'Социология НИУ-ВШЭ'
+                    },
+                    description: ' ',
+                    additionalLink: {
+                        content: 'Специальность',
+                        url: 'http://yandex.ru',
+                        theme: 'neptune',
+                        size: 'xl'
+                    },
+                    buttonLink: {
+                        data: {
+                            icon: 'arrow-circle',
+                            iconType: 'svg',
+                            url: 'http://yandex.ru'
+                        }
                     }
-                }
-            }, {
-                id: 3,
-                type: 'university',
-                name: {
-                    light: 'Менеджер МГУ'
-                },
-                description: ' ',
-                additionalLink: {
-                    content: 'Специальность',
-                    url: 'http://yandex.ru',
-                    theme: 'neptune',
-                    size: 'xl'
-                },
-                buttonLink: {
-                    data: {
-                        icon: 'arrow-circle',
-                        iconType: 'svg',
-                        url: 'http://yandex.ru'
+                }, {
+                    id: 3,
+                    type: 'university',
+                    name: {
+                        light: 'Менеджер МГУ'
+                    },
+                    description: ' ',
+                    additionalLink: {
+                        content: 'Специальность',
+                        url: 'http://yandex.ru',
+                        theme: 'neptune',
+                        size: 'xl'
+                    },
+                    buttonLink: {
+                        data: {
+                            icon: 'arrow-circle',
+                            iconType: 'svg',
+                            url: 'http://yandex.ru'
+                        }
                     }
-                }
-            }, {
-                id: 4,
-                type: 'university',
-                name: {
-                    light: 'Логистика НИУ-ВШЭ'
-                },
-                description: ' ',
-                additionalLink: {
-                    content: 'Специальность',
-                    url: 'http://yandex.ru',
-                    theme: 'neptune',
-                    size: 'xl'
-                },
-                buttonLink: {
-                    data: {
-                        icon: 'arrow-circle',
-                        iconType: 'svg',
-                        url: 'http://yandex.ru'
+                }, {
+                    id: 4,
+                    type: 'university',
+                    name: {
+                        light: 'Логистика НИУ-ВШЭ'
+                    },
+                    description: ' ',
+                    additionalLink: {
+                        content: 'Специальность',
+                        url: 'http://yandex.ru',
+                        theme: 'neptune',
+                        size: 'xl'
+                    },
+                    buttonLink: {
+                        data: {
+                            icon: 'arrow-circle',
+                            iconType: 'svg',
+                            url: 'http://yandex.ru'
+                        }
                     }
-                }
-            }],
+                }],
                 itemType: 'smItemCompact',
                 itemConfig: {
-                theme: 'neptune'
-            },
-            theme: 'neptune'
+                    theme: 'neptune'
+                }
+            }
         };
     }
 
-    private getUsefulCoursesParams_() {
-        return {
+    private setUsefulCourses_() {
+        this.params.data.usefulCourses = {
             header: 'Полезные курсы',
+            data: {
                 countItemsPerPage: 3,
                 items: [{
-                id: 1,
-                type: 'course',
-                name: {
-                    light: 'Английский язык'
-                },
-                description: `Подготовка к ЕГЭ по английскому
-                                языку English First`,
-                imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
-                'facebook/000/839/199/8a9.jpg',
-                url: 'http://yandex.ru',
-                nameLinkUrl: 'http://google.com'
-            }, {
-                id: 2,
-                type: 'course',
-                name: {
-                    light: 'Профориентация'
-                },
-                description: 'Система Выбор Smart Course',
-                imageUrl: 'http://lamcdn.net/lookatme.ru/' +
-                'post_image-image/vePw1jo6HLFVfp7JIU5_' +
-                'Qg-article.jpg',
-                url: 'http://yandex.ru',
-                nameLinkUrl: 'http://google.com'
-            }, {
-                id: 3,
-                type: 'course',
-                name: {
-                    light: 'Профориентация'
-                },
-                description: `Пропуск в профессию. Индивидуальная
-                                траектория Proekt Pro`,
-                imageUrl: 'http://cs8.pikabu.ru/post_img/2016/' +
-                '01/14/12/1452803883198482683.png',
-                url: 'http://yandex.ru',
-                nameLinkUrl: 'http://google.com'
-            }],
+                    id: 1,
+                    type: 'course',
+                    name: {
+                        light: 'Английский язык'
+                    },
+                    description: `Подготовка к ЕГЭ по английскому
+                                    языку English First`,
+                    imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
+                    'facebook/000/839/199/8a9.jpg',
+                    url: 'http://yandex.ru',
+                    nameLinkUrl: 'http://google.com'
+                }, {
+                    id: 2,
+                    type: 'course',
+                    name: {
+                        light: 'Профориентация'
+                    },
+                    description: 'Система Выбор Smart Course',
+                    imageUrl: 'http://lamcdn.net/lookatme.ru/' +
+                    'post_image-image/vePw1jo6HLFVfp7JIU5_' +
+                    'Qg-article.jpg',
+                    url: 'http://yandex.ru',
+                    nameLinkUrl: 'http://google.com'
+                }, {
+                    id: 3,
+                    type: 'course',
+                    name: {
+                        light: 'Профориентация'
+                    },
+                    description: `Пропуск в профессию. Индивидуальная
+                                    траектория Proekt Pro`,
+                    imageUrl: 'http://cs8.pikabu.ru/post_img/2016/' +
+                    '01/14/12/1452803883198482683.png',
+                    url: 'http://yandex.ru',
+                    nameLinkUrl: 'http://google.com'
+                }],
                 itemType: 'smItemCompact',
                 itemConfig: {
                 theme: 'neptune-imaged',
                     enableCover: true,
                     isDescriptionLink: true,
                     nameLinkSize: 'xl'
-            },
-            theme: 'neptune'
+                }
+            }
         };
-    }
-
-    private getComments_(data: Data): bCommentList.Params.Data {
-        return programCommentView.renderCommentsList({
-            comments: data.comments,
-            users: data.users
-        });
     }
 
     private setSubscribeBoard_(data: Data) {

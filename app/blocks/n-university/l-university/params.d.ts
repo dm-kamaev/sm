@@ -40,10 +40,16 @@ export namespace lUniversity {
                 summaryBoard: bSummaryBoard.Params.Data;
                 banner: bSmBanner.Params;
                 entityRelation: bEntityRelation.Params;
-                similarPrograms?: bSmItemList.Params.Data;
-                usefulCourses?: bSmItemList.Params.Data;
-                comments?: bCommentList.Params.Data;
             };
+            similarPrograms?: {
+                header: string;
+                data: bSmItemList.Params.Data;
+            };
+            usefulCourses?: {
+                header: string;
+                data: bSmItemList.Params.Data;
+            };
+            comments?: bCommentList.Params.Data;
             subscribeBoard: bSmSubscribeBoard.Params;
             navigationPanel: bSmRowLinks.Params.Data;
             modalComment: gModalInteraction.Params.Data;
