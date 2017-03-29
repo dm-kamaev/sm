@@ -601,7 +601,20 @@ exports.getAllTypes = async(function(req, res) {
  * @apiVersion 0.0.0
  * @apiGroup School
  * @apiName Count
- * @apiParam {Object} searchParams
+ *
+ * @apiParam {Object}   searchParams
+ * @apiParam {string}   searchParams.name
+ * @apiParam {number[]} searchParams.classes
+ * @apiParam {number[]} searchParams.schoolType
+ * @apiParam {number[]} searchParams.gia
+ * @apiParam {number[]} searchParams.ege
+ * @apiParam {number[]} searchParams.olimp
+ * @apiParam {number[]} searchParams.specializedClassType
+ * @apiParam {number[]} searchParams.activitySphere
+ * @apiParam {number}   searchParams.metroId
+ * @apiParam {number}   searchParams.areaId
+ * @apiParam {number}   searchParams.districtId
+ *
  * @apiParamExample {Object} Request-Example:
  *     {
  *         "name": "Sky",
@@ -617,6 +630,10 @@ exports.getAllTypes = async(function(req, res) {
  *         "districtId: 3
  *     }
  * @apiSuccess {number} count of school
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     "12"
  */
 exports.getSearchCount = async(function(req, res) {
     let result;
