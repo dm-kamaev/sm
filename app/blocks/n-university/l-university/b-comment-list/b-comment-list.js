@@ -131,7 +131,7 @@ goog.scope(function() {
             );
         }
 
-        if (this.showCommentsButtons_) {
+        if (this.showCommentsButtons_.length > 0) {
             this.getHandler().listen(
                 this.showCommentsButtons_[0],
                 cl.gButton.Button.Event.CLICK,
