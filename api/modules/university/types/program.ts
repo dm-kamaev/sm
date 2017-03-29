@@ -53,11 +53,6 @@ export interface ProgramAdmin extends ProgramAttribute {
     programUrl?: string;
 }
 
-export interface ProgramMeta extends ProgramAttribute {
-    pages?: any;
-    pageMetaInformations?: any;
-}
-
 export interface ProgramUrl {
     id: number;
     url: string;
