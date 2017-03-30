@@ -544,8 +544,8 @@ class InformationView extends LayoutView {
     private setSubscribeBoard_(data: Data) {
         this.params.data.subscribeBoard = {
             data: {
-                entityId: data.university.id,
-                entityType: entityType.UNIVERSITY
+                entityId: data.program.id,
+                entityType: entityType.PROGRAM
             }
         };
     }

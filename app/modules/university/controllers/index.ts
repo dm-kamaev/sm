@@ -19,7 +19,7 @@ router.get(
 );
 
 router.post(
-    '/university/subscribe',
+    '/program/subscribe',
     subscriptionController.actionCreate
 );
 router.post(

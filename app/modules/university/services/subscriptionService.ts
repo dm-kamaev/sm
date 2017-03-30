@@ -26,7 +26,10 @@ class SubscriptionService extends Service {
             method: 'post',
             data: {
                 email_address: email,
-                status: 'subscribed'
+                status: 'subscribed',
+                merge_fields: {
+                    PROGRAM_ID: id
+                }
             },
             auth: {
                 username: mailChimp.name,

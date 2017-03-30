@@ -21,7 +21,7 @@ class SubscriptionController extends Controller {
 
 
     /**
-     * @api {post} /university/subscribe Add subscriber
+     * @api {post} /program/subscribe Add subscriber
      * @apiVersion 1.0.0
      * @apiName addSubscriber
      *
@@ -48,7 +48,7 @@ class SubscriptionController extends Controller {
         ));
 
         return {
-            id: result.data.id,
+            id: result.data['merge_fields']['PROGRAM_ID'],
             email: result.data['email_address'],
             status: result.data.status
         };
