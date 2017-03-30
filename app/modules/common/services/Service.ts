@@ -19,7 +19,7 @@ abstract class Service {
 
     public async send(params: RequestParams): Promise<any|Array<any>> {
         this.log(params);
-        return await(this.makeRequest(params));
+        return await this.makeRequest(params);
     }
 
     protected abstract handleError(error);
@@ -28,9 +28,9 @@ abstract class Service {
         let res;
 
         try {
-            res = await(axios(params));
+            res = await axios(params);
         } catch (error) {
-            this.handleError(error);
+            res = this.handleError(error);
         }
 
         return res;

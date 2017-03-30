@@ -227,6 +227,7 @@ app/modules/university/services/exceptions/*.js
 app/modules/university/services/*.js
 app/modules/university/controllers/ProgramCommentController.js
 app/modules/university/types/programComment.js
+app/modules/university/constants/*.js
 
 app/modules/comment/**/*.js
 
