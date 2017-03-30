@@ -264,10 +264,11 @@
  * @private
  */
 {template .mainData_}
-    <div class="{call .rootClass/}__data_main-description">
+    <div class="{call .rootClass/}__data_main-description i-utils__clearfix">
+        {call .descriptionSizeXS_ data="all" /}
+        {call .summaryBoard_ data="all" /}
         {call .navigationPanel_ data="all" /}
         {call .description_ data="all" /}
-        {call .summaryBoard_ data="all" /}
         {call .descriptionList_ data="all" /}
         {call .subscribeBoard_ data="all" /}
         {call .bannerSizeXS_ data="all" /}
@@ -302,9 +303,53 @@
 
 
 /**
+ * Description display size xs
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             subunitName: string,
+ *             subunitType: string,
+ *             description: string,
+ *             cutDescription: {
+ *                 cutText?: string,
+ *                 fullText?: string;
+ *             }
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .descriptionSizeXS_}
+    {call .description_}
+        {param params: [
+            'data': [
+                'entityData': $params.data.entityData,
+                'size': 'xs'
+            ],
+            'config': $params.config
+        ]/}
+    {/call}
+{/template}
+
+
+/**
  * Description
  * @param params {{
- *     data: sm.lUniversity.Template.Data,
+ *     data: {
+ *         entityData: {
+ *             subunitName: string,
+ *             subunitType: string,
+ *             description: string,
+ *             cutDescription: {
+ *                 cutText?: string,
+ *                 fullText?: string;
+ *             }
+ *         },
+ *         size: (string|undefined)
+ *     },
  *     config: {
  *         modifier: string
  *     }
@@ -312,7 +357,13 @@
  * @private
  */
 {template .description_}
-    <div class="{call .rootClass/}__main-description">
+    {let $class kind="text"}
+        {if $params.data.size}
+            {call .rootClass/}__main-description_size_{$params.data.size}
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__main-description {$class}">
         <div class="{call .rootClass/}__type">
             {$params.data.entityData.subunitType}
         </div>
@@ -322,25 +373,25 @@
         </div>
 
         <div class="{call .rootClass/}__description">
-            {$params.data.entityData.description}
-        </div>
-
-        <div class="{call .rootClass/}__description_cut">
-            {call .renderChildLayout}
-                {param params: $params /}
-                {param type: 'smCollapsedText' /}
-                {param renderParams: [
-                    'data': [
-                        'text': $params.data.entityData.cutDescription,
-                        'buttonTextExpand': 'Развернуть описание'
-                    ],
-                    'config': [
-                        'isButtonCollapse': true,
-                        'buttonFont': 'inherit',
-                        'buttonTheme': 'neptune'
-                    ]
-                ]/}
-            {/call}
+            {if $params.data.size == 'xs'}
+                {call .renderChildLayout}
+                    {param params: $params /}
+                    {param type: 'smCollapsedText' /}
+                    {param renderParams: [
+                        'data': [
+                            'text': $params.data.entityData.cutDescription,
+                            'buttonTextExpand': 'Развернуть описание'
+                        ],
+                        'config': [
+                            'isButtonCollapse': true,
+                            'buttonFont': 'inherit',
+                            'buttonTheme': 'neptune'
+                        ]
+                    ]/}
+                {/call}
+            {else}
+                {$params.data.entityData.description}
+            {/if}
         </div>
     </div>
 {/template}
