@@ -217,17 +217,17 @@ goog.scope(function() {
         var data = {};
 
         var userTypeFieldName = this.userTypeField_.getName(),
+            gradeFieldName = this.gradeField_.getName(),
+            yearFieldName = this.yearField_.getName(),
             userType = this.userTypeField_.getValue();
 
         data[userTypeFieldName] = userType;
 
         if (userType == InteractionForm.UserType.GRADUATE) {
-            var yearFieldName = this.yearField_.getName();
             data[yearFieldName] = this.yearField_.getValue();
             data[gradeFieldName] = null;
         }
         else if (userType == InteractionForm.UserType.STUDENT) {
-            var gradeFieldName = this.gradeField_.getName();
             data[gradeFieldName] = this.gradeField_.getValue();
             data[yearFieldName] = null;
         }
