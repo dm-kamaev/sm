@@ -105,12 +105,14 @@
         </div>
 
         <div class="{call .rootClass /}__author-data">
-            <div class="{call .rootClass /}__author-name">
-                {$params.data.author.name}
-            </div>
+            {if $params.data.author.name}
+                <div class="{call .rootClass /}__author-name">
+                    {$params.data.author.name},
+                </div>
+            {/if}
 
             <div class="{call .rootClass /}__author-status">
-                , {$params.data.author.status}
+                {sp}{$params.data.author.status}
             </div>
 
             <div class="{call .rootClass /}__score">

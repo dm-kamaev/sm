@@ -116,7 +116,7 @@ class InformationView extends LayoutView {
             id: data.program.id,
             name: data.university.name,
             subunitName: data.program.name,
-            subunitType: 'Специальность',
+            subunitType: 'Программа обучения',
             description: data.program.description,
             sketch: this.getSketchParams_(data),
             cutDescription: this.getCutDescription_(data.program.description),
