@@ -5,7 +5,7 @@
 import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
-const awardeType = require('../enums/olimpStatusType');
+const awardType = require('../enums/olimpStatusType');
 const olympiadType = require('../enums/olimpType');
 
 import {service as olympiadResultService} from '../services/olimpResult';
@@ -306,7 +306,7 @@ class OlympiadAdminController extends Controller {
     /**
      * @api {get} /api/admin/awardetype Get all types of status olympiad
      * @apiVersion 1.0.0
-     * @apiName GetAwardeTypes
+     * @apiName GetAwardTypes
      * @apiGroup School Admin
      *
      * @apiSuccess {String[]} - school types.
@@ -316,15 +316,15 @@ class OlympiadAdminController extends Controller {
      *        "призер"
      *    ]
      */
-    public actionGetAwardeTypes(actionContext: any) {
-        return awardeType.toArray();
+    public actionGetAwardTypes(actionContext: any) {
+        return awardType.toArray();
     }
 
 
     /**
      * @api {get} /api/admin/olymptype Get all types of olympiad
      * @apiVersion 1.0.0
-     * @apiName GetOlimpTypes
+     * @apiName GetOlympTypes
      * @apiGroup School Admin
      *
      * @apiSuccess {String[]} - school types.
@@ -334,7 +334,7 @@ class OlympiadAdminController extends Controller {
      *        "московская"
      *    ]
      */
-    public actionGetOlimpTypes(actionContext: any) {
+    public actionGetOlympTypes(actionContext: any) {
         return olympiadType.toArray();
     }
 }
