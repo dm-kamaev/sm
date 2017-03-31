@@ -33,6 +33,10 @@
         margin-bottom: 55px;
         padding-top: 55px;
         border-top: 1px solid #e4e4e4;
+
+        &:first-child {
+            border-top: none;
+        }
     }
 }
 
@@ -99,7 +103,7 @@
     .b-sm-item-list_neptune-theme {
         .b-sm-item-list__item-wrap {
             margin-bottom: 55px;
-            padding-top: 42px;
+            padding-top: 40px;
             border-top: 1px solid #e4e4e4;
         }
     }
@@ -205,6 +209,10 @@
             margin-bottom: 30px;
             padding-top: 30px;
             border-top: 1px solid #e4e4e4;
+
+            &:first-child {
+                padding-top: 0;
+            }
         }
     }
 

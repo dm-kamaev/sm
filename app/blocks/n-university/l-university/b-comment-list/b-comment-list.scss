@@ -1,15 +1,21 @@
 @import '../../../n-common/i-media/i-media';
 
 .b-comment-list__header {
-    box-sizing: border-box;
-    max-width: 1200px;
-    margin: 0 auto 30px auto;
-    padding-left: 310px;
+    padding-bottom: 29px;
+
+    border-bottom: 1px solid #e4e4e4;
 
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 20.3px;
     font-weight: 700;
     line-height: 24px;
+}
+
+.b-comment-list__header-content {
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 310px;
 }
 
 .b-comment-list__list {
@@ -42,12 +48,18 @@
     width: 187px;
 }
 
+.b-comment-list__leave-comment-button-wrap_size_s {
+    display: none;
+
+    box-sizing: border-box;
+    padding: 25px;
+}
+
 .b-comment-list__placeholder {
     box-sizing: border-box;
     max-width: 1200px;
     margin: 0 auto;
-    padding-bottom: 30px;
-    padding-left: 310px;
+    padding: 30px 0 30px 310px;
 
     color: #747474;
 
@@ -57,25 +69,29 @@
 }
 
 @include media-xl {
-    .b-comment-list__header {
-        width: auto;
-        box-sizing: content-box;
-        padding-right: 40px;
-        padding-left: 350px;
-    }
-
     .b-comment-list__control-panel {
-        width: auto;
         box-sizing: content-box;
+        width: auto;
         padding-right: 40px;
         padding-left: 350px;
     }
 
     .b-comment-list__placeholder {
-        width: auto;
         box-sizing: content-box;
+        width: auto;
         padding-right: 40px;
         padding-left: 350px;
+    }
+
+    .b-comment-list__header {
+        box-sizing: content-box;
+        width: auto;
+        padding-right: 40px;
+        padding-left: 350px;
+    }
+
+    .b-comment-list__header-content {
+        padding-left: 0;
     }
 }
 
@@ -87,11 +103,17 @@
 
     .b-comment-list__show-comments-button-wrap_size_l {
         display: inline-block;
+
         width: 170px;
     }
 
     .b-comment-list__header {
         padding-left: 40px;
+    }
+
+    .b-comment-list__header-content {
+        width: auto;
+        padding-left: 0;
     }
 
     .b-comment-list__control-panel {
@@ -131,5 +153,9 @@
     .b-comment-list__placeholder {
         padding-right: 25px;
         padding-left: 25px;
+    }
+
+    .b-comment-list__leave-comment-button-wrap_size_s {
+        display: block;
     }
 }

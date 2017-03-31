@@ -30,10 +30,10 @@ sm.lUniversity.bCommentList.CommentList = function(view, opt_domHelper) {
 
     /**
      * Leave comment button instance
-     * @type {sm.gButton.ButtonStendhal}
+     * @type {Array<sm.gButton.ButtonStendhal>}
      * @private
      */
-    this.leaveCommentButton_ = null;
+    this.leaveCommentButtons_ = [];
 
     /**
      * List of comments instance
@@ -103,7 +103,7 @@ goog.scope(function() {
         var dom = this.getView().getDom();
 
         if (dom.leaveCommentButton) {
-            this.leaveCommentButton_ = this.decorateChild(
+            this.leaveCommentButton_ = this.decorateChildren(
                 sm.gButton.ButtonStendhal.NAME,
                 dom.leaveCommentButton
             );
@@ -123,9 +123,15 @@ goog.scope(function() {
      * @private
      */
     CommentList.prototype.initButtonsListeners_ = function() {
-        if (this.leaveCommentButton_) {
+        if (this.leaveCommentButton_.length > 0) {
             this.getHandler().listen(
-                this.leaveCommentButton_,
+                this.leaveCommentButton_[0],
+                cl.gButton.Button.Event.CLICK,
+                this.onLeaveCommentButtonClick_
+            );
+
+            this.getHandler().listen(
+                this.leaveCommentButton_[1],
                 cl.gButton.Button.Event.CLICK,
                 this.onLeaveCommentButtonClick_
             );

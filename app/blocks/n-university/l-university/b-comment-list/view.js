@@ -78,7 +78,7 @@ goog.scope(function() {
      */
     View.prototype.initDom = function() {
         this.dom = {
-            leaveCommentButton: this.getElementByClass(
+            leaveCommentButton: this.getElementsByClass(
                 View.CssClass.LEAVE_COMMENT_BUTTON
             ),
             itemList: this.getElementByClass(
