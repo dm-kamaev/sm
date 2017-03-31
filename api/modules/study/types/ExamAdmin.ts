@@ -1,7 +1,6 @@
 export type examResult = {
     id: number;
     subject: string;
-    subjectId: number;
     year: number;
     averageResult: number;
     passedCount: number;

@@ -69,7 +69,6 @@ class View {
         return {
           id: ege.id,
           subject,
-          subjectId: ege.subjectId,
           year: ege.year,
           averageResult: Number((ege.result || 0).toFixed(1)),
           passedCount: ege.passedCount || 0,

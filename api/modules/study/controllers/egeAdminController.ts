@@ -81,8 +81,7 @@ class EgeAdminController extends Controller {
      * @apiParam {Number} id        Ege's id.
      *
      * @apiSuccess {Number}   ege.id            Ege's id
-     * @apiSuccess {String}   ege.subject       School's subject
-     * @apiSuccess {Number}   ege.subject       School's subject id
+     * @apiSuccess {String}   ege.subject       School's ubject
      * @apiSuccess {Number}   ege.year          Ege's year
      * @apiSuccess {Number}   ege.averageResult AverageResult by subject
      * @apiSuccess {Number}   ege.passedCount   Count passed exam
@@ -91,7 +90,6 @@ class EgeAdminController extends Controller {
      *    {
      *        "id": 9889,
      *        "subject": "Английский",
-     *        "subjectId": 2,
      *        "year": 2015,
      *        "averageResult": 81,
      *        "passedCount": 0

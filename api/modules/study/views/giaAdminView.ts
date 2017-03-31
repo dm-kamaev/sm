@@ -69,7 +69,6 @@ class View {
         return {
             id: gia.id,
             subject,
-            subjectId: gia.subjectId,
             year: gia.year,
             averageResult: Number((gia.result || 0).toFixed(1)),
             passedCount: gia.count || 0,

@@ -77,8 +77,7 @@ class GiaAdminController extends Controller {
      * @apiParam {Number} id       Gia's id.
      *
      * @apiSuccess {Number}   gia.id            Gia's id
-     * @apiSuccess {String}   gia.subject       School's subject
-     * @apiSuccess {Number}   gia.subjectId     School's subject id
+     * @apiSuccess {String}   gia.subject       School's ubject
      * @apiSuccess {Number}   gia.year          Gia's year
      * @apiSuccess {Number}   gia.averageResult AverageResult by subject
      * @apiSuccess {Number}   gia.passedCount   Count passed exam
@@ -87,7 +86,6 @@ class GiaAdminController extends Controller {
      *    {
      *        "id": 5543,
      *        "subject": "Математика",
-     *        "subjectId": 1,
      *        "year": 2015,
      *        "averageResult": 4.9,
      *        "passedCount": 143
