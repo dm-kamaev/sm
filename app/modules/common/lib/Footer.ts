@@ -70,11 +70,13 @@ abstract class Footer {
     }
 
     private setCopyright_() {
-        return this.copyright || generalDataView.getCopyright();
+        this.params.data.copyright =
+            this.copyright || generalDataView.getCopyright();
     }
 
     private setContactLinks_() {
-        return this.contactLinks || generalDataView.getContactLinks();
+        this.params.data.contactLinks =
+            this.contactLinks || generalDataView.getContactLinks();
     }
 
     private setSeoLinks_() {
