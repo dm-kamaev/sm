@@ -12,6 +12,7 @@ import {
     Model as ProgramCommentModel
 } from '../../comment/models/ProgramComment';
 import {Model as EntranceStatisticModel} from '../models/EntranceStatistic';
+import {Model as ProgramEgeExamModel} from '../models/ProgramEgeExam';
 import {
     ProgramInstance,
     ProgramAdmin,
@@ -194,6 +195,26 @@ class ProgramService {
             };
         });
     }
+
+    public async getAllWithEgeAndStatistic(
+        statisticData
+    ): Promise<Array<ProgramInstance>> {
+        const programs: Array<ProgramInstance> = await ProgramModel.findAll({
+            attributes: {
+                exclude: EXCLUDE_FIELDS
+            },
+            include: [{
+                model: EntranceStatisticModel,
+                as: 'entranceStatistics',
+                where: statisticData
+            }, {
+                model: ProgramEgeExamModel,
+                as: 'programEgeExams'
+            }]
+        });
+        return programs;
+    }
+
 
     private convertToUrl(universityAlias, programAlias) {
         return UrlTemplate.PROGRAM
