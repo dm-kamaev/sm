@@ -54,6 +54,12 @@
 {template .body}
     {call .header_ data="all" /}
     // {call .filterPanel_ data="all" /}
+    {call .leaveCommentButton_}
+        {param params: [
+            'displaySize': 's',
+            'commentsCount': $params.data.list.items.length
+        ] /}
+    {/call}
     {call .list_ data="all" /}
     {call .controlPanel_ data="all" /}
 {/template}
@@ -78,7 +84,9 @@
  */
 {template .header_}
     <div class="{call .rootClass /}__header">
-        {$params.data.header}
+        <div class="{call .rootClass /}__header-content">
+            {$params.data.header}
+        </div>
     </div>
 {/template}
 
@@ -180,9 +188,10 @@
         <div class="{call .rootClass /}__show-comments-button-wrap
             {sp}{call .rootClass /}__show-comments-button-wrap_size_l"
         >
-            {call .showCommentsButtonSizeL_}
+            {call .showCommentsButton_}
                 {param params: [
-                    'count': $count
+                    'count': $count,
+                    'displaySize': 'l'
                 ] /}
             {/call}
         </div>
@@ -193,46 +202,17 @@
 /**
  * Show comments button
  * @param params {{
- *     count: number
+ *     count: number,
+ *     displaySize: (string|undefined)
  * }}
  */
 {template .showCommentsButton_}
     {let $content kind="text"}
-        Загрузить все отзывы {$params.count}
-    {/let}
-
-    {let $customClasses kind="text"}
-        {call .rootClass /}__show-comments-button
-    {/let}
-
-    {call .renderChild}
-        {param params: [
-            'type': 'button',
-            'renderParams': [
-                'data': [
-                    'content': $content
-                ],
-                'config': [
-                    'customClasses': [$customClasses],
-                    'theme': 'neptune-reverse',
-                    'borderRoundSize': 'xl',
-                    'size': 'm'
-                ]
-            ]
-        ]/}
-    {/call}
-{/template}
-
-
-/**
- * Show comments button size l
- * @param params {{
- *     count: number
- * }}
- */
-{template .showCommentsButtonSizeL_}
-    {let $content kind="text"}
-        Все отзывы {$params.count}
+        {if $params.displaySize == 'l'}
+            Все отзывы {$params.count}
+        {else}
+            Загрузить все отзывы {$params.count}
+        {/if}
     {/let}
 
     {let $customClasses kind="text"}
@@ -260,13 +240,28 @@
 
 /**
  * Button leave comment
+ * @param params {{
+ *     displaySize: (string|undefined),
+ *     commentsCount: (number|undefined)
+ * }}
  */
 {template .leaveCommentButton_}
     {let $customClasses kind="html"}
         {call .rootClass /}__leave-comment-button
     {/let}
 
-    <div class="{call .rootClass /}__leave-comment-button-wrap">
+    {let $class kind="text"}
+        {if $params.displaySize}
+            {call .rootClass/}__leave-comment-button-wrap_size_{$params.displaySize}
+
+            {if $params.commentsCount == 0}
+                {sp}i-utils__hidden
+            {/if}
+
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass /}__leave-comment-button-wrap {$class}">
         {call .renderChild}
             {param params: [
                 'type': 'button',
