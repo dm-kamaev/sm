@@ -421,7 +421,7 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.initAnalyticsSender_ = function() {
-        this.analyticsSender_ = new AnalyticsSender('course details');
+        this.analyticsSender_ = AnalyticsSender.getInstance('course details');
 
         this.analyticsSender_.setProductParams({
             id: this.params.id,

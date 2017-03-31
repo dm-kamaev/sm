@@ -23,6 +23,8 @@ goog.scope(function() {
      */
     sm.lCourse.iAnalyticsSender.AnalyticsSender = function(list) {
 
+        sm.lCourse.iAnalyticsSender.AnalyticsSender.instanse_ = this;
+
         /**
          * Product params
          * @type {sm.iAnalytics.Analytics.productFieldObjectParams}
@@ -40,6 +42,25 @@ goog.scope(function() {
     };
     var AnalyticsSender = sm.lCourse.iAnalyticsSender.AnalyticsSender,
         Analytics = sm.iAnalytics.Analytics;
+
+
+    /**
+     * singleton getter
+     * @param {string=} opt_list
+     * @return {sm.lCourse.iAnalyticsSender.AnalyticsSender}
+     */
+    AnalyticsSender.getInstance = function(opt_list) {
+        return AnalyticsSender.instanse_ ?
+            AnalyticsSender.instanse_ :
+            new AnalyticsSender(opt_list);
+    };
+
+    /**
+     * instance of AnalyticsSender
+     * @type {?sm.lCourse.iAnalyticsSender.AnalyticsSender}
+     * @private
+     */
+    AnalyticsSender.instanse_ = null;
 
 
     /**
