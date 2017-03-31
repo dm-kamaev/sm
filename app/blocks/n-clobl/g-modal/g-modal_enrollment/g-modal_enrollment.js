@@ -14,6 +14,7 @@ goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.ViewEnrollment');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lCourse.iAnalyticsSender.AnalyticsSender');
 
 
 goog.scope(function() {
@@ -35,7 +36,7 @@ goog.scope(function() {
 
         /**
          * Instance input name
-         * @type {sm.gInput.InputSthendal}
+         * @type {sm.gInput.InputStendhal}
          * @private
          */
         this.nameField_ = null;
@@ -43,7 +44,7 @@ goog.scope(function() {
 
         /**
          * Instance input phone
-         * @type {sm.gInput.InputSthendal}
+         * @type {sm.gInput.InputStendhal}
          * @private
          */
         this.phoneField_ = null;
@@ -132,6 +133,7 @@ goog.scope(function() {
         ModalEnrollment.base(this, 'enterDocument');
 
         this.initButtonListeners_();
+        this.initFieldListeners_();
     };
 
 
@@ -179,6 +181,16 @@ goog.scope(function() {
         return (this.phoneField_.validate() || this.emailField_.validate());
     };
 
+    /**
+     * close click handler
+     * @override
+     * @protected
+     */
+    ModalEnrollment.prototype.onCloseClick = function() {
+        ModalEnrollment.base(this, 'onCloseClick');
+
+        this.sendFormAnalytics_('close');
+    };
 
     /**
      * Initializes listeners for button
@@ -206,6 +218,64 @@ goog.scope(function() {
         }
     };
 
+
+    /**
+     * Initializes listeners for button
+     * @private
+     */
+    ModalEnrollment.prototype.initFieldListeners_ = function() {
+        this.getHandler().listen(
+            this.nameField_,
+            sm.gInput.InputStendhal.Event.FOCUS,
+            this.sendFormAnalytics_.bind(this, 'name')
+        ).listen(
+            this.phoneField_,
+            sm.gInput.InputStendhal.Event.FOCUS,
+            this.sendFormAnalytics_.bind(this, 'phone')
+        ).listen(
+            this.emailField_,
+            sm.gInput.InputStendhal.Event.FOCUS,
+            this.sendFormAnalytics_.bind(this, 'email')
+        ).listen(
+            this.commentField_,
+            sm.gTextarea.TextareaStendhal.Event.FOCUS,
+            this.sendFormAnalytics_.bind(this, 'comment')
+        );
+    };
+
+
+    /**
+     * send form google analytics
+     * @param {string} action
+     * @private
+     */
+    ModalEnrollment.prototype.sendFormAnalytics_ = function(action) {
+        var analyticsSender =
+            sm.lCourse.iAnalyticsSender.AnalyticsSender.getInstance();
+        var params = {
+            category: 'checkout',
+            action: 'form ' + action,
+        };
+        analyticsSender.send(params);
+    };
+
+
+    /**
+     * send form error google analytics
+     * @param {string} message
+     * @private
+     */
+    ModalEnrollment.prototype.sendFormErrorAnalytics_ = function(message) {
+        var analyticsSender =
+            sm.lCourse.iAnalyticsSender.AnalyticsSender.getInstance();
+        var name = analyticsSender.getProductParams().name;
+        var params = {
+            category: 'checkout',
+            action: 'form error',
+            name: name + ', ' + message
+        };
+        analyticsSender.send(params);
+    };
 
     /**
      * Return true if all fields is valid else return false
@@ -274,6 +344,7 @@ goog.scope(function() {
 
         this.button_.enable();
         this.getView().showErrors(messages);
+        this.sendFormErrorAnalytics_(messages.join(', '));
         this.dispatchEventError_();
     };
 

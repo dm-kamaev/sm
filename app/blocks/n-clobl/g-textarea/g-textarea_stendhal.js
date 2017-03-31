@@ -35,6 +35,19 @@ goog.scope(function() {
         }
     );
 
+
+    /**
+     * Events
+     * @enum {string}
+     */
+    TextareaStendhal.Event = {
+        SIZE_CHANGED: cl.gTextarea.Textarea.Event.SIZE_CHANGED,
+        INPUT: cl.gTextarea.Textarea.Event.INPUT,
+        SUBMIT: cl.gTextarea.Textarea.Event.SUBMIT,
+        FOCUS: sm.gTextarea.ViewStendhal.Event.FOCUS
+    };
+
+
     /**
      * Check is any value entered in texarea
      * @return {boolean}
@@ -50,5 +63,15 @@ goog.scope(function() {
         }
 
         return isValid;
+    };
+
+
+    /**
+     * @override
+     */
+    TextareaStendhal.prototype.enterDocument = function() {
+        TextareaStendhal.base(this, 'enterDocument');
+
+        this.autoDispatch(TextareaStendhal.Event.FOCUS);
     };
 });  // goog.scope
