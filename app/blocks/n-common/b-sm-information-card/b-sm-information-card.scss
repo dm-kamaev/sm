@@ -1,0 +1,30 @@
+@import '../i-media/i-media';
+
+.b-sm-information-card {
+    position: relative;
+    height: 176px;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+.b-sm-information-card__name {
+    padding: 25px;
+    margin-bottom: 80px;
+    font-family: 'Proxima', Arial, sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.b-sm-information-card__links {
+    position: absolute;
+    bottom: 30px;
+    left: 25px;
+    margin-bottom: 0;
+}
+
+.b-sm-information-card__button-link {
+    position: absolute;
+    bottom: 5px;
+    right: 3px;
+}

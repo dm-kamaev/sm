@@ -1,0 +1,133 @@
+{namespace sm.bSmInformationCard.Template}
+
+
+/**
+ * @typedef {sm.bSmInformationCard.Params.Data}
+ * sm.bSmSketch.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {sm.bSmInformationCard.Params.Config}
+ * sm.bSmSketch.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmSketch.Template.Params.Data,
+ *     config: sm.bSmSketch.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .card}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smInformationCard
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmSketch.Template.Params.Data,
+ *     config: sm.bSmSketch.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .header_ data="all" /}
+    {call .links_ data="all" /}
+{/template}
+
+
+/**
+ * Name
+ * @param params {{
+ *     data: {
+ *         name: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .header_}
+    <div class="{call .rootClass/}__name">
+        {$params.data.name}
+    </div>
+{/template}
+
+
+/**
+ * Links
+ * @param params {{
+ *     data: {
+ *         link: sm.bSmLink.Template.Params,
+ *         buttonLink: sm.bButtonLink.Template.Params
+ *     }
+ * }}
+ * @protected
+ */
+{template .links_}
+    {call .link_ data="all" /}
+    {call .buttonLink_ data="all" /}
+{/template}
+
+
+/**
+ * Link
+ * @param params {{
+ *     data: {
+ *         link: sm.bSmLink.Template.Params
+ *     }
+ * }}
+ * @protected
+ */
+{template .link_}
+    <div class="{call .rootClass/}__link">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': $params.data.link
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * ButtonLink
+ * @param params {{
+ *     data: {
+ *         buttonLink: sm.bSmButtonLink.Template.Params
+ *     }
+ * }}
+ * @protected
+ */
+{template .buttonLink_}
+    <div class="{call .rootClass/}__button-link">
+        {call .renderChild}
+            {param params: [
+                'type': 'smButtonLink',
+                'renderParams': $params.data.buttonLink
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-information-card
+{/template}
