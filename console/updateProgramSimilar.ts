@@ -14,6 +14,9 @@ import {
     Model as ProgramSimilar
 } from '../api/modules/university/models/ProgramSimilar';
 import {
+    ProgramSimilarAttribute,
+} from '../api/modules/university/types/programSimilar';
+import {
     ProgramInstance
 } from '../api/modules/university/types/program';
 import {
@@ -24,11 +27,19 @@ import {
 } from '../api/modules/university/models/ProgramEgeExam';
 
 type BooleanHash = { [ key: string ]: boolean; };
+type ProgramSimilar = {
+    relatedProgramId: number,
+    budgetPlaces: number,
+    competition: number,
+};
+type HashSimilar = {
+    [key: string]: Array<ProgramSimilar>
+};
 
 // TODO: Add types
 
 class InsertProgramSimilar {
-    private hash_: any;
+    private hashSimilar_: HashSimilar;
     private programs_: ProgramInstance[];
     private NUMBER_PROGRAM_SIMILAR_: number;
 
@@ -39,32 +50,34 @@ class InsertProgramSimilar {
     public async start() {
         logger.info('-----START-----');
         this.NUMBER_PROGRAM_SIMILAR_ = 4;
-        this.hash_ = {};
+        this.hashSimilar_ = {};
         await this.cleanTable_();
         this.programs_ = await programService.getAllWithEgeAndStatistic({
             year: 2016
         });
         // console.log('programs=', programs);
         // console.log('++++++++++++++++++++++');
-        this.build_();
-        const programSimilar = this.getListForInsert_();
-        ProgramSimilar.bulkCreate(programSimilar);
+        this.build_data_();
+        ProgramSimilar.bulkCreate(this.getListForInsert_());
         // console.log('entranceStatistics=', programs[0].entranceStatistics);
         // console.log('programEgeExams=',    programs[0].programEgeExams);
         logger.info('-----THE END-----');
     }
 
-    private build_() {
-        this.programs_.forEach((program) => {
+    private build_data_() {
+        this.programs_.forEach((program: ProgramInstance) => {
             const subjectIds: Array<number> = this.getSubjectIds_(program);
-            this.set_(program, subjectIds);
+            this.set_similar_program_(program, subjectIds);
         });
-        console.log('hash', this.hash_);
+        console.log('hash', this.hashSimilar_);
     }
 
-    private set_(program, subjectIds) {
-        const hash = this.hash_;
-        this.programs_.forEach((programAnother) => {
+    private set_similar_program_(
+        program: ProgramInstance,
+        subjectIds: Array<number>
+    ) {
+        const hash = this.hashSimilar_;
+        this.programs_.forEach((programAnother: ProgramInstance) => {
             if (program.id === programAnother.id) {
                 return;
             }
@@ -95,26 +108,31 @@ class InsertProgramSimilar {
 
     }
 
-    private getListForInsert_() {
-        const hash = this.hash_,
-            programIds: Array<string> = Object.keys(hash);
-        let res: Array<{ mainProgramId: number, relatedProgramId: any }> = [];
+    private getListForInsert_(): ProgramSimilarAttribute[] {
+        const hash: HashSimilar = this.hashSimilar_;
+        const programIds: string[] = Object.keys(hash);
+        let res: ProgramSimilarAttribute[] = [];
         programIds.forEach((programId: string) => {
-            const programsSimilar = hash[programId];
-            const ar = lodash.orderBy(
+            const programsSimilar: ProgramSimilar[] = hash[programId];
+            const partProgramsSimilar: ProgramSimilar[] = lodash.orderBy(
                 programsSimilar,
                 ['budgetPlaces', 'competition'],
                 ['desc', 'desc']
             ).slice(0, this.NUMBER_PROGRAM_SIMILAR_);
-            const data = ar.map((el: any) => {
+            const prepare = (el: ProgramSimilar): ProgramSimilarAttribute => {
                 return {
                     mainProgramId: Number(programId),
                     relatedProgramId: el.relatedProgramId,
                 };
-            });
+            };
+            const data: ProgramSimilarAttribute[] = partProgramsSimilar.map(prepare);
+            console.log('+++++++++++++++++++')
+            // console.log(programsSimilar);
+            console.log(programId, ' –– \n', data);
+            console.log('+++++++++++++++++++')
             res = res.concat(data);
         });
-        console.log(res);
+        // console.log(res);
         return res;
     }
 
@@ -130,23 +148,23 @@ class InsertProgramSimilar {
 
 
     private compareEgeSubject_(
-        egeId1: Array<number>,
-        egeId2: Array<number>
+        subjectId1: Array<number>,
+        subjectId2: Array<number>
     ): boolean {
-        if (!egeId1.length && !egeId2.length) {
+        if (!subjectId1.length && !subjectId2.length) {
             return false;
         }
-        if (egeId1.length !== egeId2.length) {
+        if (subjectId1.length !== subjectId2.length) {
             return false;
         }
         const hash: BooleanHash = {};
         let res: boolean = true;
-        egeId1.forEach((id: number) => hash[id] = true);
+        subjectId1.forEach((id: number) => hash[id] = true);
         // stupid linter !!!! for let i in circle
         /* tslint:disable */
-        for (let i = 0, l = egeId2.length; i < l; i++) {
+        for (let i = 0, l = subjectId2.length; i < l; i++) {
         /* tslint:enable */
-          if (!hash[egeId2[i]]) {
+          if (!hash[subjectId2[i]]) {
             res = false;
             break;
           }
