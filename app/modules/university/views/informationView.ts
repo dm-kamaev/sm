@@ -402,14 +402,15 @@ class InformationView extends LayoutView {
                 items: [{
                     id: 1,
                     type: entityType.UNIVERSITY,
-                    name: {
-                        light: 'Менеджер СПБГУ'
-                    },
-                    description: ' ',
-                    additionalLink: {
-                        content: 'Специальность',
-                        url: 'http://yandex.ru',
-                        size: 'xl'
+                    name: 'Менеджер СПБГУ',
+                    link: {
+                        data: {
+                            content: 'Специальность',
+                            url: 'http://yandex.ru'
+                        },
+                        config: {
+                            size: 'xl'
+                        }
                     },
                     buttonLink: {
                         data: {
@@ -421,14 +422,15 @@ class InformationView extends LayoutView {
                 }, {
                     id: 2,
                     type: entityType.UNIVERSITY,
-                    name: {
-                        light: 'Социология НИУ-ВШЭ'
-                    },
-                    description: ' ',
-                    additionalLink: {
-                        content: 'Специальность',
-                        url: 'http://yandex.ru',
-                        size: 'xl'
+                    name: 'Социология НИУ-ВШЭ',
+                    link: {
+                        data: {
+                            content: 'Специальность',
+                            url: 'http://yandex.ru'
+                        },
+                        config: {
+                            size: 'xl'
+                        }
                     },
                     buttonLink: {
                         data: {
@@ -440,14 +442,15 @@ class InformationView extends LayoutView {
                 }, {
                     id: 3,
                     type: entityType.UNIVERSITY,
-                    name: {
-                        light: 'Менеджер МГУ'
-                    },
-                    description: ' ',
-                    additionalLink: {
-                        content: 'Специальность',
-                        url: 'http://yandex.ru',
-                        size: 'xl'
+                    name: 'Менеджер МГУ',
+                    link: {
+                        data: {
+                            content: 'Специальность',
+                            url: 'http://yandex.ru'
+                        },
+                        config: {
+                            size: 'xl'
+                        }
                     },
                     buttonLink: {
                         data: {
@@ -459,14 +462,15 @@ class InformationView extends LayoutView {
                 }, {
                     id: 4,
                     type: entityType.UNIVERSITY,
-                    name: {
-                        light: 'Логистика НИУ-ВШЭ'
-                    },
-                    description: ' ',
-                    additionalLink: {
-                        content: 'Специальность',
-                        url: 'http://yandex.ru',
-                        size: 'xl'
+                    name: 'Логистика НИУ-ВШЭ',
+                    link: {
+                        data: {
+                            content: 'Специальность',
+                            url: 'http://yandex.ru'
+                        },
+                        config: {
+                            size: 'xl'
+                        }
                     },
                     buttonLink: {
                         data: {
@@ -476,11 +480,7 @@ class InformationView extends LayoutView {
                         }
                     }
                 }],
-                itemType: 'smItemCompact',
-                itemConfig: {
-                    theme: 'neptune',
-                    isNameNotLink: true
-                }
+                itemType: 'smInformationCard'
             }
         };
     }

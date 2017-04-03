@@ -12,6 +12,7 @@ goog.require('cl.iControl.Control');
 goog.require('goog.array');
 goog.require('goog.dom.classlist');
 goog.require('sm.bSmComment.SmComment');
+goog.require('sm.bSmInformationCard.SmInformationCard');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemCompact');
 goog.require('sm.bSmItem.SmItemEntity');
@@ -21,7 +22,6 @@ goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lCourse.bDepartment.Department');
-
 
 
 /**
@@ -41,7 +41,8 @@ sm.bSmItemList.SmItemList = function(view, opt_domHelper) {
      *     sm.bSmItem.SmItemEntity|
      *     sm.bSmItem.SmItemCompact|
      *     sm.bSmLink.SmLink|
-     *     sm.lCourse.bDepartment.Department)}
+     *     sm.lCourse.bDepartment.Department|
+     *     sm.bSmInformationCard.SmInformationCard)}
      * @private
      */
     this.items_ = [];
@@ -67,7 +68,8 @@ goog.inherits(sm.bSmItemList.SmItemList, cl.iControl.Control);
 
 goog.scope(function() {
     var ItemList = sm.bSmItemList.SmItemList,
-        View = sm.bSmItemList.View;
+        View = sm.bSmItemList.View,
+        Card = goog.module.get('sm.bSmInformationCard.SmInformationCard');
 
     var Analytics = sm.iAnalytics.Analytics;
 
@@ -110,7 +112,8 @@ goog.scope(function() {
         ITEM_COMPACT: sm.bSmItem.SmItemCompact.NAME,
         LINK: sm.bSmLink.SmLink.NAME,
         DEPARTMENT: sm.lCourse.bDepartment.Department.NAME,
-        COMMENT: sm.bSmComment.SmComment.NAME
+        COMMENT: sm.bSmComment.SmComment.NAME,
+        INFORMATION_CARD: Card.NAME
     };
 
 
@@ -521,6 +524,8 @@ goog.scope(function() {
             sm.lCourse.bDepartment.Department.Event;
         ItemEvent[ItemList.ItemType.COMMENT] =
             sm.bSmComment.SmComment.Event;
+        ItemEvent[ItemList.ItemType.INFORMATION_CARD] =
+            Card.Event;
 
         return ItemEvent[this.params.itemType];
     };
@@ -545,6 +550,8 @@ goog.scope(function() {
                 sm.lCourse.bDepartment.Department.getRenderParams;
             transformators[ItemList.ItemType.COMMENT] =
                 sm.bSmComment.SmComment.getRenderParams;
+            transformators[ItemList.ItemType.INFORMATION_CARD] =
+                Card.getRenderParams;
 
         this.renderParamsTransformator_ = transformators[itemType];
     };
