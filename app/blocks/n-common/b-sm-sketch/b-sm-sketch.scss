@@ -47,12 +47,10 @@
     }
 
     .b-sm-sketch__description {
-        margin-bottom: 17px;
+        margin-bottom: 0;
     }
 
     .b-sm-sketch__button-wrap {
-        width: 100%;
-        margin: 0 auto;
-        padding-left: 0;
+        display: none;
     }
 }

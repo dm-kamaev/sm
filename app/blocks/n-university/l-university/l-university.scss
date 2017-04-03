@@ -15,9 +15,8 @@
 .l-university__section_data {
     width: 1200px;
     min-width: 255px;
-    min-height: 817px;
     margin: 0 auto 80px auto;
-    padding-top: 35px;
+    padding-top: 30px;
 }
 
 .l-university__data_sketch {
@@ -44,15 +43,17 @@
     width: calc(100% - 375px);
 }
 
+.l-university__main-description_size_xs {
+    display: none;
+}
+
 .l-university__description-list {
     width: calc(100% - 375px);
     margin-bottom: 30px;
 }
 
 .l-university__board-wrap {
-    position: absolute;
-    top: 0;
-    right: 0;
+    float: right;
 
     width: 315px;
 }
@@ -65,7 +66,7 @@
     color: #747474;
 
     font-size: 15px;
-    line-height: 22px;
+    line-height: 25px;
 }
 
 .l-university__name {
@@ -78,17 +79,6 @@
 }
 
 .l-university__description {
-    margin-bottom: 25px;
-
-    color: #747474;
-
-    font-size: 15px;
-    line-height: 22px;
-}
-
-.l-university__description_cut {
-    display: none;
-
     margin-bottom: 25px;
 
     color: #747474;
@@ -159,7 +149,6 @@
 
 .l-university__subscribe-board {
     width: calc(100% - 375px);
-    margin-bottom: 80px;
 }
 
 
@@ -189,12 +178,13 @@
 
 
 @include media-l {
-    .l-university__similar-programs-header {
-        padding-bottom: 40px;
+    .l-university__section_data {
+        margin-bottom: 60px;
+        padding-top: 40px;
     }
 
-    .l-university__section_data {
-        min-height: 975px;
+    .l-university__similar-programs-header {
+        padding-bottom: 40px;
     }
 
     .l-university__data_main-description {
@@ -212,10 +202,6 @@
 
     .l-university__description-list {
         width: calc(100% - 355px);
-    }
-
-    .l-university__body {
-        min-height: 1175px;
     }
 
     .l-university__entity-relation {
@@ -263,6 +249,10 @@
         margin-bottom: 30px;
     }
 
+    .l-university__data_sketch {
+        margin-bottom: 15px;
+    }
+
     .l-university__section_programs {
         padding-right: 25px;
         padding-left: 25px;
@@ -274,6 +264,12 @@
     }
 
     .l-university__main-description {
+        display: none;
+    }
+
+    .l-university__main-description_size_xs {
+        display: block;
+
         width: 100%;
     }
 
@@ -285,14 +281,7 @@
         position: relative;
 
         width: 100%;
-    }
-
-    .l-university__description {
-        display: none;
-    }
-
-    .l-university__description_cut {
-        display: block;
+        margin-top: 0;
     }
 
     .l-university__banner {
@@ -306,7 +295,6 @@
         display: block;
 
         width: calc(100% + 50px);
-        margin-bottom: 30px;
     }
 
     .l-university__entity-relation {
@@ -337,5 +325,6 @@
 
     .l-university__subscribe-board {
         width: 100%;
+        margin-bottom: 30px;
     }
 }
