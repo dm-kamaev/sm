@@ -125,11 +125,12 @@ class InsertProgramSimilar {
                     relatedProgramId: el.relatedProgramId,
                 };
             };
-            const data: ProgramSimilarAttribute[] = partProgramsSimilar.map(prepare);
-            console.log('+++++++++++++++++++')
+            const data: ProgramSimilarAttribute[]
+                = partProgramsSimilar.map(prepare);
+            console.log('+++++++++++++++++++');
             // console.log(programsSimilar);
             console.log(programId, ' –– \n', data);
-            console.log('+++++++++++++++++++')
+            console.log('+++++++++++++++++++');
             res = res.concat(data);
         });
         // console.log(res);
