@@ -1,0 +1,42 @@
+.b-sm-range {
+    position: relative;
+
+    height: 17px;
+}
+
+.b-sm-range__bar-wrap {
+    position: relative;
+    top: 8px;
+
+    height: 2px;
+
+    cursor: pointer;
+}
+
+.b-sm-range__bar {
+    height: 1px;
+
+    background: #e4e4e4;
+}
+
+.b-sm-range__bar-progress {
+    position: absolute;
+
+    height: 100%;
+
+    background: #0777e8;
+}
+
+.b-sm-range__thumb {
+    top: 0;
+    bottom: 0;
+    position: absolute;
+
+    width: 8px;
+    height: 17px;
+    margin: auto;
+
+    cursor: pointer;
+
+    background-image: url("/static/images/n-common/b-sm-range/thumb-blue.svg");
+}
