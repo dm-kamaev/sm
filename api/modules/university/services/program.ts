@@ -13,6 +13,7 @@ import {
 } from '../../comment/models/ProgramComment';
 import {Model as EntranceStatisticModel} from '../models/EntranceStatistic';
 import {Model as ProgramEgeExamModel} from '../models/ProgramEgeExam';
+import {Model as UniversityModel} from '../models/University';
 import {
     ProgramInstance,
     ProgramAdmin,
@@ -215,6 +216,28 @@ class ProgramService {
         return programs;
     }
 
+    public async getFullList(): Promise<Array<ProgramInstance>> {
+        return ProgramModel.findAll({
+            include: [{
+                model: UniversityModel,
+                as: 'university'
+            }, {
+                model: EntranceStatisticModel,
+                as: 'entranceStatistics'
+            }, {
+                model: ProgramEgeExamModel,
+                as: 'programEgeExams'
+            }],
+            order: [[
+                {
+                    model: EntranceStatisticModel,
+                    as: 'entranceStatistics'
+                },
+                'year',
+                'DESC'
+            ]]
+        });
+    }
 
     private convertToUrl(universityAlias, programAlias) {
         return UrlTemplate.PROGRAM

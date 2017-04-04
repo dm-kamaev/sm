@@ -6,6 +6,7 @@ import {CommentGroupInstance} from '../../comment/types/commentGroup';
 import {PageAttribute, PageIntstance} from '../../entity/types/page';
 import {EntranceStatisticInstance} from '../models/EntranceStatistic';
 import {ProgramEgeExamInstance} from '../models/ProgramEgeExam';
+import {UniversityInstance} from '../models/University';
 
 export interface ProgramAttribute {
     id?: number;
@@ -33,6 +34,7 @@ export interface ProgramInstance
     commentGroup?: CommentGroupInstance;
     entranceStatistics?: Array<EntranceStatisticInstance>;
     programEgeExams?: Array<ProgramEgeExamInstance>;
+    university?: UniversityInstance;
 
     addAddress: Sequelize.BelongsToManyAddAssociationsMixin<
             AddressInstance, number, AddressAttribute

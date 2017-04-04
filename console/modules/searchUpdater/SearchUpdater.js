@@ -12,16 +12,23 @@ const SchoolActivitySphereActualizer =
 const AddressActualizer = require('./AddressActualizer');
 const TextActualizer = require('./TextActualizer');
 const CourseActualizer = require('./CourseActualizer');
+const ProgramActualizer = require('./ProgramActualizer').ProgramActualizer;
 const models = require('../../../app/components/models').all;
 const entityType = require('../../../api/modules/entity/enums/entityType');
 
 const services = require('../../../app/components/services').all;
+const programService =
+    require('../../../api/modules/university/services/program').service;
+const programSearchDataService =
+    require('../../../api/modules/university/services/programSearchData')
+        .service;
 
 const SCHOOL_FIELDS = ['name', 'fullName', 'abbreviation'],
     METRO_FIELDS = ['name'],
     AREA_FIELDS = ['name'],
     DISTRICT_FIELDS = ['name'],
-    COURSE_FIELDS = ['name'];
+    COURSE_FIELDS = ['name'],
+    PROGRAM_FIELDS = ['name'];
 
 class SearchUpdater {
     /**
@@ -87,12 +94,14 @@ class SearchUpdater {
                 areas: services.area.getAll(),
                 districts: services.district.getAll(),
                 metros: services.metro.getAll(),
-                courses: services.course.getAll()
+                courses: services.course.getAll(),
+                programs: programService.getFullList()
             },
             data = await(dataPromises);
         await(
             this.updateSchools_(data.schools),
             this.updateCourses_(data.courses),
+            this.updatePrograms_(data.programs)
             this.updateAddresses_(data.addresses),
             this.updateTextData_(data)
         );
@@ -169,6 +178,24 @@ class SearchUpdater {
     }
 
     /**
+     * @async
+     * @private
+     * @param  {Array<Program>} programs
+     */
+    updatePrograms_(programs) {
+        const bar = this.getProgressBar_('programs', programs.length);
+        const programSearchData = await(programSearchDataService.getAll());
+        programs.forEach(program => {
+            const programActualizer = new ProgramActualizer(
+                program,
+                programSearchData
+            );
+            await(programActualizer.actualize());
+            bar.tick();
+        });
+    }
+
+    /**
      * @private
      * @param {Array<Object>} addresses
      */
@@ -211,6 +238,11 @@ class SearchUpdater {
                     data.courses,
                     entityType.COURSE,
                     COURSE_FIELDS
+                ),
+                new TextActualizer(
+                    data.programs,
+                    entityType.PROGRAM,
+                    PROGRAM_FIELDS
                 )
             ],
             bar = this.getProgressBar_('text data', textActualizers.length);
