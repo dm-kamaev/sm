@@ -360,7 +360,8 @@ class ProgramCommentView {
             data: {
                 name: params.name,
                 placeholder: params.placeholder,
-                value: params.value
+                value: params.value,
+                maxLength: 4
             },
             config: {
                 theme: 'thin',

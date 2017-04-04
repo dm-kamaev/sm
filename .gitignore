@@ -205,6 +205,9 @@ app/modules/common/lib/Layout.js
 app/modules/common/types/layout.js
 app/modules/common/lib/SubHeader.js
 app/modules/common/lib/Footer.js
+app/modules/common/lib/LinksFormatter.js
+
+app/modules/common/views/footerView.js
 
 app/modules/common/enums/entityType.js
 app/modules/common/views/footerView.js

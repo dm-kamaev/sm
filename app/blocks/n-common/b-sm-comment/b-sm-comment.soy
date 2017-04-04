@@ -105,6 +105,7 @@
         </div>
 
         <div class="{call .rootClass /}__author-data">
+<<<<<<< HEAD
             {if $params.data.author.name}
                 <div class="{call .rootClass /}__author-name">
                     {$params.data.author.name},
@@ -113,6 +114,14 @@
 
             <div class="{call .rootClass /}__author-status">
                 {$params.data.author.status}
+=======
+            <div class="{call .rootClass /}__author-name">
+                {if $params.data.author.name}
+                    {$params.data.author.name}, {$params.data.author.status}
+                {else}
+                    {$params.data.author.status}
+                {/if}
+>>>>>>> feature-BP-2047_university-page
             </div>
 
             <div class="{call .rootClass /}__score">

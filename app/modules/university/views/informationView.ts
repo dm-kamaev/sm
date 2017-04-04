@@ -19,6 +19,8 @@ import {BackendProgramComment} from '../../comment/types/programComment';
 import {BackendUniversity} from '../types/university';
 import {BackendEgeExam} from '../types/egeExam';
 import {BackendEntranceStatistic} from '../types/entranceStatistic';
+import {LinksFormatter} from '../../common/lib/LinksFormatter';
+
 
 import {programCommentView} from '../../comment/views/programCommentView';
 
@@ -199,9 +201,11 @@ class InformationView extends LayoutView {
 
 
         if (data.program.links && data.program.links.length > 0) {
+            const linksFormatter = new LinksFormatter();
+
             const links = data.program.links.map(link => ({
                 url: link,
-                content: link
+                content: linksFormatter.getContent(link)
             }));
 
             result.items.push({
