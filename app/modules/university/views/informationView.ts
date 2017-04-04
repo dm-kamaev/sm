@@ -9,20 +9,19 @@ import {entityType} from '../../common/enums/entityType';
 import {LayoutView} from '../../common/lib/Layout';
 import {UniversitySubHeader} from './UniversitySubHeader';
 
-import {AppConfig} from '../../common/types/layout';
 import {lUniversity} from '../../../blocks/n-university/l-university/params';
-import {BackendUser} from '../../user/types/user';
 import {UniversityFooter} from './UniversityFooter';
 
-import {BackendProgram} from '../types/program';
-import {BackendProgramComment} from '../../comment/types/programComment';
-import {BackendUniversity} from '../types/university';
-import {BackendEgeExam} from '../types/egeExam';
-import {BackendEntranceStatistic} from '../types/entranceStatistic';
 import {LinksFormatter} from '../../common/lib/LinksFormatter';
 
-
 import {programCommentView} from '../../comment/views/programCommentView';
+import {navigationPanelView} from './navigationPanelView';
+
+import {
+    BackendData,
+    RenderParams
+} from '../types/programInformationLayout';
+import {BackendProgramComment} from '../../comment/types/programComment';
 
 import {
     bDescriptionList
@@ -38,28 +37,6 @@ import {bSmSketch} from '../../../blocks/n-common/b-sm-sketch/params';
 import {
     bCommentList
 } from '../../../blocks/n-university/l-university/b-comment-list/params';
-
-
-type Params = {
-    data: Data;
-    config: AppConfig;
-    requestData: {
-        user: BackendUser;
-        csrf: string;
-        query: any;
-    }
-};
-
-type Data = {
-    program: BackendProgram,
-    university: BackendUniversity,
-    entranceStatistic: BackendEntranceStatistic,
-    comments: Array<BackendProgramComment>,
-    egeExams: Array<BackendEgeExam>,
-    userComment: BackendProgramComment,
-    users: Array<BackendUser>,
-    favorites: Array<{string: any}>
-};
 
 type Grade = {
     label: number;
@@ -101,7 +78,7 @@ class InformationView extends LayoutView {
         this.openGraph = {};
     }
 
-    protected setParams(params: Params) {
+    protected setParams(params: RenderParams) {
         super.setParams(params);
 
         this.setEntityData_(params.data);
@@ -113,7 +90,7 @@ class InformationView extends LayoutView {
         this.setModalComment_(params.data.program.id, params.data.userComment);
     }
 
-    private setEntityData_(data: Data) {
+    private setEntityData_(data: BackendData) {
         this.params.data.entityData = {
             id: data.program.id,
             name: data.university.name,
@@ -129,7 +106,7 @@ class InformationView extends LayoutView {
         };
     }
 
-    private getSketchParams_(data: Data): bSmSketch.Params.Data {
+    private getSketchParams_(data: BackendData): bSmSketch.Params.Data {
         const universityName: string = data.university.name;
         return {
             description: universityName,
@@ -177,7 +154,7 @@ class InformationView extends LayoutView {
     }
 
     private getDescriptionListParams_(
-            data: Data): bDescriptionList.Params.Data {
+            data: BackendData): bDescriptionList.Params.Data {
         const result: bDescriptionList.Params.Data = {
             items: []
         };
@@ -235,7 +212,8 @@ class InformationView extends LayoutView {
         return result;
     }
 
-    private getSummaryBoardParams_(data: Data): bSummaryBoard.Params.Data {
+    private getSummaryBoardParams_(
+            data: BackendData): bSummaryBoard.Params.Data {
         const neptuneTheme = 'neptune';
 
         let itemHeader,
@@ -358,7 +336,7 @@ class InformationView extends LayoutView {
         return {item, list, buttonLink};
     }
 
-    private getBannerParams_(data: Data): bSmBanner.Params {
+    private getBannerParams_(data: BackendData): bSmBanner.Params {
         return {
             data: {
                 header: 'Сомневаешься?',
@@ -396,7 +374,7 @@ class InformationView extends LayoutView {
         };
     }
 
-    private setComments_(data: Data) {
+    private setComments_(data: BackendData) {
         this.params.data.comments = programCommentView.renderCommentsList({
             comments: data.comments,
             users: data.users
@@ -548,7 +526,7 @@ class InformationView extends LayoutView {
         };
     }
 
-    private setSubscribeBoard_(data: Data) {
+    private setSubscribeBoard_(data: BackendData) {
         this.params.data.subscribeBoard = {
             data: {
                 entityId: data.program.id,
@@ -557,38 +535,9 @@ class InformationView extends LayoutView {
         };
     }
 
-    private setNavigationPanel_(data: Data) {
-        this.params.data.navigationPanel = {
-            items: [{
-                data: {
-                    url: 'http://yandex.ru',
-                    content: 'ВУЗы'
-                },
-                config: {
-                    theme: 'sky',
-                    size: 'xl'
-                }
-            }, {
-                data: {
-                    url: 'http://yandex.ru',
-                    content: 'НИУ-ВШЭ'
-                },
-                config: {
-                    theme: 'sky',
-                    size: 'xl'
-                }
-            }, {
-                data: {
-                    url: 'http://yandex.ru',
-                    content: 'Менеджмент'
-                },
-                config: {
-                    theme: 'sky',
-                    size: 'xl',
-                    isSelected: true
-                }
-            }]
-        };
+    private setNavigationPanel_(data: BackendData) {
+        this.params.data.navigationPanel =
+            navigationPanelView.getForProgram(data);
     }
 
     private setModalComment_(
