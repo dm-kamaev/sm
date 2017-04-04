@@ -49,7 +49,7 @@ goog.scope(function() {
      * @const
      */
     Range.Event = {
-        CLICK: View.Event.CLICK
+        CHANGE: View.Event.CHANGE
     };
 
 
@@ -79,6 +79,6 @@ goog.scope(function() {
      * @private
      */
     Range.prototype.initViewListeners_ = function() {
-        // this.autoDispatch(View.Event.CLICK);
+        this.autoDispatch(View.Event.CHANGE);
     };
 });  // goog.scope

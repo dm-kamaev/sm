@@ -37,7 +37,19 @@
  * @constructor
  */
 {template .range}
-    {call .init data="all"/}
+    {let $config: augmentMap(
+        [
+            'theme': 'default'
+        ],
+        $params.config
+    ) /}
+
+    {call .init}
+        {param params: [
+            'data': $params.data,
+            'config': $config
+        ] /}
+    {/call}
 {/template}
 
 /**
@@ -113,8 +125,9 @@
  * }}
  */
 {template .bar_}
-    {let $width: $params.data.value ? 2 + 100 *
-        ($params.data.value/($params.data.maxValue - $params.data.minValue)):
+    {let $width: ($params.data.value - $params.data.minValue) > 0 ? 2 + 100 *
+        (($params.data.value - $params.data.minValue)/
+            ($params.data.maxValue - $params.data.minValue)):
         0
     /}
 
@@ -143,8 +156,9 @@
  * }}
  */
 {template .thumb_}
-    {let $left: $params.data.value ? 100 *
-        ($params.data.value/($params.data.maxValue - $params.data.minValue)):
+    {let $left: ($params.data.value - $params.data.minValue) > 0 ? 100 *
+        (($params.data.value - $params.data.minValue)/
+            ($params.data.maxValue - $params.data.minValue)):
         0
     /}
 

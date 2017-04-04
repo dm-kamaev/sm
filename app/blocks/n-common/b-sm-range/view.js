@@ -33,7 +33,7 @@ goog.scope(function() {
          * @type {?number}
          * @private
          */
-        this.mousePositionXOnThumb_ = null;
+        this.mouseOffsetXOnThumb_ = null;
     };
     goog.inherits(sm.bSmRange.View, cl.iControl.View);
     var View = sm.bSmRange.View;
@@ -72,7 +72,7 @@ goog.scope(function() {
      * @const
      */
     View.Event = {
-        CLICK: goog.events.getUniqueId('click')
+        CHANGE: goog.events.getUniqueId('change')
     };
 
 
@@ -93,7 +93,21 @@ goog.scope(function() {
      * @public
      */
     View.prototype.getValue = function() {
-        return this.getValueInRange_();
+        var progressPosition = goog.style.getSize(this.dom.progressBar).width;
+
+        return this.calculateValueFromPosition_(progressPosition);
+    };
+
+
+    /**
+     * Set value
+     * @param {number} value
+     * @public
+     */
+    View.prototype.setValue = function(value) {
+        var progressPosition = this.calculatePositionFromValue_(value);
+
+        this.update_(progressPosition);
     };
 
 
@@ -153,11 +167,9 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onClick_ = function(event) {
-        var eventData = this.getDataOnChange_(event);
+        var progressPosition = this.getProgressPosition_(event);
 
-        this.mousePositionXOnThumb_ = eventData.thumbBounds.width / 2;
-
-        this.update_(eventData);
+        this.update_(progressPosition);
     };
 
 
@@ -167,12 +179,21 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onThumbMouseDown_ = function(event) {
-        var eventData = this.getDataOnChange_(event);
-
-        this.mousePositionXOnThumb_ =
-            eventData.mouseOffsetXOnPage - eventData.thumbBounds.left;
-
+        this.setMouseOffsetXOnThumb_(event);
         this.setMoveListeners_();
+    };
+
+
+    /**
+     * Set mouse offset x on thumb
+     * @param {goog.events.Event} event
+     * @private
+     */
+    View.prototype.setMouseOffsetXOnThumb_ = function(event) {
+        var thumbBounds = goog.style.getBounds(this.dom.thumb),
+            mouseOffsetXOnPage = event.clientX + document.body.scrollLeft;
+
+        this.mouseOffsetXOnThumb_ = mouseOffsetXOnPage - thumbBounds.left;
     };
 
 
@@ -182,38 +203,42 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onThumbMove_ = function(event) {
-        var eventData = this.getDataOnChange_(event);
+        var progressPosition = this.getProgressPosition_(event);
 
-        this.update_(eventData);
+        this.update_(progressPosition, this.mouseOffsetXOnThumb_);
+    };
+
+
+
+    /**
+     * Get progress position from event
+     * @param {goog.events.Event} event
+     * @return {number}
+     * @private
+     */
+    View.prototype.getProgressPosition_ = function(event) {
+        var rangeBounds = goog.style.getBounds(this.getElement()),
+            mouseOffsetXOnPage = event.clientX + document.body.scrollLeft;
+
+        return mouseOffsetXOnPage - rangeBounds.left;
     };
 
 
     /**
-     * Get event data on change
-     * @param {goog.events.Event} event
-     * @return {{
-     *     mouseOffsetXOnPage: number,
-     *     thumbBounds: {
-     *         left: number,
-     *         top: number,
-     *         width: number,
-     *         height: number
-     *     },
-     *     rangeBounds: {
-     *         left: number,
-     *         top: number,
-     *         width: number,
-     *         height: number
-     *     }
-     * }}
+     * Update range - set thumb and progress bar
+     * @param {number} progressPosition
+     * @param {number=} opt_mouseOffsetXOnThumb
      * @private
      */
-    View.prototype.getDataOnChange_ = function(event) {
-        return {
-            mouseOffsetXOnPage: event.clientX + document.body.scrollLeft,
-            thumbBounds: goog.style.getBounds(this.dom.thumb),
-            rangeBounds: goog.style.getBounds(this.getElement())
-        };
+    View.prototype.update_ = function(progressPosition, opt_mouseOffsetXOnThumb
+    ) {
+        var positions = this.getElementsPosition_(
+            progressPosition,
+            opt_mouseOffsetXOnThumb
+        );
+
+        this.dom.thumb.style.left = positions.thumbLeft + 'px';
+        this.dom.progressBar.style.width = positions.progressBar + 'px';
     };
 
 
@@ -245,33 +270,6 @@ goog.scope(function() {
      */
     View.prototype.onDocumentMouseDown_ = function(event) {
         event.preventDefault();
-    };
-
-
-    /**
-     * Update range - set thumb and progress bar
-     * @param {{
-     *     mouseOffsetXOnPage: number,
-     *     thumbBounds: {
-     *         left: number,
-     *         top: number,
-     *         width: number,
-     *         height: number
-     *     },
-     *     rangeBounds: {
-     *         left: number,
-     *         top: number,
-     *         width: number,
-     *         height: number
-     *     }
-     * }} data
-     * @private
-     */
-    View.prototype.update_ = function(data) {
-        var positions = this.getProgressPositions_(data);
-
-        this.dom.thumb.style.left = positions.thumbLeft + 'px';
-        this.dom.progressBar.style.width = positions.progressBar + 'px';
     };
 
 
@@ -325,42 +323,30 @@ goog.scope(function() {
     };
 
 
-    /**
-     * Get progress positions
-     * @param {{
-     *     mouseOffsetXOnPage: number,
-     *     thumbBounds: {
-     *         left: number,
-     *         top: number,
-     *         width: number,
-     *         height: number
-     *     },
-     *     rangeBounds: {
-     *         left: number,
-     *         top: number,
-     *         width: number,
-     *         height: number
-     *     }
-     * }} data
-     * objects params left, top was given relative to page
+     /**
+     * Get elements position
+     * @param {number} progressPosition
+     * @param {number=} opt_mouseOffsetXOnThumb
      * @return {{
      *     thumbLeft: number,
      *     progressBar: number
      * }}
      * @private
      */
-    View.prototype.getProgressPositions_ = function(data) {
-        var progressPosition = data.mouseOffsetXOnPage - data.rangeBounds.left;
+    View.prototype.getElementsPosition_ = function(progressPosition,
+        opt_mouseOffsetXOnThumb) {
 
-        var thumbLeftPosition = progressPosition - this.mousePositionXOnThumb_,
-            rightEdge = data.rangeBounds.width - data.thumbBounds.width;
+        var rangeWidth = goog.style.getSize(this.getElement()).width,
+            thumbWidth = goog.style.getSize(this.dom.thumb).width;
+
+        var mouseOffsetXOnThumb = opt_mouseOffsetXOnThumb || (thumbWidth / 2);
+
+        var thumbLeftPosition = progressPosition - mouseOffsetXOnThumb,
+            rightEdge = rangeWidth - thumbWidth;
 
         return {
             thumbLeft: this.normalizePosition_(thumbLeftPosition, rightEdge),
-            progressBar: this.normalizePosition_(
-                progressPosition,
-                data.rangeBounds.width
-            )
+            progressBar: this.normalizePosition_(progressPosition, rangeWidth)
         };
     };
 
@@ -388,35 +374,55 @@ goog.scope(function() {
 
 
     /**
-     * Get value in range
+     * Calculate position from value
+     * @param {number} value
      * @return {number}
      * @private
      */
-    View.prototype.getValueInRange_ = function() {
-        var step = this.params.step || 1,
-            valueInPercent = this.getValueInPercent_();
+    View.prototype.calculatePositionFromValue_ = function(value) {
+        var position = 0,
+            roundedValue = this.roundValue_(value - this.params.minValue);
 
-        var value = (valueInPercent *
-            (this.params.maxValue - this.params.minValue)) / 100;
+        if (roundedValue > 0) {
 
-        var roundedValue = Math.round(value / step) * step;
+            var length = this.params.maxValue - this.params.minValue,
+                rangeWidth = goog.style.getSize(this.getElement()).width;
 
-        return roundedValue + Number(this.params.minValue);
+            var valueInPercent = (roundedValue * 100) / length;
+            position = (rangeWidth * valueInPercent) / 100;
+        }
+
+        return position;
     };
 
 
     /**
-     * Get value in Percent
+     * Calculate value in range from position
+     * @param {number} position
      * @return {number}
      * @private
      */
-    View.prototype.getValueInPercent_ = function() {
-        var range = this.getElement();
+    View.prototype.calculateValueFromPosition_ = function(position) {
+        var rangeWidth = goog.style.getSize(this.getElement()).width,
+            length = this.params.maxValue - this.params.minValue;
 
-        var rangeWidth = goog.style.getBounds(range).width,
-            progressPosition = goog.style.getSize(this.dom.progressBar).width;
+        var valueInPercent = (position * 100) / rangeWidth;
+        var value = (valueInPercent * length) / 100;
 
-        return (progressPosition * 100) / rangeWidth;
+        return this.roundValue_(value + Number(this.params.minValue));
+    };
+
+
+    /**
+     * Round up value to step
+     * @param {number} value
+     * @return {number}
+     * @private
+     */
+    View.prototype.roundValue_ = function(value) {
+        var step = this.params.step || 1;
+
+        return Math.round(value / step) * step;
     };
 
 
