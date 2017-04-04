@@ -14,6 +14,7 @@ import {CommentNotBelongsToProgram} from './errors/CommentNotBelongsToProgram';
 import {
     UserAlreadyCommentedProgram
 } from './errors/UserAlreadyCommentedProgram';
+import {YearGraduateNotValid} from './errors/YearGraduateNotValid';
 
 class ProgramCommentController extends Controller {
     constructor() {
@@ -25,7 +26,8 @@ class ProgramCommentController extends Controller {
             ProgramNotFoundException: ProgramNotFound,
             ProgramCommentNotFoundException: ProgramCommentNotFound,
             CommentNotBelongsToProgramException: CommentNotBelongsToProgram,
-            UserAlreadyCommentedProgramException: UserAlreadyCommentedProgram
+            UserAlreadyCommentedProgramException: UserAlreadyCommentedProgram,
+            YearGraduateNotValidException: YearGraduateNotValid
         };
     }
 
@@ -80,6 +82,14 @@ class ProgramCommentController extends Controller {
      *     [{
      *         "code": "RequiredFieldsNotFilled",
      *         "message": "Оставьте оценку или комментарий"
+     *     }]
+     *
+     * @apiError (422) YearGraduateNotValid Year graduate is not in right format
+     * @apiErrorExample {json} Error-Response:
+     *     HTTP/1.1 422 Unprocessable Entity
+     *     [{
+     *         "code": "RequiredFieldsNotFilled",
+     *         "message": "Укажите год выпуска в формате ХХХХ"
      *     }]
      *
      * @apiError (422) CommentNotBelongToProgram Comment with given id not
