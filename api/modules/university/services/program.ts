@@ -196,9 +196,7 @@ class ProgramService {
         });
     }
 
-    public async getAllWithEgeAndStatistic(
-        statisticData
-    ): Promise<Array<ProgramInstance>> {
+    public async getAllWithEgeAndStatistic(): Promise<Array<ProgramInstance>> {
         const programs: Array<ProgramInstance> = await ProgramModel.findAll({
             attributes: {
                 exclude: EXCLUDE_FIELDS
@@ -206,11 +204,10 @@ class ProgramService {
             include: [{
                 model: EntranceStatisticModel,
                 as: 'entranceStatistics',
-                where: statisticData
             }, {
                 model: ProgramEgeExamModel,
                 as: 'programEgeExams'
-            }]
+            }],
         });
         return programs;
     }

@@ -115,6 +115,25 @@ class ProgramCommentService {
         });
     }
 
+
+    public async getAllTotalScore(
+        commentGroupIds: number[]
+    ): Promise<ProgramCommentInstance[]> {
+        return await ProgramCommentModel.findAll({
+            attributes: ['commentGroupId'],
+            where: {
+                commentGroupId: {
+                    $in: commentGroupIds
+                },
+            },
+            include: [{
+                model: RatingModel,
+                attributes: ['totalScore'],
+                as: 'rating'
+            }],
+        });
+    }
+
     public async update(
             programId: number,
             commentId: number,

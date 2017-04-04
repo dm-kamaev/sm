@@ -8,6 +8,12 @@ import * as lodash from 'lodash';
 const logger = require('../app/components/logger/logger.js').getLogger('app');
 const sequelize = require('../app/components/db.js');
 import {
+    service as programCommentService
+} from '../api/modules/comment/services/programComment';
+import {
+    ProgramCommentInstance
+} from '../api/modules/comment/types/programComment';
+import {
     service as programService
 } from '../api/modules/university/services/program';
 import {
@@ -26,20 +32,20 @@ import {
     ProgramEgeExamInstance
 } from '../api/modules/university/models/ProgramEgeExam';
 
-type BooleanHash = { [ key: string ]: boolean; };
+type HashBoolean = { [key: string]: boolean; };
+type HashNumber = { [key: string]: number; };
 type ProgramSimilar = {
-    relatedProgramId: number,
-    budgetPlaces: number,
-    competition: number,
+    relatedProgramId: number;
+    budgetPlaces: number;
+    competition: number;
+    totalScore: number;
 };
-type HashSimilar = {
-    [key: string]: Array<ProgramSimilar>
-};
+type HashSimilar = { [key: string]: Array<ProgramSimilar> };
 
-// TODO: Add types
 
 class InsertProgramSimilar {
     private hashSimilar_: HashSimilar;
+    private hashTotalScore_: HashNumber;
     private programs_: ProgramInstance[];
     private NUMBER_PROGRAM_SIMILAR_: number;
 
@@ -51,16 +57,17 @@ class InsertProgramSimilar {
         logger.info('-----START-----');
         this.NUMBER_PROGRAM_SIMILAR_ = 4;
         this.hashSimilar_ = {};
-        await this.cleanTable_();
-        this.programs_ = await programService.getAllWithEgeAndStatistic({
-            year: 2016
-        });
-        // console.log('programs=', programs);
-        // console.log('++++++++++++++++++++++');
-        this.build_data_();
-        ProgramSimilar.bulkCreate(this.getListForInsert_());
-        // console.log('entranceStatistics=', programs[0].entranceStatistics);
-        // console.log('programEgeExams=',    programs[0].programEgeExams);
+        this.hashTotalScore_ = {};
+        try {
+            await this.cleanTable_();
+            this.programs_ = await programService.getAllWithEgeAndStatistic();
+            await this.buildHashTotalScore_();
+            this.build_data_();
+            ProgramSimilar.bulkCreate(this.getListForInsert_());
+        } catch (error) {
+            console.log('Error=', error);
+            logger.critical(error);
+        }
         logger.info('-----THE END-----');
     }
 
@@ -69,43 +76,40 @@ class InsertProgramSimilar {
             const subjectIds: Array<number> = this.getSubjectIds_(program);
             this.set_similar_program_(program, subjectIds);
         });
-        console.log('hash', this.hashSimilar_);
     }
 
     private set_similar_program_(
         program: ProgramInstance,
         subjectIds: Array<number>
     ) {
-        const hash = this.hashSimilar_;
+        const hashSimilar: HashSimilar = this.hashSimilar_;
+        const hashTotalScore: HashNumber = this.hashTotalScore_;
         this.programs_.forEach((programAnother: ProgramInstance) => {
             if (program.id === programAnother.id) {
                 return;
             }
             const subjectIdsAnother: Array<number>
                 = this.getSubjectIds_(programAnother);
-            if (this.compareEgeSubject_(subjectIds, subjectIdsAnother)) {
-                // console.log('HERE', program.id, programAnother);
-                if (!hash[program.id]) {
-                    hash[program.id] = [];
+            if (this.isEqualSubject_(subjectIds, subjectIdsAnother)) {
+                if (!hashSimilar[program.id]) {
+                    hashSimilar[program.id] = [];
                 }
-                // hash[program.id].push(programAnother);
-                const entranceStatistic: EntranceStatisticInstance
-                    = programAnother.entranceStatistics[0];
-                if (entranceStatistic) {
-                    const statistic =
-                        entranceStatistic as EntranceStatisticInstance;
-                    hash[program.id].push({
-                        relatedProgramId: programAnother.id,
-                        budgetPlaces: statistic.budgetPlaces || 0,
-                        competition: statistic.competition || 0,
-                    });
+                // get statistic by last year
+                const statistic: EntranceStatisticInstance | null
+                    = lodash.maxBy(programAnother.entranceStatistics, 'year');
+                if (!statistic) {
+                    return;
                 }
-
+                const totalScore: number
+                    = hashTotalScore[programAnother.commentGroupId];
+                hashSimilar[program.id].push({
+                    relatedProgramId: programAnother.id,
+                    budgetPlaces: statistic.budgetPlaces || 0,
+                    competition: statistic.competition || 0,
+                    totalScore
+                });
             }
         });
-        // program.entranceStatistics
-        // program.programEgeExams
-
     }
 
     private getListForInsert_(): ProgramSimilarAttribute[] {
@@ -116,8 +120,8 @@ class InsertProgramSimilar {
             const programsSimilar: ProgramSimilar[] = hash[programId];
             const partProgramsSimilar: ProgramSimilar[] = lodash.orderBy(
                 programsSimilar,
-                ['budgetPlaces', 'competition'],
-                ['desc', 'desc']
+                ['totalScore', 'budgetPlaces', 'competition'],
+                ['desc', 'desc', 'desc']
             ).slice(0, this.NUMBER_PROGRAM_SIMILAR_);
             const prepare = (el: ProgramSimilar): ProgramSimilarAttribute => {
                 return {
@@ -127,13 +131,8 @@ class InsertProgramSimilar {
             };
             const data: ProgramSimilarAttribute[]
                 = partProgramsSimilar.map(prepare);
-            console.log('+++++++++++++++++++');
-            // console.log(programsSimilar);
-            console.log(programId, ' –– \n', data);
-            console.log('+++++++++++++++++++');
             res = res.concat(data);
         });
-        // console.log(res);
         return res;
     }
 
@@ -147,8 +146,8 @@ class InsertProgramSimilar {
         await sequelize.query(query, option);
     }
 
-
-    private compareEgeSubject_(
+    // is equal ege subject
+    private isEqualSubject_(
         subjectId1: Array<number>,
         subjectId2: Array<number>
     ): boolean {
@@ -158,7 +157,7 @@ class InsertProgramSimilar {
         if (subjectId1.length !== subjectId2.length) {
             return false;
         }
-        const hash: BooleanHash = {};
+        const hash: HashBoolean = {};
         let res: boolean = true;
         subjectId1.forEach((id: number) => hash[id] = true);
         // stupid linter !!!! for let i in circle
@@ -174,11 +173,38 @@ class InsertProgramSimilar {
     }
 
 
-    private getSubjectIds_(program: ProgramInstance): Array<number> {
+    private getSubjectIds_(program: ProgramInstance): number[] {
         const list = function(ege: ProgramEgeExamInstance): number {
             return ege.subjectId;
         };
         return program.programEgeExams.map(list);
+    }
+
+    private getCommentGroupIds_(programs: ProgramInstance[]): number[] {
+        return programs.map((program: ProgramInstance): number =>
+            program.commentGroupId
+        );
+    }
+
+    // build hash { commentGroupId: totalScore }
+    private async buildHashTotalScore_() {
+        const hashTotalScore: HashNumber = this.hashTotalScore_;
+        const programIds: number[]
+            = this.programs_.map(program => program.id);
+        const commentGroupIds: number[]
+            = this.getCommentGroupIds_(this.programs_);
+        const programComments: ProgramCommentInstance[]
+            = await programCommentService.getAllTotalScore(commentGroupIds);
+
+        programComments.forEach((programComment: ProgramCommentInstance) => {
+            const commentGroupId: number = programComment.commentGroupId;
+            if (programComment.rating) {
+                hashTotalScore[commentGroupId]
+                    = programComment.rating.totalScore;
+            } else {
+                hashTotalScore[commentGroupId] = 0;
+            }
+        });
     }
 };
 
