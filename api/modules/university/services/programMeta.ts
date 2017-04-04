@@ -30,42 +30,28 @@ type Meta = ProgramPageMetaInformationInstance | null;
 
 class ProgramMeta {
     public async get(
-        programId: number
+        id: number
     ): Promise<ProgramPageMetaInformationInstance> {
-        const program: ProgramInstance | null = await ProgramModel.findOne({
-            where: {
-                id: programId
-            }
-        });
-        if (!program) {
-            throw new ProgramNotFound(programId);
-        }
         return await ProgramPageMetaInformationModel.findOne({
             attributes: {
                 exclude: EXCLUDE_ATTRIBUTES,
             },
             where: {
-                programId,
+                id,
             },
             raw: true,
         });
     }
 
-    public async updateOrCreate(
-        programId: number,
-        data: ProgramMetaAdmin
+    public async create(
+        data: ProgramMetaAdmin,
+        programId: number
     ): Promise<Meta> {
-        const meta: Meta = await this.get(programId);
-        let res: Meta;
         const alias: string = data.url;
         data.url = null;
-        if (meta) {
-            console.log('update', data);
-            res = await this.update_(programId, data);
-        } else {
-            console.log('insert');
-            res = await this.create_(data);
-        }
+        data.programId = programId;
+        const res: Meta = await ProgramPageMetaInformationModel.create(data);
+
         await pageService.update({
             entityId: programId,
             entityType: entityTypes.PROGRAM,
@@ -75,27 +61,33 @@ class ProgramMeta {
         return res;
     }
 
-    private async create_(
-        data: ProgramMetaAdmin
-    ): Promise<ProgramPageMetaInformationInstance> {
-        return await ProgramPageMetaInformationModel.create(data);
-    }
-
-    private async update_(
+    public async update(
         programId: number,
+        id: number,
         data: ProgramMetaAdmin
     ): Promise<Meta> {
+        const alias: string = data.url;
+        data.url = null;
         const programMeta: [number, ProgramPageMetaInformationInstance[]]
             = await ProgramPageMetaInformationModel.update(data, {
             where: {
-                programId,
+                id,
             },
             returning: true
         });
-        return (programMeta && programMeta[1]) ? programMeta[1][0] : null;
+
+        const res: Meta = (programMeta && programMeta[1]) ?
+            programMeta[1][0] :
+            null;
+
+        await pageService.update({
+            entityId: programId,
+            entityType: entityTypes.PROGRAM,
+        }, {
+            alias
+        });
+        return res;
     }
-
-
 }
 
 export const programMetaService = new ProgramMeta();

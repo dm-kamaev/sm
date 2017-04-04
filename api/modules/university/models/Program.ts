@@ -129,6 +129,10 @@ const Program: ProgramModel = sequelize.define('Program', {
                 foreignKey: 'program_major_id',
                 as: 'programMajor'
             });
+            this.hasOne(models.ProgramPageMetaInformation, {
+                as: 'programPageMetaInformations',
+                foreignKey: 'program_id',
+            });
             this.belongsToMany(models.PageMetaInformation, {
                 as: 'pageMetaInformations',
                 through: 'program_page_meta_information',

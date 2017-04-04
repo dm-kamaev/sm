@@ -6,7 +6,10 @@ import {CommentGroupInstance} from '../../comment/types/commentGroup';
 const sequelize = require('../../../../app/components/db');
 
 import {Model as ProgramModel} from '../models/Program';
-import {Model as ProgramMajor} from '../models/ProgramMajor';
+import {Model as ProgramMajorModel} from '../models/ProgramMajor';
+import {
+    Model as ProgramPageMetaModel
+} from '../models/ProgramPageMetaInformation';
 import {Model as CommentGroupModel} from '../../comment/models/commentGroup';
 import {
     Model as ProgramCommentModel
@@ -19,6 +22,8 @@ import {
     ProgramAttribute,
     ProgramUrl
 } from '../types/program';
+
+import {PageAttribute} from '../../entity/types/page';
 
 import {
     service as commentGroupService
@@ -71,14 +76,28 @@ class ProgramService {
             },
             include: [{
                 attributes: ['id', 'name'],
-                model: ProgramMajor,
+                model: ProgramMajorModel,
                 as: 'programMajor'
-            }],
+            }, {
+                attributes: ['id'],
+                model: ProgramPageMetaModel,
+                as: 'programPageMetaInformations'
+            }]
         });
         if (!program) {
             throw new ProgramNotFound(id);
         }
-        const result: ProgramAdmin = program.toJSON();
+        const data: any = program.toJSON();
+
+        const result: ProgramAdmin = {};
+        Object.keys(data).map(key => {
+            if (key != 'programPageMetaInformations') {
+                result[key] = data[key];
+            }}
+        );
+        result.pageMetaId = data.programPageMetaInformations ?
+            data.programPageMetaInformations.id :
+            null;
 
         const addresses = await program.getAddresses();
         result.addressName = addresses[0] ? addresses[0].name : null;
@@ -156,6 +175,12 @@ class ProgramService {
                 commentGroupId: commentGroupId
             }
         });
+    }
+
+    public async getProgramAlias(id: number): Promise<string> {
+        const program: PageAttribute =
+            await pageService.getOne(id, entityType.PROGRAM);
+        return program.alias;
     }
 
     public async getUrl(program: ProgramAttribute): Promise<string> {

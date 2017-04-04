@@ -2,6 +2,7 @@ import * as Sequelize from 'sequelize/v3';
 
 import {AddressAttribute, AddressInstance} from '../../geo/types/address';
 import {ProgramMajorInstance} from '../models/ProgramMajor';
+import {ProgramPageMetaInformationInstance} from './programPageMetaInformation';
 import {CommentGroupInstance} from '../../comment/types/commentGroup';
 import {PageAttribute, PageIntstance} from '../../entity/types/page';
 import {EntranceStatisticInstance} from '../models/EntranceStatistic';
@@ -30,6 +31,7 @@ export interface ProgramAttribute {
 export interface ProgramInstance
         extends Sequelize.Instance<ProgramAttribute>, ProgramAttribute {
     programMajor?: ProgramMajorInstance;
+    programPageMetaInformations?: ProgramPageMetaInformationInstance;
     commentGroup?: CommentGroupInstance;
     entranceStatistics?: Array<EntranceStatisticInstance>;
     programEgeExams?: Array<ProgramEgeExamInstance>;
@@ -50,6 +52,7 @@ export interface ProgramInstance
 
 export interface ProgramAdmin extends ProgramAttribute {
     addressName?: string;
+    pageMetaId?: number;
     commentCount?: number;
     passScore?: number;
     programUrl?: string;

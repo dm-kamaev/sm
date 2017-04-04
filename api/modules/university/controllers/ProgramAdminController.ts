@@ -60,6 +60,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Number}   id              Id.
      * @apiSuccess {String}   name            Name.
      * @apiSuccess {String}   universityId    University's id.
+     * @apiSuccess {String}   pageMetaId      Id of page with meta information.
      * @apiSuccess {String}   description     Description.
      * @apiSuccess {String}   commentGroupId  Comment group's id.
      * @apiSuccess {String}   category        Program's category.
@@ -86,6 +87,7 @@ class ProgramAdminController extends Controller {
      *        "id": 5,
      *        "name": "Прикладная математика",
      *        "universityId": 62,
+     *        "pageMetaId": 62,
      *        "description": "lalala",
      *        "commentGroupId": 369,
      *        "category": "sadadasdsadsad",
@@ -303,6 +305,24 @@ class ProgramAdminController extends Controller {
     public async actionDelete(
             actionContext: any, universityId: string, id: string) {
         return programService.delete(Number(id));
+    }
+
+    /**
+     * @api {delete} /api/admin/program/:id/alias
+     * @apiVersion 1.0.0
+     * @apiName getAlias
+     * @apiGroup Admin Program
+     *
+     * @apiParam {Number} id Program's id.
+     *
+     * @apiSuccess {string} - alias.
+     *
+     * @apiSuccessExample {json} Example response:
+     *     HTTP/1.1 200 OK
+     *     mgu
+     */
+    public async actionGetAlias(actionContext: any, id: string) {
+        return programService.getProgramAlias(Number(id));
     }
 }
 

@@ -20,7 +20,7 @@ import {UniversityAdminController} from './UniversityAdminController';
 const universityAdminController = new UniversityAdminController();
 
 import {ProgramAdminController} from './ProgramAdminController';
-const programAdminController = new ProgramAdminController();
+const programAdminController: any = new ProgramAdminController();
 
 import {ExamAdminController} from './ExamAdminController';
 const examAdminController = new ExamAdminController();
@@ -162,13 +162,26 @@ initSimpleCrudRouting(
 // /universities/api/admin/program/:id/pagemeta/
 const programMetaAdminController: any = new ProgramMetaAdminController();
 router.get(
-    '/admin/program/:id/pagemeta',
+    '/admin/program/:programId/pagemeta/:id',
     programMetaAdminController.actionGet
 );
+router.post(
+    '/admin/program/:programId/pagemeta',
+    checkToken,
+    adminUser,
+    superUserCheckAction,
+    programMetaAdminController.actionCreate
+);
 router.put(
-    '/admin/program/:id/pagemeta',
-    checkApiToken,
+    '/admin/program/:programId/pagemeta/:id',
+    checkToken,
+    adminUser,
+    superUserCheckAction,
     programMetaAdminController.actionUpdate
 );
 
+router.get(
+    '/admin/program/:programId/alias',
+    programAdminController.actionGetAlias
+);
 export {router};
