@@ -101,7 +101,7 @@ class SearchUpdater {
         await(
             this.updateSchools_(data.schools),
             this.updateCourses_(data.courses),
-            this.updatePrograms_(data.programs)
+            this.updatePrograms_(data.programs),
             this.updateAddresses_(data.addresses),
             this.updateTextData_(data)
         );
