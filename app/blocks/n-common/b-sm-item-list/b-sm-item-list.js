@@ -24,6 +24,7 @@ goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lCourse.bDepartment.Department');
 
 
+
 /**
  * Constructor
  * @param {Object} view

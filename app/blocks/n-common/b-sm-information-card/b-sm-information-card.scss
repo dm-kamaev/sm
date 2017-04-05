@@ -16,7 +16,7 @@
     line-height: 20px;
 }
 
-.b-sm-information-card__links {
+.b-sm-information-card__link {
     position: absolute;
     bottom: 30px;
     left: 25px;
@@ -27,4 +27,45 @@
     position: absolute;
     bottom: 5px;
     right: 3px;
+}
+
+@include media-m {
+    .b-sm-information-card {
+        height: 210px;
+    }
+
+    .b-sm-information-card__name {
+        padding: 30px;
+        padding-top: 33px;
+    }
+
+    .b-sm-information-card__link {
+        bottom: 35px;
+        left: 28px;
+    }
+
+    .b-sm-information-card__button-link {
+        bottom: 10px;
+        right: 5px;
+    }
+}
+
+@include media-xs {
+    .b-sm-information-card {
+        height: 176px;
+    }
+
+    .b-sm-information-card__name {
+        padding: 25px;
+    }
+
+    .b-sm-information-card__link {
+        bottom: 30px;
+        left: 25px;
+    }
+
+    .b-sm-information-card__button-link {
+        bottom: 5px;
+        right: 3px;
+    }
 }

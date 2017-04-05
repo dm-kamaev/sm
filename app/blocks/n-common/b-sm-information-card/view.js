@@ -2,6 +2,9 @@ goog.module('sm.bSmInformationCard.View');
 
 const ControlView = goog.require('cl.iControl.View');
 
+/**
+ * View
+ */
 class View extends ControlView {
     /**
      * View
@@ -13,17 +16,46 @@ class View extends ControlView {
      */
     constructor(opt_params, opt_type, opt_modifier) {
         super(opt_params, opt_type, opt_modifier);
+
+        /**
+         * Collection of DOM elements
+         * @type {Object}
+         */
+        this.dom = {};
+    }
+
+    /**
+     * @param {Object} rawParams
+     * @return {Object}
+     */
+    static getRenderParams(rawParams) {
+        return rawParams;
+    };
+
+
+    /**
+     * @param {Element} element
+     * @protected
+     * @override
+     */
+    decorateInternal(element) {
+        super.decorateInternal(element);
+
+        this.initDom_();
+    }
+
+    /**
+     * Init DOM
+     * @private
+     */
+    initDom_() {
+        this.dom = {
+            link: this.getElementByClass(sm.bSmLink.View.CssClass.ROOT),
+            buttonLink:
+                this.getElementByClass(sm.bSmButtonLink.View.CssClass.ROOT)
+        };
     }
 };
 
-/** @constructor */
-exports = View;
 
-/**
- * Transform raw params to compressed ones
- * @param {Object<string, (string|number|Object)>} rawParams
- * @return {sm.bSmInformationCard.SmInformationCard.RenderParams}
- */
-exports.getRenderParams = function(rawParams) {
-    return {};
-}
+exports = View;

@@ -1,13 +1,17 @@
 goog.module('sm.bSmInformationCard.SmInformationCard');
 
+const EventType = goog.require('goog.events.EventType');
 const Control = goog.require('cl.iControl.Control');
 const View = goog.require('sm.bSmInformationCard.View');
 const Factory = goog.require('sm.iCloblFactory.FactoryStendhal');
 const Template = goog.require('sm.bSmInformationCard.Template');
-const className = Template.NAME();
-const EventType = goog.require('goog.events.EventType');
+const Link = goog.require('sm.bSmLink.SmLink');
+const ButtonLink = goog.require('sm.bSmButtonLink.SmButtonLink');
 
 
+/**
+ * Card with some information
+ */
 class InformationCard extends Control {
     /**
      * @param {cl.gButton.View} view
@@ -19,37 +23,68 @@ class InformationCard extends Control {
     }
 
     /**
+     * @param {Object} rawParams
+     * @return {Object}
+     */
+    static getRenderParams(rawParams) {
+        return View.getRenderParams(rawParams);
+    }
+
+    /**
+     * @return {string}
+     */
+    static get NAME() {
+        return Template.NAME();
+    }
+
+    /**
+     * @return {Object<string>}
+     */
+    static get Event() {
+        return {
+            CLICK: EventType.CLICK
+        };
+    }
+
+    /**
      * @param {Element} element
      * @protected
      * @override
      */
     decorateInternal(element) {
         super.decorateInternal(element);
-        console.log('decorate internal');
+
+        this.initLinks_();
+    }
+
+    /**
+     * Init link elements
+     * @private
+     */
+    initLinks_() {
+        const dom = this.getView().getDom();
+
+        if (dom.link) {
+            this.decorateChild(
+                Link.NAME,
+                dom.link
+            );
+        }
+
+        if (dom.buttonLink) {
+            this.decorateChild(
+                ButtonLink.NAME,
+                dom.buttonLink
+            );
+        }
     }
 };
 
-Factory.getInstance().register(className, {
+
+Factory.getInstance().register(InformationCard.NAME, {
     control: InformationCard,
     view: View
 });
 
-/** @constructor */
+
 exports = InformationCard;
-
-/** @type {string} */
-exports.NAME = Template.NAME();
-
-/** @enum {string} */
-exports.Event = {
-    CLICK: EventType.CLICK
-};
-
-/**
- * Transform raw params to compressed ones
- * @param {Object<string, (string|number|Object)>} rawParams
- * @return {sm.bSmInformationCard.SmInformationCard.RenderParams}
- */
-exports.getRenderParams = function(rawParams) {
-    return View.getRenderParams(rawParams);
-}

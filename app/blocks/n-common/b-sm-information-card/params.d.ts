@@ -22,7 +22,7 @@ export namespace bSmInformationCard {
          * sm.bSmInformationCard.Params.Config
          */
         export interface Config {
-            theme: string;
+            theme?: string;
         }
     }
 
@@ -31,6 +31,6 @@ export namespace bSmInformationCard {
      */
     export interface Params {
         data: Params.Data,
-        config: Params.Config
+        config?: Params.Config
     }
 }
