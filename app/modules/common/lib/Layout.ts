@@ -62,7 +62,7 @@ abstract class LayoutView {
         metaDescription?: string
     };
 
-    /*
+    /**
      * Views that can be overridden if necessary
      */
     protected views: {

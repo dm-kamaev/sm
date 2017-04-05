@@ -38,6 +38,10 @@ import {
     bCommentList
 } from '../../../blocks/n-university/l-university/b-comment-list/params';
 
+import {
+    UniversityImageSize
+} from '../../../../api/modules/university/constants/UniversityImageSize';
+
 type Grade = {
     label: number;
     value: number;
@@ -107,11 +111,20 @@ class InformationView extends LayoutView {
     }
 
     private getSketchParams_(data: BackendData): bSmSketch.Params.Data {
-        const universityName: string = data.university.name;
+        const universityName: string = data.university.name,
+            backendImageUrl = data.university.imageUrl,
+            IMAGE_WIDTH_PATTERN = /{width}/;
+
+        const imageUrl = backendImageUrl ?
+            backendImageUrl.replace(
+                IMAGE_WIDTH_PATTERN, String(UniversityImageSize.DEFAULT[0])
+            ) :
+            null;
+
         return {
             description: universityName,
             image: {
-                url: data.university.imageUrl,
+                url: imageUrl,
                 altText: universityName
             },
             button: {
