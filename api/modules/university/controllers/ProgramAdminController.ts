@@ -59,8 +59,8 @@ class ProgramAdminController extends Controller {
      *
      * @apiSuccess {Number}   id              Id.
      * @apiSuccess {String}   name            Name.
-     * @apiSuccess {String}   universityId    University's id.
-     * @apiSuccess {String}   pageMetaId      Id of page with meta information.
+     * @apiSuccess {Number}   universityId    University's id.
+     * @apiSuccess {Number}   pageMetaId      Id of page with meta information.
      * @apiSuccess {String}   description     Description.
      * @apiSuccess {String}   commentGroupId  Comment group's id.
      * @apiSuccess {String}   category        Program's category.
@@ -308,14 +308,14 @@ class ProgramAdminController extends Controller {
     }
 
     /**
-     * @api {delete} /api/admin/program/:id/alias
+     * @api {get} /api/admin/program/:id/alias
      * @apiVersion 1.0.0
      * @apiName getAlias
      * @apiGroup Admin Program
      *
      * @apiParam {Number} id Program's id.
      *
-     * @apiSuccess {string} - alias.
+     * @apiSuccess {String} - alias.
      *
      * @apiSuccessExample {json} Example response:
      *     HTTP/1.1 200 OK

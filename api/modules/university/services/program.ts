@@ -90,11 +90,11 @@ class ProgramService {
         const data: any = program.toJSON();
 
         const result: ProgramAdmin = {};
-        Object.keys(data).map(key => {
+        Object.keys(data).forEach(key => {
             if (key != 'programPageMetaInformations') {
                 result[key] = data[key];
-            }}
-        );
+            }
+        });
         result.pageMetaId = data.programPageMetaInformations ?
             data.programPageMetaInformations.id :
             null;

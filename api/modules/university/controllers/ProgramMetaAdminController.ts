@@ -79,6 +79,7 @@ class ProgramMetaAdminController extends Controller {
     * @apiName updateProgramMeta
     * @apiGroup Admin Program Meta
     *
+    * @apiParam {Number} id   Program's id
     * @apiParamExample {json} Request-Example:
     *    {
     *        "url": "prikladnaya-matematika1",
