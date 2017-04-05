@@ -15,8 +15,6 @@
 .b-authorization-link__user {
     display: inline-block;
 
-    vertical-align: middle;
-
     &:before {
         display: inline-block;
 
@@ -52,6 +50,8 @@
     margin-right: 10px;
 
     vertical-align: middle;
+
+    line-height: 0;
 }
 
 .b-authorization-link__link {
