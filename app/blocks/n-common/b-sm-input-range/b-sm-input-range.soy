@@ -1,0 +1,242 @@
+{namespace sm.bSmInputRange.Template}
+
+
+/**
+ * @typedef {{
+ *     name: (string|undefined),
+ *     label: ?string,
+ *     value: string,
+ *     minValue: number,
+ *     maxValue: number,
+ *     step: ?number,
+ *     thumb: ?{
+ *         iconName: string,
+ *         iconType: ?string
+ *     }
+ * }} sm.bSmInputRange.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     theme: (string|undefined),
+ *     stylizationModifier: string
+ * }} sm.bSmInputRange.Template.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmInputRange.Template.Params.Data,
+ *     config: sm.bSmInputRange.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .range}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smInputRange
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         name: (string|undefined),
+ *         label: string,
+ *         value: string,
+ *         minValue: number,
+ *         maxValue: number,
+ *         step: ?number
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'name': $params.data.name ?: '',
+                'label': $params.data.label ?: '',
+                'value': $params.data.value,
+                'minValue': $params.data.minValue,
+                'maxValue': $params.data.maxValue,
+                'step': $params.data.step
+            ]/}
+        {/call}"
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-input-range
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmInputRange.Template.Params.Data,
+ *     config: sm.bSmInputRange.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .label_ data="all"/}
+    {call .input_ data="all" /}
+    {call .range_ data="all" /}
+{/template}
+
+
+/**
+ * Label template
+ * @param params {{
+ *     data: {
+ *         label: string
+ *     }
+ * }}
+ */
+{template .label_}
+    {if $params.data.label}
+        <div class="{call .rootClass/}__label">
+            {$params.data.label}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Input template
+ * @param params {{
+ *     data: {
+ *         name: (string|undefined),
+ *         value: string,
+ *         minValue: number,
+ *         maxValue: number
+ *     }
+ * }}
+ */
+{template .input_}
+    <div class="{call .rootClass/}__input-wrap">
+        {call .inputField_ data="all" /}
+        {call .inputPlaceholder_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Input template
+ * @param params {{
+ *     data: {
+ *         value: string,
+ *         minValue: number
+ *     }
+ * }}
+ */
+{template .inputPlaceholder_}
+    {let $value: $params.data.value ?: $params.data.minValue /}
+
+    {let $placeholder kind="html"}
+        {if $value and length($value)}
+            {for $i in range($value.length)}
+                {if $i and not ($i % 3)}
+                    {sp}
+                {/if}
+
+                {$value[$i]}
+            {/for}
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__input{sp}
+                {call .rootClass/}__input_placeholder">
+        до {$placeholder}
+    </div>
+{/template}
+
+
+/**
+ * Input field template
+ * @param params {{
+ *     data: {
+ *         name: (string|undefined),
+ *         value: string,
+ *         minValue: number,
+ *         maxValue: number
+ *     }
+ * }}
+ */
+{template .inputField_}
+    <div class="{call .rootClass/}__input {call .rootClass/}__input_field">
+        {call .renderChild}
+            {param params: [
+                'type': 'input',
+                'renderParams': [
+                    'data': [
+                        'type': 'number',
+                        'name': $params.data.name,
+                        'value': $params.data.value or
+                            $params.data.minValue or
+                            '',
+                        'maxLength': length($params.data.maxValue),
+                    ],
+                    'config': [
+                        'validations': ['digits', 'notEmpty'],
+                        'theme': 'minimal'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Range template
+ * @param params {{
+ *     data: {
+ *         name: (string|undefined),
+ *         label: string,
+ *         value: string,
+ *         minValue: number,
+ *         maxValue: number,
+ *         step: ?number,
+ *         thumb: ?{
+ *             iconName: string,
+ *             iconType: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .range_}
+    <div class="{call .rootClass/}__range">
+        {call .renderChild}
+            {param params: [
+                'type': 'smRange',
+                'renderParams': [
+                    'data': [
+                        'name': $params.data.name,
+                        'value': $params.data.value,
+                        'step': $params.data.step,
+                        'minValue': $params.data.minValue,
+                        'maxValue': $params.data.maxValue,
+                        'thumb': $params.data.thumb
+                    ],
+                    'config': $params.config
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
