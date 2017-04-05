@@ -54,12 +54,33 @@ goog.scope(function() {
 
 
     /**
-     * @protected
-     * @override
+     * Get value
+     * @return {number}
+     * @public
      */
-    Range.prototype.decorateInternal = function(element) {
-        Range.base(this, 'decorateInternal', element);
+    Range.prototype.getValue = function() {
+        return this.getView().getValue();
+    };
 
+
+    /**
+     * Set value
+     * @param {number} value
+     * @public
+     */
+    Range.prototype.setValue = function(value) {
+        this.getView().setValue(value);
+    };
+
+
+    /**
+     * @override
+     * @public
+     */
+    Range.prototype.enterDocument = function() {
+        Range.base(this, 'enterDocument');
+
+        this.initViewListeners_();
     };
 
 
@@ -67,10 +88,8 @@ goog.scope(function() {
      * @override
      * @protected
      */
-    Range.prototype.enterDocument = function() {
-        Range.base(this, 'enterDocument');
-
-        this.initViewListeners_();
+    Range.prototype.decorateInternal = function(element) {
+        Range.base(this, 'decorateInternal', element);
     };
 
 

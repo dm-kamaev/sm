@@ -41,9 +41,7 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     id: (string|undefined),
      *     name: (string|undefined),
-     *     label: ?string,
      *     value: string,
      *     minValue: number,
      *     maxValue: number,
@@ -167,6 +165,8 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onClick_ = function(event) {
+        this.dispatchEvent(View.Event.CHANGE);
+
         var progressPosition = this.getProgressPosition_(event);
 
         this.update_(progressPosition);
@@ -247,6 +247,8 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onThumbUp_ = function() {
+        this.dispatchEvent(View.Event.CHANGE);
+
         this.unsetMoveListeners_();
     };
 
@@ -449,9 +451,7 @@ goog.scope(function() {
      */
     View.prototype.transformParams_ = function(rawParams) {
         return {
-            id: rawParams['id'],
             name: rawParams['name'],
-            label: rawParams['label'],
             value: rawParams['value'],
             minValue: rawParams['minValue'],
             maxValue: rawParams['maxValue'],

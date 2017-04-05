@@ -3,9 +3,7 @@
 
 /**
  * @typedef {{
- *     id: (string|undefined),
  *     name: (string|undefined),
- *     label: ?string,
  *     value: string,
  *     minValue: number,
  *     maxValue: number,
@@ -64,9 +62,7 @@
  * Attributes
  * @param params {{
  *     data: {
- *         id: (string|undefined),
  *         name: (string|undefined),
- *         label: string,
  *         value: string,
  *         minValue: number,
  *         maxValue: number,
@@ -79,9 +75,7 @@
     data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: [
-                'id': $params.data?.id ?: $params.data.value,
                 'name': $params.data.name ?: '',
-                'label': $params.data.label ?: '',
                 'value': $params.data.value,
                 'minValue': $params.data.minValue,
                 'maxValue': $params.data.maxValue,
