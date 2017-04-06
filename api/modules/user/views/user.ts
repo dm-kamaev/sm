@@ -31,12 +31,13 @@ class UserView {
         null;
     }
 
-    public renderCommentUser(user: UserAttributes): CommentUser {
-        return {
-            name: user.firstName || null,
-            socialId: this.getSocialId_(user),
-            socialType: this.getSocialType_(user)
-        };
+    public renderCommentUser(user: UserAttributes | undefined): CommentUser {
+        return user ? {
+                name: user.firstName || null,
+                socialId: this.getSocialId_(user),
+                socialType: this.getSocialType_(user)
+            } :
+            {};
     }
 
     private getSocialId_(user: UserAttributes): string | null {

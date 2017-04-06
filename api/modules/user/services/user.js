@@ -94,13 +94,24 @@ service.getUserById = async(function(id) {
  * }>}
  */
 service.getUserByIds = async(function(ids) {
-    const uniqueIds = lodashUniq(ids),
-        formattedIds = uniqueIds.reduce(
-            (previous, id) => previous + `,${id}`
-        ),
-        queryParams = `?id=${formattedIds}`;
+    const uniqueIds = lodashUniq(ids);
 
-    return await(axios.get(USER_API + GET_USERS + queryParams)).data;
+    let formattedIds = '';
+    let result = [];
+
+    if (uniqueIds.length > 0) {
+        formattedIds = uniqueIds
+            .map(id => String(id))
+            .reduce(
+                (previous, id) => `${previous},${id}`
+            );
+
+        const queryParams = `?id=${formattedIds}`;
+
+        result = await(axios.get(USER_API + GET_USERS + queryParams)).data;
+    }
+
+    return result;
 });
 
 module.exports = service;
