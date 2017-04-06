@@ -72,17 +72,17 @@ goog.scope(function() {
         /**
          * Filters Instance
          * @type {sm.lSearch.bFilterPanel.FilterPanel}
-         * @private
+         * @protected
          */
-        this.filterPanel_ = null;
+        this.filterPanel = null;
 
 
         /**
          * List Instance
          * @type {sm.lSearch.bSearchResults.SearchResults}
-         * @private
+         * @protected
          */
-        this.searchResults_ = null;
+        this.searchResults = null;
 
 
         /**
@@ -96,33 +96,33 @@ goog.scope(function() {
         /**
          * Search service instance
          * @type {sm.lSearch.iSearchService.SearchService}
-         * @private
+         * @protected
          */
-        this.searchService_ = null;
+        this.searchService = null;
 
 
         /**
          * Search parameters manager
          * @type {sm.iSearchParamsManager.SearchParamsManager}
-         * @private
+         * @protected
          */
-        this.paramsManager_ = null;
+        this.paramsManager = null;
 
 
         /**
          * Url updater
          * @type {sm.lSearch.iUrlUpdater.UrlUpdater}
-         * @private
+         * @protected
          */
-        this.urlUpdater_ = null;
+        this.urlUpdater = null;
 
 
         /**
          * Instances analytics sender
          * @type {sm.lSearch.iAnalyticsSender.AnalyticsSender}
-         * @private
+         * @protected
          */
-        this.analyticsSender_ = null;
+        this.analyticsSender = null;
     };
     goog.inherits(sm.lSearch.Search, sm.iLayout.LayoutStendhal);
     var Search = sm.lSearch.Search,
@@ -175,12 +175,12 @@ goog.scope(function() {
     Search.prototype.enterDocument = function() {
         Search.base(this, 'enterDocument');
 
-        this.initSubheaderListeners_()
+        this.initSubheaderListeners()
             .initLeftMenuListeners_()
             .initSearchServiceListeners_()
             .initSearchResultsListeners_()
             .initWindowListeners_()
-            .initMapListeners_();
+            .initMapListeners();
 
         this.detectShowMoreResultsList_();
 
@@ -200,9 +200,9 @@ goog.scope(function() {
         this.initServices_()
             .initUrlUpdater_()
             .initParamsManager_()
-            .initLeftMenuInstances_()
+            .initLeftMenuInstances()
             .initSearchResultsInstance_()
-            .initMap_();
+            .initMap();
     };
 
 
@@ -225,13 +225,82 @@ goog.scope(function() {
 
 
     /**
+     * Make all actions to update information on page
+     * @protected
+     */
+    Search.prototype.updatePage = function() {
+        this.resetSecondarySearchParams_();
+        this.clearMap_();
+        this.updateParams_();
+
+        this.searchResults.setStatus(
+            sm.lSearch.bSearchResults.SearchResults.Status.SEARCH_IN_PROGRESS
+        );
+
+        this.makeSearch_();
+        this.updateUrl_();
+    };
+
+
+    /**
      * Init listeners for left menu instances
      * @return {sm.lSearch.Search}
-     * @private
+     * @protected
      */
     Search.prototype.initLeftMenuListeners_ = function() {
-        this.initSearchListeners_()
+        this.initSearchListeners()
             .initFilterPanelListeners_();
+
+        return this;
+    };
+
+
+    /**
+     * Init listeners for map
+     * @return {sm.lSearch.Search}
+     * @protected
+     */
+    Search.prototype.initMapListeners = function() {
+        this.getHandler().listen(
+            this.map_,
+            Map.Event.READY,
+            this.onMapReady_
+        ).listen(
+            this.map_,
+            Map.Event.BALLOON_OPEN,
+            this.onBalloonOpen_
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init listeners for subheader
+     * @return {sm.lSearch.Search}
+     * @protected
+     */
+    Search.prototype.initSubheaderListeners = function() {
+        this.getHandler().listen(
+            this.subheader,
+            sm.bSmSubheader.SmSubheader.Event.SEARCH_SUBMIT,
+            this.onHeaderSearchSubmit_
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init map instance
+     * @return {sm.lSearch.Search}
+     * @protected
+     */
+    Search.prototype.initMap = function() {
+        this.map_ = this.decorateChild(
+            sm.bSmMap.SmMap.NAME,
+            this.getView().getDom().map
+        );
 
         return this;
     };
@@ -242,7 +311,7 @@ goog.scope(function() {
      * @return {sm.lSearch.Search}
      * @private
      */
-    Search.prototype.initSearchListeners_ = function() {
+    Search.prototype.initSearchListeners = function() {
         this.getHandler().listen(
             this.search_,
             sm.bSearch.Search.Event.SUBMIT,
@@ -264,7 +333,7 @@ goog.scope(function() {
      */
     Search.prototype.initFilterPanelListeners_ = function() {
         this.getHandler().listen(
-            this.filterPanel_,
+            this.filterPanel,
             sm.lSearch.bFilterPanel.FilterPanel.Event.SUBMIT,
             this.onFilterPanelSubmit_
         );
@@ -279,15 +348,15 @@ goog.scope(function() {
      */
     Search.prototype.initSearchResultsListeners_ = function() {
         this.getHandler().listen(
-            this.searchResults_,
+            this.searchResults,
             sm.lSearch.bSearchResults.SearchResults.Event.LIST_ITEM_CLICK,
             this.onListItemClick_
         ).listen(
-            this.searchResults_,
+            this.searchResults,
             sm.lSearch.bSearchResults.SearchResults.Event.SORT_TYPE_CHANGE,
             this.onSortReleased_
         ).listen(
-            this.searchResults_,
+            this.searchResults,
             sm.lSearch.bSearchResults.SearchResults.Event.SHOW_MORE_CLICK,
             this.onShowMoreButtonClick_
         );
@@ -317,53 +386,17 @@ goog.scope(function() {
 
 
     /**
-     * Init listeners for map
-     * @return {sm.lSearch.Search}
-     * @private
-     */
-    Search.prototype.initMapListeners_ = function() {
-        this.getHandler().listen(
-            this.map_,
-            Map.Event.READY,
-            this.onMapReady_
-        ).listen(
-            this.map_,
-            Map.Event.BALLOON_OPEN,
-            this.onBalloonOpen_
-        );
-
-        return this;
-    };
-
-
-    /**
-     * Init listeners for subheader
-     * @return {sm.lSearch.Search}
-     * @private
-     */
-    Search.prototype.initSubheaderListeners_ = function() {
-        this.getHandler().listen(
-            this.subheader,
-            sm.bSmSubheader.SmSubheader.Event.SEARCH_SUBMIT,
-            this.onHeaderSearchSubmit_
-        );
-
-        return this;
-    };
-
-
-    /**
      * Init search service listeners
      * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initSearchServiceListeners_ = function() {
         this.getHandler().listen(
-            this.searchService_,
+            this.searchService,
             SearchService.Event.MAP_DATA_LOADED,
             this.onMapDataLoaded
         ).listen(
-            this.searchService_,
+            this.searchService,
             SearchService.Event.LIST_DATA_LOADED,
             this.onResultsListDataLoaded_
         );
@@ -389,7 +422,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onSearchSubmit_ = function() {
-        this.updatePage_();
+        this.updatePage();
     };
 
 
@@ -398,8 +431,8 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onFilterPanelSubmit_ = function() {
-        this.updatePage_();
-        this.filterPanel_.collapse();
+        this.updatePage();
+        this.filterPanel.collapse();
     };
 
 
@@ -412,9 +445,9 @@ goog.scope(function() {
         this.resetSecondarySearchParams_();
 
         var sortType = event.data ? event.data.value : null;
-        this.paramsManager_.setSortType(sortType);
+        this.paramsManager.setSortType(sortType);
 
-        this.searchResults_.setStatus(
+        this.searchResults.setStatus(
             sm.lSearch.bSearchResults.SearchResults.Status.SORT_IN_PROGRESS
         );
 
@@ -428,7 +461,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onShowMoreButtonClick_ = function() {
-        if (!this.searchService_.isSearchDataPending()) {
+        if (!this.searchService.isSearchDataPending()) {
             this.loadNextPage_();
         }
     };
@@ -440,7 +473,7 @@ goog.scope(function() {
      */
     Search.prototype.onMapReady_ = function() {
         this.initAnalyticsSender_();
-        this.searchService_.loadMapData(this.paramsManager_.getParams());
+        this.searchService.loadMapData(this.paramsManager.getParams());
     };
 
 
@@ -479,7 +512,7 @@ goog.scope(function() {
      */
     Search.prototype.onScroll_ = function() {
         if (this.isNextPageCanBeLoaded_() &&
-            !this.searchService_.isSearchDataPending()) {
+            !this.searchService.isSearchDataPending()) {
 
             this.loadNextPage_();
         }
@@ -493,8 +526,8 @@ goog.scope(function() {
      */
     Search.prototype.onShowPage_ = function(event) {
         if (event.getBrowserEvent().persisted) {
-            this.searchService_.loadSearchData(
-                this.paramsManager_.getParams()
+            this.searchService.loadSearchData(
+                this.paramsManager.getParams()
             );
         }
     };
@@ -506,28 +539,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onListItemClick_ = function(event) {
-        this.searchResults_.sendAnalyticsItemClick(
+        this.searchResults.sendAnalyticsItemClick(
             event.data.itemId,
             'search results'
         );
-    };
-
-
-    /**
-     * Make all actions to update information on page
-     * @private
-     */
-    Search.prototype.updatePage_ = function() {
-        this.resetSecondarySearchParams_();
-        this.clearMap_();
-        this.updateParams_();
-
-        this.searchResults_.setStatus(
-            sm.lSearch.bSearchResults.SearchResults.Status.SEARCH_IN_PROGRESS
-        );
-
-        this.makeSearch_();
-        this.updateUrl_();
     };
 
 
@@ -537,8 +552,8 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.updateParams_ = function() {
-        this.paramsManager_.updateParams(this.getParamsFromFilterPanel_());
-        this.paramsManager_.updateParams(this.getParamsFromSearch_());
+        this.paramsManager.updateParams(this.getParamsFromFilterPanel_());
+        this.paramsManager.updateParams(this.getParamsFromSearch_());
     };
 
 
@@ -549,7 +564,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.resetSecondarySearchParams_ = function() {
-        this.paramsManager_.setPage(0);
+        this.paramsManager.setPage(0);
     };
 
 
@@ -569,10 +584,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.makeSearch_ = function() {
-        this.searchService_.loadSearchData(
-            this.paramsManager_.getParams(/*requestMapResults*/ true)
+        this.searchService.loadSearchData(
+            this.paramsManager.getParams(/*requestMapResults*/ true)
         );
-        this.searchService_.loadMapData(this.paramsManager_.getParams());
+        this.searchService.loadMapData(this.paramsManager.getParams());
     };
 
 
@@ -593,11 +608,11 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.makeNewSearch_ = function() {
-        this.paramsManager_.resetSortType();
-        this.searchResults_.resetSort();
+        this.paramsManager.resetSortType();
+        this.searchResults.resetSort();
 
-        this.updatePage_();
-        this.filterPanel_.reset();
+        this.updatePage();
+        this.filterPanel.reset();
     };
 
 
@@ -606,7 +621,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.updateUrl_ = function() {
-        this.urlUpdater_.update(this.paramsManager_.getUrlParams(
+        this.urlUpdater.update(this.paramsManager.getUrlParams(
             this.getUrlParamsToExclude_()
         ));
     };
@@ -636,17 +651,17 @@ goog.scope(function() {
      * @param {sm.lSearch.bSearchResults.TextHeaderParams} headerText
      * @private
      */
-    Search.prototype.updateResultsList_ =
-        function(listItems, countResults, headerText) {
-            if (this.paramsManager_.getPage() == 0) {
-                this.searchResults_.update({
-                    items: listItems,
-                    countResults: countResults,
-                    headerText: headerText
-                });
-            } else {
-                this.searchResults_.addPage(listItems);
-            }
+    Search.prototype.updateResultsList_ = function(
+            listItems, countResults, headerText) {
+        if (this.paramsManager_.getPage() == 0) {
+            this.searchResults_.update({
+                items: listItems,
+                countResults: countResults,
+                headerText: headerText
+            });
+        } else {
+            this.searchResults_.addPage(listItems);
+        }
     };
 
 
@@ -657,10 +672,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.detectShowMoreResultsList_ = function() {
-        if (this.searchResults_.isAllSearchItemsLoaded()) {
-            this.searchResults_.setShowMoreButtonVisibility(false);
+        if (this.searchResults.isAllSearchItemsLoaded()) {
+            this.searchResults.setShowMoreButtonVisibility(false);
         } else {
-            this.searchResults_.setShowMoreButtonVisibility(true);
+            this.searchResults.setShowMoreButtonVisibility(true);
         }
     };
 
@@ -696,7 +711,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.isAllSearchItemsLoaded_ = function() {
-        return this.searchResults_.isAllSearchItemsLoaded();
+        return this.searchResults.isAllSearchItemsLoaded();
     };
 
 
@@ -706,7 +721,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.isResultsListAnimationEnded_ = function() {
-        return this.searchResults_.isAnimationEnded();
+        return this.searchResults.isAnimationEnded();
     };
 
 
@@ -715,14 +730,14 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.loadNextPage_ = function() {
-        if (!this.searchResults_.isAllSearchItemsLoaded()) {
-            this.paramsManager_.increasePage();
+        if (!this.searchResults.isAllSearchItemsLoaded()) {
+            this.paramsManager.increasePage();
 
-            this.searchResults_.setLoaderVisibility(true);
-            this.searchResults_.setShowMoreButtonVisibility(false);
+            this.searchResults.setLoaderVisibility(true);
+            this.searchResults.setShowMoreButtonVisibility(false);
 
-            this.searchService_.loadSearchData(
-                this.paramsManager_.getParams()
+            this.searchService.loadSearchData(
+                this.paramsManager.getParams()
             );
         }
     };
@@ -734,7 +749,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.getParamsFromFilterPanel_ = function() {
-        var params = this.filterPanel_.getData();
+        var params = this.filterPanel.getData();
 
         return goog.object.map(params, this.getParamsFromFilter_);
     };
@@ -783,7 +798,7 @@ goog.scope(function() {
         var amountItems = Search.SEARCH_CHUNK_SIZE,
             interval = {};
 
-        interval.start = amountItems * this.paramsManager_.getPage();
+        interval.start = amountItems * this.paramsManager.getPage();
         interval.end = interval.start + amountItems;
 
         var params = {
@@ -792,7 +807,7 @@ goog.scope(function() {
             nonInteraction: nonInteraction
         };
 
-        this.searchResults_.sendAnalyticsItemsImpression(params, interval);
+        this.searchResults.sendAnalyticsItemsImpression(params, interval);
     };
 
 
@@ -806,8 +821,8 @@ goog.scope(function() {
         Request.getInstance().init();
 
         /** Search service init **/
-        this.searchService_ = new SearchService();
-        this.searchService_.init(this.params.type);
+        this.searchService = new SearchService();
+        this.searchService.init(this.params.type);
 
         return this;
     };
@@ -819,7 +834,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.initUrlUpdater_ = function() {
-        this.urlUpdater_ = new UrlUpdater();
+        this.urlUpdater = new UrlUpdater();
 
         return this;
     };
@@ -833,7 +848,7 @@ goog.scope(function() {
      */
     Search.prototype.initParamsManager_ = function() {
         var searchParams = this.params.searchParams;
-        this.paramsManager_ = new SearchParamsManager(searchParams);
+        this.paramsManager = new SearchParamsManager(searchParams);
 
         return this;
     };
@@ -842,14 +857,14 @@ goog.scope(function() {
     /**
      * Init left menu instances
      * @return {sm.lSearch.Search}
-     * @private
+     * @protected
      */
-    Search.prototype.initLeftMenuInstances_ = function() {
+    Search.prototype.initLeftMenuInstances = function() {
         this.search_ = new sm.bSearch.Search();
         this.addChild(this.search_);
         this.search_.decorate(this.getView().getDom().search);
 
-        this.filterPanel_ = this.decorateChild(
+        this.filterPanel = this.decorateChild(
             sm.lSearch.bFilterPanel.FilterPanel.NAME,
             this.getView().getDom().filterPanel
         );
@@ -864,24 +879,9 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.initSearchResultsInstance_ = function() {
-        this.searchResults_ = this.decorateChild(
+        this.searchResults = this.decorateChild(
             sm.lSearch.bSearchResults.SearchResults.NAME,
             this.getView().getDom().searchResults
-        );
-
-        return this;
-    };
-
-
-    /**
-     * Init map instance
-     * @return {sm.lSearch.Search}
-     * @private
-     */
-    Search.prototype.initMap_ = function() {
-        this.map_ = this.decorateChild(
-            sm.bSmMap.SmMap.NAME,
-            this.getView().getDom().map
         );
 
         return this;
@@ -893,7 +893,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.initAnalyticsSender_ = function() {
-        this.analyticsSender_ = new AnalyticsSender('search page');
+        this.analyticsSender = new AnalyticsSender('search page');
     };
 
 
@@ -916,9 +916,9 @@ goog.scope(function() {
 
         entityItems = this.transformEntityItemsParams_(entityItems);
 
-        this.analyticsSender_.addImpressions(entityItems);
+        this.analyticsSender.addImpressions(entityItems);
 
-        this.analyticsSender_.send({
+        this.analyticsSender.send({
             category: 'search map',
             action: 'pin details',
             name: name

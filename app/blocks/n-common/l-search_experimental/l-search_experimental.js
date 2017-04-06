@@ -48,7 +48,7 @@ goog.scope(function() {
      * @protected
      */
     SearchExperimental.prototype.onMapDataLoaded = function(event) {
-        var params = this.paramsManager_.getParams();
+        var params = this.paramsManager.getParams();
 
         var itemGroups = event.getItemGroups();
 
