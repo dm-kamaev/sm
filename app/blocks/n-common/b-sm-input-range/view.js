@@ -1,7 +1,7 @@
 goog.provide('sm.bSmInputRange.View');
 
 goog.require('cl.iControl.View');
-goog.require('goog.style');
+goog.require('goog.dom');
 
 
 goog.scope(function() {
@@ -34,10 +34,10 @@ goog.scope(function() {
     /**
      * @typedef {{
      *     name: ?string,
-     *     label: ?string,
-     *     value: ?string,
+     *     value: ?number,
      *     minValue: number,
      *     maxValue: number,
+     *     defaultValue: number
      *     step: ?number
      * }}
      */
@@ -50,48 +50,54 @@ goog.scope(function() {
      * @const
      */
     View.CssClass = {
-        ROOT: 'b-sm-input-range'
-    };
-
-
-
-    /**
-     * Css class enum
-     * @enum {string}
-     * @const
-     */
-    View.Event = {
-        CHANGE: goog.events.getUniqueId('change')
+        ROOT: 'b-sm-input-range',
+        FIELD: 'b-sm-input-range__field',
+        INPUT_WRAP: 'b-sm-input-range__input-wrap',
+        PLACEHOLDER_VALUE: 'b-sm-input-range__placeholder-value'
     };
 
 
     /**
      * @override
-     * @protected
      */
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
+
+        this.initPlaceholder_();
 
         this.initDomListeners_();
     };
 
 
     /**
-     * Get value
-     * @return {number}
+     * Update placeholder value
+     * @param {(number|string)} value
      * @public
      */
-    View.prototype.getValue = function() {
-        return null;
+    View.prototype.updatePlaceholder = function(value) {
+        var formattedValue = this.formatPlaceholderValue_(value);
+
+        goog.dom.setTextContent(this.dom.placeholderValue, formattedValue);
     };
 
 
     /**
-     * Set value
-     * @param {number} value
-     * @public
+     * Show input and hide placeholder value
+     * @publick
      */
-    View.prototype.setValue = function(value) {
+    View.prototype.activateInput = function() {
+        this.setPlaceholderVisibility_(false);
+        this.setInputVisibility_(true);
+    };
+
+
+    /**
+     * Placeholder value and hide input
+     * @publick
+     */
+    View.prototype.activatePlaceholder = function() {
+        this.setInputVisibility_(false);
+        this.setPlaceholderVisibility_(true);
     };
 
 
@@ -126,19 +132,55 @@ goog.scope(function() {
      */
     View.prototype.initDomListeners_ = function() {
         this.getHandler().listen(
-            this.getElement(),
+            this.dom.field,
             goog.events.EventType.CLICK,
-            this.onClick_
+            this.onFieldClick_
+        );
+
+        this.getHandler().listen(
+            goog.dom.getDocument(),
+            goog.events.EventType.CLICK,
+            this.onDocumentClick_
         );
     };
 
 
     /**
-     * Range click handler
+     * Click handler on document
      * @param {goog.events.Event} event
      * @private
      */
-    View.prototype.onClick_ = function(event) {
+    View.prototype.onDocumentClick_ = function(event) {
+        var isContaints = goog.dom.contains(
+            this.dom.field,
+            event.target
+        );
+
+        if (!isContaints) {
+            this.activatePlaceholder();
+        }
+    };
+
+
+    /**
+     * Field click handler
+     * @private
+     */
+    View.prototype.onFieldClick_ = function() {
+        this.activateInput();
+    };
+
+
+    /**
+     * Initializes field state - show input or palseholder value
+     * @private
+     */
+    View.prototype.initPlaceholder_ = function() {
+        var value = this.params.value || this.params.defaultValue ||
+            this.params.minValue;
+
+        this.updatePlaceholder(value);
+        this.activatePlaceholder();
     };
 
 
@@ -147,13 +189,85 @@ goog.scope(function() {
      * @private
      */
     View.prototype.initDom_ = function() {
+        this.dom.field = this.getElementByClass(
+            View.CssClass.FIELD
+        );
+
+        this.dom.inputWrap = this.getElementByClass(
+            View.CssClass.INPUT_WRAP
+        );
+
         this.dom.input = this.getElementByClass(
             sm.gInput.ViewStendhal.CssClass.ROOT
+        );
+
+        this.dom.placeholderValue = this.getElementByClass(
+            View.CssClass.PLACEHOLDER_VALUE
         );
 
         this.dom.range = this.getElementByClass(
             sm.bSmRange.View.CssClass.ROOT
         );
+    };
+
+
+    /**
+     * Adds or deletes class to placeholder value visibility
+     * @param {boolean} visible
+     * @private
+     */
+    View.prototype.setPlaceholderVisibility_ = function(visible) {
+        visible ?
+            goog.dom.classlist.remove(
+                this.dom.placeholderValue,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classlist.add(
+                this.dom.placeholderValue,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+    };
+
+
+    /**
+     * Adds or deletes class to input wrap visibility
+     * @param {boolean} visible
+     * @private
+     */
+    View.prototype.setInputVisibility_ = function(visible) {
+        visible ?
+            goog.dom.classlist.remove(
+                this.dom.inputWrap,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classlist.add(
+                this.dom.inputWrap,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+    };
+
+
+    /**
+     * Format value to text for placeholder
+     * @param {(number|string)} value
+     * @return {string}
+     * @private
+     */
+    View.prototype.formatPlaceholderValue_ = function(value) {
+        var stringValue = String(value),
+            result = '';
+
+        var countChar = 0,
+            length = stringValue.length;
+
+        for (var i = length; i > 0; i--, countChar++) {
+            if (i && !(i % 3)) {
+                result = result + ' ';
+            }
+            result = result + stringValue[countChar];
+        }
+
+        return result;
     };
 
 
@@ -164,12 +278,14 @@ goog.scope(function() {
      * @private
      */
     View.prototype.transformParams_ = function(rawParams) {
+        var minValue = rawParams['minValue'] || 0;
+
         return {
             name: rawParams['name'],
-            label: rawParams['label'],
             value: rawParams['value'],
-            minValue: rawParams['minValue'],
+            minValue: minValue,
             maxValue: rawParams['maxValue'],
+            defaultValue: rawParams['defaultValue'] || minValue,
             step: rawParams['step']
         };
     };

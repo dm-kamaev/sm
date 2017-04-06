@@ -4,9 +4,10 @@
 /**
  * @typedef {{
  *     name: (string|undefined),
- *     value: string,
+ *     value: ?number,
  *     minValue: number,
  *     maxValue: number,
+ *     defaultValue: ?number,
  *     step: ?number,
  *     thumb: ?{
  *         iconName: string,
@@ -63,9 +64,10 @@
  * @param params {{
  *     data: {
  *         name: (string|undefined),
- *         value: string,
- *         minValue: number,
+ *         value: ?number,
+ *         minValue: ?number,
  *         maxValue: number,
+ *         defaultValue: ?number,
  *         step: ?number
  *     }
  * }}
@@ -79,6 +81,7 @@
                 'value': $params.data.value,
                 'minValue': $params.data.minValue,
                 'maxValue': $params.data.maxValue,
+                'defaultValue': $params.data.defaultValue,
                 'step': $params.data.step
             ]/}
         {/call}"

@@ -74,6 +74,17 @@ goog.scope(function() {
 
 
     /**
+     * Reset selected value to minimum value
+     * @public
+     */
+    Range.prototype.reset = function() {
+        var value = this.params.defaultValue;
+
+        this.setValue(value);
+    };
+
+
+    /**
      * @override
      * @public
      */

@@ -1,6 +1,7 @@
 goog.provide('sm.bSmRange.View');
 
 goog.require('cl.iControl.View');
+goog.require('goog.dom');
 goog.require('goog.style');
 
 
@@ -42,9 +43,10 @@ goog.scope(function() {
     /**
      * @typedef {{
      *     name: (string|undefined),
-     *     value: string,
+     *     value: (string|number),
      *     minValue: number,
      *     maxValue: number,
+     *     defaultValue: number,
      *     step: ?number
      * }}
      */
@@ -165,11 +167,11 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onClick_ = function(event) {
-        this.dispatchEvent(View.Event.CHANGE);
-
         var progressPosition = this.getProgressPosition_(event);
 
         this.update_(progressPosition);
+
+        this.dispatchEvent(View.Event.CHANGE);
     };
 
 
@@ -247,9 +249,9 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onThumbUp_ = function() {
-        this.dispatchEvent(View.Event.CHANGE);
-
         this.unsetMoveListeners_();
+
+        this.dispatchEvent(View.Event.CHANGE);
     };
 
 
@@ -281,19 +283,19 @@ goog.scope(function() {
      */
     View.prototype.setMoveListeners_ = function() {
         this.getHandler().listen(
-            document,
+            goog.dom.getDocument(),
             [goog.events.EventType.MOUSEMOVE, goog.events.EventType.TOUCHMOVE],
             this.onThumbMove_
         );
 
         this.getHandler().listen(
-            document,
+            goog.dom.getDocument(),
             [goog.events.EventType.MOUSEUP, goog.events.EventType.TOUCHEND],
             this.onThumbUp_
         );
 
         this.getHandler().listen(
-            document,
+            goog.dom.getDocument(),
             [goog.events.EventType.MOUSEDOWN, goog.events.EventType.TOUCHSTART],
             this.onDocumentMouseDown_
         );
@@ -306,19 +308,19 @@ goog.scope(function() {
      */
     View.prototype.unsetMoveListeners_ = function() {
         this.getHandler().unlisten(
-            document,
+            goog.dom.getDocument(),
             [goog.events.EventType.MOUSEMOVE, goog.events.EventType.TOUCHMOVE],
             this.onThumbMove_
         );
 
         this.getHandler().unlisten(
-            document,
+            goog.dom.getDocument(),
             [goog.events.EventType.MOUSEUP, goog.events.EventType.TOUCHEND],
             this.onThumbUp_
         );
 
         this.getHandler().unlisten(
-            document,
+            goog.dom.getDocument(),
             [goog.events.EventType.MOUSEDOWN, goog.events.EventType.TOUCHSTART],
             this.onDocumentMouseDown_
         );
@@ -450,11 +452,14 @@ goog.scope(function() {
      * @private
      */
     View.prototype.transformParams_ = function(rawParams) {
+        var minValue = rawParams['minValue'] || 0;
+
         return {
             name: rawParams['name'],
             value: rawParams['value'],
-            minValue: rawParams['minValue'],
+            minValue: minValue,
             maxValue: rawParams['maxValue'],
+            defaultValue: rawParams['defaultValue'] || minValue,
             step: rawParams['step']
         };
     };

@@ -4,10 +4,10 @@
 /**
  * @typedef {{
  *     name: (string|undefined),
- *     label: ?string,
- *     value: string,
+ *     value: number,
  *     minValue: number,
  *     maxValue: number,
+ *     defaultValue: ?number,
  *     step: ?number,
  *     thumb: ?{
  *         iconName: string,
@@ -52,10 +52,10 @@
  * @param params {{
  *     data: {
  *         name: (string|undefined),
- *         label: string,
- *         value: string,
+ *         value: number,
  *         minValue: number,
  *         maxValue: number,
+ *         defaultValue: ?number,
  *         step: ?number
  *     }
  * }}
@@ -66,10 +66,10 @@
         {call cl.iUtils.Utils.stringify}
             {param json: [
                 'name': $params.data.name ?: '',
-                'label': $params.data.label ?: '',
                 'value': $params.data.value,
-                'minValue': $params.data.minValue,
+                'minValue': $params.data.minValue ?: 0,
                 'maxValue': $params.data.maxValue,
+                'defaultValue': $params.data.defaultValue,
                 'step': $params.data.step
             ]/}
         {/call}"
@@ -94,26 +94,42 @@
  * @override
  */
 {template .body}
-    {call .label_ data="all"/}
-    {call .input_ data="all" /}
+    {call .field_ data="all" /}
     {call .range_ data="all" /}
 {/template}
 
 
 /**
- * Label template
+ * Field template
  * @param params {{
  *     data: {
- *         label: string
+ *         name: (string|undefined),
+ *         value: number,
+ *         minValue: number,
+ *         maxValue: number,
+ *         defaultValue: ?number,
  *     }
  * }}
  */
-{template .label_}
-    {if $params.data.label}
-        <div class="{call .rootClass/}__label">
-            {$params.data.label}
+{template .field_}
+    <div class="{call .rootClass/}__field">
+        {call .input_ data="all" /}
+        {call .placeholder_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Input template
+ */
+{template .placeholder_}
+    <div class="{call .rootClass/}__placeholder">
+        <div class="{call .rootClass /}__placeholder-text">
+            до
         </div>
-    {/if}
+        <div class="{call .rootClass /}__placeholder-value">
+        </div>
+    </div>
 {/template}
 
 
@@ -122,64 +138,19 @@
  * @param params {{
  *     data: {
  *         name: (string|undefined),
- *         value: string,
+ *         value: number,
  *         minValue: number,
- *         maxValue: number
+ *         maxValue: number,
+ *         defaultValue: ?number
  *     }
  * }}
  */
 {template .input_}
-    <div class="{call .rootClass/}__input-wrap">
-        {call .inputField_ data="all" /}
-        {call .inputPlaceholder_ data="all" /}
-    </div>
-{/template}
-
-
-/**
- * Input template
- * @param params {{
- *     data: {
- *         value: string,
- *         minValue: number
- *     }
- * }}
- */
-{template .inputPlaceholder_}
-    {let $value: $params.data.value ?: $params.data.minValue /}
-
-    {let $placeholder kind="html"}
-        {if $value and length($value)}
-            {for $i in range($value.length)}
-                {if $i and not ($i % 3)}
-                    {sp}
-                {/if}
-
-                {$value[$i]}
-            {/for}
-        {/if}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__input
     {/let}
 
-    <div class="{call .rootClass/}__input{sp}
-                {call .rootClass/}__input_placeholder">
-        до {$placeholder}
-    </div>
-{/template}
-
-
-/**
- * Input field template
- * @param params {{
- *     data: {
- *         name: (string|undefined),
- *         value: string,
- *         minValue: number,
- *         maxValue: number
- *     }
- * }}
- */
-{template .inputField_}
-    <div class="{call .rootClass/}__input {call .rootClass/}__input_field">
+    <div class="{call .rootClass/}__input-wrap">
         {call .renderChild}
             {param params: [
                 'type': 'input',
@@ -188,13 +159,15 @@
                         'type': 'number',
                         'name': $params.data.name,
                         'value': $params.data.value or
+                            $params.data.defaultValue or
                             $params.data.minValue or
                             '',
                         'maxLength': length($params.data.maxValue),
                     ],
                     'config': [
                         'validations': ['digits', 'notEmpty'],
-                        'theme': 'minimal'
+                        'theme': 'minimal',
+                        'customClasses': $customClasses
                     ]
                 ]
             ]/}
@@ -208,10 +181,10 @@
  * @param params {{
  *     data: {
  *         name: (string|undefined),
- *         label: string,
- *         value: string,
+ *         value: number,
  *         minValue: number,
  *         maxValue: number,
+ *         defaultValue: ?number,
  *         step: ?number,
  *         thumb: ?{
  *             iconName: string,
