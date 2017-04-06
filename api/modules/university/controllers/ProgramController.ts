@@ -39,6 +39,7 @@ class ProgramController extends Controller {
      * @apiSuccess {Object}   programMajor      Major program for program
      * @apiSuccess {Number}   programMajor.id   Major program id
      * @apiSuccess {String}   programMajor.name Major program name
+     * @apiSuccess {String}   oksoCode          Specialization code.
      * @apiSuccess {String}   createdAt         Created at.
      * @apiSuccess {String}   updatedAt         Updated at.
      *
@@ -67,6 +68,7 @@ class ProgramController extends Controller {
      *         ],
      *         "exchangeProgram": "Amurica",
      *         "phone": "+7 125 167 54 13",
+     *         "oksoCode": "12.1.1",
      *         "createdAt": "2017-03-07T06:59:52.220Z",
      *         "updatedAt": "2017-03-07T06:59:52.220Z",
      *         "programMajor": {

@@ -12,7 +12,6 @@ import {
     ProgramInstance
 } from '../types/program';
 
-
 import {service as pageService} from '../../entity/services/page';
 const entityTypes = require('../../entity/enums/entityType.js');
 
@@ -21,8 +20,7 @@ import {
 } from '../models/ProgramPageMetaInformation';
 import {Model as ProgramModel} from '../models/Program';
 
-import {ProgramNotFound} from './exceptions/ProgramNotFound';
-
+import {ProgramMetaNotFound, ProgramNotFound} from './exceptions';
 
 const EXCLUDE_ATTRIBUTES = ['created_at', 'updated_at', 'program_id'];
 
@@ -87,6 +85,17 @@ class ProgramMeta {
             alias
         });
         return res;
+    }
+
+    public async getByProgramId(
+            programId: number): Promise<ProgramPageMetaInformationInstance> {
+        const programMeta = await ProgramPageMetaInformationModel.findOne({
+            where: {programId}
+        });
+        if (!programMeta) {
+            throw new ProgramMetaNotFound(programId);
+        }
+        return programMeta;
     }
 }
 

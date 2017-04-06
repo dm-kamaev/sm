@@ -24,6 +24,7 @@ export interface ProgramAttribute {
     exchangeProgram?: string;
     phone?: string;
     programMajorId?: number;
+    oksoCode?: string;
     createdAt?: string;
     updatedAt?: string;
 }

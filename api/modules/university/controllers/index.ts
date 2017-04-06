@@ -65,6 +65,9 @@ import {ProgramMajorAdminController} from './ProgramMajorAdminController';
 const programMajorAdminController = new ProgramMajorAdminController();
 import {ProgramMetaAdminController} from './ProgramMetaAdminController';
 
+import {ProgramMetaController} from './ProgramMetaController';
+const programMetaController: any = new ProgramMetaController();
+
 router.get('/university/:id', universityController.actionGet);
 
 router.get(
@@ -87,6 +90,8 @@ router.get(
     entranceStatisticController.actionGet
 );
 router.get('/program/:id/exam', examController.actionList);
+
+router.get('/program/:programId/pagemeta', programMetaController.actionGet);
 
 router.get('/programmajor/search', programMajorController.actionSearch);
 
