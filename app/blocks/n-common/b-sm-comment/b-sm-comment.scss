@@ -34,6 +34,9 @@
 
 .b-sm-comment__author-photo {
     width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .b-sm-comment__author-data {
