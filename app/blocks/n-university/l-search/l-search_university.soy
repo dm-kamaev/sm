@@ -1,0 +1,472 @@
+{namespace sm.lSearch.Template}
+
+
+/**
+ * @typedef {{
+ *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined),
+ *         textLeft: (Array<string>|undefined),
+ *         textRight: (Array<string>|undefined)
+ *     },
+ *     subHeader: sm.bSmSubheader.Template.Params.Data,
+ *     user: {
+ *        firstName: (string|undefined),
+ *        lastName: (string|undefined)
+ *     },
+ *     authSocialLinks: {
+ *        vk: (string|undefined),
+ *        fb: (string|undefined)
+ *     },
+ *     map: sm.bSmMap.Template.Params.Data,
+ *     resultsList: sm.lSearch.bSearchResults.Template.Params.Data,
+ *     search: {
+ *         pageAlias: string,
+ *         placeholder: ?string,
+ *         searchText: ?string
+ *     },
+ *     filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *     searchParams: {Array<{string, (string|Array<string>|number)}>},
+ *     popularEntities: Array<{
+ *         id: number,
+ *         alias: string,
+ *         name: string,
+ *         description: (string?undefined),
+ *         metro: (Array<string>|undefined),
+ *         totalScore: (number|undefined)
+ *     }>,
+ *     footer: {
+ *         seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
+ *     }
+ * }} sm.lSearch.Template.Params.Data
+ */
+
+
+/**
+ * Search page
+ * @param params {{
+ *     data: sm.lSearch.Template.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ * @doc
+ */
+{template .search autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch
+{/template}
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/l-search.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined),
+ *             textLeft: (Array<string>|undefined),
+ *             textRight: (Array<string>|undefined)
+ *         },
+ *         map: sm.bSmMap.Template.Params.Data,
+ *         search: {
+ *             countResults: number,
+ *             searchText: ?string,
+ *             placeholder: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         },
+ *         sort: sm.gDropdown.TemplateSelect.Params.Data
+ *         entityList: sm.bSmItemList.Template.Params.Data,
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .mainContent autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__body">
+        {call .sectionMap data="all" /}
+        {call .sectionContent_ data="all" /}
+        {call .sectionFooterSeo_ data="all" /}
+        {call .sectionPopular_ data="all" /}
+    </div>
+
+    {call sm.bSmMap.Template.api/}
+{/template}
+
+
+/**
+ * Container for map
+ * @param params {{
+ *     data: {
+ *         map: sm.bSmMap.Template.Params.Data
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionMap autoescape="strict" kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_map
+
+        {for $i in range(length($params.data.map.itemGroups))}
+            {if not length($params.data.map.itemGroups[$i].items)}
+                {sp}{call .rootClass/}__section_hidden
+            {/if}
+        {/for}
+    {/let}
+
+    <div class="{$classes}">
+        <div class="{call .rootClass /}__section-inner">
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smMap' /}
+                {param renderParams: [
+                    'data': $params.data.map,
+                    'config': [
+                        'enableScrollZoom': false,
+                        'alignZoomControl': 'left',
+                        'sizeViewportShow': 'xs'
+                    ]
+                ] /}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Left menu and Search results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: ?string,
+ *             placeholder: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         },
+ *         entityList: sm.bSmItemList.Template.Params.Data,
+ *         filterPanel: {sm.lSearch.bFilterPanel.Template.Params}
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ */
+{template .sectionContent_}
+    <div class="{call .rootClass/}__section
+        {sp}{call .rootClass/}__section_content">
+
+        <div class="{call .rootClass /}__section-inner">
+            {call .leftMenu_ data="all" /}
+            {call .results_ data="all" /}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Left menu template
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string
+ *             searchText: ?string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ */
+{template .leftMenu_}
+    <div class="{call .rootClass/}__left-menu">
+        {call .search_ data="all"/}
+        {call .filters_ data="all"/}
+    </div>
+{/template}
+
+
+/**
+ * Search
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string,
+ *             pageAlias: string,
+ *             searchText: ?string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ */
+{template .search_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__search-field
+    {/let}
+
+    <div class="{call .rootClass/}__search">
+        {call sm.bSearch.Template.base}
+            {param params: [
+                'placeholder': $params.data?.search?.placeholder,
+                'text': $params.data?.search?.searchText,
+                'theme': 'min',
+                'redirect': false,
+                'pageAlias': $params.data?.search?.pageAlias,
+                'inputSize': 'min',
+                'searchArgs': $params.data.search.args,
+                'customClasses': $customClasses,
+                'config': [
+                    'entityType': $params.config.entityType,
+                    'height': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Filter template
+ * @param? params {
+ *     data: {
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params
+ *     }
+ * }
+ */
+{template .filters_}
+    <div class="{call .rootClass/}__filters">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lSearch-filterPanel' /}
+            {param renderParams: $params.data.filterPanel /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Show more button template
+ * @param params {{
+ *     data: {
+ *         resultsList: {
+ *             title: string,
+ *             description: Array<string>,
+ *             sort: sm.gDropdown.TemplateSelect.Params.Data,
+ *             entityList: sm.bSmItemList.Template.Params.Data,
+ *             countResults: number,
+ *             searchText: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .results_}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__search-results
+    {/let}
+
+    <div class="{call .rootClass/}__search-results-wrap">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lSearch-searchResults' /}
+            {param renderParams: [
+                'data': $params.data.resultsList,
+                'config': [
+                    'customClasses': [$customClasses]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Popular entities
+ * @param params {{
+ *     data: {
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     }
+ * }}
+ */
+{template .sectionPopular_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_popular">
+        <div class="{call .rootClass /}__section-inner">
+            {if $params}
+            {/if}
+
+            // {call sm.bPopularSchools.Template.base}
+            //     {param params: [
+            //         'popularSchools': $params.data.popularSchools,
+            //         'config': [
+            //             'popularSchool': [
+            //                 'customClasses': 'l-school__popular'
+            //             ],
+            //             'analyticsAction': 'school click'
+            //         ]
+            //     ]/}
+            // {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Footer for text SEO
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             textLeft: Array<string>,
+ *             textRight: Array<string>
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionFooterSeo_}
+    {if $params.data?.seo and
+        ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
+
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_footer-seo">
+            <div class="{call .rootClass /}__section-inner{sp}
+                        {call .rootClass /}__section-inner_seo">
+
+                <div class="{call .rootClass/}__column-seo{sp}
+                            {call .rootClass/}__column-seo_left">
+                    {call .textSeo_}
+                        {param text: $params.data.seo.textLeft /}
+                    {/call}
+                </div>
+
+                <div class="{call .rootClass/}__column-seo{sp}
+                            {call .rootClass/}__column-seo_right">
+                    {call .textSeo_}
+                        {param text: $params.data.seo.textRight /}
+                    {/call}
+                </div>
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Text for SEO
+ * @param? text {Array<string>}
+ */
+{template .textSeo_ private="true"}
+    {if $text}
+        {for $i in range(length($text))}
+            <div class="{call .rootClass/}__paragraph-seo">
+                {$text[$i]}
+            </div>
+        {/for}
+    {/if}
+{/template}
+
+/**
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         },
+ *         searchParams: {Array<{string, (string|Array<string>|number)}>}
+ *     },
+ *     config: {
+ *         entityType: string,
+ *         modifier: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'searchParams': $params.data?.searchParams,
+                'isUserAuthorized': $params.data?.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'modifier': $params.config?.modifier,
+                'type': $params?.config.entityType
+            ] /}
+        {/call}"
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-search
+{/template}
