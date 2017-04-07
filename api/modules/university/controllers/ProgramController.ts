@@ -1,16 +1,24 @@
 import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
+import {
+    ProgramSuggest,
+    ProgramInstance,
+} from '../types/program';
+
 import {service as programService} from '../services/program';
+import {programView} from '../views/program';
 
 import {ProgramNotFound} from './errors/ProgramNotFound';
+import {ProgramNameIsShorter} from './errors/ProgramNameIsShorter';
 
 class ProgramController extends Controller {
     constructor() {
         super();
 
         this.errors = {
-            ProgramNotFoundException: ProgramNotFound
+            ProgramNotFoundException: ProgramNotFound,
+            ProgramNameIsShorterException: ProgramNameIsShorter
         };
     }
 
@@ -80,6 +88,66 @@ class ProgramController extends Controller {
      */
     public async actionProgramPage(actionContext: any, id: string) {
         return programService.get(Number(id));
+    }
+
+
+    /**
+     * @api {get} /api/program/search/suggest Search program data by string
+     * @apiVersion 0.1.0
+     * @apiName SuggestSearch
+     * @apiGroup Program
+     *
+     * @apiParam {String} searchString The search string.
+     *
+     * @apiParamExample {json} Request-Example:
+     *     {
+     *         "searchString" : "ика",
+     *     }
+     *
+     * @apiSuccess {Object[]} programs            Array of found programs.
+     * @apiSuccess {Number}   programs.id         Program's id.
+     * @apiSuccess {String}   programs.name       Program's name.
+     * @apiSuccess {String}   programs.alias      Program's url
+     * @apiSuccess {Number[]} programs.score      Program's scores array
+     * @apiSuccess {Number}   programs.totalScore Program's total score.
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *    [
+     *        {
+     *            "id": 13,
+     *            "name": "Экономика",
+     *            "alias": "ehkonomika",
+     *            "score": [],
+     *            "totalScore": 0
+     *        },
+     *        {
+     *            "id": 12,
+     *            "name": "Прикладная математика",
+     *            "alias": "prikladnaya-matematika",
+     *            "score": [
+     *                1,
+     *                2,
+     *                3,
+     *                4
+     *            ],
+     *            "totalScore": 12
+     *        }
+     *    ]
+     *
+     * @apiError (422) ProgramNameIsShorter  Program's name is very short
+     */
+    public async actionSuggestSearch(actionContext: any) {
+        const request = actionContext.request || {};
+        const query = request.query || {};
+        const searchString: string = query.searchString || '';
+
+        const data: ProgramInstance[] | null
+            = await programService.suggestSearch(searchString);
+        let result: ProgramSuggest[] | undefined[] = [];
+        if (data) {
+            result = programView.suggestSearch(data);
+        }
+        return result;
     }
 }
 

@@ -82,6 +82,7 @@ api/modules/entity/models/pageMetaInformation.js
 api/modules/entity/services/exceptions/*.js
 api/modules/entity/services/page.js
 api/modules/entity/services/pageMetaInformation.js
+api/modules/entity/services/textSearchData.js
 api/modules/entity/types/*.js
 
 
