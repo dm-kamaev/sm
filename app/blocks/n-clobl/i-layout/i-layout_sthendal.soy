@@ -245,6 +245,7 @@
     {call .metrika data="all"/}
     {call .carrotquest data="all" /}
     {call .relap data="all" /}
+    {call .picturefill data="all" /}
 {/template}
 
 
@@ -344,6 +345,23 @@
     <script type="text/javascript" async
         src="https://relap.io/api/v6/head.js?token=s4f-T0rORrtGBgMG">
     </script>
+{/template}
+
+
+/**
+ * Polyfill for <picture> tag
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .picturefill autoescape="strict" kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/picturefill.min.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
 {/template}
 
 

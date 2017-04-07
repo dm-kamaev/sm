@@ -78,10 +78,25 @@
  * @private
  */
 {template .image_}
-    <img class="{call .rootClass/}__image"
-        src="{$params.data.image.url}"
-        alt="{$params.data.image.altText}"
-    />
+    {let $rootClass kind="text"}
+        {call .rootClass /}
+    {/let}
+    {call sm.bSmPicturefill.Template.picturefill}
+        {param params: [
+            'rootClass': $rootClass,
+            'altText': $params.data.image.altText,
+            'sources': [
+                [
+                    'srcset': $params.data.image.url,
+                    'media': '(min-width: 1101px)'
+                ],
+                [
+                    'srcset': $params.data.image.url,
+                    'media': '(max-width: 1100px)'
+                ]
+            ]
+        ] /}
+    {/call}
 {/template}
 
 

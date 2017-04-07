@@ -1,0 +1,25 @@
+{namespace sm.bSmPicturefill.Template}
+
+
+
+/**
+ * Picturefill template
+ * @param params {{
+ *      rootClass: string,
+ *      sources: Array<{
+ *          srcset: string,
+ *          media: string,
+ *      }>,
+ *      altText: (string|undefined)
+ * }}
+ */
+{template .picturefill}
+    {if $params.sources}
+        <picture>
+            {foreach $source in $params.sources}
+                <source srcset="{$source.srcset}" media="{$source.media}">
+            {/foreach}
+            <img class="{$params.rootClass}__image">
+        </picture>
+    {/if}
+{/template}
