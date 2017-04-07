@@ -1,0 +1,222 @@
+{namespace sm.lSearch.bFilter.TemplateRange}
+
+
+/**
+ * @typedef {{
+ *     name: string,
+ *     header: ({
+ *         label: (string|undefined),
+ *         tooltip: (string|undefined)
+ *     }|undefined),
+ *     options: Array<{
+ *         label: (string|undefined),
+ *         name: string,
+ *         value: ?string,
+ *         minValue: number,
+ *         maxValue: number,
+ *         step: ?number,
+ *         thumb: ?{
+ *             iconName: string,
+ *             iconType: ?string
+ *         }
+ *     }>
+ * }} sm.lSearch.bFilter.TemplateRange.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.TemplateRange.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.TemplateRange.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.TemplateRange.Params}
+ * @extends sm.lSearch.bFilter.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch-filterRange
+{/template}
+
+
+/**
+ * List options template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             label: (string|undefined),
+ *             name: string,
+ *             value: ?string,
+ *             minValue: number,
+ *             maxValue: number,
+ *             step: ?number,
+ *             thumb: ?{
+ *                 iconName: string,
+ *                 iconType: ?string
+ *             }
+ *         }>
+ *     },
+ *     config: {
+ *         optionsToShow: (number|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @public
+ */
+{template .listOptions}
+    {let $numberOptionsToShow kind="html"}
+        {call .numberOptionsToShow data="all" /}
+    {/let}
+
+    <div class="{call .rootClass/}__list-options">
+        {for $i in range($params.data.options.length)}
+            {call .option}
+                {param params: [
+                    'data': [
+                        'name': $params.data.name,
+                        'label': $params.data.options[$i].label,
+                        'minValue': $params.data.options[$i].minValue,
+                        'maxValue': $params.data.options[$i].maxValue,
+                        'defaultValue': $params.data.options[$i].defaultValue,
+                        'step': $params.data.options[$i].step,
+                        'thumb': $params.data.options[$i].thumb,
+                        'value': $params.data.options[$i].value
+                    ],
+                    'config': [
+                        'hidden': $i + 1 > $numberOptionsToShow ? true : false,
+                        'hidable': $i + 1> $numberOptionsToShow ? true : false,
+                        'stylizationModifier': $params.config.stylizationModifier
+                    ]
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Option template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         label: (string|undefined),
+ *         value: ?string,
+ *         minValue: number,
+ *         maxValue: number,
+ *         step: ?number,
+ *         thumb: ?{
+ *             iconName: string,
+ *             iconType: ?string
+ *         }
+ *     },
+ *     config: {
+ *         hidden: (boolean|undefined),
+ *         hidable: (boolean|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @public
+ */
+{template .option}
+    {let $classes kind="html"}
+        {call .rootClass/}__option
+
+        {if $params.config?.hidden}
+            {sp}i-utils__hidden
+        {/if}
+
+        {if $params.config?.hidable}
+            {sp}{call .rootClass/}__option_hidable
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .rangeLabel_ data="all" /}
+        {call .range_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Template button
+ * @override
+ */
+{template .button}
+{/template}
+
+
+/**
+ * Input template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         value: ?string,
+ *         minValue: number,
+ *         maxValue: number,
+ *         step: ?number,
+ *         thumb: ?{
+ *             iconName: string,
+ *             iconType: ?string
+ *         }
+ *     },
+ *     config: {
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .range_}
+    <div class="{call .rootClass/}__range">
+        {call .renderChild}
+            {param params: [
+                'type': 'smInputRange',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'theme': 'neptune'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Range label template
+ * @param params {{
+ *     data: {
+ *         label: (string|undefined),
+ *     }
+ * }}
+ * @private
+ */
+{template .rangeLabel_}
+    {if $params.data?.label}
+        <div class="{call .rootClass/}__range-label">
+            {$params.data.label}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_range
+{/template}

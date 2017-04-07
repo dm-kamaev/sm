@@ -7,6 +7,7 @@ goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterClasses');
 goog.require('sm.lSearch.bFilter.FilterDropdown');
 goog.require('sm.lSearch.bFilter.FilterExtended');
+goog.require('sm.lSearch.bFilter.FilterRange');
 goog.require('sm.lSearch.bFilter.FilterInput');
 goog.require('sm.lSearch.bFilter.FilterSwitch');
 goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
@@ -269,6 +270,9 @@ goog.scope(function() {
                 break;
             case sm.lSearch.bFilter.FilterSwitch.isControl(element) :
                 type = sm.lSearch.bFilter.FilterSwitch.NAME;
+                break;
+            case sm.lSearch.bFilter.FilterRange.isControl(element) :
+                type = sm.lSearch.bFilter.FilterRange.NAME;
                 break;
             case sm.lSearch.bFilter.FilterInput.isControl(element) :
                 type = sm.lSearch.bFilter.FilterInput.NAME;
