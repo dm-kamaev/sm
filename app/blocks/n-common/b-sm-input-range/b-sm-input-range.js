@@ -84,6 +84,8 @@ goog.scope(function() {
     InputRange.prototype.enterDocument = function() {
         InputRange.base(this, 'enterDocument');
 
+        this.initViewListeners_();
+
         this.initInputListeners_();
         this.initRangeListeners_();
     };
@@ -169,7 +171,7 @@ goog.scope(function() {
 
 
     /**
-     * Init listeners for input
+     * Initializes listeners for input
      * @private
      */
     InputRange.prototype.initInputListeners_ = function() {
@@ -190,7 +192,7 @@ goog.scope(function() {
 
 
     /**
-     * Init listeners for range
+     * Initializes listeners for range
      * @private
      */
     InputRange.prototype.initRangeListeners_ = function() {
@@ -201,6 +203,27 @@ goog.scope(function() {
             sm.bSmRange.SmRange.Event.CHANGE,
             this.onRangeChange_
         );
+    };
+
+
+     /**
+     * Initializes listeners for view
+     * @private
+     */
+    InputRange.prototype.initViewListeners_ = function() {
+        this.viewListen(
+            View.Event.FIELD_CLICK,
+            this.onFieldClick_
+        );
+    };
+
+
+    /**
+     * Field click handler
+     * @private
+     */
+    InputRange.prototype.onFieldClick_ = function() {
+        this.input_.focus();
     };
 
 

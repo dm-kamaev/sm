@@ -2,34 +2,10 @@
 
 
 /**
- * @typedef {{
- *     name: (string|undefined),
- *     value: ?number,
- *     minValue: number,
- *     maxValue: number,
- *     defaultValue: ?number,
- *     step: ?number,
- *     thumb: ?{
- *         iconName: string,
- *         iconType: ?string
- *     }
- * }} sm.bSmRange.Template.Params.Data
- */
-
-
-/**
- * @typedef {{
- *     theme: (string|undefined),
- *     stylizationModifier: string
- * }} sm.bSmRange.Template.Params.Config
- */
-
-
-/**
  * Constructor
  * @param params {{
- *     data: sm.bSmRange.Template.Params.Data,
- *     config: sm.bSmRange.Template.Params.Config
+ *     data: sm.bSmRange.Params.Data,
+ *     config: sm.bSmRange.Params.Config
  * }}
  * @extends cl.iControl.Template
  * @factory sm.iCloblFactory.FactoryStendhal
@@ -56,6 +32,20 @@
  */
 {template .NAME}
     smRange
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmRange.Params.Data,
+ *     config: sm.bSmRange.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .bar_ data="all" /}
+    {call .thumb_ data="all"/}
 {/template}
 
 
@@ -98,32 +88,21 @@
 
 
 /**
- * Body
- * @param params {{
- *     data: sm.bSmRange.Template.Params.Data,
- *     config: sm.bSmRange.Template.Params.Config
- * }}
- * @override
- */
-{template .body}
-    {call .bar_ data="all" /}
-    {call .thumb_ data="all"/}
-{/template}
-
-
-/**
  * Bar of range
  * @param params {{
  *     data: {
- *         value: string,
- *         minValue: number,
- *         maxValue: number
+ *         value: ?string,
+ *         minValue: ?number,
+ *         maxValue: number,
+ *         defaultValue: ?number
  *     }
  * }}
  */
 {template .bar_}
-    {let $width: ($params.data.value - $params.data.minValue) > 0 ? 2 + 100 *
-        (($params.data.value - $params.data.minValue)/
+    {let $value: $params.data.value or $params.data.defaultValue /}
+
+    {let $width: ($value - $params.data.minValue) > 0 ? 2 + 100 *
+        (($value - $params.data.minValue)/
             ($params.data.maxValue - $params.data.minValue)):
         0
     /}
@@ -142,9 +121,10 @@
  * Thumb of range
  * @param params {{
  *     data: {
- *         value: string,
- *         minValue: number,
+ *         value: ?string,
+ *         minValue: ?number,
  *         maxValue: number,
+ *         defaultValue: ?number,
  *         thumb: ?{
  *             iconName: string,
  *             iconType: ?string
@@ -153,8 +133,10 @@
  * }}
  */
 {template .thumb_}
-    {let $left: ($params.data.value - $params.data.minValue) > 0 ? 100 *
-        (($params.data.value - $params.data.minValue)/
+    {let $value: $params.data.value or $params.data.defaultValue /}
+
+    {let $left: ($value - $params.data.minValue) > 0 ? 100 *
+        (($value - $params.data.minValue)/
             ($params.data.maxValue - $params.data.minValue)):
         0
     /}

@@ -2,34 +2,10 @@
 
 
 /**
- * @typedef {{
- *     name: (string|undefined),
- *     value: number,
- *     minValue: number,
- *     maxValue: number,
- *     defaultValue: ?number,
- *     step: ?number,
- *     thumb: ?{
- *         iconName: string,
- *         iconType: ?string
- *     }
- * }} sm.bSmInputRange.Template.Params.Data
- */
-
-
-/**
- * @typedef {{
- *     theme: (string|undefined),
- *     stylizationModifier: string
- * }} sm.bSmInputRange.Template.Params.Config
- */
-
-
-/**
  * Constructor
  * @param params {{
- *     data: sm.bSmInputRange.Template.Params.Data,
- *     config: sm.bSmInputRange.Template.Params.Config
+ *     data: sm.bSmInputRange.Params.Data,
+ *     config: sm.bSmInputRange.Params.Config
  * }}
  * @extends cl.iControl.Template
  * @factory sm.iCloblFactory.FactoryStendhal
@@ -38,6 +14,7 @@
 {template .range}
     {call .init data="all"/}
 {/template}
+
 
 /**
  * @override
@@ -48,11 +25,25 @@
 
 
 /**
+ * Body
+ * @param params {{
+ *     data: sm.bSmInputRange.Params.Data,
+ *     config: sm.bSmInputRange.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .field_ data="all" /}
+    {call .range_ data="all" /}
+{/template}
+
+
+/**
  * Attributes
  * @param params {{
  *     data: {
  *         name: (string|undefined),
- *         value: number,
+ *         value: ?number,
  *         minValue: number,
  *         maxValue: number,
  *         defaultValue: ?number,
@@ -86,25 +77,11 @@
 
 
 /**
- * Body
- * @param params {{
- *     data: sm.bSmInputRange.Template.Params.Data,
- *     config: sm.bSmInputRange.Template.Params.Config
- * }}
- * @override
- */
-{template .body}
-    {call .field_ data="all" /}
-    {call .range_ data="all" /}
-{/template}
-
-
-/**
  * Field template
  * @param params {{
  *     data: {
  *         name: (string|undefined),
- *         value: number,
+ *         value: ?number,
  *         minValue: number,
  *         maxValue: number,
  *         defaultValue: ?number,
@@ -138,7 +115,7 @@
  * @param params {{
  *     data: {
  *         name: (string|undefined),
- *         value: number,
+ *         value: ?number,
  *         minValue: number,
  *         maxValue: number,
  *         defaultValue: ?number
@@ -181,7 +158,7 @@
  * @param params {{
  *     data: {
  *         name: (string|undefined),
- *         value: number,
+ *         value: ?number,
  *         minValue: number,
  *         maxValue: number,
  *         defaultValue: ?number,
@@ -205,6 +182,7 @@
                         'step': $params.data.step,
                         'minValue': $params.data.minValue,
                         'maxValue': $params.data.maxValue,
+                        'defaultValue': $params.data.defaultValue,
                         'thumb': $params.data.thumb
                     ],
                     'config': $params.config

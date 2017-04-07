@@ -2,39 +2,11 @@
 
 
 /**
- * @typedef {{
- *     name: string,
- *     header: ({
- *         label: (string|undefined),
- *         tooltip: (string|undefined)
- *     }|undefined),
- *     options: Array<{
- *         label: (string|undefined),
- *         name: string,
- *         value: ?string,
- *         minValue: number,
- *         maxValue: number,
- *         step: ?number,
- *         thumb: ?{
- *             iconName: string,
- *             iconType: ?string
- *         }
- *     }>
- * }} sm.lSearch.bFilter.TemplateRange.Params.Data
- */
-
-
-/**
- * @typedef {{
- *     data: sm.lSearch.bFilter.TemplateRange.Params.Data,
- *     config: sm.lSearch.bFilter.Template.Params.Config
- * }} sm.lSearch.bFilter.TemplateRange.Params
- */
-
-
-/**
  * Constructor
- * @param params {sm.lSearch.bFilter.TemplateRange.Params}
+ * @param params {
+ *     data: sm.lSearch.bFilterRange.Params.Data,
+ *     config: sm.lSearch.bFilterRange.Params.Config
+ * }
  * @extends sm.lSearch.bFilter.Template
  * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor

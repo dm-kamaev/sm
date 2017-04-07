@@ -45,6 +45,16 @@ goog.scope(function() {
 
 
     /**
+     * Event enum
+     * @enum {string}
+     * @const
+     */
+    View.Event = {
+        FIELD_CLICK: goog.events.getUniqueId('field-click')
+    };
+
+
+    /**
      * Css class enum
      * @enum {string}
      * @const
@@ -164,10 +174,14 @@ goog.scope(function() {
 
     /**
      * Field click handler
+     * @param {goog.events.Event} event
      * @private
      */
-    View.prototype.onFieldClick_ = function() {
+    View.prototype.onFieldClick_ = function(event) {
+        event.stopPropagation();
+
         this.activateInput();
+        this.dispatchEvent(View.Event.FIELD_CLICK);
     };
 
 

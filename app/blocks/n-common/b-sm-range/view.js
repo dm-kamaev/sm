@@ -208,6 +208,8 @@ goog.scope(function() {
         var progressPosition = this.getProgressPosition_(event);
 
         this.update_(progressPosition, this.mouseOffsetXOnThumb_);
+
+        this.dispatchEvent(View.Event.CHANGE);
     };
 
 
