@@ -29,12 +29,6 @@ goog.scope(function() {
             this, 'constructor', opt_params, opt_type, opt_modifier
         );
 
-        /**
-         * @type {sm.lSearch.bSearchResults.View.Params}
-         * @protected
-         */
-        this.params = null;
-
 
         /**
          * Is css 3 animations supported by browser
@@ -78,7 +72,9 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-search-results',
         HEADER: 'b-search-results__header_active',
-        SORT: 'b-search-results__sort-control',
+        HEADER_TEXT: 'b-search-results__header-text',
+        SORT_DROPDOWN: 'b-search-results__sort-control_dropdown',
+        SORT_SWITCH: 'b-search-results__sort-control_switch',
         ITEM_LIST: 'b-search-results__item-list',
         SHOW_MORE_BUTTON: 'b-search-results__show-more-button',
         SHOW_MORE_BUTTON_WRAP: 'b-search-results__show-more-button-wrap',
@@ -115,35 +111,31 @@ goog.scope(function() {
         HIDE_ANIMATION_END: goog.events.getUniqueId('hideAnimationEnd')
     };
 
-
     /**
-     * @typedef {{
-     *     declensionEntityType: {
+     * @typedef {Array<{
+     *     number: (number|undefined),
+     *     text: (string|{
      *         nom: string,
      *         gen: string,
      *         plu: string
-     *     }
-     * }}
+     *     })
+     * }>}
      */
-    View.Params;
+    View.TextHeaderParams;
 
 
     /**
      * Update headers size s and l for results list
-     * @param {number} countResults
-     * @param {string} searchText
+     * @param {sm.lSearch.bSearchResults.View.TextHeaderParams} headerText
      * @public
      */
-    View.prototype.updateHeader = function(countResults, searchText) {
+    View.prototype.updateHeader = function(headerText) {
         goog.soy.renderElement(
-            this.dom.header,
-            sm.lSearch.bSearchResults.Template.header_, {
+            this.dom.headerText,
+            sm.lSearch.bSearchResults.Template.generateHeaderText, {
                 params: {
                     data: {
-                        countResults: countResults,
-                        searchText: searchText,
-                        declensionEntityType:
-                            this.params.declensionEntityType
+                        headerText: headerText
                     }
                 }
             }
@@ -222,19 +214,6 @@ goog.scope(function() {
         this.initDom_()
             .initStatus_()
             .initAnimationSupportion_();
-    };
-
-
-    /**
-     * Return data-params from dom element
-     * @return {sm.lSearch.bSearchResults.View.DataParams}
-     * @protected
-     * @override
-     */
-    View.prototype.getParams = function() {
-        var rawParams = View.base(this, 'getParams');
-        this.params = rawParams ? this.transformParams(rawParams) : null;
-        return this.params;
     };
 
 
@@ -566,7 +545,9 @@ goog.scope(function() {
             results: this.getElementByClass(View.CssClass.RESULTS),
             placeholder: this.getElementByClass(View.CssClass.PLACEHOLDER),
             header: this.getElementByClass(View.CssClass.HEADER),
-            sort: this.getElementByClass(View.CssClass.SORT),
+            headerText: this.getElementByClass(View.CssClass.HEADER_TEXT),
+            sortDropdown: this.getElementByClass(View.CssClass.SORT_DROPDOWN),
+            sortSwitch: this.getElementByClass(View.CssClass.SORT_SWITCH),
             itemList: this.getElementByClass(View.CssClass.ITEM_LIST),
             showMore: this.getElementByClass(View.CssClass.SHOW_MORE_BUTTON),
             showMoreWrap: this.getElementByClass(

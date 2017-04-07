@@ -96,6 +96,16 @@ goog.scope(function() {
 
 
     /**
+     * select default element
+     * @public
+     */
+    Switch.prototype.reset = function() {
+        var id = this.params.selectedItemId;
+        this.selectLink(id);
+    };
+
+
+    /**
      * Item click handler
      * @param {number} id
      * @private

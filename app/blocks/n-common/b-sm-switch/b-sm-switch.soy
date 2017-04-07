@@ -8,7 +8,7 @@
  *         url: ?string
  *     }>,
  *     selectedItemId: ?number
- * }} sm.bSmSwitch.SmSwitch.Params.Data
+ * }} sm.bSmSwitch.Template.Params.Data
  */
 
 
@@ -16,14 +16,14 @@
  * @typedef {{
  *      size: sm.bSmLink.Template.Params.Config.size,
  *      linksTheme: sm.bSmLink.Template.Params.Config.theme,
- * }} sm.bSmSwitch.SmSwitch.Params.Config
+ * }} sm.bSmSwitch.Template.Params.Config
  */
 
 /**
  * Constructor
  * @param params {{
- *     data: sm.bSmSwitch.SmSwitch.Params.Data,
- *     config: sm.bSmSwitch.SmSwitch.Params.Config
+ *     data: sm.bSmSwitch.Template.Params.Data,
+ *     config: sm.bSmSwitch.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
  * @factory sm.iCloblFactory.FactoryStendhal
@@ -94,7 +94,8 @@
 {template .attributes kind="attributes"}
     data-params="{call cl.iUtils.Utils.stringify}
         {param json: [
-            'items': $params.data.items
+            'items': $params.data.items,
+            'selectedItemId': $params.data.selectedItemId ?: 0
         ]/}
     {/call}"
 {/template}

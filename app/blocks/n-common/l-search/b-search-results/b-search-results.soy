@@ -6,17 +6,36 @@
  *     description: (Array<string>|undefined),
  *     linksTitle: (string|undefined),
  *     links: (Array<sm.bSmLink.SmLink.Template.Params.Data>|undefined),
- *     sort: sm.gDropdown.TemplateSelect.Params.Data,
+ *     sort: (sm.gDropdown.TemplateSelect.Params.Data|
+ *            sm.bSmSwitch.Template.Params.Data),
  *     entityList: sm.bSmItemList.Template.Params.Data,
  *     countResults: number,
- *     searchText: ?string,
- *     declensionEntityType: {
+ *     headerText:
+ *          sm.lSearch.bSearchResults.Template.Params.Data.headerText,
+ *     headerTextPlaceholder:
+ *          sm.lSearch.bSearchResults.Template.Params.Data.headerText
+ * }} sm.lSearch.bSearchResults.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     [sortController = 'dropdown-list-links']: ('smSwitch'|undefined)
+ * }} sm.lSearch.bSearchResults.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {Array<{
+ *     number: (number|undefined),
+ *     text: (string|{
  *         nom: string,
  *         gen: string,
  *         plu: string
- *     }
- * }} sm.lSearch.bSearchResults.Template.Params.Data
+ *     })
+ * }>} sm.lSearch.bSearchResults.Template.Params.Data.headerText
  */
+
 
 /**
  * Template for SearchResults block
@@ -43,7 +62,7 @@
  */
 {template .body}
     {call .results_ data="all" /}
-    {call .placeholder_ /}
+    {call .placeholder_ data="all" /}
     {call .loader_ /}
 {/template}
 
@@ -66,6 +85,11 @@
 
 /**
  * Placeholder for empty results template
+ * @param params {{
+ *     data: {
+ *         headerTextPlaceholder:
+ *             sm.lSearch.bSearchResults.Template.Params.Data.headerText
+ * }}
  * @private
  */
 {template .placeholder_ kind="html"}
@@ -73,7 +97,7 @@
         {call .header_}
             {param params: [
                 'data': [
-                    'countResults': 0
+                    'headerText': $params.data.headerTextPlaceholder
                 ],
                 'config': [
                     'notActive': true
@@ -91,13 +115,15 @@
  *         description: (string|undefined),
  *         linksTtile: (string|undefined),
  *         links: (Array<sm.bSmLink.SmLink.Template.Params.Data>|undefined),
- *         countResults: number,
- *         searchText: ?string,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
+ *         headerText:  [
+ *             number: (number|undefined),
+ *             text: (string|{
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             },
+ *             select: ('text'|'number'|'all'|undefined)
+ *         ]
  *     },
  *     config: {
  *         notActive: boolean
@@ -119,9 +145,10 @@
     <div class="{$classes}">
         {if $params.data.title}
             {call .headerSeo_ data="all" /}
-        {else}
-            {call .generateHeaderText_ data="all" /}
         {/if}
+        <span class="{call .rootClass/}__header-text">
+            {call .generateHeaderText data="all" /}
+        </span>
     </div>
 {/template}
 
@@ -155,16 +182,7 @@
  * }}
  */
 {template .headerTextSeo_}
-    {let $classes kind="html"}
-        {call .rootClass/}__header-text{sp}
-        {call .rootClass/}__header-text_strong
-
-        {if $params.data.description}
-            {sp}{call .rootClass/}__header-text_title
-        {/if}
-    {/let}
-
-    <h1 class="{$classes}">
+    <h1 class="{call .rootClass/}__header-title">
         {$params.data.title}
     </h1>
 {/template}
@@ -251,177 +269,175 @@
 {/template}
 
 
-/**
- * Generates header text for results
- * @param params {{
- *     data: {
- *         searchText: ?string,
- *         countResults: number,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
- * }}
- */
-{template .generateHeaderText_}
-    {call .listHeaderTextFirstPart_ data="all" /}
-        мы{sp}
-    {call .listHeaderTextSecondPart_ data="all" /}
-{/template}
-
-
-/**
- * First part of text for list header
- * @param params {{
- *     data:
- *         searchText: string
- *     }
- * }}
- */
-{template .listHeaderTextFirstPart_}
-    {if $params.data.searchText and
-        length($params.data.searchText)}
-        {call .listHeaderSearchText_ data="all" /}
-    {else}
-        По вашему запросу{sp}
-    {/if}
-{/template}
-
-
-/**
- * Search text for list header
- * @param params {{
- *     data: {
- *         search: {
- *             searchText: string
- *         }
- *     }
- * }}
- */
-{template .listHeaderSearchText_}
-    По запросу{sp}
-
-    <span class="{call .rootClass/}__header-text{sp}
-                 {call .rootClass/}__header-text_strong">
-        «{$params.data.searchText}»
-    </span>{sp}
-{/template}
-
-
-/**
- * Second part of text for list header
- * @param params {{
- *     data: {
- *         countResults: number,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
- * }}
- */
-{template .listHeaderTextSecondPart_}
-     <span class="{call .rootClass/}__header-text{sp}
-                 {call .rootClass/}__header-text_change">
-        {if $params.data.countResults == 0}
-            не нашли ничего.
-        {else}
-            {call .listHeaderCountResults_ data="all" /}
-        {/if}
-    </span>
-{/template}
-
-
-/**
- * Count results for list header
- * @param params {{
- *     data: {
- *         countResults: number,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
- * }}
- */
-{template .listHeaderCountResults_}
-    нашли{sp}
-
-    <span class="{call .rootClass/}__header-text{sp}
-                {call .rootClass/}__header-text_strong{sp}
-                {call .rootClass/}__header-text_amount">
-        {$params.data.countResults}{sp}
-
-        {call .listHeaderEntityType_ data="all" /}
-    </span>
-{/template}
 
 
 /**
  * Entity type for list header
  * @param params {{
  *     data: {
- *         countResults: number,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
+ *         headerText:  [
+ *             number: (number|undefined),
+ *             text: (string|{
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             },
+ *             select: ('text'|'number'|'all'|undefined)
+ *         ]
+ *      }
  * }}
  */
-{template .listHeaderEntityType_}
-    {call cl.iUtils.Utils.declensionPrint}
-        {param params: [
-            'num': $params.data.countResults,
-            'nom': ' ' + $params.data.declensionEntityType.nom,
-            'gen': ' ' + $params.data.declensionEntityType.gen,
-            'plu': ' ' + $params.data.declensionEntityType.plu
-        ]/}
+{template .generateHeaderText}
+    {if $params.data.headerText}
+        {foreach $item in $params.data.headerText}
+            {if $item.number}
+                {let $selected: $item.select == 'number'
+                             or $item.select == 'all' /}
+                {call .headerTextSelectWrapper_}
+                    {param isSelected: $selected /}
+                    {param text: $item.number /}
+                {/call}
+            {/if}
+            {if $item.text}
+                {call .headerTextPart_}
+                    {param item: $item /}
+                {/call}
+            {/if}
+        {/foreach}
+    {/if}
+{/template}
+
+
+/**
+ * Entity type for list header
+ * @param text {string|number}
+ * @param isSelected {boolean}
+ */
+{template .headerTextSelectWrapper_}
+    {sp}
+    {if $isSelected}<span class="{call .rootClass/}__header-text_selected">{/if}
+        {$text}
+    {if $isSelected}</span>{/if}
+{/template}
+
+
+/**
+ * Entity type for list header
+ * @param item {{
+ *     number: (number|undefined),
+ *     text: (string|{
+ *         nom: string,
+ *         gen: string,
+ *         plu: string
+ *     },
+ *     select: ('none'|'text'|'number'|'all')
+ * }}
+ */
+{template .headerTextPart_}
+    {let $text kind="text"}
+        {if $item.text.nom}
+            {call cl.iUtils.Utils.declensionPrint}
+                 {param params: [
+                     'num': $item.number,
+                     'nom': $item.text.nom,
+                     'gen': $item.text.gen,
+                     'plu': $item.text.plu
+                 ]/}
+             {/call}
+        {else}
+            {$item.text}
+        {/if}
+    {/let}
+
+    {call .headerTextSelectWrapper_}
+        {param isSelected: $item.select == 'text' or $item.select == 'all' /}
+        {param text: $text /}
     {/call}
 {/template}
 
 
 /**
- * Sort dropdown template
+ * Sort template
  * @param params {{
  *     data: {
- *         search: {
- *             countResults: number,
- *         }
  *         sort: sm.gDropdown.TemplateSelect.Params.Data
  *     }
  * }}
  * @private
  */
 {template .sort_ kind="html"}
-    {let $customClasses kind="html"}
-        {call .rootClass /}__sort-control
-    {/let}
     <div class="{call .rootClass /}__sort">
-        <div class="{call .rootClass /}__horizontal-line"></div>
-        <div class="{call .rootClass /}__sort-control-wrap">
-            {call .renderChild}
-                {param params: [
-                    'type': 'dropdown-list-links',
-                    'renderParams': [
-                        'data': $params.data.sort,
-                        'config': [
-                            'viewType': 'link',
-                            'iconSprite': 'small-opener-arrow',
-                            'theme': 'dense',
-                            'openerSize': 'm',
-                            'contentSize': 'm',
-                            'customClasses': [$customClasses]
-                        ]
+        {if $params.config?.sortController == 'smSwitch'}
+            {call .sort_switch_ data="all" /}
+        {else}
+            {call .sort_dropdown_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Sort dropdown template
+ * @param params {{
+ *     data: {
+ *         sort: (sm.gDropdown.TemplateSelect.Params.Data|
+ *                sm.bSmSwitch.Template.Params.Data)
+ *     }
+ * }}
+ * @private
+ */
+{template .sort_dropdown_}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__sort-control_dropdown
+    {/let}
+    <div class="{call .rootClass /}__horizontal-line"></div>
+    <div class="{call .rootClass /}__sort-control-wrap_dropdown">
+        {call .renderChild}
+            {param params: [
+                'type': 'dropdown-list-links',
+                'renderParams': [
+                    'data': $params.data.sort,
+                    'config': [
+                        'viewType': 'link',
+                        'iconSprite': 'small-opener-arrow',
+                        'theme': 'dense',
+                        'openerSize': 'm',
+                        'contentSize': 'm',
+                        'customClasses': [$customClasses]
                     ]
-                ]/}
-            {/call}
-        </div>
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Sort switch template
+ * @param params {{
+ *     data: {
+ *         sort: sm.bSmSwitch.Template.Params.Data
+ *     }
+ * }}
+ * @private
+ */
+{template .sort_switch_}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__sort-control_switch
+    {/let}
+    <div class="{call .rootClass /}__sort-control-wrap_switch">
+        {call .renderChild}
+            {param params: [
+                'type': 'smSwitch',
+                'renderParams': [
+                    'data': $params.data.sort.content,
+                    'config': [
+                        'size': 'xxxl',
+                        'linksTheme': 'hoar',
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -503,28 +519,6 @@
     </div>
 {/template}
 
-/**
- * @param params {{
- *     data: {
- *         countResults: number,
- *         declensionEntityType: {
- *              nom: string,
- *              plu: string,
- *              gen: string
- *         }
- *     }
- * }}
- * @override
- * @protected
- */
-{template .attributes kind="attributes"}
-    data-params="{call cl.iUtils.Utils.stringify}
-        {param json: [
-            'countResults': $params.data.countResults,
-            'declensionEntityType': $params.data.declensionEntityType
-        ] /}
-    {/call}"
-{/template}
 
 /**
  * Additional classes

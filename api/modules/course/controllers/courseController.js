@@ -69,6 +69,10 @@ controller.search = async(function(req, res) {
         result = {
             list: {
                 items: courseView.list(aliasedCourses),
+                headerText: searchView.generateHeaderText(
+                    searchParams.name,
+                    countResults
+                ),
                 countResults: countResults
             }
         };
