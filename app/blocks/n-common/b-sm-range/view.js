@@ -241,6 +241,7 @@ goog.scope(function() {
             opt_mouseOffsetXOnThumb
         );
 
+        this.dom.thumb.style.right = 'auto';
         this.dom.thumb.style.left = positions.thumbLeft + 'px';
         this.dom.progressBar.style.width = positions.progressBar + 'px';
     };

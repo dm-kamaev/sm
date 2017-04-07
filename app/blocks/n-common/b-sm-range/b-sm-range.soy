@@ -99,11 +99,11 @@
  * }}
  */
 {template .bar_}
-    {let $value: $params.data.value or $params.data.defaultValue /}
+    {let $value: $params.data.value ?: $params.data.defaultValue /}
+    {let $minValue: $params.data.minValue ?: 0 /}
 
-    {let $width: ($value - $params.data.minValue) > 0 ? 2 + 100 *
-        (($value - $params.data.minValue)/
-            ($params.data.maxValue - $params.data.minValue)):
+    {let $width: ($value - $minValue) > 0 ? 100 *
+        (($value - $minValue)/($params.data.maxValue - $minValue)):
         0
     /}
 
@@ -133,15 +133,20 @@
  * }}
  */
 {template .thumb_}
-    {let $value: $params.data.value or $params.data.defaultValue /}
+    {let $value: $params.data.value ?: $params.data.defaultValue /}
+    {let $minValue: $params.data.minValue ?: 0 /}
 
-    {let $left: ($value - $params.data.minValue) > 0 ? 100 *
-        (($value - $params.data.minValue)/
-            ($params.data.maxValue - $params.data.minValue)):
+    {let $position: ($value - $minValue) > 0 ? 100 *
+        (($value - $minValue)/($params.data.maxValue - $minValue)):
         0
     /}
 
-    <div class="{call .rootClass/}__thumb" style="left: {$left}%;">
+    {let $side: $position < 100 ? 'left' : 'right' /}
+
+
+    <div class="{call .rootClass/}__thumb"
+        style="{$side}: {$position < 100 ? $position : 0}%;">
+
         {if $params.data?.thumb?.iconName}
             {call .renderChild}
                 {param params: [
