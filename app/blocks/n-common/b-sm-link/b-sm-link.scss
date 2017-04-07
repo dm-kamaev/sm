@@ -90,6 +90,18 @@
     color: #356fc4;
 }
 
+.b-sm-link_hoar-theme {
+    color: #747474;
+
+    &.b-sm-link_hoverable:hover {
+        color: #e4e4e4;
+    }
+
+    &.b-sm-link_selected {
+        color: #000000;
+    }
+}
+
 .b-sm-link_neptune-theme, .b-sm-link_neptune-imaged-theme {
     color: #0a5bff;
 }

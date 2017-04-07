@@ -254,11 +254,19 @@ exports.search = async(function(req, res) {
                 entityType.SCHOOL
             )),
             aliasedSchools = schoolView.joinAliases(schools, aliases);
+        let countResults = schools[0] && schools[0].countResults || 0;
 
         result = {
             list: {
                 items: schoolView.list(aliasedSchools, searchParams.sortType),
-                countResults: schools[0] && schools[0].countResults || 0
+                headerText: searchView.generateHeaderText(
+                    searchParams.name,
+                    countResults
+                ),
+                headerTextPlaceholder: [{
+                    text: 'По вашему запросу мы не нашли ничего.'
+                }],
+                countResults: countResults
             }
         };
 

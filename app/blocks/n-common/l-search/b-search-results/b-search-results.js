@@ -2,6 +2,7 @@ goog.provide('sm.lSearch.bSearchResults.SearchResults');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.bSmSwitch.SmSwitch');
 goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.iCloblFactory.FactoryStendhal');
@@ -77,7 +78,7 @@ goog.scope(function() {
      * @const
      */
     SearchResults.Event = {
-        SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.ITEM_SELECT,
+        SORT_TYPE_CHANGE: goog.events.getUniqueId('sort-type-change'),
         SHOW_MORE_CLICK: cl.gButton.Button.Event.CLICK,
         LIST_ITEM_CLICK: sm.bSmItemList.SmItemList.Event.ITEM_CLICK
     };
@@ -94,6 +95,11 @@ goog.scope(function() {
         SORT_IN_PROGRESS: View.Status.SORT_IN_PROGRESS
     };
 
+    /**
+     * @typedef {sm.lSearch.bSearchResults.View.TextHeaderParams}
+     */
+    SearchResults.TextHeaderParams;
+
 
     /**
      * @override
@@ -101,6 +107,20 @@ goog.scope(function() {
      */
     SearchResults.prototype.enterDocument = function() {
         SearchResults.base(this, 'enterDocument');
+
+        if (this.getView().dom.sortDropdown) {
+            this.getHandler().listen(
+                this.sort_,
+                sm.gDropdown.DropdownListLinks.Event.ITEM_SELECT,
+                this.onSortTypeChange
+            );
+        } else {
+            this.getHandler().listen(
+                this.sort_,
+                sm.bSmSwitch.SmSwitch.Event.ITEM_SELECT,
+                this.onSortTypeChange
+            );
+        }
     };
 
 
@@ -118,7 +138,7 @@ goog.scope(function() {
      * @param {{
      *     items: Array<sm.bSmItem.SmItem.RenderParams>,
      *     countResults: number,
-     *     searchText: string
+     *     headerText: sm.lSearch.bSearchResults.TextHeaderParams
      * }} params
      * @public
      */
@@ -127,7 +147,7 @@ goog.scope(function() {
         if (params.countResults) {
             this.params.countResults = params.countResults;
             status = SearchResults.Status.NOT_EMPTY_RESULTS;
-            this.getView().updateHeader(params.countResults, params.searchText);
+            this.getView().updateHeader(params.headerText);
             this.replaceItems(params.items);
         } else {
             status = SearchResults.Status.EMPTY_RESULTS;
@@ -278,6 +298,15 @@ goog.scope(function() {
 
 
     /**
+     * sort type change handler
+     * @protected
+     */
+    SearchResults.prototype.onSortTypeChange = function() {
+        this.dispatchEvent(SearchResults.Event.SORT_TYPE_CHANGE);
+    };
+
+
+    /**
      * Init child components
      * @return {sm.lSearch.bSearchResults.SearchResults}
      * @private
@@ -290,10 +319,15 @@ goog.scope(function() {
             dom.itemList
         );
 
-        this.sort_ = this.decorateChild(
-            sm.gDropdown.DropdownListLinks.NAME,
-            dom.sort
-        );
+        this.sort_ = dom.sortDropdown ?
+            this.decorateChild(
+                sm.gDropdown.DropdownListLinks.NAME,
+                dom.sortDropdown
+            ) :
+            this.decorateChild(
+                sm.bSmSwitch.SmSwitch.NAME,
+                dom.sortSwitch
+            );
 
         this.showMore_ = this.decorateChild(
             sm.gButton.ButtonStendhal.NAME,

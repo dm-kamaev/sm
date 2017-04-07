@@ -4,6 +4,13 @@
 import {CommentGroupInstance} from '../../comment/types/commentGroup';
 
 const sequelize = require('../../../../app/components/db');
+import {
+    service as textSearchDataService
+} from '../../entity/services/textSearchData.js';
+const entityTypes = require('../../entity/enums/entityType.js');
+
+import {Model as PageModel} from '../../entity/models/page';
+import {Model as RatingModel} from '../../comment/models/Rating';
 
 import {Model as ProgramModel} from '../models/Program';
 import {Model as ProgramMajor} from '../models/ProgramMajor';
@@ -13,23 +20,28 @@ import {
 } from '../../comment/models/ProgramComment';
 import {Model as EntranceStatisticModel} from '../models/EntranceStatistic';
 import {Model as ProgramEgeExamModel} from '../models/ProgramEgeExam';
+import {Model as UniversityModel} from '../models/University';
 import {
     ProgramInstance,
     ProgramAdmin,
     ProgramAttribute,
     ProgramUrl
 } from '../types/program';
+import {EntitiesSearch} from '../../entity/types/textSearchData';
 
 import {
     service as commentGroupService
 } from '../../comment/services/commentGroup';
+import {
+    service as programCommentService
+} from '../../comment/services/programComment';
 import {service as addressService} from '../../geo/services/address';
 import {service as universityService} from './university';
 import {service as pageService} from '../../entity/services/page';
 const entityType = require('../../entity/enums/entityType');
 import {UrlTemplate} from '../constants/UrlTemplate';
 
-import {ProgramNotFound} from './exceptions/ProgramNotFound';
+import {ProgramNotFound, ProgramNameIsShorterException} from './exceptions';
 
 const EXCLUDE_FIELDS = [
     'created_at',
@@ -213,6 +225,68 @@ class ProgramService {
             }]
         });
         return programs;
+    }
+
+    public async getFullList(): Promise<Array<ProgramInstance>> {
+        return ProgramModel.findAll({
+            include: [{
+                model: UniversityModel,
+                as: 'university'
+            }, {
+                model: EntranceStatisticModel,
+                as: 'entranceStatistics'
+            }, {
+                model: ProgramEgeExamModel,
+                as: 'programEgeExams'
+            }],
+            order: [[
+                {
+                    model: EntranceStatisticModel,
+                    as: 'entranceStatistics'
+                },
+                'year',
+                'DESC'
+            ]]
+        });
+    }
+
+
+    public async suggestSearch(
+        searchString: string
+    ): Promise<ProgramInstance[] | null> {
+        const mustLength: number = 2;
+        if (!searchString || searchString.length < mustLength) {
+            throw new ProgramNameIsShorterException(searchString, mustLength);
+        }
+
+        const founded: EntitiesSearch
+            = await textSearchDataService.entitiesSearch(
+                searchString,
+                [entityTypes.PROGRAM]
+            );
+        if (!founded.program) {
+            return null;
+        }
+        const programIds: number[] = founded.program;
+        return await this.getProgramsWithAlias_(programIds);
+    }
+
+    private async getProgramsWithAlias_(
+        programIds: number[]
+    ): Promise<ProgramInstance[]> {
+        return await ProgramModel.findAll({
+            attributes: ['id', 'name', 'score', 'totalScore'],
+            where: {
+                id: {
+                    $in: programIds
+                }
+            },
+            include: [{
+                attributes: ['alias'],
+                model: PageModel,
+                as: 'pages'
+            }],
+        });
     }
 
 

@@ -82,6 +82,7 @@ api/modules/entity/models/pageMetaInformation.js
 api/modules/entity/services/exceptions/*.js
 api/modules/entity/services/page.js
 api/modules/entity/services/pageMetaInformation.js
+api/modules/entity/services/textSearchData.js
 api/modules/entity/types/*.js
 
 
@@ -237,18 +238,16 @@ app/modules/user/**/*.js
 app/modules/common/services/*.js
 app/modules/comment/**/*.js
 
+console/executable/sendNewCommentNotifications.js
 console/modules/geoTools/*.js
 console/modules/modelArchiver/Archiver.js
 console/modules/newCommentNotifier/**/*.js
-console/executable/sendNewCommentNotifications.js
-
+console/modules/schoolSpecClasses/*.js
+console/modules/searchUpdater/ProgramActualizer.js
+console/one-off/loadPrograms.js
+console/one-off/shrinkOlympiadResults.js
+console/importSchoolSpecClasses.js
 console/insertRegionForMoscow.js
 console/updateProgramSimilar.js
-console/one-off/loadPrograms.js
-
-console/one-off/shrinkOlympiadResults.js
-console/modules/geoTools/*.js
-console/modules/schoolSpecClasses/*.js
-console/importSchoolSpecClasses.js
 
 gulp/taskBackendLint.js

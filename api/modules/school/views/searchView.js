@@ -117,13 +117,14 @@ searchView.render = function(data) {
             description: seoParams.description,
             linksTitle: seoParams.linksTitle,
             links: seoParams.links,
+            headerText: this.generateHeaderText(
+                data.searchParams.name,
+                data.countResults
+            ),
+            headerTextPlaceholder: [{
+                text: 'По вашему запросу мы не нашли ничего.'
+            }],
             countResults: data.countResults,
-            searchText: data.searchParams.name,
-            declensionEntityType: {
-                nom: 'школу',
-                gen: 'школы',
-                plu: 'школ'
-            },
             sort: {
                 opener: 'Сортировать ',
                 defaultOpenerText: 'по средней оценке',
@@ -262,6 +263,42 @@ searchView.subheader = function(data) {
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
+};
+
+
+/**
+ *
+ * @param serchText
+ * @param countResults
+ * @return {Array<Object>}
+ */
+searchView.generateHeaderText = function(serchText, countResults) {
+    let res = [];
+    if (serchText) {
+        res.push({
+            text: 'По запросу'
+        });
+        res.push({
+            text: '«' + serchText + '»'
+        });
+    } else {
+        res.push({
+            text: 'По вашему запросу'
+        });
+    }
+    res.push({
+        text: 'мы нашли'
+    });
+    res.push({
+        number: countResults,
+        text: {
+            nom: 'школу',
+            gen: 'школы',
+            plu: 'школ'
+        },
+        select: 'all'
+    });
+    return res;
 };
 
 module.exports = searchView;

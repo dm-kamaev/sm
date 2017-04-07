@@ -88,6 +88,8 @@ router.get(
 );
 router.get('/program/:id/exam', examController.actionList);
 
+router.get('/program/search/suggest', programController.actionSuggestSearch);
+
 router.get('/programmajor/search', programMajorController.actionSearch);
 
 const initCrudRouting = function(route: string, controller: any): void {

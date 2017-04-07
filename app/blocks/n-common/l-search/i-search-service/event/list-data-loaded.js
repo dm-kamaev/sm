@@ -13,7 +13,7 @@ goog.scope(function() {
 
     /**
      * Event with loaded data for results list
-     * @param  {Array<sm.bSmItem.SmItem.RenderParams>} listData
+     * @param  {sm.lSearch.iSearchService.ListDataLoadedEvent.ListData} listData
      * @param  {goog.events.EventTarget=} opt_target
      * @constructor
      */
@@ -43,7 +43,8 @@ goog.scope(function() {
     /**
      * @typedef {{
      *     items: Array<sm.bSmItem.SmItem.RenderParams>,
-     *     countResults: number
+     *     countResults: number,
+     *     headerText: sm.lSearch.bSearchResults.TextHeaderParams
      *  }}
      */
     sm.lSearch.iSearchService.ListDataLoadedEvent.ListData;
@@ -72,6 +73,16 @@ goog.scope(function() {
     ListDataLoadedEvent.prototype.getListItems = function() {
         return this.listData_['items'];
     };
+
+
+    /**
+     * Getter for header text
+     * @return {sm.lSearch.bSearchResults.TextHeaderParams}
+     */
+    ListDataLoadedEvent.prototype.getHeaderText = function() {
+        return this.listData_['headerText'];
+    };
+
 
     /**
      * Getter for count results
