@@ -30,4 +30,16 @@ class ViewUniversity extends View {
          */
         this.params = null;
     }
+
+    /**
+     * Css class enum
+     * @enum {string}
+     */
+    static get CssClass() {
+        return {
+            ROOT: 'l-search_university'
+        };
+    };
 }
+
+exports = ViewUniversity;

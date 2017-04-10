@@ -24,11 +24,11 @@ goog.scope(function() {
             opt_type, opt_modifier);
 
 
-            /**
-             * @type {sm.lSearch.View.Params}
-             * @protected
-             */
-            this.params = null;
+        /**
+         * @type {sm.lSearch.View.Params}
+         * @protected
+         */
+        this.params = null;
     };
     goog.inherits(sm.lSearch.View, sm.iLayout.ViewStendhal);
     var View = sm.lSearch.View;

@@ -178,7 +178,7 @@ goog.scope(function() {
         this.initSubheaderListeners()
             .initLeftMenuListeners_()
             .initSearchServiceListeners_()
-            .initSearchResultsListeners_()
+            .initSearchResultsListeners()
             .initWindowListeners_()
             .initMapListeners();
 
@@ -201,7 +201,7 @@ goog.scope(function() {
             .initUrlUpdater_()
             .initParamsManager_()
             .initLeftMenuInstances()
-            .initSearchResultsInstance_()
+            .initSearchResultsInstance()
             .initMap();
     };
 
@@ -245,11 +245,11 @@ goog.scope(function() {
     /**
      * Init listeners for left menu instances
      * @return {sm.lSearch.Search}
-     * @protected
+     * @private
      */
     Search.prototype.initLeftMenuListeners_ = function() {
         this.initSearchListeners()
-            .initFilterPanelListeners_();
+            .initFilterPanelListeners();
 
         return this;
     };
@@ -307,6 +307,60 @@ goog.scope(function() {
 
 
     /**
+     * Init listeners for filter panel
+     * @protected
+     * @return {sm.lSearch.Search}
+     */
+    Search.prototype.initFilterPanelListeners = function() {
+        this.getHandler().listen(
+            this.filterPanel,
+            sm.lSearch.bFilterPanel.FilterPanel.Event.SUBMIT,
+            this.onFilterPanelSubmit_
+        );
+        return this;
+    };
+
+
+    /**
+     * Init listeners for left menu
+     * @return {sm.lSearch.Search}
+     * @protected
+     */
+    Search.prototype.initSearchResultsListeners = function() {
+        this.getHandler().listen(
+            this.searchResults,
+            sm.lSearch.bSearchResults.SearchResults.Event.LIST_ITEM_CLICK,
+            this.onListItemClick_
+        ).listen(
+            this.searchResults,
+            sm.lSearch.bSearchResults.SearchResults.Event.SORT_TYPE_CHANGE,
+            this.onSortReleased_
+        ).listen(
+            this.searchResults,
+            sm.lSearch.bSearchResults.SearchResults.Event.SHOW_MORE_CLICK,
+            this.onShowMoreButtonClick_
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Init results list, sort and show more button instances
+     * @return {sm.lSearch.Search}
+     * @protected
+     */
+    Search.prototype.initSearchResultsInstance = function() {
+        this.searchResults = this.decorateChild(
+            sm.lSearch.bSearchResults.SearchResults.NAME,
+            this.getView().getDom().searchResults
+        );
+
+        return this;
+    };
+
+
+    /**
      * Init listeners for search block in menu
      * @return {sm.lSearch.Search}
      * @private
@@ -320,45 +374,6 @@ goog.scope(function() {
             this.search_,
             sm.bSearch.Search.Event.ITEM_SELECT,
             this.onSearchSubmit_
-        );
-
-        return this;
-    };
-
-
-    /**
-     * Init listeners for filter panel
-     * @private
-     * @return {sm.lSearch.Search}
-     */
-    Search.prototype.initFilterPanelListeners_ = function() {
-        this.getHandler().listen(
-            this.filterPanel,
-            sm.lSearch.bFilterPanel.FilterPanel.Event.SUBMIT,
-            this.onFilterPanelSubmit_
-        );
-        return this;
-    };
-
-
-    /**
-     * Init listeners for left menu
-     * @return {sm.lSearch.Search}
-     * @private
-     */
-    Search.prototype.initSearchResultsListeners_ = function() {
-        this.getHandler().listen(
-            this.searchResults,
-            sm.lSearch.bSearchResults.SearchResults.Event.LIST_ITEM_CLICK,
-            this.onListItemClick_
-        ).listen(
-            this.searchResults,
-            sm.lSearch.bSearchResults.SearchResults.Event.SORT_TYPE_CHANGE,
-            this.onSortReleased_
-        ).listen(
-            this.searchResults,
-            sm.lSearch.bSearchResults.SearchResults.Event.SHOW_MORE_CLICK,
-            this.onShowMoreButtonClick_
         );
 
         return this;
@@ -874,21 +889,6 @@ goog.scope(function() {
 
 
     /**
-     * Init results list, sort and show more button instances
-     * @return {sm.lSearch.Search}
-     * @private
-     */
-    Search.prototype.initSearchResultsInstance_ = function() {
-        this.searchResults = this.decorateChild(
-            sm.lSearch.bSearchResults.SearchResults.NAME,
-            this.getView().getDom().searchResults
-        );
-
-        return this;
-    };
-
-
-    /**
      * Initializes instance of Analytics Sender
      * @private
      */
@@ -960,6 +960,8 @@ goog.scope(function() {
  * creates sm.lSearch.Search instance
  */
 jQuery(function() {
+    console.log('Search layout instantiate');
+
     sm.iLayout.LayoutStendhal.autoInstance(
         sm.lSearch.Search.NAME,
         sm.lSearch.View.CssClass.ROOT

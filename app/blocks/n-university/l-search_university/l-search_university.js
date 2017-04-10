@@ -5,8 +5,8 @@
 goog.module('sm.lSearch.SearchUniversity');
 
 
-const Search = goog.require('sm.lSearch.SearchUniversity');
-const View = goog.require('sm.lSearch.View');
+const Search = goog.require('sm.lSearch.Search');
+const View = goog.require('sm.lSearch.ViewUniversity');
 const Factory = goog.require('sm.iCloblFactory.FactoryStendhal');
 const Template = goog.require('sm.lSearch.Template');
 const ILayout = goog.require('sm.iLayout.LayoutStendhal');
@@ -152,6 +152,20 @@ class SearchUniversity extends Search {
         return this;
     }
 
+    /**
+     * Init listeners for filter panel
+     * @protected
+     * @return {sm.lSearch.SearchUniversity}
+     */
+    initFilterPanelListeners() {
+        // this.getHandler().listen(
+        //     this.filterPanel,
+        //     sm.lSearch.bFilterPanel.FilterPanel.Event.SUBMIT,
+        //     this.onFilterPanelSubmit_
+        // );
+        return this;
+    };
+
 
     /**
      * Make all actions to update information on page
@@ -178,13 +192,14 @@ class SearchUniversity extends Search {
      * @override
      */
     initLeftMenuInstances() {
-        this.filterPanel = this.decorateChild(
-            sm.lSearch.bFilterPanel.FilterPanel.NAME,
-            this.getView().getDom().filterPanel
-        );
+        // this.filterPanel = this.decorateChild(
+        //     sm.lSearch.bFilterPanel.FilterPanel.NAME,
+        //     this.getView().getDom().filterPanel
+        // );
 
         return this;
     }
+
 
     /**
      * Init map instance
@@ -201,15 +216,20 @@ class SearchUniversity extends Search {
 /**
  * Register control into factory
  */
-Factory.getInstance().register({
+Factory.getInstance().register(SearchUniversity.NAME, {
     control: SearchUniversity,
     view: View
 });
 
 
 /**
- * creates sm.lSearch.SearchUniversityUniversity instance
+ * creates sm.lSearch.SearchUniversity instance
  */
-ILayout.autoInstance(SearchUniversity.NAME, View.CssClass.ROOT);
+jQuery(function() {
+    console.log('SearchUniversity instatia');
+
+    ILayout.autoInstance(SearchUniversity.NAME, View.CssClass.ROOT);
+});
+
 
 exports = SearchUniversity;
