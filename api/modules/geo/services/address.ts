@@ -78,8 +78,9 @@ class AddressService {
 
             if (!data.areaId) {
                 const areas = await services.area.create({
-                    name: await geoTools.getArea(data.coords)
+                    name: await geoTools.getArea(data.coords),
                         // area name from coords
+                    cityId: DEFAULT_CITY_ID
                 });
                 data.areaId = areas[0].id;
             }
