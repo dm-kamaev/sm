@@ -357,43 +357,45 @@
  * @private
  */
 {template .description_}
-    {let $class kind="text"}
-        {if $params.data.size}
-            {call .rootClass/}__main-description_size_{$params.data.size}
-        {/if}
-    {/let}
-
-    <div class="{call .rootClass/}__main-description {$class}">
-        <div class="{call .rootClass/}__type">
-            {$params.data.entityData.subunitType}
-        </div>
-
-        <div class="{call .rootClass/}__name">
-            {$params.data.entityData.subunitName}
-        </div>
-
-        <div class="{call .rootClass/}__description">
-            {if $params.data.size == 'xs'}
-                {call .renderChildLayout}
-                    {param params: $params /}
-                    {param type: 'smCollapsedText' /}
-                    {param renderParams: [
-                        'data': [
-                            'text': $params.data.entityData.cutDescription,
-                            'buttonTextExpand': 'Развернуть описание'
-                        ],
-                        'config': [
-                            'isButtonCollapse': true,
-                            'buttonFont': 'inherit',
-                            'buttonTheme': 'neptune'
-                        ]
-                    ]/}
-                {/call}
-            {else}
-                {$params.data.entityData.description}
+    {if $params.data.entityData.description}
+        {let $class kind="text"}
+            {if $params.data.size}
+                {call .rootClass/}__main-description_size_{$params.data.size}
             {/if}
+        {/let}
+
+        <div class="{call .rootClass/}__main-description {$class}">
+            <div class="{call .rootClass/}__type">
+                {$params.data.entityData.subunitType}
+            </div>
+
+            <div class="{call .rootClass/}__name">
+                {$params.data.entityData.subunitName}
+            </div>
+
+            <div class="{call .rootClass/}__description">
+                {if $params.data.size == 'xs'}
+                    {call .renderChildLayout}
+                        {param params: $params /}
+                        {param type: 'smCollapsedText' /}
+                        {param renderParams: [
+                            'data': [
+                                'text': $params.data.entityData.cutDescription,
+                                'buttonTextExpand': 'Развернуть описание'
+                            ],
+                            'config': [
+                                'isButtonCollapse': true,
+                                'buttonFont': 'inherit',
+                                'buttonTheme': 'neptune'
+                            ]
+                        ]/}
+                    {/call}
+                {else}
+                    {$params.data.entityData.description}
+                {/if}
+            </div>
         </div>
-    </div>
+    {/if}
 {/template}
 
 
@@ -413,15 +415,17 @@
  * @private
  */
 {template .descriptionList_}
-    <div class="{call .rootClass/}__description-list">
-        {call .renderChildLayout}
-            {param params: $params /}
-            {param type: 'lUniversity-descriptionList' /}
-            {param renderParams: [
-                'data': $params.data.entityData.descriptionList
-            ]/}
-        {/call}
-    </div>
+    {if $params.data.entityData.descriptionList}
+        <div class="{call .rootClass/}__description-list">
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'lUniversity-descriptionList' /}
+                {param renderParams: [
+                    'data': $params.data.entityData.descriptionList
+                ]/}
+            {/call}
+        </div>
+    {/if}
 {/template}
 
 
