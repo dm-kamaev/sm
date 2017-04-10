@@ -4,6 +4,8 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {programService} from '../services/programService';
 import {universityService} from '../services/universityService';
+
+import {programMetaService} from '../services/programMetaService';
 import {EntranceStatisticService} from '../services/EntranceStatisticService';
 import {userService} from '../../user/services/user';
 import {EgeExamService} from '../services/EgeExamService';
@@ -19,7 +21,6 @@ const entityType =
 class UniversityController extends Controller {
     constructor() {
         super();
-
     }
 
     public async actionGetInformation(
@@ -46,13 +47,15 @@ class UniversityController extends Controller {
             universityService.getById(universityId),
             entranceStatisticService.getLast(),
             programCommentService.getComments(),
-            egeExamService.getExams()
+            egeExamService.getExams(),
+            programMetaService.getById(programId)
         ]);
         const program = programData[0],
             university = programData[1],
             entranceStatistic = programData[2],
             comments = programData[3],
             egeExams = programData[4],
+            pageMeta = programData[5],
             userComment = programCommentService.getUserComment(user, comments);
         const users =
             await userService.getById(comments.map(comment => comment.userId));
@@ -64,6 +67,7 @@ class UniversityController extends Controller {
                 entranceStatistic,
                 comments,
                 egeExams,
+                pageMeta,
                 userComment,
                 users,
                 favorites: []

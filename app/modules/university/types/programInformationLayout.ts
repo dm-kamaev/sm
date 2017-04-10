@@ -4,6 +4,7 @@ import {BackendUniversity} from './university';
 import {BackendEgeExam} from './egeExam';
 import {BackendEntranceStatistic} from './entranceStatistic';
 import {BackendUser} from '../../user/types/user';
+import {BackendProgramMeta} from '../types/programMeta';
 import {AppConfig} from '../../common/types/layout';
 
 export type RenderParams = {
@@ -24,6 +25,7 @@ export type BackendData = {
     egeExams: Array<BackendEgeExam>,
     userComment: BackendProgramComment,
     users: Array<BackendUser>,
-    favorites: Array<{string: any}>
+    favorites: Array<{string: any}>,
+    pageMeta: BackendProgramMeta
 };
 

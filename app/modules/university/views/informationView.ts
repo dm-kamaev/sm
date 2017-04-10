@@ -22,6 +22,7 @@ import {
     RenderParams
 } from '../types/programInformationLayout';
 import {BackendProgramComment} from '../../comment/types/programComment';
+import {AppConfig} from '../../common/types/layout';
 
 import {
     bDescriptionList
@@ -59,6 +60,8 @@ class InformationView extends LayoutView {
 
     protected params: lUniversity.Params;
 
+    private subunitType: string;
+
     constructor() {
         super();
 
@@ -68,18 +71,13 @@ class InformationView extends LayoutView {
         this.entityType = entityType.UNIVERSITY;
         this.pageName = pageName.INFORMATION;
 
-        this.seo = {
-            metaTitle: 'Специальность',
-            metaDescription: ''
-        };
-
         this.subHeader = {
             isLogoRedirect: true,
             isSearchRedirect: true,
             isBottomLine: true
         };
 
-        this.openGraph = {};
+        this.subunitType = 'Программа обучения';
     }
 
     protected setParams(params: RenderParams) {
@@ -94,12 +92,39 @@ class InformationView extends LayoutView {
         this.setModalComment_(params.data.program.id, params.data.userComment);
     }
 
+    protected setSeo(data: BackendData) {
+        const seoData = this.getDefaultSeoData_(data);
+
+        this.params.data.seo = {
+            metaTitle: data.pageMeta.tabTitle || seoData.title,
+            metaDescription: data.pageMeta.seoDescription || seoData.description
+        };
+    }
+
+    protected setOpenGraph(config: AppConfig, data: BackendData) {
+        super.setOpenGraph(config, data);
+
+        const seoData = this.getDefaultSeoData_(data),
+            pageMeta = data.pageMeta;
+
+        const description = pageMeta.openGraphDescription ||
+            pageMeta.seoDescription ||
+            seoData.description;
+
+        this.params.data.openGraph.title = pageMeta.tabTitle || seoData.title;
+        this.params.data.openGraph.description = description;
+        this.params.data.openGraph.relapTag = this.subunitType;
+
+        this.params.data.openGraph.image = '';
+        this.params.data.openGraph.relapImage = '';
+    }
+
     private setEntityData_(data: BackendData) {
         this.params.data.entityData = {
             id: data.program.id,
             name: data.university.name,
             subunitName: data.program.name,
-            subunitType: 'Программа обучения',
+            subunitType: this.subunitType,
             description: data.program.description,
             sketch: this.getSketchParams_(data),
             cutDescription: this.getCutDescription_(data.program.description),
@@ -107,6 +132,37 @@ class InformationView extends LayoutView {
             summaryBoard: this.getSummaryBoardParams_(data),
             banner: this.getBannerParams_(data),
             entityRelation: this.getEntityRelationParams_(),
+        };
+    }
+
+    private getDefaultSeoData_(data: BackendData) {
+        const oksoCode = data.program.oksoCode ?
+            `(${data.program.oksoCode}) ` :
+            '';
+
+        let description;
+        if (data.program.description) {
+            description = data.program.description;
+
+            const formatUtils = new FormatUtils();
+
+            while (~description.indexOf('.')) {
+                description = formatUtils.cutText(
+                    description,
+                    description.length - 1,
+                    '.'
+                );
+            }
+
+        } else {
+            description = `${data.program.name} в ` +
+                data.university.abbreviation;
+        }
+
+        return {
+            title: `${data.program.name} ${oksoCode}– ` +
+                data.university.abbreviation,
+            description: description
         };
     }
 
