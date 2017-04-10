@@ -10,6 +10,7 @@ import {EgeExamService} from '../services/EgeExamService';
 import {ProgramCommentService} from '../../comment/services/ProgramComment';
 
 import {informationView} from '../views/informationView';
+import {searchView} from '../views/searchView';
 
 const soy = require('../../../components/soy');
 const config = require('../../../config/config.json');
@@ -78,6 +79,28 @@ class UniversityController extends Controller {
 
         return soy.render(
             'sm.lUniversity.Template.university', {
+                params: templateParams
+            }
+        );
+    }
+
+    public async actionGetSearch(actionContext: any) {
+        const user = userService.getUserFromRequest(actionContext.request);
+
+        const templateParams = searchView.render({
+            data: {
+                favorites: [],
+            },
+            config: config,
+            requestData: {
+                user: user,
+                query: actionContext.request.query,
+                csrf: actionContext.request.csrfToken()
+            }
+        });
+
+        return soy.render(
+            'sm.lSearch.TemplateUniversity.search', {
                 params: templateParams
             }
         );

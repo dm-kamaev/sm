@@ -18,6 +18,11 @@ router.get(
     universityController.actionGetInformation
 );
 
+router.get(
+    '/program/search',
+    universityController.actionGetSearch
+);
+
 router.post(
     '/university/subscribe',
     subscriptionController.actionCreate
