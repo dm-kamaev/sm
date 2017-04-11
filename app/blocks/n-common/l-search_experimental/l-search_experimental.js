@@ -63,14 +63,3 @@ goog.scope(function() {
         this.map_.center(event.getPosition());
     };
 });  // goog.scope
-
-
-/**
- * creates sm.lSearch.SearchExperimental instance
- */
-jQuery(function() {
-    sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lSearch.SearchExperimental.NAME,
-        sm.lSearch.ViewExperimental.CssClass.ROOT
-    );
-});

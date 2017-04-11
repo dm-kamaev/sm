@@ -300,14 +300,3 @@ goog.scope(function() {
         );
     };
 });  // goog.scope
-
-
-/**
- * creates sm.lUniversity.University instance
- */
-jQuery(function() {
-    sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lUniversity.University.NAME,
-        sm.lUniversity.View.CssClass.ROOT
-    );
-});

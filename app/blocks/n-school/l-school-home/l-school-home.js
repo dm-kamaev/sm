@@ -352,18 +352,3 @@ goog.scope(function() {
         return this;
     };
 });  // goog.scope
-
-
-/**
- * creates sm.lSchoolHome.SchoolHome instance
- */
-jQuery(function() {
-    var root = goog.dom.getElementByClass(
-            sm.lSchoolHome.SchoolHome.CssClass.ROOT
-        );
-
-    if (root) {
-        var schoolHome = new sm.lSchoolHome.SchoolHome();
-        schoolHome.decorate(root);
-    }
-});

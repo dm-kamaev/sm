@@ -955,15 +955,3 @@ goog.scope(function() {
     };
 });  // goog.scope
 
-
-/**
- * creates sm.lSearch.Search instance
- */
-jQuery(function() {
-    console.log('Search layout instantiate');
-
-    sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lSearch.Search.NAME,
-        sm.lSearch.View.CssClass.ROOT
-    );
-});

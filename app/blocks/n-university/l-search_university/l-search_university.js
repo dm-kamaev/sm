@@ -222,14 +222,4 @@ Factory.getInstance().register(SearchUniversity.NAME, {
 });
 
 
-/**
- * creates sm.lSearch.SearchUniversity instance
- */
-jQuery(function() {
-    console.log('SearchUniversity instatia');
-
-    ILayout.autoInstance(SearchUniversity.NAME, View.CssClass.ROOT);
-});
-
-
 exports = SearchUniversity;

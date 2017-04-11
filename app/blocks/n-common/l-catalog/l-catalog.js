@@ -65,14 +65,3 @@ goog.scope(function() {
         );
     };
 });  // goog.scope
-
-
-/**
- * creates sm.lCatalog.Catalog instance
- */
-jQuery(function() {
-    sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lCatalog.Catalog,
-        sm.lCatalog.View
-    );
-});
