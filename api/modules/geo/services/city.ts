@@ -191,7 +191,7 @@ class CityService {
     }
 
     // return only russian text or empty string
-    private cleanCityName(cityName: string): string {
+    public cleanCityName(cityName: string): string {
       return cityName
                 .toString()
                 .toLowerCase()
