@@ -171,7 +171,13 @@ class InformationView extends LayoutView {
             backendImageUrl = data.university.imageUrl,
             IMAGE_WIDTH_PATTERN = /{width}/;
 
-        const imageUrl = backendImageUrl ?
+        const imageUrlDefault = backendImageUrl ?
+            backendImageUrl.replace(
+                IMAGE_WIDTH_PATTERN, String(UniversityImageSize.MEDIUM[0])
+            ) :
+            null;
+
+        const imageUrlSizeL = backendImageUrl ?
             backendImageUrl.replace(
                 IMAGE_WIDTH_PATTERN, String(UniversityImageSize.DEFAULT[0])
             ) :
@@ -179,9 +185,15 @@ class InformationView extends LayoutView {
 
         return {
             description: universityName,
-            image: {
-                url: imageUrl,
-                altText: universityName
+            picture: {
+                altText: universityName,
+                sources: [{
+                    url: imageUrlDefault,
+                    size: 'default'
+                }, {
+                    url: imageUrlSizeL,
+                    size: 'l'
+                }]
             },
             button: {
                 data: {

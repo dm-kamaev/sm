@@ -2,6 +2,10 @@ goog.module('sm.bSmInformationCard.View');
 
 const ControlView = goog.require('cl.iControl.View');
 
+const CssClass = {
+    ROOT: 'b-sm-information-card'
+};
+
 /**
  * View
  */
@@ -58,4 +62,12 @@ class View extends ControlView {
 };
 
 
+/**
+ * @constructor
+ */
 exports = View;
+
+/**
+ * @enum {string}
+ */
+exports.CssClass = CssClass;

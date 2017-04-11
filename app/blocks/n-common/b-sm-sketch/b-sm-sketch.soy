@@ -44,7 +44,6 @@
  * @override
  */
 {template .body}
-    // {call .stripData data="all" /}
     {call .image_ data="all" /}
     {call .description_ data="all" /}
     {call .button_}
@@ -69,10 +68,7 @@
  * Image
  * @param params {{
  *     data: {
- *         image: {
- *             url: string,
- *             altText: string
- *         }
+ *         picture: sm.bSmPicture.Template.Params.Data
  *     }
  * }}
  * @private
@@ -81,22 +77,16 @@
     {let $rootClass kind="text"}
         {call .rootClass /}
     {/let}
-    {call sm.bSmPicturefill.Template.picturefill}
-        {param params: [
-            'rootClass': $rootClass,
-            'altText': $params.data.image.altText,
-            'sources': [
-                [
-                    'srcset': $params.data.image.url,
-                    'media': '(min-width: 1101px)'
-                ],
-                [
-                    'srcset': $params.data.image.url,
-                    'media': '(max-width: 1100px)'
+    <div class="{call .rootClass/}__image">
+        {call .renderChild}
+            {param params: [
+                'type': 'smPicture',
+                'renderParams': [
+                    'data': $params.data.picture
                 ]
-            ]
-        ] /}
-    {/call}
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 

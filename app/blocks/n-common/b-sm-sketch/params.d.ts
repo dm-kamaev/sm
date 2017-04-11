@@ -1,3 +1,6 @@
+import {bSmPicture} from '../b-sm-picture/params';
+
+
 export namespace bSmSketch {
     /*
      * sm.bSmSketch.Params
@@ -8,10 +11,7 @@ export namespace bSmSketch {
          */
         export interface Data {
             description: string;
-            image: {
-                url: string,
-                altText: string
-            };
+            picture: bSmPicture.Params.Data;
             button: {
                 data: {
                     content: string

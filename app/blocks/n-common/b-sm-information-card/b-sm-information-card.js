@@ -87,4 +87,7 @@ Factory.getInstance().register(InformationCard.NAME, {
 });
 
 
+/**
+ * @constructor
+ */
 exports = InformationCard;
