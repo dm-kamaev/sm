@@ -27,7 +27,6 @@ let configView = {
  *     analyticsId: string,
  *     experimentId: ?string,
  *     yandexMetrikaId: number,
- *     carrotquestId: string,
  *     domain: string,
  *     fbClientId: ?number,
  *     csrf: string
@@ -36,7 +35,8 @@ let configView = {
 configView.render = function(params) {
     let subdomains = {
         [entityTypeEnum.SCHOOL]: 'schools',
-        [entityTypeEnum.COURSE]: 'courses'
+        [entityTypeEnum.COURSE]: 'courses',
+        [entityTypeEnum.UNIVERSITY]: 'universities'
     };
 
     let subdomain = subdomains[params.entityType],
@@ -50,7 +50,6 @@ configView.render = function(params) {
         analyticsId: config[subdomain].analyticsId,
         experimentId: config[subdomain].experimentId,
         yandexMetrikaId: config[subdomain].yandexMetrikaId,
-        carrotquestId: config.carrotquestId,
         fbClientId: config.facebookClientId,
         domain: config[subdomain].host,
         csrf: params.csrf

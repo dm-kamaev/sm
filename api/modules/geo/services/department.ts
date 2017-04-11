@@ -9,14 +9,15 @@ const Exception = require('nodules/controller/ServiceException');
 const entityType = require('../../entity/enums/entityType');
 
 import {service as addressService} from './address';
+
 import {
-    DepartmentInstance,
-    DepartmentAttribute,
     Model as DepartmentModel
 } from '../models/department';
-import {AddressInstance} from '../models/address';
+import {DepartmentAttribute, DepartmentInstance} from '../types/department';
+
 import {Model as AddressModel} from '../models/address';
-import {DepartmentAdmin} from '../interfaces/DepartmentAdmin';
+
+import {DepartmentAdmin} from '../types/department';
 
 import {DepartmentNotFound} from './exceptions/DepartmentNotFound';
 import {AddressDoesNotExist} from './exceptions/AddressDoesNotExist';

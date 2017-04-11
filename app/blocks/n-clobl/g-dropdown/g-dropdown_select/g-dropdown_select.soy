@@ -5,7 +5,9 @@
  * @typedef {{
  *     opener: (string|undefined),
  *     defaultOpenerText: (string|undefined),
+ *     name: (string|undefined),
  *     content: sm.gList.TemplateSthendal.Params.Data,
+ *     contentConfig: (sm.gList.TemplateStendhal.Params.Config|undefined)
  * }} sm.gDropdown.TemplateSelect.Params.Data
  */
 
@@ -14,8 +16,9 @@
  * @typedef {{
  *     stylizationModifier: string,
  *     iconName: (string|undefined),
+ *     iconType: ('icon-svg'|undefined),
  *     customClasses: (Array<string>|undefined),
- *     theme: ('rectangle'|undefined)
+ *     theme: ('light'|'rectangle'|undefined)
  * }} sm.gDropdown.TemplateSelect.Params.Config
  */
 
@@ -51,7 +54,9 @@
  *     },
  *     config: {
  *         openerSize: ('m'|'xl'|undefined),
- *         iconName: (string|undefined)
+ *         iconName: (string|undefined),
+ *         iconType: ('icon-svg'|undefined),
+ *         isChangingOpenerText: boolean
  *     }
  * }}
  * @override
@@ -69,7 +74,9 @@
  *         defaultOpenerText: (string|undefined)
  *     },
  *     config: {
- *         iconName: (string|undefined)
+ *         iconName: (string|undefined),
+ *         iconType: ('icon-svg'|undefined),
+ *         isChangingOpenerText: boolean
  *     }
  * }}
  * @protected
@@ -88,6 +95,9 @@
  *     data: {
  *         opener: (string|undefined),
  *         defaultOpenerText: (string|undefined)
+ *     },
+ *     config: {
+ *         isChangingOpenerText: boolean
  *     }
  * }}
  * @override
@@ -105,10 +115,12 @@
             {sp}
         {/if}
 
-        {if $params.data.defaultOpenerText}
+        {if $params.data.defaultOpenerText or
+            $params.config.isChangingOpenerText}
+
             <div class="{call .rootClass/}__text{sp}
                         {call .rootClass/}__text_changing">
-                {$params.data.defaultOpenerText}
+                {$params.data.defaultOpenerText ?: ''}
             </div>
         {/if}
     </div>
@@ -119,7 +131,8 @@
  * Icon of opener
  * @param params {{
  *     config: {
- *         iconName: (string|undefined)
+ *         iconName: (string|undefined),
+ *         iconType: ('icon-svg'|undefined)
  *     }
  * }}
  * @protected
@@ -128,7 +141,7 @@
     <div class="{call .rootClass/}__opener-icon">
         {call .renderChild}
             {param params: [
-                'type': 'icon',
+                'type': $params.config.iconType ?: 'icon',
                 'renderParams': [
                     'data': [
                         'type': $params.config.iconName ?: 'opener-arrow'
@@ -145,7 +158,8 @@
  * Content
  * @param params {{
  *     data: {
- *        content: sm.gList.TemplateSthendal.Params.Data
+ *        content: sm.gList.TemplateSthendal.Params.Data,
+ *        contentConfig: (sm.gList.TemplateStendhal.Params.Config|undefined)
  *     }
  * }}
  * @override
@@ -155,7 +169,8 @@
         {param params: [
             'type': 'list',
             'renderParams': [
-                'data': $params.data.content
+                'data': $params.data.content,
+                'config': $params.data.contentConfig
             ]
         ]/}
     {/call}
@@ -192,6 +207,7 @@
         {param json: quoteKeysIfJs([
             'opener': $params.data.opener,
             'defaultOpenerText': $params.data.defaultOpenerText,
+            'name': $params.data.name,
             'items': $params.data.content.items,
         ]) /}
     {/call}"

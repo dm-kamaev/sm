@@ -1,6 +1,6 @@
 const lodash = require('lodash');
 
-import {DepartmentAdmin} from '../interfaces/DepartmentAdmin';
+import {DepartmentAdmin} from '../types/department';
 
 type DepartmentAdminView = {
     id?: number,

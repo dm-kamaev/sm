@@ -7,5 +7,7 @@ module.exports = new Enum('entityType', {
     COURSE_DEPARTMENT: 'course_department',
     COURSE: 'course',
     COURSE_BRAND: 'course_brand',
-    COURSE_CATEGORY: 'course_category'
+    COURSE_CATEGORY: 'course_category',
+    UNIVERSITY: 'university',
+    PROGRAM: 'program'
 });

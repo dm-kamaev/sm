@@ -5,7 +5,7 @@
 
 const lodash = require('lodash');
 
-const userView = require('../../user/views/user'),
+const userView = require('../../user/views/user').userView,
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('../../course/views/courseCategoryView'),
     footerView = require('../../entity/views/footerView'),
@@ -34,7 +34,7 @@ let view = {};
  * @return {Object}
  */
 view.render = function(data) {
-    let user = userView.default(data.user);
+    let user = userView.renderDefault(data.user);
     return {
         seo: {
             metaTitle: 'Курсы мела',

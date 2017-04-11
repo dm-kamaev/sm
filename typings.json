@@ -6,6 +6,7 @@
     "sequelize/v3": "registry:dt/sequelize/v3#3.4.1+20170106203657"
   },
   "globalDependencies": {
+    "axios": "registry:dt/axios#0.9.1+20161016142654",
     "node": "registry:dt/node#6.0.0+20161220160159",
     "validator": "registry:dt/validator#5.7.0+20161119044246"
   }

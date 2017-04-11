@@ -42,6 +42,18 @@
     }
 }
 
+.b-sm-stars_size_s {
+    .b-sm-stars__star {
+        margin-right: 7px;
+
+        font-size: 20px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
 .b-sm-stars_colored-theme {
     .b-sm-stars__star {
         color: #e6e6e6;
@@ -49,5 +61,13 @@
 
     .b-sm-stars__star_selected {
         color: #e2332a;
+    }
+}
+
+.b-sm-stars_neptune-theme {
+    text-align: left;
+
+    .b-sm-stars__star_selected {
+        color: #007aff;
     }
 }

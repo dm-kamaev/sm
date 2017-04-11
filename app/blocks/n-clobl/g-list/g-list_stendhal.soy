@@ -5,7 +5,7 @@
  * @typedef {{
  *     items: Array<{
  *         label: ?string,
- *         val: (string|number|undefined),
+ *         value: (string|number|undefined),
  *         url: (string|undefined),
  *         isSelected: (boolean|undefined),
  *         isDisabled: (boolean|undefined)
@@ -17,6 +17,8 @@
 
 /**
  * @typedef {{
+ *     theme: (string|undefined),
+ *     size: ('m'|undefined),
  *     mode: ('selection'|'multiselection'|undefined),
  *     maxSelection: (number|undefined)
  * }} sm.gList.TemplateStendhal.Params.Config
@@ -73,6 +75,7 @@
  * Css classes
 * @param params {{
  *     config: {
+ *         size: ('m'|undefined),
  *         mode: ('selection'|'multiselection'|undefined)
  *     }
  * }}
@@ -82,5 +85,9 @@
 {template .additionalClasses}
     {if $params.config.mode}
         {call .rootClass/}_mode_{$params.config.mode}
+    {/if}
+
+    {if $params.config.size}
+        {call .rootClass/}_size_{$params.config.size}
     {/if}
 {/template}

@@ -51,16 +51,52 @@ typings
 #builded typescript files ignore
 api/components/interface.js
 
+api/modules/comment/controllers/errors/**/*.js
+api/modules/comment/controllers/AdminProgramCommentController.js
+api/modules/comment/controllers/ProgramCommentController.js
+api/modules/comment/lib/**/*.js
+api/modules/comment/migrations/20170227134914-create-program-comments.js
+api/modules/comment/models/commentGroup.js
+api/modules/comment/models/ProgramComment.js
+api/modules/comment/models/Rating.js
+api/modules/comment/services/exceptions/**/*.js
+api/modules/comment/services/commentGroup.js
+api/modules/comment/services/programComment.js
+api/modules/comment/services/rating.js
+api/modules/comment/views/programCommentView.js
+api/modules/comment/types/**/*.js
+
+
+api/modules/entity/models/page.js
+api/modules/entity/services/page.js
+api/modules/entity/types/**/*.js
+
 api/modules/course/controllers/middleware/**/*.js
 api/modules/course/models/courseBrand.js
 
+api/modules/geo/controllers/index.js
+api/modules/geo/controllers/CityAdminController.js
+api/modules/geo/controllers/errors/*.js
+
 api/modules/geo/interfaces/*.js
 api/modules/geo/models/address.js
+api/modules/geo/models/area.js
+api/modules/geo/models/city.js
 api/modules/geo/models/department.js
+api/modules/geo/models/metro.js
+api/modules/geo/models/Region.js
 api/modules/geo/services/exceptions/*.js
 api/modules/geo/services/address.js
+api/modules/geo/services/city.js
 api/modules/geo/services/department.js
+api/modules/geo/services/region.js
 api/modules/geo/views/departmentView.js
+api/modules/geo/services/exceptions/*.js
+api/modules/geo/types/**/*.js
+
+api/modules/geo/migrations/20170309140000-create-region.js
+api/modules/geo/migrations/20170309144500-add-region-id-for-city.js
+api/modules/geo/migrations/20170310170002-add-composit-index-by-city-name-region-id.js
 
 
 api/modules/school/interfaces/*.js
@@ -89,6 +125,7 @@ api/modules/school/models/additionalEducationSphere.js
 api/modules/school/models/school.js
 api/modules/school/models/schoolSpecializedClass.js
 api/modules/school/models/specializedClassType.js
+api/school/services/specializedClasses.js
 
 
 api/modules/school/services/exceptions/*.js
@@ -145,6 +182,10 @@ api/modules/entity/services/exceptions/*.js
 api/modules/course/types/*.js
 
 
+api/modules/study/controllers/**/*.js
+
+api/modules/university/**/*.js
+
 api/modules/user/controllers/errors/*.js
 api/modules/user/controllers/adminUserController.js
 api/modules/user/lib/*.js
@@ -152,10 +193,63 @@ api/modules/user/models/adminUser.js
 api/modules/user/services/exceptions/*.js
 api/modules/user/services/adminUser.js
 api/modules/user/views/adminUserView.js
+api/modules/user/models/userData.js
+api/modules/user/types/**/*.js
+api/modules/user/migrations/20170227191120-drop-user-data-user-type-enum.js
+api/modules/user/migrations/20170227193010-user-data-class-type-rename.js
+
+api/modules/user/services/userData.js
+api/modules/user/views/user.js
+
+api/modules/entity/enums/entityRoutes.js
 
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
+app/middleware/checkApiToken.js
 
+app/modules/common/lib/Header.js
+app/modules/common/lib/Layout.js
+app/modules/common/types/layout.js
+app/modules/common/lib/SubHeader.js
+app/modules/common/lib/LinksFormatter.js
+
+app/modules/common/views/footerView.js
+
+app/modules/common/enums/entityType.js
+
+
+app/modules/university/index.js
+
+app/modules/university/types/**/*.js
+
+app/modules/university/controllers/errors/*.js
+app/modules/university/controllers/index.js
+app/modules/university/controllers/SubscriptionController.js
+app/modules/university/controllers/UniversityController.js
+app/modules/university/controllers/programController.js
+
+app/modules/university/services/exceptions/*.js
+app/modules/university/services/*.js
+app/modules/university/controllers/ProgramCommentController.js
+app/modules/university/types/programComment.js
+app/modules/university/constants/*.js
+
+app/modules/comment/**/*.js
+
+app/modules/university/views/*.js
+
+app/modules/user/**/*.js
+
+app/modules/common/services/*.js
+app/modules/comment/**/*.js
+
+console/modules/geoTools/*.js
+console/modules/modelArchiver/Archiver.js
+console/modules/newCommentNotifier/**/*.js
+console/executable/sendNewCommentNotifications.js
+
+console/insertRegionForMoscow.js
+console/one-off/loadPrograms.js
 
 console/one-off/shrinkOlympiadResults.js
 console/modules/geoTools/*.js

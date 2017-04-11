@@ -14,6 +14,7 @@ const entityTypeEnum =
         require('../../../../api/modules/entity/enums/entityType');
 const pageName = require('../../common/enums/pageName');
 
+
 const config = require('../../../config').config;
 
 let controller = {};

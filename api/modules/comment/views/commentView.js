@@ -141,7 +141,7 @@ var details = function(userData) {
  */
 var parentAdditionalInformation = function(userData) {
     var result = 'родитель',
-        classType = userData.classType;
+        classType = userData.grade;
     if (classType) {
         var classTypes = {
             1: 'первоклассника',
@@ -173,7 +173,7 @@ var parentAdditionalInformation = function(userData) {
  */
 var scholarAdditionalInformation = function(userData) {
     var result = 'ученик',
-        classType = userData.classType;
+        classType = userData.grade;
 
     if (classType) {
         result += ' (' + classType + '-й класс)';

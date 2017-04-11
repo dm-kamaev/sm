@@ -1,0 +1,130 @@
+@import "../../i-media/i-media";
+
+.b-sm-interaction-form_comment {
+    .b-sm-interaction-form__title {
+        margin-bottom: 15px;
+
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .b-sm-interaction-form__title_section {
+        margin-bottom: 20px;
+    }
+
+    .b-sm-interaction-form__field {
+        color: #747474;
+
+        font: 15px Arial, sans-serif;
+    }
+
+    .b-sm-interaction-form__section_user-data {
+        min-height: 55px;
+        margin-bottom: 5px;
+
+        .b-sm-interaction-form__field-wrap {
+            display: inline-block;
+
+            min-width: 200px;
+
+            vertical-align: top;
+        }
+    }
+
+    .b-sm-interaction-form__field-wrap_user-type {
+        margin-right: 30px;
+        margin-bottom: 15px;
+    }
+
+    .b-sm-interaction-form__section_fields {
+        .b-sm-interaction-form__field-wrap {
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .b-sm-interaction-form__evaluations {
+        font-family: Arial, sans-serif;
+    }
+
+    .b-sm-interaction-form__evaluation {
+        display: inline-block;
+
+        box-sizing: border-box;
+        width: 50%;
+
+        vertical-align: top;
+
+        &:nth-child(odd) {
+            padding-right: 55px;
+        }
+
+        &:nth-child(even) {
+            padding-left: 55px;
+        }
+
+        &:nth-child(n+3) {
+            margin-top: 20px;
+        }
+    }
+
+    .b-sm-interaction-form__evaluation-name {
+        display: inline-block;
+
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .b-sm-interaction-form__evaluation-stars {
+        float: right;
+    }
+
+    .b-sm-interaction-form__evaluation-description {
+        margin-top: 10px;
+
+        color: #747474;
+
+        font-size: 13px;
+        line-height: 20px;
+    }
+}
+
+@include media-s {
+    .b-sm-interaction-form_comment {
+        .b-sm-interaction-form__evaluation {
+            &:nth-child(even) {
+                padding-left: 25px;
+            }
+        }
+    }
+}
+
+@include media-xs {
+    .b-sm-interaction-form_comment {
+        .b-sm-interaction-form__section_user-data {
+            margin-bottom: 20px;
+
+            .b-sm-interaction-form__field-wrap {
+                width: 100%;
+            }
+        }
+
+        .b-sm-interaction-form__evaluation {
+            display: block;
+
+            width: 100%;
+
+            &:nth-child(n) {
+                margin-top: 30px;
+                padding: 0;
+            }
+
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+    }
+}

@@ -2,7 +2,10 @@
 
 /**
  * @typedef {{
- *     phone: string
+ *     phone: string,
+ *     helper: {
+ *         text: string
+ *     }
  * }} sm.bSmContacts.Template.Params.Data
  */
 
@@ -33,26 +36,67 @@
  * @override
  */
 {template .body}
-    {call .sectionPhone data="all" /}
+    {call .helper_ data="all" /}
+    {call .phone_ data="all" /}
+{/template}
+
+
+/**
+ * Title of contacts
+ * @param params {{
+ *     data: {
+ *         helper: {
+ *             text: string
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .helper_ kind="html"}
+    {call .helperText_ data="all" /}
+{/template}
+
+
+/**
+ * Helper text
+ * @param params {{
+ *     data: {
+ *         helper: {
+ *             text: string
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .helperText_ kind="html"}
+    <div class="{call .rootClass/}__helper {call .rootClass/}__helper_text">
+        {$params.data.helper.text}
+    </div>
 {/template}
 
 
 /**
  * Phone with icon template
  * @param params {{
- *     phone: string
+ *     data: {
+ *         phone: string
+ *     }
  * }}
+ * @private
  */
-{template .sectionPhone kind="html"}
-    {call .phoneIcon /}
-    {call .phoneNumber data="all" /}
+{template .phone_ kind="html"}
+    <div class="{call .rootClass/}__phone">
+        {call .phoneIcon_ /}
+        {call .phoneNumber_ data="all" /}
+    </div>
 {/template}
 
 
 /**
  * Icon for phone template
+ * @private
  */
-{template .phoneIcon kind="html"}
+{template .phoneIcon_ kind="html"}
     <div class='{call .rootClass /}__phone-icon'>
         {call .renderChild}
             {param params: [
@@ -75,11 +119,16 @@
  *         phone: string
  *     }
  * }}
+ * @private
  */
-{template .phoneNumber kind="html"}
+{template .phoneNumber_ kind="html"}
     <div class="{call .rootClass /}__phone-number">
-        <a class="{call .rootClass /}__number {call .rootClass /}__number_mobile" href="tel:{$params.data.phone}" target="__blank">{$params.data.phone}</a>
-        <a class="{call .rootClass /}__number {call .rootClass /}__number_desktop" href="#">{$params.data.phone}</a>
+        <a class="{call .rootClass /}__number {call .rootClass /}__number_mobile" href="tel:{$params.data.phone}" target="__blank">
+            {$params.data.phone}
+        </a>
+        <a class="{call .rootClass /}__number {call .rootClass /}__number_desktop" href="#">
+            {$params.data.phone}
+        </a>
     </div>
 {/template}
 
