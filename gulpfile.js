@@ -131,10 +131,11 @@ gulp.task('watch', function() {
         [path.join(__dirname, BLOCKS_DIR, '/**/*.js')],
         ['scripts']
     );
-    gulp.watch(
-        [path.join(__dirname, BLOCKS_DIR, '**/*.s+(a|c)ss')],
-        ['lint-css']
-    );
+    // TODO: make rules for css-linter and enable this watcher
+    // gulp.watch(
+    //     [path.join(__dirname, BLOCKS_DIR, '**/*.s+(a|c)ss')],
+    //     ['lint-css']
+    // );
     gulp.watch(
         [path.join(__dirname, ROOT_DIR, '/**/*.ts')],
         ['tsCompile']
