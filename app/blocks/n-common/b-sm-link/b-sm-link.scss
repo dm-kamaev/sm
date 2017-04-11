@@ -93,6 +93,8 @@
 .b-sm-link_sky-theme {
     color: #356fc4;
 
+    line-height: inherit;
+
     &.b-sm-link_selected {
         color: #7f7f7f;
     }

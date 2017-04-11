@@ -143,7 +143,7 @@
 }
 
 .l-university__navigation-panel {
-    width: calc(100% - 375px);
+    width: 100%;
     padding-bottom: 25px;
 }
 
@@ -210,11 +210,6 @@
 
     .l-university__useful-courses-content {
         padding-top: 40px;
-    }
-
-    .l-university__navigation-panel {
-        width: 100%;
-        padding-bottom: 25px;
     }
 
     .l-university__board-wrap {
