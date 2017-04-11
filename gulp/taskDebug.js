@@ -22,6 +22,7 @@ module.exports = function(gulpHelper) {
         return gulpHelper.js.build({
             outputFiles: filteredEntryPoints,
             compile: true,
+            es6: true,
             compilerFlags: {
                 debug: true,
                 'warning_level': 'QUIET'

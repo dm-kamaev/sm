@@ -34,7 +34,37 @@ let getEnteryPointFromName = function(fileName) {
         slice = slice.slice(0, index) + slice.slice(index + 1);
     }
 
-    return 'sm.l' + slice + '.' + slice + modifier;
+    return `sm.l${slice}.${slice}${modifier}.Initer`;
+};
+
+/**
+ * Check that in given directory has layout script with given filename and
+ * it initer
+ * @param {string} layoutDirectoryPath
+ * @param {string} layoutName
+ * @return {boolean}
+ */
+const checkFiles = function(layoutDirectoryPath, layoutName) {
+    const layoutScriptPath = path.join(layoutDirectoryPath, `${layoutName}.js`);
+    const islayoutScriptExists = fs.existsSync(layoutScriptPath);
+    if (!islayoutScriptExists) {
+        console.log(
+            `There is no layout script in directory: ${layoutDirectoryPath}.` +
+            `Expected layout script filepath: ${layoutScriptPath}.`
+        );
+    }
+
+    const layoutIniterName = 'Initer.js';
+    const layoutIniterPath = path.join(layoutDirectoryPath, layoutIniterName);
+    const isLayoutIniterExists = fs.existsSync(layoutIniterPath);
+    if (!isLayoutIniterExists) {
+        console.log(
+            `There is no layout initer in directory: ${layoutDirectoryPath}.` +
+            `Expected layout initer filepath: ${layoutIniterPath}.`
+        );
+    }
+
+    return isLayoutIniterExists && islayoutScriptExists;
 };
 
 module.exports = {
@@ -46,9 +76,8 @@ module.exports = {
                     let directoryPath = path.join(blocks, directory);
                     return getDirectories(directoryPath)
                         .filter(dirname => dirname.startsWith('l-'))
-                        .filter(name => fs.existsSync(
-                            path.join(directoryPath, name, name) + '.js')
-                        )
+                        .filter(name =>
+                            checkFiles(path.join(directoryPath, name), name))
                         .map(name => {
                             return {
                                 fileName: name + '.js',
