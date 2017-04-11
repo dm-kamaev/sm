@@ -1,8 +1,13 @@
 'use strict';
 
-var squel = require('squel').useFlavour('postgres');
+const squel = require('squel').useFlavour('postgres');
 
-class SearchQuery {
+export abstract class SearchQuery {
+    protected baseQuery_;
+    protected innerQuery_;
+    protected addressDataCount_;
+    protected addressSearchParams_;
+
     /**
      * Init inner queries
      */
@@ -36,7 +41,7 @@ class SearchQuery {
      * Get query string
      * @return {string}
      */
-    getQuery() {
+    public getQuery(): string {
         this.updateQueries_();
         this.updateInnerWhere_();
         return this.baseQuery_
@@ -51,7 +56,7 @@ class SearchQuery {
      * @param {(number|undefined)} limit
      * @return {Object}
      */
-    setLimit(limit) {
+    public setLimit(limit: number | undefined): this {
         if (limit) {
             this.innerQuery_.limit(limit);
         }
@@ -63,7 +68,7 @@ class SearchQuery {
      * @param {number} offset
      * @return {Object}
      */
-    setOffset(offset) {
+    public setOffset(offset: number): this {
         this.innerQuery_.offset(offset);
 
         return this;
@@ -73,8 +78,8 @@ class SearchQuery {
      * @param {(number|undefined)} sortType
      * @return {Object}
      */
-    setSortType(sortType) {
-        if (sortType && sortType !== '0') {
+    public setSortType(sortType: number | undefined): this {
+        if (sortType && sortType != 0) {
             this.setTypeOrder_(sortType);
         }
         this.setQueriesOrder_();
@@ -86,7 +91,7 @@ class SearchQuery {
      * @param {(string|undefined)} searchString
      * @return {Object}
      */
-    setSearchString(searchString) {
+    public setSearchString(searchString: string | undefined): this {
         if (searchString) {
             this.setStringWhere_(searchString);
         }
@@ -102,7 +107,8 @@ class SearchQuery {
      * @param {string} type
      * @param {string} entityType
      */
-    addAddressSearchData_(values, type, entityType) {
+    protected addAddressSearchData_(
+            values: Array<number>, type: string, entityType: string): void {
         if (values && values.length) {
             this.addressSearchParams_.or(
                 squel.expr()
@@ -127,9 +133,9 @@ class SearchQuery {
 
     /**
      * @protected
-     * @return {Object}
+     * @return {string}
      */
-    generateAddressDataQuery_() {
+    protected generateAddressDataQuery_(): string {
         return squel.select()
             .from('address_search_data')
             .field('DISTINCT entity_id')
@@ -144,6 +150,60 @@ class SearchQuery {
             .toString();
     }
 
+    /**
+    * @protected
+    * @param {Array<number>} arr
+    * @return {string}
+    */
+    protected intArrayToSql_(arr: Array<number>): string {
+        return 'ARRAY [' + arr.map(item => '\'' + item + '\'') +
+        ']::INTEGER[]';
+    }
+
+    /* Virtual methods */
+
+    /**
+    * Set base params
+    * @virtual
+    * @protected
+    */
+    protected abstract setBaseQuery_(): void
+
+    /**
+    * Set inner params
+    * @virtual
+    */
+    protected abstract setInnerQuery_(): void
+
+    /**
+    * Alias for inner query
+    * @virtual
+    * @return {string}
+    */
+    protected abstract getAlias_(): string
+
+    /**
+    * @virtual
+    * @param {number} sortType
+    */
+    protected abstract setTypeOrder_(sortType: number): void
+
+    /**
+    * @virtual
+    */
+    protected abstract setQueriesOrder_(): void
+
+    /**
+    * @virtual
+    * @param {string} searchString
+    */
+    protected abstract setStringWhere_(searchString: string): void
+
+    /**
+    * @virtual
+    */
+    protected abstract updateInnerWhere_(): void
+
     /* Private methods */
 
     /**
@@ -151,7 +211,7 @@ class SearchQuery {
      * @private
      * @return {Object}
      */
-    generateBaseQuery_() {
+    private generateBaseQuery_(): Object {
         return squel.select({
             autoQuoteAliasNames: true,
             tableAliasQuoteCharacter: '"'
@@ -162,71 +222,15 @@ class SearchQuery {
      * @private
      * @return {Object}
      */
-    generateInnerQuery_() {
+    private generateInnerQuery_(): Object {
         return squel.select();
     }
 
     /**
      * @private
      */
-    updateQueries_() {
+    private updateQueries_(): void {
         this.setBaseQuery_();
         this.setInnerQuery_();
     }
-
-    /**
-     * @private
-     * @param {Array<number>} arr
-     * @return {string}
-     */
-    intArrayToSql_(arr) {
-        return 'ARRAY [' + arr.map(number => '\'' + number + '\'') +
-            ']::INTEGER[]';
-    };
-
-    /* Virtual methods */
-
-    /**
-     * Set base params
-     * @virtual
-     * @protected
-     */
-    setBaseQuery_() {}
-
-    /**
-     * Set inner params
-     * @virtual
-     */
-    setInnerQuery_() {}
-
-    /**
-     * Alias for inner query
-     * @virtual
-     * @return {string}
-     */
-    getAlias_() {}
-
-    /**
-     * @virtual
-     * @param {number} sortType
-     */
-    setTypeOrder_(sortType) {}
-
-    /**
-     * @virtual
-     */
-    setQueriesOrder_() {}
-
-    /**
-     * @virtual
-     * @param {string} searchString
-     */
-    setStringWhere_(searchString) {}
-
-    /**
-     * @virtual
-     */
-    updateInnerWhere_() {}
 }
-
-module.exports = SearchQuery;

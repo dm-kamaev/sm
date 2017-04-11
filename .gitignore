@@ -77,6 +77,8 @@ api/modules/course/services/exceptions/*.js
 api/modules/course/services/coursePageMeta.js
 api/modules/course/types/*.js
 
+api/modules/entity/enums/entityRoutes.js
+api/modules/entity/lib/Search.js
 api/modules/entity/models/page.js
 api/modules/entity/models/pageMetaInformation.js
 api/modules/entity/services/exceptions/*.js
@@ -194,8 +196,6 @@ api/modules/user/migrations/20170227193010-user-data-class-type-rename.js
 
 api/modules/user/services/userData.js
 api/modules/user/views/user.js
-
-api/modules/entity/enums/entityRoutes.js
 
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js

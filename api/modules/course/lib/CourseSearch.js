@@ -2,7 +2,7 @@
 
 const squel = require('squel');
 
-const SearchQuery = require('../../entity/lib/Search'),
+const SearchQuery = require('../../entity/lib/Search').SearchQuery,
     entityType = require('../../entity/enums/entityType'),
     searchType = require('../enums/searchType'),
     addressSearchType = require('../../geo/enums/addressSearchType');
