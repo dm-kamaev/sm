@@ -1,5 +1,5 @@
 /**
- * @fileOverview Service for make CRUD operations on program model
+ * @fileoverview Service for make CRUD operations on program model
  */
 import {CommentGroupInstance} from '../../comment/types/commentGroup';
 
