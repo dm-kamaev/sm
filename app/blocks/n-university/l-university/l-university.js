@@ -20,6 +20,7 @@ goog.require('sm.lUniversity.View');
 goog.require('sm.lUniversity.bCommentList.CommentList');
 goog.require('sm.lUniversity.bCommentList.CommentList');
 goog.require('sm.lUniversity.bDescriptionList.DescriptionList');
+goog.require('sm.lUniversity.iAnalyticsSender.AnalyticsSender');
 
 
 goog.scope(function() {
@@ -48,6 +49,30 @@ goog.scope(function() {
 
 
         /**
+         * Instance summary board
+         * @type {sm.bSummaryBoard.SummaryBoard}
+         * @private
+         */
+        this.summaryBoard_ = null;
+
+
+        /**
+         * Instance banner
+         * @type {sm.bSmBanner.SmBanner}
+         * @private
+         */
+        this.banner_ = null;
+
+
+        /**
+         * Instance subscribe board
+         * @type {sm.bSmSubscribeBoard.SmSubscribeBoard}
+         * @private
+         */
+        this.subscribeBoard_ = null;
+
+
+        /**
          * Instance comment List
          * @type {sm.lUniversity.bCommentList.CommentList}
          * @private
@@ -61,12 +86,21 @@ goog.scope(function() {
          * @private
          */
         this.modalComment_ = null;
+
+
+        /**
+         * Instances analytics sender
+         * @type {sm.lUniversity.iAnalyticsSender.AnalyticsSender}
+         * @private
+         */
+        this.analyticsSender_ = null;
     };
     goog.inherits(sm.lUniversity.University, sm.iLayout.LayoutStendhal);
     var University = sm.lUniversity.University,
         View = sm.lUniversity.View;
 
-    var Authorization = sm.iAuthorization.Authorization;
+    var Authorization = sm.iAuthorization.Authorization,
+        AnalyticsSender = sm.lUniversity.iAnalyticsSender.AnalyticsSender;
 
 
     /**
@@ -91,6 +125,7 @@ goog.scope(function() {
         this.initSketch_();
         this.initDescriptionList_();
         this.initSummaryBoard_();
+        this.initBanner_();
         this.initCutDescription_();
         this.initPrograms_();
         this.initCourses_();
@@ -98,6 +133,8 @@ goog.scope(function() {
         this.initComments_();
         this.initNavigationPanel_();
         this.initSubscribeBoard_();
+
+        this.initAnalyticsSender_();
     };
 
 
@@ -109,6 +146,9 @@ goog.scope(function() {
 
         this.initSketchListeners_();
         this.initCommentsListeners_();
+        this.initModalCommentListeners_();
+
+        this.analyticsSender_.sendPageview();
     };
 
 
@@ -143,6 +183,56 @@ goog.scope(function() {
 
 
     /**
+     * Initializes listeners for modal comment
+     * @private
+     */
+    University.prototype.initModalCommentListeners_ = function() {
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.modalComment_,
+            sm.gModal.ModalInteraction.Event.SHOW,
+            this.onModalCommentShow_
+        );
+
+
+        handler.listen(
+            this.modalComment_,
+            sm.gModal.ModalInteraction.Event.SUCCESS,
+            this.onCommentSendSuccess_
+        );
+    };
+
+
+    /**
+     * Modal comment show handler
+     * @private
+     */
+    University.prototype.onModalCommentShow_ = function() {
+        var params = {
+            category: 'review',
+            action: 'review start'
+        };
+
+        this.analyticsSender_.send(params);
+    };
+
+
+    /**
+     * Comment send success handler
+     * @private
+     */
+    University.prototype.onCommentSendSuccess_ = function() {
+        var params = {
+            category: 'review',
+            action: 'review submit'
+        };
+
+        this.analyticsSender_.send(params);
+    };
+
+
+    /**
      * Button sketch handler
      * @private
      */
@@ -152,6 +242,24 @@ goog.scope(function() {
         authorization.isUserAuthorized() ?
             this.modalComment_.show() :
             authorization.authorize();
+    };
+
+
+    /**
+     * Initializes instance of Analytics Sender
+     * @private
+     */
+    University.prototype.initAnalyticsSender_ = function() {
+        var list = this.params.type + ' details';
+
+        this.analyticsSender_ = new AnalyticsSender(list);
+
+        this.analyticsSender_.setProductParams({
+            id: this.params.id,
+            name: this.params.subunitName,
+            brand: this.params.abbreviation,
+            category: 'major'
+        });
     };
 
 
@@ -192,9 +300,21 @@ goog.scope(function() {
      * @private
      */
     University.prototype.initSummaryBoard_ = function() {
-        this.decorateChild(
+        this.summaryBoard_ = this.decorateChild(
             sm.bSummaryBoard.SummaryBoard.NAME,
             this.getView().getDom().summaryBoard
+        );
+    };
+
+
+    /**
+     * Init banner instance
+     * @private
+     */
+    University.prototype.initBanner_ = function() {
+        this.banner_ = this.decorateChild(
+            sm.bSmBanner.SmBanner.NAME,
+            this.getView().getDom().banner
         );
     };
 
@@ -294,7 +414,7 @@ goog.scope(function() {
      * @private
      */
     University.prototype.initSubscribeBoard_ = function() {
-        this.decorateChild(
+        this.subscribeBoard_ = this.decorateChild(
             sm.bSmSubscribeBoard.SmSubscribeBoard.NAME,
             this.getView().getDom().subscribeBoard
         );
