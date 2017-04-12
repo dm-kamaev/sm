@@ -79,7 +79,7 @@ goog.scope(function() {
      * Button link click handler
      * @private
      */
-    View.prototype.onButtonLinkClick_ = function() {
+    View.prototype.onLinkClick_ = function() {
         this.dispatchEvent(View.Event.LINK_CLICK);
     };
 

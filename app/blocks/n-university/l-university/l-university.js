@@ -145,8 +145,11 @@ goog.scope(function() {
         University.base(this, 'enterDocument');
 
         this.initSketchListeners_();
+        this.initSummaryBoardListeners_();
+        this.initBannerListeners_();
         this.initCommentsListeners_();
         this.initModalCommentListeners_();
+        this.initSubscribeBoardListeners_();
 
         this.analyticsSender_.sendPageview();
     };
@@ -163,6 +166,36 @@ goog.scope(function() {
             this.sketch_,
             sm.bSmSketch.SmSketch.Event.BUTTON_CLICK,
             this.onLeaveCommentClick_
+        );
+    };
+
+
+    /**
+     * Initializes listeners for summary board
+     * @private
+     */
+    University.prototype.initSummaryBoardListeners_ = function() {
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.summaryBoard_,
+            sm.bSummaryBoard.SummaryBoard.Event.LINK_CLICK,
+            this.onSummaryBoardLinkClick_
+        );
+    };
+
+
+    /**
+     * Initializes listeners for banner
+     * @private
+     */
+    University.prototype.initBannerListeners_ = function() {
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.banner_,
+            sm.bSmBanner.SmBanner.Event.LINK_CLICK,
+            this.onBannerLinkClick_
         );
     };
 
@@ -205,6 +238,61 @@ goog.scope(function() {
 
 
     /**
+     * Initializes listeners for subscribe board
+     * @private
+     */
+    University.prototype.initSubscribeBoardListeners_ = function() {
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.subscribeBoard_,
+            sm.bSmSubscribeBoard.SmSubscribeBoard.Event.SUCCESS,
+            this.onSubscribeSuccess_
+        );
+    };
+
+
+    /**
+     * Button sketch handler
+     * @private
+     */
+    University.prototype.onLeaveCommentClick_ = function() {
+        var authorization = Authorization.getInstance();
+
+        authorization.isUserAuthorized() ?
+            this.modalComment_.show() :
+            authorization.authorize();
+    };
+
+
+    /**
+     * Subscribe Board success handler
+     * @private
+     */
+    University.prototype.onSubscribeSuccess_ = function() {
+        this.sendAnalyticsSubscribeSuccess_();
+    };
+
+
+    /**
+     * Summary board link click handler
+     * @private
+     */
+    University.prototype.onSummaryBoardLinkClick_ = function() {
+        this.sendAnalyticsSummaryBoardLinkClick_();
+    };
+
+
+    /**
+     * Banner link click handler
+     * @private
+     */
+    University.prototype.onBannerLinkClick_ = function() {
+        this.sendAnalyticsBannerLinkClick_();
+    };
+
+
+    /**
      * Modal comment show handler
      * @private
      */
@@ -233,15 +321,52 @@ goog.scope(function() {
 
 
     /**
-     * Button sketch handler
+     * Send analytics summary board link click
      * @private
      */
-    University.prototype.onLeaveCommentClick_ = function() {
-        var authorization = Authorization.getInstance();
+    University.prototype.sendAnalyticsSubscribeSuccess_ = function() {
+        var actionData = {
+            category: 'subscription',
+            action: 'subscribe'
+        };
 
-        authorization.isUserAuthorized() ?
-            this.modalComment_.show() :
-            authorization.authorize();
+        this.analyticsSender_.sendCheckout(actionData);
+    };
+
+
+    /**
+     * Send analytics summary board link click
+     * @private
+     */
+    University.prototype.sendAnalyticsSummaryBoardLinkClick_ = function() {
+        var actionData = {
+            category: 'promo',
+            action: 'button'
+        };
+
+        var promoData = {
+            name: 'consult'
+        };
+
+        this.analyticsSender_.sendPromo(actionData, promoData);
+    };
+
+
+    /**
+     * Send analytics banner link click
+     * @private
+     */
+    University.prototype.sendAnalyticsBannerLinkClick_ = function() {
+        var actionData = {
+            category: 'promo',
+            action: 'banner'
+        };
+
+        var promoData = {
+            name: 'help to choose'
+        };
+
+        this.analyticsSender_.sendPromo(actionData, promoData);
     };
 
 

@@ -77,6 +77,57 @@ goog.scope(function() {
 
 
     /**
+     * Send analytics by checkout action
+     * @param {{
+     *     category: string,
+     *     action: string,
+     *     name: (string|undefined)
+     * }} actionParams
+     * @param {
+     *     sm.iAnalytics.Analytics.actionFieldObjectParams=
+     * } opt_actionDataEc
+     */
+    AnalyticsSender.prototype.sendCheckout = function(actionParams,
+        opt_actionDataEc) {
+
+        var params = opt_actionDataEc || {};
+        params.list = this.list_;
+
+        var productParamsEc = Analytics.getInstance().transformProductParams(
+            this.getProductParams()
+        );
+
+        var actionParamsEc = Analytics.getInstance().transformActionParams(
+            params
+        );
+
+        Analytics.getInstance().checkoutProduct(
+            productParamsEc, actionParamsEc
+        );
+        this.send(actionParams);
+    };
+
+
+    /**
+     * Send analytics by promo action
+     * @param {{
+     *     category: string,
+     *     action: string,
+     *     name: (string|undefined)
+     * }} actionParams
+     * @param {sm.iAnalytics.Analytics.promoFieldObject} promoDataEc
+     */
+    AnalyticsSender.prototype.sendPromo = function(actionParams, promoDataEc) {
+        var promoParamsEc = Analytics.getInstance().transformPromoParams(
+            promoDataEc
+        );
+
+        Analytics.getInstance().promoClick(promoParamsEc);
+        this.send(actionParams);
+    };
+
+
+    /**
      * Send data
      * @param {{
      *     category: string,
