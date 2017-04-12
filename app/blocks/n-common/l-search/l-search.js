@@ -202,7 +202,8 @@ goog.scope(function() {
             .initParamsManager_()
             .initLeftMenuInstances_()
             .initSearchResultsInstance_()
-            .initMap_();
+            .initMap_()
+            .initAnalyticsSender_();
     };
 
 
@@ -458,7 +459,6 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onMapReady_ = function() {
-        this.initAnalyticsSender_();
         this.searchService_.loadMapData(this.paramsManager_.getParams());
     };
 
@@ -934,10 +934,12 @@ goog.scope(function() {
 
     /**
      * Initializes instance of Analytics Sender
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initAnalyticsSender_ = function() {
         this.analyticsSender_ = new AnalyticsSender('search page');
+        return this;
     };
 
 
