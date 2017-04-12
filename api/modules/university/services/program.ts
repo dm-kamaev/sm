@@ -1,6 +1,8 @@
 /**
  * @fileOverview Service for make CRUD operations on program model
  */
+import * as Sequelize from 'sequelize';
+
 import {CommentGroupInstance} from '../../comment/types/commentGroup';
 
 const sequelize = require('../../../../app/components/db');
@@ -28,6 +30,7 @@ import {
     ProgramUrl
 } from '../types/program';
 import {EntitiesSearch} from '../../entity/types/textSearchData';
+import {ListProgram, SearchListResult} from '../types/programSearch';
 
 import {
     service as commentGroupService
@@ -38,6 +41,7 @@ import {
 import {service as addressService} from '../../geo/services/address';
 import {service as universityService} from './university';
 import {service as pageService} from '../../entity/services/page';
+import {programSearchService} from './programSearch';
 const entityType = require('../../entity/enums/entityType');
 import {UrlTemplate} from '../constants/UrlTemplate';
 
@@ -250,7 +254,6 @@ class ProgramService {
         });
     }
 
-
     public async suggestSearch(
         searchString: string
     ): Promise<ProgramInstance[] | null> {
@@ -269,6 +272,58 @@ class ProgramService {
         }
         const programIds: number[] = founded.program;
         return await this.getProgramsWithAlias_(programIds);
+    }
+
+    public async searchList(queryParams): Promise<SearchListResult> {
+        const queryResult: ListProgram[] =
+            await this.getRawSearchList_(queryParams);
+
+        let result;
+        if (!queryResult.length) {
+            result = {
+                programCount: 0,
+                universityCount: 0,
+                programs: []
+            };
+        } else {
+            result = {
+                programCount: Number(queryResult[0].programCount),
+                universityCount: Number(queryResult[0].universityCount),
+                programs: queryResult.map(program => ({
+                    id: program.id,
+                    name: program.name,
+                    totalScore: program.totalScore,
+                    exchangeProgram: program.exchangeProgram,
+                    extraExam: program.extraExam,
+                    egeScore: program.egeScore,
+                    cost: program.cost,
+                    budgetPlaces: program.budgetPlaces,
+                    commercialPlaces: program.commercialPlaces,
+                    competition: program.competition,
+                    imageUrl: program.imageUrl,
+                    universityName: program.universityName,
+                    universityAbbreviation: program.universityAbbreviation,
+                    cityName: program.cityName,
+                    programAlias: program.programAlias,
+                    universityAlias: program.universityAlias
+                }))
+            };
+        }
+
+        return result;
+    }
+
+    private async getRawSearchList_(queryParams): Promise<ListProgram[]> {
+        const searchParams =
+            programSearchService.converSearchParams(queryParams);
+        const searchQuery = programSearchService.getListSearchQuery(
+            searchParams
+        );
+        return sequelize.query(
+            searchQuery, {
+                type: Sequelize.QueryTypes.SELECT
+            }
+        );
     }
 
     private async getProgramsWithAlias_(

@@ -112,18 +112,42 @@ export class ProgramSearchQuery extends SearchQuery {
             .field('program.last_cost', 'cost')
             .field('program.last_budget_places', 'budgetPlaces')
             .field('program.last_commercial_places', 'commercialPlaces')
+            .field('program.last_competition', 'competition')
             .field('program.university_image_url', 'imageUrl')
             .field('program.university_name', 'universityName')
             .field('program.university_abbreviation', 'universityAbbreviation')
             .field('program.city_name', 'cityName')
+            .field('program_page_data.alias', 'programAlias')
+            .field('university_page_data.alias', 'universityAlias')
             .field('program.program_count', 'programCount')
-            .field('program.university_count', 'universityСount');
+            .field('program.university_count', 'universityCount')
+            .left_join(
+                'program_page',
+                null,
+                'program.id = program_page.program_id'
+            )
+            .left_join(
+                'university_page',
+                null,
+                'program.university_id = university_page.university_id'
+            )
+            .left_join(
+                'page',
+                'program_page_data',
+                'program_page.page_id = program_page_data.id'
+            )
+            .left_join(
+                'page',
+                'university_page_data',
+                'university_page.page_id = university_page_data.id'
+            );
     }
 
     protected setInnerQuery_(): void {
         this.innerQuery_
             .from('program')
             .field('program.id')
+            .field('program.university_id')
             .field('program.name')
             .field('program.total_score')
             .field('program.exchange_program')
@@ -135,6 +159,7 @@ export class ProgramSearchQuery extends SearchQuery {
             .field('entrance_statistic.ege_pass_score', 'last_ege_score')
             .field('entrance_statistic.cost', 'last_cost')
             .field('entrance_statistic.budget_places', 'last_budget_places')
+            .field('entrance_statistic.competition', 'last_competition')
             .field(
                 'entrance_statistic.commercial_places',
                 'last_commercial_places'

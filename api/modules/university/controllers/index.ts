@@ -72,6 +72,8 @@ router.get(
     universityPageController.actionFindByAlias
 );
 
+router.get('/program/search', programController.actionSearch);
+
 router.get(
     '/program/:id',
     programController.actionProgramPage
