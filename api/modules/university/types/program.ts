@@ -29,6 +29,12 @@ export interface ProgramAttribute {
     updatedAt?: string;
 }
 
+export interface ProgramSimilar {
+    id: number;
+    name: string;
+    url: string;
+}
+
 export interface ProgramInstance
         extends Sequelize.Instance<ProgramAttribute>, ProgramAttribute {
     programMajor?: ProgramMajorInstance;
