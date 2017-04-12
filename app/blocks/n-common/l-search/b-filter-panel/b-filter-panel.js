@@ -3,6 +3,7 @@ goog.provide('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('cl.iControl.Control');
 goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterClasses');
 goog.require('sm.lSearch.bFilter.FilterDropdown');
@@ -60,13 +61,22 @@ sm.lSearch.bFilterPanel.FilterPanel = function(view, opt_domHelper) {
      * @private
      */
     this.tooltipPosition_ = null;
+
+
+    /**
+     * Count of search results
+     * @type {?number}
+     * @private
+     */
+    this.countResults_ = null;
 };
 goog.inherits(sm.lSearch.bFilterPanel.FilterPanel, cl.iControl.Control);
 
 
 goog.scope(function() {
     var FilterPanel = sm.lSearch.bFilterPanel.FilterPanel,
-        View = sm.lSearch.bFilterPanel.View;
+        View = sm.lSearch.bFilterPanel.View,
+        viewport = sm.iSmViewport.SmViewport.getInstance();
 
     /**
      * Name of this element in factory
@@ -117,6 +127,7 @@ goog.scope(function() {
         this.initFiltersListeners_();
         this.initButtonListeners_();
         this.initTooltipListeners_();
+        this.initViewportListener_();
     };
 
 
@@ -129,6 +140,8 @@ goog.scope(function() {
         });
 
         this.getView().setResetButtonVisibility(false);
+        this.setButtonFace();
+        this.countResults_ = null;
     };
 
 
@@ -163,26 +176,59 @@ goog.scope(function() {
         return result;
     };
 
-
     /**
-     * show balloon with value
-     * @param {string|number} value
+     * set count results
+     * @param {number|string} count
      * @public
      */
-    FilterPanel.prototype.showTooltip = function(value) {
-        this.getView().setTooltipPosition(this.tooltipPosition_);
-        if (value) {
-            this.tooltip_.setText('Найдено: ' + value);
-            this.tooltip_.showButton();
+    FilterPanel.prototype.setCountResults = function(count) {
+        this.countResults_ = count;
+        var displayer = viewport.getSize() <= sm.iSmViewport.SmViewport.Size.M ?
+            this.setButtonFace :
+            this.showTooltip;
+        displayer = displayer.bind(this);
+
+        if(count) {
+            displayer('Найдено' + ': ' + count);
         } else {
-            this.tooltip_.setText();
+            displayer('Ничего не найдено', true);
+        }
+    };
+
+    /**
+     * show tooltip with value
+     * @param {string|number} value
+     * @param {boolean=} opt_hideButton
+     * @public
+     */
+    FilterPanel.prototype.showTooltip = function(value, opt_hideButton) {
+        this.getView().setTooltipPosition(this.tooltipPosition_);
+        this.tooltip_.setText(value);
+        if (opt_hideButton) {
             this.tooltip_.hideButton();
+        } else {
+            this.tooltip_.showButton();
         }
         this.tooltip_.display(
             sm.lSearch.bTooltip.Tooltip.Animation.DISAPPEAR_SLOW
         );
     };
 
+
+    /**
+     * set text and disable status for button
+     * @param {string|number|undefined} opt_text
+     * @param {boolean=} opt_disable
+     * @public
+     */
+    FilterPanel.prototype.setButtonFace = function(opt_text, opt_disable) {
+        this.button_.setText(opt_text);
+        if (opt_disable) {
+            this.button_.disable();
+        } else {
+            this.button_.enable();
+        }
+    };
 
     /**
      * Initializes listeners for view
@@ -192,6 +238,10 @@ goog.scope(function() {
         this.viewListen(
             View.Event.RESET,
             this.onResetClick_
+        );
+        this.viewListen(
+            View.Event.SCROLL,
+            this.onScroll_
         );
     };
 
@@ -224,6 +274,14 @@ goog.scope(function() {
                 filter,
                 sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
                 this.onOption_
+            ).listen(
+                filter,
+                sm.lSearch.bFilter.Filter.Event.EXPAND,
+                this.onFilterExpand_
+            ).listen(
+                filter,
+                sm.lSearch.bFilter.Filter.Event.COLLAPSE,
+                this.onFilterCollapse_
             );
         }
     };
@@ -236,7 +294,7 @@ goog.scope(function() {
     FilterPanel.prototype.initButtonListeners_ = function() {
         this.getHandler().listen(
             this.button_,
-            cl.gButton.Button.Event.CLICK,
+            sm.gButton.ButtonStendhal.Event.CLICK,
             this.onSubmit_
         );
     };
@@ -254,7 +312,37 @@ goog.scope(function() {
 
 
     /**
-     * Initializes listeners for balloon
+     * fix button if set count results and required viewport size
+     * @private
+     */
+    FilterPanel.prototype.generateAndSetButtonFixedStatus_ = function() {
+        if (this.countResults_ !== null &&
+            viewport.getSize() <= sm.iSmViewport.SmViewport.Size.M) {
+            this.getView().generateAndSetButtonFixedStatus();
+        }
+    };
+
+
+    /**
+     * filter expand handler
+     * @private
+     */
+    FilterPanel.prototype.onFilterExpand_ = function() {
+        this.generateAndSetButtonFixedStatus_();
+    };
+
+
+    /**
+     * filter collapse handler
+     * @private
+     */
+    FilterPanel.prototype.onFilterCollapse_ = function() {
+        this.generateAndSetButtonFixedStatus_();
+    };
+
+
+    /**
+     * Initializes listeners for tooltip
      * @private
      */
     FilterPanel.prototype.initTooltipListeners_ = function() {
@@ -267,11 +355,48 @@ goog.scope(function() {
 
 
     /**
+     * Initializes listeners for viewport
+     * @private
+     */
+    FilterPanel.prototype.initViewportListener_ = function() {
+        this.getHandler().listen(
+            viewport,
+            sm.iSmViewport.SmViewport.Event.RESIZE,
+            this.onResize_
+        );
+    };
+
+
+    /**
+     * Resize handler
+     * @param {Object} event
+     * @private
+     */
+    FilterPanel.prototype.onResize_ = function(event) {
+        if (event.newSize > sm.iSmViewport.SmViewport.Size.M) {
+            this.getView().editButtonFixedStatus(false);
+            this.setButtonFace();
+        } else {
+            this.setCountResults(this.countResults_);
+        }
+    };
+
+
+    /**
      * Reset handler
      * @private
      */
     FilterPanel.prototype.onResetClick_ = function() {
         this.reset();
+    };
+
+
+    /**
+     * Scroll handler
+     * @private
+     */
+    FilterPanel.prototype.onScroll_ = function() {
+        this.generateAndSetButtonFixedStatus_();
     };
 
 

@@ -42,4 +42,28 @@ goog.scope(function() {
 
         View.base(this, 'onClick');
     };
+
+
+    /**
+     * Set text
+     * @param {string} text
+     * @public
+     */
+    View.prototype.setText = function(text) {
+        goog.dom.setTextContent(
+            this.getElement(),
+            text ? text : this.getParams()['defaultText']
+        );
+    };
+
+
+    /**
+     * @protected
+     * @override
+     */
+    View.prototype.initConfig = function() {
+        this.getParams(); //init params;
+        View.base(this, 'initConfig');
+    };
+
 });  // goog.scope

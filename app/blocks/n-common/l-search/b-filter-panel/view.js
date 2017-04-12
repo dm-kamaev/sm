@@ -4,6 +4,7 @@ goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
 goog.require('goog.style');
+goog.require('sm.iSmViewport.SmViewport');
 
 
 
@@ -18,11 +19,18 @@ goog.require('goog.style');
 sm.lSearch.bFilterPanel.View = function(opt_params, opt_type, opt_modifier) {
     sm.lSearch.bFilterPanel.View.base(this, 'constructor', opt_params, opt_type,
         opt_modifier);
+
+    /**
+     * indicator of fixed button
+     * @type {boolean}
+     */
+    this.fixedButton_ = false;
 };
 goog.inherits(sm.lSearch.bFilterPanel.View, cl.iControl.View);
 
 goog.scope(function() {
-    var View = sm.lSearch.bFilterPanel.View;
+    var View = sm.lSearch.bFilterPanel.View,
+        viewport = sm.iSmViewport.SmViewport.getInstance();
 
 
     /**
@@ -38,6 +46,9 @@ goog.scope(function() {
         CONTENT: 'b-filter-panel__content',
         FILTER: 'b-filter-panel__filter',
         RESET: 'b-filter-panel__reset',
+        FIXES_BUTTON: 'b-filter-panel__button_fixed',
+        BUTTON_WRAP: 'b-filter-panel__button-wrap',
+        BUTTON_BOX: 'b-filter-panel__button-box',
         TOOLTIP: 'b-filter-panel__tooltip',
         TOOLTIP_WRAP: 'b-filter-panel__tooltip-wrap'
     };
@@ -48,7 +59,8 @@ goog.scope(function() {
      * @enum {string}
      */
     View.Event = {
-        RESET: goog.events.getUniqueId('reset')
+        RESET: goog.events.getUniqueId('reset'),
+        SCROLL: goog.events.getUniqueId('scroll')
     };
 
 
@@ -70,6 +82,7 @@ goog.scope(function() {
         View.base(this, 'enterDocument');
 
         this.initDomListeners_();
+        this.initWindowListeners_();
     };
 
 
@@ -77,7 +90,7 @@ goog.scope(function() {
      * Expand filters
      */
     View.prototype.expand = function() {
-        goog.dom.classes.swap(
+        goog.dom.classlist.swap(
             this.getElement(),
             View.CssClass.STATE_COLLAPSED,
             View.CssClass.STATE_EXPANDED
@@ -89,7 +102,7 @@ goog.scope(function() {
      * Collapse filters
      */
     View.prototype.collapse = function() {
-        goog.dom.classes.swap(
+        goog.dom.classlist.swap(
             this.getElement(),
             View.CssClass.STATE_EXPANDED,
             View.CssClass.STATE_COLLAPSED
@@ -125,6 +138,49 @@ goog.scope(function() {
 
 
     /**
+     * calculate position of button, compare it with scroll position and edit
+     * button fixed status
+     * @public
+     */
+    View.prototype.generateAndSetButtonFixedStatus = function() {
+        var buttonBoxBound = goog.style.getBounds(this.dom.buttonBox);
+        var buttonBoxBottom = 15;
+
+        var boxPositionY =
+            buttonBoxBound.height + buttonBoxBound.top + buttonBoxBottom;
+
+        var viewportHeght = goog.dom.getViewportSize().height;
+        var yCoordinate = goog.dom.getDocumentScroll().y;
+
+        var buttonFixedStatus = boxPositionY > viewportHeght + yCoordinate;
+        this.editButtonFixedStatus(buttonFixedStatus);
+    };
+
+
+    /**
+     * add and remove class for fix button
+     * @param {boolean} fix
+     * @public
+     */
+    View.prototype.editButtonFixedStatus = function(fix) {
+        if (this.fixedButton_ !== fix) {
+            if (fix) {
+                goog.dom.classlist.add(
+                    this.dom.buttonWrap,
+                    View.CssClass.FIXES_BUTTON
+                );
+            } else {
+                goog.dom.classlist.remove(
+                    this.dom.buttonWrap,
+                    View.CssClass.FIXES_BUTTON
+                );
+            }
+            this.fixedButton_ = fix;
+        }
+    };
+
+
+    /**
      * Initializes listeners for dom elements
      * @private
      */
@@ -146,6 +202,28 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onResetClick_
         );
+    };
+
+
+    /**
+     * Initializes listeners for dom elements
+     * @private
+     */
+    View.prototype.initWindowListeners_ = function() {
+        this.getHandler().listen(
+            goog.dom.getWindow(),
+            goog.events.EventType.SCROLL,
+            this.onScroll_
+        );
+    };
+
+
+    /**
+     * Scroll handler
+     * @private
+     */
+    View.prototype.onScroll_ = function() {
+        this.dispatchEvent(View.Event.SCROLL);
     };
 
 
@@ -195,6 +273,12 @@ goog.scope(function() {
             ),
             button: this.getElementByClass(
                 cl.gButton.View.CssClass.ROOT
+            ),
+            buttonWrap: this.getElementByClass(
+                View.CssClass.BUTTON_WRAP
+            ),
+            buttonBox: this.getElementByClass(
+                View.CssClass.BUTTON_BOX
             ),
             reset: this.getElementByClass(
                 View.CssClass.RESET

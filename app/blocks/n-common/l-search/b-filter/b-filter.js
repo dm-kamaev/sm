@@ -75,7 +75,9 @@ goog.scope(function() {
         UNCHECK_OPTION: UncheckOptionEvent.Type,
         CHECK: goog.events.getUniqueId('check'),
         UNCHECK: goog.events.getUniqueId('uncheck'),
-        SUBMIT: goog.events.getUniqueId('submit')
+        SUBMIT: goog.events.getUniqueId('submit'),
+        EXPAND: View.Event.EXPAND,
+        COLLAPSE: View.Event.COLLAPSE
     };
 
 
@@ -358,6 +360,8 @@ goog.scope(function() {
      * @protected
      */
     Filter.prototype.initViewListeners = function() {
+        this.autoDispatch(Filter.Event.COLLAPSE);
+        this.autoDispatch(Filter.Event.EXPAND);
     };
 
 

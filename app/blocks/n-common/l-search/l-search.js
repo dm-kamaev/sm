@@ -494,7 +494,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onCountSearchDataLoaded_ = function(event) {
-        this.filterPanel_.showTooltip(event.data);
+        this.filterPanel_.setCountResults(event.data);
     };
 
 
@@ -607,6 +607,7 @@ goog.scope(function() {
      */
     Search.prototype.loadSearchCount_ = function() {
         var params = this.getParamsFromFilterPanel_();
+        goog.object.extend(params, this.getParamsFromSearch_());
         this.searchService_.loadSearchCountData(params);
     };
 

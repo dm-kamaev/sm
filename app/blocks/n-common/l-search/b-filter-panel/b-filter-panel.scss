@@ -4,9 +4,14 @@
     width: 100%;
 
     color: #000;
+    background-color: inherit;
 
     font-family: Arial, sans-serif;
     font-size: 15px;
+}
+
+.b-filter-panel__content {
+    background-color: inherit;
 }
 
 .b-filter-panel__expander {
@@ -61,6 +66,23 @@
     top: 0;
 }
 
+.b-filter-panel__button-wrap {
+    background-color: inherit;
+}
+
+.b-filter-panel__button-box {
+    height: 50px;
+    background-color: inherit;
+}
+
+.b-filter-panel__button_fixed {
+    position: fixed;
+    width: calc(100% - 80px);
+    bottom: 20px;
+
+    box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.3);
+}
+
 
 @include media-m {
     .b-filter-panel_state_expanded {
@@ -85,5 +107,15 @@
 
     .b-filter-panel__collapser {
         display: inline-block;
+    }
+
+    .b-filter-panel__tooltip-wrap {
+        display: none;
+    }
+}
+
+@include media-xs {
+    .b-filter-panel__button_fixed {
+        width: calc(100% - 60px);
     }
 }

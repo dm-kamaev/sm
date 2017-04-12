@@ -1,8 +1,8 @@
 goog.provide('sm.gButton.ButtonStendhal');
 
 goog.require('cl.gButton.Button');
-goog.require('cl.gButton.View');
 goog.require('sm.gButton.TemplateStendhal');
+goog.require('sm.gButton.ViewStendhal');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
@@ -23,22 +23,37 @@ sm.gButton.ButtonStendhal = function(view, opt_params, opt_domHelper) {
 goog.inherits(sm.gButton.ButtonStendhal, cl.gButton.Button);
 
 
-/**
- * Name of this element in factory
- */
-sm.gButton.ButtonStendhal.NAME = sm.gButton.TemplateStendhal.NAME();
+goog.scope(function() {
+    var Button = sm.gButton.ButtonStendhal;
 
-sm.iCloblFactory.FactoryStendhal.getInstance().register(
-    sm.gButton.ButtonStendhal.NAME, {
-        control: sm.gButton.ButtonStendhal,
-        view: cl.gButton.View
-});
+    /**
+     * Name of this element in factory
+     */
+    Button.NAME = sm.gButton.TemplateStendhal.NAME();
+
+    sm.iCloblFactory.FactoryStendhal.getInstance().register(
+        Button.NAME, {
+            control: Button,
+            view: sm.gButton.ViewStendhal
+        });
 
 
-/**
- * Event enum
- * @enum {string}
- */
-sm.gButton.ButtonStendhal.Event = {
-    CLICK: cl.gButton.Button.Event.CLICK
-};
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    Button.Event = {
+        CLICK: cl.gButton.Button.Event.CLICK
+    };
+
+
+    /**
+     * Set text
+     * @param {string} text
+     * @public
+     */
+    Button.prototype.setText = function(text) {
+        this.getView().setText(text);
+    };
+
+});  // goog.scope

@@ -179,21 +179,23 @@
  * Button to search for entity on filters
  */
 {template .button_}
-    <div class="{call .rootClass/}__button">
-        {call .renderChild}
-            {param params: [
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': 'Подобрать'
-                    ],
-                    'config': [
-                        'theme': 'dark',
-                        'size': 's'
+    <div class="{call .rootClass/}__button-box">
+        <div class="{call .rootClass/}__button-wrap">
+            {call .renderChild}
+                {param params: [
+                    'type': 'button',
+                    'renderParams': [
+                        'data': [
+                            'defaultText': 'Подобрать'
+                        ],
+                        'config': [
+                            'theme': 'dark',
+                            'size': 's'
+                        ]
                     ]
-                ]
-            ]/}
-        {/call}
+                ]/}
+            {/call}
+        </div>
     </div>
 {/template}
 
@@ -205,14 +207,18 @@
     {let $customClass kind="text"}
         {call .rootClass/}__tooltip
     {/let}
+    {let $buttonLabel kind="text"}
+        {call .getText}
+            {param message: 'Показать' /}
+        {/call}
+    {/let}
     <div class="{call .rootClass/}__tooltip-wrap">
         {call .renderChild}
             {param params: [
                 'type': 'lSearch-tooltip',
                 'renderParams': [
                     'data': [
-                        'defaultText': 'Ничего не найдено',
-                        'buttonLabel': 'Показать'
+                        'buttonLabel': $buttonLabel
                     ],
                     'config': [
                         'customClasses': [

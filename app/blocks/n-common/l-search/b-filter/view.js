@@ -52,6 +52,16 @@ goog.scope(function() {
 
 
     /**
+     * Event enum
+     * @enum {string}
+     */
+    View.Event = {
+        EXPAND: goog.events.getUniqueId('expand'),
+        COLLAPSE: goog.events.getUniqueId('collapse')
+    };
+
+
+    /**
      * @param {Element} element
      * @override
      */
@@ -83,6 +93,7 @@ goog.scope(function() {
     View.prototype.expand = function() {
         this.setContentVisibility_(true);
         this.setHeaderIconUpState_(true);
+        this.dispatchEvent(View.Event.EXPAND);
 
         this.contentVisibility_ = true;
     };
@@ -95,6 +106,7 @@ goog.scope(function() {
         if (this.dom.buttonSwitchContentVisibility) {
             this.setContentVisibility_(false);
             this.setHeaderIconUpState_(false);
+            this.dispatchEvent(View.Event.COLLAPSE);
 
             this.contentVisibility_ = false;
         }
