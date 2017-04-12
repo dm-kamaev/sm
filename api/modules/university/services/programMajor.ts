@@ -1,3 +1,8 @@
+import * as squel from 'squel';
+squel.useFlavour('postgres');
+
+const sequelize = require('../../../../app/components/db');
+
 import {
     Model as ProgramMajorModel,
     ProgramMajorInstance,
@@ -30,6 +35,13 @@ class ProgramMajor {
                 model: CourseTypeModel,
                 as: 'courseTypes'
             }]
+        });
+    }
+
+    public async getPopular(limit?: number): Promise<ProgramMajorInstance[]> {
+        return ProgramMajorModel.findAll({
+            limit: limit,
+            order: [['popularity', 'DESC']]
         });
     }
 
@@ -66,6 +78,16 @@ class ProgramMajor {
         return ProgramMajorModel.destroy({
             where: {id}
         });
+    }
+
+    public async getCount(): Promise<Number> {
+        const result = await ProgramMajorModel.findAll({
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+            ]
+        });
+
+        return Number(result[0].getDataValue('count'));
     }
 }
 

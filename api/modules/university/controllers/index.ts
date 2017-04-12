@@ -91,6 +91,7 @@ router.get('/program/:id/exam', examController.actionList);
 router.get('/program/search/suggest', programController.actionSuggestSearch);
 
 router.get('/programmajor/search', programMajorController.actionSearch);
+router.get('/programmajor/popular', programMajorController.actionGetPopular);
 
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
