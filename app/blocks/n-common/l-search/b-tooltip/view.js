@@ -96,7 +96,7 @@ goog.scope(function() {
     View.prototype.setText = function(text) {
         goog.dom.setTextContent(
             this.dom.text,
-            text ? text : this.getParams().defaultText
+            text ? text : this.getParams()['defaultText']
         );
     };
 
