@@ -41,7 +41,8 @@ import {
 
 import {
     UniversityImageSize
-} from '../../../../api/modules/university/constants/UniversityImageSize';
+} from '../constants/UniversityImageSize';
+import {ImageSize} from '../../common/types/image';
 
 type Grade = {
     label: number;
@@ -115,8 +116,12 @@ class InformationView extends LayoutView {
         this.params.data.openGraph.description = description;
         this.params.data.openGraph.relapTag = this.subunitType;
 
-        this.params.data.openGraph.image = '';
-        this.params.data.openGraph.relapImage = '';
+        const relapImage = this.getImageUrl_(
+            data.university.imageUrl,
+            UniversityImageSize.RELAP
+        );
+        this.params.data.openGraph.image = relapImage;
+        this.params.data.openGraph.relapImage = relapImage;
     }
 
     private setEntityData_(data: BackendData) {
@@ -168,20 +173,12 @@ class InformationView extends LayoutView {
 
     private getSketchParams_(data: BackendData): bSmSketch.Params.Data {
         const universityName: string = data.university.name,
-            backendImageUrl = data.university.imageUrl,
-            IMAGE_WIDTH_PATTERN = /{width}/;
+            backendImageUrl = data.university.imageUrl;
 
-        const imageUrlDefault = backendImageUrl ?
-            backendImageUrl.replace(
-                IMAGE_WIDTH_PATTERN, String(UniversityImageSize.MEDIUM[0])
-            ) :
-            null;
-
-        const imageUrlSizeL = backendImageUrl ?
-            backendImageUrl.replace(
-                IMAGE_WIDTH_PATTERN, String(UniversityImageSize.DEFAULT[0])
-            ) :
-            null;
+        const imageUrlDefault = this.getImageUrl_(
+            backendImageUrl, UniversityImageSize.MEDIUM);
+        const imageUrlSizeL = this.getImageUrl_(
+            backendImageUrl, UniversityImageSize.DEFAULT);
 
         return {
             description: universityName,
@@ -629,6 +626,16 @@ class InformationView extends LayoutView {
             programId: programId,
             comment: userComment
         });
+    }
+
+    private getImageUrl_(
+            urlPattern: string | undefined, size: ImageSize): string | null {
+        const IMAGE_WIDTH_PATTERN = /{width}/;
+        const width = size[0];
+
+        return urlPattern ?
+            urlPattern.replace(IMAGE_WIDTH_PATTERN, String(width)) :
+            null;
     }
 }
 
