@@ -1,26 +1,26 @@
 /* tslint:disable:max-file-line-count */
 // Made by anedashkovsky for store some params in view
 // TODO: enable this rule
-const FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
-
 const pageName = require('../../common/enums/pageName');
 import {entityType} from '../../common/enums/entityType';
 
 import {LayoutView} from '../../common/lib/Layout';
 import {UniversitySubHeader} from './UniversitySubHeader';
+import {UniversityFooter} from './UniversityFooter';
+import {FormatUtils} from '../../common/lib/FormatUtils';
+
+import {programCommentView} from '../../comment/views/programCommentView';
 
 import {AppConfig} from '../../common/types/layout';
-import {lUniversity} from '../../../blocks/n-university/l-university/params';
-import {BackendUser} from '../../user/types/user';
-import {UniversityFooter} from './UniversityFooter';
 
+import {BackendUser} from '../../user/types/user';
 import {BackendProgram} from '../types/program';
 import {BackendProgramComment} from '../../comment/types/programComment';
 import {BackendUniversity} from '../types/university';
 import {BackendEgeExam} from '../types/egeExam';
 import {BackendEntranceStatistic} from '../types/entranceStatistic';
 
-import {programCommentView} from '../../comment/views/programCommentView';
+import {lUniversity} from '../../../blocks/n-university/l-university/params';
 
 import {
     bDescriptionList
