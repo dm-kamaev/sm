@@ -68,6 +68,9 @@ import {ProgramMetaAdminController} from './ProgramMetaAdminController';
 import {ProgramMetaController} from './ProgramMetaController';
 const programMetaController: any = new ProgramMetaController();
 
+import {ProgramSimilarController} from './ProgramSimilarController';
+const programSimilarController: any = new ProgramSimilarController();
+
 router.get('/university/:id', universityController.actionGet);
 
 router.get(
@@ -92,6 +95,8 @@ router.get(
 router.get('/program/:id/exam', examController.actionList);
 
 router.get('/program/:programId/pagemeta', programMetaController.actionGet);
+
+router.get('/program/:programId/similar', programSimilarController.actionGet);
 
 router.get('/programmajor/search', programMajorController.actionSearch);
 
