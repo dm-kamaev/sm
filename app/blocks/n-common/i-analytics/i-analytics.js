@@ -63,8 +63,9 @@ goog.scope(function() {
     /**
      * To use for sending data about the action
      * Revenue for example 29.20
+     * Id required, if action type - purchase or refund
      * @typedef {{
-     *     id: string,
+     *     id: (string|undefined),
      *     affiliation: (string|undefined),
      *     revenue: (number|undefined),
      *     tax: (number|undefined),
@@ -76,6 +77,21 @@ goog.scope(function() {
      * }}
      */
     sm.iAnalytics.Analytics.actionFieldObjectParams;
+
+
+    /**
+     * To use for sending data about the action
+     * Required id or name - one of the parameters must be
+     * Creative - associated with the promotion,
+     * for example summer_banner2
+     * @typedef {{
+     *     id: string,
+     *     name: string,
+     *     creative: (string|undefined),
+     *     position: (string|undefined)
+     * }}
+     */
+    sm.iAnalytics.Analytics.promoFieldObject;
 
 
     /**
@@ -183,6 +199,16 @@ goog.scope(function() {
 
 
     /**
+     * Add information about promotion that was clicked
+     * @param {Analytics.promoFieldObject} promoParams
+     */
+    Analytics.prototype.promoClick = function(promoParams) {
+        ga('ec:addPromo', promoParams);
+        ga('ec:setAction', 'promo_click');
+    };
+
+
+    /**
      * Add information about view product
      * @param {Analytics.productFieldObjectParams} params
      */
@@ -276,6 +302,21 @@ goog.scope(function() {
             'list': params.list || null,
             'step': params.step || null,
             'option': params.option || null
+        };
+    };
+
+
+    /**
+     * Transformation promo params in not compressed params to send analysts
+     * @param {Analytics.promoFieldObject} params
+     * @return {Analytics.promoFieldObject}
+     */
+    Analytics.prototype.transformPromoParams = function(params) {
+        return {
+            'id': params.id || null,
+            'name': params.name || null,
+            'position': params.position || null,
+            'creative': params.creative || null
         };
     };
 
