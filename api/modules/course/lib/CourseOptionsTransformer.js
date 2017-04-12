@@ -445,7 +445,7 @@ module.exports = class {
         } else if (cost > 0) {
             result = `${cost} руб. / ${type}`;
         } else {
-            result = ' '; // 'Цена не указана';
+            result = ''; // 'Цена не указана';
         }
         return result;
     }
