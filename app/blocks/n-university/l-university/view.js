@@ -35,6 +35,9 @@ goog.scope(function() {
      * @typedef {{
      *     id: number,
      *     name: string,
+     *     abbreviation: string,
+     *     category: string,
+     *     subunitName: string,
      *     isCommented: boolean,
      *     isUserAuthorzed: boolean,
      *     authSocialLinks:  {
@@ -102,6 +105,9 @@ goog.scope(function() {
                 summaryBoard: this.getElementByClass(
                     View.CssClass.SUMMARY_BOARD
                 ),
+                banner: this.getElementByClass(
+                    sm.bSmBanner.View.CssClass.ROOT
+                ),
                 cutDescription: this.getElementByClass(
                     View.CssClass.CUT_DESCRIPTION
                 ),
@@ -143,7 +149,10 @@ goog.scope(function() {
 
         goog.object.extend(params, {
             id: rawParams['id'],
-            name: rawParams['name']
+            name: rawParams['name'],
+            abbreviation: rawParams['abbreviation'],
+            category: rawParams['category'],
+            subunitName: rawParams['subunitName']
         });
 
         return params;

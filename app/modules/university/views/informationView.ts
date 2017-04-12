@@ -115,6 +115,8 @@ class InformationView extends LayoutView {
         this.params.data.entityData = {
             id: data.program.id,
             name: data.university.name,
+            abbreviation: data.university.abbreviation,
+            category: 'major',
             subunitName: data.program.name,
             subunitType: 'Специальность',
             description: data.program.description,

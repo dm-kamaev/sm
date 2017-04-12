@@ -91,7 +91,10 @@
  *         },
  *         entityData: {
  *             id: number,
- *             name: string
+ *             name: string,
+ *             abbreviation: string,
+ *             category: string,
+ *             subunitName: string
  *         }
  *     },
  *     config: {
@@ -107,6 +110,9 @@
             {param json: [
                 'id': $params.data.entityData?.id,
                 'name': $params.data.entityData?.name,
+                'abbreviation': $params.data.entityData?.abbreviation,
+                'category': $params.data.entityData?.category,
+                'subunitName': $params.data.entityData?.subunitName,
                 'isUserAuthorized': $params.data.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'modifier': $params.config?.modifier,
