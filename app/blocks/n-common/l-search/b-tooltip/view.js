@@ -96,8 +96,34 @@ goog.scope(function() {
     View.prototype.setText = function(text) {
         goog.dom.setTextContent(
             this.dom.text,
-            text ? text : this.getParams()['defaultText']
+            text ? text : this.getParams().defaultText
         );
+    };
+
+
+    /**
+     * Return data-params from dom element
+     * @return {sm.lSearch.bSearchResults.View.DataParams}
+     * @protected
+     * @override
+     */
+    View.prototype.getParams = function() {
+        var rawParams = View.base(this, 'getParams');
+        this.params = rawParams ? this.transformParams(rawParams) : null;
+        return this.params;
+    };
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, string>} rawParams
+     * @return {sm.bSmLink.View.DataParams}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            defaultText: rawParams['defaultText']
+        };
     };
 
 
