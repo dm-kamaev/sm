@@ -17,7 +17,7 @@ export namespace bFilterRange {
             options: Array<{
                 label: string;
                 name: string;
-                value?: string;
+                value: number;
                 minValue?: number;
                 maxValue: number;
                 step?: number;

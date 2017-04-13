@@ -1,3 +1,5 @@
+import {bSmCheckbox} from '../../b-sm-checkbox/params';
+
 export namespace bFilter {
     /**
      * sm.lSearch.bFilter.Params
@@ -12,11 +14,7 @@ export namespace bFilter {
                 title: string;
                 tooltip?: string;
             });
-            options: Array<{
-                label: string;
-                value?: string;
-                isChecked?: (boolean|undefined);
-            }>
+            options: bSmCheckbox.Params.Data[]
         }
 
         /**
@@ -24,7 +22,7 @@ export namespace bFilter {
          */
         export interface Config {
             type?: string;
-            optionsToShow?: boolean;
+            optionsToShow?: number;
             cannotBeHidden?: boolean;
             isShowed?: boolean;
             showMoreButtonText?: number;
