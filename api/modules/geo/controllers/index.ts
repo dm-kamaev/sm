@@ -11,10 +11,14 @@ import {
 
 const addressController = require('./addressController');
 import {CityAdminController} from './CityAdminController';
+import {CityController} from './CityController';
+const cityController = new CityController();
 
 
 router.get('/school/:id/address', addressController.getAddresses);
 router.get('/school/:school_id/address/:id', addressController.getAddress);
+
+router.get('/program/cities', cityController.actionProgramList);
 
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(

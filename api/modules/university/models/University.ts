@@ -113,6 +113,10 @@ const University: UniversityModel = sequelize.define('University', {
                 through: 'university_page',
                 foreignKey: 'university_id',
             });
+            this.hasMany(models.Program, {
+                as: 'programs',
+                foreignKey: 'university_id'
+            });
         }
     }
 });

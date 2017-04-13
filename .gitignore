@@ -90,6 +90,7 @@ api/modules/entity/types/*.js
 
 api/modules/geo/controllers/errors/*.js
 api/modules/geo/controllers/CityAdminController.js
+api/modules/geo/controllers/CityController.js
 api/modules/geo/controllers/index.js
 
 api/modules/geo/migrations/2017*.js

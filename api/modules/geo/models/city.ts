@@ -26,17 +26,21 @@ const City: CityModel = db.define('City', {
     tableName: 'city',
     classMethods: {
         associate: function(models) {
-            City.hasMany(models.School, {
+            this.hasMany(models.School, {
                 as: 'schools',
                 foreignKey: 'city_id'
             });
-            City.hasMany(models.CityResult, {
+            this.hasMany(models.CityResult, {
                 as: 'cityResult',
                 foreignKey: 'city_id'
             });
             this.belongsTo(models.Region, {
                 as: 'region',
                 foreignKey: 'region_id'
+            });
+            this.hasMany(models.University, {
+                as: 'universities',
+                foreignKey: 'city_id'
             });
         }
     }
