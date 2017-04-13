@@ -20,13 +20,13 @@ export class ProgramSearchQuery extends SearchQuery {
         this.programSearchParams_ = squel.expr();
     }
 
-    public setCity(cityId: number): this {
-        this.addProgramSearchData_([cityId], SearchType.CITY);
+    public setCities(cities: number[]): this {
+        this.addProgramSearchData_(cities, SearchType.CITY);
 
         return this;
     }
 
-    public setEge(eges: Array<number>): this {
+    public setEge(eges: number[]): this {
         this.addProgramSearchData_(eges, SearchType.EGE, {
             isContained: true
         });
@@ -34,13 +34,13 @@ export class ProgramSearchQuery extends SearchQuery {
         return this;
     }
 
-    public setPayType(payTypes: Array<number>): this {
+    public setPayType(payTypes: number[]): this {
         this.addProgramSearchData_(payTypes, SearchType.PAY_TYPE);
 
         return this;
     }
 
-    public setMajors(majors: Array<number>): this {
+    public setMajors(majors: number[]): this {
         this.addProgramSearchData_(majors, SearchType.MAJOR);
 
         return this;
@@ -53,31 +53,8 @@ export class ProgramSearchQuery extends SearchQuery {
         return this;
     }
 
-    public setExchangeProgram(isExchangeAvailable: boolean): this {
-        const exchangeProgram = this.booleanToSearchArray_(isExchangeAvailable);
-        this.addProgramSearchData_(
-            exchangeProgram,
-            SearchType.EXCHANGE_PROGRAM
-        );
-
-        return this;
-    }
-
-    public setMilitaryDepartment(isMilitaryDepartmentAvailable: boolean): this {
-        const militaryDepartment = this.booleanToSearchArray_(
-            isMilitaryDepartmentAvailable
-        );
-        this.addProgramSearchData_(
-            militaryDepartment,
-            SearchType.MILITARY_DEPARTMENT
-        );
-
-        return this;
-    }
-
-    public setDormitory(isDormitoryAvailable: boolean): this {
-        const dormitory = this.booleanToSearchArray_(isDormitoryAvailable);
-        this.addProgramSearchData_(dormitory, SearchType.DORMITORY);
+    public setFeatures(features: number[]) {
+        this.addProgramSearchData_(features, SearchType.FEATURES);
 
         return this;
     }
@@ -229,7 +206,7 @@ export class ProgramSearchQuery extends SearchQuery {
     }
 
     private addProgramSearchData_(
-            values: Array<number>, type: string, options?: SearchDataOptions
+            values: number[], type: string, options?: SearchDataOptions
     ): void {
         if (values && values.length) {
             const condition = this.getProgramSearchCondition_(
@@ -243,7 +220,7 @@ export class ProgramSearchQuery extends SearchQuery {
     }
 
     private getProgramSearchCondition_(
-            values: Array<number>, type: string, options?: SearchDataOptions
+            values: number[], type: string, options?: SearchDataOptions
     ): Object {
         const isContained = options && options.isContained;
         const arrayOperator = isContained ? '<@' : '&&';
@@ -287,7 +264,7 @@ export class ProgramSearchQuery extends SearchQuery {
             .where('program.id = entrance_statistic.program_id');
     }
 
-    private booleanToSearchArray_(value: boolean): Array<number> {
+    private booleanToSearchArray_(value: boolean): number[] {
         return value ? [1] : [];
     }
 }
