@@ -14,6 +14,19 @@ class ProgramSimilarController extends Controller {
      * @apiName getSimilarPrograms
      * @apiGroup Similar programs
      *
+     * @apiSuccess {Object[]} similarPrograms      Found similar programs
+     * @apiSuccess {Number}   similarPrograms.id   Id of similar program
+     * @apiSuccess {String}   similarPrograms.name Name of similar program
+     * @apiSuccess {String}   similarPrograms.url  Builded url of similar
+     *     program
+     *
+     * @apiSuccessExample Success-Responce:
+     *     HTTP 1/1 200 OK
+     *     [{
+     *         id: 10,
+     *         name: "Прикладная математика",
+     *         url: "vuz/mgu/specialnost/prikladnaya-matemtika"
+     *     }]
      */
     public async actionGet(actionContext: any, programId: number) {
         const similarPrograms =
