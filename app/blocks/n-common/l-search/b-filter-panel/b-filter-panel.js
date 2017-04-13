@@ -377,7 +377,11 @@ goog.scope(function() {
             this.getView().editButtonFixedStatus(false);
             this.setButtonFace();
         } else {
-            this.setCountResults(this.countResults_);
+            if (this.countResults_ !== null) {
+                this.setCountResults(this.countResults_);
+            } else {
+                this.setButtonFace();
+            }
         }
     };
 
