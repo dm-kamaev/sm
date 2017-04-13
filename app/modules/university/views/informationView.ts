@@ -21,6 +21,8 @@ import {
     BackendData,
     RenderParams
 } from '../types/programInformationLayout';
+import {BackendSimilarProgram} from '../types/similarProgram';
+
 import {BackendProgramComment} from '../../comment/types/programComment';
 import {AppConfig} from '../../common/types/layout';
 
@@ -38,6 +40,9 @@ import {bSmSketch} from '../../../blocks/n-common/b-sm-sketch/params';
 import {
     bCommentList
 } from '../../../blocks/n-university/l-university/b-comment-list/params';
+import {
+    bSmInformationCard
+} from '../../../blocks/n-common/b-sm-information-card/params';
 
 import {
     UniversityImageSize
@@ -88,7 +93,7 @@ class InformationView extends LayoutView {
         this.setSubscribeBoard_(params.data);
         this.setNavigationPanel_(params.data);
         this.setComments_(params.data);
-        this.setSimilarPrograms_();
+        this.setSimilarPrograms_(params.data);
         this.setUsefulCourses_();
         this.setModalComment_(params.data.program.id, params.data.userComment);
     }
@@ -459,93 +464,41 @@ class InformationView extends LayoutView {
         });
     }
 
-    private setSimilarPrograms_() {
-        this.params.data.similarPrograms = {
+    private setSimilarPrograms_(data: BackendData) {
+        this.params.data.similarPrograms = data.similarPrograms.length ? {
             header: 'Похожие программы',
             data: {
                 countItemsPerPage: 4,
-                items: [{
-                    id: 1,
-                    type: entityType.UNIVERSITY,
-                    name: 'Менеджер СПБГУ',
-                    link: {
-                        data: {
-                            content: 'Специальность',
-                            url: 'http://yandex.ru'
-                        },
-                        config: {
-                            size: 'xl'
-                        }
-                    },
-                    buttonLink: {
-                        data: {
-                            icon: 'arrow-circle',
-                            iconType: 'svg',
-                            url: 'http://yandex.ru'
-                        }
-                    }
-                }, {
-                    id: 2,
-                    type: entityType.UNIVERSITY,
-                    name: 'Социология НИУ-ВШЭ',
-                    link: {
-                        data: {
-                            content: 'Специальность',
-                            url: 'http://yandex.ru'
-                        },
-                        config: {
-                            size: 'xl'
-                        }
-                    },
-                    buttonLink: {
-                        data: {
-                            icon: 'arrow-circle',
-                            iconType: 'svg',
-                            url: 'http://yandex.ru'
-                        }
-                    }
-                }, {
-                    id: 3,
-                    type: entityType.UNIVERSITY,
-                    name: 'Менеджер МГУ',
-                    link: {
-                        data: {
-                            content: 'Специальность',
-                            url: 'http://yandex.ru'
-                        },
-                        config: {
-                            size: 'xl'
-                        }
-                    },
-                    buttonLink: {
-                        data: {
-                            icon: 'arrow-circle',
-                            iconType: 'svg',
-                            url: 'http://yandex.ru'
-                        }
-                    }
-                }, {
-                    id: 4,
-                    type: entityType.UNIVERSITY,
-                    name: 'Логистика НИУ-ВШЭ',
-                    link: {
-                        data: {
-                            content: 'Специальность',
-                            url: 'http://yandex.ru'
-                        },
-                        config: {
-                            size: 'xl'
-                        }
-                    },
-                    buttonLink: {
-                        data: {
-                            icon: 'arrow-circle',
-                            iconType: 'svg',
-                            url: 'http://yandex.ru'
-                        }
-                    }
-                }],
+                items: data.similarPrograms.map(
+                    program => this.getSimilarProgramItem_(program)),
                 itemType: 'smInformationCard'
+            }
+        } :
+        null;
+    }
+
+    private getSimilarProgramItem_(
+            similarProgram: BackendSimilarProgram
+    ): bSmInformationCard.Params.Data {
+        return {
+            id: similarProgram.id,
+            type: entityType.UNIVERSITY,
+            name: similarProgram.name,
+            link: {
+                data: {
+                    content: 'Программа обучения',
+                    url: similarProgram.url
+                },
+                config: {
+                    size: 'xl'
+                }
+            },
+            buttonLink: {
+                data: {
+                    icon: 'arrow-circle',
+                    iconType: 'svg',
+                    url: similarProgram.url
+                }
             }
         };
     }

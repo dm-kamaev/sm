@@ -1,3 +1,5 @@
+import {bSmInformationCard} from '../b-sm-information-card/params';
+
 export namespace bSmItemList {
     /*
      * sm.bSmItemList.Template.Params
@@ -8,10 +10,10 @@ export namespace bSmItemList {
          * sm.bSmItemList.Params.Data
          */
         export interface Data {
-            items: Array<any>;
+            items: any[] | bSmInformationCard.Params.Data[];
             itemType: string;
             countItemsPerPage?: number;
-            itemConfig?: any;
+            itemConfig?: any | bSmInformationCard.Params.Config;
         }
 
         /*

@@ -10,6 +10,7 @@ import {EntranceStatisticService} from '../services/EntranceStatisticService';
 import {userService} from '../../user/services/user';
 import {EgeExamService} from '../services/EgeExamService';
 import {ProgramCommentService} from '../../comment/services/ProgramComment';
+import {SimilarProgramsService} from '../services/SimilarProgramsService';
 
 import {informationView} from '../views/informationView';
 
@@ -38,25 +39,31 @@ class UniversityController extends Controller {
             programId = data[1];
 
         const entranceStatisticService =
-            new EntranceStatisticService(programId),
-            programCommentService = new ProgramCommentService(programId),
-            egeExamService = new EgeExamService(programId);
+            new EntranceStatisticService(programId);
+        const similarProgramsService = new SimilarProgramsService(programId);
+        const programCommentService = new ProgramCommentService(programId);
+        const egeExamService = new EgeExamService(programId);
 
-        const programData  = await Promise.all([
-            programService.getById(programId),
-            universityService.getById(universityId),
-            entranceStatisticService.getLast(),
-            programCommentService.getComments(),
-            egeExamService.getExams(),
-            programMetaService.getById(programId)
+        const [
+                program,
+                university,
+                entranceStatistic,
+                comments,
+                egeExams,
+                pageMeta,
+                similarPrograms
+            ] = await Promise.all([
+                programService.getById(programId),
+                universityService.getById(universityId),
+                entranceStatisticService.getLast(),
+                programCommentService.getComments(),
+                egeExamService.getExams(),
+                programMetaService.getById(programId),
+                similarProgramsService.getSimilar()
         ]);
-        const program = programData[0],
-            university = programData[1],
-            entranceStatistic = programData[2],
-            comments = programData[3],
-            egeExams = programData[4],
-            pageMeta = programData[5],
-            userComment = programCommentService.getUserComment(user, comments);
+
+        const userComment =
+            programCommentService.getUserComment(user, comments);
         const users =
             await userService.getById(comments.map(comment => comment.userId));
 
@@ -70,6 +77,7 @@ class UniversityController extends Controller {
                 pageMeta,
                 userComment,
                 users,
+                similarPrograms,
                 favorites: []
             },
             config: config,

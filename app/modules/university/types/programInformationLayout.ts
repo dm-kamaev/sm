@@ -6,6 +6,7 @@ import {BackendEntranceStatistic} from './entranceStatistic';
 import {BackendUser} from '../../user/types/user';
 import {BackendProgramMeta} from '../types/programMeta';
 import {AppConfig} from '../../common/types/layout';
+import {BackendSimilarProgram} from '../types/similarProgram';
 
 export type RenderParams = {
     data: BackendData;
@@ -26,6 +27,7 @@ export type BackendData = {
     userComment: BackendProgramComment,
     users: Array<BackendUser>,
     favorites: Array<{string: any}>,
-    pageMeta: BackendProgramMeta
+    pageMeta: BackendProgramMeta,
+    similarPrograms: BackendSimilarProgram[]
 };
 

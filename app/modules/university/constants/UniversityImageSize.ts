@@ -1,4 +1,4 @@
-import {ImageSizeEnum} from "../../common/types/image";
+import {ImageSizeEnum} from '../../common/types/image';
 
 const UniversityImageSize: ImageSizeEnum = {
     DEFAULT: [252, 252],
