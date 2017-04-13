@@ -202,7 +202,7 @@ app/middleware/checkApiToken.js
 
 app/modules/common/lib/Header.js
 app/modules/common/lib/Layout.js
-app/modules/common/types/layout.js
+app/modules/common/types/**/*.js
 app/modules/common/lib/SubHeader.js
 app/modules/common/lib/Footer.js
 app/modules/common/lib/LinksFormatter.js
