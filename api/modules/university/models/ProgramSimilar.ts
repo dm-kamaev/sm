@@ -57,7 +57,7 @@ const ProgramSimilar: ProgramSimilarModel = sequelize.define('ProgramSimilar', {
             this.belongsTo(models.Program, {
                 as: 'relatedProgram',
                 foreignKey: 'related_program_id'
-            })
+            });
         }
     }
 });

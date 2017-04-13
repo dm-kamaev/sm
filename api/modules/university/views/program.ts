@@ -8,7 +8,7 @@ import {
 } from '../types/program';
 
 class ProgramView {
-    renderSimilar(
+    public renderSimilar(
             programs: ProgramAttribute[], urls: ProgramUrl[]
     ): ProgramSimilar[] {
         return programs.map(program => {
