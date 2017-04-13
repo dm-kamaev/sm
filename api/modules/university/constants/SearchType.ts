@@ -3,8 +3,6 @@ export const SearchType = {
     EGE: 'ege',
     MAJOR: 'major',
     DISCOUNT: 'discount',
-    EXCHANGE_PROGRAM: 'exchangeProgram',
-    MILITARY_DEPARTMENT: 'militaryDepartment',
-    DORMITORY: 'dormitory',
+    FEATURES: 'features',
     PAY_TYPE: 'payType'
 };

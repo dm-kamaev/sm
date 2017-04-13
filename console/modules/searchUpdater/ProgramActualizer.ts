@@ -5,6 +5,9 @@ import {
 } from '../../../api/modules/university/services/programSearchData';
 import {SearchType} from '../../../api/modules/university/constants/SearchType';
 import {PayType} from '../../../api/modules/university/constants/PayType';
+import {
+    ProgramFeature
+} from '../../../api/modules/university/constants/ProgramFeature';
 
 import {ProgramInstance} from '../../../api/modules/university/types/program';
 import {
@@ -17,11 +20,11 @@ import {
 
 export class ProgramActualizer {
     private program_: ProgramInstance;
-    private programSearchData_: Array<ProgramSearchDataInstance>;
+    private programSearchData_: ProgramSearchDataInstance[];
 
     constructor(
             program: ProgramInstance,
-            programSearchData: Array<ProgramSearchDataInstance>
+            programSearchData: ProgramSearchDataInstance[]
     ) {
         this.program_ = program;
 
@@ -34,9 +37,7 @@ export class ProgramActualizer {
             this.actualizeEge_(),
             this.actualizeMajor_(),
             this.actualizeDiscount_(),
-            this.actualizeExchangeProgram_(),
-            this.actualizeMilitaryDepartment_(),
-            this.actualizeDormitory_(),
+            this.actualizeFeatures_(),
             this.actualizePaidType_()
         ]);
     }
@@ -66,33 +67,26 @@ export class ProgramActualizer {
         this.actualizeData_(discountData, SearchType.DISCOUNT);
     }
 
-    private async actualizeExchangeProgram_(): Promise<void> {
-        const exchangeProgramData = this.formatToBooleanData_(
-            this.program_.exchangeProgram
-        );
-        this.actualizeData_(exchangeProgramData, SearchType.EXCHANGE_PROGRAM);
-    }
-
-    private async actualizeMilitaryDepartment_(): Promise<void> {
-        const militaryDepartmentData = this.formatToBooleanData_(
-            this.program_.university.militaryDepartment
-        );
-        this.actualizeData_(
-            militaryDepartmentData,
-            SearchType.MILITARY_DEPARTMENT
-        );
-    }
-
-    private async actualizeDormitory_(): Promise<void> {
-        const dormitoryData = this.formatToBooleanData_(
-            this.program_.university.dormitory
-        );
-        this.actualizeData_(dormitoryData, SearchType.DORMITORY);
+    private async actualizeFeatures_(): Promise<void> {
+        const features: number[] = [];
+        const exchangeProgram = this.program_.exchangeProgram;
+        const militaryDepartment = this.program_.university.militaryDepartment;
+        const dormitory = this.program_.university.dormitory;
+        if (exchangeProgram) {
+            features.push(ProgramFeature.EXCHANGE_PROGRAM);
+        }
+        if (militaryDepartment) {
+            features.push(ProgramFeature.MILITARY_DEPARTMENT);
+        }
+        if (dormitory) {
+            features.push(ProgramFeature.DORMITORY);
+        }
+        this.actualizeData_(features, SearchType.FEATURES);
     }
 
     private async actualizePaidType_(): Promise<void> {
         const entranceStatistic = this.getLastStatistic_();
-        let payType: Array<number> = [];
+        let payType: number[] = [];
         if (entranceStatistic) {
             payType = this.getPayType_(entranceStatistic);
         }
@@ -101,8 +95,8 @@ export class ProgramActualizer {
 
     private getPayType_(
             entranceStatistic: EntranceStatisticInstance
-    ): Array<number> {
-        const payType: Array<number> = [];
+    ): number[] {
+        const payType: number[] = [];
         if (entranceStatistic.egePassScore || entranceStatistic.budgetPlaces) {
             payType.push(PayType.BUDGET);
         }
@@ -122,7 +116,7 @@ export class ProgramActualizer {
     }
 
     private async actualizeData_(
-            values: Array<number>,
+            values: number[],
             type: string
     ): Promise<void> {
         if (values && values.length) {
