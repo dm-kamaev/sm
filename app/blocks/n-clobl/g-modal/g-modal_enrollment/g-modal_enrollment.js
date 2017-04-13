@@ -80,6 +80,14 @@ goog.scope(function() {
          * @private
          */
         this.button_ = null;
+
+
+        /**
+         * indicator. it's true, if data has been sent before
+         * @type {boolean}
+         * @private
+         */
+        this.enrollmentSend_ = false;
     };
     goog.inherits(sm.gModal.ModalEnrollment, sm.gModal.ModalStendhal);
     var ModalEnrollment = sm.gModal.ModalEnrollment,
@@ -134,6 +142,7 @@ goog.scope(function() {
 
         this.initButtonListeners_();
         this.initFieldListeners_();
+        this.initViewListeners_();
     };
 
 
@@ -220,6 +229,31 @@ goog.scope(function() {
 
 
     /**
+     * Initializes listeners for view
+     * @private
+     */
+    ModalEnrollment.prototype.initViewListeners_ = function() {
+        this.viewListen(
+            goog.events.EventType.BEFOREUNLOAD,
+            this.onBeforeunload_
+        );
+    };
+
+
+    /**
+     * Before close page
+     * @private
+     */
+    ModalEnrollment.prototype.onBeforeunload_ = function() {
+        if ((!this.enrollmentSend_) &&
+            this.isPhoneOrEmailValid()) {
+            var data = this.buildRequestData_();
+            Request.getInstance().send(data);
+        }
+    };
+
+
+    /**
      * Initializes listeners for button
      * @private
      */
@@ -296,7 +330,7 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.sendRequest_ = function() {
-        var data = this.buildRequestData();
+        var data = this.buildRequestData_();
 
         this.dispatchEvent(ModalEnrollment.Event.SEND_REQUEST);
 
@@ -322,6 +356,7 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.onSuccess_ = function(response) {
+        this.enrollmentSend_ = true;
         this.hide();
 
         this.clear();
@@ -374,9 +409,9 @@ goog.scope(function() {
     /**
      * Build and get data for request
      * @return {Object}
-     * @public
+     * @private
      */
-    ModalEnrollment.prototype.buildRequestData = function() {
+    ModalEnrollment.prototype.buildRequestData_ = function() {
         return {
             url: this.buildApiAddress_(),
             type: 'POST',
