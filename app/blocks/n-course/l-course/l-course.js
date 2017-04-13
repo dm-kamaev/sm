@@ -194,17 +194,9 @@ goog.scope(function() {
     Course.prototype.initModalsListeners_ = function() {
         this.getHandler().listen(
             this.modalEnrollment_,
-            sm.gModal.ModalEnrollment.Event.SEND_REQUEST,
-            this.onEnrollmentSend_
-        );
-
-        this.getHandler().listen(
-            this.modalEnrollment_,
             sm.gModal.ModalEnrollment.Event.SUCCESS,
             this.onSendEnrollmentSuccess_
-        );
-
-        this.getHandler().listen(
+        ).listen(
             this.modalEnrollment_,
             sm.gModal.ModalEnrollment.Event.SHOW,
             this.onModalEnrollmentShow_
@@ -297,15 +289,6 @@ goog.scope(function() {
 
 
     /**
-     * Send enrollment handler
-     * @private
-     */
-    Course.prototype.onEnrollmentSend_ = function() {
-        this.sendAnalyticsSendEnrollment_();
-    };
-
-
-    /**
      * Send enrollment success handler
      * @param {sm.gModal.Event.EnrollmentSuccess} event
      * @private
@@ -321,14 +304,8 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.sendAnalyticsCheckoutEnrollment_ = function(data) {
-        var actionData = {
-            category: 'checkout',
-            action: 'form request'
-        };
-
         this.analyticsSender_.sendCheckout(
-            this.getEcAnalyticsEnrollmentData_(data),
-            actionData
+            this.getEcAnalyticsEnrollmentData_(data)
         );
     };
 
@@ -339,27 +316,9 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.sendAnalyticsSuccessEnrollment_ = function(data) {
-        var actionData = {
-            category: 'checkout',
-            action: 'form success'
-        };
-
         this.analyticsSender_.sendPurchase(
-            this.getEcAnalyticsEnrollmentData_(data),
-            actionData
+            this.getEcAnalyticsEnrollmentData_(data)
         );
-    };
-
-
-    /**
-     * Send analytics about send Enrollment
-     * @private
-     */
-    Course.prototype.sendAnalyticsSendEnrollment_ = function() {
-        this.analyticsSender_.send({
-            category: 'checkout',
-            action: 'form submit'
-        });
     };
 
 
@@ -387,7 +346,7 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.initAnalyticsSender_ = function() {
-        this.analyticsSender_ = AnalyticsSender.getInstance('course details');
+        this.analyticsSender_ = new AnalyticsSender('course details');
 
         this.analyticsSender_.setProductParams({
             id: this.params.id,
@@ -516,6 +475,7 @@ goog.scope(function() {
             sm.gModal.ModalEnrollment.NAME,
             this.getView().getDom().modalEnrollment
         );
+        this.modalEnrollment_.setPageName(this.params.name);
 
         this.modalSuccess_ = this.decorateChild(
             sm.gModal.ModalSuccess.NAME,

@@ -23,8 +23,6 @@ goog.scope(function() {
      */
     sm.lCourse.iAnalyticsSender.AnalyticsSender = function(list) {
 
-        sm.lCourse.iAnalyticsSender.AnalyticsSender.instanse_ = this;
-
         /**
          * Product params
          * @type {sm.iAnalytics.Analytics.productFieldObjectParams}
@@ -42,25 +40,6 @@ goog.scope(function() {
     };
     var AnalyticsSender = sm.lCourse.iAnalyticsSender.AnalyticsSender,
         Analytics = sm.iAnalytics.Analytics;
-
-
-    /**
-     * singleton getter
-     * @param {string=} opt_list
-     * @return {sm.lCourse.iAnalyticsSender.AnalyticsSender}
-     */
-    AnalyticsSender.getInstance = function(opt_list) {
-        return AnalyticsSender.instanse_ ?
-            AnalyticsSender.instanse_ :
-            new AnalyticsSender(opt_list);
-    };
-
-    /**
-     * instance of AnalyticsSender
-     * @type {?sm.lCourse.iAnalyticsSender.AnalyticsSender}
-     * @private
-     */
-    AnalyticsSender.instanse_ = null;
 
 
     /**
@@ -105,14 +84,8 @@ goog.scope(function() {
     /**
      * Send analytics by checkout action
      * @param {sm.iAnalytics.Analytics.actionFieldObjectParams} actionDataEc
-     * @param {{
-     *     category: string,
-     *     action: string,
-     *     name: (string|undefined)
-     * }} actionParams
      */
-    AnalyticsSender.prototype.sendCheckout = function(actionDataEc,
-        actionParams) {
+    AnalyticsSender.prototype.sendCheckout = function(actionDataEc) {
 
         var params = actionDataEc;
         params.list = this.list_;
@@ -132,21 +105,14 @@ goog.scope(function() {
         Analytics.getInstance().checkoutProduct(
             productParamsEc, actionParamsEc
         );
-        this.send(actionParams);
     };
 
 
     /**
      * Send analytics by purchase action
      * @param {sm.iAnalytics.Analytics.actionFieldObjectParams} actionDataEc
-     * @param {{
-     *     category: string,
-     *     action: string,
-     *     name: (string|undefined)
-     * }} actionParams
      */
-    AnalyticsSender.prototype.sendPurchase = function(actionDataEc,
-        actionParams) {
+    AnalyticsSender.prototype.sendPurchase = function(actionDataEc) {
 
         var params = actionDataEc;
         params.list = this.list_;
@@ -166,7 +132,6 @@ goog.scope(function() {
         Analytics.getInstance().purchaseProduct(
             productParamsEc, actionParamsEc
         );
-        this.send(actionParams);
     };
 
 
