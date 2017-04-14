@@ -61,7 +61,7 @@ class CityService {
         if (!cities) {
             cities = await this.getAllSortedByProgramCountDb();
 
-            await redis.set(CITIES_POPULAR_PROGRAM, cities, CACHE_TIME);
+            redis.set(CITIES_POPULAR_PROGRAM, cities, CACHE_TIME);
         }
         return cities;
     }

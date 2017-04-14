@@ -153,33 +153,26 @@ api/modules/school/views/commentView.js
 api/modules/school/views/profileAdminView.js
 
 
-api/modules/study/models/olimpResult.js
-api/modules/study/services/exceptions/*.js
-api/modules/study/services/olimpResult.js
-api/modules/study/controllers/errors/*.js
-api/modules/study/controllers/olympiadAdminController.js
-
-api/modules/study/controllers/*.js
-api/modules/study/controllers/errors/*.js
-
-api/modules/study/models/giaResult.js
-api/modules/study/models/subject.js
+api/modules/study/controllers/**/*.js
 api/modules/study/models/egeResult.js
+api/modules/study/models/giaResult.js
+api/modules/study/models/olimpResult.js
+api/modules/study/models/subject.js
 
 api/modules/study/services/exceptions/*.js
-api/modules/study/services/profileAdminService.js
-api/modules/study/services/giaAdminService.js
-api/modules/study/services/examAdminService.js
-api/modules/study/services/egeAdminService.js
 api/modules/study/services/additionalClassAdminService.js
+api/modules/study/services/ege.js
+api/modules/study/services/egeAdminService.js
+api/modules/study/services/examAdminService.js
+api/modules/study/services/giaAdminService.js
+api/modules/study/services/olimpResult.js
 
 api/modules/study/types/*.js
 
 api/modules/study/views/additionalClassAdminView.js
-api/modules/study/views/giaAdminView.js
 api/modules/study/views/egeAdminView.js
+api/modules/study/views/giaAdminView.js
 
-api/modules/study/controllers/**/*.js
 
 api/modules/university/**/*.js
 
