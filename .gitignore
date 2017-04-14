@@ -202,11 +202,16 @@ app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
 app/middleware/checkApiToken.js
 
+app/modules/common/constants/*.js
+
+app/modules/common/lib/FilterPanel.js
+app/modules/common/lib/Footer.js
+app/modules/common/lib/FormatUtils.js
 app/modules/common/lib/Header.js
 app/modules/common/lib/Layout.js
-app/modules/common/types/layout.js
 app/modules/common/lib/SubHeader.js
-app/modules/common/lib/Footer.js
+
+app/modules/common/types/*.js
 
 app/modules/common/enums/entityType.js
 app/modules/common/views/footerView.js
@@ -215,7 +220,11 @@ app/modules/common/views/generalDataView.js
 
 app/modules/school/views/olympiadResultView.js
 
+app/modules/university/constants/*.js
+
 app/modules/university/index.js
+
+app/modules/university/lib/ProgramFilterPanel.js
 
 app/modules/university/types/**/*.js
 
