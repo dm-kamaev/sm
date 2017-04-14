@@ -193,6 +193,7 @@ goog.scope(function() {
         } else {
             displayer('Ничего не найдено', true);
         }
+        this.generateAndSetButtonFixedStatus_();
     };
 
     /**
