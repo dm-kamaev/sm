@@ -219,6 +219,7 @@ class CourseFilterPanel extends FilterPanel {
                 isShowed: true
             }
         };
+    }
 
 
     /**
