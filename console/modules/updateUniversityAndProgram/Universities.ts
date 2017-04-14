@@ -14,9 +14,9 @@ import {
     service as cityService
 } from '../../../api/modules/geo/services/city';
 
-type BooleanHash = {[key: string]: boolean;};
-type HashNumber = {[key: string]: number;};
-type HashString = {[key: string]: number;};
+type BooleanHash = {[key: string]: boolean};
+type HashNumber = {[key: string]: number};
+type HashString = {[key: string]: number};
 
 
 

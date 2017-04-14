@@ -166,6 +166,19 @@ class CityService {
         return responce;
     }
 
+    // return only russian text or empty string
+    public cleanCityName(cityName: string): string {
+      return cityName
+                .toString()
+                .toLowerCase()
+                .replace(/[\w\d_!@#\$%^&*\(\)"':;|,\.\+<>?\[\]~{}\/\\]+/g, '')
+                .replace(/-+/g, '-')
+                .replace(/^-+/g, '')
+                .replace(/-+$/g, '')
+                .trim()
+                .replace(/\s+/g, ' ');
+    }
+
     private async getAllSortedByProgramCountDb(): Promise<CityInstance[]> {
         return CityModel.findAll({
             attributes: {exclude: EXCLUDE_ATTRIBUTES},
@@ -188,19 +201,6 @@ class CityService {
                 'DESC'
             ]]
         });
-    }
-
-    // return only russian text or empty string
-    public cleanCityName(cityName: string): string {
-      return cityName
-                .toString()
-                .toLowerCase()
-                .replace(/[\w\d_!@#\$%^&*\(\)"':;|,\.\+<>?\[\]~{}\/\\]+/g, '')
-                .replace(/-+/g, '-')
-                .replace(/^-+/g, '')
-                .replace(/-+$/g, '')
-                .trim()
-                .replace(/\s+/g, ' ');
     }
 
 }

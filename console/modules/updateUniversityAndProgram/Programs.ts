@@ -13,10 +13,13 @@ import {
 import {
     service as programService
 } from '../../../api/modules/university/services/program';
+import {
+    service as programMajorService
+} from '../../../api/modules/university/services/programMajor';
 
-type BooleanHash = {[key: string]: boolean;};
-type HashNumber = {[key: string]: number;};
-type HashString = {[key: string]: number;};
+type BooleanHash = {[key: string]: boolean};
+type HashNumber = {[key: string]: number};
+type HashString = {[key: string]: number};
 
 
 export class Programs {
