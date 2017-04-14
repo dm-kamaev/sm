@@ -1,12 +1,12 @@
 import {bFilter} from '../params';
 
-export namespace bFilterRange {
+export namespace bFilterInput {
     /**
-     * sm.lSearch.bFilterRange.Params
+     * sm.lSearch.bFilterInput.Params
      */
     export namespace Params {
         /**
-         * sm.lSearch.bFilterRange.Params.Data
+         * sm.lSearch.bFilterInput.Params.Data
          */
         export interface Data extends bFilter.Params.Data {
             name: string,
@@ -16,28 +16,22 @@ export namespace bFilterRange {
             }),
             options: Array<{
                 label: string;
-                name: string;
-                value: number;
-                step?: number;
-                minValue?: number;
-                maxValue: number;
-                defaultValue?: number;
-                thumb?: {
-                    iconName: string;
-                    iconType?: string;
-                }
+                name?: (string|number);
+                placeholder?: string;
+                value: (string|number|undefined);
+                maxLength?: number;
             }>
         }
 
         /**
-         * sm.lSearch.bFilterRange.Params.Config
+         * sm.lSearch.bFilterInput.Params.Config
          */
         export interface Config extends bFilter.Params.Config {}
     }
 
 
     /**
-     * sm.lSearch.bFilterRange.Params
+     * sm.lSearch.bFilterInput.Params
      */
     export interface Params {
         data: Params.Data;

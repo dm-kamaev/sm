@@ -9,7 +9,7 @@
  *         tooltip: (string|undefined)
  *     }|undefined),
  *     options: Array<{
- *         title: (string|undefined),
+ *         label: (string|undefined),
  *         placeholder: ?string,
  *         value: ?string,
  *         maxLength: number
@@ -51,10 +51,11 @@
  *     data: {
  *         name: string,
  *         options: Array<{
- *             title: (string|undefined),
- *             placeholder: ?string,
- *             value: ?string,
- *             maxLength: number
+ *             label?: string,
+ *             name?: string,
+ *             placeholder?: string,
+ *             value?: (string|number),
+ *             maxLength?: number
  *         }>
  *     },
  *     config: {
@@ -75,8 +76,9 @@
             {call .option}
                 {param params: [
                     'data': [
-                        'name': $params.data.name,
-                        'title': $params.data.options[$i].title,
+                        'name': $params.data.options[$i].name ?:
+                            $params.data.name,
+                        'label': $params.data.options[$i].label,
                         'placeholder': $params.data.options[$i].placeholder,
                         'value': $params.data.options[$i].value,
                         'maxLength': $params.data.options[$i].maxLength
@@ -98,7 +100,7 @@
  * @param params {{
  *     data: {
  *         name: string,
- *         title: (string|undefined),
+ *         label: (string|undefined),
  *         placeholder: ?string,
  *         value: ?string,
  *         maxLength: number
@@ -126,7 +128,7 @@
 
     <div class="{$classes}">
         {call .input_ data="all" /}
-        {call .inputTitle_ data="all" /}
+        {call .inputLabel_ data="all" /}
     </div>
 {/template}
 
@@ -225,14 +227,15 @@
  * @param params {{
  *     data: {
  *         title: (string|undefined),
+ *         label: (string|undefined)
  *     }
  * }}
  * @private
  */
-{template .inputTitle_}
-    {if $params.data?.title}
-        <div class="{call .rootClass/}__input-title">
-            {$params.data.title}
+{template .inputLabel_}
+    {if $params.data?.label}
+        <div class="{call .rootClass/}__input-label">
+            {$params.data.label}
         </div>
     {/if}
 {/template}

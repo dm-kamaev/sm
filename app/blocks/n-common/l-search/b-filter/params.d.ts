@@ -25,7 +25,7 @@ export namespace bFilter {
             optionsToShow?: number;
             cannotBeHidden?: boolean;
             isShowed?: boolean;
-            showMoreButtonText?: number;
+            showMoreButtonText?: string;
             theme?: string;
             align?: string;
             customClasses?: Array<string>;

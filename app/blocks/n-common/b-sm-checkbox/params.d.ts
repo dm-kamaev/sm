@@ -9,7 +9,7 @@ export namespace bSmCheckbox {
          */
         export interface Data {
             id?: string;
-            name?: string;
+            name?: (string|number);
             label: string;
             value: (string|number);
             isChecked?: boolean;

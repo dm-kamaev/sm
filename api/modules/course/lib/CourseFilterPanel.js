@@ -43,7 +43,7 @@ class CourseFilterPanel extends FilterPanel {
                 name: 'age',
                 options: [
                     {
-                        'title': 'лет',
+                        'label': 'лет',
                         'value': '',
                         'maxLength': 2
                     }
@@ -219,7 +219,6 @@ class CourseFilterPanel extends FilterPanel {
                 isShowed: true
             }
         };
-    }
 
 
     /**
