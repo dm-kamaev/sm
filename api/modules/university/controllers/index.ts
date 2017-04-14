@@ -59,7 +59,7 @@ import {
 const programCommentController = new ProgramCommentController();
 
 import {ProgramMajorController} from './ProgramMajorController';
-const programMajorController = new ProgramMajorController();
+const programMajorController: any = new ProgramMajorController();
 
 import {ProgramMajorAdminController} from './ProgramMajorAdminController';
 const programMajorAdminController = new ProgramMajorAdminController();
@@ -99,6 +99,10 @@ router.get('/program/:programId/pagemeta', programMetaController.actionGet);
 router.get('/program/:programId/similar', programSimilarController.actionGet);
 
 router.get('/programmajor/search', programMajorController.actionSearch);
+router.get(
+    '/programmajor/:programMajorId/advicedcourses',
+    programMajorController.actionGetAdvicedCourses
+);
 
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
