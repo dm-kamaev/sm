@@ -537,6 +537,11 @@ service.getByTypes = async(function(types, limit) {
                 in: types.map(type => type.id)
             }
         },
+        include: [{
+            model: models.CourseType,
+            attributes: ['id', 'name'],
+            as: 'courseType'
+        }],
         order: [
             ['ctr', 'DESC NULLS LAST'],
             ['updated_at', 'DESC']

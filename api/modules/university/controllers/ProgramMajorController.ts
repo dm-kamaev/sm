@@ -47,6 +47,9 @@ class ProgramMajorController extends Controller {
      * @apiSuccess {String}   courses.imageUrl
      * @apiSuccess {String}   courses.embedId
      * @apiSuccess {Number}   courses.ctr
+     * @apiSuccess {Object}   courses.courseType     Course type of course
+     * @apiSuccess {Number}   course.courseType.id   Id of course type
+     * @apiSuccess {String}   course.courseType.name Name of course type
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
@@ -67,6 +70,10 @@ class ProgramMajorController extends Controller {
      *         "imageUrl": "/static/images/kursy-anglijskogo-jazyka.jpg",
      *         "embedId": "",
      *         "ctr": 5.37634408602151,
+     *         courseType":{
+     *             "id": 4,
+     *             "name": "Английский язык"
+     *         }
      *     }]
      */
     public async actionGetAdvicedCourses(
