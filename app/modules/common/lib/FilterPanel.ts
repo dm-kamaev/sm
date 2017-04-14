@@ -354,8 +354,6 @@ abstract class FilterPanel {
 
 
     protected getInputOption(model: OptionModel): InputOption {
-        console.log('getInputOption');
-
         return {
             name: model.id,
             label: this.getLabel(model),

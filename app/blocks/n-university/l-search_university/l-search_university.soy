@@ -70,6 +70,7 @@
  *         sort: sm.gDropdown.TemplateSelect.Params.Data
  *         entityList: sm.bSmItemList.Template.Params.Data,
  *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params,
  *         popularEntities: Array<{
  *             id: number,
  *             alias: ?string,
@@ -114,7 +115,8 @@
  *             }
  *         },
  *         entityList: sm.bSmItemList.Template.Params.Data,
- *         filterPanel: {sm.lSearch.bFilterPanel.Template.Params}
+ *         filterPanel: {sm.lSearch.bFilterPanel.Template.Params},
+ *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params
  *     },
  *     config: {
  *         entityType: string
@@ -162,21 +164,32 @@
  * Filter template
  * @param? params {
  *     data: {
- *         filterPanel: sm.lSearch.bFilterPanel.Template.Params
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params
  *     }
  * }
  * @protected
  * @override
  */
 {template .filters_}
-    <div class="{call .rootClass/}__filters">
-        {if $params}
-        {/if}
-        // {call .renderChildLayout}
-        //     {param params: $params /}
-        //     {param type: 'lSearch-filterPanel' /}
-        //     {param renderParams: $params.data.filterPanel /}
-        // {/call}
+    <div class="{call .rootClass/}__filters{sp}
+                {call .rootClass/}__filters_main">
+
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lSearch-filterPanel' /}
+            {param renderParams: $params.data.filterPanel /}
+        {/call}
+    </div>
+
+    <div class="{call .rootClass/}__filters{sp}
+                {call .rootClass/}__filters_dependent">
+
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lSearch-filterPanel' /}
+            {param renderParams: $params.data.dependentFilterPanel /}
+        {/call}
     </div>
 {/template}
 

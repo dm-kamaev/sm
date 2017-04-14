@@ -15,8 +15,18 @@ export namespace lSearchUniversity {
         export interface Data extends iLayoutStendhal.Params.Data {
             resultsList: any,
             filterPanel: Object,
+            dependentFilterPanel: Object,
             searchParams: {
-                [name: string]: number[] | string[] | number
+                cities: number[];
+                ege: number[];
+                payType: number[];
+                maxPassScore: number[];
+                maxPrice: number[];
+                majors: number[];
+                features: number[];
+                page: number;
+                sortType: number;
+                name: string;
             }
         }
 
