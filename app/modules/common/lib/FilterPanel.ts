@@ -2,10 +2,15 @@ const lodash = require('lodash').lodash;
 
 import {filterType} from '../constants/filterType';
 
+import {Option, OptionModel} from '../../common/types/filterPanel';
+
 import {bFilter} from '../../../blocks/n-common/l-search/b-filter/params';
 import {
     bFilterRange
 } from '../../../blocks/n-common/l-search/b-filter/b-filter_range/params';
+import {
+    bFilterExtended
+} from '../../../blocks/n-common/l-search/b-filter/b-filter_extended/params';
 import {
     bFilterPanel
 } from '../../../blocks/n-common/l-search/b-filter-panel/params';
@@ -13,19 +18,13 @@ import {
 type InitFiltersData = {
     enabledFilters: string[];
     filtersData: {[name: string]: Option[]};
-    searchParams: {[name: string]: (number|string)[]};
+    searchParams: {[name: string]: number[] | string[] | any};
 };
 
 type InitFilterData = {
     filterName: string;
     dataValues: Option[];
-    checkedValues: (string|number)[];
-};
-
-type Option = {
-    label: string;
-    value: (number|string);
-    isChecked?: boolean;
+    checkedValues: (number[] | string[] | number);
 };
 
 type OptionWithoutValue = {
@@ -33,12 +32,20 @@ type OptionWithoutValue = {
     isChecked?: boolean;
 };
 
-type OptionModel = {
-    id: (number|string);
-    name: string;
+type InputOption = {
+    label: string;
+    name?: (string|number);
+    placeholder?: string;
+    value: (string|number|undefined);
+    maxLength?: number;
 };
 
-type FilterParams = (bFilter.Params|bFilterRange.Params|any);
+type FilterParams = (
+    bFilter.Params|
+    bFilterRange.Params|
+    bFilterExtended.Params|
+    any
+);
 
 abstract class FilterPanel {
 
@@ -55,6 +62,8 @@ abstract class FilterPanel {
     protected optionsWeekDays: Array<OptionWithoutValue>;
 
     constructor() {
+        this.filters = [];
+
         this.optionsWeekDays = [
             {
                 'label': 'Пн'
@@ -106,9 +115,9 @@ abstract class FilterPanel {
     }
 
     public initFilters(data: InitFiltersData) {
-        let enabledFilters = data.enabledFilters || this.defaultFilters;
-        let filtersData = data.filtersData || {};
-        let searchParams = data.searchParams || {};
+        const enabledFilters = data.enabledFilters || this.defaultFilters;
+        const filtersData = data.filtersData || {};
+        const searchParams = data.searchParams || {};
 
         enabledFilters.forEach((filterName) => {
             const filterDataValues = filtersData[filterName];
@@ -123,7 +132,7 @@ abstract class FilterPanel {
     }
 
     protected setFilterWeekDays(checkedValues?: (number|string)[]) {
-        let params: bFilter.Params = this.filterWeekDays;
+        const params: bFilter.Params = this.filterWeekDays;
 
         params.data.options = this.createOptionsValuesInOrder(
             this.optionsWeekDays
@@ -139,7 +148,7 @@ abstract class FilterPanel {
             filterParams: FilterParams,
             checkedValues?: (number|string)[]
     ) {
-        let params = filterParams;
+        const params = filterParams;
         params.config.type = filterType.EXTENDED;
 
         this.setFilter(params, checkedValues);
@@ -152,7 +161,7 @@ abstract class FilterPanel {
             filterParams: FilterParams,
             checkedValues?: (number|string)[]
     ) {
-        let params = filterParams;
+        const params = filterParams;
 
         params.config.align = 'horizontal';
         params.config.optionsToShow = (
@@ -169,7 +178,7 @@ abstract class FilterPanel {
             filterParams: FilterParams,
             checkedValues?: (number|string)[]
     ) {
-        let params = filterParams;
+        const params = filterParams;
         params.config.type = filterType.INPUT;
 
         this.setFilter(params, checkedValues);
@@ -185,7 +194,7 @@ abstract class FilterPanel {
             filterParams: FilterParams,
             checkedValues?: (number|string)[]
     ) {
-        let params = filterParams;
+        const params = filterParams;
         params.config.type = filterType.SWITCH;
 
         this.setFilter(params, checkedValues);
@@ -198,8 +207,21 @@ abstract class FilterPanel {
             filterParams: FilterParams,
             checkedValues?: (number|string)[]
     ) {
-        let params = filterParams;
+        const params = filterParams;
         params.config.type = filterType.LABELS;
+
+        this.setFilter(params, checkedValues);
+
+        return this;
+    }
+
+
+    protected setFilterRange(
+            filterParams: FilterParams,
+            checkedValues?: (number|string)[]
+    ) {
+        const params = filterParams;
+        params.config.type = filterType.RANGE;
 
         this.setFilter(params, checkedValues);
 
@@ -221,6 +243,22 @@ abstract class FilterPanel {
     }
 
 
+    protected initFilter(data: InitFilterData) {
+        const name: string = data.filterName,
+            dataValues: Option[] = data.dataValues,
+            checkedValues: (number[] | string[] | number) = data.checkedValues,
+            initFunction: Function = this.filterInitializers[name];
+
+        if (initFunction) {
+            if (dataValues) {
+                initFunction(dataValues, checkedValues);
+            } else {
+                initFunction(checkedValues);
+            }
+        }
+    }
+
+
     /**
      * Determines is expanded filter panel
      */
@@ -235,7 +273,7 @@ abstract class FilterPanel {
             filterParams: FilterParams,
             checkedValues?: (number|string)[]
     ): FilterParams {
-        let params = filterParams;
+        const params = filterParams;
 
         params.data.options = this.updateOptionsIsChecked(
             filterParams.data.options,
@@ -259,7 +297,7 @@ abstract class FilterPanel {
             checkedValues?: (number|string)[]
     ): (bFilter.Params.Config|any) {
 
-        let data = filterParams.data,
+        const data = filterParams.data,
             config = filterParams.config;
 
         if (data.options.some(option => option.isChecked)) {
@@ -279,7 +317,7 @@ abstract class FilterPanel {
             options: Option[],
             checkedValues?: (number|string)[]
     ): Option[] {
-        let values = checkedValues || [];
+        const values = checkedValues || [];
 
         return options.map(option => {
             if (values.some(value => option.value == value)) {
@@ -300,10 +338,29 @@ abstract class FilterPanel {
     ): Option[] {
 
         return lodash.map(options, (option, index) => {
-            let result = option || {};
+            const result = option || {};
             result.value = index;
             return result;
         });
+    }
+
+
+    /**
+     * Transform array of models to options of inputs
+     */
+    protected getInputOptions(models: OptionModel[]): InputOption[] {
+        return models.map(this.getInputOption, this);
+    }
+
+
+    protected getInputOption(model: OptionModel): InputOption {
+        console.log('getInputOption');
+
+        return {
+            name: model.id,
+            label: this.getLabel(model),
+            value: null
+        };
     }
 
 
@@ -328,22 +385,6 @@ abstract class FilterPanel {
 
     protected getLabel(model: OptionModel): string {
         return model.name;
-    }
-
-
-    protected initFilter(data: InitFilterData) {
-        const name: string = data.filterName,
-            dataValues: Option[] = data.dataValues,
-            checkedValues: (string|number)[] = data.checkedValues,
-            initFunction: Function = this.filterInitializers[name];
-
-        if (initFunction) {
-            if (dataValues) {
-                initFunction(dataValues, checkedValues);
-            } else {
-                initFunction(checkedValues);
-            }
-        }
     }
 }
 
