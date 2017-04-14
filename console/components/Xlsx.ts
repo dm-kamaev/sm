@@ -10,13 +10,13 @@ export class Xlsx {
             xlsxj({
                 input: path,
                 output: null,
-            }, function(err, res) {
+            }, function(err, res: any[]) {
                 if (err) {
                     return reject(err);
                 }
                 resolve(res);
             });
-        })
+        });
     }
 }
 
