@@ -7,6 +7,7 @@ import {BackendUser} from '../../user/types/user';
 import {BackendProgramMeta} from '../types/programMeta';
 import {AppConfig} from '../../common/types/layout';
 import {BackendSimilarProgram} from '../types/similarProgram';
+import {BackendCourseAdviced} from '../types/programMajor';
 
 export type RenderParams = {
     data: BackendData;
@@ -28,6 +29,7 @@ export type BackendData = {
     users: Array<BackendUser>,
     favorites: Array<{string: any}>,
     pageMeta: BackendProgramMeta,
-    similarPrograms: BackendSimilarProgram[]
+    similarPrograms: BackendSimilarProgram[],
+    usefulCourses: BackendCourseAdviced[]
 };
 

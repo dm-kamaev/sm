@@ -22,6 +22,7 @@ import {
     RenderParams
 } from '../types/programInformationLayout';
 import {BackendSimilarProgram} from '../types/similarProgram';
+import {BackendCourseAdviced} from '../types/programMajor';
 
 import {BackendProgramComment} from '../../comment/types/programComment';
 import {AppConfig} from '../../common/types/layout';
@@ -43,6 +44,9 @@ import {
 import {
     bSmInformationCard
 } from '../../../blocks/n-common/b-sm-information-card/params';
+import {
+    bSmItemCompact
+} from '../../../blocks/n-common/b-sm-item/b-sm-item_compact/params';
 
 import {
     UniversityImageSize
@@ -94,7 +98,7 @@ class InformationView extends LayoutView {
         this.setNavigationPanel_(params.data);
         this.setComments_(params.data);
         this.setSimilarPrograms_(params.data);
-        this.setUsefulCourses_();
+        this.setUsefulCourses_(params.data);
         this.setModalComment_(params.data.program.id, params.data.userComment);
     }
 
@@ -503,48 +507,13 @@ class InformationView extends LayoutView {
         };
     }
 
-    private setUsefulCourses_() {
-        this.params.data.usefulCourses = {
+    private setUsefulCourses_(data: BackendData) {
+        this.params.data.usefulCourses = data.usefulCourses.length ? {
             header: 'Полезные курсы',
             data: {
                 countItemsPerPage: 3,
-                items: [{
-                    id: 1,
-                    type: 'course',
-                    name: {
-                        light: 'Английский язык'
-                    },
-                    description: `Подготовка к ЕГЭ по английскому
-                                    языку English First`,
-                    imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
-                    'facebook/000/839/199/8a9.jpg',
-                    url: 'http://yandex.ru',
-                    nameLinkUrl: 'http://google.com'
-                }, {
-                    id: 2,
-                    type: 'course',
-                    name: {
-                        light: 'Профориентация'
-                    },
-                    description: 'Система Выбор Smart Course',
-                    imageUrl: 'http://lamcdn.net/lookatme.ru/' +
-                    'post_image-image/vePw1jo6HLFVfp7JIU5_' +
-                    'Qg-article.jpg',
-                    url: 'http://yandex.ru',
-                    nameLinkUrl: 'http://google.com'
-                }, {
-                    id: 3,
-                    type: 'course',
-                    name: {
-                        light: 'Профориентация'
-                    },
-                    description: `Пропуск в профессию. Индивидуальная
-                                    траектория Proekt Pro`,
-                    imageUrl: 'http://cs8.pikabu.ru/post_img/2016/' +
-                    '01/14/12/1452803883198482683.png',
-                    url: 'http://yandex.ru',
-                    nameLinkUrl: 'http://google.com'
-                }],
+                items: data.usefulCourses.map(
+                    course => this.getUsefulCourseParams_(course)),
                 itemType: 'smItemCompact',
                 itemConfig: {
                     theme: 'neptune-imaged',
@@ -554,7 +523,24 @@ class InformationView extends LayoutView {
                     nameLinkTheme: 'default'
                 }
             }
-        };
+        } :
+        null;
+    }
+
+    getUsefulCourseParams_(
+            data: BackendCourseAdviced
+    ): bSmItemCompact.Params.Data {
+        return {
+            id: data.id,
+            type: 'course',
+            name: {
+                light: data.courseType.name
+            },
+            description: data.name,
+            imageUrl: data.imageUrl,
+            url: 'http://yandex.ru',
+            nameLinkUrl: 'http://google.com'
+        }
     }
 
     private setSubscribeBoard_(data: BackendData) {

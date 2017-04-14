@@ -11,6 +11,7 @@ import {userService} from '../../user/services/user';
 import {EgeExamService} from '../services/EgeExamService';
 import {ProgramCommentService} from '../../comment/services/ProgramComment';
 import {SimilarProgramsService} from '../services/SimilarProgramsService';
+import {programMajorService} from '../services/programMajorService';
 
 import {informationView} from '../views/informationView';
 
@@ -30,13 +31,13 @@ class UniversityController extends Controller {
             programAlias: string
     ) {
         const user = userService.getUserFromRequest(actionContext.request);
-        const data = await Promise.all([
-            await universityService.getIdByAlias(universityAlias),
-            await programService.getIdByAlias(programAlias)
-        ]);
-
-        const universityId = data[0],
-            programId = data[1];
+        const [
+                universityId,
+                programId
+            ] = await Promise.all([
+                universityService.getIdByAlias(universityAlias),
+                programService.getIdByAlias(programAlias)
+            ]);
 
         const entranceStatisticService =
             new EntranceStatisticService(programId);
@@ -61,7 +62,9 @@ class UniversityController extends Controller {
                 programMetaService.getById(programId),
                 similarProgramsService.getSimilar()
         ]);
-
+        const usefulCourses =
+            await programMajorService.getAdvicedCourses(program.id);
+        console.log('Useful courses', usefulCourses);
         const userComment =
             programCommentService.getUserComment(user, comments);
         const users =
@@ -78,6 +81,7 @@ class UniversityController extends Controller {
                 userComment,
                 users,
                 similarPrograms,
+                usefulCourses,
                 favorites: []
             },
             config: config,
@@ -87,6 +91,7 @@ class UniversityController extends Controller {
                 csrf: actionContext.request.csrfToken()
             },
         });
+
 
         return soy.render(
             'sm.lUniversity.Template.university', {
