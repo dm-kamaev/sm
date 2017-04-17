@@ -87,7 +87,7 @@ goog.scope(function() {
          * @type {boolean}
          * @private
          */
-        this.enrollmentSend_ = false;
+        this.isEnrollmentSend_ = false;
 
 
         /**
@@ -285,7 +285,7 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.onBeforeunload_ = function() {
-        if ((!this.enrollmentSend_) &&
+        if ((!this.isEnrollmentSend_) &&
             this.isPhoneOrEmailValid()) {
             var data = this.buildRequestData_();
             Request.getInstance().send(data);
@@ -400,7 +400,7 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.onSuccess_ = function(response) {
-        this.enrollmentSend_ = true;
+        this.isEnrollmentSend_ = true;
         this.hide();
         this.clear();
 
