@@ -171,7 +171,12 @@ goog.scope(function() {
     };
 
 
+    /**
+     * checks button to need fixed
+     * @return {boolean}
+     */
     View.prototype.isButtonNeedToBeFixed = function() {
+        var res = false;
         if(viewport.getSize() <= sm.iSmViewport.SmViewport.Size.M) {
             var buttonBoxBound = goog.style.getBounds(this.dom.buttonBox);
             var buttonBoxBottom = 15;
@@ -182,8 +187,9 @@ goog.scope(function() {
             var viewportHeght = goog.dom.getViewportSize().height;
             var documentScrollY = goog.dom.getDocumentScroll().y;
 
-            return boxBottomPositionY > viewportHeght + documentScrollY;
-        } else return false;
+            res = boxBottomPositionY > viewportHeght + documentScrollY;
+        }
+        return res;
     };
 
 
