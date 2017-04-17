@@ -4,6 +4,10 @@
     "protocol": "http",
     "authApi": "http://pablo-mel.qa.lan:49611",
     "userApi": "http://pablo-mel.qa.lan:20348",
+    "notifications": {
+        "schools": "easyrider377@yandex.ru",
+        "universities": "easyrider377@yandex.ru"
+    },
     "schools": {
         "analyticsId": "UA-34116537-11",
         "yandexMetrikaId": 37512315,
@@ -16,6 +20,15 @@
         "analyticsViewId": "ga:130630878",
         "experimentId": "134372507-21"
     },
+    "universities": {
+        "host": "vuz.rt.lan"
+    },
     "carrotquestId": "6408-1ccff98844d996fc088fed318b4",
-    "facebookClientId": 525358880980041
+    "facebookClientId": 525358880980041,
+    "mailChimp": {
+        "dc": "us15",
+        "listId": "ef236b2f67",
+        "name": "butusov@mel.fm",
+        "password": "5154328c5a5b8208e043e563b8ebaa27-us15"
+    }
 }

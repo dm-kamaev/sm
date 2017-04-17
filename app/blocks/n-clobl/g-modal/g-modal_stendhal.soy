@@ -4,7 +4,11 @@
  * Modal template
  * @param params {{
  *     data: {
- *         content: ?string
+ *         content: ?string,
+ *         closer: ({
+ *             iconName: ?string,
+ *             iconType: ?string
+ *         }|undefined)
  *     },
  *     config: {
  *         stylizationModifier: string,
@@ -52,10 +56,40 @@
     <div class="{call .rootClass/}__close-button">
         {if $params?.config?.size == 's'}
             {call .smallIcon data="all"/}
+        {elseif $params.data?.closer and $params.data?.closer?.iconName}
+            {call .customizableIcon data="all"/}
         {else}
             {call .defaultIcons data="all"/}
         {/if}
     </div>
+{/template}
+
+
+/**
+ * Customizable Icon for closer
+ * @param params {
+ *     data: {
+ *         closer: ({
+ *             iconName: ?string,
+ *             iconType: ?string
+ *         }|undefined)
+ *     },
+ *     config: {
+ *         stylizationModifier: string
+ *     }
+ * }
+ */
+{template .customizableIcon}
+    {call .renderChild}
+        {param params: [
+            'type': $params.data.closer.iconType ?: 'icon',
+            'renderParams': [
+                'data': [
+                    'type': $params.data.closer.iconName
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 /**

@@ -8,7 +8,7 @@ rules:
             - right
             - bottom
             - left
-        
+
             - display
             - visibility
             - float
@@ -22,7 +22,7 @@ rules:
             - flex-order
             - flex-pack
             - flex-align
-              
+
             - box-sizing
             - width
             - min-width
@@ -40,7 +40,7 @@ rules:
             - padding-right
             - padding-bottom
             - padding-left
-        
+
             - table-layout
             - empty-cells
             - caption-side
@@ -50,7 +50,7 @@ rules:
             - list-style-position
             - list-style-type
             - list-style-image
-            
+
             - content
             - quotes
             - counter-reset
@@ -103,7 +103,7 @@ rules:
             - tab-size
             - hyphens
             - pointer-events
-        
+
             - opacity
             - filter:progid:DXImageTransform.Microsoft.Alpha(Opacity
             - -ms-filter:'progid:DXImageTransform.Microsoft.Alpha
@@ -166,7 +166,7 @@ rules:
             - filter:progid:DXImageTransform.Microsoft.gradient
             - -ms-filter:'progid:DXImageTransform.Microsoft.gradient
             - text-shadow
-        
+
             - font
             - font-family
             - font-size

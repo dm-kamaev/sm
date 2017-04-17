@@ -1,0 +1,103 @@
+{namespace sm.bSmRowLinks.Template}
+
+/**
+ *  @typedef  {{
+ *      items: Array<sm.bSmLink.Template.Params>,
+ *  }} sm.bSmRowLinks.Template.Params.Data
+ */
+
+
+/**
+ *  @typedef {{
+ *      theme: ?('breadcrumbs')
+ *  }} sm.bSmRowLinks.Template.Params.Config
+ */
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmRowLinks.Template.Params.Data,
+ *     config: sm.bSmRowLinks.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .rowLinks}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smRowLinks
+{/template}
+
+
+/**
+ * @override
+ * @param params {{
+ *     data: sm.bSmRowLinks.Template.Params.Data,
+ *     config: sm.bSmRowLinks.Template.Params.Config
+ * }}
+ */
+{template .body}
+    {if $params?.data?.items}
+        {for $i in range($params.data.items.length)}
+            <div class="{call .rootClass/}__link-wrap{sp}
+                {if $params.data.items[$i].config?.isSelected}
+                    {call .rootClass/}__link-wrap_selected
+                {/if}
+            ">
+                {call .link}
+                    {param params: $params.data.items[$i] /}
+                {/call}
+            </div>
+
+            {if ($params.config?.theme == 'breadcrumbs') and
+                ($i != ($params.data.items.length - 1))
+            }
+                 <div class="{call .rootClass/}__divider">/</div>
+            {/if}
+        {/for}
+    {/if}
+{/template}
+
+
+/**
+ * render b-sm-link
+ * @param params {sm.bSmLink.Template.Params}
+ */
+{template .link}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link
+    {/let}
+
+    {let $config: augmentMap(
+        $params.config,
+        [
+            'customClasses': [$customClasses]
+        ]
+    ) /}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'smLink',
+            'renderParams': [
+                'data': $params.data,
+                'config': $config
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-row-links
+{/template}

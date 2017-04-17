@@ -1,4 +1,5 @@
 {
+    "host": "market-admin.mel.fm",
     "headers": {
         "token": {
             "name": "admin-token",

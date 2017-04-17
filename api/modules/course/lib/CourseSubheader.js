@@ -14,6 +14,14 @@ class CourseSubheader extends Subheader {
 
 
         /**
+         * Entity type
+         * @type {string}
+         * @protected
+         */
+        this.entityType = entityType.COURSE;
+
+
+        /**
          * Data for logo
          * @type {Object<string, string>}
          * @protected
@@ -63,19 +71,6 @@ class CourseSubheader extends Subheader {
             placeholder: 'Район, метро, название курса',
             pageAlias: 'search'
         };
-    }
-
-
-    /**
-     * Config setter
-     * @param {boolean} isBottomLine
-     * @override
-     * @public
-     */
-    setConfig(isBottomLine) {
-        super.setConfig(isBottomLine);
-
-        this.params.config.entityType = entityType.COURSE;
     }
 }
 

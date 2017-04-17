@@ -1,0 +1,27 @@
+.b-entity-relation {
+    height: 100%;
+}
+
+.b-entity-relation__list {
+    height: 100%;
+}
+
+.b-entity-relation__list-item {
+    display: inline-block;
+
+    margin: 0 3px;
+
+    vertical-align: middle;
+
+    color: #929292;
+
+    font-size: 13px;
+
+    &:first-child {
+        margin-left: 0;
+    }
+
+    &:last-child {
+        margin-right: 0;
+    }
+}

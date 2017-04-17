@@ -1,6 +1,6 @@
 'use strict';
 
-const userView = require('../../user/views/user');
+const userView = require('../../user/views/user').userView;
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
 
@@ -36,7 +36,7 @@ let view = {};
  * @return {Object}
  */
 view.render = function(data) {
-    let user = userView.default(data.user),
+    let user = userView.renderDefault(data.user),
         entityData = courseView.page(data.course, data.categoryAlias);
 
     let imageOpenGraph = entityData.imageUrl ?

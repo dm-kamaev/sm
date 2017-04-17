@@ -107,7 +107,7 @@ exports.getLink = async(function(req, res) {
             authUrl = authUrlResponse.headers.location;
         res.redirect(authUrl);
     } catch (error) {
-        console.log(error); // TODO: change to logger
+        logger.error(error);
         result = JSON.stringify(error);
         res.end(result);
     }

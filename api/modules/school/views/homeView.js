@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const userView = require('../../user/views/user'),
+const userView = require('../../user/views/user').userView,
     favoriteView = require('../../favorite/views/favoriteView'),
     footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
@@ -30,7 +30,7 @@ let homeView = {};
  * @return {Object}
  */
 homeView.render = function(data) {
-    let user = userView.default(data.user),
+    let user = userView.renderDefault(data.user),
         favoriteEntities = favoriteView.list(data.favorites);
     return {
         header: headerView.render(data.config, data.entityType),

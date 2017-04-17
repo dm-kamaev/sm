@@ -1,6 +1,6 @@
 @mixin media-xxs {
     @media screen and (max-width: 350px) {
-        @content; 
+        @content;
     }
 }
 
@@ -35,6 +35,12 @@
 
 @mixin media-xl {
     @media screen and (max-width: 1280px) {
+        @content;
+    }
+}
+
+@mixin pixel-ratio-2x {
+    @media screen and (min-resolution: 128dpi) {
         @content;
     }
 }

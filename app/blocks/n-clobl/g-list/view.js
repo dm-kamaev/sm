@@ -116,7 +116,7 @@ goog.scope(function() {
      */
     View.prototype.initDataParams = function(element) {
         return goog.json.parse(
-            goog.dom.dataset.get(element, 'params') || '{}'
+            goog.dom.dataset.get(element, 'params') || {}
         );
     };
 
@@ -133,7 +133,7 @@ goog.scope(function() {
                 items: rawParams['data']['items'].map(function(item) {
                     return {
                         label: item['label'],
-                        val: item['val'],
+                        val: item['value'],
                         url: item['url']
                     };
                 }),

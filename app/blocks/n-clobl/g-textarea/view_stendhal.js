@@ -29,6 +29,8 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
+        ROOT: 'g-textarea_standhal',
+        TEXTAREA: 'g-textarea__textarea',
         NOT_VALID: 'g-textarea_not-valid',
         COUNTER_CUSTOM_TEXT_SYMBOLS: 'g-textarea__counter-custom-text-symbols',
         COUNTER_CUSTOM_TEXT_LEFT: 'g-textarea__counter-custom-text-left'
@@ -52,13 +54,18 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.dom.counterCustomTextSymbols = this.getElementByClass(
-            View.CssClass.COUNTER_CUSTOM_TEXT_SYMBOLS
-        );
+        this.initDom_();
+        this.initValue_();
+    };
 
-        this.dom.counterCustomTextLeft = this.getElementByClass(
-            View.CssClass.COUNTER_CUSTOM_TEXT_LEFT
-        );
+
+    /**
+     * Get name
+     * @return {string}
+     * @public
+     */
+    View.prototype.getName = function() {
+        return this.dom.field.name || null;
     };
 
 
@@ -119,6 +126,36 @@ goog.scope(function() {
         goog.dom.classes.remove(
             this.getElement(),
             View.CssClass.NOT_VALID
+        );
+    };
+
+
+    /**
+     * Init value (need if value set from params)
+     * @private
+     */
+    View.prototype.initValue_ = function() {
+        if (this.params.maxLength) {
+            this.checkAndUpdateLength();
+        }
+    };
+
+
+    /**
+     * Init dom elements
+     * @private
+     */
+    View.prototype.initDom_ = function() {
+        this.dom.counterCustomTextSymbols = this.getElementByClass(
+            View.CssClass.COUNTER_CUSTOM_TEXT_SYMBOLS
+        );
+
+        this.dom.counterCustomTextLeft = this.getElementByClass(
+            View.CssClass.COUNTER_CUSTOM_TEXT_LEFT
+        );
+
+        this.dom.field = this.getElementByClass(
+            View.CssClass.TEXTAREA
         );
     };
 });  // goog.scope

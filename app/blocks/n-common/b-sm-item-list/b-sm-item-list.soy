@@ -1,6 +1,6 @@
 /**
  * @fileOverview itemType can be smItem, smItemEntity, smItemCompact, smLink,
- * lCourse-department
+ * lCourse-department, smComment
  */
 
 {namespace sm.bSmItemList.Template}
@@ -33,7 +33,8 @@
  *     stylizationModifier: (string|undefined),
  *     customClasses: (Array<string>|undefined),
  *     theme: ('light'|undefined),
- *     showLine: (boolean|undefined)
+ *     showLine: (boolean|undefined),
+ *     countShownItems: ?number
  * }} sm.bSmItemList.Template.Params.Config
  */
 
@@ -129,7 +130,8 @@
  *         )
  *     },
  *     config: {
- *         stylizationModifier: (string|undefined)
+ *         stylizationModifier: (string|undefined),
+ *         countShownItems: ?number
  *     }
  * }}
  */
@@ -137,6 +139,14 @@
     {let $countItemsPerPage kind="html"}
         {if $params.data?.countItemsPerPage}
             {$params.data.countItemsPerPage}
+        {else}
+            {length($params.data.items)}
+        {/if}
+    {/let}
+
+    {let $countShownItems kind="html"}
+        {if $params.config?.countShownItems}
+            {$params.config.countShownItems}
         {else}
             {length($params.data.items)}
         {/if}
@@ -152,7 +162,7 @@
                     ],
                     'config': [
                         'type': $params.data.itemType,
-                        'isHidden': $i >= $countItemsPerPage ? true : false,
+                        'isHidden': $i >= $countItemsPerPage or $i >= $countShownItems ? true : false,
                         'stylizationModifier': $params.config.stylizationModifier
                     ]
                 ]/}

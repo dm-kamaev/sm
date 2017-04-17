@@ -1,0 +1,658 @@
+{namespace sm.lUniversity.Template}
+
+
+/**
+ * typedef {sm.lUniversity.Params} sm.lUniversity.Template.Params
+ */
+
+
+/**
+ * Page university information
+ * @param params {{
+ *     data: sm.lUniversity.Params.Data,
+ *     config: ?sm.lUniversity.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ * @doc
+ */
+{template .university autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    lUniversity
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/l-university.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.lUniversity.Params.Data,
+ *     config: ?sm.lUniversity.Params.Config
+ * }}
+ * @protected
+ * @override
+ */
+{template .mainContent autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__body">
+        {call .sectionData_ data="all" /}
+        {call .sectionComments_ data="all" /}
+        {call .sectionPrograms_ data="all" /}
+        {call .sectionUsefulCourses_ data="all" /}
+        {call .sectionModals_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-university
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         },
+ *         entityData: {
+ *             id: number,
+ *             name: string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string,
+ *         modifier: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'id': $params.data.entityData?.id,
+                'name': $params.data.entityData?.name,
+                'isUserAuthorized': $params.data.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'modifier': $params.config?.modifier,
+                'type': $params.config.entityType
+            ]/}
+        {/call}"
+{/template}
+
+
+/**
+ * Section data
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             name: string
+ *          }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionData_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_data{sp}"
+    >
+        {call .sketchData_ data="all" /}
+        {call .mainData_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section comments
+ * @param params {{
+ *     data: {
+ *         comments: sm.bCommentList.Template.Params.Data
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionComments_}
+    {if $params.data.comments}
+        <div class="{call .rootClass/}__section{sp}
+            {call .rootClass/}__section_comments{sp}"
+        >
+            {call .comments_ data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Section programs
+ * @param params {{
+ *     data: {
+ *         similarPrograms: {
+ *             header: string,
+ *             data: sm.bSmItemList.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionPrograms_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_programs{sp}"
+    >
+        {call .programs_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section courses
+ * @param params {{
+ *     data: {
+ *         usefulCourses: {
+ *             header: string,
+ *             data: sm.bSmItemList.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionUsefulCourses_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_courses{sp}"
+    >
+        {call .courses_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section modals
+ * @param params {{
+ *     data: {
+ *         modalComment: sm.gModal.TemplateInteraction.Data
+ *     },
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @private
+ */
+{template .sectionModals_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_modals"
+    >
+        {call .modalComment_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the left side - section sketch
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             name: string
+ *          }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .sketchData_}
+    <div class="{call .rootClass/}__data_sketch">
+        <div class="{call .rootClass/}__entity-relation">
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'entity-relation' /}
+                {param renderParams: $params.data.entityData.entityRelation /}
+            {/call}
+        </div>
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smSketch' /}
+            {param renderParams: [
+                'data': $params.data.entityData.sketch
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Data on the middle - section main data
+ * @param params {{
+ *     data: sm.lUniversity.Template.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @private
+ */
+{template .mainData_}
+    <div class="{call .rootClass/}__data_main-description i-utils__clearfix">
+        {call .descriptionSizeXS_ data="all" /}
+        {call .summaryBoard_ data="all" /}
+        {call .navigationPanel_ data="all" /}
+        {call .description_ data="all" /}
+        {call .descriptionList_ data="all" /}
+        {call .subscribeBoard_ data="all" /}
+        {call .bannerSizeXS_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the middle - section main data
+ * @param params {{
+ *     data: {
+ *         navigationPanel: sm.bSmRowLinks.Template.Params.Data
+ *     },
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @private
+ */
+{template .navigationPanel_}
+    <div class="{call .rootClass/}__navigation-panel">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smRowLinks' /}
+            {param renderParams: [
+                'data': $params.data.navigationPanel,
+                'config': [
+                    'theme': 'breadcrumbs'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Description display size xs
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             subunitName: string,
+ *             subunitType: string,
+ *             description: string,
+ *             cutDescription: {
+ *                 cutText?: string,
+ *                 fullText?: string;
+ *             }
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .descriptionSizeXS_}
+    {call .description_}
+        {param params: [
+            'data': [
+                'entityData': $params.data.entityData,
+                'size': 'xs'
+            ],
+            'config': $params.config
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             subunitName: string,
+ *             subunitType: string,
+ *             description: string,
+ *             cutDescription: {
+ *                 cutText?: string,
+ *                 fullText?: string;
+ *             }
+ *         },
+ *         size: (string|undefined)
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .description_}
+    {let $class kind="text"}
+        {if $params.data.size}
+            {call .rootClass/}__main-description_size_{$params.data.size}
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__main-description {$class}">
+        <div class="{call .rootClass/}__type">
+            {$params.data.entityData.subunitType}
+        </div>
+
+        <div class="{call .rootClass/}__name">
+            {$params.data.entityData.subunitName}
+        </div>
+
+        <div class="{call .rootClass/}__description">
+            {if $params.data.size == 'xs'}
+                {call .renderChildLayout}
+                    {param params: $params /}
+                    {param type: 'smCollapsedText' /}
+                    {param renderParams: [
+                        'data': [
+                            'text': $params.data.entityData.cutDescription,
+                            'buttonTextExpand': 'Развернуть описание'
+                        ],
+                        'config': [
+                            'isButtonCollapse': true,
+                            'buttonFont': 'inherit',
+                            'buttonTheme': 'neptune'
+                        ]
+                    ]/}
+                {/call}
+            {else}
+                {$params.data.entityData.description}
+            {/if}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Data on the middle - section main data
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             descriptionList:
+ *                 sm.lUniversity.bDescriptionList.Template.Params
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .descriptionList_}
+    <div class="{call .rootClass/}__description-list">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lUniversity-descriptionList' /}
+            {param renderParams: [
+                'data': $params.data.entityData.descriptionList
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Summary board
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             summaryBoard: sm.bSummaryBoard.Template.Params,
+ *             banner: sm.bSmBanner.Template.Params,
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .summaryBoard_}
+    <div class="{call .rootClass/}__board-wrap">
+
+        <div class="{call .rootClass/}__summary-board">
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'summary-board' /}
+                {param renderParams: [
+                    'data': $params.data.entityData.summaryBoard
+                ]/}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass/}__banner">
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smBanner' /}
+                {param renderParams: $params.data.entityData.banner /}
+            {/call}
+        </div>
+
+    </div>
+{/template}
+
+
+/**
+ * Subscribe block input email
+ * @param params {{
+ *     data: {
+ *         subscribeBoard: sm.bSmSubscribeBoard.Template.Params
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .subscribeBoard_}
+    <div class="{call .rootClass/}__subscribe-board">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smSubscribeBoard' /}
+            {param renderParams: $params.data.subscribeBoard /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Banner size XS
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             banner: sm.bSmBanner.Template.Params
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .bannerSizeXS_}
+    <div class="{call .rootClass/}__banner_size_xs">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'smBanner' /}
+            {param renderParams: $params.data.entityData.banner /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Similar programs block
+ * @param params {{
+ *     data: {
+ *         similarPrograms: {
+ *              header: string,
+ *              data: sm.bSmItemList.Template.Params.Data
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .programs_}
+    {if $params.data.similarPrograms}
+        <div class="{call .rootClass/}__similar-programs-content">
+            {let $customClasses kind="html"}
+                {call .rootClass/}__programs
+            {/let}
+            <div class="{call .rootClass/}__similar-programs-header">
+                {$params.data.similarPrograms.header}
+            </div>
+            <div class="{call .rootClass/}__similar-programs-list">
+                {call .renderChildLayout}
+                    {param params: $params /}
+                    {param type: 'smItemList' /}
+                    {param renderParams: [
+                        'data': $params.data.similarPrograms.data,
+                        'config': [
+                            'theme': 'inline',
+                            'customClasses': [$customClasses]
+                        ]
+                    ] /}
+                {/call}
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Similar programs block
+ * @param params {{
+ *     data: {
+ *         usefulCourses: {
+ *             header: string,
+ *             data: sm.bSmItemList.Template.Params.Data
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .courses_}
+    {if $params.data.usefulCourses}
+        <div class="{call .rootClass/}__useful-courses-content">
+            {let $customClasses kind="html"}
+                {call .rootClass/}__courses
+            {/let}
+            <div class="{call .rootClass/}__useful-courses-header">
+                {$params.data.usefulCourses.header}
+            </div>
+            <div class="{call .rootClass/}__useful-courses-list">
+                {call .renderChildLayout}
+                    {param params: $params /}
+                    {param type: 'smItemList' /}
+                    {param renderParams: [
+                        'data': $params.data.usefulCourses.data,
+                        'config': [
+                            'enableCover': true,
+                            'theme': 'inline',
+                            'customClasses': [$customClasses]
+                        ]
+                    ] /}
+                {/call}
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Modal to leave comment
+ * @param params {{
+ *     data: {
+ *         modalComment: sm.gModal.TemplateInteraction.Data
+ *     },
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @private
+ */
+{template .modalComment_}
+    <div class="{call .rootClass/}__modal {call .rootClass/}__modal_comment">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'modal-interaction' /}
+            {param renderParams: [
+                'data': $params.data.modalComment,
+                'config': [
+                    'stylizationModifier': $params.config.modifier
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Comments block
+ * @param params {{
+ *     data: {
+ *         comments: sm.bCommentList.Template.Params.Data
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .comments_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__comments
+    {/let}
+
+    <div class="{call .rootClass/}__comment-list">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lUniversity-commentList' /}
+            {param renderParams: [
+                'data': $params.data.comments,
+                'config': [
+                    'theme': 'neptune',
+                    'customClasses': [$customClasses],
+                    'countShownItems': 2
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
