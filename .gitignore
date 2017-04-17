@@ -253,6 +253,8 @@ console/importSchoolSpecClasses.js
 console/insertRegionForMoscow.js
 console/updateProgramSimilar.js
 console/updateUniverstyAndProgram.js
+console/fixedEncodingProgramMajor.js
+console/addedNewProgramMajor.js
 console/modules/updateUniversityAndProgram/*.js
 
 gulp/taskBackendLint.js
