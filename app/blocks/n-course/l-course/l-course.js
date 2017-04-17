@@ -475,7 +475,7 @@ goog.scope(function() {
             sm.gModal.ModalEnrollment.NAME,
             this.getView().getDom().modalEnrollment
         );
-        this.modalEnrollment_.setPageName(this.params.name);
+        this.modalEnrollment_.setProductName(this.params.name);
 
         this.modalSuccess_ = this.decorateChild(
             sm.gModal.ModalSuccess.NAME,

@@ -105,6 +105,11 @@ goog.scope(function() {
         Analytics.getInstance().checkoutProduct(
             productParamsEc, actionParamsEc
         );
+
+        this.send({
+            category: 'checkout',
+            action: 'form request'
+        });
     };
 
 
@@ -132,6 +137,11 @@ goog.scope(function() {
         Analytics.getInstance().purchaseProduct(
             productParamsEc, actionParamsEc
         );
+
+        this.send({
+            category: 'checkout',
+            action: 'form success'
+        });
     };
 
 

@@ -91,10 +91,10 @@ goog.scope(function() {
 
 
         /**
-         * name of parent layout for analytics
+         * name of product for analytics
          * @type {string}
          */
-        this.pageName_ = null;
+        this.productName_ = null;
     };
     goog.inherits(sm.gModal.ModalEnrollment, sm.gModal.ModalStendhal);
     var ModalEnrollment = sm.gModal.ModalEnrollment,
@@ -154,12 +154,12 @@ goog.scope(function() {
 
 
     /**
-     * set name of page with this element
+     * set name of product
      * @param {string} name
      * @public
      */
-    ModalEnrollment.prototype.setPageName = function(name) {
-        this.pageName_ = name;
+    ModalEnrollment.prototype.setProductName = function(name) {
+        this.productName_ = name;
     };
 
 
@@ -171,9 +171,6 @@ goog.scope(function() {
     ModalEnrollment.prototype.show = function() {
         this.getView().show();
         this.dispatchEventShow_();
-        this.sendAnalytics_({
-            action: 'form request'
-        });
     };
 
 
@@ -234,7 +231,7 @@ goog.scope(function() {
             'hitType': 'event',
             'eventCategory': 'checkout',
             'eventAction': params.action,
-            'eventLabel': params.name || this.pageName_
+            'eventLabel': params.name || this.productName_
         };
 
         sm.iAnalytics.Analytics.getInstance().send(data);
@@ -348,7 +345,7 @@ goog.scope(function() {
     ModalEnrollment.prototype.sendFormErrorAnalytics_ = function(message) {
         this.sendAnalytics_({
             action: 'form error',
-            name: this.pageName_ + ', ' + message
+            name: this.productName_ + ', ' + message
         });
     };
 
@@ -405,9 +402,6 @@ goog.scope(function() {
         this.clear();
 
         this.dispatchEventSuccess_(response['data']['applicationId']);
-        this.sendAnalytics_({
-            action: 'form success'
-        });
     };
 
 
