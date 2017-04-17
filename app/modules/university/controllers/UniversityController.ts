@@ -64,7 +64,7 @@ class UniversityController extends Controller {
         ]);
         const usefulCourses =
             await programMajorService.getAdvicedCourses(program.id);
-        console.log('Useful courses', usefulCourses);
+
         const userComment =
             programCommentService.getUserComment(user, comments);
         const users =

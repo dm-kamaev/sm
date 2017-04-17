@@ -6,10 +6,3 @@ export interface BackendProgramMajor {
     createdAt: Date;
     updatedAt: Date;
 }
-
-export interface BackendCourseAdviced extends BackendCourse {
-    courseType: {
-        id: number;
-        name: string;
-    }
-}

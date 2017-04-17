@@ -13,7 +13,9 @@ import {lUniversity} from '../../../blocks/n-university/l-university/params';
 import {UniversityFooter} from './UniversityFooter';
 
 import {LinksFormatter} from '../../common/lib/LinksFormatter';
+import {utils} from '../../common/lib/utils';
 
+import {courseView} from '../../course/views/courseView';
 import {programCommentView} from '../../comment/views/programCommentView';
 import {navigationPanelView} from './navigationPanelView';
 
@@ -22,7 +24,7 @@ import {
     RenderParams
 } from '../types/programInformationLayout';
 import {BackendSimilarProgram} from '../types/similarProgram';
-import {BackendCourseAdviced} from '../types/programMajor';
+import {BackendCourseAdviced} from '../../course/types/course';
 
 import {BackendProgramComment} from '../../comment/types/programComment';
 import {AppConfig} from '../../common/types/layout';
@@ -51,6 +53,7 @@ import {
 import {
     UniversityImageSize
 } from '../constants/UniversityImageSize';
+import {CourseImageSize} from '../../course/constants/CourseImageSize';
 import {ImageSize} from '../../common/types/image';
 
 type Grade = {
@@ -125,7 +128,7 @@ class InformationView extends LayoutView {
         this.params.data.openGraph.description = description;
         this.params.data.openGraph.relapTag = this.subunitType;
 
-        const relapImage = this.getImageUrl_(
+        const relapImage = utils.getImageUrl(
             data.university.imageUrl,
             UniversityImageSize.RELAP
         );
@@ -184,9 +187,9 @@ class InformationView extends LayoutView {
         const universityName: string = data.university.name,
             backendImageUrl = data.university.imageUrl;
 
-        const imageUrlDefault = this.getImageUrl_(
+        const imageUrlDefault = utils.getImageUrl(
             backendImageUrl, UniversityImageSize.MEDIUM);
-        const imageUrlSizeL = this.getImageUrl_(
+        const imageUrlSizeL = utils.getImageUrl(
             backendImageUrl, UniversityImageSize.DEFAULT);
 
         return {
@@ -527,20 +530,20 @@ class InformationView extends LayoutView {
         null;
     }
 
-    getUsefulCourseParams_(
+    private getUsefulCourseParams_(
             data: BackendCourseAdviced
     ): bSmItemCompact.Params.Data {
         return {
             id: data.id,
             type: 'course',
             name: {
-                light: data.courseType.name
+                light: data.categoryName
             },
-            description: data.name,
-            imageUrl: data.imageUrl,
-            url: 'http://yandex.ru',
-            nameLinkUrl: 'http://google.com'
-        }
+            description: `${data.name} ${data.brandName}`,
+            imageUrl: utils.getImageUrl(data.imageUrl, CourseImageSize.LARGE),
+            url: courseView.getLink(data.url),
+            nameLinkUrl: courseView.getLink(data.categoryUrl)
+        };
     }
 
     private setSubscribeBoard_(data: BackendData) {
@@ -565,16 +568,6 @@ class InformationView extends LayoutView {
             programId: programId,
             comment: userComment
         });
-    }
-
-    private getImageUrl_(
-            urlPattern: string | undefined, size: ImageSize): string | null {
-        const IMAGE_WIDTH_PATTERN = /{width}/;
-        const width = size[0];
-
-        return urlPattern ?
-            urlPattern.replace(IMAGE_WIDTH_PATTERN, String(width)) :
-            null;
     }
 }
 

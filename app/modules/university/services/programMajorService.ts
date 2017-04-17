@@ -12,7 +12,7 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 
 const apiAddress = config.backendApi;
 
-import {BackendCourseAdviced} from '../types/programMajor';
+import {BackendCourseAdviced} from '../../course/types/course';
 
 class ProgramMajorService extends Service {
     constructor() {

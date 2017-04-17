@@ -7,7 +7,7 @@ import {BackendUser} from '../../user/types/user';
 import {BackendProgramMeta} from '../types/programMeta';
 import {AppConfig} from '../../common/types/layout';
 import {BackendSimilarProgram} from '../types/similarProgram';
-import {BackendCourseAdviced} from '../types/programMajor';
+import {BackendCourseAdviced} from '../../course/types/course';
 
 export type RenderParams = {
     data: BackendData;
