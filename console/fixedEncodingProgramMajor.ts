@@ -2,7 +2,7 @@
 
 // author: dm-kamaev
 // node commander.js fixedEncodingProgramMajor
-// fixed encode problem with letter й
+// fixed encode problem with letter "й"
 
 import * as commander from 'commander';
 const logger = require('../app/components/logger/logger.js').getLogger('app');
