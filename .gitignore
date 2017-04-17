@@ -256,5 +256,6 @@ console/updateUniverstyAndProgram.js
 console/fixedEncodingProgramMajor.js
 console/addedNewProgramMajor.js
 console/modules/updateUniversityAndProgram/*.js
+console/modules/updateUniversityAndProgram/types/*.js
 
 gulp/taskBackendLint.js
