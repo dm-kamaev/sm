@@ -12,6 +12,7 @@ import {FormatUtils} from '../../common/lib/FormatUtils';
 import {UniversitySubHeader} from './UniversitySubHeader';
 import {UniversityFooter} from './UniversityFooter';
 import {ProgramFilterPanel} from '../lib/ProgramFilterPanel';
+import {programsView} from './programsView';
 
 import {AppConfig} from '../../common/types/layout';
 import {BackendUser} from '../../user/types/user';
@@ -110,40 +111,42 @@ class SearchView extends LayoutView {
     }
 
     private setResultsList_() {
+        const programs = programsView.list();
+
         this.params.data.resultsList = {
             sort: {
-                opener: 'Сортировать ',
-                defaultOpenerText: 'по популярности',
-                content: {
-                    items: [{
-                        'label': 'по популярности',
-                        'value': 4
-                    }, {
-                        'label': 'по возрастанию цены за час',
+                items: [{
+                        'label': 'Проще поступить',
                         'value': 0
                     }, {
-                        'label': 'по убыванию цены за час',
+                        'label': 'Дешевле',
                         'value': 1
                     }, {
-                        'label': 'по возрастанию цены за курс',
+                        'label': 'Отзывы',
                         'value': 2
-                    }, {
-                        'label': 'по убыванию цены за курс',
-                        'value': 3
-                    }]
-                }
+                    }
+                ]
             },
+            headerText: [
+                {
+                    text: 'Мы нашли'
+                },
+                {
+                    number: 123,
+                    text: {
+                        nom: 'програму',
+                        gen: 'программы',
+                        plu: 'программ'
+                    },
+                    select: 'number'
+                }
+            ],
             entityList: {
-                items: [],
-                itemType: 'smItemEntity',
+                items: programs,
+                itemType: 'smItemUniversity',
                 itemConfig: {
                     enableCover: true
                 }
-            },
-            declensionEntityType: {
-                nom: 'програму',
-                gen: 'программы',
-                plu: 'программ'
             }
         };
     }

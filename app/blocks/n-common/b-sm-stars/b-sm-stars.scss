@@ -54,6 +54,18 @@
     }
 }
 
+.b-sm-stars_size_xs {
+    .b-sm-stars__star {
+        margin-right: 4px;
+
+        font-size: 15px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
 .b-sm-stars_size_5xs {
     .b-sm-stars__star {
         margin-right: 1.5px;
@@ -84,6 +96,6 @@
     }
 
     .b-sm-stars__star_selected {
-        color: #0777e8;
+        color: #356fc4;
     }
 }

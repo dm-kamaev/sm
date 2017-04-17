@@ -1,0 +1,432 @@
+{namespace sm.bSmItem.TemplateUniversity}
+
+
+/**
+ * @typedef {{
+ *     id: number,
+ *     type: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
+ *     imageUrl: (string|undefined),
+ *     alias: ?string,
+ *     score: ?number,
+ *     description: (string|Array<string>|undefined),
+ *     url: ?string,
+ *     company?: {
+ *         abbreviation: string,
+ *         city: string,
+ *         name: string
+ *     },
+ *     nicety: Array<{
+ *         title: {
+ *             text: string,
+ *             textForMobile: ?string,
+ *             selected: ?boolean
+ *         },
+ *         value: ?string
+ *     }>,
+ *     buttonLink: ?sm.bSmButtonLink.Template.Params
+ * }} sm.bSmItem.TemplateUniversity.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     enableCover: boolean,
+ *     stylizationModifier: string,
+ *     customClasses: ?Array<string>,
+ *     theme: ?string,
+ *     nameLinkSize: ?string,
+ *     isDescriptionLink: ?string
+ * }} sm.bSmItem.TemplateUniversity.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmItem.TemplateUniversity.Params.Data,
+ *     config: sm.bSmItem.TemplateUniversity.Params.Config
+ * }}
+ * @extends sm.bSmItem.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .item}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smItemUniversity
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmItem.TemplateUniversity.Params.Data,
+ *     config: sm.bSmItem.TemplateUniversity.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .sections data="all" /}
+{/template}
+
+
+/**
+ * sections
+ * @param params {{
+ *     data: sm.bSmItem.TemplateUniversity.Params.Data,
+ *     config: sm.bSmItem.TemplateUniversity.Params.Config
+ * }}
+ * @override
+ */
+{template .sections}
+    {if $params.data}
+        {call .sectionGroupCover data="all" /}
+        {call .sectionGroupInfo data="all" /}
+        {call .sectionGroupDetails data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * Cover section group
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: (string|undefined)
+ *         },
+ *         imageUrl: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionGroupCover kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass/}__section-group{sp}
+        {call .rootClass/}__section-group_cover
+    {/let}
+
+    <div class="{$classes}">
+        {call .sectionCover data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Iformation section group
+ * @param params {{
+ *     data: sm.bSmItem.TemplateUniversity.Params.Data
+ *     config: sm.bSmItem.TemplateUniversity.Params.Config
+ * }}
+ * @override
+ */
+{template .sectionGroupInfo kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass/}__section-group{sp}
+        {call .rootClass/}__section-group_info
+    {/let}
+
+    <div class="{$classes}">
+        {call .sectionHeader data="all" /}
+        {if $params.data.company}
+            {call .sectionCompany data="all" /}
+        {/if}
+        {if $params.data.nicety and length($params.data.nicety)}
+            {call .sectionNicety data="all" /}
+        {/if}
+        {if $params.data.description}
+            {call .sectionDescription data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Iformation section group
+ * @param params {{
+ *     data: sm.bSmItem.TemplateUniversity.Params.Data
+ *     config: sm.bSmItem.TemplateUniversity.Params.Config
+ * }}
+ * @override
+ */
+{template .sectionGroupDetails kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass/}__section-group{sp}
+        {call .rootClass/}__section-group_details
+    {/let}
+
+    <div class="{$classes}">
+        {call .sectionDetails data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: (string|undefined)
+ *         },
+ *         imageUrl: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionCover}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_cover">
+        {call .image data="all"/}
+    </div>
+{/template}
+
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         score: ?number
+ *     },
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionHeader}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_header">
+        {call .name data="all" /}
+        {call .score data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Company
+ * @param params {{
+ *     data: sm.bSmItem.TemplateUniversity.Params.Data,
+ *     config: sm.bSmItem.TemplateUniversity.Params.Config
+ * }}
+ * @override
+ */
+{template .sectionCompany}
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_company
+    {/let}
+
+    <div class="{$classes}">
+        <div class="{call .rootClass/}__small-image">
+            {call .image data="all"/}
+        </div>
+        <div class="{call .rootClass/}__company-information">
+            {call .companyInformation data="all"/}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Details
+ * @param params {{
+ *     data: {
+ *         metro: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>,
+ *         area: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionNicety}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_nicety">
+        {foreach $item in $params.data.nicety}
+            {let $nicetyTitleClasses kind="text"}
+                {call .rootClass/}__nicety-title
+                {if $item.title.selected}
+                    {sp}{call .rootClass/}__nicety-title_selected
+                {/if}
+            {/let}
+            {let $nicetyTitleForMobileClasses kind="text"}
+                {call .rootClass/}__nicety-title-mobile
+                {if $item.title.selected}
+                    {sp}{call .rootClass/}__nicety-title_selected
+                {/if}
+            {/let}
+
+            <div class="{call .rootClass/}__nicety-item">
+                <div class="{$nicetyTitleClasses}">
+                    {$item.title.text}
+                </div>
+                <div class="{$nicetyTitleForMobileClasses}">
+                    {$item.title.textForMobile}
+                </div>
+                <div class="{call .rootClass/}__nicety-value">
+                    {$item.value}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: (string|Array<string>|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionDescription}
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_description
+        {if not $params.data?.description}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .description data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Score
+ * @param params {{
+ *     data: {
+ *         score: ?number
+ *     }
+ * }}
+ * @protected
+ */
+{template .score}
+    {let $classes kind="html"}
+        {call .rootClass/}__score
+
+        {if not $params.data.score}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__stars
+    {/let}
+
+    <div class="{$classes}">
+        {call .renderChild}
+            {param params: [
+                'type': 'smStars',
+                'renderParams': [
+                    'data': [
+                        'amount': 5,
+                        'selectedAmount': $params.data.score
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': 'neptune',
+                        'size': 'xs'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Score
+ * @param params {{
+ *     data: {
+ *         score: ?number
+ *     }
+ * }}
+ */
+{template .companyInformation}
+    <div class="{call .rootClass/}__company-abbreviation">
+        {$params.data.company.abbreviation}
+    </div>
+    <div class="{call .rootClass/}__company-city">
+        {$params.data.company.city}
+    </div>
+    <div class="{call .rootClass/}__company-name">
+        {$params.data.company.name}
+    </div>
+{/template}
+
+
+/**
+ * Details
+ * @param params {{
+ *     data: {
+ *         metro: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>,
+ *         area: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionDetails}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_details">
+        {call .buttonLink_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Button link
+ * @param params {{
+ *     data: {
+ *         buttonLink:
+ *     }
+ * }}
+ */
+{template .buttonLink_}
+    {if $params.data.buttonLink}
+        <div class="{call .rootClass/}__button-link">
+            {call .renderChild}
+                {param params: [
+                    'type': 'smButtonLink',
+                    'renderParams': $params.data.buttonLink
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .additionalClasses}
+    {call .super_additionalClasses data="all"/}{sp}
+
+    {call .rootClass/}_university
+{/template}

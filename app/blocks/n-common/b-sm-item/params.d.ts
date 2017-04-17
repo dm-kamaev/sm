@@ -22,7 +22,7 @@ export namespace bSmItem {
             imageUrl: string;
             alias?: string;
             score?: number;
-            description?: string;
+            description?: (string|Array<string>);
             metro?: BadgeItem[];
             area?: BadgeItem[];
             category?: string;

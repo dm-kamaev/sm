@@ -1,0 +1,7 @@
+@import "../../n-common/i-media/i-media";
+
+@include media-xs {
+    .l-search__search-results-wrap {
+        padding: 0 24px;
+    }
+}

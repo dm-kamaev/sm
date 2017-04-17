@@ -115,6 +115,7 @@ async(function() {
         'build/compiledServerSoy/server.soy.concat.js',
         'node_modules/clobl/blocks/i-utils/i-utils.js',
         'node_modules/clobl/blocks/i-utils-legacy/i-utils.js',
+        'app/blocks/n-common/i-sm-utils/i-sm-utils.js',
         'app/blocks/n-common/i-media/i-media.js'
     ];
     soy.loadFiles(

@@ -1,0 +1,204 @@
+@import '../../../../n-common/i-media/i-media';
+
+.b-sm-item_university {
+    position: relative;
+    margin: 30px 0;
+    padding: 0;
+
+    cursor: default;
+
+    .b-sm-item__section-group_cover {
+        width: 135px;
+
+        float: left;
+        padding: 10px 35px 0 0;;
+        box-sizing: border-box;
+
+        cursor: pointer;
+    }
+
+    .b-sm-item__section-group_info {
+        padding: 0 163px 0 135px;
+    }
+
+    .b-sm-item__section-group_details {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .b-sm-item__cover-image {
+        width: 100%;
+    }
+
+    .b-sm-item__section_header {
+        margin-bottom: 10px;
+    }
+
+    .b-sm-item__section_nicety {
+        margin-top: 13px;
+    }
+
+    .b-sm-item__section_description {
+        margin-top: 6px;
+    }
+
+    .b-sm-item__score {
+        display: inline-block;
+    }
+
+    .b-sm-item__name {
+        padding-right: 15px;
+        font-family: 'Proxima', Arial, sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        line-height: 0.83;
+    }
+
+    .b-sm-item__small-image {
+        display: none;
+        padding-top: 3px;
+        width: 48px;
+        float: left;
+    }
+
+    .b-sm-item__company-information {
+        font-family: Arial, sans-serif;
+        color: #747474;
+        font-size: 14px;
+        line-height: 1.29;
+    }
+
+    .b-sm-item__company-abbreviation {
+        display: inline-block;
+
+        font-size: 16px;
+        font-weight: bold;
+        color: #000000;
+
+    }
+
+    .b-sm-item__company-city {
+        display: inline-block;
+        padding-left: 10px;
+
+    }
+
+    .b-sm-item__description {
+        font-family: Arial, sans-serif;
+        font-size: 15px;
+        line-height: 1.47;
+        color: #747474;
+    }
+
+    .b-sm-item__nicety-item {
+        display: inline-block;
+        padding-right: 20px;
+        padding-bottom: 10px;
+    }
+
+    .b-sm-item__nicety-item:last-of-type {
+        padding-right: 0;
+    }
+
+    .b-sm-item__nicety-title, .b-sm-item__nicety-title-mobile {
+        opacity: 0.6;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        padding-bottom: 4px;
+    }
+
+    .b-sm-item__nicety-title-mobile {
+        display: none;
+    }
+
+    .b-sm-item__nicety-title_selected {
+        color: #ed6327;
+    }
+
+    .b-sm-item__nicety-value {
+
+        font-family: 'Proxima', Arial, sans-serif;
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 1;
+        color: #0777e8;
+    }
+
+    .b-sm-item__button-link {
+        border-radius: 100px;
+        padding: 0 15px;
+        border: solid 2px #0777e8;
+    }
+
+    @include media-l {
+        .b-sm-item__section-group_details {
+            position: static;
+            padding-left: 135px;
+        }
+
+        .b-sm-item__section-group_info {
+            padding-right: 0;
+        }
+    }
+
+    @include media-m {
+        .b-sm-item__section-group_details {
+            position: absolute;
+        }
+
+        .b-sm-item__section-group_info {
+            padding-right: 135px;
+        }
+    }
+
+    @include media-s {
+        .b-sm-item__section-group_details {
+            position: static;
+            padding-left: 135px;
+        }
+
+        .b-sm-item__section-group_info {
+            padding-right: 0;
+        }
+    }
+
+    @include media-xs {
+        .b-sm-item__small-image {
+            display: block;
+        }
+
+        .b-sm-item__section-group_cover {
+            display: none;
+        }
+
+        .b-sm-item__section-group_details {
+            display: none;
+        }
+
+        .b-sm-item__section-group_info {
+            padding: 0;
+        }
+
+        .b-sm-item__company-information {
+            padding-left: 60px;
+        }
+
+        .b-sm-item__company-name {
+            font-size: 12px;
+        }
+
+        .b-sm-item__nicety-title {
+            display: none;
+        }
+
+        .b-sm-item__nicety-title-mobile {
+            display: block;
+        }
+
+        .b-sm-item__nicety-value {
+            font-size: 18px;
+        }
+    }
+
+}

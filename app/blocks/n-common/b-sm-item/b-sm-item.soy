@@ -12,7 +12,7 @@
  *     imageUrl: (string|undefined),
  *     alias: ?string,
  *     score: ?number,
- *     description: (string|undefined),
+ *     description: (string|Array<string>|undefined),
  *     metro: ?Array<{
  *         id: number,
  *         name: string
@@ -394,8 +394,31 @@
                     ]/}
                 {/call}
             {else}
-                {call soydata.VERY_UNSAFE.ordainSanitizedHtml
-                    data="$params.data.description" /}
+                {let $isString kind="html"}
+                    {call sm.iSmUtils.smUtils.isString
+                        data="$params.data.description" /}
+                {/let}
+
+                {if $isString == 'false'}
+                    {call .renderChild}
+                        {param params: [
+                            'type': 'smCollapsedText',
+                            'renderParams': [
+                                'data': [
+                                    'text': [
+                                        'cutText': $params.data.description
+                                    ]
+                                ],
+                                'config': [
+                                    'theme': 'paragraphs'
+                                ]
+                            ]
+                        ]/}
+                    {/call}
+                {else}
+                    {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                        data="$params.data.description" /}
+                {/if}
             {/if}
         </div>
     {/if}
