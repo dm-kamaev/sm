@@ -108,6 +108,21 @@ service.getById = async(function(id) {
 });
 
 /**
+ * Get Ccourse categories by given array of id
+ * @param  {number[]} id
+ * @return {CourseCategory[]}
+ */
+service.getByIds = async(function(ids) {
+    return await(models.CourseCategory.findAll({
+        where: {
+            id: {
+                $in: ids
+            }
+        }
+    }));
+});
+
+/**
  * @param  {{
  *     name: string,
  *     isActive: ?boolean,
@@ -166,10 +181,16 @@ service.deleteAlias = async(function(courseCategory) {
 });
 
 /**
- * @return {Array<Page>}
+ * Get all of category aliases or by array of their ids
+ * @param {number[]=} ids
+ * @return {models.Page[]}
  */
-service.getAliases = async(function() {
-    return await(services.page.getAllAliases(entityType.COURSE_CATEGORY));
+service.getAliases = async(function(ids) {
+    const result = ids ?
+        services.page.getAliases(ids, entityType.COURSE_CATEGORY) :
+        services.page.getAllAliases(entityType.COURSE_CATEGORY);
+
+    return result;
 });
 
 module.exports = service;
