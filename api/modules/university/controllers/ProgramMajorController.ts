@@ -40,6 +40,7 @@ class ProgramMajorController extends Controller {
      * @apiSuccess {String}   courses.categoryName Name of category of course
      * @apiSuccess {String}   course.url           Url of course on
      *     courses.mel.fm site
+     * @apiSuccess {String}   course.categoryUrl  Url of course category
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
