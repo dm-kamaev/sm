@@ -16,3 +16,14 @@ export interface BackendCourse {
     embedId: string;
     ctr: number;
 };
+
+
+export interface BackendCourseAdviced {
+    id: number;
+    name: string;
+    brandName: string;
+    categoryName: string;
+    imageUrl: string;
+    url: string;
+    categoryUrl: string;
+}
