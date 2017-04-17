@@ -49,7 +49,8 @@ class ProgramMajorController extends Controller {
      *         "brandName": "Unium",
      *         "categoryName": "Английский",
      *         "imageUrl": "/static/kursy-anglijskogo-jazyka.jpg",
-     *         "url": "anglijskij/unium/anglijskij-jazyk-dlja-7-11-klassa"
+     *         "url": "anglijskij/unium/anglijskij-jazyk-dlja-7-11-klassa",
+     *         "categoryUrl": "anglijskij"
      *     }]
      */
     public async actionGetAdvicedCourses(

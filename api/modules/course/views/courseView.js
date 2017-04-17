@@ -317,7 +317,8 @@ view.listAdviced = function(aliasedCourses, brands, categories) {
                 course.alias,
                 course.brandAlias,
                 course.categoryAlias
-            )
+            ),
+            categoryUrl: course.categoryAlias
         };
     });
 };
