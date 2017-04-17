@@ -1,5 +1,5 @@
 import {Service, RequestParams} from '../../common/services/Service';
-import {BackendEgeExam} from '../types/egeExam';
+import {BackendEgeExam, Subject} from '../types/egeExam';
 
 const config = require('../../../config/config.json');
 const logger = require('../../../components/logger/logger').getLogger('app');
@@ -8,22 +8,29 @@ const apiAddress = config.backendApi;
 
 class EgeExamService extends Service {
     private programId: number;
-    constructor(programId: number) {
+    constructor() {
         super();
 
-        this.programId = programId;
-
-        this.baseUrl =
-            `${apiAddress}/universities/api/program/` +
-            `${this.programId}/exam`;
+        this.baseUrl = `${apiAddress}/universities/api`;
     }
 
-    public async getExams(): Promise<Array<BackendEgeExam>> {
+    public async getProgramExams(
+            programId: number): Promise<Array<BackendEgeExam>> {
+        this.baseUrl += `/program/${programId}/exam`;
         const params: RequestParams = {
             url: this.baseUrl,
             method: 'get'
         };
 
+        const response = await this.send(params);
+        return response.data;
+    }
+
+    public async getExams(): Promise<Subject> {
+        const params: RequestParams = {
+            url: this.baseUrl + '/subject/ege',
+            method: 'get'
+        };
         const response = await this.send(params);
         return response.data;
     }
@@ -34,4 +41,4 @@ class EgeExamService extends Service {
     }
 }
 
-export {EgeExamService};
+export const egeExamService = new EgeExamService();

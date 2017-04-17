@@ -5,3 +5,12 @@ export interface BackendEgeExam {
     programId: number;
     isMain: boolean;
 }
+
+export interface Subject {
+    id: number;
+    name: string;
+    displayName: string;
+    alias: string;
+    created_at: string;
+    updated_at: string;
+}

@@ -6,7 +6,7 @@ import {programService} from '../services/programService';
 import {universityService} from '../services/universityService';
 import {EntranceStatisticService} from '../services/EntranceStatisticService';
 import {userService} from '../../user/services/user';
-import {EgeExamService} from '../services/EgeExamService';
+import {egeExamService} from '../services/egeExamService';
 import {ProgramCommentService} from '../../comment/services/ProgramComment';
 
 import {informationView} from '../views/informationView';
@@ -39,15 +39,14 @@ class UniversityController extends Controller {
 
         const entranceStatisticService =
             new EntranceStatisticService(programId),
-            programCommentService = new ProgramCommentService(programId),
-            egeExamService = new EgeExamService(programId);
+            programCommentService = new ProgramCommentService(programId);
 
         const programData  = await Promise.all([
             programService.getById(programId),
             universityService.getById(universityId),
             entranceStatisticService.getLast(),
             programCommentService.getComments(),
-            egeExamService.getExams()
+            egeExamService.getProgramExams(programId)
         ]);
         const program = programData[0],
             university = programData[1],

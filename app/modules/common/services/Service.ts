@@ -1,5 +1,6 @@
 import * as axios from 'axios';
 
+const config = require('../../../config/config.json');
 const logger = require('../../../components/logger/logger').getLogger('app');
 
 interface RequestParams {
@@ -16,6 +17,10 @@ interface RequestParams {
 
 abstract class Service {
     protected baseUrl: string;
+
+    constructor() {
+        this.baseUrl = config.backendApi;
+    }
 
     public async send(params: RequestParams): Promise<any|Array<any>> {
         this.log(params);

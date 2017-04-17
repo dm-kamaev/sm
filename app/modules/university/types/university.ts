@@ -1,8 +1,4 @@
-interface City {
-    id: number;
-    name: string;
-    regionId: number;
-}
+import {BackendCity} from './city';
 
 export interface BackendUniversity {
     id: number;
@@ -15,7 +11,7 @@ export interface BackendUniversity {
     militaryDepartment: boolean;
     dormitory: boolean;
     cityId: number;
-    city: City;
+    city: BackendCity;
     created_at: Date;
     updated_at: Date;
 }
