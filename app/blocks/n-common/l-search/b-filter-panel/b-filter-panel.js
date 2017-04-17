@@ -140,7 +140,7 @@ goog.scope(function() {
         });
 
         this.getView().setResetButtonVisibility(false);
-        this.setButtonFace();
+        this.updateButton();
         this.countResults_ = null;
     };
 
@@ -178,22 +178,27 @@ goog.scope(function() {
 
     /**
      * set count results
-     * @param {number|string} count
+     * @param {number|string|undefined} opt_count
      * @public
      */
-    FilterPanel.prototype.setCountResults = function(count) {
-        this.countResults_ = count;
-        var displayer = viewport.getSize() <= sm.iSmViewport.SmViewport.Size.M ?
-            this.setButtonFace :
-            this.showTooltip;
-        displayer = displayer.bind(this);
-
-        if(count) {
-            displayer('Найдено' + ': ' + count);
-        } else {
-            displayer('Ничего не найдено', true);
+    FilterPanel.prototype.showCountResults = function(opt_count) {
+        if (opt_count) {
+            this.countResults_ = opt_count;
         }
-        this.generateAndSetButtonFixedStatus_();
+
+        var text = this.countResults_ ?
+            'Найдено' + ': ' + this.countResults_ :
+            'Ничего не найдено';
+        var isEmptyResults = !this.countResults_;
+
+
+        if(viewport.getSize() <= sm.iSmViewport.SmViewport.Size.M) {
+            this.updateButton(text, isEmptyResults);
+        } else {
+            this.showTooltip(text, isEmptyResults);
+        }
+
+        this.updateButtonFixability_();
     };
 
     /**
@@ -222,7 +227,7 @@ goog.scope(function() {
      * @param {boolean=} opt_disable
      * @public
      */
-    FilterPanel.prototype.setButtonFace = function(opt_text, opt_disable) {
+    FilterPanel.prototype.updateButton = function(opt_text, opt_disable) {
         this.button_.setText(opt_text);
         if (opt_disable) {
             this.button_.disable();
@@ -316,10 +321,9 @@ goog.scope(function() {
      * fix button if set count results and required viewport size
      * @private
      */
-    FilterPanel.prototype.generateAndSetButtonFixedStatus_ = function() {
-        if (this.countResults_ !== null &&
-            viewport.getSize() <= sm.iSmViewport.SmViewport.Size.M) {
-            this.getView().generateAndSetButtonFixedStatus();
+    FilterPanel.prototype.updateButtonFixability_ = function() {
+        if (this.countResults_ !== null) {
+            this.getView().updateButtonFixability();
         }
     };
 
@@ -329,7 +333,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onFilterExpand_ = function() {
-        this.generateAndSetButtonFixedStatus_();
+        this.updateButtonFixability_();
     };
 
 
@@ -338,7 +342,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onFilterCollapse_ = function() {
-        this.generateAndSetButtonFixedStatus_();
+        this.updateButtonFixability_();
     };
 
 
@@ -375,14 +379,10 @@ goog.scope(function() {
      */
     FilterPanel.prototype.onResize_ = function(event) {
         if (event.newSize > sm.iSmViewport.SmViewport.Size.M) {
-            this.getView().editButtonFixedStatus(false);
-            this.setButtonFace();
-        } else {
-            if (this.countResults_ !== null) {
-                this.setCountResults(this.countResults_);
-            } else {
-                this.setButtonFace();
-            }
+            this.getView().setButtonFixability(false);
+            this.updateButton();
+        } else if (this.countResults_ !== null) {
+            this.showCountResults();
         }
     };
 
@@ -401,7 +401,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onScroll_ = function() {
-        this.generateAndSetButtonFixedStatus_();
+        this.updateButtonFixability_();
     };
 
 

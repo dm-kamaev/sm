@@ -75,7 +75,7 @@
     background-color: inherit;
 }
 
-.b-filter-panel__button_fixed {
+.b-filter-panel__button-wrap_fixed {
     position: fixed;
     width: calc(100% - 80px);
     bottom: 20px;
@@ -115,7 +115,7 @@
 }
 
 @include media-xs {
-    .b-filter-panel__button_fixed {
+    .b-filter-panel__button-wrap_fixed {
         width: calc(100% - 60px);
     }
 }

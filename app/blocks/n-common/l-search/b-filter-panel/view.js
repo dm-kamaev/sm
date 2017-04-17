@@ -46,7 +46,7 @@ goog.scope(function() {
         CONTENT: 'b-filter-panel__content',
         FILTER: 'b-filter-panel__filter',
         RESET: 'b-filter-panel__reset',
-        FIXES_BUTTON: 'b-filter-panel__button_fixed',
+        FIXES_BUTTON: 'b-filter-panel__button-wrap_fixed',
         BUTTON_WRAP: 'b-filter-panel__button-wrap',
         BUTTON_BOX: 'b-filter-panel__button-box',
         TOOLTIP: 'b-filter-panel__tooltip',
@@ -142,18 +142,9 @@ goog.scope(function() {
      * button fixed status
      * @public
      */
-    View.prototype.generateAndSetButtonFixedStatus = function() {
-        var buttonBoxBound = goog.style.getBounds(this.dom.buttonBox);
-        var buttonBoxBottom = 15;
-
-        var boxPositionY =
-            buttonBoxBound.height + buttonBoxBound.top + buttonBoxBottom;
-
-        var viewportHeght = goog.dom.getViewportSize().height;
-        var yCoordinate = goog.dom.getDocumentScroll().y;
-
-        var buttonFixedStatus = boxPositionY > viewportHeght + yCoordinate;
-        this.editButtonFixedStatus(buttonFixedStatus);
+    View.prototype.updateButtonFixability = function() {
+        var isButtonNeedToBeFixed = this.isButtonNeedToBeFixed();
+        this.setButtonFixability(isButtonNeedToBeFixed);
     };
 
 
@@ -162,7 +153,7 @@ goog.scope(function() {
      * @param {boolean} fix
      * @public
      */
-    View.prototype.editButtonFixedStatus = function(fix) {
+    View.prototype.setButtonFixability = function(fix) {
         if (this.fixedButton_ !== fix) {
             if (fix) {
                 goog.dom.classlist.add(
@@ -177,6 +168,22 @@ goog.scope(function() {
             }
             this.fixedButton_ = fix;
         }
+    };
+
+
+    View.prototype.isButtonNeedToBeFixed = function() {
+        if(viewport.getSize() <= sm.iSmViewport.SmViewport.Size.M) {
+            var buttonBoxBound = goog.style.getBounds(this.dom.buttonBox);
+            var buttonBoxBottom = 15;
+
+            var boxBottomPositionY =
+                buttonBoxBound.height + buttonBoxBound.top + buttonBoxBottom;
+
+            var viewportHeght = goog.dom.getViewportSize().height;
+            var documentScrollY = goog.dom.getDocumentScroll().y;
+
+            return boxBottomPositionY > viewportHeght + documentScrollY;
+        } else return false;
     };
 
 

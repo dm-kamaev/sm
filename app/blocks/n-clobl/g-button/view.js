@@ -52,7 +52,7 @@ goog.scope(function() {
     View.prototype.setText = function(text) {
         goog.dom.setTextContent(
             this.getElement(),
-            text ? text : this.getParams()['defaultText']
+            text ? text : this.getParams().defaultText
         );
     };
 
@@ -62,8 +62,27 @@ goog.scope(function() {
      * @override
      */
     View.prototype.initConfig = function() {
-        this.getParams(); //init params;
+        this.initParams_();
         View.base(this, 'initConfig');
+    };
+
+
+    /**
+     * Transform raw params from dom element
+     * @param {Object} rawParams
+     * @return {Object}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            defaultText: rawParams['defaultText']
+        };
+    };
+
+
+    View.prototype.initParams_ = function() {
+        var params = this.getParams();
+        this.params = this.transformParams(params);
     };
 
 });  // goog.scope
