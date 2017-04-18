@@ -1,10 +1,6 @@
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
 const sequelizeInclude = require('../../../components/sequelizeInclude');
 const models = require('../../../../app/components/models').all;
 const services = require('../../../../app/components/services').all;
-const logger = require('../../../../app/components/logger/logger')
-    .getLogger('app');
 
 const entityTypes = require('../../entity/enums/entityType');
 
@@ -82,8 +78,9 @@ class AddressService {
 
             if (!data.areaId) {
                 const areas = await services.area.create({
-                    name: await geoTools.getArea(data.coords)
+                    name: await geoTools.getArea(data.coords),
                         // area name from coords
+                    cityId: DEFAULT_CITY_ID
                 });
                 data.areaId = areas[0].id;
             }
@@ -95,6 +92,10 @@ class AddressService {
             address = await models.Address.create(data);
 
             const metros = await geoTools.getMetros(data.coords, SEARCH_RADIUS);
+            const metrosData = metros.map(metro => {
+                metro.cityId = DEFAULT_CITY_ID;
+                return metro;
+            });
 
             await this.setMetro(address, metros);
             await this.setDistance(address);
@@ -479,12 +480,12 @@ class AddressService {
             addressForDepartments.find(address => address.name === newAddress);
 
         // check is current department or not
-        if (address) {
-            const department = await models.Department.findOne({
-                    where: {
-                        addressId: address.id
-                    }
-                });
+        const department = await models.Department.findOne({
+            where: {
+                addressId: address.id
+            }
+        });
+        if (address && department) {
             result = !(department.id === departmentId);
         } else {
             result = Boolean(address);

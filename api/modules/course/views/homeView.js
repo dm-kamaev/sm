@@ -113,9 +113,6 @@ view.searchPanel = function() {
     let searchUrl = `/${PAGE_ALIAS}?name=`;
 
     let links = [{
-        'content': 'Английский язык',
-        'url': '/anglijskij'
-    }, {
         'content': 'ЦАО',
         'url': searchUrl + encodeURIComponent('ЦАО')
     }, {

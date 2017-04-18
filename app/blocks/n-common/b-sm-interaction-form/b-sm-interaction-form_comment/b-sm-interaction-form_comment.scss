@@ -59,29 +59,27 @@
         vertical-align: top;
 
         &:nth-child(odd) {
-            padding-right: 25px;
+            padding-right: 55px;
         }
 
         &:nth-child(even) {
-            padding-left: 25px;
+            padding-left: 55px;
         }
 
         &:nth-child(n+3) {
-            margin-top: 40px;
+            margin-top: 20px;
         }
     }
 
     .b-sm-interaction-form__evaluation-name {
         display: inline-block;
 
-        margin-right: 18px;
-
         font-size: 15px;
         font-weight: 700;
     }
 
     .b-sm-interaction-form__evaluation-stars {
-        display: inline-block;
+        float: right;
     }
 
     .b-sm-interaction-form__evaluation-description {
@@ -91,6 +89,16 @@
 
         font-size: 13px;
         line-height: 20px;
+    }
+}
+
+@include media-s {
+    .b-sm-interaction-form_comment {
+        .b-sm-interaction-form__evaluation {
+            &:nth-child(even) {
+                padding-left: 25px;
+            }
+        }
     }
 }
 

@@ -16,9 +16,8 @@ class SchoolActionChecker extends ActionChecker {
     protected isPossibleAction(
         accessAttributes: AccessAttributes, restrictedId?: number
     ): boolean {
-        console.log(accessAttributes, restrictedId);
         return accessAttributes.isSuperUser ||
-            accessAttributes.schoolId === restrictedId;
+            accessAttributes.schoolId == restrictedId;
     }
 }
 

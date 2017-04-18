@@ -43,7 +43,7 @@ class RatingService {
 
         if (Boolean(notEmptyScore.length)) {
             const sum = score.reduce(
-                (total, current) => total + current,
+                (total, current) => total + Number(current),
                 0
             );
             result = sum / notEmptyScore.length;
