@@ -16,9 +16,8 @@ class EgeExamService extends Service {
 
     public async getProgramExams(
             programId: number): Promise<Array<BackendEgeExam>> {
-        this.baseUrl += `/program/${programId}/exam`;
         const params: RequestParams = {
-            url: this.baseUrl,
+            url: `${this.baseUrl}/program/${programId}/exam`,
             method: 'get'
         };
 

@@ -224,15 +224,10 @@ app/modules/university/lib/ProgramFilterPanel.js
 
 app/modules/university/types/**/*.js
 
-app/modules/university/controllers/errors/*.js
-app/modules/university/controllers/index.js
-app/modules/university/controllers/SubscriptionController.js
-app/modules/university/controllers/UniversityController.js
-app/modules/university/controllers/programController.js
+app/modules/university/controllers/**/*.js
 
 app/modules/university/services/exceptions/*.js
 app/modules/university/services/*.js
-app/modules/university/controllers/ProgramCommentController.js
 app/modules/university/types/programComment.js
 app/modules/university/constants/*.js
 
