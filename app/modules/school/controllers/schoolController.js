@@ -12,7 +12,7 @@ const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
 const homeView = require('../../../../api/modules/school/views/homeView');
 const seoView = require('../../../../api/modules/school/views/seoView');
-const userView = require('../../../../api/modules/user/views/user');
+const userView = require('../../../../api/modules/user/views/user').userView;
 const configView = require('../../common/views/configView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType');
@@ -315,7 +315,7 @@ exports.catalog = async(function(req, res, next) {
 
         var data = seoView.catalog({
             entityType: entityType.SCHOOL,
-            user: userView.default(user),
+            user: userView.renderDefault(user),
             favorites: schoolView.listCompact(results.favorites),
             authSocialLinks: results.authSocialLinks,
             listsCatalog: seoView.listsCatalog(seoCatalogData)

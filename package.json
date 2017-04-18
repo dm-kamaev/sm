@@ -28,11 +28,13 @@
     "closure-templates": "20141017.0.1",
     "commander": "^2.9.0",
     "connect-redis": "^3.1.0",
+    "connect-session-sequelize": "^3.0.0",
+    "continuation-local-storage": "^3.2.0",
     "cookie-parser": "^1.4.0",
     "csurf": "^1.8.3",
     "csvtojson": "^0.5.0",
     "decompress": "^3.0.0",
-    "deployment": "git+ssh://git@github.com/c7s/deployment.git#release-20170202-PB-1846",
+    "deployment": "git+ssh://git@github.com/c7s/deployment.git#release-20170329-SV-1101",
     "ejs": "^2.3.4",
     "express-session": "^1.13.0",
     "fs-extra": "0.26.7",
@@ -65,10 +67,11 @@
     "tar.gz": "^1.0.2",
     "tipograph": "^0.3.3",
     "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com/c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
-    "uid-safe": "2.1.2"
+    "uid-safe": "^2.1.0",
+    "xlsx-to-json": "^0.2.4"
   },
   "dependencies": {
-    "clobl": "git+ssh://git@github.com/c7s/clobl.git#release-20170301-BP-2246",
+    "clobl": "git+ssh://git@github.com/c7s/clobl.git#dev",
     "continuation-local-storage": "^3.2.0",
     "eslint": "^2.13.1",
     "express": "4.14.1",

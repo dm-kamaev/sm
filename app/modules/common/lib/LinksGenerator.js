@@ -17,6 +17,9 @@ class LinksGenerator {
      *     },
      *     schools: {
      *         host: string
+     *     },
+     *     universities: {
+     *         host: string
      *     }
      * }} config
      * @constructor
@@ -47,7 +50,10 @@ class LinksGenerator {
      *     },
      *     schools: {
      *         host: string
-     *      }
+     *     },
+     *     universities: {
+     *         host: string
+     *     }
      * }} config
      * @return {Object<string, string>}
      * @protected
@@ -68,6 +74,9 @@ class LinksGenerator {
      *     },
      *     schools: {
      *         host: string
+     *     },
+     *     universities: {
+     *         host: string
      *     }
      * }} config
      * @return {Object<string, string>}
@@ -76,7 +85,8 @@ class LinksGenerator {
         let protocol = config.protocol;
         return {
             [entityType.SCHOOL]: `${protocol}://${config.schools.host}`,
-            [entityType.COURSE]: `${protocol}://${config.courses.host}`
+            [entityType.COURSE]: `${protocol}://${config.courses.host}`,
+            [entityType.UNIVERSITY]: `${protocol}://${config.universities.host}`
         };
     }
 

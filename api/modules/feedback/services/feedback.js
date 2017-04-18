@@ -21,7 +21,7 @@ var service = {
 service.sendFeedback = async(function(letter) {
     var params = {
         from: 'schools.mel.fm <sender@mel.fm>',
-        to: config.emailNotifier.email
+        to: config.notifications.schools
     };
 
     services.mail.sendLetter(letter, params);

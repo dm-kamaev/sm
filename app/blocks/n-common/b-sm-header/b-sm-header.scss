@@ -10,11 +10,9 @@
     font-size: 20px;
 }
 
-.b-sm-header__section_menu {
-    color: #000;
-
-    font-family: Proxima, sans-serif;
-    font-weight: 800;
+.b-sm-header__body {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .b-sm-header__section {
@@ -23,9 +21,11 @@
     height: 100%;
 }
 
-.b-sm-header__body {
-    max-width: 1200px;
-    margin: 0 auto;
+.b-sm-header__section_menu {
+    color: #000;
+
+    font-family: Proxima, sans-serif;
+    font-weight: 800;
 }
 
 .b-sm-header__section_contacts {
@@ -50,17 +50,8 @@
     border-bottom: 3px solid #00aa00;
 }
 
-.b-sm-header__helper-text {
-    display: inline-block;
-
-    padding-right: 10px;
-
-    vertical-align: middle;
-
-    color: #000;
-
-    font-family: 'Times New Roman', Times, serif;
-    font-weight: 200;
+.b-sm-header__menu-item_active-university {
+    border-bottom: 3px solid #007aff;
 }
 
 .b-sm-header__contacts {
@@ -73,19 +64,11 @@
     }
 }
 
-@include media-l {
-}
-
-@include media-m {
-    .b-sm-header__helper-text {
-        display: none;
-    }
-}
-
 @include media-xs {
     .b-sm-header__main-menu {
         display: none;
     }
+
     .b-sm-header__menu-item {
         display: block;
 
@@ -94,10 +77,16 @@
         margin-bottom: 20px;
         padding: 10px 0 0 0;
     }
+
     .b-sm-header__menu-item_active-course {
         border-bottom: none;
     }
+
     .b-sm-header__menu-item_active-school {
+        border-bottom: none;
+    }
+
+    .b-sm-header__menu-item_active-university {
         border-bottom: none;
     }
 }

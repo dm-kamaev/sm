@@ -74,4 +74,24 @@ goog.scope(function() {
 
         this.autoDispatch(TextareaStendhal.Event.FOCUS);
     };
+
+
+    /**
+     * Get value
+     * @return {string}
+     * @public
+     */
+    TextareaStendhal.prototype.getValue = function() {
+        return this.getView().getValue();
+    };
+
+
+    /**
+     * Get name
+     * @return {string}
+     * @public
+     */
+    TextareaStendhal.prototype.getName = function() {
+        return this.getView().getName();
+    };
 });  // goog.scope

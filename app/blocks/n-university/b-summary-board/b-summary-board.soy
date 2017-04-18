@@ -1,0 +1,264 @@
+{namespace sm.bSummaryBoard.Template}
+
+
+/**
+ * @typedef {{
+ *     list: Array<{
+ *         header: string,
+ *         items: Array<{
+ *             data: {
+ *                 header: string,
+ *                 description: string
+ *             },
+ *             config: ({
+ *                 iconType: (string|undefined),
+ *                 theme: (string|undefined)
+ *             }|undefined)
+ *         }>
+ *     }>,
+ *     item: {
+ *         data: {
+ *             header: string,
+ *             description: string
+ *         },
+ *         config: ({
+ *             theme: string
+ *         }|undefined)
+ *     }
+ *     buttonLink: sm.bButtonLink.Template.Params
+ * }} sm.bSummaryBoard.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ * }} sm.bSummaryBoard.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data:  sm.bSummaryBoard.Template.Params.Data,
+ *     config: sm.bSummaryBoard.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .summaryBoard}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data:  sm.bSummaryBoard.Template.Params.Data,
+ *     config: sm.bSummaryBoard.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .list_ data="all" /}
+    {call .item_ data="all" /}
+    {call .button_ data="all" /}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    summary-board
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-summary-board
+{/template}
+
+
+/**
+ * List
+ * @param params {{
+ *     data: {
+ *         list: Array<{
+ *             header: string,
+ *             items: Array<{
+ *                 data: {
+ *                     header: string,
+ *                     description: string
+ *                 },
+ *                 config: ({
+ *                     iconType: (string|undefined),
+ *                     theme: (string|undefined)
+ *                 }|undefined)
+ *             }>
+ *         }>,
+ *     }
+ * }}
+ * @override
+ */
+{template .list_}
+    <div class="{call .rootClass/}__list">
+        {foreach $list in $params.data.list}
+            {call .listItem_}
+                {param listItem: $list/}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * List item
+ * @param listItem {{
+ *     header: string,
+ *     items: Array<{
+ *         data: {
+ *             header: string,
+ *             description: string
+ *         },
+ *         config: ({
+ *             iconType: (string|undefined),
+ *             theme: (string|undefined)
+ *         }|undefined)
+ *     }>
+ * }}
+ * @override
+ */
+{template .listItem_}
+    <div class="{call .rootClass/}__list-item">
+        <div class="{call .rootClass/}__list-item-header">
+            {call .getText}
+                {param message: $listItem.header /}
+            {/call}
+        </div>
+        {foreach $item in $listItem.items}
+            {call .listSubitem_}
+                {param subitem: $item/}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * List subitem
+ * @param subitem {{
+ *     data: {
+ *         header: string,
+ *         description: string
+ *     },
+ *     config: ({
+ *         iconType: (string|undefined),
+ *         theme: (string|undefined)
+ *     }|undefined)
+ * }}
+ * @override
+ */
+{template .listSubitem_}
+    {let $class kind="text"}
+        {if $subitem.config and $subitem.config.theme}
+            {call .rootClass/}__list-subitem_{$subitem.config.theme}-theme
+        {/if}
+    {/let}
+    <div class="{call .rootClass/}__list-subitem {$class}">
+        <div class="{call .rootClass/}__list-subitem-header-wrap">
+            <div class="{call .rootClass/}__list-subitem-header">
+                {call .getText}
+                    {param message: $subitem.data.header /}
+                {/call}
+            </div>
+            {if $subitem.config and $subitem.config.iconType}
+                <div class="{call .rootClass /}__list-subitem-icon">
+                    {call .renderChild}
+                        {param params: [
+                            'type': 'icon',
+                            'renderParams': [
+                                'data': [
+                                    'type': $subitem.config.iconType
+                                ]
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+            {/if}
+        </div>
+
+        <div class="{call .rootClass/}__list-subitem-description">
+            {call .getText}
+                {param message: $subitem.data.description /}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Item content template
+ * @param params {{
+ *     data: {
+ *         item: {
+ *             data: {
+ *                 header: string,
+ *                 description: string
+ *             },
+ *             config: ({
+ *                 theme: string
+ *             }|undefined)
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .item_ kind="html"}
+    {if $params.data?.item?.data?.header and
+            $params.data?.item?.data?.description}
+        {let $classes kind="text"}
+            {call .rootClass/}__item
+            {if $params.data.item.config and $params.data.item.config.theme}
+                {sp}{call .rootClass/}__item_{$params.data.item.config.theme}-theme
+            {/if}
+        {/let}
+
+        <div class="{$classes}">
+            <div class="{call .rootClass/}__item-header">
+                {call .getText}
+                    {param message: $params.data.item.data.header /}
+                {/call}
+            </div>
+
+            <div class="{call .rootClass/}__item-description">
+                {call .getText}
+                    {param message: $params.data.item.data.description /}
+                {/call}
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         buttonLink: buttonLink: sm.bButtonLink.Template.Params
+ *     }
+ * }}
+ * @private
+ */
+{template .button_ kind="html"}
+    <div class="{call .rootClass/}__link">
+        {call .renderChild}
+            {param params: [
+                'type': 'smButtonLink',
+                'renderParams': $params.data.buttonLink
+            ]/}
+        {/call}
+    </div>
+{/template}

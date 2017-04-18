@@ -1,0 +1,45 @@
+.b-sm-button-link {
+    position: relative;
+
+    display: block;
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 11px;
+
+    text-align: center;
+    text-decoration: none;
+
+    font-family: 'Proxima', Arial, sans-serif;
+    font-weight: 600;
+}
+
+
+
+.b-sm-button-link_neptune-theme {
+    color: #fff;
+    background-color: #007aff;
+}
+
+.b-sm-button-link_neptune-reverse-theme {
+    color: #007aff;
+    background-color: #fff;
+}
+
+.b-sm-button-link_size_s {
+    height: 21px;
+
+    font-size: 13px;
+    line-height: 21px;
+}
+
+.b-sm-button-link_size_xxl {
+    height: 46px;
+
+    font-size: 16px;
+    line-height: 46px;
+}
+
+.b-sm-button-link_border-round_size_m {
+    border-radius: 100px;
+}

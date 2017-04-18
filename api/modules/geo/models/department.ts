@@ -3,16 +3,7 @@ const db = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
-export interface DepartmentAttribute {
-    id?: number;
-    name?: string;
-    addressId?: number;
-    educationalGrades?: Array<number>;
-    updatedAt?: Date;
-}
-
-export interface DepartmentInstance
-    extends Sequelize.Instance<DepartmentAttribute>, DepartmentAttribute {}
+import {DepartmentInstance, DepartmentAttribute} from '../types/department';
 
 interface DepartmentModel
     extends Sequelize.Model<DepartmentInstance, DepartmentAttribute> {}

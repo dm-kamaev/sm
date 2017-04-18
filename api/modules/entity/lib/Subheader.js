@@ -14,6 +14,14 @@ class Subheader {
      */
     constructor() {
         /**
+         * Entity type
+         * @type {string}
+         * @protected
+         */
+        this.entityType = '';
+
+
+        /**
          * Data for logo
          * @type {Object<string, string>}
          * @protected
@@ -67,7 +75,7 @@ class Subheader {
          *         links: (Object<string, string>|undefined),
          *         search: Object<string, string>,
          *         user: ?Object<string, string>,
-         *         favorites: ?Object<string, (string|Array|Object)>,
+         *         favorites: ?Object<string, (string|Array|Object)>
          *     },
          *     config: Object<string, string>
          * }}
@@ -143,8 +151,12 @@ class Subheader {
      * @public
      */
     setContacts() {
-        let contactsGenerator = new ContactsGenerator();
-        this.params.data.contacts = contactsGenerator.contacts;
+        let data = {
+            entityType: this.entityType
+        };
+
+        let contactsGenerator = new ContactsGenerator(data);
+        this.params.data.contacts = contactsGenerator.params;
     }
 
 
@@ -219,6 +231,7 @@ class Subheader {
      */
     setConfig(isBottomLine) {
         this.params.config.bottomLine = isBottomLine;
+        this.params.config.entityType = this.entityType;
     }
 };
 

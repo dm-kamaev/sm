@@ -112,7 +112,7 @@ goog.scope(function() {
      * Transform raw params from dom element
      * @param {Object} rawParams
      * @return {{
-     *     isUserAuthorzed: boolean,
+     *     isUserAuthorized: boolean,
      *     authSocialLinks: {
      *         vk: string,
      *         fb: string
@@ -124,7 +124,7 @@ goog.scope(function() {
      */
     View.prototype.transformParams = function(rawParams) {
         return {
-            isUserAuthorzed: rawParams['isUserAuthorzed'],
+            isUserAuthorized: rawParams['isUserAuthorized'],
             authSocialLinks: {
                 vk: rawParams['authSocialLinks']['vk'],
                 fb: rawParams['authSocialLinks']['fb']

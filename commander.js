@@ -25,7 +25,6 @@ require('./console/isAddressIsSchool.js').Command;
 require('./console/metro.js').Command;
 require('./console/metro_closest.js').Command;
 require('./console/modelArchiver.js').Command;
-require('./console/modules/newCommentNotifier/newCommentNotifier.js').Command;
 require('./console/parse.js').Command;
 require('./console/parseExt.js').Command;
 require('./console/parseMail.js').Command;
@@ -43,7 +42,6 @@ require('./console/updateSearch.js').Command;
 require('./console/updateSitemap.js').Command;
 require('./console/updateUrls.js').Command;
 require('./console/updateUserData.js').Command;
-require('./console/vkapi.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander

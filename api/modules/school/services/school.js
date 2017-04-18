@@ -17,7 +17,7 @@ const sequelize = require('../../../../app/components/db'),
     redis = require('../../../../app/components/redis'),
     CsvConverter =
         require('../../../../console/modules/modelArchiver/CsvConverter'),
-    RatingChanger = require('../../comment/lib/RatingChanger');
+    RatingChanger = require('../../comment/lib/RatingChanger').RatingChanger;
 
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
@@ -85,7 +85,7 @@ service.create = function(data) {
         data.addresses.forEach(address => {
             if (!address.coords) {
                 var coords = await(
-                        services.yapi.getCoords('Москва, ' + address.name)
+                        services.yapi.getCoords('Москва', address.name)
                     );
                 address.coords = coords;
             }
@@ -780,7 +780,7 @@ service.review = async(function(schoolId, params) {
     var userData = {
         userType: params.userType,
         yearGraduate: params.yearGraduate,
-        classType: params.classType,
+        grade: params.classType,
         key: params.key,
         username: params.username,
         userId: params.userId

@@ -1,0 +1,284 @@
+{namespace sm.bSmInteractionForm.Template}
+
+
+/**
+ * @typedef {{
+ *     fields: Array<{
+ *         data: (
+ *             sm.gTextarea.TemplateStendhal.Params.Data|
+ *             sm.gInput.TemplateStendhal.Params.Data
+ *         ),
+ *         config: (
+ *             sm.gTextarea.TemplateStendhal.Params.Config|
+ *             sm.gInput.TemplateStendhal.Params.Config
+ *         ),
+ *         controlName: string
+ *     }>,
+ *     id: ?(number|undefined)
+ * }} sm.bSmInteractionForm.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     stylizationModifier: string
+ * }} sm.bSmInteractionForm.Template.Params.Config
+ */
+
+
+/**
+ * Template interaction form
+ * @param params {{
+ *     data: sm.bSmInteractionForm.Template.Params.Data,
+ *     config: sm.bSmInteractionForm.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @doc
+ */
+{template .interactionForm}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smInteractionForm
+{/template}
+
+
+/**
+ * Template body
+ * @param params {{
+ *     data: sm.bSmInteractionForm.Template.Params.Data,
+ *     config: sm.bSmInteractionForm.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .sectionFields data="all" /}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-interaction-form
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         id: ?(number|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'id': $params.data.id
+            ]/}
+        {/call}"
+{/template}
+
+
+/**
+ * Fields
+ * @param params {{
+ *     data: {
+ *         fields: Array<{
+ *             data: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Data|
+ *                 sm.gInput.TemplateStendhal.Params.Data
+ *             ),
+ *             config: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Config|
+ *                 sm.gInput.TemplateStendhal.Params.Config
+ *             ),
+ *             controlName: string
+ *         }>
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionFields}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_fields">
+        {call .fields_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Field
+ * @param params {{
+ *     data: {
+ *         field: {
+ *             data: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Data|
+ *                 sm.gInput.TemplateStendhal.Params.Data
+ *             ),
+ *             config: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Config|
+ *                 sm.gInput.TemplateStendhal.Params.Config
+ *             ),
+ *             controlName: string
+ *         }
+ *     },
+ *     config: ({
+ *         modifier: ?string,
+ *         isHidden: boolean
+ *     }|undefined)
+ * }}
+ * @protected
+ */
+{template .field}
+    {let $classes kind="html"}
+        {call .rootClass/}__field-wrap
+
+        {if $params.config?.modifier}
+            {sp}{call .rootClass/}__field-wrap_{$params.config.modifier}
+        {/if}
+
+        {if $params.config?.isHidden}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .title}
+            {param params: [
+                'title': $params.data.field.data.title
+            ] /}
+        {/call}
+
+        {call .fieldItem_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Title
+ * @param params {{
+ *     title: ?string,
+ *     modifier: (string|undefined)
+ * }}
+ * @protected
+ */
+{template .title}
+    {let $classes kind="html"}
+        {call .rootClass/}__title{sp}
+
+        {if $params.modifier}
+            {call .rootClass/}__title_{$params.modifier}
+        {/if}
+    {/let}
+
+    {if $params.title}
+        <div class="{$classes}">
+            {$params.title}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Fields
+ * @param params {{
+ *     data: {
+ *         fields: Array<{
+ *             data: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Data|
+ *                 sm.gInput.TemplateStendhal.Params.Data
+ *             ),
+ *             config: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Config|
+ *                 sm.gInput.TemplateStendhal.Params.Config
+ *             ),
+ *             controlName: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .fields_}
+    <div class="{call .rootClass/}__fields">
+        {foreach $field in $params.data.fields}
+            {call .field}
+                {param params: [
+                    'data': [
+                        'field': $field
+                    ]
+                ]/}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Field item
+ * @param params {{
+ *     data: {
+ *         field: {
+ *             data: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Data|
+ *                 sm.gInput.TemplateStendhal.Params.Data
+ *             ),
+ *             config: (
+ *                 sm.gTextarea.TemplateStendhal.Params.Config|
+ *                 sm.gInput.TemplateStendhal.Params.Config
+ *             ),
+ *             controlName: string
+ *         }
+ *     },
+ *     config: ({
+ *         modifier: string
+ *     }|undefined)
+ * }}
+ */
+{template .fieldItem_}
+    {let $modifier kind="html"}
+        {if $params.config and $params.config.modifier}
+            {$params.config.modifier}
+        {else}
+            default
+        {/if}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass/}__field-item{sp}
+        {call .rootClass/}__field-item_{$modifier}
+    {/let}
+
+    {let $config: augmentMap(
+        [
+            'customClasses': [$customClasses]
+        ],
+        $params.data.field.config
+    ) /}
+
+    <div class="{call .rootClass/}__field"{sp}
+        data-params={call cl.iUtils.Utils.stringify}
+            {param json: ['name': $params.data.field.controlName]/}
+        {/call}
+    >
+
+        {call .renderChild}
+            {param params: [
+                'type': $params.data.field.controlName,
+                'renderParams': [
+                    'data': $params.data.field.data,
+                    'config': $config
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}

@@ -9,11 +9,13 @@
  *         linkUrl: ?string
  *     },
  *     listLinks: (sm.gDropdown.TemplateListLinks.Params.Data|undefined),
+ *     contacts: sm.bSmContacts.Template.Params.Data,
  *     links: ({
  *         nameL: string,
  *         nameM: string,
  *         nameS: (string|undefined),
- *         url: string
+ *         url: string,
+ *         theme: (string|undefined)
  *     }|undefined),
  *     search: {
  *         placeholder: (string|undefined),
@@ -112,9 +114,7 @@
  * Section Contacts
  * @param params {{
  *     data: {
- *         contacts: {
- *             phone: string
- *         }
+ *         contacts: sm.bSmContacts.Template.Params.Data
  *     }
  * }}
  */
@@ -175,10 +175,7 @@
             {param params: [
                 'type': 'smContacts',
                 'renderParams': [
-                    'data': $params.data.contacts,
-                    'config': [
-                        'size': 'xl'
-                    ]
+                    'data': $params.data.contacts
                 ]
             ] /}
         {/call}
@@ -195,7 +192,8 @@
  *             nameL: string,
  *             nameM: string,
  *             nameS: (string|undefined),
- *             url: string
+ *             url: string,
+ *             theme: (string|undefined)
  *         }|undefined),
  *         user: ?{
  *             firstName: ?string,
@@ -246,7 +244,8 @@
  *             nameL: string,
  *             nameM: string,
  *             nameS: (string|undefined),
- *             url: string
+ *             url: string,
+ *             theme: (string|undefined)
  *         }|undefined)
  *     }
  * }}
@@ -268,7 +267,8 @@
  *             nameL: string,
  *             nameM: string,
  *             nameS: (string|undefined),
- *             url: string
+ *             url: string,
+ *             theme: (string|undefined)
  *         }
  *     }
  * }}
@@ -283,7 +283,8 @@
                     'url': $params.data.links.url
                 ],
                 'config': [
-                    'size': 'l'
+                    'size': 'l',
+                    'theme': $params.data.links.theme
                 ]
             ]/}
         {/call}
@@ -295,7 +296,8 @@
                     'url': $params.data.links.url
                 ],
                 'config': [
-                    'size': 'm'
+                    'size': 'm',
+                    'theme': $params.data.links.theme
                 ]
             ]/}
         {/call}
@@ -307,7 +309,8 @@
                     'url': $params.data.links.url
                 ],
                 'config': [
-                    'size': 's'
+                    'size': 's',
+                    'theme': $params.data.links.theme
                 ]
             ]/}
         {/call}
@@ -562,7 +565,8 @@
  *         name: (string|undefined)
  *     },
  *     config: {
- *         size: string
+ *         size: string,
+ *         theme: (string|undefined)
  *     }
  * }}
  */
@@ -585,7 +589,8 @@
                         'content': $content
                     ],
                     'config': [
-                        'size': 'l'
+                        'size': 'l',
+                        'theme': $params.config.theme ?: 'default'
                     ]
                 ]
             ]/}
