@@ -1,11 +1,9 @@
 User-agent: Yandex
-Disallow: /proforientacija?*
-Disallow: /anglijskij-jazyk?*
+Disallow: /*=
 Disallow: /search
 Host: courses.mel.fm
 
 User-agent: *
-Disallow: /proforientacija?*
-Disallow: /anglijskij-jazyk?*
+Disallow: /*=
 Disallow: /search
-Sitemap: http://courses.mel.fm/sitemap.xm
+Sitemap: http://courses.mel.fm/sitemap.xml
