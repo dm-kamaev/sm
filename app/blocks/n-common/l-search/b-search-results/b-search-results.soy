@@ -11,8 +11,6 @@
  *     entityList: sm.bSmItemList.Template.Params.Data,
  *     countResults: number,
  *     headerText:
- *          sm.lSearch.bSearchResults.Template.Params.Data.headerText,
- *     headerTextPlaceholder:
  *          sm.lSearch.bSearchResults.Template.Params.Data.headerText
  * }} sm.lSearch.bSearchResults.Template.Params.Data
  */
@@ -62,7 +60,7 @@
  */
 {template .body}
     {call .results_ data="all" /}
-    {call .placeholder_ data="all" /}
+    {call .placeholder_ /}
     {call .loader_ /}
 {/template}
 
@@ -85,25 +83,19 @@
 
 /**
  * Placeholder for empty results template
- * @param params {{
- *     data: {
- *         headerTextPlaceholder:
- *             sm.lSearch.bSearchResults.Template.Params.Data.headerText
- * }}
  * @private
  */
 {template .placeholder_ kind="html"}
     <div class="{call .rootClass /}__placeholder">
-        {call .header_}
-            {param params: [
-                'data': [
-                    'headerText': $params.data.headerTextPlaceholder
-                ],
-                'config': [
-                    'notActive': true
-                ]
-            ] /}
-        {/call}
+        <div class="{call .rootClass /}__placeholder-title">
+            Ничего не найдено
+        </div>
+        <div class="{call .rootClass /}__placeholder-subtitle">
+            Измените параметры поиска
+        </div>
+        <div class="{call .rootClass /}__placeholder-subtitle">
+            и попробуйте ещё раз.
+        </div>
     </div>
 {/template}
 
@@ -429,7 +421,7 @@
             {param params: [
                 'type': 'smSwitch',
                 'renderParams': [
-                    'data': $params.data.sort.content,
+                    'data': $params.data.sort,
                     'config': [
                         'size': 'xxxl',
                         'linksTheme': 'hoar',

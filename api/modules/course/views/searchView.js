@@ -164,9 +164,6 @@ searchView.render = function(data) {
                 data.searchParams.name,
                 countResults
             ),
-            headerTextPlaceholder: [{
-                text: 'По вашему запросу мы не нашли ничего.'
-            }],
             countResults: countResults,
             sort: {
                 opener: 'Сортировать ',

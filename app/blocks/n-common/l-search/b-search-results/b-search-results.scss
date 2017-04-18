@@ -9,6 +9,28 @@
     font: 600 22px/38px Proxima, arial, sans-serif;
 }
 
+.b-search-results__placeholder {
+    padding-top: 200px;
+}
+
+.b-search-results__placeholder-title {
+    font-family: Proxima, arial, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    color: #000000;
+    padding-bottom: 13px;
+    line-height: 1;
+}
+
+.b-search-results__placeholder-subtitle {
+    font-family: arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.47;
+    text-align: center;
+    color: #747474;
+}
+
 .b-search-results__sort {
     position: relative;
 

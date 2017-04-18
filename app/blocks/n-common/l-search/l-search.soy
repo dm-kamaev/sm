@@ -303,17 +303,18 @@
  * @param params {{
  *     data: {
  *         resultsList: {
- *             title: string,
- *             description: Array<string>,
- *             sort: sm.gDropdown.TemplateSelect.Params.Data,
- *             entityList: sm.bSmItemList.Template.Params.Data,
- *             countResults: number,
- *             searchText: ?string,
- *             declensionEntityType: {
- *                 nom: string,
- *                 gen: string,
- *                 plu: string
- *             }
+ *             title: (string|undefined),
+ *              description: (Array<string>|undefined),
+ *              linksTitle: (string|undefined),
+ *              links: (Array<sm.bSmLink.SmLink.Template.Params.Data>|undefined),
+ *              sort: (sm.gDropdown.TemplateSelect.Params.Data|
+ *                     sm.bSmSwitch.Template.Params.Data),
+ *              entityList: sm.bSmItemList.Template.Params.Data,
+ *              countResults: number,
+ *              headerText:
+ *                   sm.lSearch.bSearchResults.Template.Params.Data.headerText,
+ *              headerTextPlaceholder:
+ *                   sm.lSearch.bSearchResults.Template.Params.Data.headerText
  *         }
  *     }
  * }}
