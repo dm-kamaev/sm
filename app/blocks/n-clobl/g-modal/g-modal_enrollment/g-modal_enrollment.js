@@ -280,7 +280,7 @@ goog.scope(function() {
         var errorMessages = [];
 
         errorData.forEach(function(data) {
-            for (field in data.message) {
+            for (var field in data.message) {
                 if (data.message.hasOwnProperty(field)) {
                     errorMessages.push(data.message[field]);
                 }

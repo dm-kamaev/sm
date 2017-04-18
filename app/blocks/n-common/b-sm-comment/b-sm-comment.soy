@@ -85,9 +85,9 @@
     <div class="{call .rootClass /}__author">
         <div class="{call .rootClass /}__author-photo-wrap">
             {if $params.data.author.photoUrl}
-                <img class="{call .rootClass /}__author-photo"
-                    src="{$params.data.author.photoUrl}"
-                />
+                <div class="{call .rootClass /}__author-photo"
+                    style="background-image: url({$params.data.author.photoUrl})">
+                </div>
             {else}
                 {let $icon: $params.data.author.grade ? 'student' : 'graduate' /}
 
@@ -106,18 +106,17 @@
 
         <div class="{call .rootClass /}__author-data">
             <div class="{call .rootClass /}__author-name">
-                {$params.data.author.name}
-            </div>
-
-            <div class="{call .rootClass /}__author-status">
-                , {$params.data.author.status}
+                {if $params.data.author.name}
+                    {$params.data.author.name}, {$params.data.author.status}
+                {else}
+                    {$params.data.author.status}
+                {/if}
             </div>
 
             <div class="{call .rootClass /}__score">
                 {call .score_ data="all" /}
             </div>
         </div>
-
     </div>
 {/template}
 

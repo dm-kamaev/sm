@@ -1,3 +1,3 @@
 export const UrlTemplate = {
-    PROGRAM: '/vuz/${universityAlias}/program/${programAlias}'
+    PROGRAM: '/vuz/${universityAlias}/specialnost/${programAlias}'
 };

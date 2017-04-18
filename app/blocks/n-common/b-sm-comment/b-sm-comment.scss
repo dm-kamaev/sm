@@ -1,8 +1,9 @@
-@import "../i-media/i-media";
+@import '../i-media/i-media';
 
 .b-sm-comment {
     max-width: 1200px;
     margin: 0 auto;
+
     font-size: 15px;
 }
 
@@ -22,13 +23,20 @@
 }
 
 .b-sm-comment__author-photo-wrap {
+    overflow: hidden;
+
     width: 64px;
+    height: 64px;
     margin-bottom: 10px;
+
+    border-radius: 50%;
 }
 
 .b-sm-comment__author-photo {
     width: 100%;
-    border-radius: 50%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .b-sm-comment__author-data {
@@ -40,10 +48,6 @@
 }
 
 .b-sm-comment__author-name {
-    display: inline-block;
-}
-
-.b-sm-comment__author-status {
     display: inline-block;
 }
 
@@ -67,17 +71,23 @@
     line-height: 22px;
 }
 
+.b-sm-comment__score {
+    padding-top: 14px;
+}
+
 .b-sm-comment__score-title {
     margin-bottom: 10px;
 
     color: #747474;
+
+    font-weight: normal;
 }
 
 
 @include media-xl {
     .b-sm-comment {
-        padding-left: 40px;
         padding-right: 40px;
+        padding-left: 40px;
     }
 }
 
@@ -85,26 +95,34 @@
 @include media-l {
     .b-sm-comment__author {
         display: block;
+
+        width: auto;
         margin-right: 0;
-        margin-bottom: 27px;
+        margin-bottom: 22px;
     }
 
     .b-sm-comment__text {
         display: block;
     }
 
-    .b-sm-comment__author {
-        width: auto;
-    }
-
     .b-sm-comment__author-photo-wrap {
         display: inline-block;
+
         margin-right: 16px;
     }
 
     .b-sm-comment__author-data {
         display: inline-block;
+
         vertical-align: top;
+    }
+
+    .b-sm-comment__score {
+        padding-top: 7px;
+    }
+
+    .b-sm-comment__score-title {
+        margin-bottom: 7px;
     }
 }
 
@@ -117,8 +135,8 @@
 
 @include media-xs {
     .b-sm-comment {
-        padding-left: 25px;
         padding-right: 25px;
+        padding-left: 25px;
     }
 
     .b-sm-comment__author-photo-wrap {
@@ -127,5 +145,9 @@
 
     .b-sm-comment__author {
         margin-bottom: 30px;
+    }
+
+    .b-sm-comment__score {
+        padding-top: 14px;
     }
 }

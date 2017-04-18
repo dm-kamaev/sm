@@ -26,7 +26,7 @@ router.get(
 router.get('/university/suggest', universityController.actionSuggestSearch);
 
 router.post(
-    '/university/subscribe',
+    '/program/subscribe',
     subscriptionController.actionCreate
 );
 router.post(

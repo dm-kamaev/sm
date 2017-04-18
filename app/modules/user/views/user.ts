@@ -9,8 +9,7 @@ class UserView {
             {
                 firstName: user.firstName,
                 lastName: user.lastName,
-                photoUrl: user.photoUrl ||
-                    '/static/images/n-common/b-sm-header/cat.jpg'
+                photoUrl: user.photoUrl
             } :
             null;
     }

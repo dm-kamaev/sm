@@ -287,19 +287,18 @@ searchView.subheader = function(data) {
 
 
 /**
- *
- * @param serchText
- * @param countResults
+ * @param {string} searchText
+ * @param {number} countResults
  * @return {Array<Object>}
  */
-searchView.generateHeaderText = function(serchText, countResults) {
+searchView.generateHeaderText = function(searchText, countResults) {
     let res = [];
-    if (serchText) {
+    if (searchText) {
         res.push({
             text: 'По запросу'
         });
         res.push({
-            text: '«' + serchText + '»'
+            text: '«' + searchText + '»'
         });
     } else {
         res.push({

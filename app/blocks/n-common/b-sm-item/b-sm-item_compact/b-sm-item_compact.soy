@@ -13,11 +13,9 @@
  *     alias: ?string,
  *     score: ?number,
  *     description: (string|undefined),
- *     additionalLink: ({
+ *     descriptionLink: ({
  *         content: string,
- *         url: string,
- *         size: ?string,
- *         theme: ?string
+ *         url: string
  *     }|undefined),
  *     metro: ?Array<{
  *         id: number,
@@ -42,9 +40,7 @@
  *     customClasses: ?Array<string>,
  *     theme: ?string,
  *     nameLinkSize: ?string,
- *     nameLinkTheme: ?string,
- *     isNameNotLink: ?boolean,
- *     isDescriptionLink: ?string
+ *     nameLinkTheme: ?string
  * }} sm.bSmItem.TemplateCompact.Params.Config
  */
 
@@ -111,7 +107,7 @@
 
     <div class="{$classes}">
         {call .description data="all" /}
-        {call .additionalLink_ data="all" /}
+        {call .descriptionLink_ data="all" /}
     </div>
 {/template}
 
@@ -141,7 +137,6 @@
  *     },
  *     config: {
  *         nameLinkTheme: ?string,
- *         isNameNotLink: ?boolean,
  *         nameLinkSize: ?string
  *     }
  * }}
@@ -171,27 +166,23 @@
             {call .rootClass/}__link-name
         {/let}
 
-        {if $url and not $params.config.isNameNotLink}
-            {call .renderChild}
-                {param params: [
-                    'type': 'smLink',
-                    'renderParams': [
-                        'data': [
-                            'id': $params.data.id,
-                            'content': $name,
-                            'url': $url
-                        ],
-                        'config': [
-                            'customClasses': [$customClasses],
-                            'theme': $params.config.nameLinkTheme ?: 'dark',
-                            'size': $params.config.nameLinkSize ?: 'xxl'
-                        ]
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'id': $params.data.id,
+                        'content': $name,
+                        'url': $url
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': $params.config.nameLinkTheme ?: 'dark',
+                        'size': $params.config.nameLinkSize ?: 'xxl'
                     ]
-                ]/}
-            {/call}
-        {else}
-            {$name}
-        {/if}
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -361,23 +352,22 @@
 {/template}
 
 
+
 /**
  * Description
  * @param params {{
  *     data: {
- *         additionalLink: ({
+ *         descriptionLink: ({
  *             content: string,
- *             url: string,
- *             size: ?string,
- *             theme: ?string
+ *             url: string
  *         }|undefined)
  *     }
  * }}
  */
-{template .additionalLink_}
-    {if $params.data?.additionalLink}
+{template .descriptionLink_}
+    {if $params.data?.descriptionLink}
         {let $customClasses kind="html"}
-            {call .rootClass/}__additional-link
+            {call .rootClass/}__link-description
         {/let}
 
         <div class="{call .rootClass/}__description-link">{sp}
@@ -385,12 +375,9 @@
                 {param params: [
                     'type': 'smLink',
                     'renderParams': [
-                        'data': $params.data?.additionalLink,
+                        'data': $params.data?.descriptionLink,
                         'config': [
-                            'customClasses': [$customClasses],
-                            'size': $params.data?.additionalLink?.size,
-                            'theme': $params.data?.additionalLink?.theme ?:
-                                'default'
+                            'customClasses': [$customClasses]
                         ]
                     ]
                 ]/}

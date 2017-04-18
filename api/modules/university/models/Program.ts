@@ -82,6 +82,10 @@ const Program: ProgramModel = sequelize.define('Program', {
         field: 'review_count',
         type: DataType.ARRAY(DataType.INTEGER)
     },
+    oksoCode: {
+        field: 'okso_code',
+        type: DataType.STRING
+    },
     createdAt: {
         field: 'created_at',
         type: DataType.DATE
@@ -128,6 +132,10 @@ const Program: ProgramModel = sequelize.define('Program', {
             this.belongsTo(models.ProgramMajor, {
                 foreignKey: 'program_major_id',
                 as: 'programMajor'
+            });
+            this.hasOne(models.ProgramPageMetaInformation, {
+                as: 'programPageMetaInformations',
+                foreignKey: 'program_id',
             });
             this.belongsToMany(models.PageMetaInformation, {
                 as: 'pageMetaInformations',

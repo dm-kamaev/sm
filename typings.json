@@ -2,6 +2,7 @@
   "name": "l3_school-market",
   "dependencies": {
     "express": "registry:npm/express#4.14.0+20160925001530",
+    "glob": "registry:npm/glob#6.0.0+20160723033700",
     "lodash": "registry:npm/lodash#4.0.0+20161015015725",
     "sequelize/v3": "registry:dt/sequelize/v3#3.4.1+20170106203657"
   },

@@ -301,7 +301,7 @@ goog.scope(function() {
      * @private
      */
     Dropdown.prototype.getValueById_ = function(itemId) {
-        return value = this.params.items[itemId] ?
+        return this.params.items[itemId] ?
             this.params.items[itemId].value :
             null;
     };
@@ -314,7 +314,7 @@ goog.scope(function() {
      * @private
      */
     Dropdown.prototype.getLabelById_ = function(itemId) {
-        return label = this.params.items[itemId] ?
+        return this.params.items[itemId] ?
             this.params.items[itemId].label :
             null;
     };

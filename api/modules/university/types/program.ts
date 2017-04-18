@@ -2,6 +2,7 @@ import * as Sequelize from 'sequelize/v3';
 
 import {AddressAttribute, AddressInstance} from '../../geo/types/address';
 import {ProgramMajorInstance} from '../models/ProgramMajor';
+import {ProgramPageMetaInformationInstance} from './programPageMetaInformation';
 import {CommentGroupInstance} from '../../comment/types/commentGroup';
 import {PageAttribute, PageIntstance} from '../../entity/types/page';
 import {EntranceStatisticInstance} from '../models/EntranceStatistic';
@@ -26,13 +27,21 @@ export interface ProgramAttribute {
     programMajorId?: number;
     score?: Array<number>;
     totalScore?: number;
+    oksoCode?: string;
     createdAt?: string;
     updatedAt?: string;
+}
+
+export interface ProgramSimilar {
+    id: number;
+    name: string;
+    url: string;
 }
 
 export interface ProgramInstance
         extends Sequelize.Instance<ProgramAttribute>, ProgramAttribute {
     programMajor?: ProgramMajorInstance;
+    programPageMetaInformations?: ProgramPageMetaInformationInstance;
     commentGroup?: CommentGroupInstance;
     entranceStatistics?: Array<EntranceStatisticInstance>;
     programEgeExams?: Array<ProgramEgeExamInstance>;
@@ -55,6 +64,7 @@ export interface ProgramInstance
 
 export interface ProgramAdmin extends ProgramAttribute {
     addressName?: string;
+    pageMetaId?: number;
     commentCount?: number;
     passScore?: number;
     programUrl?: string;
@@ -64,7 +74,6 @@ export interface ProgramUrl {
     id: number;
     url: string;
 }
-
 
 export interface ProgramSuggest extends ProgramAttribute {
     alias?: string;

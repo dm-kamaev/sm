@@ -9,7 +9,7 @@
 }
 
 .b-summary-board__list {
-    padding: 4px;
+    padding: 4px 4px 10px 4px;
 }
 
 .b-summary-board__list-item {
@@ -35,12 +35,12 @@
 
 .b-summary-board__list-subitem_neptune-theme {
     .b-summary-board__list-subitem-header-wrap {
-        color: #0777e8;
+        color: #356fc4;
     }
 }
 
 .b-summary-board__list-subitem-header-wrap {
-    padding-bottom: 3px;
+    position: relative;
 
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 24px;
@@ -51,9 +51,7 @@
 .b-summary-board__list-subitem-header {
     display: inline-block;
 
-    padding-right: 9px;
-
-    vertical-align: bottom;
+    padding-right: 10px;
 }
 
 .b-summary-board__list-subitem-description {
@@ -96,6 +94,9 @@
 }
 
 .b-summary-board__list-subitem-icon {
+    position: relative;
+    top: -2px;
+
     display: inline-block;
 
     height: 25px;

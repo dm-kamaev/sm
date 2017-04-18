@@ -25,7 +25,7 @@ module.exports = function(gulpHelper) {
             es6: true,
             compilerFlags: {
                 debug: true,
-                'warning_level': 'QUIET'
+                'warning_level': 'QUIET',
             },
             dest: Path.SHARED_STATIC_DIR
         });

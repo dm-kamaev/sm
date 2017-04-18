@@ -187,6 +187,15 @@ gulp.task('lint-css', function() {
         }));
 });
 
+gulp.task('picturefill', function() {
+    const picturefillPath = path.join(
+        __dirname,
+        '/node_modules/picturefill/dist/picturefill.min.js'
+    );
+    return gulp.src(picturefillPath)
+        .pipe(gulp.dest(path.join(__dirname, SHARED_STATIC_DIR)));
+});
+
 const tasks = function(bool) {
     return bool ? [
         'createTimestamp',
@@ -200,6 +209,7 @@ const tasks = function(bool) {
         'styles',
         'copySchools',
         'copyCourses',
+        'picturefill',
         'localConfig'
     ] : [
         'watch',
@@ -214,6 +224,7 @@ const tasks = function(bool) {
         // 'lint-css',
         'copySchools',
         'copyCourses',
+        'picturefill',
         'localConfig',
         'backendLint'
     ];

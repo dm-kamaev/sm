@@ -29,7 +29,7 @@ type DropdownItem = {
 
 type EvaluationItem = {
     name: string;
-    description: string;
+    description?: string;
     selectedAmount?: number;
 };
 
@@ -143,27 +143,13 @@ class ProgramCommentView {
 
 
         this.evaluationItems_ = [{
-            name: 'Образование',
-            description: `Достигают ли ученики высоких
-                результатов на государственных экзаменах,
-                олимпиадах и вступительных испытаниях в ВУЗах?`
+            name: 'Образование'
         }, {
-            name: 'Преподаватели',
-            description: `Являются ли учителя квалифицированными
-                специалистами, которые любят свою работу, хорошо
-                общаются с детьми и помогают им получать
-                отличные знания?`
+            name: 'Преподаватели'
         }, {
-            name: 'Атмосфера',
-            description: `Созданы ли в школе комфортная для
-                получения знаний атмосфера и доверительные
-                отношения между учениками, учителями,
-                родителями и администрацией?`
+            name: 'Атмосфера'
         }, {
-            name: 'Инфраструктура',
-            description: `Хорошо ли оборудована школа, есть ли
-                в ней всё для комфортного обучения и
-                всестороннего развития детей?`
+            name: 'Инфраструктура'
         }];
 
         this.commentHeaders_ = {
@@ -360,7 +346,8 @@ class ProgramCommentView {
             data: {
                 name: params.name,
                 placeholder: params.placeholder,
-                value: params.value
+                value: params.value,
+                maxLength: 4
             },
             config: {
                 theme: 'thin',

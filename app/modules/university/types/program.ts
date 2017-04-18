@@ -16,6 +16,7 @@ export interface BackendProgram {
     exchangeProgram: boolean;
     createdAt: Date;
     updatedAt: Date;
+    oksoCode?: string;
     programMajor: BackendProgramMajor;
     addressName: string;
 }

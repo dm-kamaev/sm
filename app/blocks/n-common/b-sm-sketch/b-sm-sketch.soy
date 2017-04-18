@@ -44,7 +44,6 @@
  * @override
  */
 {template .body}
-    // {call .stripData data="all" /}
     {call .image_ data="all" /}
     {call .description_ data="all" /}
     {call .button_}
@@ -69,19 +68,25 @@
  * Image
  * @param params {{
  *     data: {
- *         image: {
- *             url: string,
- *             altText: string
- *         }
+ *         picture: sm.bSmPicture.Template.Params.Data
  *     }
  * }}
  * @private
  */
 {template .image_}
-    <img class="{call .rootClass/}__image"
-        src="{$params.data.image.url}"
-        alt="{$params.data.image.altText}"
-    />
+    {let $rootClass kind="text"}
+        {call .rootClass /}
+    {/let}
+    <div class="{call .rootClass/}__image">
+        {call .renderChild}
+            {param params: [
+                'type': 'smPicture',
+                'renderParams': [
+                    'data': $params.data.picture
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 

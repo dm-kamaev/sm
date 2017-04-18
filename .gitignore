@@ -197,23 +197,26 @@ app/middleware/checkApiToken.js
 
 app/modules/common/constants/*.js
 
+app/modules/common/enums/entityType.js
 app/modules/common/lib/FilterPanel.js
 app/modules/common/lib/Footer.js
 app/modules/common/lib/FormatUtils.js
 app/modules/common/lib/Header.js
 app/modules/common/lib/Layout.js
+app/modules/common/lib/LinksFormatter.js
 app/modules/common/lib/SubHeader.js
-
-app/modules/common/types/*.js
-
-app/modules/common/enums/entityType.js
+app/modules/common/lib/utils.js
+app/modules/common/types/**/*.js
 app/modules/common/views/footerView.js
-app/modules/common/views/sideMenuView.js
 app/modules/common/views/generalDataView.js
+app/modules/common/views/sideMenuView.js
 
 app/modules/school/views/olympiadResultView.js
 
 app/modules/university/constants/*.js
+app/modules/course/constants/**/*.js
+app/modules/course/types/**/*.js
+app/modules/course/views/**/*.js
 
 app/modules/university/index.js
 
@@ -231,6 +234,7 @@ app/modules/university/services/exceptions/*.js
 app/modules/university/services/*.js
 app/modules/university/controllers/ProgramCommentController.js
 app/modules/university/types/programComment.js
+app/modules/university/constants/*.js
 
 app/modules/comment/**/*.js
 

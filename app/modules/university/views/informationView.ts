@@ -9,18 +9,24 @@ import {UniversitySubHeader} from './UniversitySubHeader';
 import {UniversityFooter} from './UniversityFooter';
 import {FormatUtils} from '../../common/lib/FormatUtils';
 
-import {programCommentView} from '../../comment/views/programCommentView';
-
-import {AppConfig} from '../../common/types/layout';
-
-import {BackendUser} from '../../user/types/user';
-import {BackendProgram} from '../types/program';
-import {BackendProgramComment} from '../../comment/types/programComment';
-import {BackendUniversity} from '../types/university';
-import {BackendEgeExam} from '../types/egeExam';
-import {BackendEntranceStatistic} from '../types/entranceStatistic';
-
 import {lUniversity} from '../../../blocks/n-university/l-university/params';
+
+import {LinksFormatter} from '../../common/lib/LinksFormatter';
+import {utils} from '../../common/lib/utils';
+
+import {courseView} from '../../course/views/courseView';
+import {programCommentView} from '../../comment/views/programCommentView';
+import {navigationPanelView} from './navigationPanelView';
+
+import {
+    BackendData,
+    RenderParams
+} from '../types/programInformationLayout';
+import {BackendSimilarProgram} from '../types/similarProgram';
+import {BackendCourseAdviced} from '../../course/types/course';
+
+import {BackendProgramComment} from '../../comment/types/programComment';
+import {AppConfig} from '../../common/types/layout';
 
 import {
     bDescriptionList
@@ -36,28 +42,18 @@ import {bSmSketch} from '../../../blocks/n-common/b-sm-sketch/params';
 import {
     bCommentList
 } from '../../../blocks/n-university/l-university/b-comment-list/params';
+import {
+    bSmInformationCard
+} from '../../../blocks/n-common/b-sm-information-card/params';
+import {
+    bSmItemCompact
+} from '../../../blocks/n-common/b-sm-item/b-sm-item_compact/params';
 
-
-type Params = {
-    data: Data;
-    config: AppConfig;
-    requestData: {
-        user: BackendUser;
-        csrf: string;
-        query: any;
-    }
-};
-
-type Data = {
-    program: BackendProgram,
-    university: BackendUniversity,
-    entranceStatistic: BackendEntranceStatistic,
-    comments: Array<BackendProgramComment>,
-    egeExams: Array<BackendEgeExam>,
-    userComment: BackendProgramComment,
-    users: Array<BackendUser>,
-    favorites: Array<{string: any}>
-};
+import {
+    UniversityImageSize
+} from '../constants/UniversityImageSize';
+import {CourseImageSize} from '../../course/constants/CourseImageSize';
+import {ImageSize} from '../../common/types/image';
 
 type Grade = {
     label: number;
@@ -76,6 +72,8 @@ class InformationView extends LayoutView {
 
     protected params: lUniversity.Params;
 
+    private subunitType: string;
+
     constructor() {
         super();
 
@@ -85,40 +83,66 @@ class InformationView extends LayoutView {
         this.entityType = entityType.UNIVERSITY;
         this.pageName = pageName.INFORMATION;
 
-        this.seo = {
-            metaTitle: 'Специальность',
-            metaDescription: ''
-        };
-
         this.subHeader = {
             isLogoRedirect: true,
             isSearchRedirect: true,
             isBottomLine: true
         };
 
-        this.openGraph = {};
+        this.subunitType = 'Программа обучения';
     }
 
-    protected setParams(params: Params) {
+    protected setParams(params: RenderParams) {
         super.setParams(params);
 
         this.setEntityData_(params.data);
         this.setSubscribeBoard_(params.data);
         this.setNavigationPanel_(params.data);
         this.setComments_(params.data);
-        this.setSimilarPrograms_();
-        this.setUsefulCourses_();
+        this.setSimilarPrograms_(params.data);
+        this.setUsefulCourses_(params.data);
         this.setModalComment_(params.data.program.id, params.data.userComment);
     }
 
-    private setEntityData_(data: Data) {
+    protected setSeo(data: BackendData) {
+        const seoData = this.getDefaultSeoData_(data);
+
+        this.params.data.seo = {
+            metaTitle: data.pageMeta.tabTitle || seoData.title,
+            metaDescription: data.pageMeta.seoDescription || seoData.description
+        };
+    }
+
+    protected setOpenGraph(config: AppConfig, data: BackendData) {
+        super.setOpenGraph(config, data);
+
+        const seoData = this.getDefaultSeoData_(data),
+            pageMeta = data.pageMeta;
+
+        const description = pageMeta.openGraphDescription ||
+            pageMeta.seoDescription ||
+            seoData.description;
+
+        this.params.data.openGraph.title = pageMeta.tabTitle || seoData.title;
+        this.params.data.openGraph.description = description;
+        this.params.data.openGraph.relapTag = this.subunitType;
+
+        const relapImage = utils.getImageUrl(
+            data.university.imageUrl,
+            UniversityImageSize.RELAP
+        );
+        this.params.data.openGraph.image = relapImage;
+        this.params.data.openGraph.relapImage = relapImage;
+    }
+
+    private setEntityData_(data: BackendData) {
         this.params.data.entityData = {
             id: data.program.id,
             name: data.university.name,
             abbreviation: data.university.abbreviation,
             category: 'major',
             subunitName: data.program.name,
-            subunitType: 'Специальность',
+            subunitType: this.subunitType,
             description: data.program.description,
             sketch: this.getSketchParams_(data),
             cutDescription: this.getCutDescription_(data.program.description),
@@ -129,13 +153,57 @@ class InformationView extends LayoutView {
         };
     }
 
-    private getSketchParams_(data: Data): bSmSketch.Params.Data {
-        const universityName: string = data.university.name;
+    private getDefaultSeoData_(data: BackendData) {
+        const oksoCode = data.program.oksoCode ?
+            `(${data.program.oksoCode}) ` :
+            '';
+
+        let description;
+        if (data.program.description) {
+            description = data.program.description;
+
+            const formatUtils = new FormatUtils();
+
+            while (~description.indexOf('.')) {
+                description = formatUtils.cutText(
+                    description,
+                    description.length - 1,
+                    '.'
+                );
+            }
+
+        } else {
+            description = `${data.program.name} в ` +
+                data.university.abbreviation;
+        }
+
+        return {
+            title: `${data.program.name} ${oksoCode}– ` +
+                data.university.abbreviation,
+            description: description
+        };
+    }
+
+    private getSketchParams_(data: BackendData): bSmSketch.Params.Data {
+        const universityName: string = data.university.name,
+            backendImageUrl = data.university.imageUrl;
+
+        const imageUrlDefault = utils.getImageUrl(
+            backendImageUrl, UniversityImageSize.MEDIUM);
+        const imageUrlSizeL = utils.getImageUrl(
+            backendImageUrl, UniversityImageSize.DEFAULT);
+
         return {
             description: universityName,
-            image: {
-                url: data.university.imageUrl,
-                altText: universityName
+            picture: {
+                altText: universityName,
+                sources: [{
+                    url: imageUrlDefault,
+                    size: 'default'
+                }, {
+                    url: imageUrlSizeL,
+                    size: 'l'
+                }]
             },
             button: {
                 data: {
@@ -177,7 +245,7 @@ class InformationView extends LayoutView {
     }
 
     private getDescriptionListParams_(
-            data: Data): bDescriptionList.Params.Data {
+            data: BackendData): bDescriptionList.Params.Data {
         const result: bDescriptionList.Params.Data = {
             items: []
         };
@@ -187,6 +255,7 @@ class InformationView extends LayoutView {
             const egeTests =
                 data.egeExams.map(exam => `${exam.subjectName} (ЕГЭ)`);
             const entranceTests = egeTests.concat(data.program.extraExam);
+            console.log(data.egeExams);
 
             result.items.push({
                 data: {
@@ -201,9 +270,11 @@ class InformationView extends LayoutView {
 
 
         if (data.program.links && data.program.links.length > 0) {
+            const linksFormatter = new LinksFormatter();
+
             const links = data.program.links.map(link => ({
                 url: link,
-                content: link
+                content: linksFormatter.getContent(link)
             }));
 
             result.items.push({
@@ -233,7 +304,8 @@ class InformationView extends LayoutView {
         return result;
     }
 
-    private getSummaryBoardParams_(data: Data): bSummaryBoard.Params.Data {
+    private getSummaryBoardParams_(
+            data: BackendData): bSummaryBoard.Params.Data {
         const neptuneTheme = 'neptune';
 
         let itemHeader,
@@ -356,7 +428,7 @@ class InformationView extends LayoutView {
         return {item, list, buttonLink};
     }
 
-    private getBannerParams_(data: Data): bSmBanner.Params {
+    private getBannerParams_(data: BackendData): bSmBanner.Params {
         return {
             data: {
                 header: 'Сомневаешься?',
@@ -394,146 +466,59 @@ class InformationView extends LayoutView {
         };
     }
 
-    private setComments_(data: Data) {
+    private setComments_(data: BackendData) {
         this.params.data.comments = programCommentView.renderCommentsList({
             comments: data.comments,
             users: data.users
         });
     }
 
-    private setSimilarPrograms_() {
-        this.params.data.similarPrograms = {
+    private setSimilarPrograms_(data: BackendData) {
+        this.params.data.similarPrograms = data.similarPrograms.length ? {
             header: 'Похожие программы',
             data: {
                 countItemsPerPage: 4,
-                items: [{
-                    id: 1,
-                    type: entityType.UNIVERSITY,
-                    name: {
-                        light: 'Менеджер СПБГУ'
-                    },
-                    description: ' ',
-                    additionalLink: {
-                        content: 'Специальность',
-                        url: 'http://yandex.ru',
-                        size: 'xl'
-                    },
-                    buttonLink: {
-                        data: {
-                            icon: 'arrow-circle',
-                            iconType: 'svg',
-                            url: 'http://yandex.ru'
-                        }
-                    }
-                }, {
-                    id: 2,
-                    type: entityType.UNIVERSITY,
-                    name: {
-                        light: 'Социология НИУ-ВШЭ'
-                    },
-                    description: ' ',
-                    additionalLink: {
-                        content: 'Специальность',
-                        url: 'http://yandex.ru',
-                        size: 'xl'
-                    },
-                    buttonLink: {
-                        data: {
-                            icon: 'arrow-circle',
-                            iconType: 'svg',
-                            url: 'http://yandex.ru'
-                        }
-                    }
-                }, {
-                    id: 3,
-                    type: entityType.UNIVERSITY,
-                    name: {
-                        light: 'Менеджер МГУ'
-                    },
-                    description: ' ',
-                    additionalLink: {
-                        content: 'Специальность',
-                        url: 'http://yandex.ru',
-                        size: 'xl'
-                    },
-                    buttonLink: {
-                        data: {
-                            icon: 'arrow-circle',
-                            iconType: 'svg',
-                            url: 'http://yandex.ru'
-                        }
-                    }
-                }, {
-                    id: 4,
-                    type: entityType.UNIVERSITY,
-                    name: {
-                        light: 'Логистика НИУ-ВШЭ'
-                    },
-                    description: ' ',
-                    additionalLink: {
-                        content: 'Специальность',
-                        url: 'http://yandex.ru',
-                        size: 'xl'
-                    },
-                    buttonLink: {
-                        data: {
-                            icon: 'arrow-circle',
-                            iconType: 'svg',
-                            url: 'http://yandex.ru'
-                        }
-                    }
-                }],
-                itemType: 'smItemCompact',
-                itemConfig: {
-                    theme: 'neptune',
-                    isNameNotLink: true
+                items: data.similarPrograms.map(
+                    program => this.getSimilarProgramItem_(program)),
+                itemType: 'smInformationCard'
+            }
+        } :
+        null;
+    }
+
+    private getSimilarProgramItem_(
+            similarProgram: BackendSimilarProgram
+    ): bSmInformationCard.Params.Data {
+        return {
+            id: similarProgram.id,
+            type: entityType.UNIVERSITY,
+            name: similarProgram.name,
+            link: {
+                data: {
+                    content: 'Программа обучения',
+                    url: similarProgram.url
+                },
+                config: {
+                    size: 'xl'
+                }
+            },
+            buttonLink: {
+                data: {
+                    icon: 'arrow-circle',
+                    iconType: 'svg',
+                    url: similarProgram.url
                 }
             }
         };
     }
 
-    private setUsefulCourses_() {
-        this.params.data.usefulCourses = {
+    private setUsefulCourses_(data: BackendData) {
+        this.params.data.usefulCourses = data.usefulCourses.length ? {
             header: 'Полезные курсы',
             data: {
                 countItemsPerPage: 3,
-                items: [{
-                    id: 1,
-                    type: 'course',
-                    name: {
-                        light: 'Английский язык'
-                    },
-                    description: `Подготовка к ЕГЭ по английскому
-                                    языку English First`,
-                    imageUrl: 'http://i0.kym-cdn.com/photos/images/' +
-                    'facebook/000/839/199/8a9.jpg',
-                    url: 'http://yandex.ru',
-                    nameLinkUrl: 'http://google.com'
-                }, {
-                    id: 2,
-                    type: 'course',
-                    name: {
-                        light: 'Профориентация'
-                    },
-                    description: 'Система Выбор Smart Course',
-                    imageUrl: 'http://lamcdn.net/lookatme.ru/' +
-                    'post_image-image/vePw1jo6HLFVfp7JIU5_' +
-                    'Qg-article.jpg',
-                    url: 'http://yandex.ru',
-                    nameLinkUrl: 'http://google.com'
-                }, {
-                    id: 3,
-                    type: 'course',
-                    name: {
-                        light: 'Профориентация'
-                    },
-                    description: `Пропуск в профессию. Индивидуальная
-                                    траектория Proekt Pro`,
-                    imageUrl: 'http://cs8.pikabu.ru/post_img/2016/' +
-                    '01/14/12/1452803883198482683.png',
-                    url: 'http://yandex.ru',
-                    nameLinkUrl: 'http://google.com'
-                }],
+                items: data.usefulCourses.map(
+                    course => this.getUsefulCourseParams_(course)),
                 itemType: 'smItemCompact',
                 itemConfig: {
                     theme: 'neptune-imaged',
@@ -543,50 +528,38 @@ class InformationView extends LayoutView {
                     nameLinkTheme: 'default'
                 }
             }
+        } :
+        null;
+    }
+
+    private getUsefulCourseParams_(
+            data: BackendCourseAdviced
+    ): bSmItemCompact.Params.Data {
+        return {
+            id: data.id,
+            type: 'course',
+            name: {
+                light: data.categoryName
+            },
+            description: `${data.name} ${data.brandName}`,
+            imageUrl: utils.getImageUrl(data.imageUrl, CourseImageSize.LARGE),
+            url: courseView.getLink(data.url),
+            nameLinkUrl: courseView.getLink(data.categoryUrl)
         };
     }
 
-    private setSubscribeBoard_(data: Data) {
+    private setSubscribeBoard_(data: BackendData) {
         this.params.data.subscribeBoard = {
             data: {
-                entityId: data.university.id,
-                entityType: entityType.UNIVERSITY
+                entityId: data.program.id,
+                entityType: entityType.PROGRAM
             }
         };
     }
 
-    private setNavigationPanel_(data: Data) {
-        this.params.data.navigationPanel = {
-            items: [{
-                data: {
-                    url: 'http://yandex.ru',
-                    content: 'ВУЗы'
-                },
-                config: {
-                    theme: 'sky',
-                    size: 'xl'
-                }
-            }, {
-                data: {
-                    url: 'http://yandex.ru',
-                    content: 'НИУ-ВШЭ'
-                },
-                config: {
-                    theme: 'sky',
-                    size: 'xl'
-                }
-            }, {
-                data: {
-                    url: 'http://yandex.ru',
-                    content: 'Менеджмент'
-                },
-                config: {
-                    theme: 'sky',
-                    size: 'xl',
-                    isSelected: true
-                }
-            }]
-        };
+    private setNavigationPanel_(data: BackendData) {
+        this.params.data.navigationPanel =
+            navigationPanelView.getForProgram(data);
     }
 
     private setModalComment_(

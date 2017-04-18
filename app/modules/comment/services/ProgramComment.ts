@@ -17,6 +17,7 @@ import {BackendUser} from '../../user/types/user';
 import {
     RequiredFieldsNotFilledException
 } from './exceptions/RequiredFieldsNotFilled';
+import {YearGraduateNotValid} from './exceptions/YearGraduateNotValid';
 import {ProgramNotFound} from './exceptions/ProgramNotFound';
 import {ProgramCommentNotFound} from './exceptions/ProgramCommentNotFound';
 import {
@@ -68,8 +69,12 @@ class ProgramCommentService extends Service {
             data: ProgramCommentData,
             user: BackendUser): Promise<void> {
 
-        if (!this.validateData(data)) {
+        if (!this.validateContent(data)) {
             throw new RequiredFieldsNotFilledException();
+        }
+
+        if (!this.validateYearGraduate(data)) {
+            throw new YearGraduateNotValid();
         }
 
         const params = {
@@ -88,8 +93,12 @@ class ProgramCommentService extends Service {
             data: ProgramCommentData,
             user: BackendUser): Promise<void> {
 
-        if (!this.validateData(data)) {
+        if (!this.validateContent(data)) {
             throw new RequiredFieldsNotFilledException();
+        }
+
+        if (!this.validateYearGraduate(data)) {
+            throw new YearGraduateNotValid();
         }
 
         const params = {
@@ -142,11 +151,21 @@ class ProgramCommentService extends Service {
         };
     }
 
-    private validateData(data: ProgramCommentData): boolean {
+    private validateContent(data: ProgramCommentData): boolean {
         const hasText = Boolean(data.pros || data.cons || data.advice),
             hasScore = Boolean(data.score) && Boolean(data.score.length);
 
         return hasScore || hasText;
+    }
+
+    private validateYearGraduate(data: ProgramCommentData): boolean {
+        let result = true;
+        const yearGraduate = data.yearGraduate;
+        if (yearGraduate) {
+            result = /^\d{4}$/.test(yearGraduate);
+        }
+
+        return result;
     }
 }
 

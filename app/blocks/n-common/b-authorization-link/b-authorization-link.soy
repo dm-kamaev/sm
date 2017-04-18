@@ -159,7 +159,10 @@
  */
 {template .userData_}
     <img class="{call .rootClass/}__user-photo"{sp}
-        src="{$params.data?.user?.photoUrl}" alt="avatar">
+        alt="avatar"{sp}
+        src="{$params.data?.user?.photoUrl ?:
+            '/static/images/n-common/b-authorization-link/user.svg'}"
+        >
 
     <div class="{call .rootClass/}__user-name">
         {$params.data?.user?.firstName}

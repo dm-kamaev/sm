@@ -73,7 +73,7 @@
     <target name="schools.change-permissions">
         <exec executable="chmod" dir="${basedir}">
             <arg line=
-                "644 ${project.node-modules.path}/tipograph/src/languages.js"
+                "-R go+r ${project.node-modules.path}"
             />
         </exec>
     </target>

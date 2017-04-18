@@ -54,7 +54,10 @@ const ProgramSimilar: ProgramSimilarModel = sequelize.define('ProgramSimilar', {
     tableName: 'program_similar',
     classMethods: {
         associate: function(models) {
-
+            this.belongsTo(models.Program, {
+                as: 'relatedProgram',
+                foreignKey: 'related_program_id'
+            });
         }
     }
 });

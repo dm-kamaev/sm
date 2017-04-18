@@ -9,6 +9,7 @@ module.exports = function(gulpHelper) {
             compilerFlags: {
                 'warning_level': 'QUIET'
             },
+            es6: true,
             dest: Path.SHARED_STATIC_DIR
         });
     };

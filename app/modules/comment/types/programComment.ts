@@ -2,7 +2,7 @@ export interface ProgramCommentData {
     id?: number;
     userType?: string;
     grade?: number;
-    yearGraduate?: number;
+    yearGraduate?: string;
     pros?: string;
     cons?: string;
     advice?: string;

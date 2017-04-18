@@ -62,7 +62,7 @@ abstract class LayoutView {
         metaDescription?: string
     };
 
-    /*
+    /**
      * Views that can be overridden if necessary
      */
     protected views: {
@@ -116,8 +116,8 @@ abstract class LayoutView {
 
 
     protected setParams(params: Params) {
-        this.setOpenGraph_(params.config, params.data);
-        this.setSeo_();
+        this.setOpenGraph(params.config, params.data);
+        this.setSeo(params.data);
 
         this.setHeader_(params.config);
         this.setSubHeader_(params.data);
@@ -136,15 +136,15 @@ abstract class LayoutView {
     }
 
 
-    private setSeo_() {
+    protected setSeo(data: Data) {
         this.params.data.seo = this.seo;
     }
 
 
-    private setOpenGraph_(config: AppConfig, data: Data) {
-        this.params.data.openGraph = {
-            fbClientId: config.facebookClientId
-        };
+    protected setOpenGraph(config: AppConfig, data: Data) {
+        this.params.data.openGraph = this.openGraph || {};
+
+        this.params.data.openGraph.fbClientId = config.facebookClientId;
     }
 
 

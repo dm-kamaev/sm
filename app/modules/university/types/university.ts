@@ -1,5 +1,10 @@
 import {BackendCity} from './city';
 
+interface Profile {
+    id: number;
+    name: string;
+}
+
 export interface BackendUniversity {
     id: number;
     name: string;
@@ -12,6 +17,7 @@ export interface BackendUniversity {
     dormitory: boolean;
     cityId: number;
     city: BackendCity;
+    profiles: Array<Profile>;
     created_at: Date;
     updated_at: Date;
 }

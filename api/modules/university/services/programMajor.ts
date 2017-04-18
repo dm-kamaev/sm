@@ -50,7 +50,6 @@ class ProgramMajor {
             attributes: {exclude: EXCLUDE_ATTRIBUTES},
             where: {id},
             include: [{
-                attributes: ['id'],
                 model: CourseTypeModel,
                 as: 'courseTypes'
             }]

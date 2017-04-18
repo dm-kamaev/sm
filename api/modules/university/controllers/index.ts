@@ -20,7 +20,7 @@ import {UniversityAdminController} from './UniversityAdminController';
 const universityAdminController = new UniversityAdminController();
 
 import {ProgramAdminController} from './ProgramAdminController';
-const programAdminController = new ProgramAdminController();
+const programAdminController: any = new ProgramAdminController();
 
 import {ExamAdminController} from './ExamAdminController';
 const examAdminController = new ExamAdminController();
@@ -59,11 +59,17 @@ import {
 const programCommentController = new ProgramCommentController();
 
 import {ProgramMajorController} from './ProgramMajorController';
-const programMajorController = new ProgramMajorController();
+const programMajorController: any = new ProgramMajorController();
 
 import {ProgramMajorAdminController} from './ProgramMajorAdminController';
 const programMajorAdminController = new ProgramMajorAdminController();
 import {ProgramMetaAdminController} from './ProgramMetaAdminController';
+
+import {ProgramMetaController} from './ProgramMetaController';
+const programMetaController: any = new ProgramMetaController();
+
+import {ProgramSimilarController} from './ProgramSimilarController';
+const programSimilarController: any = new ProgramSimilarController();
 
 router.get('/university/:id', universityController.actionGet);
 
@@ -94,6 +100,16 @@ router.get('/program/search/suggest', programController.actionSuggestSearch);
 
 router.get('/programmajor/search', programMajorController.actionSearch);
 router.get('/programmajor/popular', programMajorController.actionGetPopular);
+
+router.get('/program/:programId/pagemeta', programMetaController.actionGet);
+
+router.get('/program/:programId/similar', programSimilarController.actionGet);
+
+router.get('/programmajor/search', programMajorController.actionSearch);
+router.get(
+    '/programmajor/:programMajorId/advicedcourses',
+    programMajorController.actionGetAdvicedCourses
+);
 
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(
@@ -164,16 +180,28 @@ initSimpleCrudRouting(
     programCommentController
 );
 
-// /universities/api/admin/program/:id/pagemeta/
 const programMetaAdminController: any = new ProgramMetaAdminController();
 router.get(
-    '/admin/program/:id/pagemeta',
+    '/admin/program/:programId/pagemeta/:id',
     programMetaAdminController.actionGet
 );
+router.post(
+    '/admin/program/:programId/pagemeta',
+    checkToken,
+    adminUser,
+    superUserCheckAction,
+    programMetaAdminController.actionCreate
+);
 router.put(
-    '/admin/program/:id/pagemeta',
-    checkApiToken,
+    '/admin/program/:programId/pagemeta/:id',
+    checkToken,
+    adminUser,
+    superUserCheckAction,
     programMetaAdminController.actionUpdate
 );
 
+router.get(
+    '/admin/program/:programId/alias',
+    programAdminController.actionGetAlias
+);
 export {router};

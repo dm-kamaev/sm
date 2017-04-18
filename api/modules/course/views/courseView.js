@@ -293,6 +293,37 @@ view.listMap = function(courses, viewType) {
 };
 
 /**
+ * Transform given aliased (with mapped related entities aiases) courses to
+ * adviced courses
+ * @param {Object[]} aliasedCourses
+ * @param {models.CourseBrans[]} brands
+ * @param {models.CourseCategory[]} categories
+ * @return {Object[]}
+ */
+view.listAdviced = function(aliasedCourses, brands, categories) {
+    return aliasedCourses.map(course => {
+        const brand = brands.find(brand => brand.id === course.brandId);
+
+        const category = categories.find(
+            category => category.id === course.categoryId);
+
+        return {
+            id: course.id,
+            name: course.name,
+            brandName: brand.name,
+            categoryName: category.name,
+            imageUrl: course.imageUrl,
+            url: view.generateAlias(
+                course.alias,
+                course.brandAlias,
+                course.categoryAlias
+            ),
+            categoryUrl: course.categoryAlias
+        };
+    });
+};
+
+/**
  * @param {{
  *    courses: Array<models.Course>,
  *    areas: Array<models.Area>,
@@ -668,6 +699,27 @@ view.joinAliases = function(courses, aliases) {
         );
 
     return categoryAliasedCourses;
+};
+
+/**
+ * Join to course object corresponding categoryId
+ * @param {{
+ *     courses: Object[],
+ *     types: models.CourseType[],
+ *     categories: models.CourseCategory[]
+ * }} data
+ * @return {Object}
+ */
+view.joinCategory = function(data) {
+    const types = data.types;
+    const categories = data.categories;
+    return data.courses.map(course => {
+        const type = types.find(type => type.id === course.type);
+        const category = categories.find(
+            category => category.id === type.categoryId);
+
+        return Object.assign({}, course, {categoryId: category.id});
+    });
 };
 
 /**

@@ -1,5 +1,5 @@
 /**
- * @fileOverview Service for make CRUD operations on program model
+ * @fileoverview Service for make CRUD operations on program model
  */
 import * as Sequelize from 'sequelize';
 
@@ -15,7 +15,10 @@ import {Model as PageModel} from '../../entity/models/page';
 import {Model as RatingModel} from '../../comment/models/Rating';
 
 import {Model as ProgramModel} from '../models/Program';
-import {Model as ProgramMajor} from '../models/ProgramMajor';
+import {Model as ProgramMajorModel} from '../models/ProgramMajor';
+import {
+    Model as ProgramPageMetaModel
+} from '../models/ProgramPageMetaInformation';
 import {Model as CommentGroupModel} from '../../comment/models/commentGroup';
 import {
     Model as ProgramCommentModel
@@ -31,6 +34,8 @@ import {
 } from '../types/program';
 import {EntitiesSearch} from '../../entity/types/textSearchData';
 import {ListProgram, SearchListResult} from '../types/programSearch';
+
+import {PageAttribute} from '../../entity/types/page';
 
 import {
     service as commentGroupService
@@ -87,14 +92,28 @@ class ProgramService {
             },
             include: [{
                 attributes: ['id', 'name'],
-                model: ProgramMajor,
+                model: ProgramMajorModel,
                 as: 'programMajor'
-            }],
+            }, {
+                attributes: ['id'],
+                model: ProgramPageMetaModel,
+                as: 'programPageMetaInformations'
+            }]
         });
         if (!program) {
             throw new ProgramNotFound(id);
         }
-        const result: ProgramAdmin = program.toJSON();
+        const data: any = program.toJSON();
+
+        const result: ProgramAdmin = {};
+        Object.keys(data).forEach(key => {
+            if (key != 'programPageMetaInformations') {
+                result[key] = data[key];
+            }
+        });
+        result.pageMetaId = data.programPageMetaInformations ?
+            data.programPageMetaInformations.id :
+            null;
 
         const addresses = await program.getAddresses();
         result.addressName = addresses[0] ? addresses[0].name : null;
@@ -174,6 +193,12 @@ class ProgramService {
         });
     }
 
+    public async getProgramAlias(id: number): Promise<string> {
+        const program: PageAttribute =
+            await pageService.getOne(id, entityType.PROGRAM);
+        return program.alias;
+    }
+
     public async getUrl(program: ProgramAttribute): Promise<string> {
         const programPage = await pageService.getOne(
                 program.id, entityType.PROGRAM
@@ -212,9 +237,7 @@ class ProgramService {
         });
     }
 
-    public async getAllWithEgeAndStatistic(
-        statisticData
-    ): Promise<Array<ProgramInstance>> {
+    public async getAllWithEgeAndStatistic(): Promise<Array<ProgramInstance>> {
         const programs: Array<ProgramInstance> = await ProgramModel.findAll({
             attributes: {
                 exclude: EXCLUDE_FIELDS
@@ -222,11 +245,10 @@ class ProgramService {
             include: [{
                 model: EntranceStatisticModel,
                 as: 'entranceStatistics',
-                where: statisticData
             }, {
                 model: ProgramEgeExamModel,
                 as: 'programEgeExams'
-            }]
+            }],
         });
         return programs;
     }
