@@ -19,3 +19,11 @@ export interface BackendProgram {
     programMajor: BackendProgramMajor;
     addressName: string;
 }
+
+export interface SuggestProgram {
+    id: number;
+    name: string;
+    alias: string;
+    score: number[];
+    totalScore: number;
+}

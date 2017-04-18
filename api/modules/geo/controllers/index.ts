@@ -18,7 +18,7 @@ const cityController = new CityController();
 router.get('/school/:id/address', addressController.getAddresses);
 router.get('/school/:school_id/address/:id', addressController.getAddress);
 
-router.get('/program/cities', cityController.actionProgramList);
+router.get('/cities/program', cityController.actionProgramList);
 
 const initCrudRouting = function(route: string, controller: any): void {
     router.post(

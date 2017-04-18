@@ -5,40 +5,36 @@
 // update universities, programs and reltions
 // update table university, program, city,
 
-// const commander = require('commander');
 import * as commander from 'commander';
 import * as path from 'path';
 import * as lodash from 'lodash';
 const logger = require('../app/components/logger/logger.js').getLogger('app');
 const sequelize = require('../app/components/db.js');
+// sequelize.options.logging = function (query) {
+//   console.log(query
+//      .replace(/(,)/g, '$1\n')
+//      .replace(/SELECT/, 'SELECT\n')
+//      .replace(/(INSERT)/, '$1\n')
+//      .replace(/(UPDATE)/, '$1\n')
+//      .replace(/(FROM)/, '\n$1')
+//      .replace(/(LEFT OUTER JOIN)/g, '\n$1')
+//      .replace(/(LEFT JOIN)/g, '\n$1')
+//      .replace(/(WHERE)/g, '\n$1')
+//      .replace(/(VALUES)/g, '\n$1\n')
+//      .replace(/(ARRAY)/g, '\n$1')
+//      .replace(/(GROUP BY)/g, '\n$1\n')
+//   );
+// };
 import {Xlsx} from './components/Xlsx';
-import {
-    service as universityService
-} from '../api/modules/university/services/university';
 import {Universities} from './modules/updateUniversityAndProgram/Universities';
 import {Programs} from './modules/updateUniversityAndProgram/Programs';
-// import {
-//     Model as ProgramSimilar
-// } from '../api/modules/university/models/ProgramSimilar';
-// import {
-//     ProgramInstance
-// } from '../api/modules/university/types/program';
-// import {
-//     EntranceStatisticInstance
-// } from '../api/modules/university/models/EntranceStatistic';
-// import {
-//     ProgramEgeExamInstance
-// } from '../api/modules/university/models/ProgramEgeExam';
-import {
-    service as cityService
-} from '../api/modules/geo/services/city';
-
-type BooleanHash = { [key: string]: boolean; };
+import {Cities} from './modules/updateUniversityAndProgram/Cities';
 
 
 class UpdateUniversityProgram {
     private listProgram_: any[];
     private hashColumn_: { [key: string]: string; };
+
     constructor() {
         this.hashColumn_ = {
             city: 'Город',
@@ -50,6 +46,7 @@ class UpdateUniversityProgram {
             specialtyСodificator: 'Специальность (по кодификатору)',
             militaryDepartment: 'Военная кафедра (да/нет)',
             dormitory: 'общежитие (да/нет)',
+            programMajor: 'major',
         };
     }
 
@@ -57,20 +54,19 @@ class UpdateUniversityProgram {
         logger.info('-----START-----');
         try {
             const pathFile: string = '../assets/universities/listProgram.xlsx';
-            const fullPath: string = path.join(__dirname, pathFile);
-            this.listProgram_ = await new Xlsx().getJson(fullPath);
+            this.listProgram_ = await this.getJsonFromXlsx(pathFile);
             const data = {
                 hashColumn: this.hashColumn_,
                 listProgram: this.listProgram_,
             };
-            // await this.updateCities();
-            const universities = new Universities(data);
-            await universities.validate();
+            // await new Cities(data).updateViaXlsx();
+            // const universities = new Universities(data);
+            // await universities.validate();
             // await universities.updateViaXlsx();
             // console.log(this.listProgram_);
             // process.exit();
-            // const programs = new Programs(data);
-            // await programs.validate();
+            const programs = new Programs(data);
+            await programs.validate();
             // await programs.updateViaXlsx();
         } catch (error) {
             console.log('ERROR=', error);
@@ -78,31 +74,10 @@ class UpdateUniversityProgram {
         logger.info('-----THE END-----');
     }
 
-    private async updateCities() {
-        let cities: string[] = this.extractCities_(this.listProgram_);
-        cities = lodash.uniq(cities);
-        console.log('cities=', cities, cities.length);
-        const create = async(cityName: string): Promise<any> => {
-            try {
-                return await cityService.create(cityName);
-            } catch (error) {
-                console.log('Error: cityService.create=>', error);
-                return null;
-            }
-        };
-        try {
-            const promiseCities: Promise<any>[] = cities.map(create);
-            await Promise.all(promiseCities);
-        } catch (error) {
-            console.log('Error: updateCity=> ', error);
-        }
+    private async getJsonFromXlsx(pathFile: string): Promise<any[]> {
+        const fullPath: string = path.join(__dirname, pathFile);
+        return await new Xlsx().getJson(fullPath);
     }
-
-    private extractCities_(listProgram: any[]): string[] {
-        const cityColumn: string = this.hashColumn_.city;
-        return listProgram.map(program => program[cityColumn]);
-    }
-
 };
 
 commander

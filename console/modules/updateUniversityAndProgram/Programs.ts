@@ -17,33 +17,80 @@ import {
     service as programMajorService
 } from '../../../api/modules/university/services/programMajor';
 
-type BooleanHash = {[key: string]: boolean};
-type HashNumber = {[key: string]: number};
-type HashString = {[key: string]: number};
+import {BaseWorkWithProgram} from './BaseWorkWithProgram';
 
+import {Hash} from './types/updateUniverstyAndProgram';
 
-export class Programs {
+export class Programs extends BaseWorkWithProgram {
     private listProgram_: any[];
-    private hashColumn_: HashString;
-    private hashUniversities_: HashNumber;
+    private hashColumn_: Hash<string>;
+    private hashUniversities_: Hash<number>;
 
     constructor(option) {
+        super();
         this.hashColumn_ = option.hashColumn;
         this.listProgram_ = option.listProgram;
     }
 
     public async validate() {
+        // await this.validateUniversityAndProgramName();
+        await this.validateProgramMajor();
+    }
+
+    public async updateViaXlsx() {
+        try {
+            const program = await this.extractPrograms();
+            // TODO: Filter all program without name and duration 2
+            // await this.updateUniversities(universities);
+        } catch (error) {
+            logger.critical('Programs.updateViaXlsx => ' + error);
+        }
+    }
+
+    private async validateProgramMajor() {
+        const hashProgramMajor: Hash<number> = await this.getHashProgramMajor();
+        const {
+            programMajor: programMajorColumn,
+        } = this.hashColumn_;
+        let validateError: boolean = false;
+        console.log(hashProgramMajor);
+        console.log('++++++++');
+        const not = {};
+        this.listProgram_.forEach((program, i) => {
+            const programMajor: string
+                = this.cleanWhiteSpace(program[programMajorColumn]);
+            let errorText: string = '';
+            if (!hashProgramMajor[programMajor]) {
+                // console.log('|'+programMajor+'|');
+                not[programMajor] = true;
+                validateError = true;
+                errorText =
+                    `Program major name is not exist in db: "${programMajor}"
+                    ${JSON.stringify(program, null, 2)}, row=${i}`;
+                logger.critical(errorText);
+            }
+        });
+        if (validateError) {
+            console.log(not);
+            throw new Error('Program Majors are invalid');
+        }
+    }
+
+    private async validateUniversityAndProgramName() {
         const hashUniversities
             = this.hashUniversities_ = await this.getHashUniversities();
         const {
             programName: programNameColumn,
             universityName: universityNameColumn,
             universityAbbreviation: universityAbbreviationColumn,
+            specialtyСodificator: specialtyСodificatorColumn,
         } = this.hashColumn_;
         this.listProgram_.forEach((program, i) => {
             const universityName: string = program[universityNameColumn];
             const abbreviation: string = program[universityAbbreviationColumn];
             const programName: string = program[programNameColumn];
+            const specialtyСodificator: string
+                = program[specialtyСodificatorColumn];
             const key: string
                 = this.uniteAbbrevationAndName(abbreviation, universityName);
             let errorText: string = '';
@@ -58,6 +105,10 @@ export class Programs {
                 errorText =
                     `University is not found for
                     program name="${programNameColumn}"`;
+            } else if (!specialtyСodificator) {
+                errorText =
+                    `Specialty for program is not exist
+                    specialty="${specialtyСodificator}"`;
             }
             if (errorText) {
                 errorText += ` ${JSON.stringify(program, null, 2)}, row=${i}`;
@@ -67,20 +118,19 @@ export class Programs {
         });
     }
 
-    // private validateUniversityAndProgram() {}
-    // private validateProgramMajor() {}
-
-    public async updateViaXlsx() {
-        try {
-            const program = await this.extractPrograms();
-            // await this.updateUniversities(universities);
-        } catch (error) {
-            console.log('ERROR=', error);
-        }
+    private async getHashProgramMajor(): Promise<Hash<number>> {
+        const programMajors = await programMajorService.getAll();
+        const hashProgramMajor: Hash<number> = {};
+        programMajors.forEach((programMajor) => {
+            const name: string = this.cleanWhiteSpace(programMajor.name);
+            hashProgramMajor[name] = programMajor.id;
+        });
+        return hashProgramMajor;
     }
 
+
     private async extractPrograms() {
-        const hashUniversities: HashNumber = this.hashUniversities_;
+        const hashUniversities: Hash<number> = this.hashUniversities_;
         const {
             programName: programNameColumn,
             universityName: universityNameColumn,
@@ -90,7 +140,8 @@ export class Programs {
             specialtyСodificator: specialtyСodificatorColumn,
         } = this.hashColumn_;
         const programs = this.listProgram_.map((program) => {
-            const programName: string = program[programNameColumn] || '';
+            const programName: string =
+                this.cleanWhiteSpace(program[programNameColumn]);
             const duration: number = parseInt(program[durationColumn], 10);
             const description: string
                 = this.cleanWhiteSpace(program[descriptionProgramColumn]);
@@ -101,27 +152,30 @@ export class Programs {
                 = program[universityAbbreviationColumn] || '';
             const key: string
                 = this.uniteAbbrevationAndName(abbreviation, name);
+            // TODO: remove in future
+            if (!programName) {
+                return null;
+            }
             const data: any = {
                 name: programName,
                 universityId: hashUniversities[key],
             };
-            if (duration) {
-                data.duration = duration;
+            if (description) {
+                data.description = description;
             }
             if (duration) {
-                data.description = description;
+                data.duration = duration;
             }
             const oksoCode: string = this.getOksoCode(specialty);
             if (oksoCode) {
                 data.oksoCode = oksoCode;
             }
             return data;
-            // programs.push(data);
         });
         console.log('programs=', programs, programs.length);
     }
 
-    private getOksoCode(specialty): string {
+    private getOksoCode(specialty: string): string {
         specialty = specialty || '';
         specialty = specialty.replace(/[а-я]/ig, '');
         const m = specialty.match(/\((.+)\)/);
@@ -130,9 +184,9 @@ export class Programs {
     }
 
     // TODO: remove to another class
-    private async getHashUniversities(): Promise<HashNumber> {
+    private async getHashUniversities(): Promise<Hash<number>> {
         const universitiesDb = await universityService.getAll();
-        const hashUniverDb: HashNumber = {};
+        const hashUniverDb: Hash<number> = {};
         universitiesDb.forEach((university) => {
             const {abbreviation, name} = university;
             const key: string
@@ -140,19 +194,6 @@ export class Programs {
             hashUniverDb[key] = university.id;
         });
         return hashUniverDb;
-    }
-
-    // TODO: remove to another class
-    private uniteAbbrevationAndName(abbreviation, name): string {
-        return this.cleanWhiteSpace(abbreviation) +
-               '::::' +
-               this.cleanWhiteSpace(name);
-    }
-
-    // TODO: remove to another class
-    private cleanWhiteSpace(str: string): string {
-        str = str || '';
-        return str.replace(/\s+/g, ' ').trim();
     }
 
 };

@@ -44,6 +44,8 @@ require('./console/updateUrls.js').Command;
 require('./console/updateUserData.js').Command;
 require('./console/updateProgramSimilar.js').Command;
 require('./console/updateUniverstyAndProgram.js').Command;
+require('./console/fixedEncodingProgramMajor.js').Command;
+require('./console/addedNewProgramMajor.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander

@@ -6,17 +6,23 @@
 import * as lodash from 'lodash';
 const logger
     = require('../../../app/components/logger/logger.js').getLogger('app');
-const sequelize = require('../../../app/components/db.js');
+// const sequelize = require('../../../app/components/db.js');
 import {
     service as universityService
 } from '../../../api/modules/university/services/university';
+import {Cities} from './Cities';
 import {
     service as cityService
 } from '../../../api/modules/geo/services/city';
-
-type BooleanHash = {[key: string]: boolean};
-type HashNumber = {[key: string]: number};
-type HashString = {[key: string]: number};
+import {
+    HashBoolean, HashNumber, HashString
+} from './types/updateUniverstyAndProgram';
+// import {
+//     UniversityInstance
+// } from '../../../api/modules/university/models/University';
+import {
+    UniversityAdminList
+} from '../../../api/modules/university/types/university';
 
 
 
@@ -24,15 +30,18 @@ export class Universities {
     private listProgram_: any[];
     private hashColumn_: HashString;
     private hashCities_: HashNumber;
+    private cities: {getHashCity(): Promise<HashNumber>};
 
     constructor(option) {
         this.listProgram_ = option.listProgram;
         this.hashColumn_ = option.hashColumn;
+        this.cities = new Cities();
     }
 
     public async validate() {
         await this.validateCities();
-        this.validateUniversityAndProgramName();
+        // TURN ON !!!!
+        // this.validateUniversityAndProgramName();
         this.validateParams();
     }
 
@@ -40,21 +49,22 @@ export class Universities {
         try {
             const universities = await this.extractUniversities();
             await this.updateUniversities(universities);
+            logger.info('success universities updateViaXlsx');
         } catch (error) {
-            console.log('ERROR=', error);
+            logger.critical('Universities.updateViaXlsx => ' + error);
         }
     }
 
     private async validateCities() {
         const hashCity
-            = this.hashCities_ = await this.getHashCity();
+            = this.hashCities_ = await this.cities.getHashCity();
         const {city: cityColumn} = this.hashColumn_;
         this.listProgram_.forEach((program, i) => {
             let cityName: string = program[cityColumn] || '';
             cityName = cityService.cleanCityName(cityName);
             let errorText = '';
             const cityId: number | null = hashCity[cityName] || null;
-            if (!cityId) {
+            if (!cityName || !cityId) {
                 errorText =
                     `Error: city is not found
                     cityName="${cityName}", cityId="${cityId}"
@@ -68,7 +78,6 @@ export class Universities {
             }
         });
     }
-
 
     private validateUniversityAndProgramName() {
         const {
@@ -99,27 +108,30 @@ export class Universities {
     }
 
 
+    // all program cell the same militaryDepartment and dormitory
     private validateParams() {
         const {
             universityName: universityNameColumn,
             universityAbbreviation: universityAbbreviationColumn,
-            programName: programNameColumn,
+            // programName: programNameColumn,
             militaryDepartment: militaryDepartmentColumn,
             dormitory: dormitoryColumn,
         } = this.hashColumn_;
         const universities = {};
         this.listProgram_.forEach((program, i) => {
-            const universityName: string = program[universityNameColumn];
-            const abbreviation: string = program[universityAbbreviationColumn];
+            const universityName: string =
+                this.cleanWhiteSpace(program[universityNameColumn]);
+            const abbreviation: string =
+                this.cleanWhiteSpace(program[universityAbbreviationColumn]);
             const militaryDepartment: boolean | null =
                 this.russianBooleanToEnglish(program[militaryDepartmentColumn]);
             const dormitory: boolean | null =
                 this.russianBooleanToEnglish(program[dormitoryColumn]);
             const key: string
-                = this.uniteAbbrevationAndName(abbreviation, name);
+                = this.uniteAbbrevationAndName(abbreviation, universityName);
 
             let errorText: string = '';
-
+            // console.log(key, militaryDepartment, dormitory);
             if (!universities[key]) {
                 universities[key] = {
                     militaryDepartment,
@@ -164,11 +176,10 @@ export class Universities {
         } = this.hashColumn_;
         const universities = {};
         this.listProgram_.forEach((program) => {
-            // one func for get cityName
             let cityName: string = program[cityColumn] || '';
             cityName = cityService.cleanCityName(cityName);
             const cityId: number | null = hashCity[cityName] || null;
-            const name: string = program[universityNameColumn];
+            const universityName: string = program[universityNameColumn];
             const abbreviation: string = program[universityAbbreviationColumn];
             const militaryDepartment: boolean | null =
                 this.russianBooleanToEnglish(
@@ -177,15 +188,15 @@ export class Universities {
             const dormitory: boolean | null =
                 this.russianBooleanToEnglish(program[dormitoryColumn]);
             const key: string
-                = this.uniteAbbrevationAndName(abbreviation, name);
+                = this.uniteAbbrevationAndName(abbreviation, universityName);
             const data: any = {
-                name: this.cleanWhiteSpace(name),
+                name: this.cleanWhiteSpace(universityName),
                 abbreviation: this.cleanWhiteSpace(abbreviation),
                 cityId
                 // links: program['ссылка на офиц сайт программы'],
             };
             if (typeof militaryDepartment === 'boolean') {
-                data.militaryDepartment = militaryDepartment;
+                data['militaryDepartment'] = militaryDepartment;
             }
             if (typeof dormitory === 'boolean') {
                 data.dormitory = dormitory;
@@ -195,37 +206,29 @@ export class Universities {
                 universities[key] = data;
             }
         });
-        console.log('universities=', universities);
+        // console.log('universities=',
+        //  universities, Object.keys(universities).length);
         return universities;
     }
 
-
-    private async getHashCity(): Promise<HashNumber> {
-        const cities = await cityService.getAll();
-        const hashCity = {};
-        cities.forEach((city) => {
-            hashCity[city.name] = city.id;
-        });
-        return hashCity;
-    }
-
     private async updateUniversities(universitiesFromFile) {
-        const universitiesDb = await universityService.getAll();
-        const hashUniverDb = {};
-        universitiesDb.forEach((university) => {
+        const universitiesDb: UniversityAdminList[] =
+            await universityService.getAll();
+        const hashUniverDb: HashNumber = {};
+        universitiesDb.forEach((university: UniversityAdminList) => {
             const {abbreviation, name} = university;
             const key: string
                 = this.uniteAbbrevationAndName(abbreviation, name);
             hashUniverDb[key] = university.id;
         });
+
         let promiseUniversities;
         const universityNames: string[] = Object.keys(universitiesFromFile);
         promiseUniversities = universityNames.map(async(key: string) => {
-            const universityInDb = hashUniverDb[key];
+            const universityId: number | null = hashUniverDb[key];
             const data = universitiesFromFile[key];
-            let res;
-            if (universityInDb) {
-                const universityId: number = universityInDb.id;
+            let res = null;
+            if (universityId) {
                 try {
                     res =
                         await universityService.update(universityId, data, []);
@@ -241,7 +244,7 @@ export class Universities {
             }
             return res;
         });
-        console.log('hashUniverDb=', hashUniverDb);
+        // console.log('hashUniverDb=', hashUniverDb);
         await Promise.all(promiseUniversities);
     }
 
@@ -269,11 +272,19 @@ export class Universities {
         russianBoolean = russianBoolean || '';
         russianBoolean = russianBoolean.replace(/[\s!-/:-@[-`{-~]/g, '')
             .toLowerCase();
-        const englishBoolean = {
+        const englishBoolean: HashBoolean = {
             'да': true,
             'нет': false
         };
-        return englishBoolean[russianBoolean] || null;
+        let res = null;
+        if (
+            englishBoolean[russianBoolean] === true ||
+            englishBoolean[russianBoolean] === false
+        ) {
+            res = englishBoolean[russianBoolean];
+        }
+        return res;
+
     }
 
     // TODO: remove to another class
