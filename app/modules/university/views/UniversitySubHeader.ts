@@ -48,9 +48,10 @@ class UniversitySubHeader extends SubHeader {
         };
 
         this.search = {
-            placeholder: 'ВУЗ, специальность',
+            placeholder: 'Специальность, вуз…',
             pageAlias: 'search',
-            redirect: false
+            redirect: false,
+            sourceUrl: ''
         };
     }
 

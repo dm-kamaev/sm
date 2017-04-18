@@ -20,7 +20,8 @@
  *     search: {
  *         placeholder: (string|undefined),
  *         redirect: boolean,
- *         pageAlias: string
+ *         pageAlias: string,
+ *         sourceUrl: ?string
  *     },
  *     favorites: sm.bSmFavorite.Template.Params.Data
  * }} sm.bSmSubheader.Template.Params.Data
@@ -172,7 +173,8 @@
  *         search: {
  *             placeholder: ?string,
  *             redirect: ?boolean,
- *             pageAlias: string
+ *             pageAlias: string,
+ *             sourceUrl: ?string
  *         }
  *     }
  * }}
@@ -422,7 +424,8 @@
  *         search: {
  *             placeholder: ?string,
  *             redirect: ?boolean,
- *             pageAlias: string
+ *             pageAlias: string,
+ *             sourceUrl: ?string
  *         }
  *     },
  *     config: {
@@ -444,6 +447,9 @@
             'redirect': $params.data?.search?.redirect,
             'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
+            'data': [
+                'sourceUrl': $params.data?.search?.sourceUrl
+            ],
             'config': [
                 'entityType': $params.config.entityType,
                 'showSearchIcon': true,
@@ -461,7 +467,8 @@
  *         search: {
  *             placeholder: ?string,
  *             redirect: ?boolean,
- *             pageAlias: string
+ *             pageAlias: string,
+ *             sourceUrl: ?string
  *         }
  *     },
  *     config: {
@@ -483,6 +490,9 @@
             'redirect': $params.data?.search?.redirect,
             'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
+            'data': [
+                'sourceUrl': $params.data?.search?.sourceUrl
+            ],
             'config': [
                 'entityType': $params.config.entityType,
                 'height': 'xxl'

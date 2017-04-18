@@ -42,7 +42,8 @@ abstract class SubHeader {
     protected search: {
         placeholder: string,
         pageAlias: string,
-        redirect: boolean
+        redirect: boolean,
+        sourceUrl?: string
     };
 
     protected favorites: {

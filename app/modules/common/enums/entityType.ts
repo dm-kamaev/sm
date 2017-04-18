@@ -1,5 +1,6 @@
 export const entityType = {
     SCHOOL: 'school',
     COURSE: 'course',
-    UNIVERSITY: 'university'
+    UNIVERSITY: 'university',
+    PROGRAM: 'program'
 };
