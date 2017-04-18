@@ -86,7 +86,7 @@ class Menu {
         let possibleEnityTypes = [
             entityTypeEnum.SCHOOL,
             entityTypeEnum.COURSE,
-            entityTypeEnum.UNIVERSITY
+            // entityTypeEnum.UNIVERSITY
         ];
 
         return this.generateMenuItems(possibleEnityTypes);
