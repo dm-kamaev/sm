@@ -23,6 +23,8 @@ router.get(
     universityController.actionGetSearch
 );
 
+router.get('/university/suggest', universityController.actionSuggestSearch);
+
 router.post(
     '/university/subscribe',
     subscriptionController.actionCreate
