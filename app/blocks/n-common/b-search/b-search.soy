@@ -1,25 +1,37 @@
 {namespace sm.bSearch.Template}
 
+/**
+ * typedef {{
+ *     sourceUrl: ?string,
+ * }} sm.bSearch.Template.Params.Data
+ */
+
+/**
+ * typedef {{
+ *     showSearchIcon: ?boolean,
+ *     height: ?string,
+ *     faderSize: ?string,
+ *     entityType: string
+ * }} sm.bSearch.Template.Params.Config
+ */
 
 
 /**
- * Search parameters
- * @typedef {object} sm.bSearch.Template.Params
- * @property {?string} text
- * @property {?string} placeholder
- * @property {?boolean} autofocus
- * @property {?boolean} redirect
- * @property {?string} pageAlias
- * @property {?string} theme
- * @property {?string} customClasses
- * @property {?string} inputSize
- * @property {?map} config
- * @property {string} searchArgs
- * @property {?boolean} config.showSearchIcon
- * @property {?string} config.height
- * @property {?string} config.faderSize
- * @property {string} config.entityType
+ * typedef {{
+ *     text: ?string,
+ *     placeholder: ?string,
+ *     autofocus: ?boolean,
+ *     redirect: ?boolean,
+ *     pageAlias: ?string,
+ *     theme: ?string,
+ *     customClasses: ?string,
+ *     inputSize: ?string,
+ *     searchArgs: ?string,
+ *     data: ?sm.bSearch.Template.Params.Data,
+ *     config: ?sm.bSearch.Template.Params.Config
+ * }} sm.bSearch.Template.Params
  */
+
 
 /**
  * Search template
@@ -78,6 +90,15 @@
 
         {let $minLength: $params.config.entityType == 'school' ? 2 : 3 /}
 
+        {let $sourceUrl: $params?.data?.sourceUrl ?:
+            '/api/' + $params.config.entityType + '/search/suggest'/}
+
+        {let $isUniversity: $params.config.entityType ==
+            'university' or 'program' ?
+                true :
+                false
+        /}
+
         <div class="b-search__suggest-holder i-animate">
             {call gorod.gSuggest.SuggestTemplate.render}
                 {param params: [
@@ -86,7 +107,7 @@
                         'minLength': $minLength,
                         'autofocus': $params?.autofocus,
                         'placeholder': $params?.placeholder,
-                        'sourceUrl': '/api/' + $params.config.entityType + '/search/suggest',
+                        'sourceUrl': $sourceUrl,
                         'argName': 'searchString',
                         'args': $params.searchArgs
                     ],
@@ -95,8 +116,8 @@
                         'filtrationEnabled': false,
                     ],
                     'list': [
-                        'theme': 'stendhal',
-                        'color': 'sienna'
+                        'theme': $isUniversity ? 'neptune' : 'stendhal',
+                        'color': $isUniversity ? 'blue' : 'sienna'
                     ],
                     'input': [
                         'style': [
@@ -127,7 +148,9 @@
 {template .item autoescape="strict" kind="html"}
     <span class="b-search__item b-search__item_type_{$params.type}">
         {call .itemIcon_ data="all" /}
-        <span class="b-search__list-name">{$params.name}</span>
+        {call .itemName_ data="all" /}
+        {call .itemScore_ data="all" /}
+
         {if $params.areas}
             <span class="b-search__list-area">{$params.areas}</span>
         {/if}
@@ -155,6 +178,34 @@
         {case 'districts'}
             {call .itemIconLocation_ /}
     {/switch}
+{/template}
+
+
+/**
+ * Search suggest item score
+ * @param? params {{
+ *     type: string,
+ *     totalScore: ?number
+ * }}
+ */
+{template .itemScore_ private="true" autoescape="strict" kind="html"}
+    {switch $params.type}
+        {case 'universities'}
+            {call .itemScoreUniversity_ data="all" /}
+        {case 'programs'}
+            {call .itemScoreUniversity_ data="all" /}
+    {/switch}
+{/template}
+
+
+/**
+ * Search suggest entity name
+ * @param? params {{
+ *     name: string,
+ * }}
+ */
+{template .itemName_ private="true" autoescape="strict" kind="html"}
+    <span class="b-search__list-name">{$params.name}</span>
 {/template}
 
 
@@ -212,6 +263,32 @@
         ]/}
     {/call}
 {/template}
+
+
+/**
+ * Search suggest university score
+ * @param? params {{
+ *     totalScore: ?number
+ * }}
+ */
+{template .itemScoreUniversity_ private="true" autoescape="strict" kind="html"}
+    <div class="b-search__item-score">
+        {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+            {param type: 'smStars' /}
+            {param renderParams: [
+                'data': [
+                    'amount': 5,
+                    'selectedAmount': $params.totalScore
+                ],
+                'config': [
+                    'size': '5xs',
+                    'theme': 'neptune'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
 
 /**
  * Clear button template

@@ -8,7 +8,7 @@
 .b-search__fader {
     position: fixed;
     z-index: 10;
-    top: 120px;
+    top: 0;
     left: 0;
 
     visibility: hidden;
@@ -120,6 +120,10 @@
     left: 1px;
 }
 
+.b-search__item-score {
+    display: inline-block;
+}
+
 .b-search__item_type_schools
 .b-search__item-icon {
     margin-top: -10px;
@@ -128,6 +132,22 @@
 .b-search__item_type_courses
 .b-search__item-icon {
     margin-top: -10px;
+}
+
+.b-search__item_type_universities,
+.b-search__item_type_programs {
+    padding: 8.5px 0;
+
+    white-space: normal;
+
+    font-size: 15px;
+    line-height: 22px;
+
+    .b-search__item-score {
+        vertical-align: middle;
+
+        font-size: 0;
+    }
 }
 
 .b-search__item_type_metro
@@ -171,6 +191,8 @@
 .b-search_theme_foldable {
     height: 100%;
     .b-search__body {
+        top: -1px;
+
         z-index: 15;
     }
 
@@ -184,9 +206,13 @@
         box-sizing: border-box;
         width: 100%;
         height: 100%;
-        padding: 0 90px 0 53px;
+        padding: 0 90px 0 85px;
 
         background: none;
+    }
+
+    .b-search__item {
+        padding-left: 92px;
     }
 }
 
@@ -309,7 +335,7 @@
     .b-search_mode_search.b-search_animation_on {
         .b-search__control {
             &.b-search__control_search {
-                left: 15px;
+                left: 25px;
             }
 
             &.b-search__control_clear {
@@ -323,19 +349,28 @@
     .b-search__item {
         line-height: 49px;
     }
+
+    .b-search__item_type_universities,
+    .b-search__item_type_programs {
+        padding: 13px 0;
+
+        line-height: 22px;
+    }
 }
 
 @include media-m {
     .b-search__fader {
-        top: 72px;
-    }
-
-    .b-search__fader_size_l {
-        top: 150px;
+        top: 0;
     }
 
     .b-search__item {
         padding: 0 60px;
+    }
+
+    .b-search__item_type_universities,
+    .b-search__item_type_programs {
+        padding-top: 19px;
+        padding-bottom: 19px;
     }
 
     .b-search__item-icon {
@@ -345,13 +380,27 @@
     .b-search__control {
         right: 25px;
     }
+
+    .b-search_theme_foldable {
+        .b-search__item-icon {
+            left: 42px;
+        }
+    }
 }
 
 @include media-s {
     .b-search_theme_min,
-    .b-search_theme_foldable{
+    .b-search_theme_foldable {
         .b-search__item {
             line-height: 50px;
+        }
+
+        .b-search__item_type_universities,
+        .b-search__item_type_programs {
+            padding-top: 19px;
+            padding-bottom: 19px;
+
+            line-height: 22px;
         }
     }
 
@@ -359,20 +408,32 @@
         .b-search__item {
             line-height: 50px;
         }
+
+        .b-search__item_type_universities,
+        .b-search__item_type_programs {
+            padding-top: 19px;
+            padding-bottom: 19px;
+
+            line-height: 22px;
+        }
     }
 }
 
 @include media-xs {
-    .b-search__fader_size_l {
-        top: 109px;
-    }
-
     .b-search__control {
         right: 15px;
     }
 
+    .b-search_mode_search.b-search_animation_on {
+        .b-search__control {
+            &.b-search__control_search {
+                left: 15px;
+            }
+        }
+    }
+
     .b-search_theme_foldable {
-        .b-search__suggest {;
+        .b-search__suggest {
             padding: 0 40px 0 53px;
         }
     }
@@ -381,9 +442,24 @@
         padding: 0 30px 0 60px;
     }
 
+    .b-search__item_type_universities,
+    .b-search__item_type_programs {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
     .b-search_theme_foldable {
         .b-search__item {
             padding: 0 60px;
+        }
+
+        .b-search__item-icon {
+            left: 32px;
+        }
+
+        .b-search__item_type_universities,
+        .b-search__item_type_programs {
+            padding: 8px 25px;
         }
     }
 }
