@@ -2,11 +2,14 @@ import * as express from 'express';
 
 const router = express.Router();
 
-import {UniversityController} from './UniversityController';
-const universityController: any = new UniversityController();
+import {UniversityRenderController} from './UniversityRenderController';
+const universityRenderController: any = new UniversityRenderController();
 
 import {SubscriptionController} from './SubscriptionController';
 const subscriptionController = new SubscriptionController();
+
+import {UniversityController} from './UniversityController';
+const universityController = new UniversityController();
 
 import {
     ProgramCommentController
@@ -15,12 +18,12 @@ const programCommentController: any = new ProgramCommentController();
 
 router.get(
     '/vuz/:universityAlias/specialnost/:programAlias',
-    universityController.actionGetInformation
+    universityRenderController.actionGetInformation
 );
 
 router.get(
     '/program/search',
-    universityController.actionGetSearch
+    universityRenderController.actionGetSearch
 );
 
 router.get('/university/suggest', universityController.actionSuggestSearch);
