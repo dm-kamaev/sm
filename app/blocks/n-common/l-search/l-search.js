@@ -574,11 +574,11 @@ goog.scope(function() {
 
     /**
      * Set given text of search field
-     * @param {string} searchText
+     * @param {sm.bSearch.Search.Data} searchData
      * @private
      */
-    Search.prototype.setSearchFieldText_ = function(searchText) {
-        this.search_.setData(searchText);
+    Search.prototype.setSearchFieldText_ = function(searchData) {
+        this.search_.setData(searchData);
         this.subheader.setMode(sm.bSmSubheader.SmSubheader.Mode.DEFAULT);
     };
 
@@ -842,6 +842,13 @@ goog.scope(function() {
         this.search_ = new sm.bSearch.Search();
         this.addChild(this.search_);
         this.search_.decorate(this.getView().getDom().search);
+
+        /** Init current search params in b-search */
+        this.search_.setData(this.paramsManager_.getParams());
+        /** As in search params search text is 'name' field, and in search_ is
+         * 'text' field. So it need to init it manually
+         */
+        this.search_.setText(this.paramsManager_.getName());
 
         this.filterPanel_ = this.decorateChild(
             sm.lSearch.bFilterPanel.FilterPanel.NAME,

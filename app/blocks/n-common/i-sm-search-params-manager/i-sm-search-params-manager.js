@@ -112,7 +112,8 @@ goog.scope(function() {
      * @public
      */
     SearchParamsManager.prototype.setSortType = function(sortType) {
-        return this.params_['sortType'] = sortType;
+        this.params_['sortType'] = sortType;
+        return this.params_['sortType'];
     };
 
 
@@ -214,12 +215,12 @@ goog.scope(function() {
      * @private
      */
     SearchParamsManager.prototype.updateParam_ = function(
-        paramValue, paramName) {
-            if (paramName == 'text') {
-                this.params_['name'] = paramValue;
-            } else {
-                this.params_[paramName] = paramValue;
-            }
+            paramValue, paramName) {
+        if (paramName == 'text') {
+            this.params_['name'] = paramValue;
+        } else {
+            this.params_[paramName] = paramValue;
+        }
     };
 
 
