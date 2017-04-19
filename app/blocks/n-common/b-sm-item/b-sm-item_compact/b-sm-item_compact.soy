@@ -9,7 +9,7 @@
  *         light: string,
  *         bold: ?string
  *     },
- *     imageUrl: (string|undefined),
+ *     picture: ?sm.bSmPicture.Template.Params.Data,
  *     alias: ?string,
  *     score: ?number,
  *     description: (string|Array<string>|undefined),
@@ -68,7 +68,7 @@
  *             bold: (string|undefined)
  *         },
  *         score: ?number,
- *         imageUrl: (string|undefined)
+ *         picture: ?sm.bSmPicture.Template.Params.Data
  *     }
  * }}
  * @override
@@ -77,7 +77,7 @@
 {template .sectionCover}
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_cover">
-        {if $params.data.imageUrl}
+        {if $params.data.picture}
             {call .image data="all" /}
         {else}
             {call .score data="all" /}
@@ -223,41 +223,25 @@
  *             light: string,
  *             bold: (string|undefined)
  *         },
- *         imageUrl: (string|undefined),
+ *         picture: ?sm.bSmPicture.Template.Params.Data,
  *         url: ?string
  *     }
  * }}
  * @protected
  */
 {template .image}
-    {let $description kind="html"}
-        {$params.data.name.light}
-        {if $params.data.name.bold}
-            {sp}{$params.data.name.bold}
-        {/if}
-    {/let}
+    {let $tag: $params.data.url ? 'a' : 'div' /}
+    {let $link: $params.data.url ?: '' /}
 
-    {let $tag kind="html"}
-        {if $params.data.url}
-            a
-        {else}
-            div
-        {/if}
-    {/let}
-
-    {let $link kind="html"}
-        {if $params.data.url}
-            {$params.data.url}
-        {/if}
-    {/let}
-
-    <{$tag} class="{call .rootClass/}__cover-link"
-        href="{$link}"
-    >
-        <img class="{call .rootClass/}__cover-image"
-            src="{$params.data.imageUrl}"
-            alt="{$description}"
-        >
+    <{$tag} class="{call .rootClass/}__cover-link" href="{$link}">
+        {call .renderChild}
+            {param params: [
+                'type': 'smPicture',
+                'renderParams': [
+                    'data': $params.data.picture
+                ]
+            ]/}
+        {/call}
     </{$tag}>
 {/template}
 

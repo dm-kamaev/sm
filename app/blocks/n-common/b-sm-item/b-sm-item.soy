@@ -9,7 +9,7 @@
  *         light: string,
  *         bold: ?string
  *     },
- *     imageUrl: (string|undefined),
+ *     picture: ?sm.bSmPicture.Template.Params.Data,
  *     alias: ?string,
  *     score: ?number,
  *     description: (string|Array<string>|undefined),
@@ -99,7 +99,9 @@
  *             light: string,
  *             bold: (string|undefined)
  *         },
- *         imageUrl: (string|undefined)
+ *         url: ?string,
+ *         alias: ?string,
+ *         picture: ?sm.bSmPicture.Template.Params.Data
  *     }
  * }}
  * @protected
@@ -143,10 +145,11 @@
  * @param params {{
  *     data: {
  *         name: {
- *             light: string,
- *             bold: (string|undefined)
+ *             light: string
  *         },
- *         imageUrl: (string|undefined)
+ *         url: ?string,
+ *         alias: ?string,
+ *         picture: ?sm.bSmPicture.Template.Params.Data
  *     }
  * }}
  * @protected
@@ -164,29 +167,23 @@
  * @param params {{
  *     data: {
  *         name: {
- *             light: string,
- *             bold: (string|undefined)
+ *             light: string
  *         },
- *         imageUrl: (string|undefined)
+ *         url: ?string,
+ *         alias: ?string,
+ *         picture: ?sm.bSmPicture.Template.Params.Data
  *     }
  * }}
  * @protected
  */
 {template .image}
-    {let $imageUrl kind="html"}
-        {if $params.data.imageUrl}
-            {$params.data.imageUrl}
-        {else}
-            /static/images/n-common/b-sm-item/b-sm-item_entity/images/placeholder.png
-        {/if}
-    {/let}
-
-    {let $description kind="html"}
-        {$params.data.name.light}
-        {if $params.data.name.bold}
-            {sp}{$params.data.name.bold}
-        {/if}
-    {/let}
+    {let $picture: $params.data.picture ?: [
+        'sources': [[
+            'url': '/static/images/n-common/b-sm-item/b-sm-item_entity/images/placeholder.png',
+            'size': 'default'
+        ]],
+        'altText': $params.data.name.light
+    ] /}
 
     {let $url kind="html"}
         {if $params.data.url}
@@ -197,11 +194,14 @@
     {/let}
 
     <a class="{call .rootClass/}__cover-link" href="{$url}">
-
-        <img class="{call .rootClass/}__cover-image"
-            src="{$imageUrl}"
-            alt="{$description}"
-        >
+        {call .renderChild}
+            {param params: [
+                'type': 'smPicture',
+                'renderParams': [
+                    'data': $picture
+                ]
+            ]/}
+        {/call}
     </a>
 {/template}
 
@@ -211,8 +211,7 @@
  * @param params {{
  *     data: {
  *         name: {
- *             light: string,
- *             bold: ?string
+ *             light: string
  *         },
  *         score: ?number
  *     },

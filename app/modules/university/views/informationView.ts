@@ -536,13 +536,22 @@ class InformationView extends LayoutView {
             data: BackendCourseAdviced
     ): bSmItemCompact.Params.Data {
         return {
+            picture: {
+                sources: [{
+                    url: utils.getImageUrl(
+                        data.imageUrl,
+                        CourseImageSize.LARGE
+                    ),
+                    size: 'default'
+                }],
+                altText: data.categoryName,
+            },
             id: data.id,
             type: 'course',
             name: {
                 light: data.categoryName
             },
             description: `${data.name} ${data.brandName}`,
-            imageUrl: utils.getImageUrl(data.imageUrl, CourseImageSize.LARGE),
             url: courseView.getLink(data.url),
             nameLinkUrl: courseView.getLink(data.categoryUrl)
         };

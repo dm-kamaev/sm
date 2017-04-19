@@ -1,5 +1,6 @@
 import {bSmItem} from '../../../../n-common/b-sm-item/params';
 import {bSmButtonLink} from '../../../../n-common/b-sm-button-link/params';
+import {bSmPicture} from '../../../../n-common/b-sm-picture/params';
 
 export namespace bSmItemUniversity {
     /*

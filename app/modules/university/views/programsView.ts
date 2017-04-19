@@ -9,8 +9,14 @@ class ProgramsView {
     protected getListPrograms = function() {
         return {
             id: '1',
-            imageUrl: 'http://vuzopedia.ru/themes/vuzopedia/assets/images' +
-                '/logo/342.png',
+            picture: {
+                sources: [{
+                    url: 'http://vuzopedia.ru/themes/vuzopedia/assets/images' +
+                        '/logo/342.png',
+                    size: 'default',
+                }],
+                altText: 'Менеджмент'
+            },
             name: {light: 'Менеджмент'},
             score: 4,
             description: [
