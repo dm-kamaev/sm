@@ -19,14 +19,14 @@ import {
 import {BaseWorkWithProgram} from './BaseWorkWithProgram';
 import {Universities} from './Universities';
 
-import {Hash} from './types/updateUniverstyAndProgram';
+import {Hash, IUniversities} from './types/updateUniverstyAndProgram';
 
 export class Programs extends BaseWorkWithProgram {
     private listProgram_: any[];
     private hashColumn_: Hash<string>;
     private hashUniversities_: Hash<number>;
     private getHashProgramMajor_: Hash<number>;
-    private universitiesInstance: {getHashUniversities(): Promise<Hash<number>>}
+    private universitiesInstance: IUniversities;
 
     constructor(option?) {
         super();
@@ -52,6 +52,21 @@ export class Programs extends BaseWorkWithProgram {
             logger.critical('Programs.updateViaXlsx => ' + error);
         }
     }
+
+    // {"universityId::::programName": programId}
+    public async getHashPrograms(): Promise<Hash<number>> {
+        const programsDb: ProgramInstance[] =
+            await programService.getAll();
+        const hashProgramDb: Hash<number> = {};
+        programsDb.forEach((program: ProgramInstance) => {
+            const {universityId, name} = program;
+            const key: string
+                = this.uniteUniversityIdAndProgramName(universityId, name);
+            hashProgramDb[key] = program.id;
+        });
+        return hashProgramDb;
+    }
+
 
     private async validateProgramMajor() {
         const hashProgramMajor: Hash<number> =
@@ -210,20 +225,6 @@ export class Programs extends BaseWorkWithProgram {
         });
         // console.log('programs=', programs, programs.length);
         return programs;
-    }
-
-    // {"universityId::::programName": programId}
-    public async getHashPrograms(): Promise<Hash<number>> {
-        const programsDb: ProgramInstance[] =
-            await programService.getAll();
-        const hashProgramDb: Hash<number> = {};
-        programsDb.forEach((program: ProgramInstance) => {
-            const {universityId, name} = program;
-            const key: string
-                = this.uniteUniversityIdAndProgramName(universityId, name);
-            hashProgramDb[key] = program.id;
-        });
-        return hashProgramDb;
     }
 
 

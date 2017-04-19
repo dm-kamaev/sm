@@ -145,8 +145,10 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             const universityKey: string =
                 this.uniteAbbrevationAndName(abbreviation, universityName);
             const universityId: number = hashUniversities[universityKey];
-            const programKey: string
-                = this.uniteUniversityIdAndProgramName(universityId, programName);
+            const programKey: string = this.uniteUniversityIdAndProgramName(
+                universityId,
+                programName
+            );
 
             return {
                 programId: hashPrograms[programKey],
@@ -185,7 +187,7 @@ export class EntranceStatistics extends BaseWorkWithProgram {
                 statistic.year
             );
             const statisticId: number | null = hashStatisticDb[key];
-            if (statisticId === 2473) { return null; }
+            // if (statisticId === 2473) { return null; }
             let res = null;
             if (!statisticId) {
                 try {
@@ -197,7 +199,10 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             } else {
                 try {
                     console.log('UPDATE');
-                    res = entranceStatisticService.update(statisticId, statistic);
+                    res = entranceStatisticService.update(
+                        statisticId,
+                        statistic
+                    );
                 } catch (error) {
                     console.log('Error: update =>', error);
                 }

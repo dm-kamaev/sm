@@ -52,6 +52,19 @@ export class Universities extends BaseWorkWithProgram {
         }
     }
 
+
+    public async getHashUniversities(): Promise<Hash<number>> {
+        const universitiesDb = await universityService.getAll();
+        const hashUniverDb: Hash<number> = {};
+        universitiesDb.forEach((university) => {
+            const {abbreviation, name} = university;
+            const key: string
+                = this.uniteAbbrevationAndName(abbreviation, name);
+            hashUniverDb[key] = university.id;
+        });
+        return hashUniverDb;
+    }
+
     private async validateCities() {
         const hashCity
             = this.hashCities_ = await this.citiesInstance.getHashCity();
@@ -206,18 +219,6 @@ export class Universities extends BaseWorkWithProgram {
         // console.log('universities=',
         //  universities, Object.keys(universities).length);
         return universities;
-    }
-
-    public async getHashUniversities(): Promise<Hash<number>> {
-        const universitiesDb = await universityService.getAll();
-        const hashUniverDb: Hash<number> = {};
-        universitiesDb.forEach((university) => {
-            const {abbreviation, name} = university;
-            const key: string
-                = this.uniteAbbrevationAndName(abbreviation, name);
-            hashUniverDb[key] = university.id;
-        });
-        return hashUniverDb;
     }
 
 

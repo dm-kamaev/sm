@@ -27,7 +27,9 @@ const sequelize = require('../app/components/db.js');
 import {Xlsx} from './components/Xlsx';
 import {Universities} from './modules/updateUniversityAndProgram/Universities';
 import {Programs} from './modules/updateUniversityAndProgram/Programs';
-import {EntranceStatistics} from './modules/updateUniversityAndProgram/EntranceStatistics';
+import {
+    EntranceStatistics
+} from './modules/updateUniversityAndProgram/EntranceStatistics';
 import {Cities} from './modules/updateUniversityAndProgram/Cities';
 
 
@@ -58,9 +60,11 @@ class UpdateUniversityProgram {
     public async start() {
         logger.info('-----START-----');
         try {
-            // const pathFile: string = '../assets/universities/listProgram.xlsx';
+            // const pathFile: string
+            //     = '../assets/universities/listProgram.xlsx';
             logger.info('Reading files');
-            const pathFile: string = '../assets/universities/listProgram_all.xlsx';
+            const pathFile: string =
+                '../assets/universities/listProgram_all.xlsx';
             this.listProgram_ = await this.getJsonFromXlsx(pathFile);
             const data = {
                 hashColumn: this.hashColumn_,
