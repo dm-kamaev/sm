@@ -10,24 +10,28 @@ export namespace lSearchUniversity {
      */
     export namespace Params {
         /**
+         * sm.lSearch.ParamsUniversity.Data.SearchParams
+         */
+        export interface SearchParams {
+            cities: number[];
+            ege: number[];
+            payType: number[];
+            maxPassScore: number[];
+            maxPrice: number[];
+            majors: number[];
+            features: number[];
+            page: number;
+            sortType: number;
+        }
+
+        /**
          * sm.lSearch.ParamsUniversity.Data
          */
         export interface Data extends iLayoutStendhal.Params.Data {
-            resultsList: any,
-            filterPanel: Object,
-            dependentFilterPanel: Object,
-            searchParams: {
-                cities: number[];
-                ege: number[];
-                payType: number[];
-                maxPassScore: number[];
-                maxPrice: number[];
-                majors: number[];
-                features: number[];
-                page: number;
-                sortType: number;
-                name: string;
-            }
+            resultsList: any;
+            filterPanel: Object;
+            dependentFilterPanel: Object;
+            searchParams: SearchParams;
         }
 
         /**

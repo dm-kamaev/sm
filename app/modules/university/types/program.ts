@@ -21,6 +21,27 @@ export interface BackendProgram {
     addressName: string;
 }
 
+export interface BackendListProgram {
+    id: number;
+    name: string;
+    totalScore: number;
+    exchangeProgram: string;
+    extraExam: string[];
+    egeScore: number;
+    cost: number;
+    budgetPlaces: number;
+    commercialPlaces: number;
+    competition: number;
+    imageUrl: string;
+    universityName: string;
+    universityAbbreviation: string;
+    cityName: string;
+    programAlias: string;
+    universityAlias: string;
+    programCount?: string;
+    universityCount?: string;
+};
+
 export interface SuggestProgram {
     id: number;
     name: string;
