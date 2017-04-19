@@ -70,8 +70,11 @@ class SearchView extends LayoutView {
         this.pageName = pageName.SEARCH;
 
         this.seo = {
-            metaTitle: 'Поиск программ',
-            metaDescription: 'Поиск программ'
+            metaTitle: 'Поиск программ, факультетов и специальностей на Меле',
+            metaDescription: 'Узнай, в какой вуз России ты можешь поступить ' +
+                'с твоими баллами ЕГЭ. Выбери вуз, который подходит тебе, ' +
+                'и подпишись на новости о днях открытых дверей и публикации ' +
+                'списков зачисления!'
         };
 
         this.subHeader = {
