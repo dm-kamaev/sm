@@ -16,7 +16,7 @@
     width: 1200px;
     min-width: 255px;
     margin: 0 auto 80px auto;
-    padding-top: 30px;
+    padding-top: 25px;
 }
 
 .l-university__data_sketch {
@@ -180,7 +180,6 @@
 @include media-l {
     .l-university__section_data {
         margin-bottom: 60px;
-        padding-top: 40px;
     }
 
     .l-university__similar-programs-header {
