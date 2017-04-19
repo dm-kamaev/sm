@@ -50,17 +50,19 @@ exports.request = async(string => {
 
 /**
  * Get address coords
+ * @param  {string} city
  * @param  {string} addressName
  * @param  {boolean=} opt_house Coords for a building/house
  * @return {number[]} array of adress coords
  */
-exports.getCoords = async(function(addressName, opt_house) {
-    let geoData = await(exports.request(addressName)),
+exports.getCoords = async(function(city, addressName, opt_house) {
+    let geoData = await(exports.request(`${city}, ${addressName}`)),
         result = null;
 
     geoData.featureMember = geoData.featureMember.find(data =>
-        this.isCoordsCorrect(data.GeoObject, opt_house)
+        this.isCoordsCorrect(data.GeoObject, city, opt_house)
     );
+
 
     if (geoData.featureMember) {
         result = geoData.featureMember.GeoObject.Point.pos
@@ -77,15 +79,18 @@ exports.getCoords = async(function(addressName, opt_house) {
 
 /**
  * @param  {Object}  geoObject
+ * @param  {string}  city
  * @param  {boolean=}  opt_house
  * @return {boolean}
  */
-exports.isCoordsCorrect = function(geoObject, opt_house) {
-    let isMoscow = /^москва/ig.test(geoObject.description),
+exports.isCoordsCorrect = function(geoObject, city, opt_house) {
+    let isCityCorrect = new RegExp(`^${city}`, 'ig')
+        .test(geoObject.description),
+            // check is there a city you passed as a first word
         isHouse = opt_house ?
             this.isHouse(geoObject) :
             true;
-    return isMoscow && isHouse;
+    return isCityCorrect && isHouse;
 };
 
 /**

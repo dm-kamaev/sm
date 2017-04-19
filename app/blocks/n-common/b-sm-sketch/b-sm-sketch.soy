@@ -1,0 +1,141 @@
+{namespace sm.bSmSketch.Template}
+
+
+/**
+ * @typedef {sm.bSmSketch.Params.Data} sm.bSmSketch.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ * }} sm.bSmSketch.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmSketch.Template.Params.Data,
+ *     config: sm.bSmSketch.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .sketch}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smSketch
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmSketch.Template.Params.Data,
+ *     config: sm.bSmSketch.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    // {call .stripData data="all" /}
+    {call .image_ data="all" /}
+    {call .description_ data="all" /}
+    {call .button_}
+        {param params: [
+            'data': $params.data.button.data,
+            'config': $params.data.button.config
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-sketch
+{/template}
+
+
+/**
+ * Image
+ * @param params {{
+ *     data: {
+ *         image: {
+ *             url: string,
+ *             altText: string
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .image_}
+    <img class="{call .rootClass/}__image"
+        src="{$params.data.image.url}"
+        alt="{$params.data.image.altText}"
+    />
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: string
+ *     }
+ * }}
+ * @private
+ */
+{template .description_}
+    <div class="{call .rootClass/}__description">
+        {call .getText}
+            {param message: $params.data.description /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Button
+ * @param params {{
+ *     data: {
+ *         content: string
+ *     },
+ *     config: ({
+ *         theme: (string|undefined),
+ *         borderRoundSize: (string|undefined)
+ *     }|undefined)
+ * }}
+ * @private
+ */
+{template .button_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__button-action
+    {/let}
+    <div class="{call .rootClass/}__button-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.content
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': $params.config.theme,
+                        'borderRoundSize': $params.config.borderRoundSize,
+                        'size': 'm'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}

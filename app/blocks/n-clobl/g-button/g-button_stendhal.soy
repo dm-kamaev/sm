@@ -12,8 +12,9 @@
  * typedef {{
  *     theme: ('dark'|'thin'|undefined),
  *     isDisabled: (boolean|undefined),
- *     size: ('s'|'m'|undefined),
- *     disableHover: (boolean|undefined)
+ *     size: ('s'|'m'|'xl'|undefined),
+ *     disableHover: (boolean|undefined),
+ *     borderRoundSize: ('xl'|undefined)
  * }}
  * sm.gButton.TemplateStendhal.Params.Config
  */
@@ -43,9 +44,10 @@
 /**
  * @param params {
  *     config: {
- *         size: ('s'|'m'|undefined),
+ *         size: ('s'|'m'|'xl'|undefined),
  *         isDisabled: (boolean|undefined),
- *         disableHover: (boolean|undefined)
+ *         disableHover: (boolean|undefined),
+ *         borderRoundSize: ('xl'|undefined)
  *     }
  * }
  * @override
@@ -61,5 +63,9 @@
 
     {if not $params?.config?.disableHover}
         {sp}{call .rootClass /}_hoverable
+    {/if}
+
+    {if $params?.config?.borderRoundSize}
+        {sp}{call .rootClass /}_border-round-size_{$params?.config?.borderRoundSize}
     {/if}
 {/template}

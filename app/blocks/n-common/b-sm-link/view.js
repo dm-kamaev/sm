@@ -74,7 +74,8 @@ goog.scope(function() {
         ATTENTION: 'attention',
         DARK: 'dark',
         BLOCK: 'block',
-        HOAR: 'hoar'
+        HOAR: 'hoar',
+        NEPTUNE: 'neptune'
     };
 
 

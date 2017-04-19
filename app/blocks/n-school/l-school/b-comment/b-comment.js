@@ -176,7 +176,7 @@ goog.scope(function() {
      */
     Comment.prototype.initScore_ = function() {
         var scoreElement = this.getElementByClass(ScoreMinimized.CssClass.ROOT);
-        var score = new ScoreMinimized;
+        var score = new ScoreMinimized();
         this.addChild(score);
         score.decorate(scoreElement);
     };

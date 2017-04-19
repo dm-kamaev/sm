@@ -71,6 +71,16 @@ goog.scope(function() {
 
 
     /**
+     * Get name
+     * @return {?string}
+     * @public
+     */
+    View.prototype.getName = function() {
+        return this.dom.input.name || null;
+    };
+
+
+    /**
      * Key press handler
      * @param {goog.events.BrowserEvent} event
      * @protected

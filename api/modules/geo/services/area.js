@@ -11,12 +11,14 @@ exports.name = 'area';
  * Creates an Area instance and returns it
  * @param {Object} params
  * @param {string} params.name
+ * @param {number} params.cityId
  * @return {Area}
  */
 exports.create = async(function(params) {
     return await(models.Area.findOrCreate({
         where: {
-            name: params.name
+            name: params.name,
+            cityId: params.cityId
         }
     }));
 });

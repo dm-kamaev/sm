@@ -1,0 +1,135 @@
+{namespace sm.bSmButtonLink.Template}
+
+
+/**
+ * @typedef {{
+ *     id: ?number,
+ *     url: ?strnig,
+ *     icon: ?string,
+ *     iconType: ?string,
+ *     content: ?string
+ * }}
+ * sm.bButtonLink.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     disableHover: boolean,
+ *     size: ('s'|'m'|'l'|'xl'),
+ *     theme: (string|undefined),
+ *     borderRoundSize: string
+ * }}
+ * sm.bButtonLink.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data:  sm.bButtonLink.Template.Params.Data,
+ *     config: sm.bButtonLink.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .buttonLink}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smButtonLink
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data:  sm.bButtonLink.Template.Params.Data,
+ *     config: sm.bButtonLink.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {if $params.data.icon}
+        {let $type kind="html"}
+            {if $params.data.iconType}
+                icon-{$params.data.iconType}
+            {else}
+                icon
+            {/if}
+        {/let}
+        {call .renderChild}
+            {param params: [
+                'type': $type,
+                'renderParams': [
+                    'data': [
+                        'type': $params.data.icon
+                    ]
+                ]
+            ]/}
+        {/call}
+    {/if}
+    {if $params.data.content}
+        {call cl.iControl.Template.getText}
+            {param message: $params.data.content /}
+        {/call}
+    {/if}
+{/template}
+
+
+/**
+ * Define tag
+ * @override
+ */
+{template .tag kind="html"}
+    a
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-button-link
+{/template}
+
+
+/**
+ * Addtitonal classes
+ * @param params {{
+ *     config: {
+ *         size: string,
+ *         theme: string
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses kind="html"}
+    {if $params?.config.size}
+        {sp}{call .rootClass /}_size_{$params?.config.size}
+    {/if}
+    {if $params?.config?.borderRoundSize}
+        {sp}{call .rootClass /}_border-round_size_{$params.config.borderRoundSize}
+    {/if}
+{/template}
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     data: {
+ *         url: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    href="{$params.data.url}"
+{/template}

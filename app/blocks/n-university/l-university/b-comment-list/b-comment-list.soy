@@ -1,0 +1,303 @@
+{namespace sm.lUniversity.bCommentList.Template}
+
+
+/**
+ * @typedef {{
+ *     header: string,
+ *     list: {
+ *         items: Array<sm.bSmComment.Template.Params.Data>,
+ *         itemType: string
+ *     }
+ * }} sm.lUniversity.bCommentList.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     theme: ?string,
+ *     customClasses: ?Array<string>,
+ *     countShownItems: ?number
+ * }} sm.lUniversity.bCommentList.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.lUniversity.bCommentList.Template.Data,
+ *     config: sm.lUniversity.bCommentList.Template.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .commentList}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    lUniversity-commentList
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data:  sm.lUniversity.bCommentList.Template.Data,
+ *     config: sm.lUniversity.bCommentList.Template.Config
+ * }}
+ */
+{template .body}
+    {call .header_ data="all" /}
+    // {call .filterPanel_ data="all" /}
+    {call .leaveCommentButton_}
+        {param params: [
+            'displaySize': 's',
+            'commentsCount': $params.data.list.items.length
+        ] /}
+    {/call}
+    {call .list_ data="all" /}
+    {call .controlPanel_ data="all" /}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-comment-list
+{/template}
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         header: string
+ *     }
+ * }}
+ */
+{template .header_}
+    <div class="{call .rootClass /}__header">
+        <div class="{call .rootClass /}__header-content">
+            {$params.data.header}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Comment list
+ * @param params {{
+ *     data: {
+ *         list: {
+ *             items: Array<sm.bSmComment.Template.Params.Data>
+ *         }
+ *     }
+ * }}
+ */
+{template .list_}
+    {if $params.data.list?.items and $params.data.list.items.length > 0}
+        {let $customClasses kind="html"}
+            {call .rootClass /}__item-list
+        {/let}
+
+        <div class="{call .rootClass /}__list">
+            {call .renderChild}
+                {param params: [
+                    'type': 'smItemList',
+                    'renderParams': [
+                        'data': $params.data.list,
+                        'config': [
+                            'customClasses': [$customClasses],
+                            'theme': $params.config?.theme,
+                            'countShownItems': $params.config?.countShownItems
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {else}
+        {call .placeholder_ /}
+    {/if}
+{/template}
+
+
+/**
+ * Empty list
+ */
+{template .placeholder_}
+    <div class="{call .rootClass /}__placeholder">
+        {call .getText}
+            {param message: 'Пока никто не оставил отзывов об этой специальности.' /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Buttons
+ * @param params {{
+ *     data: {
+ *         list: {
+ *             items: Array<sm.bSmComment.Template.Params.Data>
+ *         }
+ *     }
+ * }}
+ */
+{template .controlPanel_}
+    <div class="{call .rootClass /}__control-panel">
+        {call .showCommentsButtons_ data="all" /}
+        {call .leaveCommentButton_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Show comments buttons
+ * @param params {{
+ *     data: {
+ *         list: {
+ *             items: Array<sm.bSmComment.Template.Params.Data>
+ *         }
+ *     },
+ *     config: {
+ *         countShownItems: ?number
+ *     }
+ * }}
+ */
+{template .showCommentsButtons_}
+    {if $params.data.list?.items and
+            $params.data.list.items.length > $params.config?.countShownItems
+    }
+        {let $count: $params.data.list.items.length - $params.config.countShownItems /}
+
+        <div class="{call .rootClass /}__show-comments-button-wrap">
+            {call .showCommentsButton_}
+                {param params: [
+                    'count': $count
+                ] /}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass /}__show-comments-button-wrap
+            {sp}{call .rootClass /}__show-comments-button-wrap_size_l"
+        >
+            {call .showCommentsButton_}
+                {param params: [
+                    'count': $count,
+                    'displaySize': 'l'
+                ] /}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Show comments button
+ * @param params {{
+ *     count: number,
+ *     displaySize: (string|undefined)
+ * }}
+ */
+{template .showCommentsButton_}
+    {let $content kind="text"}
+        {if $params.displaySize == 'l'}
+            Все отзывы {$params.count}
+        {else}
+            Загрузить все отзывы {$params.count}
+        {/if}
+    {/let}
+
+    {let $customClasses kind="text"}
+        {call .rootClass /}__show-comments-button
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'button',
+            'renderParams': [
+                'data': [
+                    'content': $content
+                ],
+                'config': [
+                    'customClasses': [$customClasses],
+                    'theme': 'neptune-reverse',
+                    'borderRoundSize': 'xl',
+                    'size': 'm'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Button leave comment
+ * @param params {{
+ *     displaySize: (string|undefined),
+ *     commentsCount: (number|undefined)
+ * }}
+ */
+{template .leaveCommentButton_}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__leave-comment-button
+    {/let}
+
+    {let $class kind="text"}
+        {if $params.displaySize}
+            {call .rootClass/}__leave-comment-button-wrap_size_{$params.displaySize}
+
+            {if $params.commentsCount == 0}
+                {sp}i-utils__hidden
+            {/if}
+
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass /}__leave-comment-button-wrap {$class}">
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'Оставить отзыв'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': 'neptune',
+                        'borderRoundSize': 'xl',
+                        'size': 'm'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     config: {
+ *         countShownItems: ?number
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $data: quoteKeysIfJs([
+        'countShownItems': $params.config?.countShownItems
+    ])/}
+
+    data-params="
+    {call cl.iUtils.Utils.stringify}
+        {param json: $data/}
+    {/call}"
+{/template}

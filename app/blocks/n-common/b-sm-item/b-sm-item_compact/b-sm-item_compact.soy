@@ -13,9 +13,11 @@
  *     alias: ?string,
  *     score: ?number,
  *     description: (string|undefined),
- *     descriptionLink: ({
+ *     additionalLink: ({
  *         content: string,
- *         url: string
+ *         url: string,
+ *         size: ?string,
+ *         theme: ?string
  *     }|undefined),
  *     metro: ?Array<{
  *         id: number,
@@ -26,15 +28,24 @@
  *         name: string
  *     }>,
  *     category: string,
- *     url: ?string
+ *     url: ?string,
+ *     nameLinkUrl: ?string
  * }}
  * sm.bSmItem.TemplateCompact.Params.Data
  */
 
 
 /**
- * @typedef {sm.bSmItem.Template.Params.Config}
- * sm.bSmItem.TemplateCompact.Params.Config
+ * @typedef {{
+ *     enableCover: boolean,
+ *     stylizationModifier: string,
+ *     customClasses: ?Array<string>,
+ *     theme: ?string,
+ *     nameLinkSize: ?string,
+ *     nameLinkTheme: ?string,
+ *     isNameNotLink: ?boolean,
+ *     isDescriptionLink: ?string
+ * }} sm.bSmItem.TemplateCompact.Params.Config
  */
 
 
@@ -100,7 +111,7 @@
 
     <div class="{$classes}">
         {call .description data="all" /}
-        {call .descriptionLink_ data="all" /}
+        {call .additionalLink_ data="all" /}
     </div>
 {/template}
 
@@ -125,10 +136,13 @@
  *             bold: ?string
  *         },
  *         alias: ?string,
- *         url: ?string
+ *         url: ?string,
+ *         nameLinkUrl: ?string
  *     },
  *     config: {
- *         theme: string
+ *         nameLinkTheme: ?string,
+ *         isNameNotLink: ?boolean,
+ *         nameLinkSize: ?string
  *     }
  * }}
  * @protected
@@ -144,7 +158,9 @@
         {/let}
 
         {let $url kind="html"}
-            {if $params.data.url}
+            {if $params.data.nameLinkUrl}
+                {$params.data.nameLinkUrl}
+            {elseif $params.data.url}
                 {$params.data.url}
             {else}
                 /{$params.data.alias}
@@ -155,23 +171,27 @@
             {call .rootClass/}__link-name
         {/let}
 
-        {call .renderChild}
-            {param params: [
-                'type': 'smLink',
-                'renderParams': [
-                    'data': [
-                        'id': $params.data.id,
-                        'content': $name,
-                        'url': $url
-                    ],
-                    'config': [
-                        'customClasses': [$customClasses],
-                        'theme': 'dark',
-                        'size': 'xxl'
+        {if $url and not $params.config.isNameNotLink}
+            {call .renderChild}
+                {param params: [
+                    'type': 'smLink',
+                    'renderParams': [
+                        'data': [
+                            'id': $params.data.id,
+                            'content': $name,
+                            'url': $url
+                        ],
+                        'config': [
+                            'customClasses': [$customClasses],
+                            'theme': $params.config.nameLinkTheme ?: 'dark',
+                            'size': $params.config.nameLinkSize ?: 'xxl'
+                        ]
                     ]
-                ]
-            ]/}
-        {/call}
+                ]/}
+            {/call}
+        {else}
+            {$name}
+        {/if}
     </div>
 {/template}
 
@@ -212,27 +232,42 @@
  *             light: string,
  *             bold: (string|undefined)
  *         },
- *         imageUrl: (string|undefined)
+ *         imageUrl: (string|undefined),
+ *         url: ?string
  *     }
  * }}
  * @protected
  */
 {template .image}
-    {if $params.data.imageUrl}
-        {let $description kind="html"}
-            {$params.data.name.light}
-            {if $params.data.name.bold}
-                {sp}{$params.data.name.bold}
-            {/if}
-        {/let}
+    {let $description kind="html"}
+        {$params.data.name.light}
+        {if $params.data.name.bold}
+            {sp}{$params.data.name.bold}
+        {/if}
+    {/let}
 
-        <div class="{call .rootClass/}__cover-link">
-            <img class="{call .rootClass/}__cover-image"
-                src="{$params.data.imageUrl}"
-                alt="{$description}"
-            >
-        </div>
-    {/if}
+    {let $tag kind="html"}
+        {if $params.data.url}
+            a
+        {else}
+            div
+        {/if}
+    {/let}
+
+    {let $link kind="html"}
+        {if $params.data.url}
+            {$params.data.url}
+        {/if}
+    {/let}
+
+    <{$tag} class="{call .rootClass/}__cover-link"
+        href="{$link}"
+    >
+        <img class="{call .rootClass/}__cover-image"
+            src="{$params.data.imageUrl}"
+            alt="{$description}"
+        >
+    </{$tag}>
 {/template}
 
 
@@ -330,17 +365,19 @@
  * Description
  * @param params {{
  *     data: {
- *         descriptionLink: ({
+ *         additionalLink: ({
  *             content: string,
- *             url: string
+ *             url: string,
+ *             size: ?string,
+ *             theme: ?string
  *         }|undefined)
  *     }
  * }}
  */
-{template .descriptionLink_}
-    {if $params.data?.descriptionLink}
+{template .additionalLink_}
+    {if $params.data?.additionalLink}
         {let $customClasses kind="html"}
-            {call .rootClass/}__link-description
+            {call .rootClass/}__additional-link
         {/let}
 
         <div class="{call .rootClass/}__description-link">{sp}
@@ -348,9 +385,12 @@
                 {param params: [
                     'type': 'smLink',
                     'renderParams': [
-                        'data': $params.data?.descriptionLink,
+                        'data': $params.data?.additionalLink,
                         'config': [
-                            'customClasses': [$customClasses]
+                            'customClasses': [$customClasses],
+                            'size': $params.data?.additionalLink?.size,
+                            'theme': $params.data?.additionalLink?.theme ?:
+                                'default'
                         ]
                     ]
                 ]/}

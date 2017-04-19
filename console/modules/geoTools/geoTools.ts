@@ -6,6 +6,10 @@ const logger = require('../../../app/components/logger/logger.js')
     .getLogger('app');
 
 const GEOCODER = 'http://geocode-maps.yandex.ru/1.x/';
+import {
+    GeoCoderException,
+    GeoCoderRegionNotFoundException
+} from '../../../api/modules/geo/services/exceptions/index';
 
 class GeoTools {
     /**
@@ -155,6 +159,63 @@ class GeoTools {
         return metrosUniq;
     }
 
+    // get region name by city name
+    public async getRegion(cityName: string): Promise<string> {
+        let responseGeo;
+        try {
+            responseGeo = await axios.get(GEOCODER, {
+                params: {
+                    geocode: cityName,
+                    kind: 'locality',
+                    format: 'json',
+                    results: 1
+                }
+            });
+        } catch (error) {
+            throw new GeoCoderException(error);
+        }
+
+        type componentAddress = {kind: string, name: string};
+        type address = {
+          country_code: string,
+          formatted: string,
+          Components: Array<componentAddress>
+        };
+        const featureMember: Array<any> = responseGeo.data
+            .response
+            .GeoObjectCollection
+            .featureMember;
+        if (!featureMember.length) {
+            throw new GeoCoderRegionNotFoundException(cityName);
+        }
+
+        const address: address = featureMember[0]
+            .GeoObject
+            .metaDataProperty
+            .GeocoderMetaData
+            .Address;
+        const components: Array<componentAddress>
+            = address.Components;
+
+        const searchRegion = function(
+            component: componentAddress
+        ): boolean {
+            if (
+                component.kind === 'province' &&
+                !/округ/i.test(component.name)
+            ) {
+                return true;
+            }
+        };
+        const foundRegion: componentAddress | boolean
+            = components.find(searchRegion);
+        if (foundRegion) {
+            const region = foundRegion as componentAddress;
+            return region.name;
+        } else {
+            throw new GeoCoderRegionNotFoundException(cityName, components);
+        }
+    }
 
     /**
      * distanceKm

@@ -70,7 +70,7 @@ goog.scope(function() {
     View.prototype.initOptions = function(opt_element) {
         this.dom.options = this.getElementsByClass(
             sm.gDropdown.ViewSelect.CssClass.ROOT,
-            element
+            opt_element
         );
     };
 

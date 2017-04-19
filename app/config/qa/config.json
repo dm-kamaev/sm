@@ -1,6 +1,7 @@
 {
-    "emailNotifier": {
-        "email": "easyrider377@yandex.ru"
+    "notifications": {
+        "schools": "easyrider377@yandex.ru",
+        "universities": "easyrider377@yandex.ru"
     },
     "port": 3000,
     "environment": "development",
@@ -20,6 +21,15 @@
         "analyticsViewId": "ga:134372507",
         "experimentId": "134372507-21"
     },
+    "universities": {
+        "host": "vuz.qa.lan"
+    },
     "carrotquestId": "6408-1ccff98844d996fc088fed318b4",
-    "facebookClientId": 525358880980041
+    "facebookClientId": 525358880980041,
+    "mailChimp": {
+        "dc": "us15",
+        "listId": "ef236b2f67",
+        "name": "butusov@mel.fm",
+        "password": "5154328c5a5b8208e043e563b8ebaa27-us15"
+    }
 }

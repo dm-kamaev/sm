@@ -71,7 +71,7 @@
                 {param params: [
                     'data': [
                         'index': $i,
-                        'selectedAmount': $params?.data?.selectedAmount
+                        'selectedAmount': round($params?.data?.selectedAmount)
                     ]
                 ]/}
             {/call}

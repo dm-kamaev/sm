@@ -8,8 +8,7 @@
  *         type: string,
  *         isSelected: boolean
  *     }>,
- *     contacts: sm.bSmContacts.Template.Params.Data,
- *     helperText: string
+ *     contacts: sm.bSmContacts.Template.Params.Data
  * }} sm.bSmHeader.Template.Params.Data
  */
 
@@ -59,7 +58,7 @@
  */
 {template .body}
     <div class="{call .rootClass /}__body">
-        {call .headerMainMenu data="all" /}
+        {call .headerMainMenu_ data="all" /}
     </div>
 {/template}
 
@@ -67,11 +66,12 @@
  * @param params {{
  *     data: sm.bSmHeader.Template.Params.Data
  * }}
+ * @private
  */
-{template .headerMainMenu kind="html"}
+{template .headerMainMenu_ kind="html"}
     <div class="{call .rootClass /}__main-menu">
-        {call .sectionNavigation data="all" /}
-        {call .sectionContacts data="all" /}
+        {call .sectionNavigation_ data="all" /}
+        {call .sectionContacts_ data="all" /}
     </div>
 {/template}
 
@@ -86,11 +86,12 @@
  *         isSelected: boolean
  *     }>
  * }}
+ * @private
  */
-{template .sectionNavigation kind="html"}
+{template .sectionNavigation_ kind="html"}
     <div class="{call .rootClass /}__section
         {sp}{call .rootClass /}__section_menu">
-        {call .menu data="all" /}
+        {call .menu_ data="all" /}
     </div>
 {/template}
 
@@ -99,16 +100,15 @@
  * Contacts section
  * @param params {{
  *     data: {
- *         contacts: sm.bSmContacts.Template.Params.Data,
- *         helperText: string
+ *         contacts: sm.bSmContacts.Template.Params.Data
  *     }
  * }}
+ * @private
  */
-{template .sectionContacts kind="html"}
+{template .sectionContacts_ kind="html"}
     <div class="{call .rootClass /}__section
         {sp}{call .rootClass /}__section_contacts">
-        {call .helperText data="all" /}
-        {call .contacts data="all" /}
+        {call .contacts_ data="all" /}
     </div>
 {/template}
 
@@ -125,11 +125,12 @@
  *         }>
  *     }
  * }}
+ * @private
  */
-{template .menu kind="html"}
+{template .menu_ kind="html"}
     <ul class="{call .rootClass /}__navigation-menu">
         {foreach $item in $params.data.menuItems}
-            {call .menuItem}
+            {call .menuItem_}
                 {param params: [
                     'data': $item
                 ] /}
@@ -147,8 +148,9 @@
  *     type: string,
  *     isSelected: boolean
  * }}
+ * @private
  */
-{template .menuItem kind="html"}
+{template .menuItem_ kind="html"}
     {let $classes kind="html"}
         {call .rootClass /}__menu-item
         {if $params.data.type}
@@ -193,35 +195,23 @@
  *         contacts: sm.bSmContacts.Template.Params.Data
  *     }
  * }}
+ * @private
  */
-{template .contacts kind="html"}
-    <div class="{call .rootClass /}__contacts">
-        {call .renderChild}
-            {param params: [
-                'type': 'smContacts',
-                'renderParams': [
-                    'data': $params.data.contacts,
-                    'config': [
-                        'size': 'xl'
+{template .contacts_ kind="html"}
+    {if $params.data.contacts}
+        <div class="{call .rootClass /}__contacts">
+            {call .renderChild}
+                {param params: [
+                    'type': 'smContacts',
+                    'renderParams': [
+                        'data': $params.data.contacts
                     ]
-                ]
-            ] /}
-        {/call}
-    </div>
+                ] /}
+            {/call}
+        </div>
+    {/if}
 {/template}
 
-
-/**
- * Helper text template
- * @param params {{
- *      helperText: string
- * }}
- */
-{template .helperText kind="html"}
-    <div class="{call .rootClass /}__helper-text">
-        {$params.data.helperText}
-    </div>
-{/template}
 
 /**
  * @override

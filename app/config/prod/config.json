@@ -17,6 +17,15 @@
         "analyticsViewId": "ga:130670455",
         "experimentId": "130670455-19"
     },
+    "universities": {
+        "host": "vuz.mel.fm"
+    },
     "carrotquestId": "6408-1ccff98844d996fc088fed318b4",
-    "facebookClientId": 1463878833939061
+    "facebookClientId": 1463878833939061,
+    "mailChimp": {
+        "dc": "us15",
+        "listId": "ef236b2f67",
+        "name": "butusov@mel.fm",
+        "password": "5154328c5a5b8208e043e563b8ebaa27-us15"
+    }
 }

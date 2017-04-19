@@ -39,6 +39,11 @@
     font-size: 17px;
 }
 
+.b-sm-link_size_6xl {
+    font-size: 20px;
+    line-height: 24px;
+}
+
 .b-sm-link_size_7xl {
     font-size: 21px;
     line-height: 26px;
@@ -91,5 +96,18 @@
     &.b-sm-link_selected {
         color: #000000;
     }
+}
+
+.b-sm-link_neptune-theme, .b-sm-link_neptune-imaged-theme {
+    color: #0a5bff;
+}
+
+.b-sm-link_sky-theme {
+    color: #0a60ff;
+
+    &.b-sm-link_selected, &.b-sm-link_hoverable:hover {
+        color: #7f7f7f;
+    }
+
 }
 /** Themes end */

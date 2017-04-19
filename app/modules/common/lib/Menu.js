@@ -19,6 +19,9 @@ class Menu {
      *         },
      *         schools: {
      *             host: string
+     *         },
+     *         universities: {
+     *             host: string
      *         }
      *     }
      * }} data
@@ -82,7 +85,8 @@ class Menu {
     generateParams() {
         let possibleEnityTypes = [
             entityTypeEnum.SCHOOL,
-            entityTypeEnum.COURSE
+            entityTypeEnum.COURSE,
+            // entityTypeEnum.UNIVERSITY
         ];
 
         return this.generateMenuItems(possibleEnityTypes);
@@ -139,6 +143,9 @@ class Menu {
             break;
         case entityTypeEnum.COURSE:
             name = 'Курсы и секции';
+            break;
+        case entityTypeEnum.UNIVERSITY:
+            name = 'ВУЗы';
             break;
         }
         return name;

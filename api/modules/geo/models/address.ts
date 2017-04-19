@@ -4,22 +4,8 @@ const db = require('../../../../app/components/db'),
     entityTypes = require('../../entity/enums/entityType');
 
 import * as Sequelize from 'sequelize/v3';
-import {DepartmentAttribute} from './department';
 
-interface AddressAttribute {
-    id?: number;
-    entityId?: number;
-    entityType?: string;
-    areaId?: number;
-    name?: string;
-    coords?: Array<number>;
-    isSchool?: boolean;
-}
-
-export interface AddressInstance
-    extends Sequelize.Instance<AddressAttribute>, AddressAttribute {
-    getDepartments: Sequelize.HasManyGetAssociationsMixin<DepartmentAttribute>;
-}
+import {AddressInstance, AddressAttribute} from '../types/address';
 
 interface AddressModel
     extends Sequelize.Model<AddressInstance, AddressAttribute> {}
@@ -79,6 +65,10 @@ const Model: AddressModel = db.define('Address', {
                 as: 'searchData',
                 foreignKey: 'address_id',
                 onDelete: 'cascade'
+            });
+            this.belongsToMany(models.Program, {
+                as: 'programs',
+                through: 'program_address'
             });
         }
     }

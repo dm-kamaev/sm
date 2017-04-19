@@ -1,3 +1,3 @@
 #!/bin/bash
 BASEDIR=$(dirname $0)
-node $BASEDIR/../../commander notify
+node $BASEDIR/../executable/sendNewCommentNotifications.js

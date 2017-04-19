@@ -2,17 +2,29 @@
 
 
 /**
+ * @typedef {{
+ *     placeholder: (string|undefined),
+ *     value: (string|undefined),
+ *     name: (string|undefined),
+ *     maxLength: (number|undefined)
+ * }} sm.gInput.TemplateStendhal.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     stylizationModifier: string,
+ *     validations: (Array<string>|undefined),
+ *     theme: ('thin'|'light'|undefined)
+ * }} sm.gInput.TemplateStendhal.Params.Config
+ */
+
+
+/**
  * Constructor
  * @param? params {{
- *     data: {
- *         placeholder: (string|undefined),
- *         value: (string|undefined),
- *         name: (string|undefined),
- *         maxLength: (number|undefined)
- *     },
- *     config: {
- *         validations: (Array<string>|undefined)
- *     }
+ *     data: sm.gInput.TemplateStendhal.Params.Data,
+ *     config: sm.gInput.TemplateStendhal.Params.Config
  * }}
  * @extends cl.gInput.Template
  * @factory sm.iCloblFactory.FactoryStendhal

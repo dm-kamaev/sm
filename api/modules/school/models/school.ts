@@ -184,9 +184,6 @@ const Model: SchoolModel = db.define('School', {
                 foreignKey: 'city_id',
                 as: 'city'
             });
-            this.hasMany(models.SchoolUniversity, {
-                as: 'schoolUniversities', foreignKey: 'school_id'
-            });
             this.hasMany(models.Activity, {
                 as: 'activites',
                 foreignKey: 'school_id'
