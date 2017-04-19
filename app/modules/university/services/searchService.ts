@@ -1,7 +1,9 @@
 const logger = require('../../../components/logger/logger').getLogger('app');
 
+import {QueryParams} from '../types/programSearchLayout';
+
 import {Service, RequestParams} from '../../common/services/Service';
-import {SuggestProgram} from '../types/program';
+import {SuggestProgram, BackendListProgram} from '../types/program';
 
 class SearchService extends Service {
     constructor() {
@@ -15,6 +17,18 @@ class SearchService extends Service {
             url: this.baseUrl + '/suggest',
             method: 'get',
             params: {searchString: name}
+        };
+
+        const response = await this.send(requestParams);
+        return response.data;
+    }
+
+    public async findByParams(
+            queryParams: QueryParams): Promise<BackendListProgram> {
+        const requestParams: RequestParams = {
+            url: `${this.baseUrl}`,
+            method: 'get',
+            params: queryParams
         };
 
         const response = await this.send(requestParams);
