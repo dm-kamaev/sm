@@ -100,15 +100,11 @@ class UniversityRenderController extends Controller {
     }
 
     public async actionGetSearch(actionContext: any) {
-        const user = userService.getUserFromRequest(actionContext.request),
-            searchParams = searchView.initSearchParams(
-                actionContext.request.query
-            );
+        const user = userService.getUserFromRequest(actionContext.request);
 
         const templateParams = searchView.render({
             data: {
                 favorites: [],
-                searchParams: searchParams
             },
             config: config,
             requestData: {

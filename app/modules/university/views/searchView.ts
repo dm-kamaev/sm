@@ -14,46 +14,19 @@ import {UniversityFooter} from './UniversityFooter';
 import {ProgramFilterPanel} from '../lib/ProgramFilterPanel';
 import {programsView} from './programsView';
 
-import {AppConfig} from '../../common/types/layout';
-import {BackendUser} from '../../user/types/user';
+import {
+    BackendData,
+    RenderParams,
+    QueryParams
+} from '../types/programSearchLayout';
 
 import {
     lSearchUniversity
 } from '../../../blocks/n-university/l-search_university/params';
 
-
-type Params = {
-    data: Data;
-    config: AppConfig;
-    requestData: {
-        user: BackendUser;
-        csrf: string;
-        query: any;
-    }
-};
-
-type Data = {
-    filtersData: any;
-    searchParams: SearchParams;
-    favorites: Array<{string: any}>;
-};
-
-type SearchParams = {
-    cities: number[];
-    ege: number[];
-    payType: number[];
-    maxPassScore: number[];
-    maxPrice: number[];
-    majors: number[];
-    features: number[];
-    page: number;
-    sortType: number;
-    name: string;
-};
-
 type FilterPanelParams = {
     filtersData: any;
-    searchParams: SearchParams;
+    searchParams: lSearchUniversity.Params.SearchParams;
     enabledFilters: string[];
 };
 
@@ -85,8 +58,10 @@ class SearchView extends LayoutView {
         this.openGraph = {};
     }
 
-    public initSearchParams(params): SearchParams {
+    public initSearchParams(
+            data: RenderParams): lSearchUniversity.Params.SearchParams {
         const formatUtils = new FormatUtils();
+        const params = data.requestData.query;
 
         return {
             cities: formatUtils.transformToArray(params.cities),
@@ -99,17 +74,17 @@ class SearchView extends LayoutView {
                 params.features
             ),
             page: params.page || 0,
-            sortType: params.sortType || 0,
-            name: params.name
+            sortType: params.sortType || 0
         };
     }
 
-    protected setParams(params: Params) {
+    protected setParams(params: RenderParams) {
         super.setParams(params);
 
+        const searchParams = this.initSearchParams(params);
         this.setResultsList_();
-        this.setFilterPanels_(params.data);
-        this.setSearchParams_(params.data.searchParams);
+        this.setFilterPanels_(params.data, searchParams);
+        this.setSearchParams_(searchParams);
     }
 
     private setResultsList_() {
@@ -153,7 +128,9 @@ class SearchView extends LayoutView {
         };
     }
 
-    private setFilterPanels_(data: Data) {
+    private setFilterPanels_(
+            data: BackendData,
+            searchParams: lSearchUniversity.Params.SearchParams) {
         const ege = [
             {
                 id: 1,
@@ -196,7 +173,7 @@ class SearchView extends LayoutView {
             ]
         };
         const mainPanelParams: FilterPanelParams = {
-            searchParams: data.searchParams,
+            searchParams: searchParams,
             filtersData: data.filtersData || filtersData,
             enabledFilters: [
                 filterName.CITIES,
@@ -209,7 +186,7 @@ class SearchView extends LayoutView {
         this.params.data.filterPanel = filterPanel.render(mainPanelParams);
 
         const dependentPanelParams: FilterPanelParams = {
-            searchParams: data.searchParams,
+            searchParams: searchParams,
             filtersData: data.filtersData || filtersData,
             enabledFilters: [
                 filterName.MAX_PASS_SCORE,
@@ -225,7 +202,8 @@ class SearchView extends LayoutView {
         );
     }
 
-    private setSearchParams_(searchParams: SearchParams) {
+    private setSearchParams_(
+            searchParams: lSearchUniversity.Params.SearchParams) {
         this.params.data.searchParams = searchParams;
     }
 }
