@@ -958,7 +958,7 @@ service.getByIds = function(ids) {
  */
 service.getAllTypes = async(function() {
     return await(models.SchoolTypeFilter.findAll({
-        attributes: [ 'id', 'name', 'values', 'alias' ]
+        attributes: ['id', 'name', 'values', 'alias']
     }));
 });
 
