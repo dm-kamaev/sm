@@ -848,7 +848,7 @@ goog.scope(function() {
         /** As in search params search text is 'name' field, and in search_ is
          * 'text' field. So it need to init it manually
          */
-        this.search_.setText(this.paramsManager_.getName());
+        this.search_.setText(this.paramsManager_.getName() || '');
 
         this.filterPanel_ = this.decorateChild(
             sm.lSearch.bFilterPanel.FilterPanel.NAME,
