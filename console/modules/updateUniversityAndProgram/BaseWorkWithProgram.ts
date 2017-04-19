@@ -36,6 +36,24 @@ export abstract class BaseWorkWithProgram {
           res = englishBoolean[russianBoolean];
       }
       return res;
+  }
 
+  protected uniteUniversityIdAndProgramName(
+    universityId: number,
+    programName: string
+  ): string {
+    return this.cleanWhiteSpace(String(universityId)) +
+           '::::' +
+           this.cleanWhiteSpace(programName);
+  }
+
+
+  protected uniteProgramIdAndYear(
+    programId: number,
+    year: number
+  ): string {
+    return this.cleanWhiteSpace(String(programId)) +
+           '::::' +
+           this.cleanWhiteSpace(String(year));
   }
 }

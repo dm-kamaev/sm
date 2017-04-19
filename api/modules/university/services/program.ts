@@ -335,6 +335,30 @@ class ProgramService {
         return result;
     }
 
+
+    public async fullUpdate(id: number, data: ProgramAdmin):
+            Promise<[number, Array<ProgramInstance>]> {
+        const updatedResult = await ProgramModel.update(data, {
+            where: {
+                id: id
+            },
+            individualHooks: true
+        });
+        const program = await ProgramModel.findById(id);
+        const university = await universityService.get(program.universityId);
+
+        if (data.addressName) {
+            const address = await addressService.getOrCreateByName(
+                data.addressName,
+                university.cityId
+            );
+            await program.setAddresses([address]);
+        }
+
+        return updatedResult;
+    }
+
+
     private async getRawSearchList_(queryParams): Promise<ListProgram[]> {
         const searchParams =
             programSearchService.converSearchParams(queryParams);
@@ -390,28 +414,6 @@ class ProgramService {
         }
 
         return program;
-    }
-
-    private async fullUpdate(id: number, data: ProgramAdmin):
-            Promise<[number, Array<ProgramInstance>]> {
-        const updatedResult = await ProgramModel.update(data, {
-            where: {
-                id: id
-            },
-            individualHooks: true
-        });
-        const program = await ProgramModel.findById(id);
-        const university = await universityService.get(program.universityId);
-
-        if (data.addressName) {
-            const address = await addressService.getOrCreateByName(
-                data.addressName,
-                university.cityId
-            );
-            await program.setAddresses([address]);
-        }
-
-        return updatedResult;
     }
 
     private async silentGetOne_(programId: number): Promise<ProgramInstance> {

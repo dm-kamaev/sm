@@ -14,34 +14,31 @@ import {Cities} from './Cities';
 import {
     service as cityService
 } from '../../../api/modules/geo/services/city';
-import {
-    HashBoolean, HashNumber, HashString
-} from './types/updateUniverstyAndProgram';
-// import {
-//     UniversityInstance
-// } from '../../../api/modules/university/models/University';
+import {Hash, ICities} from './types/updateUniverstyAndProgram';
 import {
     UniversityAdminList
 } from '../../../api/modules/university/types/university';
 
+import {BaseWorkWithProgram} from './BaseWorkWithProgram';
 
 
-export class Universities {
+export class Universities extends BaseWorkWithProgram {
     private listProgram_: any[];
-    private hashColumn_: HashString;
-    private hashCities_: HashNumber;
-    private cities: {getHashCity(): Promise<HashNumber>};
+    private hashColumn_: Hash<string>;
+    private hashCities_: Hash<number>;
+    private citiesInstance: ICities;
 
-    constructor(option) {
+    constructor(option?) {
+        super();
+        option = option || {};
         this.listProgram_ = option.listProgram;
         this.hashColumn_ = option.hashColumn;
-        this.cities = new Cities();
+        this.citiesInstance = new Cities();
     }
 
     public async validate() {
         await this.validateCities();
-        // TURN ON !!!!
-        // this.validateUniversityAndProgramName();
+        this.validateUniversityAndProgramName();
         this.validateParams();
     }
 
@@ -49,7 +46,7 @@ export class Universities {
         try {
             const universities = await this.extractUniversities();
             await this.updateUniversities(universities);
-            logger.info('success universities updateViaXlsx');
+            logger.info('Success universities updateViaXlsx');
         } catch (error) {
             logger.critical('Universities.updateViaXlsx => ' + error);
         }
@@ -57,7 +54,7 @@ export class Universities {
 
     private async validateCities() {
         const hashCity
-            = this.hashCities_ = await this.cities.getHashCity();
+            = this.hashCities_ = await this.citiesInstance.getHashCity();
         const {city: cityColumn} = this.hashColumn_;
         this.listProgram_.forEach((program, i) => {
             let cityName: string = program[cityColumn] || '';
@@ -211,10 +208,23 @@ export class Universities {
         return universities;
     }
 
+    public async getHashUniversities(): Promise<Hash<number>> {
+        const universitiesDb = await universityService.getAll();
+        const hashUniverDb: Hash<number> = {};
+        universitiesDb.forEach((university) => {
+            const {abbreviation, name} = university;
+            const key: string
+                = this.uniteAbbrevationAndName(abbreviation, name);
+            hashUniverDb[key] = university.id;
+        });
+        return hashUniverDb;
+    }
+
+
     private async updateUniversities(universitiesFromFile) {
         const universitiesDb: UniversityAdminList[] =
             await universityService.getAll();
-        const hashUniverDb: HashNumber = {};
+        const hashUniverDb: Hash<number> = {};
         universitiesDb.forEach((university: UniversityAdminList) => {
             const {abbreviation, name} = university;
             const key: string
@@ -233,64 +243,19 @@ export class Universities {
                     res =
                         await universityService.update(universityId, data, []);
                 } catch (error) {
-                    console.log('Error: create =>', error);
+                    console.log('Error: update =>', error);
                 }
             } else {
                 try {
                     res = await universityService.create(data, []);
                 } catch (error) {
-                    console.log('Error: update =>', error);
+                    console.log('Error: create =>', error);
                 }
             }
             return res;
         });
         // console.log('hashUniverDb=', hashUniverDb);
         await Promise.all(promiseUniversities);
-    }
-
-    // TODO: remove to another class
-    private async getHashUniversities(): Promise<HashNumber> {
-        const universitiesDb = await universityService.getAll();
-        const hashUniverDb: HashNumber = {};
-        universitiesDb.forEach((university) => {
-            const {abbreviation, name} = university;
-            const key: string
-                = this.uniteAbbrevationAndName(abbreviation, name);
-            hashUniverDb[key] = university.id;
-        });
-        return hashUniverDb;
-    }
-
-    // TODO: remove to another class
-    private uniteAbbrevationAndName(abbreviation, name): string {
-        return this.cleanWhiteSpace(abbreviation) +
-               '::::' +
-               this.cleanWhiteSpace(name);
-    }
-
-    private russianBooleanToEnglish(russianBoolean: string): boolean | null {
-        russianBoolean = russianBoolean || '';
-        russianBoolean = russianBoolean.replace(/[\s!-/:-@[-`{-~]/g, '')
-            .toLowerCase();
-        const englishBoolean: HashBoolean = {
-            'да': true,
-            'нет': false
-        };
-        let res = null;
-        if (
-            englishBoolean[russianBoolean] === true ||
-            englishBoolean[russianBoolean] === false
-        ) {
-            res = englishBoolean[russianBoolean];
-        }
-        return res;
-
-    }
-
-    // TODO: remove to another class
-    private cleanWhiteSpace(str: string): string {
-        str = str || '';
-        return str.replace(/\s+/g, ' ').trim();
     }
 
 };

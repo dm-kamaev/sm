@@ -38,7 +38,7 @@ export class Cities {
                     return this.create(cityName, hashCity);
                 });
             await Promise.all(promiseCities);
-            logger.info('success cities updateViaXlsx');
+            logger.info('Success cities updateViaXlsx');
         } catch (error) {
             logger.critical('Error: updateCity=> ' + error);
         }

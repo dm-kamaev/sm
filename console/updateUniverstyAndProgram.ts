@@ -7,7 +7,6 @@
 
 import * as commander from 'commander';
 import * as path from 'path';
-import * as lodash from 'lodash';
 const logger = require('../app/components/logger/logger.js').getLogger('app');
 const sequelize = require('../app/components/db.js');
 // sequelize.options.logging = function (query) {
@@ -28,6 +27,7 @@ const sequelize = require('../app/components/db.js');
 import {Xlsx} from './components/Xlsx';
 import {Universities} from './modules/updateUniversityAndProgram/Universities';
 import {Programs} from './modules/updateUniversityAndProgram/Programs';
+import {EntranceStatistics} from './modules/updateUniversityAndProgram/EntranceStatistics';
 import {Cities} from './modules/updateUniversityAndProgram/Cities';
 
 
@@ -40,34 +40,52 @@ class UpdateUniversityProgram {
             city: 'Город',
             universityName: 'Вуз (полное)',
             universityAbbreviation: 'Аббревиатура вуза',
-            programName: 'НАЗВАНИЕ',
+            programName: 'Программа',
             duration: 'срок обучения',
             descriptionProgram: 'Описание программы',
             specialtyСodificator: 'Специальность (по кодификатору)',
             militaryDepartment: 'Военная кафедра (да/нет)',
             dormitory: 'общежитие (да/нет)',
             programMajor: 'major',
+            competition: 'Конкурс (бюджет)',
+            budgetPlaces: 'Кол-во бюджетных мест',
+            commercialPlaces: 'Кол-во платных мест',
+            cost: 'Стоимость в год',
+            egePassScore: 'Проходной на бюджет',
         };
     }
 
     public async start() {
         logger.info('-----START-----');
         try {
-            const pathFile: string = '../assets/universities/listProgram.xlsx';
+            // const pathFile: string = '../assets/universities/listProgram.xlsx';
+            logger.info('Reading files');
+            const pathFile: string = '../assets/universities/listProgram_all.xlsx';
             this.listProgram_ = await this.getJsonFromXlsx(pathFile);
             const data = {
                 hashColumn: this.hashColumn_,
                 listProgram: this.listProgram_,
             };
-            // await new Cities(data).updateViaXlsx();
-            // const universities = new Universities(data);
-            // await universities.validate();
-            // await universities.updateViaXlsx();
             // console.log(this.listProgram_);
-            // process.exit();
+            await new Cities(data).updateViaXlsx();
+
+            const universities = new Universities(data);
+            logger.info('Validate universities...');
+            await universities.validate();
+            logger.info('Update...');
+            await universities.updateViaXlsx();
+
             const programs = new Programs(data);
+            logger.info('Validate programs...');
             await programs.validate();
-            // await programs.updateViaXlsx();
+            logger.info('Update...');
+            await programs.updateViaXlsx();
+
+            const entranceStatistics = new EntranceStatistics(data);
+            logger.info('Validate programs...');
+            await entranceStatistics.validate();
+            logger.info('Update...');
+            await entranceStatistics.updateViaXlsx();
         } catch (error) {
             console.log('ERROR=', error);
         }

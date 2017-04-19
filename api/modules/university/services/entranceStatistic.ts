@@ -11,6 +11,10 @@ const subjectService = require('../../study/services/subject');
 const EXCLUDE_FIELDS = ['created_at', 'updated_at', 'program_id'];
 
 class EntranceStatisticService {
+    public async getAll(): Promise<EntranceStatisticAttribute[]> {
+        return EntranceStatisticModel.findAll();
+    }
+
     public async getByProgramId(programId: number):
             Promise<Array<EntranceStatisticAttribute>> {
         return EntranceStatisticModel.findAll({

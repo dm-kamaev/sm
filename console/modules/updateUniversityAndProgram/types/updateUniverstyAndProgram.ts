@@ -1,5 +1,14 @@
 
-export type HashBoolean = {[key: string]: boolean};
-export type HashNumber = {[key: string]: number};
-export type HashString = {[key: string]: string};
 export type Hash<T> = {[key: string]: T};
+
+export interface IUniversities {
+    getHashUniversities(): Promise<Hash<number>>;
+};
+
+export interface IPrograms {
+    getHashPrograms(): Promise<Hash<number>>;
+};
+
+export interface ICities {
+    getHashCity(): Promise<Hash<number>>;
+};
