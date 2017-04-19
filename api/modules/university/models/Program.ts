@@ -86,10 +86,6 @@ const Program: ProgramModel = sequelize.define('Program', {
         field: 'review_count',
         type: DataType.ARRAY(DataType.INTEGER)
     },
-    oksoCode: {
-        field: 'okso_code',
-        type: DataType.STRING
-    },
     createdAt: {
         field: 'created_at',
         type: DataType.DATE
