@@ -1,6 +1,12 @@
+import * as querystring from 'querystring';
+
 import {ProgramSearchQuery} from '../lib/ProgramSearch';
 
-import {QueryParams, SearchParams} from '../types/programSearch';
+import {QueryParams, SearchParams, EgeSearch} from '../types/programSearch';
+
+type QueryEge = {
+    [key: string]: number
+};
 
 class ProgramSearch {
     public converSearchParams(queryParams: QueryParams): SearchParams {
@@ -10,13 +16,12 @@ class ProgramSearch {
             sortType: Number(queryParams.sortType),
             searchString: queryParams.searchString,
             cities: this.stringToNumberArray_(queryParams.cities),
-            ege: this.stringToNumberArray_(queryParams.ege),
+            ege: this.formatEge_(queryParams.ege),
             payType: this.stringToNumberArray_(queryParams.payType),
             majors: this.stringToNumberArray_(queryParams.majors),
             discount: Boolean(queryParams.discount),
             features: this.stringToNumberArray_(queryParams.features),
-            maxPrice: Number(queryParams.maxPrice),
-            maxPassScore: Number(queryParams.maxPassScore)
+            maxPrice: Number(queryParams.maxPrice)
         };
     }
 
@@ -34,13 +39,33 @@ class ProgramSearch {
             .setDiscount(params.discount)
             .setFeatures(params.features)
             .setMaxPrice(params.maxPrice)
-            .setMaxPassScore(params.maxPassScore)
             .getQuery();
     }
 
     private stringToNumberArray_(
             value: string | undefined): Array<number> | undefined {
         return value && value.split(',').map(Number);
+    }
+
+    private formatEge_(ege: string): EgeSearch[] {
+        let egeResult: QueryEge[];
+        try {
+            egeResult = JSON.parse(ege);
+        } catch (error) {
+            egeResult = [];
+        }
+        return this.convertEge_(egeResult);
+    }
+
+    private convertEge_(ege: QueryEge[]): EgeSearch[] {
+        return ege.map(egeItem => {
+            const subjectId: number = Number(Object.keys(egeItem)[0]);
+            const egeSearchItem: EgeSearch = {
+                subjectId: subjectId,
+                score: Number(egeItem[subjectId])
+            };
+            return egeSearchItem;
+        });
     }
 }
 

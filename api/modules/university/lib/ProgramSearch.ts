@@ -3,6 +3,7 @@ import * as squel from 'squel';
 import {SearchQuery} from '../../entity/lib/Search';
 
 import {SearchType} from '../constants/SearchType';
+import {EgeSearch} from '../types/programSearch';
 
 type SearchDataOptions = {
     isContained?: boolean;
@@ -11,6 +12,7 @@ type SearchDataOptions = {
 export class ProgramSearchQuery extends SearchQuery {
     private programDataCount_: number;
     private programSearchParams_: any;
+    private programEgeResults_: EgeSearch[];
 
     constructor() {
         super();
@@ -20,16 +22,27 @@ export class ProgramSearchQuery extends SearchQuery {
         this.programSearchParams_ = squel.expr();
     }
 
+    public getQuery(): string {
+        const mainQuery: string = super.getQuery();
+        let withQuery: string = '';
+        if (!!this.programEgeResults_) {
+            withQuery = this.generateWithProgramEgeScore_();
+        }
+        return withQuery + mainQuery;
+    }
+
     public setCities(cities: number[]): this {
         this.addProgramSearchData_(cities, SearchType.CITY);
 
         return this;
     }
 
-    public setEge(eges: number[]): this {
-        this.addProgramSearchData_(eges, SearchType.EGE, {
-            isContained: true
-        });
+    public setEge(eges: EgeSearch[] | undefined): this {
+        if (eges && eges.length) {
+            this.addEgeWhere_();
+
+            this.programEgeResults_ = eges;
+        }
 
         return this;
     }
@@ -62,17 +75,6 @@ export class ProgramSearchQuery extends SearchQuery {
     public setMaxPrice(price: number): this {
         if (price) {
             this.innerQuery_.where('entrance_statistic.cost <= ?', price);
-        }
-
-        return this;
-    }
-
-    public setMaxPassScore(passScore: number): this {
-        if (passScore) {
-            this.innerQuery_.where(
-                'entrance_statistic.ege_pass_score <= ?',
-                passScore
-            );
         }
 
         return this;
@@ -219,9 +221,23 @@ export class ProgramSearchQuery extends SearchQuery {
         }
     }
 
+    private addEgeWhere_(): void {
+        this.innerQuery_
+            .where(`program.id IN (${this.generateEgeWhereSubquery_()})`);
+    }
+
+    private generateEgeWhereSubquery_(): string {
+        return squel.select()
+            .from('program_ege_score')
+            .field('program_ege_score.program_id')
+            .where('entrance_statistic.ege_pass_score <= ' +
+                'program_ege_score.score_sum')
+            .toString();
+    }
+
     private getProgramSearchCondition_(
             values: number[], type: string, options?: SearchDataOptions
-    ): Object {
+    ): string {
         const isContained = options && options.isContained;
         const arrayOperator = isContained ? '<@' : '&&';
         return squel.expr()
@@ -262,6 +278,59 @@ export class ProgramSearchQuery extends SearchQuery {
             .field('max(entrance_statistic.year)')
             .from('entrance_statistic')
             .where('program.id = entrance_statistic.program_id');
+    }
+
+    private generateWithProgramEgeScore_(): string {
+        const userEgeScoreQuery: string = this.generateUserEgeScoreQuery_();
+        const programEgeQuery: string = this.generateProgramEgeQuery_();
+        const programEgeScoreQuery: string =
+            this.generateProgramEgeScoreQuery_();
+        const withQuery = `WITH user_ege_score AS (${userEgeScoreQuery}),
+    program_ege AS (${programEgeQuery}),
+    program_ege_score AS (${programEgeScoreQuery})`;
+        return withQuery;
+    }
+
+    private generateUserEgeScoreQuery_(): string {
+        return `SELECT *
+    FROM (${this.generateEgeConstantsTable_()})
+    AS user_ege_score (subject_id, score)`;
+    }
+
+    private generateEgeConstantsTable_(): string {
+        const egeSubjectValues: string[] = this.programEgeResults_.map(
+            egeResult => `(${egeResult.subjectId}, ${egeResult.score})`
+        );
+        return `VALUES${egeSubjectValues.join(', ')}`;
+    }
+
+    private generateProgramEgeQuery_(): string {
+        const egeIds: number[] = this.programEgeResults_.map(egeResult =>
+            egeResult.subjectId);
+        const whereCondition: string = this.getProgramSearchCondition_(
+            egeIds,
+            SearchType.EGE, {
+                isContained: true
+            }
+        );
+
+        return `SELECT program_id, unnest(values) AS subject_id
+    FROM program_search_data
+    WHERE (${whereCondition})`;
+    }
+
+    private generateProgramEgeScoreQuery_(): string {
+        return squel.select()
+            .from('program_ege')
+            .field('program_ege.program_id')
+            .field('sum(user_ege_score.score)', 'score_sum')
+            .join(
+                'user_ege_score',
+                null,
+                'program_ege.subject_id = user_ege_score.subject_id'
+            )
+            .group('program_ege.program_id')
+            .toString();
     }
 
     private booleanToSearchArray_(value: boolean): number[] {

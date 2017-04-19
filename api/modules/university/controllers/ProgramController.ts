@@ -160,7 +160,7 @@ class ProgramController extends Controller {
      * @apiGroup Program
      *
      * @apiExample {curl} Example usage:
-     *     curl 'http://localhost:3000/universities/api/program/search?limit=10&searchString=%D0%B8%D0%BD%D0%B6&sortType=1&page=0&cityId=2&ege=11%2C12%2C13%2C14%2C15&features=0%2C2&maxPrice=130000'
+     *     curl 'http://www21.lan:3000/universities/api/program/search?ege=%5B%7B%2212%22%3A+80%7D%2C+%7B%2213%22%3A+90%7D%2C+%7B%2214%22%3A+90%7D%2C+%7B%2215%22%3A+90%7D%5D&limit=10&page=0&searchString=%D0%BA%D0%B0'
      *
      * @apiParam (query) {Number} [limit] Limit quantity of search results.
      * @apiParam (query) {Number} [page] Page of result.
@@ -170,8 +170,8 @@ class ProgramController extends Controller {
      * @apiParam (query) {String} [searchString] Program names will contain
      *     that search string.
      * @apiParam (query) {Number[]} [cities] Cities' id search programs in.
-     * @apiParam (query) {Number[]} [ege] Array of ege's ids
-     *     that program have to contain.
+     * @apiParam (query) {Object[]} [ege] Array of ege objects.
+     *     Ex: [{"12": 60}, {"13": 70}, {"14": 70}].
      * @apiParam (query) {Number[]=0,1} [payType] Program's pay type:
      *     0 – budget type; 1 – commercial type.
      * @apiParam (query) {Number[]} [majors] Array of program's majors.
@@ -180,7 +180,6 @@ class ProgramController extends Controller {
      *     features. 0 – exchange program; 1 – military department;
      *     2 – dormitory.
      * @apiParam (query) {Number} [maxPrice] Program's price cap.
-     * @apiParam (query) {Number} [maxPassScore] Program's ege pass cap.
      *
      * @apiSuccess {Number} programCount Count of found programs.
      * @apiSuccess {Number} universityCount Count of programs' universities.

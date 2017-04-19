@@ -10,7 +10,11 @@ export type QueryParams = {
     discount?: string;
     features?: string;
     maxPrice?: string;
-    maxPassScore?: string;
+};
+
+export type EgeSearch = {
+    subjectId: number;
+    score: number;
 };
 
 export type SearchParams = {
@@ -19,13 +23,12 @@ export type SearchParams = {
     sortType?: number;
     searchString?: string;
     cities?: number[];
-    ege?: number[];
+    ege?: EgeSearch[];
     payType?: number[];
     majors?: number[];
     discount?: boolean;
     features: number[];
     maxPrice?: number;
-    maxPassScore?: number;
 };
 
 export type ListProgram = {
