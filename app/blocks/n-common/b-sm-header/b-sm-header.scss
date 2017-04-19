@@ -64,7 +64,8 @@
     border-bottom: 3px solid #00aa00;
 }
 
-.b-sm-header__menu-item_active-university {
+.b-sm-header__menu-item_active-university,
+.b-sm-header__menu-item_active-program {
     border-bottom: 3px solid #0777e8;
 }
 
@@ -130,7 +131,8 @@
         border-bottom: none;
     }
 
-    .b-sm-header__menu-item_active-university {
+    .b-sm-header__menu-item_active-university,
+    .b-sm-header__menu-item_active-program {
         border-bottom: none;
     }
 }

@@ -52,7 +52,9 @@ abstract class SubHeader {
 
     protected params: bSmSubheader.Params;
 
-    constructor() {
+    constructor(entityType: string) {
+        this.entityType = entityType;
+
         this.params = {
             data: {},
             config: {}

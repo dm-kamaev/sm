@@ -1,12 +1,8 @@
 import {SubHeader, Data} from '../../common/lib/SubHeader';
 
-import {entityType} from '../../common/enums/entityType';
-
 class UniversitySubHeader extends SubHeader {
-    constructor() {
-        super();
-
-        this.entityType = entityType.UNIVERSITY;
+    constructor(entityType: string) {
+        super(entityType);
 
         this.logo = {
             altText: '«ВУЗы Мела»',

@@ -75,12 +75,11 @@ class InformationView extends LayoutView {
     private subunitType: string;
 
     constructor() {
-        super();
+        super(entityType.PROGRAM);
 
         this.views.subHeader = UniversitySubHeader;
         this.views.footer = UniversityFooter;
 
-        this.entityType = entityType.UNIVERSITY;
         this.pageName = pageName.INFORMATION;
 
         this.subHeader = {
@@ -491,7 +490,7 @@ class InformationView extends LayoutView {
     ): bSmInformationCard.Params.Data {
         return {
             id: similarProgram.id,
-            type: entityType.UNIVERSITY,
+            type: entityType.PROGRAM,
             name: similarProgram.name,
             link: {
                 data: {

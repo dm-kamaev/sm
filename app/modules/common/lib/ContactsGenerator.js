@@ -106,7 +106,8 @@ class ContactsGenerator {
     getPhone() {
         let phone;
 
-        if (this.entityType_ != entityTypeEnum.UNIVERSITY) {
+        if (this.entityType_ != entityTypeEnum.UNIVERSITY &&
+            this.entityType_ != entityTypeEnum.PROGRAM) {
             phone = this.phone_;
         }
 

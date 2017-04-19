@@ -61,12 +61,11 @@ class SearchView extends LayoutView {
     protected params: lSearchUniversity.Params;
 
     constructor() {
-        super();
+        super(entityType.PROGRAM);
 
         this.views.subHeader = UniversitySubHeader;
         this.views.footer = UniversityFooter;
 
-        this.entityType = entityType.UNIVERSITY;
         this.pageName = pageName.SEARCH;
 
         this.seo = {
