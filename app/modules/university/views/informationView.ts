@@ -473,7 +473,10 @@ class InformationView extends LayoutView {
 
     private setSimilarPrograms_(data: BackendData) {
         this.params.data.similarPrograms = data.similarPrograms.length ? {
-            header: 'Похожие программы',
+            header: {
+                default: 'Похожие программы обучения',
+                sizeXS: 'Похожие программы'
+            },
             data: {
                 countItemsPerPage: 4,
                 items: data.similarPrograms.map(
@@ -493,7 +496,7 @@ class InformationView extends LayoutView {
             name: similarProgram.name,
             link: {
                 data: {
-                    content: 'Программа обучения',
+                    content: 'Программа',
                     url: similarProgram.url
                 },
                 config: {
@@ -545,7 +548,8 @@ class InformationView extends LayoutView {
             url: courseView.getLink(data.url),
             nameLinkUrl: courseView.getLink(data.categoryUrl),
             placeholder: {
-                url: '/static/images/n-common/b-sm-item/b-sm-item_entity/images/placeholder.png'
+                url: '/static/images/n-common/b-sm-item/b-sm-item_entity' +
+                    '/images/placeholder.png'
             }
         };
     }

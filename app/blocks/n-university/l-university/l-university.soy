@@ -522,8 +522,11 @@
  * @param params {{
  *     data: {
  *         similarPrograms: {
- *              header: string,
- *              data: sm.bSmItemList.Template.Params.Data
+ *             header: {
+ *                 default: string,
+ *                 sizeXS: (string|undefined)
+ *             },
+ *             data: sm.bSmItemList.Template.Params.Data
  *         }
  *     },
  *     config: {
@@ -539,7 +542,12 @@
                 {call .rootClass/}__programs
             {/let}
             <div class="{call .rootClass/}__similar-programs-header">
-                {$params.data.similarPrograms.header}
+                {$params.data.similarPrograms.header.default}
+            </div>
+            <div class="{call .rootClass/}__similar-programs-header{sp}
+                {call .rootClass/}__similar-programs-header_size_xs"
+            >
+                {$params.data.similarPrograms.header.sizeXS}
             </div>
             <div class="{call .rootClass/}__similar-programs-list">
                 {call .renderChildLayout}

@@ -121,6 +121,10 @@
     font-weight: 700;
 }
 
+.l-university__similar-programs-header_size_xs {
+    display: none;
+}
+
 .l-university__section_courses {
     width: 1200px;
     min-width: 255px;
@@ -304,7 +308,11 @@
     }
 
     .l-university__similar-programs-header {
-        padding-bottom: px;
+        display: none;
+    }
+
+    .l-university__similar-programs-header_size_xs {
+        display: block;
     }
 
     .l-university__useful-courses-header {
