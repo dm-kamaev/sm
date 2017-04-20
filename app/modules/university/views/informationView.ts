@@ -523,7 +523,8 @@ class InformationView extends LayoutView {
                     enableCover: true,
                     isDescriptionLink: true,
                     nameLinkSize: 'xl',
-                    nameLinkTheme: 'default'
+                    nameLinkTheme: 'default',
+                    isLinksInNewTab: true
                 }
             }
         } :

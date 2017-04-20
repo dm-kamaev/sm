@@ -137,7 +137,8 @@
  *     },
  *     config: {
  *         nameLinkTheme: ?string,
- *         nameLinkSize: ?string
+ *         nameLinkSize: ?string,
+ *         isLinksInNewTab: ?boolean
  *     }
  * }}
  * @protected
@@ -166,6 +167,12 @@
             {call .rootClass/}__link-name
         {/let}
 
+        {let $target kind="html"}
+            {if $params.config.isLinksInNewTab}
+                _blank
+            {/if}
+        {/let}
+
         {call .renderChild}
             {param params: [
                 'type': 'smLink',
@@ -178,7 +185,8 @@
                     'config': [
                         'customClasses': [$customClasses],
                         'theme': $params.config.nameLinkTheme ?: 'dark',
-                        'size': $params.config.nameLinkSize ?: 'xxl'
+                        'size': $params.config.nameLinkSize ?: 'xxl',
+                        'target': $target
                     ]
                 ]
             ]/}
@@ -225,6 +233,9 @@
  *         },
  *         imageUrl: (string|undefined),
  *         url: ?string
+ *     },
+ *     config: {
+ *         isLinksInNewTab: (boolean|undefined)
  *     }
  * }}
  * @protected
@@ -253,6 +264,9 @@
 
     <{$tag} class="{call .rootClass/}__cover-link"
         href="{$link}"
+        {if $params.config.isLinksInNewTab}
+            target="_blank"
+        {/if}
     >
         <img class="{call .rootClass/}__cover-image"
             src="{$params.data.imageUrl}"
