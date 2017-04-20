@@ -2,17 +2,14 @@
 
 
 /**
- * @typedef {{
- *    filters: Array<{sm.lSearch.bFilter.Template.Params}>
- * }} sm.lSearch.bFilterPanel.Template.Params.Data
+ * @typedef {sm.lSearch.bFilterPanel.Params.Data}
+ * sm.lSearch.bFilterPanel.Template.Params.Data
  */
 
 
 /**
- * @typedef {{
- *     hasCheckedFilters: (boolean|undefined),
- *     stylizationModifier: string
- * }} sm.lSearch.bFilterPanel.Template.Params.Config
+ * @typedef {sm.lSearch.bFilterPanel.Params.Config}
+ * sm.lSearch.bFilterPanel.Template.Params.Config
  */
 
 
@@ -86,7 +83,7 @@
 {template .content_}
     <div class="{call .rootClass/}__content">
         {call .filtersList_ data="all" /}
-        {call .button_ /}
+        {call .button_ data="all" /}
         {call .controlLinks_ data="all" /}
     </div>
 {/template}
@@ -104,7 +101,15 @@
     <div class="{call .rootClass/}__filters-list">
         {foreach $filter in $params.data.filters}
             {call .filter_}
-                {param params: $filter/}
+                {param params: [
+                    'data': $filter.data,
+                    'config': augmentMap(
+                        $filter.config,
+                        [
+                            'panelTheme': $params.config.theme
+                        ]
+                    )
+                ]/}
             {/call}
         {/foreach}
     </div>
@@ -121,7 +126,8 @@
  *         sm.lSearch.bFilter.TemplateDropdown.Params.Data
  *     ),
  *     config: {
- *         type: (string|undefined)
+ *         type: (string|undefined),
+ *         panelTheme: (string|undefined)
  *     }
  * }}
  */
@@ -160,6 +166,10 @@
             {call .rootClass/}__filter
         {/let}
 
+        {let $theme kind="text"}
+
+        {/let}
+
         {call .renderChild}
             {param params: [
                 'type': $type,
@@ -167,7 +177,11 @@
                     'data': $params.data,
                     'config': augmentMap(
                         $params.config,
-                        ['customClasses': [$customClasses]]
+                        [
+                            'customClasses': [$customClasses],
+                            'theme': $params.config.theme ?
+                                $params.config.theme : $params.config.panelTheme
+                        ]
                     )
                 ]
             ]/}
@@ -178,6 +192,14 @@
 
 /**
  * Button to search for entity on filters
+ * @param params {{
+ *     data: {
+ *         button: ({
+ *             content: string,
+ *             theme: string
+ *         }|undefined)
+ *     }
+ * }}
  */
 {template .button_}
     <div class="{call .rootClass/}__button">
@@ -186,11 +208,14 @@
                 'type': 'button',
                 'renderParams': [
                     'data': [
-                        'content': 'Подобрать'
+                        'content': $params.data.button ?
+                            $params.data.button.content : 'Подобрать'
                     ],
                     'config': [
-                        'theme': 'dark',
-                        'size': 's'
+                        'theme': $params.data.button ?
+                            $params.data.button.theme : 'dark',
+                        'size': 's',
+                        'borderRoundSize': $params.data.button?.borderRoundSize
                     ]
                 ]
             ]/}
@@ -201,16 +226,11 @@
 
 /**
  * Links Controls for filters
- * @param params {{
- *     config: {
- *         hasCheckedFilters: (bool|undefined)
- *     }
- * }}
  */
 {template .controlLinks_}
     <div class="{call .rootClass/}__control-links">
         {call .reset_ data="all" /}
-        {call .collapser_ /}
+        {call .collapser_ data="all" /}
     </div>
 {/template}
 
@@ -219,7 +239,8 @@
  * Control for reset filters
  * @param params {{
  *     config: {
- *         hasCheckedFilters: (bool|undefined)
+ *         hasCheckedFilters: (boolean|undefined),
+ *         theme: (string|undefined)
  *     }
  * }}
  */
@@ -239,7 +260,8 @@
                     'name': 'Сбросить фильтр'
                 ],
                 'config': [
-                    'theme': 'attention',
+                    'theme': $params.config?.theme ?
+                        $params.config?.theme : 'attention',
                     'size': 'large'
                 ]
             ]/}
@@ -250,6 +272,11 @@
 
 /**
  * Control for collapse filters
+ * @param params {{
+ *     config: {
+ *         theme: (string|undefined)
+ *     }
+ * }}
  */
 {template .collapser_}
     <div class="{call .rootClass/}__collapser">
@@ -259,7 +286,8 @@
                     'name': 'Свернуть фильтр'
                 ],
                 'config': [
-                    'size': 'large'
+                    'size': 'large',
+                    'theme': $params.config.theme
                 ]
             ]/}
         {/call}
@@ -269,10 +297,22 @@
 
 /**
  * Css classes
+ * @param params {{
+ *     config: {
+ *         isMainPanel: (boolean|undefined)
+ *         isDependentPanel: (boolean|undefined)
+ *     }
+ * }}
  * @override
  */
 {template .additionalClasses}
-    {call .rootClass /}_state_collapsed
+    {call .rootClass /}_state_collapsed{sp}
+    {if $params.config.isMainPanel}
+        {call .rootClass /}_main
+    {/if}
+    {if $params.config.isDependentPanel}
+        {call .rootClass /}_dependent
+    {/if}
 {/template}
 
 

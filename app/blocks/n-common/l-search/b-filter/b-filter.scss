@@ -104,6 +104,23 @@
     }
 }
 
+/** Neptune theme start */
+.b-sm-filter_neptune-theme {
+    .b-sm-filter__option {
+        font-size: 15px;
+    }
+
+    .b-sm-filter__header {
+        font-size: 20px;
+    }
+
+    .b-sm-filter__header-icon {
+        float: none;
+        display: inline-block;
+        margin-left: 5px;
+    }
+}
+/** Neptune theme end */
 
 @include media-m {
     .b-sm-filter__option {
@@ -114,6 +131,15 @@
 
         vertical-align: top;
     }
+
+    /** Neptune theme start */
+    .b-sm-filter_neptune-theme {
+        .b-sm-filter__option {
+            display: block;
+            width: auto;
+        }
+    }
+    /** Neptune theme end */
 }
 
 @include media-s {

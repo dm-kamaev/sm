@@ -9,17 +9,24 @@ export namespace bFilterPanel {
          * sm.lSearch.bFilterPanel.Params.Data
          */
         export interface Data {
-            filters: Array<(bFilter.Params|any)>
+            filters: Array<(bFilter.Params|any)>;
+            button?: {
+                content: string;
+                theme?: string;
+                borderRoundSize?: string;
+            };
         }
 
         /**
          * sm.lSearch.bFilterPanel.Params.Config
          */
         export interface Config {
-            hasCheckedFilters?: boolean,
+            hasCheckedFilters?: boolean;
             theme?: string;
-            customClasses?: Array<string>;
+            customClasses?: string[];
             stylizationModifier?: string;
+            isMainPanel?: boolean;
+            isDependentPanel?: boolean;
         }
     }
 

@@ -1,5 +1,22 @@
 @import "../../n-common/i-media/i-media";
 
+.l-search_university {
+    .l-search__left-menu {
+        width: 315px;
+
+        background-color: #fff;
+    }
+}
+
+
+@include media-m {
+    .l-search_university {
+        .l-search__left-menu {
+            width: 100%;
+        }
+    }
+}
+
 @include media-xs {
     .l-search__search-results-wrap {
         padding: 0 24px;

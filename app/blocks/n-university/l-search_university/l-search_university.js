@@ -10,6 +10,8 @@ const View = goog.require('sm.lSearch.ViewUniversity');
 const Factory = goog.require('sm.iCloblFactory.FactoryStendhal');
 const Template = goog.require('sm.lSearch.Template');
 const ILayout = goog.require('sm.iLayout.LayoutStendhal');
+const FilterPanelGroup = goog.require('sm.bFilterPanelGroup.FilterPanelGroup');
+
 
 /**
  * Search University page control
@@ -44,10 +46,10 @@ class SearchUniversity extends Search {
 
         /**
          * Filters Instance
-         * @type {sm.lSearch.bFilterPanel.FilterPanel}
+         * @type {sm.bFilterPanelGroup.FilterPanelGroup}
          * @protected
          */
-        this.filterPanel = null;
+        this.filterPanelGroup = null;
 
 
         /**
@@ -88,6 +90,13 @@ class SearchUniversity extends Search {
          * @private
          */
         this.analyticsSender = null;
+
+        /**
+         * Instances filter strip
+         * @type {sm.bFilterStrip.FilterStrip}
+         * @private
+         */
+        this.filterStrip = null;
     }
 
     /**
@@ -157,15 +166,10 @@ class SearchUniversity extends Search {
      * @protected
      * @return {sm.lSearch.SearchUniversity}
      */
-    initFilterPanelListeners() {
-        // this.getHandler().listen(
-        //     this.filterPanel,
-        //     sm.lSearch.bFilterPanel.FilterPanel.Event.SUBMIT,
-        //     this.onFilterPanelSubmit_
-        // );
+    initLeftMenuListeners_() {
+        this.initSearchListeners();
         return this;
-    };
-
+    }
 
     /**
      * Make all actions to update information on page
@@ -186,16 +190,20 @@ class SearchUniversity extends Search {
 
 
     /**
-     * Init left menu instances
+     * Init left menu instance
      * @return {sm.lSearch.SearchUniversity}
      * @protected
      * @override
      */
     initLeftMenuInstances() {
-        // this.filterPanel = this.decorateChild(
-        //     sm.lSearch.bFilterPanel.FilterPanel.NAME,
-        //     this.getView().getDom().filterPanel
-        // );
+        const dom = this.getView().getDom();
+
+        if (dom.filterPanelGroup) {
+            this.filterPanelGroup = this.decorateChild(
+                FilterPanelGroup.NAME,
+                dom.filterPanelGroup
+            );
+        }
 
         return this;
     }

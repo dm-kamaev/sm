@@ -45,7 +45,8 @@ goog.scope(function() {
      * @enum {string}
      */
     View.Event = {
-        RESET: goog.events.getUniqueId('reset')
+        RESET: goog.events.getUniqueId('reset'),
+        COLLAPSE: goog.events.getUniqueId('collapse')
     };
 
 
@@ -116,23 +117,29 @@ goog.scope(function() {
      * @private
      */
     View.prototype.initDomListeners_ = function() {
-        this.getHandler().listen(
-            this.dom.expander,
-            goog.events.EventType.CLICK,
-            this.onExpanderClick_
-        );
+        if (this.dom.expander) {
+            this.getHandler().listen(
+                this.dom.expander,
+                goog.events.EventType.CLICK,
+                this.onExpanderClick_
+            );
+        }
 
-        this.getHandler().listen(
-            this.dom.collapser,
-            goog.events.EventType.CLICK,
-            this.onCollapserClick_
-        );
+        if (this.dom.collapser) {
+            this.getHandler().listen(
+                this.dom.collapser,
+                goog.events.EventType.CLICK,
+                this.onCollapserClick_
+            );
+        }
 
-        this.getHandler().listen(
-            this.dom.reset,
-            goog.events.EventType.CLICK,
-            this.onResetClick_
-        );
+        if (this.dom.reset) {
+            this.getHandler().listen(
+                this.dom.reset,
+                goog.events.EventType.CLICK,
+                this.onResetClick_
+            );
+        }
     };
 
 
@@ -150,6 +157,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onCollapserClick_ = function() {
+        this.dispatchEvent(View.Event.COLLAPSE);
         this.collapse();
     };
 

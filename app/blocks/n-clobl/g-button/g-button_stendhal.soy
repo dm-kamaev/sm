@@ -2,7 +2,12 @@
 
 /**
  * typedef {{
- *     content: ?string
+ *     content: ?string,
+ *     icon: ({
+ *         name: string,
+ *         type: ('png'|'svg'),
+ *         position: ('left'|'right')
+ *     }|undefined)
  * }}
  * sm.gButton.TemplateStendhal.Params.Data
  */
@@ -38,6 +43,97 @@
  */
 {template .NAME}
     button
+{/template}
+
+
+/**
+ * Body
+ * @param? params {{
+ *     data: {
+ *         content: ?string,
+ *         icon: ({
+ *             name: string,
+ *             type: ('png'|'svg'),
+ *             position: ('left'|'right')
+ *         }|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .body}
+    {if $params.data.icon}
+        {call .content_ data="all" /}
+    {else}
+        {$params.data.content}
+    {/if}
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         content: ?string,
+ *         icon: {
+ *             name: string,
+ *             type: ('png'|'svg'),
+ *             position: ('left'|'right')
+ *         }
+ *     }
+ * }}
+ */
+{template .content_}
+    <div class="{call .rootClass /}__content">
+        {if $params.data.icon.position == 'left'}
+            {call .icon_ data="all" /}
+            {call .text_ data="all" /}
+        {else}
+            {call .text_ data="all" /}
+            {call .icon_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         icon: {
+ *             name: string,
+ *             type: ('png'|'svg'),
+ *             position: ('left'|'right')
+ *         }
+ *     }
+ * }}
+ */
+{template .icon_}
+    {let $type: $params.data.icon.type == 'png' ? 'icon' : 'icon-svg' /}
+
+    <div class="{call .rootClass /}__content-icon">
+        {call .renderChild}
+            {param params: [
+                'type': $type,
+                'renderParams': [
+                    'data': [
+                        'type': $params.data.icon.name
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         content: (string|undefined)
+ *     }
+ * }}
+ */
+{template .text_}
+    <div class="{call .rootClass /}__content-text">
+        {$params.data.content}
+    </div>
 {/template}
 
 

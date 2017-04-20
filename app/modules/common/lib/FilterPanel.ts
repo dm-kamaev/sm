@@ -19,6 +19,14 @@ type InitFiltersData = {
     enabledFilters: string[];
     filtersData: {[name: string]: Option[]};
     searchParams: {[name: string]: number[] | string[] | any};
+    theme?: string;
+    button?: {
+        content: string;
+        theme?: string;
+        borderRoundSize?: string;
+    };
+    isMainPanel?: boolean;
+    isDependentPanel?: boolean;
 };
 
 type InitFilterData = {
@@ -38,6 +46,7 @@ type InputOption = {
     placeholder?: string;
     value: (string|number|undefined);
     maxLength?: number;
+    inline?: boolean;
 };
 
 type FilterParams = (
@@ -47,19 +56,38 @@ type FilterParams = (
     any
 );
 
+type Button = {
+    content: string;
+    theme: string;
+    borderRoundSize: string;
+};
+
+type Config = {
+    theme?: string;
+    hasCheckedFilters?: boolean;
+    isMainPanel?: boolean;
+    isDependentPanel?: boolean;
+};
+
 abstract class FilterPanel {
 
     /**
      * Include filters what will show on page
      */
-    protected filters: Array<FilterParams>;
+    protected filters: FilterParams[];
 
     /**
      * Params for filter by days of week
      */
     protected filterWeekDays: bFilter.Params;
 
-    protected optionsWeekDays: Array<OptionWithoutValue>;
+    protected optionsWeekDays: OptionWithoutValue[];
+
+    protected theme: string;
+
+    protected button: Button;
+
+    protected config: Config;
 
     constructor() {
         this.filters = [];
@@ -100,17 +128,33 @@ abstract class FilterPanel {
 
     public render(data: InitFiltersData): bFilterPanel.Params {
         this.initFilters(data);
+        this.setButton(data.button);
+
+        this.setConfig(data);
+
         return this.getParams();
+    }
+
+    public setConfig(data: InitFiltersData) {
+        this.config = {
+            theme: data.theme,
+            hasCheckedFilters: this.getHasCheckedFilters(this.filters),
+            isMainPanel: data.isMainPanel,
+            isDependentPanel: data.isDependentPanel
+        };
+    }
+
+    public setButton(button) {
+        this.button = button;
     }
 
     public getParams(): bFilterPanel.Params {
         return {
             data: {
-                filters: this.filters
+                filters: this.filters,
+                button: this.button
             },
-            config: {
-                hasCheckedFilters: this.getHasCheckedFilters(this.filters)
-            }
+            config: this.config
         };
     }
 
@@ -357,7 +401,8 @@ abstract class FilterPanel {
         return {
             name: model.id,
             label: this.getLabel(model),
-            value: null
+            value: null,
+            inline: model.inline
         };
     }
 

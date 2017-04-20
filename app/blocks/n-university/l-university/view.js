@@ -1,5 +1,6 @@
 goog.provide('sm.lUniversity.View');
 
+goog.require('sm.bEntityRelation.View');
 goog.require('sm.bSmCollapsedText.View');
 goog.require('sm.bSmRowLinks.View');
 goog.require('sm.bSmSketch.View');

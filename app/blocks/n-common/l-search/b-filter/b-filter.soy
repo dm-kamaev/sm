@@ -27,7 +27,12 @@
  *     theme: ('light'|'minimal'|undefined),
  *     align: (string|undefined),
  *     customClasses: (Array<string>|undefined),
- *     stylizationModifier: string
+ *     stylizationModifier: string,
+ *     filterArrowIcon: ({
+ *         up: (string|undefined),
+ *         down: (string|undefined)
+ *     }|undefined),
+ *     inline: (boolean|undefined)
  * }} sm.lSearch.bFilter.Template.Params.Config
  */
 
@@ -160,7 +165,8 @@
  *         optionsToShow: (number|undefined),
  *         type: (string|undefined),
  *         align: (string|undefined),
- *         stylizationModifier: string
+ *         stylizationModifier: string,
+ *         theme: ('light'|'minimal'|undefined)
  *     }
  * }}
  * @public
@@ -188,7 +194,8 @@
                     'config': [
                         'hidden': $i + 1 > $numberOptionsToShow ? true : false,
                         'hidable': $i + 1> $numberOptionsToShow ? true : false,
-                        'theme': $params.config.align == 'horizontal' ? 'narrow' : '',
+                        'theme': $params.config.align == 'horizontal' ?
+                            'narrow' : $params.config.theme,
                         'stylizationModifier': $params.config.stylizationModifier
                     ]
                 ]/}
@@ -289,19 +296,39 @@
  * @param params {{
  *     config: {
  *         cannotBeHidden: (boolean|undefined),
- *         isShowed: (boolean|undefined)
+ *         isShowed: (boolean|undefined),
+ *         filterArrowIcon: ({
+ *             up: string,
+ *             down: string
+ *         }|undefined)
  *     }
  * }}
  * @protected
  */
 {template .showOptions}
     {if not $params?.config?.cannotBeHidden}
+        {let $iconUp kind="text"}
+            {if $params.config.filterArrowIcon?.up}
+                {$params.config.filterArrowIcon.up}
+            {else}
+                filter-arrow-up
+            {/if}
+        {/let}
+
+        {let $iconDown kind="text"}
+            {if $params.config.filterArrowIcon?.down}
+                {$params.config.filterArrowIcon.down}
+            {else}
+                filter-arrow-down
+            {/if}
+        {/let}
+
         <div class="{call .rootClass/}__header-icon{sp}
                     {call .rootClass/}__header-icon_up{sp}
                     {$params?.config?.isShowed ? '' : 'i-utils__hidden'}">
 
             {call .icon}
-                {param type: 'filter-arrow-up'/}
+                {param type: $iconUp /}
             {/call}
         </div>
 
@@ -310,7 +337,7 @@
                     {$params?.config?.isShowed ? 'i-utils__hidden' : ''}">
 
             {call .icon}
-                {param type: 'filter-arrow-down'/}
+                {param type: $iconDown /}
             {/call}
         </div>
     {/if}

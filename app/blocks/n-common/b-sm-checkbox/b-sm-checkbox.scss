@@ -72,3 +72,20 @@
         display: none;
     }
 }
+
+.b-sm-checkbox_neptune-theme {
+    .b-sm-checkbox__input {
+        width: 15px;
+        height: 15px;
+    }
+
+    .b-sm-checkbox__label {
+        color: #747474;
+    }
+}
+
+.b-sm-checkbox_neptune-theme.b-sm-checkbox_checked {
+    .b-sm-checkbox__label {
+        color: #000;
+    }
+}

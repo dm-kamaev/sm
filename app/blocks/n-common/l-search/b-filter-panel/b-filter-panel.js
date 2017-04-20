@@ -7,8 +7,8 @@ goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterClasses');
 goog.require('sm.lSearch.bFilter.FilterDropdown');
 goog.require('sm.lSearch.bFilter.FilterExtended');
-goog.require('sm.lSearch.bFilter.FilterRange');
 goog.require('sm.lSearch.bFilter.FilterInput');
+goog.require('sm.lSearch.bFilter.FilterRange');
 goog.require('sm.lSearch.bFilter.FilterSwitch');
 goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
 goog.require('sm.lSearch.bFilterPanel.Template');
@@ -67,7 +67,10 @@ goog.scope(function() {
      * @enum {string}
      */
     FilterPanel.Event = {
-        SUBMIT: goog.events.getUniqueId('submit')
+        SUBMIT: goog.events.getUniqueId('submit'),
+        COLLAPSE: View.Event.COLLAPSE,
+        CHECK: goog.events.getUniqueId('check'),
+        UNCHECK: goog.events.getUniqueId('uncheck')
     };
 
 
@@ -146,6 +149,17 @@ goog.scope(function() {
 
 
     /**
+     * Return true if selected least one filter
+     * @return {boolean}
+     */
+    FilterPanel.prototype.isChecked = function() {
+        return this.filters_.some(function(filter) {
+            return filter.isChecked();
+        });
+    };
+
+
+    /**
      * Initializes listeners for view
      * @private
      */
@@ -154,6 +168,8 @@ goog.scope(function() {
             View.Event.RESET,
             this.onResetClick_
         );
+
+        this.autoDispatch(FilterPanel.Event.COLLAPSE);
     };
 
 
@@ -191,11 +207,13 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.initButtonListeners_ = function() {
-        this.getHandler().listen(
-            this.button_,
-            cl.gButton.Button.Event.CLICK,
-            this.onSubmit_
-        );
+        if (this.button_) {
+            this.getHandler().listen(
+                this.button_,
+                cl.gButton.Button.Event.CLICK,
+                this.onSubmit_
+            );
+        }
     };
 
 
@@ -226,6 +244,7 @@ goog.scope(function() {
      */
     FilterPanel.prototype.onFilterCheck_ = function() {
         this.getView().setResetButtonVisibility(true);
+        this.dispatchEvent(FilterPanel.Event.CHECK);
     };
 
 
@@ -234,21 +253,10 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onFilterUncheck_ = function() {
-        if (!this.isChecked_()) {
+        if (!this.isChecked()) {
             this.getView().setResetButtonVisibility(false);
+            this.dispatchEvent(FilterPanel.Event.UNCHECK);
         }
-    };
-
-
-    /**
-     * Return true if selected least one filter
-     * @return {boolean}
-     * @private
-     */
-    FilterPanel.prototype.isChecked_ = function() {
-        return this.filters_.some(function(filter) {
-            return filter.isChecked();
-        });
     };
 
 
@@ -317,9 +325,12 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.initButton_ = function() {
-        this.button_ = this.decorateChild(
-            sm.gButton.ButtonStendhal.NAME,
-            this.getView().getDom().button
-        );
+        var button = this.getView().getDom().button;
+        if (button) {
+            this.button_ = this.decorateChild(
+                sm.gButton.ButtonStendhal.NAME,
+                button
+            );
+        }
     };
 });  // goog.scope

@@ -30,6 +30,11 @@ export namespace bFilter {
             align?: string;
             customClasses?: Array<string>;
             stylizationModifier?: string;
+            filterArrowIcon?: {
+                up?: string;
+                down?: string;
+            };
+            inline?: boolean;
         }
     }
 

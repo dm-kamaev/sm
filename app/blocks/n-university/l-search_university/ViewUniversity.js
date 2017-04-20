@@ -3,7 +3,9 @@
  */
 goog.module('sm.lSearch.ViewUniversity');
 
-var View = goog.require('sm.lSearch.View');
+const View = goog.require('sm.lSearch.View');
+const Utils = goog.require('cl.iUtils.Utils');
+const ViewFilterPanelGroup = goog.require('sm.bFilterPanelGroup.View');
 
 
 /**
@@ -37,9 +39,37 @@ class ViewUniversity extends View {
      */
     static get CssClass() {
         return {
-            ROOT: 'l-search_university'
+            ROOT: 'l-search_university',
+            FILTER_PANEL_GROUP: ViewFilterPanelGroup.CssClass.ROOT
         };
     };
+
+
+    /**
+     * @param {Element} element
+     * @protected
+     * @override
+     */
+    decorateInternal(element) {
+        super.decorateInternal(element);
+
+        this.initDom();
+    }
+
+
+    /**
+     * Init DOM
+     * @protected
+     */
+    initDom() {
+        super.initDom();
+
+        goog.object.extend(this.dom, {
+            filterPanelGroup: this.getElementByClass(
+                ViewUniversity.CssClass.FILTER_PANEL_GROUP
+            )
+        });
+    }
 }
 
 exports = ViewUniversity;

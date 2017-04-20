@@ -123,6 +123,7 @@ controller.commonSearch = async(function(req, res, next) {
             config: config
         });
 
+
         let templateConfig = configView.render({
             entityType: entityType.COURSE,
             pageName: pageName.SEARCH,

@@ -1,0 +1,194 @@
+{namespace sm.bFilterPanelGroup.Template}
+
+
+/**
+ * @typedef {sm.bFilterPanelGroup.Params.Data}
+ * sm.bFilterPanelGroup.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {sm.bFilterPanelGroup.Params.Config}
+ * sm.bFilterPanelGroup.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmSketch.Template.Params.Data,
+ *     config: sm.bSmSketch.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .group}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    filter-panel-group
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bFilterPanelGroup.Template.Params.Data,
+ *     config: sm.bFilterPanelGroup.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .controls_ data="all" /}
+    {call .reset_ data="all" /}
+    {call .mainFilterPanel_ data="all" /}
+    {call .dependentFilterPanel_ data="all" /}
+{/template}
+
+
+/**
+ * @param params {
+ *     data: {
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params
+ *     }
+ * }
+ */
+{template .mainFilterPanel_}
+    <div class="{call .rootClass/}__filters{sp}
+                {call .rootClass/}__filters_main">
+
+        {let $customClasses kind="html"}
+            {call .rootClass /}__main-filter-panel
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'lSearch-filterPanel',
+                'renderParams': [
+                    'data': $params.data.filterPanel.data,
+                    'config': augmentMap(
+                        $params.data.filterPanel.config,
+                        [
+                            'customClasses': [$customClasses]
+                        ]
+                    )
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @param params {
+ *     data: {
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params
+ *     }
+ * }
+ */
+{template .dependentFilterPanel_}
+    <div class="{call .rootClass/}__filters{sp}
+                {call .rootClass/}__filters_dependent">
+
+        {let $customClasses kind="text"}
+            {call .rootClass /}__dependent-filter-panel
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'lSearch-filterPanel',
+                'renderParams': [
+                    'data': $params.data.dependentFilterPanel.data,
+                    'config': augmentMap(
+                        $params.data.dependentFilterPanel.config,
+                        [
+                            'customClasses': [$customClasses]
+                        ]
+                    )
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Name
+ * @protected
+ */
+{template .controls_}
+    <div class="{call .rootClass/}__controls-wrap">
+        <div class="{call .rootClass/}__controls">
+            {call .button_ data="all" /}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Name
+ */
+{template .button_}
+    <div class="{call .rootClass/}__button">
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'Показать фильтры',
+                        'icon': [
+                            'name': 'filters',
+                            'type': 'svg',
+                            'position': 'left'
+                        ]
+                    ],
+                    'config': [
+                        'theme': 'neptune-reverse',
+                        'size': 'xs',
+                        'borderRoundSize': 'xl'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Reset button
+ */
+{template .reset_}
+    <div class="{call .rootClass/}__reset">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'content': 'Сбросить фильтр',
+                    ],
+                    'config': [
+                        'theme': 'neptune',
+                        'size': 'l'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-filter-panel-group
+{/template}

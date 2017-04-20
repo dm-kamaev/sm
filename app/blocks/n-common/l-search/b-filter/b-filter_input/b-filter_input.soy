@@ -61,7 +61,8 @@
  *     config: {
  *         optionsToShow: (number|undefined),
  *         type: (string|undefined),
- *         stylizationModifier: string
+ *         stylizationModifier: string,
+ *         theme: (string|undefined)
  *     }
  * }}
  * @public
@@ -86,7 +87,10 @@
                     'config': [
                         'hidden': $i + 1 > $numberOptionsToShow ? true : false,
                         'hidable': $i + 1> $numberOptionsToShow ? true : false,
-                        'stylizationModifier': $params.config.stylizationModifier
+                        'stylizationModifier': $params.config.stylizationModifier,
+                        'theme': $params.config.theme ?
+                            $params.config.theme : 'light',
+                        'inline': $params.config.inline
                     ]
                 ]/}
             {/call}
@@ -108,7 +112,8 @@
  *     config: {
  *         hidden: (boolean|undefined),
  *         hidable: (boolean|undefined),
- *         stylizationModifier: string
+ *         stylizationModifier: string,
+ *         inline: (boolean|undefined)
  *     }
  * }}
  * @public
@@ -127,8 +132,13 @@
     {/let}
 
     <div class="{$classes}">
-        {call .input_ data="all" /}
-        {call .inputLabel_ data="all" /}
+        {if $params.config.inline}
+            {call .inputLabel_ data="all" /}
+            {call .input_ data="all" /}
+        {else}
+            {call .input_ data="all" /}
+            {call .inputLabel_ data="all" /}
+        {/if}
     </div>
 {/template}
 
@@ -200,7 +210,8 @@
  *         maxLength: number
  *     },
  *     config: {
- *         stylizationModifier: string
+ *         stylizationModifier: string,
+ *         theme: string
  *     }
  * }}
  * @private
@@ -213,7 +224,7 @@
                 'renderParams': [
                     'data': $params.data,
                     'config': [
-                        'theme': 'light'
+                        'theme': $params.config.theme
                     ]
                 ]
             ]/}
@@ -243,8 +254,16 @@
 
 /**
  * Css classes
+ * @param params {{
+ *     config: {
+ *         inline: (boolean|undefined)
+ *     }
+ * }}
  * @override
  */
 {template .additionalClasses}
     {call .rootClass/}_input
+    {if $params.config.inline}
+        {sp}{call .rootClass/}_input_inline
+    {/if}
 {/template}

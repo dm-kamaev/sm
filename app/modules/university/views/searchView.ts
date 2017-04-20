@@ -28,6 +28,14 @@ type FilterPanelParams = {
     filtersData: any;
     searchParams: lSearchUniversity.Params.SearchParams;
     enabledFilters: string[];
+    theme?: string;
+    button?: {
+        content: string;
+        theme?: string;
+        borderRoundSize?: string;
+    };
+    isMainPanel?: boolean;
+    isDependentPanel?: boolean;
 };
 
 class SearchView extends LayoutView {
@@ -179,7 +187,14 @@ class SearchView extends LayoutView {
                 filterName.CITIES,
                 filterName.EGE,
                 filterName.PAY_TYPE
-            ]
+            ],
+            theme: 'neptune',
+            button: {
+                content: 'Найти',
+                theme: 'neptune-reverse',
+                borderRoundSize: 'xl'
+            },
+            isMainPanel: true
         };
 
         const filterPanel = new ProgramFilterPanel();
@@ -193,7 +208,14 @@ class SearchView extends LayoutView {
                 filterName.MAJORS,
                 filterName.MAX_PRICE,
                 filterName.FEATURES
-            ]
+            ],
+            theme: 'neptune',
+            button: {
+                content: 'Найти',
+                theme: 'neptune-reverse',
+                borderRoundSize: 'xl'
+            },
+            isDependentPanel: true
         };
 
         const dependentfilterPanel = new ProgramFilterPanel();

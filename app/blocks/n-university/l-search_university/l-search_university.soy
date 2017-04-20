@@ -155,40 +155,31 @@
  */
 {template .leftMenu_}
     <div class="{call .rootClass/}__left-menu">
-        {call .filters_ data="all"/}
+        {call .filterPanelGroup_ data="all" /}
     </div>
 {/template}
 
 
 /**
- * Filter template
- * @param? params {
+ * Filter strip template
+ * @param params {{
  *     data: {
  *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
  *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params
  *     }
- * }
- * @protected
- * @override
+ * }}
  */
-{template .filters_}
-    <div class="{call .rootClass/}__filters{sp}
-                {call .rootClass/}__filters_main">
-
+{template .filterPanelGroup_}
+    <div class="{call .rootClass/}__filter-panel-group">
         {call .renderChildLayout}
             {param params: $params /}
-            {param type: 'lSearch-filterPanel' /}
-            {param renderParams: $params.data.filterPanel /}
-        {/call}
-    </div>
-
-    <div class="{call .rootClass/}__filters{sp}
-                {call .rootClass/}__filters_dependent">
-
-        {call .renderChildLayout}
-            {param params: $params /}
-            {param type: 'lSearch-filterPanel' /}
-            {param renderParams: $params.data.dependentFilterPanel /}
+            {param type: 'filter-panel-group' /}
+            {param renderParams: [
+                'data': [
+                    'filterPanel': $params.data.filterPanel,
+                    'dependentFilterPanel': $params.data.dependentFilterPanel
+                ]
+            ]/}
         {/call}
     </div>
 {/template}

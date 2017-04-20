@@ -15,6 +15,15 @@ import {
     bFilterInput
 } from '../../../blocks/n-common/l-search/b-filter/b-filter_input/params';
 
+import {filterType} from '../../common/constants/filterType';
+
+type FilterParams = (
+    bFilter.Params|
+    bFilterRange.Params|
+    bFilterExtended.Params|
+    any
+);
+
 class ProgramFilterPanel extends FilterPanel {
     private filterCities_: bFilter.Params;
     private filterEge_: bFilter.Params;
@@ -195,6 +204,39 @@ class ProgramFilterPanel extends FilterPanel {
         ];
     }
 
+    protected setFilterInput(
+            filterParams: FilterParams,
+            checkedValues?: (number|string)[]
+    ) {
+        const params = filterParams;
+
+        params.config.type = filterType.INPUT;
+        params.config.inline = true;
+
+        this.setFilter(params, checkedValues);
+
+        return this;
+    }
+
+
+    /**
+     * Adds new filter params in array of filters for filter panel
+     */
+    protected setFilter(
+            filterParams: FilterParams,
+            checkedValues?: (number|string)[]
+    ) {
+        const params = this.updateFilterParams(filterParams, checkedValues);
+
+        params.config.filterArrowIcon = {
+            up: 'filter-arrow-up_black'
+        };
+
+        this.filters.push(params);
+
+        return this;
+    }
+
     private setFilterCities_(
             optionModels: Array<OptionModel>,
             checkedValues?: (number|string)[]
@@ -232,6 +274,7 @@ class ProgramFilterPanel extends FilterPanel {
     ) {
         const params = this.filterMaxPassScore_;
         params.data.options = this.getInputOptions(optionModels);
+
         this.setFilterInput(params, checkedValues);
 
         return this;

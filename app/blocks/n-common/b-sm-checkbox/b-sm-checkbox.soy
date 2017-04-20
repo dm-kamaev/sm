@@ -130,3 +130,19 @@
 {template .rootClass}
     b-sm-checkbox
 {/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     data: {
+ *         isChecked: (boolean|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.data.isChecked}
+        {call .rootClass/}_checked
+    {/if}
+{/template}
