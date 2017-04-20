@@ -357,22 +357,22 @@
  * @private
  */
 {template .description_}
-    {if $params.data.entityData.description}
-        {let $class kind="text"}
-            {if $params.data.size}
-                {call .rootClass/}__main-description_size_{$params.data.size}
-            {/if}
-        {/let}
+    {let $class kind="text"}
+        {if $params.data.size}
+            {call .rootClass/}__main-description_size_{$params.data.size}
+        {/if}
+    {/let}
 
-        <div class="{call .rootClass/}__main-description {$class}">
-            <div class="{call .rootClass/}__type">
-                {$params.data.entityData.subunitType}
-            </div>
+    <div class="{call .rootClass/}__main-description {$class}">
+        <div class="{call .rootClass/}__type">
+            {$params.data.entityData.subunitType}
+        </div>
 
-            <div class="{call .rootClass/}__name">
-                {$params.data.entityData.subunitName}
-            </div>
+        <div class="{call .rootClass/}__name">
+            {$params.data.entityData.subunitName}
+        </div>
 
+        {if $params.data.entityData.description}
             <div class="{call .rootClass/}__description">
                 {if $params.data.size == 'xs'}
                     {call .renderChildLayout}
@@ -394,8 +394,8 @@
                     {$params.data.entityData.description}
                 {/if}
             </div>
-        </div>
-    {/if}
+        {/if}
+    </div>
 {/template}
 
 
