@@ -543,7 +543,10 @@ class InformationView extends LayoutView {
             description: `${data.name} ${data.brandName}`,
             imageUrl: utils.getImageUrl(data.imageUrl, CourseImageSize.LARGE),
             url: courseView.getLink(data.url),
-            nameLinkUrl: courseView.getLink(data.categoryUrl)
+            nameLinkUrl: courseView.getLink(data.categoryUrl),
+            placeholder: {
+                url: '/static/images/n-common/b-sm-item/b-sm-item_entity/images/placeholder.png'
+            }
         };
     }
 

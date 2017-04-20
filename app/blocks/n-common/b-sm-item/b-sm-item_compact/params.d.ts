@@ -15,6 +15,9 @@ export namespace bSmItemCompact {
                 url: string;
             }
             nameLinkUrl: string;
+            placeholder?: {
+                url: string;
+            };
         }
 
         /*

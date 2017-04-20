@@ -68,7 +68,10 @@
  *             bold: (string|undefined)
  *         },
  *         score: ?number,
- *         imageUrl: (string|undefined)
+ *         imageUrl: (string|undefined),
+ *         placeholder?: {
+ *             url: string;
+ *         }
  *     }
  * }}
  * @override
@@ -79,6 +82,17 @@
                 {call .rootClass/}__section_cover">
         {if $params.data.imageUrl}
             {call .image data="all" /}
+        {elseif $params.data.placeholder}
+            {call .image}
+                {param params: [
+                    'data': [
+                        'name': $params.data.name,
+                        'url': $params.data.url,
+                        'imageUrl': $params.data.placeholder.url
+                    ],
+                    'config': $params.config
+                ]/}
+            {/call}
         {else}
             {call .score data="all" /}
         {/if}
