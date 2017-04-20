@@ -98,6 +98,17 @@
 .b-sm-footer_overcast-theme {
     background-color: #282828;
 
+    .b-sm-footer__body {
+        padding-bottom: 77px;
+
+        &:after {
+            display: block;
+            clear: both;
+
+            content: '';
+        }
+    }
+
     .b-sm-footer__copyright {
         color: #bdbdbd;
         font-size: 16px;
@@ -202,6 +213,10 @@
 
     /** Overcast them start */
     .b-sm-footer_overcast-theme {
+        .b-sm-footer__body {
+            padding-bottom: 46px;
+        }
+
         .b-sm-footer__column {
             position: static;
             width: 100%;
