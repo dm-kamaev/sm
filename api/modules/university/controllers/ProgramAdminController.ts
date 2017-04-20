@@ -19,7 +19,8 @@ class ProgramAdminController extends Controller {
     }
 
     /**
-     * @api {get} /api/admin/university/:universityId/program Get all programs
+     * @api {get} /api/admin/university/:universityId/program Get programs by
+     *     university id
      * @apiVersion 1.0.0
      * @apiName getAllPrograms
      * @apiGroup Admin Program
@@ -45,7 +46,9 @@ class ProgramAdminController extends Controller {
      *     ]
      */
     public async actionList(actionContext: any, universityId: string) {
-        const programs = await programService.getAll();
+        const programs = await programService.getByUniversityId(
+            Number(universityId)
+        );
         const programUrls = await programService.getUrls(programs);
         return programAdminView.renderList(programs, programUrls);
     }
