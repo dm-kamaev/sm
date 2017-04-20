@@ -160,7 +160,7 @@ class ProgramController extends Controller {
      * @apiGroup Program
      *
      * @apiExample {curl} Example usage:
-     *     curl 'http://www21.lan:3000/universities/api/program/search?ege=%5B%7B%2212%22%3A+80%7D%2C+%7B%2213%22%3A+90%7D%2C+%7B%2214%22%3A+90%7D%2C+%7B%2215%22%3A+90%7D%5D&limit=10&page=0&searchString=%D0%BA%D0%B0'
+     *     curl 'http://localhost.lan:3000/universities/api/program/search?cities=2&cities=1&discount=1&ege=%7B%2212%22%3A+80%7D&ege=%7B%2213%22%3A+85%7D&ege=%7B%2214%22%3A+70%7D&limit=10&page=0&searchString=%D0%BA%D0%B0'
      *
      * @apiParam (query) {Number} [limit] Limit quantity of search results.
      * @apiParam (query) {Number} [page] Page of result.

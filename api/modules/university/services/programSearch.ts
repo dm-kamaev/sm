@@ -43,14 +43,22 @@ class ProgramSearch {
     }
 
     private stringToNumberArray_(
-            value: string | undefined): Array<number> | undefined {
-        return value && value.split(',').map(Number);
+            value: string[] | string | undefined): Array<number> | undefined {
+        if (value) {
+            return typeof value === 'string' ?
+                [Number(value)] :
+                value.map(Number);
+        } else {
+            return undefined;
+        }
     }
 
-    private formatEge_(ege: string): EgeSearch[] {
+    private formatEge_(ege: string[] | string): EgeSearch[] {
         let egeResult: QueryEge[];
         try {
-            egeResult = JSON.parse(ege);
+            egeResult = typeof ege === 'string' ?
+                [JSON.parse(ege)] :
+                ege.map(egeItem => JSON.parse(egeItem));
         } catch (error) {
             egeResult = [];
         }

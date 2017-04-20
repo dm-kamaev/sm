@@ -3,12 +3,12 @@ export type QueryParams = {
     page?: string;
     sortType?: string;
     searchString?: string;
-    cities?: string;
-    ege?: string;
-    payType?: string;
-    majors?: string;
+    cities?: string[];
+    ege?: string[];
+    payType?: string[];
+    majors?: string[];
     discount?: string;
-    features?: string;
+    features?: string[];
     maxPrice?: string;
 };
 
