@@ -2,11 +2,11 @@ class ProgramsView {
 
     public list = function() {
         return [
-            this.getListPrograms()
+            this.getItem()
         ];
     };
 
-    protected getListPrograms = function() {
+    protected getItem = function() {
         return {
             id: '1',
             picture: {
@@ -32,16 +32,16 @@ class ProgramsView {
             nicety: [
                 {
                     title: {
-                        text: 'Бюджетных мест: 100',
-                        textForMobile: 'Бюджетных: 100',
+                        textDefault: 'Бюджетных мест: 100',
+                        textXs: 'Бюджетных: 100',
                         selected: true
                     },
                     value: 'от 374 баллов'
                 },
                 {
                     title: {
-                        text: 'Платных мест: 100',
-                        textForMobile: 'Платных: 100'
+                        textDefault: 'Платных мест: 100',
+                        textXs: 'Платных: 100'
                     },
                     value: 'от 170 тыс./год'
                 }

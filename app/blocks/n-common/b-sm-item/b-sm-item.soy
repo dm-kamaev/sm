@@ -298,41 +298,14 @@
  */
 {template .name}
     <div class="{call .rootClass/}__name">
-        {let $name kind="html"}
-            {$params.data.name.light}
-
-            {if $params.data.name?.bold}
-                {$params.data.name.bold}
-            {/if}
-        {/let}
-
-        {let $url kind="html"}
-            {if $params.data.url}
-                {$params.data.url}
-            {else}
-                /{$params.data.alias}
-            {/if}
-        {/let}
-
         {let $customClasses kind="html"}
             {call .rootClass/}__link-name
         {/let}
 
-        {let $size kind="html"}
-            {if $params.config.theme == 'minimal'}
-                l
-            {else}
-                7xl
-            {/if}
-        {/let}
-
-        {let $theme kind="html"}
-            {if $params.config.theme == 'minimal'}
-                default
-            {else}
-                dark
-            {/if}
-        {/let}
+        {let $name: $params.data.name.light + ($params.data.name.bold ?: '') /}
+        {let $url: $params.data.url ?: ('/' + $params.data.alias) /}
+        {let $size: $params.config.theme == 'minimal' ? 'l' : '7xl' /}
+        {let $theme: $params.config.theme == 'minimal' ? 'default' : 'dark' /}
 
         {call .renderChild}
             {param params: [
@@ -360,7 +333,7 @@
  * @param params {{
  *     data: {
  *         id: ?number,
- *         description: (string|undefined),
+ *         description: (string|Array<string>|undefined),
  *         url: ?string,
  *     },
  *     config: {
@@ -372,26 +345,7 @@
     {if $params.data?.description}
         <div class="{call .rootClass/}__description">
             {if $params.config.isDescriptionLink}
-                {let $customClasses kind="html"}
-                    {call .rootClass /}__description_link
-                {/let}
-                {call .renderChild}
-                    {param params: [
-                        'type': 'smLink',
-                        'renderParams': [
-                            'data': [
-                                'id': $params.data.id,
-                                'content': $params.data.description,
-                                'url': $params.data.url
-                            ],
-                            'config': [
-                                'customClasses': [$customClasses],
-                                'theme': 'dark',
-                                'size': '6xl'
-                            ]
-                        ]
-                    ]/}
-                {/call}
+                {call .descriptionLink data="all" /}
             {else}
                 {let $isString kind="html"}
                     {call sm.iSmUtils.smUtils.isString
@@ -399,21 +353,7 @@
                 {/let}
 
                 {if $isString == 'false'}
-                    {call .renderChild}
-                        {param params: [
-                            'type': 'smCollapsedText',
-                            'renderParams': [
-                                'data': [
-                                    'text': [
-                                        'cutText': $params.data.description
-                                    ]
-                                ],
-                                'config': [
-                                    'theme': 'paragraphs'
-                                ]
-                            ]
-                        ]/}
-                    {/call}
+                    {call .descriptionParagraphs data="all" /}
                 {else}
                     {call soydata.VERY_UNSAFE.ordainSanitizedHtml
                         data="$params.data.description" /}
@@ -421,6 +361,67 @@
             {/if}
         </div>
     {/if}
+{/template}
+
+
+/**
+ * Description link
+ * @param params {{
+ *     data: {
+ *         id: ?number,
+ *         description: (string|undefined),
+ *         url: ?string,
+ *     }
+ * }}
+ */
+{template .descriptionLink}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__description_link
+    {/let}
+    {call .renderChild}
+        {param params: [
+            'type': 'smLink',
+            'renderParams': [
+                'data': [
+                    'id': $params.data.id,
+                    'content': $params.data.description,
+                    'url': $params.data.url
+                ],
+                'config': [
+                    'customClasses': [$customClasses],
+                    'theme': 'dark',
+                    'size': '6xl'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Description paragraphs
+ * @param params {{
+ *     data: {
+ *         description: (string|Array<string>|undefined),
+ *     }
+ * }}
+ */
+{template .descriptionParagraphs}
+    {call .renderChild}
+        {param params: [
+            'type': 'smCollapsedText',
+            'renderParams': [
+                'data': [
+                    'text': [
+                        'cutText': $params.data.description
+                    ]
+                ],
+                'config': [
+                    'theme': 'paragraphs'
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 

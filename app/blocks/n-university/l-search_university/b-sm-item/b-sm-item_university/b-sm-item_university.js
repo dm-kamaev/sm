@@ -43,7 +43,7 @@ goog.scope(function() {
      * @const
      */
     Item.Event = {
-        CLICK: View.Event.CLICK
+        CLICK: sm.bSmItem.SmItem.Event.CLICK
     };
 
 
@@ -64,16 +64,5 @@ goog.scope(function() {
             );
         }
     };
-
-
-    /**
-     * @override
-     * @protected
-     */
-    Item.prototype.enterDocument = function() {
-        Item.base(this, 'enterDocument');
-    };
-
-
 
 });  // goog.scope

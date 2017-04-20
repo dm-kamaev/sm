@@ -4,31 +4,31 @@ import {bSmPicture} from '../../../../n-common/b-sm-picture/params';
 
 export namespace bSmItemUniversity {
     /*
-     * sm.bSmItem.TemplateUniversity.Params
+     * sm.bSmItemUniversity.Params
      */
     export namespace Params {
         /*
-         * sm.bSmItem.TemplateUniversity.Params.Data
+         * sm.bSmItemUniversity.Params.Data
          */
         export interface Data extends bSmItem.Params.Data {
-             company?: {
-                 abbreviation: string,
-                 city: string,
-                 name: string
-             },
-             nicety?: Array<{
-                 title: {
-                     text: string,
-                     textForMobile?: string,
-                     selected?: boolean
-                 },
-                 value?: string
-             }>,
-             buttonLink?: bSmButtonLink.Params
+            company?: {
+                abbreviation: string,
+                city: string,
+                name: string
+            },
+            nicety?: Array<{
+                title: {
+                    textDefault: string,
+                    textXs?: string,
+                    selected?: boolean
+                },
+                value?: string
+            }>,
+            buttonLink?: bSmButtonLink.Params
         }
 
         /*
-         * sm.bSmItem.TemplateUniversity.Params.Config
+         * sm.bSmItemUniversity.Params.Config
          */
         export interface Config extends bSmItem.Params.Config {
 
@@ -37,7 +37,7 @@ export namespace bSmItemUniversity {
 
 
     /*
-     * sm.bSmItem.TemplateUniversity.Params
+     * sm.bSmItemUniversity.Params
      */
     export interface Params {
         data: Params.Data;

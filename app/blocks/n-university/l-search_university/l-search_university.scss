@@ -3,8 +3,13 @@
 .l-search_university {
     .l-search__left-menu {
         width: 315px;
+        margin-right: 0;
 
         background-color: #fff;
+    }
+
+    .l-search__search-results-wrap {
+        padding-left: 360px;
     }
 }
 
@@ -14,11 +19,17 @@
         .l-search__left-menu {
             width: 100%;
         }
+
+        .l-search__search-results-wrap {
+            padding: 0 30px;
+        }
     }
 }
 
 @include media-xs {
-    .l-search__search-results-wrap {
-        padding: 0 24px;
+    .l-search__search__university {
+        .l-search__search-results-wrap {
+            padding: 0 24px;
+        }
     }
 }

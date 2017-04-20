@@ -103,6 +103,7 @@
 
 .l-university__section_programs {
     width: 100%;
+
     background-color: #f3f3f3;
 }
 
@@ -115,6 +116,7 @@
 
 .l-university__similar-programs-header {
     padding-bottom: 35px;
+
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 24px;
     font-weight: 700;
@@ -132,10 +134,11 @@
 
 .l-university__useful-courses-header {
     padding-bottom: 25px;
-    line-height: 29px;
+
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 24px;
     font-weight: 600;
+    line-height: 29px;
 }
 
 .l-university__section_comments {
@@ -243,9 +246,9 @@
     }
 
     .l-university__section_data {
+        margin-bottom: 30px;
         padding-right: 25px;
         padding-left: 25px;
-        margin-bottom: 30px;
     }
 
     .l-university__data_sketch {
@@ -298,6 +301,7 @@
 
     .l-university__entity-relation {
         display: block;
+
         padding-bottom: 20px;
     }
 

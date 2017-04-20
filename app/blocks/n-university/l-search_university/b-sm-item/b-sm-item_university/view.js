@@ -30,20 +30,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-item_university',
-        COVER_IMAGE: 'b-sm-item__cover-image',
-        STARS: 'b-sm-item__stars',
-        NAME_LINK: 'b-sm-item__link-name',
-        DESCRIPTION_LINK: 'b-sm-item__description-link'
-    };
-
-
-    /**
-     * Event enum
-     * @enum {string}
-     * @const
-     */
-    View.Event = {
-        CLICK: goog.events.getUniqueId('click')
+        STARS: 'b-sm-item__stars'
     };
 
 
@@ -53,14 +40,6 @@ goog.scope(function() {
      */
     View.prototype.initDom = function() {
         View.base(this, 'initDom');
-        // this.dom = {
-        //     coverImage: this.getElementByClass(View.CssClass.COVER_IMAGE),
-        //     nameLink: this.getElementByClass(View.CssClass.NAME_LINK),
-        //     stars: this.getElementByClass(View.CssClass.STARS),
-        //     descriptionLink: this.getElementByClass(
-        //         View.CssClass.DESCRIPTION_LINK
-        //     )
-        // };
         this.dom.stars = this.getElementByClass(View.CssClass.STARS);
     };
 });  // goog.scope

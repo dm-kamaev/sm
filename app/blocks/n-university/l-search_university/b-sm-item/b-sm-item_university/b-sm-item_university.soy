@@ -14,7 +14,6 @@
  *         bold: ?string
  *     },
  *     picture: ?sm.bSmPicture.Template.Params.Data,
- *     alias: ?string,
  *     score: ?number,
  *     description: (string|Array<string>|undefined),
  *     url: ?string,
@@ -25,8 +24,8 @@
  *     },
  *     nicety: Array<{
  *         title: {
- *             text: string,
- *             textForMobile: ?string,
+ *             textDefault: string,
+ *             textXs: ?string,
  *             selected: ?boolean
  *         },
  *         value: ?string
@@ -101,31 +100,6 @@
 
 
 /**
- * Cover section group
- * @param params {{
- *     data: {
- *         name: {
- *             light: string,
- *             bold: (string|undefined)
- *         },
- *         picture: ?sm.bSmPicture.Template.Params.Data
- *     }
- * }}
- * @override
- */
-{template .sectionGroupCover kind="html"}
-    {let $classes kind="html"}
-        {call .rootClass/}__section-group{sp}
-        {call .rootClass/}__section-group_cover
-    {/let}
-
-    <div class="{$classes}">
-        {call .sectionCover data="all" /}
-    </div>
-{/template}
-
-
-/**
  * Iformation section group
  * @param params {{
  *     data: sm.bSmItem.TemplateUniversity.Params.Data
@@ -175,27 +149,6 @@
 
 
 /**
- * @param params {{
- *     data: {
- *         name: {
- *             light: string,
- *             bold: (string|undefined)
- *         },
- *         picture: ?sm.bSmPicture.Template.Params.Data
- *     }
- * }}
- * @override
- */
-{template .sectionCover}
-    <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_cover">
-        {call .image data="all"/}
-    </div>
-{/template}
-
-
-
-/**
  * Header
  * @param params {{
  *     data: {
@@ -216,6 +169,50 @@
                 {call .rootClass/}__section_header">
         {call .name data="all" /}
         {call .score data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Item name
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         }
+ *     },
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .name}
+    <div class="{call .rootClass/}__name">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__link-name
+        {/let}
+
+        {let $name: $params.data.name.light + ($params.data.name.bold ?: '') /}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'id': $params.data.id,
+                        'content': $name,
+                        'url': $params.data.url
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': 'dark',
+                        'size': 'inherit'
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -246,17 +243,17 @@
 
 
 /**
- * Details
+ * section nicety
  * @param params {{
  *     data: {
- *         metro: ?Array<{
- *             id: number,
- *             name: string
+ *         nicety: Array<{
+ *             title: {
+ *                 textDefault: string,
+ *                 textXs: ?string,
+ *                 selected: ?boolean
+ *             },
+ *             value: ?string
  *         }>,
- *         area: ?Array<{
- *             id: number,
- *             name: string
- *         }>
  *     }
  * }}
  * @protected
@@ -265,31 +262,66 @@
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_nicety">
         {foreach $item in $params.data.nicety}
-            {let $nicetyTitleClasses kind="text"}
-                {call .rootClass/}__nicety-title
-                {if $item.title.selected}
-                    {sp}{call .rootClass/}__nicety-title_selected
-                {/if}
-            {/let}
-            {let $nicetyTitleForMobileClasses kind="text"}
-                {call .rootClass/}__nicety-title-mobile
-                {if $item.title.selected}
-                    {sp}{call .rootClass/}__nicety-title_selected
-                {/if}
-            {/let}
-
             <div class="{call .rootClass/}__nicety-item">
-                <div class="{$nicetyTitleClasses}">
-                    {$item.title.text}
-                </div>
-                <div class="{$nicetyTitleForMobileClasses}">
-                    {$item.title.textForMobile}
-                </div>
-                <div class="{call .rootClass/}__nicety-value">
-                    {$item.value}
-                </div>
+                {call .nicetyTitle}
+                    {param item: [
+                        'data' : $item
+                    ]/}
+                {/call}
+                {call .nicetyValue}
+                    {param item: [
+                        'data' : $item
+                    ]/}
+                {/call}
             </div>
         {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * nicety title
+ * @param item {{
+ *     data: {
+ *         title: {
+ *             textDefault: string,
+ *             textXs: ?string,
+ *             selected: ?boolean
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .nicetyTitle}
+    {let $nicetyTitleClasses kind="text"}
+        {call .rootClass/}__nicety-title
+        {if $item.data.title.selected}
+            {sp}{call .rootClass/}__nicety-title_selected
+        {/if}
+    {/let}
+
+    <div class="{$nicetyTitleClasses}
+            {sp}{call .rootClass/}__nicety-title_default">
+        {$item.data.title.textDefault}
+    </div>
+    <div class="{$nicetyTitleClasses}{sp}{call .rootClass/}__nicety-title_xs">
+        {$item.data.title.textXs}
+    </div>
+{/template}
+
+
+/**
+ * nicety value
+ * @param item {{
+ *     data: {
+ *         value: ?string
+ *     }
+ * }}
+ * @protected
+ */
+{template .nicetyValue}
+    <div class="{call .rootClass/}__nicety-value">
+        {$item.data.value}
     </div>
 {/template}
 
@@ -351,7 +383,7 @@
                     'config': [
                         'customClasses': [$customClasses],
                         'theme': 'neptune',
-                        'size': 'xs'
+                        'size': 'xxxs'
                     ]
                 ]
             ]/}

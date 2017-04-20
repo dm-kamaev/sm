@@ -254,7 +254,6 @@ class InformationView extends LayoutView {
             const egeTests =
                 data.egeExams.map(exam => `${exam.subjectName} (ЕГЭ)`);
             const entranceTests = egeTests.concat(data.program.extraExam);
-            console.log(data.egeExams);
 
             result.items.push({
                 data: {
@@ -535,6 +534,12 @@ class InformationView extends LayoutView {
             data: BackendCourseAdviced
     ): bSmItemCompact.Params.Data {
         return {
+            id: data.id,
+            type: 'course',
+            name: {
+                light: data.categoryName
+            },
+            description: `${data.name} ${data.brandName}`,
             picture: {
                 sources: [{
                     url: utils.getImageUrl(
@@ -545,12 +550,6 @@ class InformationView extends LayoutView {
                 }],
                 altText: data.categoryName,
             },
-            id: data.id,
-            type: 'course',
-            name: {
-                light: data.categoryName
-            },
-            description: `${data.name} ${data.brandName}`,
             url: courseView.getLink(data.url),
             nameLinkUrl: courseView.getLink(data.categoryUrl)
         };
