@@ -5,6 +5,8 @@ import {QueryParams} from '../types/programSearchLayout';
 import {Service, RequestParams} from '../../common/services/Service';
 import {SuggestProgram, BackendListProgram} from '../types/program';
 
+import {ProgramNameIsShorter} from './exceptions/ProgramNameIsShorter';
+
 class SearchService extends Service {
     constructor() {
         super();
@@ -36,6 +38,15 @@ class SearchService extends Service {
     }
 
     protected handleError(error: any): void {
+        const data = error.data || [];
+        data.map(errorItem => {
+            const code = errorItem.code;
+
+            switch (code) {
+            case 'ProgramNameIsShorter':
+                throw new ProgramNameIsShorter();
+            }
+        });
         logger.critical(error);
         throw error;
     }

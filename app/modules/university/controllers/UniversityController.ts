@@ -4,7 +4,17 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {searchService} from '../services/searchService';
 
+import {ProgramNameIsShorter} from './errors/ProgramNameIsShorter';
+
 export class UniversityController extends Controller {
+    constructor() {
+        super();
+
+        this.errors = {
+            ProgramNameIsShorterException: ProgramNameIsShorter
+        };
+    }
+
     /**
      * @api {get} /university/suggest
      * @apiVersion 1.0.0
