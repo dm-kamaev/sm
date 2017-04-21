@@ -114,7 +114,8 @@ class AdminProgramCommentController extends Controller {
     public async actionList(actionContext: any, programId: string) {
         const comments =
                 await programCommentService.getAllByProgramIdWithFullData(
-                    +programId
+                    +programId,
+                    {filterEmptyComments: true}
                 ),
             userId = comments.map(comment => comment.userData.userId),
             users = await userService.getUserByIds(userId);
