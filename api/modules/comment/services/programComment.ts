@@ -327,7 +327,7 @@ class ProgramCommentService {
                 pros: {$ne: null},
                 cons: {$ne: null}
             }
-        }
+        };
     }
 
     private async updateRating_(commentGroupId: number): Promise<any> {
