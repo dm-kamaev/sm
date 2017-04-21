@@ -51,6 +51,7 @@ typings
 
 #builded typescript files ignore
 api/components/interface.js
+api/components/xlsx.js
 
 api/modules/comment/controllers/errors/**/*.js
 api/modules/comment/controllers/AdminProgramCommentController.js
@@ -255,6 +256,7 @@ console/updateProgramSimilar.js
 console/updateUniverstyAndProgram.js
 console/fixedEncodingProgramMajor.js
 console/addedNewProgramMajor.js
+console/addedNewSubject.js
 console/modules/updateUniversityAndProgram/*.js
 console/modules/updateUniversityAndProgram/types/*.js
 
