@@ -238,6 +238,16 @@ goog.scope(function() {
 
 
     /**
+     * get position of this element
+     * @return {number}
+     * @public
+     */
+    Search.prototype.getPosition = function() {
+        var element = this.getElement();
+        return element.offsetTop;
+    };
+
+    /**
      * Resets data and suggest value
      * @public
      */

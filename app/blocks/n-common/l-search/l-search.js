@@ -252,6 +252,10 @@ goog.scope(function() {
             this.search_,
             sm.bSearch.Search.Event.ITEM_SELECT,
             this.onSearchSubmit_
+        ).listen(
+            this.search_,
+            sm.bSearch.Search.Event.TEXT_CHANGE,
+            this.onSearchChange_
         );
 
         return this;
@@ -415,10 +419,20 @@ goog.scope(function() {
 
     /**
      * Filter change handler
-     * @param {Object} event
      * @private
      */
     Search.prototype.onFilterChange_ = function() {
+        this.loadSearchCount_();
+    };
+
+
+    /**
+     * Search change handler
+     * @private
+     */
+    Search.prototype.onSearchChange_ = function() {
+        var searchPosition = this.search_.getPosition();
+        this.filterPanel_.setTooltipPosition(searchPosition);
         this.loadSearchCount_();
     };
 
@@ -607,7 +621,7 @@ goog.scope(function() {
      */
     Search.prototype.loadSearchCount_ = function() {
         var params = this.getParamsFromFilterPanel_();
-        goog.object.extend(params, this.getParamsFromSearch_());
+        params.name = this.getParamsFromSearch_().text;
         this.searchService_.loadSearchCountData(params);
     };
 

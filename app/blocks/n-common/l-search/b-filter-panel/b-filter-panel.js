@@ -182,7 +182,7 @@ goog.scope(function() {
      * @public
      */
     FilterPanel.prototype.showCountResults = function(opt_count) {
-        if (opt_count) {
+        if (opt_count !== undefined) {
             this.countResults_ = opt_count;
         }
 
@@ -218,6 +218,16 @@ goog.scope(function() {
         this.tooltip_.display(
             sm.lSearch.bTooltip.Tooltip.Animation.DISAPPEAR_SLOW
         );
+    };
+
+
+    /**
+     * set position of tooltip
+     * @param {number} position
+     * @public
+     */
+    FilterPanel.prototype.setTooltipPosition = function(position) {
+        this.tooltipPosition_ = position;
     };
 
 
@@ -308,11 +318,12 @@ goog.scope(function() {
 
     /**
      * checkOption/uncheckOption handler
-     * @param {sm.lSearch.bFilter.OptionChangeEvent} event
+     * @param {sm.lSearch.bFilter.CheckOptionEvent|
+     *         sm.lSearch.bFilter.UncheckOptionEvent} event
      * @private
      */
     FilterPanel.prototype.onOption_ = function(event) {
-        this.tooltipPosition_ = event.position;
+        this.setTooltipPosition(event.position);
         this.dispatchEvent(FilterPanel.Event.CHANGE);
     };
 
