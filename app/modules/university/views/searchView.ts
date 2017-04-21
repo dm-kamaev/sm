@@ -19,6 +19,7 @@ import {
     RenderParams,
     QueryParams
 } from '../types/programSearchLayout';
+import {BackendProgramResults} from '../types/program';
 
 import {
     lSearchUniversity
@@ -78,26 +79,51 @@ class SearchView extends LayoutView {
             maxPassScore: formatUtils.transformToArray(params.maxPassScore),
             majors: formatUtils.transformToArray(params.majors),
             maxPrice: formatUtils.transformToArray(params.maxPrice),
-            features: formatUtils.transformToArray(
-                params.features
-            ),
+            features: formatUtils.transformToArray(params.features),
             page: params.page || 0,
             sortType: params.sortType || 0
         };
+    }
+
+    public generateHeaderText(programCount: number, universityCount: number) {
+        return [
+            {
+                text: 'Мы нашли'
+            },
+            {
+                number: programCount,
+                text: {
+                    nom: 'програму',
+                    gen: 'программы',
+                    plu: 'программ'
+                },
+                select: 'number'
+            },
+            {
+                text: 'обучения в'
+            },
+            {
+                number: universityCount,
+                text: {
+                    nom: 'вузе',
+                    gen: 'вузах',
+                    plu: 'вузов'
+                },
+                select: 'number'
+            },
+        ]
     }
 
     protected setParams(params: RenderParams) {
         super.setParams(params);
 
         const searchParams = this.initSearchParams(params);
-        this.setResultsList_();
+        this.setResultsList_(params.data.resultsList);
         this.setFilterPanels_(params.data, searchParams);
         this.setSearchParams_(searchParams);
     }
 
-    private setResultsList_() {
-        const programs = programsView.list();
-
+    private setResultsList_(resultsList: BackendProgramResults) {
         this.params.data.resultsList = {
             sort: {
                 items: [{
@@ -112,22 +138,12 @@ class SearchView extends LayoutView {
                     }
                 ]
             },
-            headerText: [
-                {
-                    text: 'Мы нашли'
-                },
-                {
-                    number: 123,
-                    text: {
-                        nom: 'програму',
-                        gen: 'программы',
-                        plu: 'программ'
-                    },
-                    select: 'number'
-                }
-            ],
+            headerText: this.generateHeaderText(
+                resultsList.programCount,
+                resultsList.universityCount
+            ),
             entityList: {
-                items: programs,
+                items: programsView.list(resultsList.programs),
                 itemType: 'smItemUniversity',
                 itemConfig: {
                     enableCover: true

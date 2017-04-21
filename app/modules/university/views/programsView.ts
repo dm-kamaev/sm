@@ -1,64 +1,109 @@
-class ProgramsView {
+import {BackendListProgram} from '../types/program';
 
-    public list = function() {
-        return [
-            this.getItem()
-        ];
+import {FormatUtils} from '../../common/lib/FormatUtils';
+const config = require('../../../config/config.json');
+
+class ProgramsView {
+    public getUrl(universityAlias: string, programAlias: string): string {
+        const protocol = config.protocol;
+        const host =  config.universities.host;
+
+        return `${protocol}://${host}/vuz` +
+            `/${universityAlias}/specialnost/${programAlias}`;
+    }
+
+    public list(items: Array<BackendListProgram>) {
+        return items.map(item => this.transformItem(item));
     };
 
-    protected getItem = function() {
+    protected transformItem(item: BackendListProgram) {
+        const programUrl = this.getUrl(item.universityAlias, item.programAlias);
+
         return {
-            id: '1',
+            id: item.id,
+            name: {light: item.name},
+            url: programUrl,
+            score: item.totalScore,
             picture: {
                 sources: [{
-                    url: 'http://vuzopedia.ru/themes/vuzopedia/assets/images' +
-                        '/logo/342.png',
+                    url: item.imageUrl,
                     size: 'default',
                 }],
-                altText: 'Менеджмент'
+                altText: item.name
             },
-            name: {light: 'Менеджмент'},
-            score: 4,
-            description: [
-                '– Программы обмена (Великобритания, Нидерланды)',
-                '– Нет вступительных испытаний'
-            ],
             company: {
-                abbreviation: 'НИУ-ВШЭ',
-                city: 'Москва',
-                name: 'Национальный исследовательский университет – ' +
-                'Высшая школа экономики'
+                abbreviation: item.universityAbbreviation,
+                city: item.cityName,
+                name: item.universityName
             },
-            nicety: [
-                {
-                    title: {
-                        textDefault: 'Бюджетных мест: 100',
-                        textXs: 'Бюджетных: 100',
-                        selected: true
-                    },
-                    value: 'от 374 баллов'
-                },
-                {
-                    title: {
-                        textDefault: 'Платных мест: 100',
-                        textXs: 'Платных: 100'
-                    },
-                    value: 'от 170 тыс./год'
-                }
-            ],
-            buttonLink: {
-                data: {
-                    content: 'Подробности',
-                    url: '123'
-                },
-                config: {
-                    borderRoundSize: 'm',
-                    size: 'l',
-                    theme: 'neptune-reverse'
-                }
-            }
+            nicety: this.generateNicety(item),
+            description: this.generateDescription(item),
+            buttonLink: this.generateButtonLinkParams(programUrl)
         };
     };
+
+    protected generateNicety(item: BackendListProgram) {
+        const formatUtils = new FormatUtils();
+
+        return [
+            {
+                title: {
+                    textDefault: 'Бюджетных мест: ' + item.budgetPlaces,
+                    textXs: 'Бюджетных: ' + item.budgetPlaces,
+                    selected: (item.competition > 3)
+                },
+                value: `от ${item.egeScore} ` + formatUtils.declensionPrint(
+                    item.egeScore,
+                    {
+                        nom: 'балл',
+                        gen: 'баллов',
+                        plu: 'баллов'
+                    }
+                )
+            },
+            {
+                title: {
+                    textDefault: 'Платных мест: ' + item.commercialPlaces,
+                    textXs: 'Платных: ' + item.commercialPlaces
+                },
+                value: 'от ' + item.cost + ' тыс./год'
+            }
+        ]
+    }
+
+    protected generateDescription(item: BackendListProgram) {
+        let res = [];
+
+        if (item.exchangeProgram) {
+            res.push(`– Программы обмена (${item.exchangeProgram})`)
+        }
+
+        if (item.extraExam.length) {
+            let exams = item.extraExam.join(', ');
+            let declensionExam = item.extraExam.length == 1 ?
+                'Вступительное испытание' :
+                'Вступительные испытания';
+            res.push(`– ${declensionExam} - ${exams}`);
+        } else {
+            res.push('– Нет вступительных испытаний');
+        }
+
+        return res.length ? res : null;
+    }
+
+    protected generateButtonLinkParams(url: string) {
+        return {
+            data: {
+                content: 'Подробности',
+                url: url
+            },
+            config: {
+                borderRoundSize: 'm',
+                size: 'l',
+                theme: 'neptune-reverse'
+            }
+        }
+    }
 }
 
 export const programsView = new ProgramsView();

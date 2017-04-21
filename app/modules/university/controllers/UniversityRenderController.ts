@@ -11,6 +11,7 @@ import {ProgramCommentService} from '../../comment/services/ProgramComment';
 import {SimilarProgramsService} from '../services/SimilarProgramsService';
 import {programMajorService} from '../services/programMajorService';
 import {programMetaService} from '../services/programMetaService';
+import {searchService} from '../services/searchService';
 
 import {informationView} from '../views/informationView';
 import {searchView} from '../views/searchView';
@@ -101,9 +102,12 @@ class UniversityRenderController extends Controller {
 
     public async actionGetSearch(actionContext: any) {
         const user = userService.getUserFromRequest(actionContext.request);
+        const searchParams = actionContext.request.query;
+        const resultsList = await searchService.findByParams(searchParams);
 
         const templateParams = searchView.render({
             data: {
+                resultsList,
                 favorites: [],
             },
             config: config,

@@ -21,6 +21,12 @@ export interface BackendProgram {
     addressName: string;
 }
 
+export interface BackendProgramResults {
+    programCount: number;
+    universityCount: number;
+    programs: Array<BackendListProgram>;
+};
+
 export interface BackendListProgram {
     id: number;
     name: string;

@@ -3,7 +3,7 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 import {QueryParams} from '../types/programSearchLayout';
 
 import {Service, RequestParams} from '../../common/services/Service';
-import {SuggestProgram, BackendListProgram} from '../types/program';
+import {SuggestProgram, BackendProgramResults} from '../types/program';
 
 import {ProgramNameIsShorter} from './exceptions/ProgramNameIsShorter';
 
@@ -26,7 +26,7 @@ class SearchService extends Service {
     }
 
     public async findByParams(
-            queryParams: QueryParams): Promise<BackendListProgram> {
+            queryParams: QueryParams): Promise<BackendProgramResults> {
         const requestParams: RequestParams = {
             url: `${this.baseUrl}`,
             method: 'get',

@@ -1,12 +1,13 @@
 import {BackendUser} from '../../user/types/user';
 import {AppConfig} from '../../common/types/layout';
+import {BackendProgramResults} from './program';
 
 export type QueryParams = {
-    cities?: string;
-    ege?: string;
-    payType?: string;
-    maxPassScore?: string;
-    maxPrice?: string;
+    cities?: Array<number>;
+    ege?: Array<number>;
+    payType?: Array<number>;
+    maxPassScore?: number;
+    maxPrice?: number;
     majors?: string;
     features?: string;
     page?: number;
@@ -25,5 +26,6 @@ export type RenderParams = {
 
 export type BackendData = {
     filtersData: any;
+    resultsList: BackendProgramResults;
     favorites: Array<{string: any}>;
 };
