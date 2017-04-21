@@ -80,6 +80,16 @@ goog.scope(function() {
 
 
     /**
+     * Check is element shown
+     * @return {boolean}
+     * @public
+     */
+    View.prototype.isElementShown = function() {
+        return goog.style.isElementShown(this.getElement());
+    };
+
+
+    /**
      * Update placeholder value
      * @param {(number|string)} value
      * @public

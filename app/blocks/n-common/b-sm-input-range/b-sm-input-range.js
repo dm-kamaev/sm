@@ -6,7 +6,7 @@ goog.require('sm.bSmInputRange.View');
 goog.require('sm.bSmRange.SmRange');
 goog.require('sm.gInput.InputStendhal');
 goog.require('sm.iCloblFactory.FactoryStendhal');
-
+goog.require('sm.iSmViewport.SmViewport');
 
 
 goog.scope(function() {
@@ -85,6 +85,7 @@ goog.scope(function() {
         InputRange.base(this, 'enterDocument');
 
         this.initViewListeners_();
+        this.initViewportListeners_();
 
         this.initInputListeners_();
         this.initRangeListeners_();
@@ -215,6 +216,32 @@ goog.scope(function() {
             View.Event.FIELD_CLICK,
             this.onFieldClick_
         );
+    };
+
+
+    /**
+     * Initializes listeners for viewport
+     * @private
+     */
+    InputRange.prototype.initViewportListeners_ = function() {
+        this.getHandler().listen(
+            sm.iSmViewport.SmViewport.getInstance(),
+            sm.iSmViewport.SmViewport.Event.RESIZE,
+            this.onResize_
+        );
+    };
+
+
+    /**
+     * Resize handler
+     * @private
+     */
+    InputRange.prototype.onResize_ = function() {
+        if (this.getView().isElementShown()) {
+            var value = this.input_.getValue();
+
+            this.setRangeValue_(value);
+        }
     };
 
 

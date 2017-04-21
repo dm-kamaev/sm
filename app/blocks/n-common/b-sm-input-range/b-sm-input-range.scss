@@ -1,3 +1,5 @@
+@import '../i-media/i-media';
+
 .b-sm-input-range__field {
     position: relative;
 
@@ -51,5 +53,11 @@
 
     .b-sm-input-range__input-wrap {
         top: -2px;
+    }
+}
+
+@include media-m {
+    .b-sm-input-range__range {
+        display: none;
     }
 }
