@@ -16,7 +16,7 @@ import {LinksFormatter} from '../../common/lib/LinksFormatter';
 import {utils} from '../../common/lib/utils';
 
 import {courseView} from '../../course/views/courseView';
-import {programCommentView} from '../../comment/views/programCommentView';
+import {ProgramCommentView} from '../../comment/views/ProgramCommentView';
 import {navigationPanelView} from './navigationPanelView';
 
 import {
@@ -465,6 +465,7 @@ class InformationView extends LayoutView {
     }
 
     private setComments_(data: BackendData) {
+        const programCommentView = new ProgramCommentView();
         this.params.data.comments = programCommentView.renderCommentsList({
             comments: data.comments,
             users: data.users
@@ -572,6 +573,7 @@ class InformationView extends LayoutView {
         programId: number,
         userComment: BackendProgramComment
     ) {
+        const programCommentView = new ProgramCommentView();
         this.params.data.modalComment = programCommentView.renderModal({
             programId: programId,
             comment: userComment
