@@ -35,16 +35,17 @@ feedbackView.getLetterTheme = function(params) {
  */
 feedbackView.getLetterBody = function(params) {
     var letterBody = '';
+    const breakHtml = '<br>';
 
-    letterBody += 'Имя отправителя: ' + params.name + '\n';
-    letterBody += 'email отправителя: ' + params.email + '\n';
-    letterBody += 'Тема: ' + params.theme + '\n';
+    letterBody += `Имя отправителя: ${params.name}${breakHtml}`;
+    letterBody += `email отправителя: ${params.email}${breakHtml}`;
+    letterBody += `Тема: ${params.theme}${breakHtml}`;
 
     if (params.url) {
-        letterBody += 'Url: ' + params.url + '\n';
+        letterBody += `Url: ${params.url}${breakHtml}`;
     }
 
-    letterBody += 'Сообщение: ' + params.text + '\n';
+    letterBody += `Сообщение: ${params.text}`;
 
     return letterBody;
 };
