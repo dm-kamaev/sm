@@ -68,19 +68,19 @@ class ProgramsView {
                 },
                 value: 'от ' + item.cost + ' тыс./год'
             }
-        ]
+        ];
     }
 
     protected generateDescription(item: BackendListProgram) {
-        let res = [];
+        const res = [];
 
         if (item.exchangeProgram) {
-            res.push(`– Программы обмена (${item.exchangeProgram})`)
+            res.push(`– Программы обмена (${item.exchangeProgram})`);
         }
 
         if (item.extraExam.length) {
-            let exams = item.extraExam.join(', ');
-            let declensionExam = item.extraExam.length == 1 ?
+            const exams = item.extraExam.join(', ');
+            const declensionExam = item.extraExam.length == 1 ?
                 'Вступительное испытание' :
                 'Вступительные испытания';
             res.push(`– ${declensionExam} - ${exams}`);
@@ -102,7 +102,7 @@ class ProgramsView {
                 size: 'l',
                 theme: 'neptune-reverse'
             }
-        }
+        };
     }
 }
 

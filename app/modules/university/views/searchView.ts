@@ -111,7 +111,7 @@ class SearchView extends LayoutView {
                 },
                 select: 'number'
             },
-        ]
+        ];
     }
 
     protected setParams(params: RenderParams) {
