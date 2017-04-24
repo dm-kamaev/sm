@@ -13,12 +13,12 @@ import {
 import {
     CityInstance
 } from '../../../api/modules/geo/types/city';
-import {Hash} from './types/updateUniverstyAndProgram';
+import {Hash, Columns} from './types/updateUniverstyAndProgram';
 
 
 export class Cities {
     private listProgram_: any[];
-    private hashColumn_: Hash<string>;
+    private hashColumn_: Columns;
 
     constructor(option?) {
         option = option || {};

@@ -10,7 +10,8 @@ import {
     service as programService
 } from '../../../api/modules/university/services/program';
 import {
-    ProgramInstance
+    ProgramInstance,
+    ProgramAttribute
 } from '../../../api/modules/university/types/program';
 import {
     service as programMajorService
@@ -20,6 +21,7 @@ import {BaseWorkWithProgram} from './BaseWorkWithProgram';
 import {Universities} from './Universities';
 
 import {Hash, IUniversities} from './types/updateUniverstyAndProgram';
+import {promiseMethods} from '../../../api/components/promiseMethods';
 
 export class Programs extends BaseWorkWithProgram {
     private listProgram_: any[];
@@ -37,9 +39,11 @@ export class Programs extends BaseWorkWithProgram {
     }
 
     public async validate() {
-        // this.validateDuplicateProgram();
         await this.validateParams();
         await this.validateProgramMajor();
+        this.validateDuplicateProgram(
+            this.extractPrograms()
+        );
     }
 
     public async updateViaXlsx() {
@@ -133,35 +137,29 @@ export class Programs extends BaseWorkWithProgram {
         });
     }
 
-    private validateDuplicateProgram() {
-        const {
-            programName: programNameColumn,
-            universityName: universityNameColumn,
-            universityAbbreviation: universityAbbreviationColumn,
-        } = this.hashColumn_;
-        const uniq: Hash<number> = {};
-        let validateError: boolean = false;
-        this.listProgram_.forEach((program, i) => {
-            const programName: string =
-                this.cleanWhiteSpace(program[programNameColumn]);
-            if (!uniq[programName]) {
-                uniq[programName] = 0;
-            }
-            uniq[programName]++;
-            if (uniq[programName] > 2) {
-                validateError = true;
-                let errorText: string = '';
-                errorText = `Program name is empty "${programName}"`;
-                errorText += ` ${JSON.stringify(program, null, 2)}, row=${i}`;
-                logger.critical(errorText);
-            }
 
-            if (validateError) {
-                throw new Error('EntranceStatistic are not valid');
+    private validateDuplicateProgram(programsFromFile: ProgramAttribute[]) {
+        const uniqProgram: Hash<boolean> = {};
+        let validateError: boolean = false;
+        programsFromFile.forEach((program: ProgramAttribute) => {
+            const key: string = this.uniteUniversityIdAndProgramName(
+                program.universityId,
+                program.name
+             );
+            if (!uniqProgram[key]) {
+                uniqProgram[key] = true;
+            } else {
+                validateError = true;
+                logger.critical(`
+                    Program duplicate
+                    ${JSON.stringify(program, null, 2)}
+                `);
             }
         });
+        if (validateError) {
+            throw new Error('Programs are not valid');
+        }
     }
-
 
 
     private async getHashProgramMajor(): Promise<Hash<number>> {
@@ -175,7 +173,7 @@ export class Programs extends BaseWorkWithProgram {
     }
 
 
-    private extractPrograms() {
+    private extractPrograms(): ProgramAttribute[] {
         const hashUniversities: Hash<number> = this.hashUniversities_;
         const hashProgramMajor: Hash<number> = this.getHashProgramMajor_;
         const {
@@ -202,11 +200,8 @@ export class Programs extends BaseWorkWithProgram {
                 this.cleanWhiteSpace(program[programMajorColumn]);
             const key: string
                 = this.uniteAbbrevationAndName(abbreviation, name);
-            // TODO: remove in future
-            // if (!programName) {
-            //     return null;
-            // }
-            const data: any = {
+
+            const data: ProgramAttribute = {
                 name: programName,
                 universityId: hashUniversities[key],
                 programMajorId: hashProgramMajor[programMajor],
@@ -228,7 +223,7 @@ export class Programs extends BaseWorkWithProgram {
     }
 
 
-    private async updatePrograms(programsFromFile: any[]) {
+    private async updatePrograms(programsFromFile: ProgramAttribute[]) {
         const programsDb: ProgramInstance[] =
             await programService.getAll();
         const hashProgramDb: Hash<number> = {};
@@ -239,8 +234,7 @@ export class Programs extends BaseWorkWithProgram {
             hashProgramDb[key] = program.id;
         });
 
-        let promisePrograms;
-        promisePrograms = programsFromFile.map((program) => {
+        const update = (program: ProgramAttribute) => {
             const key: string = this.uniteUniversityIdAndProgramName(
                 program.universityId,
                 program.name
@@ -249,27 +243,35 @@ export class Programs extends BaseWorkWithProgram {
             let res = null;
             if (!programId) {
                 try {
+                    // console.log(`INSERT`);
                     res = programService.create(program);
                 } catch (error) {
                     console.log('Error: create =>', error);
                 }
             } else {
                 try {
-                    res = programService.fullUpdate(programId, program);
+                    // console.log(`
+                    //     UPDATE ${programId} ${JSON.stringify(program)}
+                    // `);
+                    // console.log(`UPDATE ${programId}`);
+                    // res = programService.fullUpdate(programId, program);
+                    res = programService.update(programId, program);
                 } catch (error) {
                     console.log('Error: update =>', error);
                 }
             }
             return res;
-        });
-        await Promise.all(promisePrograms);
+        };
+        await promiseMethods.queue(update, programsFromFile);
     }
 
     private getOksoCode(specialty: string): string {
         specialty = specialty || '';
         specialty = specialty.replace(/[а-я]/ig, '');
         const m = specialty.match(/\((.+)\)/);
-        return (m && m[1]) ? m[1] : '';
+        let oksoCode: string = (m && m[1]) ? m[1] : '';
+        oksoCode = oksoCode.replace(/[\(\)]/g, '').trim();
+        return oksoCode;
     }
 
 };

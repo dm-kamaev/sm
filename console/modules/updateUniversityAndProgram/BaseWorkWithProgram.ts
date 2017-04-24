@@ -6,15 +6,6 @@ import {Hash} from './types/updateUniverstyAndProgram';
 
 export abstract class BaseWorkWithProgram {
 
-  protected uniteAbbrevationAndName(
-    abbreviation: string,
-    name: string
-  ): string {
-      return this.cleanWhiteSpace(abbreviation) +
-             '::::' +
-             this.cleanWhiteSpace(name);
-  }
-
   protected cleanWhiteSpace(str: string): string {
       str = str || '';
       return str.replace(/\s+/g, ' ').trim();
@@ -38,6 +29,16 @@ export abstract class BaseWorkWithProgram {
       return res;
   }
 
+  protected uniteAbbrevationAndName(
+    abbreviation: string,
+    name: string
+  ): string {
+      return this.cleanWhiteSpace(abbreviation) +
+             '::::' +
+             this.cleanWhiteSpace(name);
+  }
+
+
   protected uniteUniversityIdAndProgramName(
     universityId: number,
     programName: string
@@ -55,5 +56,14 @@ export abstract class BaseWorkWithProgram {
     return this.cleanWhiteSpace(String(programId)) +
            '::::' +
            this.cleanWhiteSpace(String(year));
+  }
+
+  protected uniteProgramIdAndSubjectId(
+    programId: number,
+    subjectId: number
+  ): string {
+    return this.cleanWhiteSpace(String(programId)) +
+           '::::' +
+           this.cleanWhiteSpace(String(subjectId));
   }
 }

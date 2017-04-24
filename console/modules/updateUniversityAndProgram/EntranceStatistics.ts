@@ -25,6 +25,7 @@ import {
     IUniversities,
     IPrograms,
 } from './types/updateUniverstyAndProgram';
+import {promiseMethods} from '../../../api/components/promiseMethods';
 
 export class EntranceStatistics extends BaseWorkWithProgram {
     private listProgram_: any[];
@@ -160,7 +161,7 @@ export class EntranceStatistics extends BaseWorkWithProgram {
                 egePassScore,
             };
         });
-        console.log('statistics=', statistics, statistics.length);
+        // console.log('statistics=', statistics, statistics.length);
         return statistics;
     }
 
@@ -178,27 +179,23 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             hashStatisticDb[key] = id;
         });
 
-        console.log('hashStatisticDb=', hashStatisticDb);
-        const promiseStatistics = statisticsFromFile.map((
-            statistic: EntranceStatisticAttribute
-        ) => {
+        const update = (statistic: EntranceStatisticAttribute) => {
             const key: string = this.uniteProgramIdAndYear(
                 statistic.programId,
                 statistic.year
             );
             const statisticId: number | null = hashStatisticDb[key];
-            // if (statisticId === 2473) { return null; }
             let res = null;
             if (!statisticId) {
                 try {
-                    console.log('INSERT');
+                    // console.log('INSERT');
                     res = entranceStatisticService.create(statistic);
                 } catch (error) {
                     console.log('Error: create =>', error);
                 }
             } else {
                 try {
-                    console.log('UPDATE');
+                    // console.log('UPDATE');
                     res = entranceStatisticService.update(
                         statisticId,
                         statistic
@@ -208,8 +205,8 @@ export class EntranceStatistics extends BaseWorkWithProgram {
                 }
             }
             return res;
-        });
-        await Promise.all(promiseStatistics);
+        };
+        await promiseMethods.queue(update, statisticsFromFile);
     }
 
     private int(str: string): number {

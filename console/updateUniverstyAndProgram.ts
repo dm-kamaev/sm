@@ -3,7 +3,7 @@
 // author: dm-kamaev
 // node commander.js updateUniverstyAndProgram
 // update universities, programs and reltions
-// update table university, program, city,
+// update table university, program, city, program_ege_exam
 
 import * as commander from 'commander';
 import * as path from 'path';
@@ -24,18 +24,24 @@ const sequelize = require('../app/components/db.js');
 //      .replace(/(GROUP BY)/g, '\n$1\n')
 //   );
 // };
-import {Xlsx} from './components/Xlsx';
+import {xlsx} from '../api/components/xlsx';
 import {Universities} from './modules/updateUniversityAndProgram/Universities';
 import {Programs} from './modules/updateUniversityAndProgram/Programs';
+import {EgeExams} from './modules/updateUniversityAndProgram/EgeExams';
 import {
     EntranceStatistics
 } from './modules/updateUniversityAndProgram/EntranceStatistics';
 import {Cities} from './modules/updateUniversityAndProgram/Cities';
+import {
+    Hash, Columns
+} from './modules/updateUniversityAndProgram/types/updateUniverstyAndProgram';
 
 
 class UpdateUniversityProgram {
     private listProgram_: any[];
-    private hashColumn_: { [key: string]: string; };
+    private listEgeExams_: any[];
+    private hashColumn_: Columns;
+    private hashColumnEgeExam_: Columns;
 
     constructor() {
         this.hashColumn_ = {
@@ -55,22 +61,29 @@ class UpdateUniversityProgram {
             cost: 'Стоимость в год',
             egePassScore: 'Проходной на бюджет',
         };
+
+        this.hashColumnEgeExam_ = {
+            universityAbbreviation: 'Аббревиатура вуза',
+            programName: 'Название программы',
+            ege: 'ЕГЭ',
+            extraExam: 'Экзамены в вузе',
+        };
     }
 
-    public async start() {
-        logger.info('-----START-----');
+    public async updateProgramAndRelation() {
         try {
             // const pathFile: string
-            //     = '../assets/universities/listProgram.xlsx';
-            logger.info('Reading files');
+            //     = '../assets/universities/listProgramPart.xlsx';
+            logger.info('Reading file programs and universities...');
             const pathFile: string =
-                '../assets/universities/listProgram_all.xlsx';
+                '../assets/universities/listProgramAll.xlsx';
             this.listProgram_ = await this.getJsonFromXlsx(pathFile);
             const data = {
                 hashColumn: this.hashColumn_,
                 listProgram: this.listProgram_,
             };
             // console.log(this.listProgram_);
+            logger.info('Update cities...');
             await new Cities(data).updateViaXlsx();
 
             const universities = new Universities(data);
@@ -93,19 +106,48 @@ class UpdateUniversityProgram {
         } catch (error) {
             console.log('ERROR=', error);
         }
-        logger.info('-----THE END-----');
     }
 
-    private async getJsonFromXlsx(pathFile: string): Promise<any[]> {
-        const fullPath: string = path.join(__dirname, pathFile);
-        return await new Xlsx().getJson(fullPath);
+    public async updateEgeExam() {
+        try {
+            logger.info('Reading file egeExam...');
+            const pathFile: string
+                // = '../assets/universities/listProgramPart.xlsx';
+                = '../assets/universities/listProgramAll.xlsx';
+            this.listEgeExams_ = await this.getJsonFromXlsx(
+                pathFile, {sheet: 'поступи'}
+            );
+            const egeExams = new EgeExams({
+                hashColumn: this.hashColumnEgeExam_,
+                listProgram: this.listEgeExams_,
+            });
+            logger.info('Validate...');
+            await egeExams.validate();
+            logger.info('Update...');
+            await egeExams.updateViaXlsx();
+        } catch (error) {
+            console.log('Error=', error);
+        }
     }
+
+    private async getJsonFromXlsx(
+        pathFile: string,
+        option?: any
+    ): Promise<any[]> {
+        const fullPath: string = path.join(__dirname, pathFile);
+        return await xlsx.getJson(fullPath, option);
+    }
+
 };
 
 commander
     .command('updateUniverstyAndProgram')
     .action(async() => {
-        await new UpdateUniversityProgram().start();
+        logger.info('-----START-----');
+        const updateUniversityProgram = new UpdateUniversityProgram();
+        await updateUniversityProgram.updateProgramAndRelation();
+        await updateUniversityProgram.updateEgeExam();
+        logger.info('-----THE END-----');
     });
 
 exports.Command;
