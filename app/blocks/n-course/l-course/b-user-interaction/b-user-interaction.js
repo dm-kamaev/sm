@@ -142,7 +142,7 @@ goog.scope(function() {
     UserInteraction.prototype.onClick_ = function(event) {
         var viewportSize = Viewport.getInstance().getSize();
 
-        if (viewportSize <= Viewport.Size.XS) {
+        if (viewportSize <= Viewport.Size.S) {
             this.dispatchEvent(UserInteraction.Event.CLICK);
         }
     };
