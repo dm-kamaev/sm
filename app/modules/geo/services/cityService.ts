@@ -10,10 +10,20 @@ class CityService extends Service {
         this.baseUrl += '/universities/api/cities';
     }
 
-    public async getAllSorted(): Promise<Array<BackendCity>> {
+    public async getAllSortedByProgramCount(): Promise<BackendCity[]> {
         const params: RequestParams = {
             url: this.baseUrl + '/program',
             method: 'get'
+        };
+        const response = await this.send(params);
+        return response.data;
+    }
+
+    public async findByName(name: string): Promise<BackendCity[]> {
+        const params: RequestParams = {
+            url: this.baseUrl,
+            method: 'get',
+            params: {name}
         };
         const response = await this.send(params);
         return response.data;

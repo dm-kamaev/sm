@@ -214,6 +214,8 @@ app/modules/common/views/footerView.js
 app/modules/common/views/generalDataView.js
 app/modules/common/views/sideMenuView.js
 
+app/modules/geo/**/*.js
+
 app/modules/school/views/olympiadResultView.js
 
 app/modules/university/constants/*.js

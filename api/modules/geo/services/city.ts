@@ -178,6 +178,17 @@ class CityService {
                 .replace(/\s+/g, ' ');
     }
 
+    public async findByName(name: string): Promise<CityInstance[]> {
+        return CityModel.findAll({
+            attributes: {exclude: EXCLUDE_ATTRIBUTES},
+            where: {
+                name: {
+                    $ilike: `%${name}%`
+                }
+            }
+        });
+    }
+
     private async getAllSortedByProgramCountDb(): Promise<CityInstance[]> {
         return CityModel.findAll({
             attributes: {exclude: EXCLUDE_ATTRIBUTES},

@@ -113,7 +113,7 @@ class UniversityRenderController extends Controller {
                 majors
             ] = await Promise.all([
                 searchService.findByParams(searchParams),
-                cityService.getAllSorted(),
+                cityService.getAllSortedByProgramCount(),
                 egeExamService.getExams(),
                 majorService.getPopular()
         ]);

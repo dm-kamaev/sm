@@ -1,12 +1,12 @@
-import {LegacyController} from '../../../components/interface';
+import {LegacyController} from '../../../../api/components/interface';
 
 const Controller: LegacyController = require('nodules/controller').Controller;
 
-import {service as cityService} from '../services/city';
+import {cityService} from '../services/cityService';
 
-class CityController extends Controller {
+export class CityController extends Controller {
     /**
-     * @api {get} /api/cities/program Get all cities sorted by programs count
+     * @api {get} /program/cities Get all cities sorted by programs count
      * @apiVersion 1.0.0
      * @apiName getAllCitiesByProgramCount
      * @apiGroup City
@@ -29,7 +29,7 @@ class CityController extends Controller {
     }
 
     /**
-     * @api {get} /api/cities Find city by name
+     * @api {get} /cities Find city by name
      * @apiVersion 1.0.0
      * @apiName findCityByName
      * @apiGroup City
@@ -46,5 +46,3 @@ class CityController extends Controller {
         return cityService.findByName(searchString);
     }
 }
-
-export {CityController};
