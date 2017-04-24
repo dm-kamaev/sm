@@ -47,7 +47,7 @@ class ProgramFilterPanel extends FilterPanel {
             config: {
                 isShowed: true,
                 optionsToShow: 3,
-                showMoreButtonText: 'другие города (count)'
+                showMoreButtonText: 'другие города'
             }
         };
 
@@ -145,7 +145,7 @@ class ProgramFilterPanel extends FilterPanel {
             },
             config: {
                 optionsToShow: 3,
-                showMoreButtonText: 'выбрать специальность (count)'
+                showMoreButtonText: 'выбрать специальность'
             }
         };
 
@@ -175,21 +175,20 @@ class ProgramFilterPanel extends FilterPanel {
         };
     }
 
-    /**
-     * Must be  overriden in heirs
-     * @return {Object<string, Function>}
-     * @override
-     */
+
     protected get filterInitializers(): {[name: string]: Function} {
         return {
-            [filterName.CITIES]: this.setFilterCities_.bind(this),
+            [filterName.CITIES]: this.setFilterCities_.bind(
+                this, this.filtersData.citiesCount
+            ),
             [filterName.EGE_SUBJECTS]: this.setFilterEgeSubjects_.bind(this),
             [filterName.PAY_TYPE]: this.setFilterPayType_.bind(this),
             [filterName.EGE_RESULTS]: this.setFilterEgeResults_.bind(this),
             [filterName.MAX_PRICE]: this.setFilterMaxPrice_.bind(this),
-            [filterName.MAJORS]: this.setFilterMajors_.bind(this),
-            [filterName.FEATURES]:
-                this.setFilterFeatures_.bind(this)
+            [filterName.MAJORS]: this.setFilterMajors_.bind(
+                this, this.filtersData.majorsCount
+            ),
+            [filterName.FEATURES]: this.setFilterFeatures_.bind(this)
         };
     }
 
@@ -238,11 +237,17 @@ class ProgramFilterPanel extends FilterPanel {
     }
 
     private setFilterCities_(
+            count: number,
             optionModels: Array<OptionModel>,
             checkedValues?: (number|string)[]
     ) {
         const params = this.filterCities_;
         params.data.options = this.getOptions(optionModels);
+
+        if (count) {
+            params.config.showMoreButtonText =
+                `${params.config.showMoreButtonText} (${count})`;
+        }
 
         this.setFilter(params, checkedValues);
 
@@ -288,11 +293,17 @@ class ProgramFilterPanel extends FilterPanel {
     }
 
     private setFilterMajors_(
+            count: number,
             optionModels: Array<OptionModel>,
             checkedValues?: (number|string)[]
     ) {
         const params = this.filterMajors_;
         params.data.options = this.getOptions(optionModels);
+
+        if (count) {
+            params.config.showMoreButtonText =
+                `${params.config.showMoreButtonText} (${count})`;
+        }
 
         this.setFilterModal(params, checkedValues);
 

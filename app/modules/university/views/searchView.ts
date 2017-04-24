@@ -156,19 +156,13 @@ class SearchView extends LayoutView {
             data: BackendData,
             searchParams: lSearchUniversity.Params.SearchParams) {
 
-        const filtersData = {
-            cities: data.cities,
-            egeSubjects: data.egeExams,
-            egeResults: data.egeExams,
-            majors: data.majors.programMajor,
-            majorsCount: data.majors.count
-        };
-
-        // console.log(JSON.stringify(filtersData, null, 4));
-
         const mainPanelParams: FilterPanelParams = {
             searchParams: searchParams,
-            filtersData: filtersData,
+            filtersData: {
+                cities: data.cities,
+                egeSubjects: data.egeExams,
+                citiesCount: data.cities.length
+            },
             enabledFilters: [
                 filterName.CITIES,
                 filterName.EGE_SUBJECTS,
@@ -188,7 +182,11 @@ class SearchView extends LayoutView {
 
         const dependentPanelParams: FilterPanelParams = {
             searchParams: searchParams,
-            filtersData: filtersData,
+            filtersData: {
+                egeResults: data.egeExams,
+                majors: data.majors.programMajor,
+                majorsCount: data.majors.count
+            },
             enabledFilters: [
                 filterName.EGE_RESULTS,
                 filterName.MAJORS,

@@ -46,7 +46,6 @@ type InputOption = {
     placeholder?: string;
     value: (string|number|undefined);
     maxLength?: number;
-    inline?: boolean;
 };
 
 type FilterParams = (
@@ -75,6 +74,12 @@ abstract class FilterPanel {
      * Include filters what will show on page
      */
     protected filters: FilterParams[];
+
+
+    /**
+     * Includes filters and options count
+     */
+    protected filtersData: {[name: string]: (Option[]|number)};
 
     /**
      * Params for filter by days of week
@@ -127,10 +132,12 @@ abstract class FilterPanel {
     }
 
     public render(data: InitFiltersData): bFilterPanel.Params {
-        this.initFilters(data);
-        this.setButton(data.button);
+        this.setData(data.filtersData);
 
+        this.setButton(data.button);
         this.setConfig(data);
+
+        this.initFilters(data);
 
         return this.getParams();
     }
@@ -143,6 +150,7 @@ abstract class FilterPanel {
             isDependentPanel: data.isDependentPanel
         };
     }
+
 
     public setButton(button) {
         this.button = button;
@@ -158,7 +166,11 @@ abstract class FilterPanel {
         };
     }
 
-    public initFilters(data: InitFiltersData) {
+    protected setData(filtersData: {[name: string]: (Option[]|number)}) {
+        this.filtersData = filtersData;
+    }
+
+    protected initFilters(data: InitFiltersData) {
         const enabledFilters = data.enabledFilters || this.defaultFilters;
         const filtersData = data.filtersData || {};
         const searchParams = data.searchParams || {};
@@ -401,8 +413,7 @@ abstract class FilterPanel {
         return {
             name: model.id,
             label: this.getLabel(model),
-            value: null,
-            inline: model.inline
+            value: null
         };
     }
 
@@ -427,7 +438,7 @@ abstract class FilterPanel {
 
 
     protected getLabel(model: OptionModel): string {
-        return model.name;
+        return model.displayName || model.name;
     }
 }
 

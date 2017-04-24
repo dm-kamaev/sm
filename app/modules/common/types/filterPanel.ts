@@ -7,5 +7,5 @@ export type Option = {
 export type OptionModel = {
     id: (number|string);
     name: string;
-    inline?: boolean;
+    displayName?: string;
 };
