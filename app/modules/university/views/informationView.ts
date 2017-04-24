@@ -406,7 +406,10 @@ class InformationView extends LayoutView {
             });
         }
 
-        if (budgetPlaces) {
+        if (budgetPlaces &&
+            data.entranceStatistic.competition &&
+            data.entranceStatistic.competition != 0
+        ) {
             listItems.push({
                 data: {
                     header: data.entranceStatistic.competition,
