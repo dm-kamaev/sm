@@ -673,10 +673,10 @@ goog.scope(function() {
                         jQuery.proxy(this.onItemNameClick, this)
                     );
                     that.dispatchEvent({
-                        'type': Map.Event.OPEN_BALLOON,
+                        'type': YMap.Event.OPEN_BALLOON,
                         'data': {
                             'name': goog.dom.getElementByClass(
-                                Map.CssClass.BALLOON_NAME,
+                                YMap.CssClass.BALLOON_NAME,
                                 this._$element[0]
                             ).innerText
                         }
