@@ -105,7 +105,6 @@ class InformationView extends LayoutView {
 
     protected setSeo(data: BackendData) {
         const seoData = this.getDefaultSeoData_(data);
-
         this.params.data.seo = {
             metaTitle: data.pageMeta.tabTitle || seoData.title,
             metaDescription: data.pageMeta.seoDescription || seoData.description

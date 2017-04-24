@@ -26,7 +26,6 @@ goog.scope(function() {
         sm.iSmSearchParamsManager.SmSearchParamsManager.base(
             this, 'constructor');
 
-
         /**
          * Current search parameters
          * @type {Object<string, (Array<number>|number|string)>}
@@ -70,7 +69,8 @@ goog.scope(function() {
         return goog.object.filter(
             this.params_,
             goog.partial(this.isExcludedParam_, paramsToExclude),
-            this);
+            this
+        );
     };
 
 
@@ -186,7 +186,7 @@ goog.scope(function() {
      * @private
      */
     SearchParamsManager.prototype.isExcludedParam_ = function(
-        excludedParams, paramValue, paramName) {
+            excludedParams, paramValue, paramName) {
         return !~goog.array.findIndex(
             excludedParams,
             function(excludedParamName) {
