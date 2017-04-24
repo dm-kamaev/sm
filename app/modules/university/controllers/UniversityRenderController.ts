@@ -12,6 +12,8 @@ import {SimilarProgramsService} from '../services/SimilarProgramsService';
 import {programMajorService} from '../services/programMajorService';
 import {programMetaService} from '../services/programMetaService';
 import {searchService} from '../services/searchService';
+import {cityService} from '../services/cityService';
+import {majorService} from '../services/majorService';
 
 import {informationView} from '../views/informationView';
 import {searchView} from '../views/searchView';
@@ -103,12 +105,26 @@ class UniversityRenderController extends Controller {
     public async actionGetSearch(actionContext: any) {
         const user = userService.getUserFromRequest(actionContext.request);
         const searchParams = actionContext.request.query;
-        const resultsList = await searchService.findByParams(searchParams);
+
+        const [
+                resultsList,
+                cities,
+                egeExams,
+                majors
+            ] = await Promise.all([
+                searchService.findByParams(searchParams),
+                cityService.getAllSorted(),
+                egeExamService.getExams(),
+                majorService.getPopular()
+        ]);
 
         const templateParams = searchView.render({
             data: {
                 resultsList,
-                favorites: [],
+                cities,
+                egeExams,
+                majors,
+                favorites: []
             },
             config: config,
             requestData: {

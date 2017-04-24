@@ -1,8 +1,8 @@
 const filterName = {
     CITIES: 'cities',
-    EGE: 'ege',
+    EGE_SUBJECTS: 'egeSubjects',
     PAY_TYPE: 'payType',
-    MAX_PASS_SCORE: 'maxPassScore',
+    EGE_RESULTS: 'egeResults',
     MAJORS: 'majors',
     MAX_PRICE: 'maxPrice',
     FEATURES: 'features'

@@ -1,12 +1,15 @@
 import {BackendUser} from '../../user/types/user';
 import {AppConfig} from '../../common/types/layout';
 import {BackendProgramResults} from './program';
+import {Subject} from './egeExam';
+import {BackendCity} from './city';
+import {PopularMajor} from './major';
 
 export type QueryParams = {
     cities?: Array<number>;
-    ege?: Array<number>;
+    egeSubjects?: Array<number>;
     payType?: Array<number>;
-    maxPassScore?: number;
+    egeResults?: number;
     maxPrice?: number;
     majors?: string;
     features?: string;
@@ -25,7 +28,9 @@ export type RenderParams = {
 };
 
 export type BackendData = {
-    filtersData: any;
     resultsList: BackendProgramResults;
+    cities: BackendCity[],
+    egeExams: Subject[],
+    majors: PopularMajor,
     favorites: Array<{string: any}>;
 };

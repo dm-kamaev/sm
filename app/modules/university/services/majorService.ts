@@ -1,12 +1,7 @@
 import {Service, RequestParams} from '../../common/services/Service';
 const logger = require('../../../components/logger/logger').getLogger('app');
 
-import {BackendProgramMajor} from '../types/programMajor';
-
-type PopularMajor = {
-    prograMajor: BackendProgramMajor[];
-    count: number;
-};
+import {PopularMajor} from '../types/major';
 
 class MajorService extends Service {
     constructor() {

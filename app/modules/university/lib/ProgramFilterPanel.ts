@@ -26,9 +26,9 @@ type FilterParams = (
 
 class ProgramFilterPanel extends FilterPanel {
     private filterCities_: bFilter.Params;
-    private filterEge_: bFilter.Params;
+    private filterEgeSubjects_: bFilter.Params;
     private filterPayType_: bFilter.Params;
-    private filterMaxPassScore_: bFilterInput.Params;
+    private filterEgeResults_: bFilterInput.Params;
     private filterMaxPrice_: bFilterRange.Params;
     private filterMajors_: bFilterExtended.Params;
     private filterFeatures_: bFilter.Params;
@@ -52,12 +52,12 @@ class ProgramFilterPanel extends FilterPanel {
         };
 
 
-        this.filterEge_ = {
+        this.filterEgeSubjects_ = {
             data: {
                 header: {
                     title: 'ЕГЭ по выбору'
                 },
-                name: filterName.EGE,
+                name: filterName.EGE_SUBJECTS,
                 options: []
             },
             config: {
@@ -91,12 +91,12 @@ class ProgramFilterPanel extends FilterPanel {
         };
 
 
-        this.filterMaxPassScore_ = {
+        this.filterEgeResults_ = {
             data: {
                 header: {
                     title: 'Баллы ЕГЭ'
                 },
-                name: filterName.MAX_PASS_SCORE,
+                name: filterName.EGE_RESULTS,
                 options: []
             },
             config: {
@@ -183,9 +183,9 @@ class ProgramFilterPanel extends FilterPanel {
     protected get filterInitializers(): {[name: string]: Function} {
         return {
             [filterName.CITIES]: this.setFilterCities_.bind(this),
-            [filterName.EGE]: this.setFilterEge_.bind(this),
+            [filterName.EGE_SUBJECTS]: this.setFilterEgeSubjects_.bind(this),
             [filterName.PAY_TYPE]: this.setFilterPayType_.bind(this),
-            [filterName.MAX_PASS_SCORE]: this.setFilterMaxPassScore_.bind(this),
+            [filterName.EGE_RESULTS]: this.setFilterEgeResults_.bind(this),
             [filterName.MAX_PRICE]: this.setFilterMaxPrice_.bind(this),
             [filterName.MAJORS]: this.setFilterMajors_.bind(this),
             [filterName.FEATURES]:
@@ -199,7 +199,7 @@ class ProgramFilterPanel extends FilterPanel {
     get defaultFilters() {
         return [
             filterName.CITIES,
-            filterName.EGE,
+            filterName.EGE_SUBJECTS,
             filterName.PAY_TYPE
         ];
     }
@@ -249,11 +249,11 @@ class ProgramFilterPanel extends FilterPanel {
         return this;
     }
 
-    private setFilterEge_(
+    private setFilterEgeSubjects_(
             optionModels: Array<OptionModel>,
             checkedValues?: (number|string)[]
     ) {
-        const params = this.filterEge_;
+        const params = this.filterEgeSubjects_;
         params.data.options = this.getOptions(optionModels);
 
         this.setFilter(params, checkedValues);
@@ -268,11 +268,11 @@ class ProgramFilterPanel extends FilterPanel {
         return this;
     }
 
-    private setFilterMaxPassScore_(
+    private setFilterEgeResults_(
             optionModels: Array<OptionModel>,
             checkedValues?: (number|string)[]
     ) {
-        const params = this.filterMaxPassScore_;
+        const params = this.filterEgeResults_;
         params.data.options = this.getInputOptions(optionModels);
 
         this.setFilterInput(params, checkedValues);

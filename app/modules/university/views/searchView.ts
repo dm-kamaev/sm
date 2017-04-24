@@ -74,9 +74,9 @@ class SearchView extends LayoutView {
 
         return {
             cities: formatUtils.transformToArray(params.cities),
-            ege: formatUtils.transformToArray(params.ege),
+            egeSubjects: formatUtils.transformToArray(params.egeSubjects),
             payType: formatUtils.transformToArray(params.payType),
-            maxPassScore: formatUtils.transformToArray(params.maxPassScore),
+            egeResults: formatUtils.transformToArray(params.egeResults),
             majors: formatUtils.transformToArray(params.majors),
             maxPrice: formatUtils.transformToArray(params.maxPrice),
             features: formatUtils.transformToArray(params.features),
@@ -155,53 +155,23 @@ class SearchView extends LayoutView {
     private setFilterPanels_(
             data: BackendData,
             searchParams: lSearchUniversity.Params.SearchParams) {
-        const ege = [
-            {
-                id: 1,
-                name: 'Математика (профильная)'
-            }, {
-                id: 2,
-                name: 'Английский язык'
-            }, {
-                id: 3,
-                name: 'История'
-            }
-        ];
 
         const filtersData = {
-            cities: [
-                {
-                    id: 1,
-                    name: 'Москва'
-                }, {
-                    id: 2,
-                    name: 'Санкт-Петербург'
-                }
-            ],
-            ege: ege,
-            maxPassScore: ege,
-            majors: [
-                {
-                    id: 1,
-                    name: 'Менеджмент'
-                }, {
-                    id: 2,
-                    name: 'Экономика'
-                }, {
-                    id: 3,
-                    name: 'Юриспруденция'
-                }, {
-                    id: 4,
-                    name: 'Медицина'
-                }
-            ]
+            cities: data.cities,
+            egeSubjects: data.egeExams,
+            egeResults: data.egeExams,
+            majors: data.majors.programMajor,
+            majorsCount: data.majors.count
         };
+
+        // console.log(JSON.stringify(filtersData, null, 4));
+
         const mainPanelParams: FilterPanelParams = {
             searchParams: searchParams,
-            filtersData: data.filtersData || filtersData,
+            filtersData: filtersData,
             enabledFilters: [
                 filterName.CITIES,
-                filterName.EGE,
+                filterName.EGE_SUBJECTS,
                 filterName.PAY_TYPE
             ],
             theme: 'neptune',
@@ -218,9 +188,9 @@ class SearchView extends LayoutView {
 
         const dependentPanelParams: FilterPanelParams = {
             searchParams: searchParams,
-            filtersData: data.filtersData || filtersData,
+            filtersData: filtersData,
             enabledFilters: [
-                filterName.MAX_PASS_SCORE,
+                filterName.EGE_RESULTS,
                 filterName.MAJORS,
                 filterName.MAX_PRICE,
                 filterName.FEATURES

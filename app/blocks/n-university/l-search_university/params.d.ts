@@ -14,9 +14,9 @@ export namespace lSearchUniversity {
          */
         export interface SearchParams {
             cities: number[];
-            ege: number[];
+            egeSubjects: number[];
             payType: number[];
-            maxPassScore: number[];
+            egeResults: number[];
             maxPrice: number[];
             majors: number[];
             features: number[];

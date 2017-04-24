@@ -25,7 +25,7 @@ class EgeExamService extends Service {
         return response.data;
     }
 
-    public async getExams(): Promise<Subject> {
+    public async getExams(): Promise<Array<Subject>> {
         const params: RequestParams = {
             url: this.baseUrl + '/subject/ege',
             method: 'get'

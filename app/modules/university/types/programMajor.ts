@@ -6,4 +6,4 @@ export interface BackendProgramMajor {
     popularity?: number;
     createdAt: Date;
     updatedAt: Date;
-}
+};
