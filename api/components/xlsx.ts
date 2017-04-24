@@ -17,8 +17,5 @@ xlsx.getJson = function(path: string, options?: Option): Promise<any[]> {
             resolve(res);
         });
     });
-}
+};
 
-// new Xlsx().getJson('/home/gorod/l3_school-market/assets/universities/listProgram_part.xlsx', {
-//     sheet: 'поступи'
-// }).then(res => console.log(res)).catch(e => console.log(e));
