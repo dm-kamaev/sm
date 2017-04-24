@@ -29,6 +29,7 @@ deployment-config.json
 .ftpconfig
 .csscomb*
 .tags*
+.syncrconf
 jsconfig.json
 tslint.json
 

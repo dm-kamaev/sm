@@ -14,6 +14,15 @@ const FilterPanelGroup = goog.require('sm.bFilterPanelGroup.FilterPanelGroup');
 
 
 /**
+ * Search params names, which exclude when built url
+ * @const {Array<string>}
+ */
+const URL_PARAMS_TO_EXCLUDE = ['page'];
+
+
+
+
+/**
  * Search University page control
  * @class SearchUniversity
  * @extends {Search}
@@ -109,15 +118,6 @@ class SearchUniversity extends Search {
 
 
     /**
-     * Search params names, which exclude when built url
-     * @const {Array<string>}
-     */
-    static get URL_PARAMS_TO_EXCLUDE() {
-        return ['sortType', 'page', 'categoryId'];
-    };
-
-
-    /**
      * Entity type
      * @const {Object<string>}
      */
@@ -126,6 +126,34 @@ class SearchUniversity extends Search {
             SCHOOL: 'school',
             COURSE: 'course',
         };
+    }
+
+    /**
+     * @protected
+     * @override
+     */
+    makeSearch() {
+        this.searchService.loadSearchData(
+            this.paramsManager.getParams()
+        );
+    }
+
+
+    /**
+     * @protected
+     * @override
+     */
+    clearMap() {
+    }
+
+
+    /**
+     * @return {Array<string>}
+     * @private
+     * @override
+     */
+    getUrlParamsToExclude_() {
+        return URL_PARAMS_TO_EXCLUDE;
     }
 
 
@@ -177,15 +205,15 @@ class SearchUniversity extends Search {
      * @override
      */
     updatePage() {
-        this.resetSecondarySearchParams_();
-        this.updateParams_();
+        this.resetSecondarySearchParams();
+        this.updateSearchParams();
 
         this.searchResults.setStatus(
             sm.lSearch.bSearchResults.SearchResults.Status.SEARCH_IN_PROGRESS
         );
 
-        this.makeSearch_();
-        this.updateUrl_();
+        this.makeSearch();
+        this.updateUrl();
     }
 
 

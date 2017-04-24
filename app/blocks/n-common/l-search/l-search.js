@@ -196,7 +196,6 @@ goog.scope(function() {
      */
     Search.prototype.decorateInternal = function(element) {
         Search.base(this, 'decorateInternal', element);
-
         this.initServices_()
             .initUrlUpdater_()
             .initParamsManager_()
@@ -229,29 +228,61 @@ goog.scope(function() {
      * @protected
      */
     Search.prototype.updatePage = function() {
-        this.resetSecondarySearchParams_();
-        this.clearMap_();
-        this.updateParams_();
+        this.resetSecondarySearchParams();
+        this.clearMap();
+        this.updateSearchParams();
 
         this.searchResults.setStatus(
             sm.lSearch.bSearchResults.SearchResults.Status.SEARCH_IN_PROGRESS
         );
 
-        this.makeSearch_();
-        this.updateUrl_();
+        this.makeSearch();
+        this.updateUrl();
     };
 
 
     /**
-     * Init listeners for left menu instances
-     * @return {sm.lSearch.Search}
-     * @private
+     * Take params from search params manager and send queries for list and map
+     * Update url also
+     * for small amount results and for other map results
+     * @protected
      */
-    Search.prototype.initLeftMenuListeners_ = function() {
-        this.initSearchListeners()
-            .initFilterPanelListeners();
+    Search.prototype.makeSearch = function() {
+        this.searchService.loadSearchData(
+            this.paramsManager.getParams(/*requestMapResults*/ true)
+        );
+        this.searchService.loadMapData(this.paramsManager.getParams());
+    };
 
-        return this;
+
+    /**
+     * Get search params from filters and search field and update
+     * it in params manager
+     * @protected
+     */
+    Search.prototype.updateSearchParams = function() {
+        this.paramsManager.updateParams(this.getParamsFromFilterPanel_());
+        this.paramsManager.updateParams(this.getParamsFromSearch_());
+    };
+
+
+    /**
+     * Reset secondary search params to default values
+     * Secondary search params is page and sortType, it affect more view of
+     * results page than search results
+     * @protected
+     */
+    Search.prototype.resetSecondarySearchParams = function() {
+        this.paramsManager.setPage(0);
+    };
+
+
+    /**
+     * Clear a map
+     * @protected
+     */
+    Search.prototype.clearMap = function() {
+        this.map_.clear();
     };
 
 
@@ -361,6 +392,19 @@ goog.scope(function() {
 
 
     /**
+     * Init listeners for left menu instances
+     * @return {sm.lSearch.Search}
+     * @private
+     */
+    Search.prototype.initLeftMenuListeners_ = function() {
+        this.initSearchListeners()
+            .initFilterPanelListeners();
+
+        return this;
+    };
+
+
+    /**
      * Init listeners for search block in menu
      * @return {sm.lSearch.Search}
      * @private
@@ -457,7 +501,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onSortReleased_ = function(event) {
-        this.resetSecondarySearchParams_();
+        this.resetSecondarySearchParams();
 
         var sortType = event.data ? event.data.value : null;
         this.paramsManager.setSortType(sortType);
@@ -466,8 +510,8 @@ goog.scope(function() {
             sm.lSearch.bSearchResults.SearchResults.Status.SORT_IN_PROGRESS
         );
 
-        this.clearMap_();
-        this.makeSearch_();
+        this.clearMap();
+        this.makeSearch();
     };
 
 
@@ -562,51 +606,6 @@ goog.scope(function() {
 
 
     /**
-     * Get search params from filters and search field and update
-     * it in params manager
-     * @private
-     */
-    Search.prototype.updateParams_ = function() {
-        this.paramsManager.updateParams(this.getParamsFromFilterPanel_());
-        this.paramsManager.updateParams(this.getParamsFromSearch_());
-    };
-
-
-    /**
-     * Reset secondary search params to default values
-     * Secondary search params is page and sortType, it affect more view of
-     * results page than search results
-     * @private
-     */
-    Search.prototype.resetSecondarySearchParams_ = function() {
-        this.paramsManager.setPage(0);
-    };
-
-
-    /**
-     * Clear a map
-     * @private
-     */
-    Search.prototype.clearMap_ = function() {
-        this.map_.clear();
-    };
-
-
-    /**
-     * Take params from search params manager and send queries for list and map
-     * Update url also
-     * for small amount results and for other map results
-     * @private
-     */
-    Search.prototype.makeSearch_ = function() {
-        this.searchService.loadSearchData(
-            this.paramsManager.getParams(/*requestMapResults*/ true)
-        );
-        this.searchService.loadMapData(this.paramsManager.getParams());
-    };
-
-
-    /**
      * Set given text of search field
      * @param {sm.bSearch.Search.Data} searchData
      * @private
@@ -633,9 +632,9 @@ goog.scope(function() {
 
     /**
      * Update url via url updater
-     * @private
+     * @protected
      */
-    Search.prototype.updateUrl_ = function() {
+    Search.prototype.updateUrl = function() {
         this.urlUpdater.update(this.paramsManager.getUrlParams(
             this.getUrlParamsToExclude_()
         ));
@@ -649,13 +648,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.getUrlParamsToExclude_ = function() {
-        var filtersName = Object.keys(this.getParamsFromFilterPanel_());
-
-        return goog.array.filter(Search.URL_PARAMS_TO_EXCLUDE, function(param) {
-            return !filtersName.some(function(filterName) {
-                return param == filterName;
-            });
-        });
+        return Search.URL_PARAMS_TO_EXCLUDE;
     };
 
 
@@ -668,14 +661,14 @@ goog.scope(function() {
      */
     Search.prototype.updateResultsList_ = function(
             listItems, countResults, headerText) {
-        if (this.paramsManager_.getPage() == 0) {
-            this.searchResults_.update({
+        if (this.paramsManager.getPage() == 0) {
+            this.searchResults.update({
                 items: listItems,
                 countResults: countResults,
                 headerText: headerText
             });
         } else {
-            this.searchResults_.addPage(listItems);
+            this.searchResults.addPage(listItems);
         }
     };
 
@@ -884,13 +877,12 @@ goog.scope(function() {
         /** As in search params search text is 'name' field, and in search_ is
          * 'text' field. So it need to init it manually
          */
-        this.search_.setText(this.paramsManager.getName());
+        this.search_.setText(this.paramsManager.getName() || '');
 
-        this.filterPanel_ = this.decorateChild(
+        this.filterPanel = this.decorateChild(
             sm.lSearch.bFilterPanel.FilterPanel.NAME,
             this.getView().getDom().filterPanel
         );
-
         return this;
     };
 
