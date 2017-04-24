@@ -170,7 +170,6 @@ class CityService {
     public cleanCityName(cityName: string): string {
       return cityName
                 .toString()
-                .toLowerCase()
                 .replace(/[\w\d_!@#\$%^&*\(\)"':;|,\.\+<>?\[\]~{}\/\\]+/g, '')
                 .replace(/-+/g, '-')
                 .replace(/^-+/g, '')
