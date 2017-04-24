@@ -21,7 +21,7 @@ class AddedNewSubject {
         try {
           const option = {type: sequelize.QueryTypes.SELECT};
           newSubjects.forEach(async(displayName: string) => {
-              let query: string = `
+              const query: string = `
               SELECT id FROM subject WHERE display_name='${displayName}'
               `;
               const subject = await sequelize.query(
