@@ -114,27 +114,29 @@ class ProgramController extends Controller {
      * @apiSuccess {Number}   programs.totalScore Program's total score.
      *
      * @apiSuccessExample {json} Success-Response:
-     *    [
-     *        {
-     *            "id": 13,
-     *            "name": "Экономика",
-     *            "alias": "ehkonomika",
-     *            "score": [],
-     *            "totalScore": 0
-     *        },
-     *        {
-     *            "id": 12,
-     *            "name": "Прикладная математика",
-     *            "alias": "prikladnaya-matematika",
-     *            "score": [
-     *                1,
-     *                2,
-     *                3,
-     *                4
-     *            ],
-     *            "totalScore": 12
-     *        }
-     *    ]
+     *    {
+     *        "programs": [
+     *            {
+     *                "id": 12,
+     *                "name": "Прикладная математика",
+     *                "alias": "prikladnaya-matematika",
+     *                "score": [
+     *                    1,
+     *                    2,
+     *                    3,
+     *                    4
+     *                ],
+     *                "totalScore": 12
+     *            },
+     *            {
+     *                "id": 13,
+     *                "name": "Экономика",
+     *                "alias": "ehkonomika",
+     *                "score": [],
+     *                "totalScore": 0
+     *            }
+     *        ]
+     *    }
      *
      * @apiError (422) ProgramNameIsShorter  Program's name is very short
      */
@@ -145,9 +147,9 @@ class ProgramController extends Controller {
 
         const data: ProgramInstance[] | null
             = await programService.suggestSearch(searchString);
-        let result: ProgramSuggest[] | undefined[] = [];
+        const result: any = {};
         if (data) {
-            result = programView.suggestSearch(data);
+            result.programs = programView.suggestSearch(data);
         }
         return result;
     }
