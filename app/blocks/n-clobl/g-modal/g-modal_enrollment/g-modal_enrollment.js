@@ -215,7 +215,7 @@ goog.scope(function() {
     ModalEnrollment.prototype.onCloseClick = function() {
         ModalEnrollment.base(this, 'onCloseClick');
 
-        this.sendFormAnalytics_('close');
+        this.sendFormAnalytics_('cancel');
     };
 
 
@@ -261,6 +261,8 @@ goog.scope(function() {
         if (this.isValidFields_()) {
             this.button_.disable();
             this.sendRequest_();
+        } else {
+            this.sendFormErrorAnalytics_();
         }
     };
 
@@ -338,14 +340,29 @@ goog.scope(function() {
 
 
     /**
-     * send form error google analytics
-     * @param {string} message
+     * send server error google analytics
+     * @param {Array<string>} messages
      * @private
      */
-    ModalEnrollment.prototype.sendFormErrorAnalytics_ = function(message) {
+    ModalEnrollment.prototype.sendServerErrorAnalytics_ = function(messages) {
+        var errorMessage = messages.join(', ');
+        this.sendAnalytics_({
+            action: 'server error',
+            name: this.productName_ + ': ' + errorMessage
+        });
+    };
+
+
+    /**
+     * send form error google analytics
+     * @private
+     */
+    ModalEnrollment.prototype.sendFormErrorAnalytics_ = function() {
+        var validationErrors = this.getFieldValidationErrors_();
+        var errorMessage = validationErrors.join(', ');
         this.sendAnalytics_({
             action: 'form error',
-            name: this.productName_ + ', ' + message
+            name: this.productName_ + ': ' + errorMessage
         });
     };
 
@@ -361,6 +378,27 @@ goog.scope(function() {
             isValidEmail = this.emailField_.validate();
 
         return isValidName && isValidPhone && isValidEmail;
+    };
+
+
+    /**
+     * Return array of errors if fields have unvalid values
+     * @return {?Array<string>}
+     * @private
+     */
+    ModalEnrollment.prototype.getFieldValidationErrors_ = function() {
+        var res = [];
+        if (!this.nameField_.validate()) {
+            res.push('Нет имени');
+        }
+        if (!this.phoneField_.validate()) {
+            res.push('Нет телефона');
+        }
+        if (!this.emailField_.validate()) {
+            res.push('Нет email');
+        }
+
+        return res.length ? res : null;
     };
 
 
@@ -420,7 +458,7 @@ goog.scope(function() {
 
         this.button_.enable();
         this.getView().showErrors(messages);
-        this.sendFormErrorAnalytics_(messages.join(', '));
+        this.sendServerErrorAnalytics_(messages);
         this.dispatchEventError_();
     };
 
