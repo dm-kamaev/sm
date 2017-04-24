@@ -243,18 +243,12 @@ export class Programs extends BaseWorkWithProgram {
             let res = null;
             if (!programId) {
                 try {
-                    // console.log(`INSERT`);
                     res = programService.create(program);
                 } catch (error) {
                     console.log('Error: create =>', error);
                 }
             } else {
                 try {
-                    // console.log(`
-                    //     UPDATE ${programId} ${JSON.stringify(program)}
-                    // `);
-                    // console.log(`UPDATE ${programId}`);
-                    // res = programService.fullUpdate(programId, program);
                     res = programService.update(programId, program);
                 } catch (error) {
                     console.log('Error: update =>', error);
