@@ -2,7 +2,11 @@
 
 /**
  * typedef {{
- *     content: ?string,
+ *     content: ({
+ *         default: ?string,
+ *         sizeS: ?string,
+ *         sizeL: ?string
+ *     }|undefined),
  *     icon: ({
  *         name: string,
  *         type: ('png'|'svg'),
@@ -50,7 +54,11 @@
  * Body
  * @param? params {{
  *     data: {
- *         content: ?string,
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|undefined),
  *         icon: ({
  *             name: string,
  *             type: ('png'|'svg'),
@@ -64,7 +72,7 @@
     {if $params.data.icon}
         {call .content_ data="all" /}
     {else}
-        {$params.data.content}
+        {call .text_ data="all" /}
     {/if}
 {/template}
 
@@ -72,7 +80,11 @@
 /**
  * @param? params {{
  *     data: {
- *         content: ?string,
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|undefined),
  *         icon: {
  *             name: string,
  *             type: ('png'|'svg'),
@@ -126,19 +138,44 @@
 /**
  * @param? params {{
  *     data: {
- *         content: (string|undefined)
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|undefined),
  *     }
  * }}
  */
 {template .text_}
     <div class="{call .rootClass /}__content-text">
-        {$params.data.content}
+        {$params.data.content.default}
     </div>
+    {if $params.data.content.sizeS}
+        <div class="{call .rootClass /}__content-text
+            {sp}{call .rootClass /}__content-text_size_s"
+        >
+            {$params.data.content.sizeS}
+        </div>
+    {/if}
+    {if $params.data.content.sizeL}
+        <div class="{call .rootClass /}__content-text
+            {sp}{call .rootClass /}__content-text_size_l"
+        >
+            {$params.data.content.sizeL}
+        </div>
+    {/if}
 {/template}
 
 
 /**
  * @param params {
+ *     data: {
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|undefined)
+ *     },
  *     config: {
  *         size: ('s'|'m'|'xl'|undefined),
  *         isDisabled: (boolean|undefined),
@@ -163,5 +200,13 @@
 
     {if $params?.config?.borderRoundSize}
         {sp}{call .rootClass /}_border-round-size_{$params?.config?.borderRoundSize}
+    {/if}
+
+    {if $params.data.content.sizeS}
+        {sp}{call .rootClass /}_viewport-size_s
+    {/if}
+
+    {if $params.data.content.sizeL}
+        {sp}{call .rootClass /}_viewport-size_l
     {/if}
 {/template}

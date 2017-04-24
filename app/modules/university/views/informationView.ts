@@ -205,7 +205,9 @@ class InformationView extends LayoutView {
             },
             button: {
                 data: {
-                    content: 'Оставить отзыв'
+                    content: {
+                        default: 'Оставить отзыв'
+                    }
                 },
                 config: {
                     theme: 'neptune',

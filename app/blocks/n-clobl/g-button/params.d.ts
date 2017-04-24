@@ -17,7 +17,11 @@ export namespace gButtonStendhal {
          * sm.gButtonStendhal.Params.Data
          */
         export interface Data {
-            content?: string;
+            content?: {
+                default?: string;
+                sizeS?: string;
+                sizeL?: string;
+            };
             icon?: {
                 name: string;
                 type: IconType;

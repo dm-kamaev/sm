@@ -36,6 +36,12 @@
     display: none;
 }
 
+@include media-s {
+    .b-filter-panel-group__button {
+        width: 102px;
+    }
+}
+
 @include media-m {
     .b-filter-panel-group__filters {
         display: none;

@@ -208,8 +208,10 @@
                 'type': 'button',
                 'renderParams': [
                     'data': [
-                        'content': $params.data.button ?
-                            $params.data.button.content : 'Подобрать'
+                        'content': [
+                            'default': $params.data.button ?
+                                $params.data.button.content : 'Подобрать'
+                        ]
                     ],
                     'config': [
                         'theme': $params.data.button ?

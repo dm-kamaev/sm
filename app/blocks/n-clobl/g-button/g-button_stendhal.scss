@@ -1,3 +1,5 @@
+@import '../../n-common/i-media/i-media';
+
 .g-button_stendhal {
     box-sizing: border-box;
     width: 100%;
@@ -141,4 +143,40 @@
 
 .g-button_border-round-size_xl {
     border-radius: 100px;
+}
+
+.g-button.g-button_viewport-size_s {
+    .g-button__content-text_size_s {
+        display: none;
+    }
+}
+
+.g-button.g-button_viewport-size_l {
+    .g-button__content-text_size_l {
+        display: none;
+    }
+}
+
+@include media-l {
+    .g-button.g-button_viewport-size_l {
+        .g-button__content-text {
+            display: none;
+        }
+
+        .g-button__content-text_size_l {
+            display: inline-block;
+        }
+    }
+}
+
+@include media-s {
+    .g-button.g-button_viewport-size_s {
+        .g-button__content-text {
+            display: none;
+        }
+
+        .g-button__content-text_size_s {
+            display: inline-block;
+        }
+    }
 }
