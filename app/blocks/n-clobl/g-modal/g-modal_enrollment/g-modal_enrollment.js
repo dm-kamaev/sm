@@ -83,11 +83,11 @@ goog.scope(function() {
 
 
         /**
-         * indicator. it's true, if data has been sent before
-         * @type {boolean}
+         * Query params of last request
+         * @type {Object}
          * @private
          */
-        this.isEnrollmentSend_ = false;
+        this.lastSendEnrollmentData_ = {};
 
 
         /**
@@ -216,6 +216,7 @@ goog.scope(function() {
         ModalEnrollment.base(this, 'onCloseClick');
 
         this.sendFormAnalytics_('cancel');
+        this.silentSendRequest_();
     };
 
 
@@ -284,11 +285,32 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.onBeforeunload_ = function() {
-        if ((!this.isEnrollmentSend_) &&
-            this.isPhoneOrEmailValid()) {
+        this.silentSendRequest_();
+    };
+
+
+    /**
+    * Send data on api without messages and analytics
+    * @private
+    */
+    ModalEnrollment.prototype.silentSendRequest_ = function() {
+        if (!this.isEnrollmentNeededSend_() && this.isPhoneOrEmailValid()) {
             var data = this.buildRequestData_();
             Request.getInstance().send(data);
+            this.lastSendEnrollmentData_ = data.data;
         }
+    };
+
+
+    /**
+    * it's true, if data has been sent before
+    * @return {boolean}
+    * @private
+    */
+    ModalEnrollment.prototype.isEnrollmentNeededSend_ = function() {
+        var data = JSON.stringify(this.buildQueryParams_()),
+            lastData = JSON.stringify(this.lastSendEnrollmentData_);
+        return data == lastData;
     };
 
 
@@ -435,7 +457,7 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.onSuccess_ = function(response) {
-        this.isEnrollmentSend_ = true;
+        this.lastSendEnrollmentData_ = this.buildQueryParams_();
         this.hide();
         this.clear();
 
