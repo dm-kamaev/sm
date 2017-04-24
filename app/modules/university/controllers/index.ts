@@ -14,6 +14,9 @@ const universityController = new UniversityController();
 import {ProgramController} from './ProgramController';
 const programController = new ProgramController();
 
+import {ProgramMajorController} from './ProgramMajorController';
+const programMajorController = new ProgramMajorController();
+
 import {
     ProgramCommentController
 } from '../../comment/controllers/ProgramCommentController';
@@ -44,5 +47,8 @@ router.post(
     '/program/:programId/comment',
     programCommentController.actionChange
 );
+
+router.get('/programmajor/search', programMajorController.actionSearch);
+router.get('/programmajor/popular', programMajorController.actionGetPopular);
 
 export {router};

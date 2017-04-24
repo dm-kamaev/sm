@@ -7,3 +7,8 @@ export interface BackendProgramMajor {
     createdAt: Date;
     updatedAt: Date;
 };
+
+export interface BackendProgramMajorPopular {
+    programMajor: BackendProgramMajor[];
+    count: number;
+}
