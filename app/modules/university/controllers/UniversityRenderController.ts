@@ -12,7 +12,7 @@ import {SimilarProgramsService} from '../services/SimilarProgramsService';
 import {programMajorService} from '../services/programMajorService';
 import {programMetaService} from '../services/programMetaService';
 import {searchService} from '../services/searchService';
-import {cityService} from '../services/cityService';
+import {cityService} from '../../geo/services/cityService';
 import {majorService} from '../services/majorService';
 
 import {informationView} from '../views/informationView';

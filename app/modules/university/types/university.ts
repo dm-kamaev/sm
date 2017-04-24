@@ -1,4 +1,4 @@
-import {BackendCity} from './city';
+import {BackendCity} from '../../geo/types/city';
 
 interface Profile {
     id: number;

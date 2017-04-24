@@ -2,7 +2,7 @@ import {BackendUser} from '../../user/types/user';
 import {AppConfig} from '../../common/types/layout';
 import {BackendProgramResults} from './program';
 import {Subject} from './egeExam';
-import {BackendCity} from './city';
+import {BackendCity} from '../../geo/types/city';
 import {PopularMajor} from './major';
 
 export type QueryParams = {
