@@ -120,11 +120,16 @@ class Menu {
      * @protected
      */
     generateMenuItem(entityType) {
+        const isSelected = entityType === entityTypeEnum.UNIVERSITY ?
+            (this.entityType_ === entityTypeEnum.PROGRAM) ||
+            (this.entityType_ === entityTypeEnum.UNIVERSITY) :
+            this.entityType_ === entityType;
+
         return {
             name: this.getEntityName(entityType),
             url: this.getEntityUrl(entityType),
             type: entityType,
-            isSelected: this.entityType_ == entityType
+            isSelected: isSelected
         };
     }
 
@@ -145,6 +150,7 @@ class Menu {
             name = 'Курсы и секции';
             break;
         case entityTypeEnum.UNIVERSITY:
+        case entityTypeEnum.PROGRAM:
             name = 'Вузы';
             break;
         }

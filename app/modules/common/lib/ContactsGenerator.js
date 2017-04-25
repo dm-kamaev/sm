@@ -87,6 +87,7 @@ class ContactsGenerator {
             helper.text = 'Поможем выбрать курс!';
             break;
         case entityTypeEnum.UNIVERSITY:
+        case entityTypeEnum.PROGRAM:
             helper = {
                 text: 'Поможем выбрать',
                 url: '/university'
