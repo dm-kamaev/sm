@@ -215,10 +215,13 @@
     }
 
     .b-sm-subheader__section_search {
+        width: auto;
+
         text-align: right;
     }
 
     .b-sm-subheader__search.b-sm-subheader__search_visible_l {
+        width: 315px;
         max-width: 315px;
     }
 
