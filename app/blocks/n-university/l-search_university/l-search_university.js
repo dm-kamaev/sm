@@ -149,10 +149,10 @@ class SearchUniversity extends Search {
 
     /**
      * @return {Array<string>}
-     * @private
+     * @protected
      * @override
      */
-    getUrlParamsToExclude_() {
+    getUrlParamsToExclude() {
         return URL_PARAMS_TO_EXCLUDE;
     }
 
@@ -165,6 +165,21 @@ class SearchUniversity extends Search {
      */
     initSearchListeners() {
         return this;
+    }
+
+
+    /**
+     * Init listeners for filter panel group
+     * @return {sm.lSearch.SearchUniversity}
+     * @protected
+     * @override
+     */
+    initFilterPanelListeners() {
+        this.getHandler().listen(
+            this.filterPanelGroup,
+            FilterPanelGroup.Event.SUBMIT,
+            this.onFilterPanelGroupSubmit_
+        );
     }
 
 
@@ -190,16 +205,6 @@ class SearchUniversity extends Search {
     }
 
     /**
-     * Init listeners for filter panel
-     * @protected
-     * @return {sm.lSearch.SearchUniversity}
-     */
-    initLeftMenuListeners_() {
-        this.initSearchListeners();
-        return this;
-    }
-
-    /**
      * Make all actions to update information on page
      * @protected
      * @override
@@ -216,22 +221,25 @@ class SearchUniversity extends Search {
         this.updateUrl();
     }
 
+    /**
+     * Get search params from filter panel board and update int in params
+     * manager
+     * @protected
+     * @override
+     */
+    updateSearchParams() {
+        this.paramsManager.updateParams(this.getParamsFromFilterPanelGroup_());
+    }
+
 
     /**
-     * Init left menu instance
+     * Init left menu instances
      * @return {sm.lSearch.SearchUniversity}
      * @protected
      * @override
      */
     initLeftMenuInstances() {
-        const dom = this.getView().getDom();
-
-        if (dom.filterPanelGroup) {
-            this.filterPanelGroup = this.decorateChild(
-                FilterPanelGroup.NAME,
-                dom.filterPanelGroup
-            );
-        }
+        this.initFilterGroupInstance_();
 
         return this;
     }
@@ -244,6 +252,41 @@ class SearchUniversity extends Search {
      * @override
      */
     initMap() {
+        return this;
+    }
+
+    /**
+     * Get current searchParams from filter panel group
+     * @return {Object<string, Array<(string|number)>>}
+     * @private
+     */
+    getParamsFromFilterPanelGroup_() {
+        return this.filterPanelGroup.getData();
+    }
+
+    /**
+     * Filter group submit handler
+     * @private
+     */
+    onFilterPanelGroupSubmit_() {
+        this.updatePage();
+    }
+
+    /**
+     * Init filter group instance
+     * @return {sm.lSearch.SearchUniversity}
+     * @private
+     */
+    initFilterGroupInstance_() {
+        const dom = this.getView().getDom();
+
+        if (dom.filterPanelGroup) {
+            this.filterPanelGroup = this.decorateChild(
+                FilterPanelGroup.NAME,
+                dom.filterPanelGroup
+            );
+        }
+
         return this;
     }
 }

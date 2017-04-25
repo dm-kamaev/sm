@@ -636,7 +636,7 @@ goog.scope(function() {
      */
     Search.prototype.updateUrl = function() {
         this.urlUpdater.update(this.paramsManager.getUrlParams(
-            this.getUrlParamsToExclude_()
+            this.getUrlParamsToExclude()
         ));
     };
 
@@ -645,9 +645,9 @@ goog.scope(function() {
      * Search params names, which exclude when built url
      * all names of filters used to build url
      * @return {Array<string>}
-     * @private
+     * @protected
      */
-    Search.prototype.getUrlParamsToExclude_ = function() {
+    Search.prototype.getUrlParamsToExclude = function() {
         return Search.URL_PARAMS_TO_EXCLUDE;
     };
 
