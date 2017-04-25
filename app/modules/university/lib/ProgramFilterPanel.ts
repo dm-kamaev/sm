@@ -30,7 +30,7 @@ type filledInputOption = {
 };
 
 class ProgramFilterPanel extends FilterPanel {
-    private filterCities_: bFilter.Params;
+    private filterCities_: bFilterExtended.Params;
     private filterEgeSubjects_: bFilter.Params;
     private filterPayType_: bFilter.Params;
     private filterEgeResults_: bFilterInput.Params;
@@ -47,10 +47,15 @@ class ProgramFilterPanel extends FilterPanel {
                     title: 'Город'
                 },
                 name: filterName.CITIES,
+                api: '/cities',
+                modal: {
+                    header: 'Какой город вы ищете?',
+                    placeholder: 'Поиск по городам',
+                    filterHeader: 'Популярные города'
+                },
                 options: []
             },
             config: {
-                isShowed: true,
                 optionsToShow: 3,
                 showMoreButtonText: 'другие города'
             }
@@ -140,7 +145,7 @@ class ProgramFilterPanel extends FilterPanel {
                     title: 'Специальности'
                 },
                 name: filterName.MAJORS,
-                api: '',
+                api: '/programmajor/search',
                 modal: {
                     header: 'Какую специальность вы ищете?',
                     placeholder: 'Поиск по специальностям',
@@ -241,7 +246,7 @@ class ProgramFilterPanel extends FilterPanel {
                 `${params.config.showMoreButtonText} (${count})`;
         }
 
-        this.setFilter(params, checkedValues);
+        this.setFilterModal(params, checkedValues);
 
         return this;
     }
