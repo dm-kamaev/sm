@@ -350,19 +350,39 @@ abstract class FilterPanel {
      */
     protected updateFilterConfigIsShowed(
             filterParams: FilterParams,
-            checkedValues?: (number|string)[]
+            checkedValues?: (number|string|Object)[]
     ): (bFilter.Params.Config|any) {
 
-        const data = filterParams.data,
-            config = filterParams.config;
+        const config = filterParams.config;
 
-        if (data.options.some(option => option.isChecked)) {
-            config.isShowed = true;
-        } else if (checkedValues && checkedValues.length) {
-            config.isShowed = true;
-        }
+        config.isShowed = this.isShowedFilter(
+            filterParams.data.options,
+            checkedValues,
+            filterParams.config.type
+        );
 
         return config;
+    }
+
+
+    /**
+     * Return true if any option is checked or input is filled
+     */
+    protected isShowedFilter(
+            options: Option[],
+            checkedValues?: (number|string|Object)[],
+            type?: string
+    ): boolean {
+
+        const isInputFilter = type == filterType.INPUT;
+
+        const optionsIsChecked = options.some(option => option.isChecked),
+            isCheckedValues = !!(checkedValues && checkedValues.length),
+            inputsIsFilled = isInputFilter && options.some(
+                option => !!option.value
+            );
+
+        return optionsIsChecked || inputsIsFilled || isCheckedValues;
     }
 
 

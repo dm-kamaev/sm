@@ -24,6 +24,11 @@ type FilterParams = (
     any
 );
 
+type filledInputOption = {
+    id: number,
+    value: number
+};
+
 class ProgramFilterPanel extends FilterPanel {
     private filterCities_: bFilter.Params;
     private filterEgeSubjects_: bFilter.Params;
@@ -62,7 +67,6 @@ class ProgramFilterPanel extends FilterPanel {
             },
             config: {
                 isShowed: true,
-                optionsToShow: 3,
                 showMoreButtonText: 'все предметы'
             }
         };
@@ -101,7 +105,8 @@ class ProgramFilterPanel extends FilterPanel {
             },
             config: {
                 isShowed: true,
-                optionsToShow: 3
+                optionsToShow: 3,
+                inline: true
             }
         };
 
@@ -203,20 +208,6 @@ class ProgramFilterPanel extends FilterPanel {
         ];
     }
 
-    protected setFilterInput(
-            filterParams: FilterParams,
-            checkedValues?: (number|string)[]
-    ) {
-        const params = filterParams;
-
-        params.config.type = filterType.INPUT;
-        params.config.inline = true;
-
-        this.setFilter(params, checkedValues);
-
-        return this;
-    }
-
 
     /**
      * Adds new filter params in array of filters for filter panel
@@ -225,16 +216,17 @@ class ProgramFilterPanel extends FilterPanel {
             filterParams: FilterParams,
             checkedValues?: (number|string)[]
     ) {
-        const params = this.updateFilterParams(filterParams, checkedValues);
+        const params = filterParams;
 
         params.config.filterArrowIcon = {
             up: 'filter-arrow-up_black'
         };
 
-        this.filters.push(params);
+        super.setFilter(params, checkedValues);
 
         return this;
     }
+
 
     private setFilterCities_(
             count: number,
@@ -275,12 +267,12 @@ class ProgramFilterPanel extends FilterPanel {
 
     private setFilterEgeResults_(
             optionModels: Array<OptionModel>,
-            checkedValues?: (number|string)[]
+            filledOptions?: filledInputOption[]
     ) {
         const params = this.filterEgeResults_;
         params.data.options = this.getInputOptions(optionModels);
 
-        this.setFilterInput(params, checkedValues);
+        this.setFilterEgeInput_(params, filledOptions);
 
         return this;
     }
@@ -318,6 +310,58 @@ class ProgramFilterPanel extends FilterPanel {
         this.setFilter(params, checkedValues);
 
         return this;
+    }
+
+
+    private setFilterEgeInput_(
+            filterParams: FilterParams,
+            filledOptions?: filledInputOption[]
+    ) {
+        let params = filterParams;
+        params.config.type = filterType.INPUT;
+
+        params = this.updateFilterEgeInputParams_(filterParams, filledOptions);
+
+        this.filters.push(params);
+    }
+
+
+    private updateFilterEgeInputParams_(
+            filterParams: FilterParams,
+            filledOptions?: filledInputOption[]
+    ): FilterParams {
+        const params = filterParams;
+
+        params.data.options = this.updateInputsIsFilled_(
+            filterParams.data.options,
+            filledOptions
+        );
+
+        params.config = this.updateFilterConfigIsShowed(
+            filterParams,
+            filledOptions
+        );
+
+        return params;
+    }
+
+    /**
+     * Set options value if options are filled
+     */
+    private updateInputsIsFilled_(
+            options: Option[],
+            filledOptions?: filledInputOption[]
+    ): Option[] {
+        const filledData = filledOptions || [];
+
+        return options.map(option => {
+            filledData.map(filledOption => {
+                if (option.name == filledOption.id) {
+                    option.value = filledOption.value;
+                }
+            });
+            return option;
+        });
     }
 }
 
