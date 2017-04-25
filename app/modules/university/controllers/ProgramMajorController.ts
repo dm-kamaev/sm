@@ -3,6 +3,7 @@ import {LegacyController} from '../../../../api/components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {programMajorService} from '../services/programMajorService';
+import {programMajorView} from '../views/programMajorView';
 
 export class ProgramMajorController extends Controller {
     /**
@@ -13,15 +14,14 @@ export class ProgramMajorController extends Controller {
      *
      * @apiParam {String} name Part of a program major's name you search for.
      *
-     * @apiSuccess {Object[]} -            Response body.
-     * @apiSuccess {Number}   -.id         Id.
-     * @apiSuccess {String}   -.name       Name.
-     * @apiSuccess {Number}   -.popularity Popularity.
-     * @apiSuccess {String}   -.createdAt  Created at.
-     * @apiSuccess {String}   -.updatedAt  Updated at.
+     * @apiSuccess {Object[]} -       Response body.
+     * @apiSuccess {Number}   -.value Id.
+     * @apiSuccess {String}   -.label Name.
      */
     public async actionSearch(actionContext: any) {
-        return programMajorService.findByName(actionContext.data.name);
+        const foundProgramMajors =
+            await programMajorService.findByName(actionContext.data.name);
+        return programMajorView.filtersListRender(foundProgramMajors);
     }
 
     /**
@@ -33,30 +33,21 @@ export class ProgramMajorController extends Controller {
      * @apiParam (query) {Number} count Count of popular program major,
      *     which you want to retrieve.
      *
-     * @apiSuccess {Object[]} programMajor            Program major.
-     * @apiSuccess {Number}   programMajor.id         Id of program major.
-     * @apiSuccess {String}   programMajor.name       Name of program major.
-     * @apiSuccess {Number}   programMajor.popularity Popularity of program
-     *     major.
-     * @apiSuccess {String}   programMajor.createdAt  Date of creation.
-     * @apiSuccess {String}   programMajor.updatedAt  Date of last update.
-     * @apiSuccess {Number}   count                   Amount of all program
-     *     majors.
+     * @apiSuccess {Object[]} programMajor       Program major.
+     * @apiSuccess {Number}   programMajor.value Id of program major.
+     * @apiSuccess {String}   programMajor.label Name of program major.
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
-     *     {
-     *         programMajor: [{
-     *             id: 10,
-     *             name: "Математика и механика",
-     *             popularity: 25
-     *         }],
-     *         count: 150
-     *     }
+     *     [{
+     *         value: 10,
+     *         label: "Математика и механика"
+     *     }]
      */
     public async actionGetPopular(actionContext: any) {
         const count = Number(actionContext.data.count) || null;
 
-        return await programMajorService.getPopular(count);
+        const popularMajors = await programMajorService.getPopular(count);
+        return programMajorView.filtersListRender(popularMajors.programMajor);
     }
 }
