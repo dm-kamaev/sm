@@ -310,7 +310,9 @@ class ProgramService {
         } else {
             result = {
                 programCount: Number(queryResult[0].programCount),
-                universityCount: Number(queryResult[0].universityCount),
+                universityCount: Object.keys(
+                        queryResult[0].universities
+                    ).length,
                 programs: queryResult.map(program => ({
                     id: program.id,
                     name: program.name,

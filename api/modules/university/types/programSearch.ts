@@ -49,7 +49,7 @@ export type ListProgram = {
     programAlias: string;
     universityAlias: string;
     programCount?: string;
-    universityCount?: string;
+    universities?: {[universityId: string]: string};
 };
 
 export type SearchListResult = {

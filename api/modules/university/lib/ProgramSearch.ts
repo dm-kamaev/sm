@@ -99,7 +99,7 @@ export class ProgramSearchQuery extends SearchQuery {
             .field('program_page_data.alias', 'programAlias')
             .field('university_page_data.alias', 'universityAlias')
             .field('program.program_count', 'programCount')
-            .field('program.university_count', 'universityCount')
+            .field('program.universities', 'universities')
             .left_join(
                 'program_page',
                 null,
@@ -143,10 +143,11 @@ export class ProgramSearchQuery extends SearchQuery {
                 'entrance_statistic.commercial_places',
                 'last_commercial_places'
             )
-            .field('COUNT(program.id) OVER()', 'program_count')
+            .field('count(program.id) OVER()', 'program_count')
             .field(
-                'COUNT(program.university_id) OVER(PARTITION BY program.id)',
-                'university_count'
+                'jsonb_object_agg(university.id, university.abbreviation) ' +
+                    'OVER()',
+                'universities'
             )
             .left_join(
                 'entrance_statistic',
