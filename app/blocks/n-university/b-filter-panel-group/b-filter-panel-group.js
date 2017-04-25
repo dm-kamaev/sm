@@ -1,14 +1,22 @@
 goog.module('sm.bFilterPanelGroup.FilterPanelGroup');
 
-const Control = goog.require('cl.iControl.Control');
-const View = goog.require('sm.bFilterPanelGroup.View');
-const Factory = goog.require('sm.iCloblFactory.FactoryStendhal');
-const Template = goog.require('sm.bFilterPanelGroup.Template');
-const ButtonStendhal = goog.require('sm.gButton.ButtonStendhal');
 const Button = goog.require('cl.gButton.Button');
+const ButtonStendhal = goog.require('sm.gButton.ButtonStendhal');
+const Control = goog.require('cl.iControl.Control');
+const Factory = goog.require('sm.iCloblFactory.FactoryStendhal');
 const FilterPanel = goog.require('sm.lSearch.bFilterPanel.FilterPanel');
+const Template = goog.require('sm.bFilterPanelGroup.Template');
+const View = goog.require('sm.bFilterPanelGroup.View');
+const events = goog.require('goog.events');
+const object = goog.require('goog.object');
 
-goog.require('goog.events');
+/**
+ * Possible event enum
+f* @enum {string}
+ */
+const Event = {
+    SUBMIT: FilterPanel.Event.SUBMIT 
+};
 
 
 /**
@@ -60,6 +68,28 @@ class FilterPanelGroup extends Control {
     }
 
     /**
+     * Return selected search params from all filter panels
+     * @return {Object}
+     */
+    getData() {
+        const mainFilterPanelData = this.transformFilterPanelData(
+            this.mainFilterPanel_.getData()
+        );
+        const dependentFilterPanelData = this.transformFilterPanelData(
+            this.dependentFilterPanel_.getData()
+        );
+        const result = {};
+        
+        goog.object.extend(
+            result,
+            mainFilterPanelData,
+            dependentFilterPanelData
+        );
+
+        return result;
+    }
+
+    /**
      * @override
      * @public
      */
@@ -80,6 +110,25 @@ class FilterPanelGroup extends Control {
 
         this.initButton_();
         this.initFilterPanels_();
+    }
+
+    /**
+     * Transform filter panel data for each filter from array of objects to
+     * array of values
+     * @param {Object<string, Array<Object>>} data
+     * @return {Object<string, Array<Object>>}
+     */
+    transformFilterPanelData(filterPanelData) {
+        return object.map(filterPanelData, this.transformFilterData_);
+    };
+
+    /**
+     * Remove from filter data unnecessary fields
+     * @param {Array<Object<string, (string | number)>>} filterData
+     * @return {Array<(string | number | Object)>}
+     */
+    transformFilterData_(filterData) {
+        return filterData.map(data => data.value);
     }
 
     /**
@@ -191,13 +240,15 @@ class FilterPanelGroup extends Control {
     }
 
     /**
-     * On filter check
+     * Filter check event handler
+     * @private
      */
     onFilterCheck_() {
     }
 
     /**
-     * On filter check
+     * Filter check event handler
+     * @private
      */
     onFilterUncheck_() {
     }

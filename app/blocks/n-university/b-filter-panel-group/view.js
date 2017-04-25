@@ -6,6 +6,10 @@ const Utils = goog.require('cl.iUtils.Utils');
 
 goog.require('goog.dom.classlist');
 
+/**
+ * Css class enum
+ * @enum {string}
+ */
 const CssClass = {
     ROOT: 'b-filter-panel-group',
     MAIN_FILTER_PANEL: 'b-filter-panel-group__main-filter-panel',
@@ -55,7 +59,7 @@ class View extends ControlView {
     }
 
     /**
-     * Show filters
+     * Hide filters
      */
     hideFilters() {
         goog.dom.classlist.remove(
@@ -80,7 +84,7 @@ class View extends ControlView {
     }
 
     /**
-     * Hide controls
+     * Show controls
      */
     showControls() {
         goog.dom.classlist.remove(
