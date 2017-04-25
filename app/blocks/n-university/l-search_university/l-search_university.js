@@ -180,6 +180,8 @@ class SearchUniversity extends Search {
             FilterPanelGroup.Event.SUBMIT,
             this.onFilterPanelGroupSubmit_
         );
+
+        return this;
     }
 
 

@@ -15,7 +15,7 @@ const object = goog.require('goog.object');
  * @enum {string}
  */
 const Event = {
-    SUBMIT: FilterPanel.Event.SUBMIT 
+    SUBMIT: FilterPanel.Event.SUBMIT
 };
 
 /**
@@ -85,7 +85,7 @@ class FilterPanelGroup extends Control {
             this.dependentFilterPanel_.getData()
         );
         const result = {};
-        
+
         goog.object.extend(
             result,
             mainFilterPanelData,
@@ -121,7 +121,7 @@ class FilterPanelGroup extends Control {
     /**
      * Transform filter panel data for each filter from array of objects to
      * array of values
-     * @param {Object<string, Array<Object>>} data
+     * @param {Object<string, Array<Object>>} filterPanelData
      * @return {Object<string, Array<Object>>}
      * @private
      */
@@ -167,7 +167,7 @@ class FilterPanelGroup extends Control {
         return {
             subjectId: filterDataItem.name,
             value: filterDataItem.value
-        }; 
+        };
     }
 
     /**
