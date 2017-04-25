@@ -76,15 +76,17 @@
  */
 {template .picture_}
     <picture>
-        {foreach $source in $params.data.sources}
-            {let $media kind="text"}
-                {call sm.iMedia.Media.getMediaString}
-                    {param sources: $params.data.sources /}
-                    {param size: $source.size /}
-                {/call}
-            {/let}
-            <source srcset="{$source.url}" media="{$media}">
-        {/foreach}
+        {if $params.data.sources}
+            {foreach $source in $params.data.sources}
+                {let $media kind="text"}
+                    {call sm.iMedia.Media.getMediaString}
+                        {param sources: $params.data.sources /}
+                        {param size: $source.size /}
+                    {/call}
+                {/let}
+                <source srcset="{$source.url}" media="{$media}">
+            {/foreach}
+        {/if}
 
         <img class="{call .rootClass /}"
             {if $params.data.altText}

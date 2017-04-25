@@ -16,6 +16,15 @@ class Picture extends Control {
     static get NAME() {
         return Template.NAME();
     }
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object} rawParams
+     * @return {sm.bSmPicture.Params}
+     */
+    static getRenderParams(rawParams) {
+        return View.getRenderParams(rawParams);
+    };
 };
 
 

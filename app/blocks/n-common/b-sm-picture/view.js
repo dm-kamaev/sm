@@ -9,7 +9,23 @@ const CssClass = {
 /**
  * View
  */
-class View extends ControlView {};
+class View extends ControlView {
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object} rawParams
+     * @return {sm.bSmPicture.Params}
+     */
+    static getRenderParams(rawParams) {
+        return {
+            altText: rawParams['altText'],
+            sources: rawParams['sources'].map(sourse => ({
+                url: sourse['url'],
+                size: sourse['size']
+            }))
+        };
+    };
+};
 
 
 /**

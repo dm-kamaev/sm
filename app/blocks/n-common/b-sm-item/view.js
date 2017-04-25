@@ -4,6 +4,7 @@ goog.require('cl.iControl.View');
 
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
+goog.require('sm.bSmPicture.SmPicture');
 
 
 
@@ -24,6 +25,8 @@ goog.inherits(sm.bSmItem.View, cl.iControl.View);
 
 goog.scope(function() {
     var View = sm.bSmItem.View;
+
+    var Picture = goog.module.get('sm.bSmPicture.SmPicture');
 
 
     /**
@@ -108,13 +111,16 @@ goog.scope(function() {
         var areaParams = rawParams['area'] ?
             sm.bSmBadge.SmBadge.getRenderParams(rawParams['area']) :
             {};
+        var picture = rawParams['picture'] ?
+            Picture.getRenderParams(rawParams['picture']) :
+            null;
         var name = rawParams['name'] || {};
 
         return {
             data: {
                 id: rawParams['id'],
                 type: rawParams['type'],
-                imageUrl: rawParams['imageUrl'],
+                picture: picture,
                 name: {
                     light: name['light'],
                     bold: name['bold']
