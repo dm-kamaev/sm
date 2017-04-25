@@ -24,9 +24,23 @@ type FilterParams = (
     any
 );
 
-type filledInputOption = {
+type FilledInputOption = {
     id: number,
     value: number
+};
+
+type RangeOption = {
+    name: string,
+    label: string,
+    value: number,
+    step?: number,
+    minValue?: number,
+    maxValue: number,
+    defaultValue?: number,
+    thumb?: {
+        iconName: string,
+        iconType?: string
+    }
 };
 
 class ProgramFilterPanel extends FilterPanel {
@@ -271,18 +285,29 @@ class ProgramFilterPanel extends FilterPanel {
 
     private setFilterEgeResults_(
             optionModels: Array<OptionModel>,
-            filledOptions?: filledInputOption[]
+            filledOptions?: FilledInputOption[]
     ) {
-        const params = this.filterEgeResults_;
-        params.data.options = this.getInputOptions(optionModels);
+        const params = this.filterEgeResults_,
+            options = this.getInputOptions(optionModels);
 
-        this.setFilterEgeInput_(params, filledOptions);
+        params.data.options = this.updateInputsIsFilled_(
+            options,
+            filledOptions
+        );
+
+        this.setFilterInput(params, filledOptions);
 
         return this;
     }
 
-    private setFilterMaxPrice_(checkedValues?: (number|string)[]) {
+    private setFilterMaxPrice_(checkedValues?: number[]) {
         const params = this.filterMaxPrice_;
+
+        params.data.options = this.updateFilterMaxPrice(
+            params.data.options,
+            checkedValues
+        );
+
         this.setFilterRange(params, checkedValues);
 
         return this;
@@ -317,36 +342,21 @@ class ProgramFilterPanel extends FilterPanel {
     }
 
 
-    private setFilterEgeInput_(
-            filterParams: FilterParams,
-            filledOptions?: filledInputOption[]
-    ) {
-        let params = filterParams;
-        params.config.type = filterType.INPUT;
+    /**
+     * Sets getting values in options
+     */
+    private updateFilterMaxPrice(
+            rangeOptions: RangeOption[],
+            checkedValues?: number[]
+    ): RangeOption[] {
 
-        params = this.updateFilterEgeInputParams_(filterParams, filledOptions);
+        var options = rangeOptions;
 
-        this.filters.push(params);
-    }
+        if (checkedValues && checkedValues.length) {
+            options[0].value = checkedValues[0];
+        }
 
-
-    private updateFilterEgeInputParams_(
-            filterParams: FilterParams,
-            filledOptions?: filledInputOption[]
-    ): FilterParams {
-        const params = filterParams;
-
-        params.data.options = this.updateInputsIsFilled_(
-            filterParams.data.options,
-            filledOptions
-        );
-
-        params.config = this.updateFilterConfigIsShowed(
-            filterParams,
-            filledOptions
-        );
-
-        return params;
+        return options;
     }
 
     /**
@@ -354,7 +364,7 @@ class ProgramFilterPanel extends FilterPanel {
      */
     private updateInputsIsFilled_(
             options: Option[],
-            filledOptions?: filledInputOption[]
+            filledOptions?: FilledInputOption[]
     ): Option[] {
         const filledData = filledOptions || [];
 

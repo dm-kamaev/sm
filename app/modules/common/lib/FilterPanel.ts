@@ -232,7 +232,7 @@ abstract class FilterPanel {
 
     protected setFilterInput(
             filterParams: FilterParams,
-            checkedValues?: (number|string)[]
+            checkedValues?: (number|string|Object)[]
     ) {
         const params = filterParams;
         params.config.type = filterType.INPUT;
@@ -290,7 +290,7 @@ abstract class FilterPanel {
      */
     protected setFilter(
             filterParams: FilterParams,
-            checkedValues?: (number|string)[]
+            checkedValues?: (number|string|Object)[]
     ) {
         const params = this.updateFilterParams(filterParams, checkedValues);
         this.filters.push(params);
@@ -327,7 +327,7 @@ abstract class FilterPanel {
 
     protected updateFilterParams(
             filterParams: FilterParams,
-            checkedValues?: (number|string)[]
+            checkedValues?: (number|string|Object)[]
     ): FilterParams {
         const params = filterParams;
 
@@ -391,7 +391,7 @@ abstract class FilterPanel {
      */
     protected updateOptionsIsChecked(
             options: Option[],
-            checkedValues?: (number|string)[]
+            checkedValues?: (number|string|Object)[]
     ): Option[] {
         const values = checkedValues || [];
 
