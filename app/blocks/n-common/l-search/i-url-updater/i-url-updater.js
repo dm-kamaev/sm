@@ -73,28 +73,28 @@ goog.scope(function() {
     };
 
     /**
-    * Transform params map for build url
-    * @param  {Object<string, (Array|string|number|boolean)>} params
-    * @return {Object<string, (string|number|boolean)>}
-    * @private
-    */
+     * Transform params map for build url
+     * @param  {Object<string, (Array|string|number|boolean)>} params
+     * @return {Object<string, (string|number|boolean)>}
+     * @private
+     */
     UrlUpdater.prototype.transformParams_ = function(params) {
         var notEmptyParams = goog.object.filter(
             params, this.isNotEmptyParam_
         );
 
-        return goog.object.map(notEmptyParams, this.transformParam_);
+        return goog.object.map(notEmptyParams, this.transformParam_, this);
     };
 
 
     /**
-    * Check that parame is not empty
-    * Which means is not null and
-    * if param is array it has length more than zero
-    * @param  {?(Array|number|string|boolean)} param
-    * @return {boolean}
-    * @private
-    */
+     * Check that parame is not empty
+     * Which means is not null and
+     * if param is array it has length more than zero
+     * @param  {?(Array|number|string|boolean)} param
+     * @return {boolean}
+     * @private
+     */
     UrlUpdater.prototype.isNotEmptyParam_ = function(param) {
         var result = param;
         if (goog.isDefAndNotNull(param) && Array.isArray(param)) {
@@ -106,18 +106,46 @@ goog.scope(function() {
 
 
     /**
-    * Transform array to string of elements divivded by commas
-    * @param  {(Array|number|string|boolean)} param
-    * @return {(string|number|boolean)} trasformed param
-    * @private
-    */
+     * Transform array to string of elements divivded by commas
+     * @param  {(Array|number|string|boolean)} param
+     * @return {(string|number|boolean)} trasformed param
+     * @private
+     */
     UrlUpdater.prototype.transformParam_ = function(param) {
         var result = param;
+
         if (Array.isArray(param)) {
-            result = goog.isNull(param) ? null : param.toString();
+            result = this.transformArray_(param);
         }
 
         return result;
     };
 
+    /**
+     * Transform array of primitives or objects to string
+     * @param {Array<(number|string|Object)>} arrayParam
+     * @return {string}
+     * @private
+     */
+    UrlUpdater.prototype.transformArray_ = function(arrayParam) {
+        var result;
+
+        if (this.isObjectArray_(arrayParam)) {
+            result = JSON.stringify(arrayParam);
+        } else {
+            result = arrayParam.toString();
+        }
+
+        return result;
+    };
+
+    /**
+     * Check that in given array one of members are Object
+     * @param {Array<(number|string|Object)>} array
+     * @return {boolean}
+     * @private
+     */
+    UrlUpdater.prototype.isObjectArray_ = function(array) {
+        return array.some(item => goog.isObject(item));
+    };
 });  // goog.scope
