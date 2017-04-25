@@ -12,11 +12,17 @@ const object = goog.require('goog.object');
 
 /**
  * Possible event enum
-f* @enum {string}
+ * @enum {string}
  */
 const Event = {
     SUBMIT: FilterPanel.Event.SUBMIT 
 };
+
+/**
+ * Filter name of ege results filter
+ * @const {string}
+ */
+const EGE_RESULTS_FILTER = 'egeResults';
 
 
 /**
@@ -72,10 +78,10 @@ class FilterPanelGroup extends Control {
      * @return {Object}
      */
     getData() {
-        const mainFilterPanelData = this.transformFilterPanelData(
+        const mainFilterPanelData = this.transformFilterPanelData_(
             this.mainFilterPanel_.getData()
         );
-        const dependentFilterPanelData = this.transformFilterPanelData(
+        const dependentFilterPanelData = this.transformFilterPanelData_(
             this.dependentFilterPanel_.getData()
         );
         const result = {};
@@ -117,18 +123,51 @@ class FilterPanelGroup extends Control {
      * array of values
      * @param {Object<string, Array<Object>>} data
      * @return {Object<string, Array<Object>>}
+     * @private
      */
-    transformFilterPanelData(filterPanelData) {
-        return object.map(filterPanelData, this.transformFilterData_);
+    transformFilterPanelData_(filterPanelData) {
+        return object.map(filterPanelData, this.transformFilterData_, this);
     };
 
     /**
      * Remove from filter data unnecessary fields
      * @param {Array<Object<string, (string | number)>>} filterData
+     * @param {string} filterName
      * @return {Array<(string | number | Object)>}
+     * @private
      */
-    transformFilterData_(filterData) {
-        return filterData.map(data => data.value);
+    transformFilterData_(filterData, filterName) {
+        const transformFunction = (filterName === EGE_RESULTS_FILTER) ?
+            this.getEgeResultsFilterData_ :
+            this.getDefaultFilterData_;
+
+        return filterData.map(transformFunction);
+    }
+
+    /**
+     * Default filter data transformation
+     * @param {Object<string, (string | number)>} filterDataItem
+     * @return {(string | number)}
+     * @private
+     */
+    getDefaultFilterData_(filterDataItem) {
+        return filterDataItem.value;
+    }
+
+    /**
+     * Ege resulte filter data transformation
+     * @param {Object<string, (string | number)>} filterDataItem
+     * @return {{
+     *     subjectId: number,
+     *     value: number
+     * }}
+     * @private
+     */
+    getEgeResultsFilterData_(filterDataItem) {
+        return {
+            subjectId: filterDataItem.name,
+            value: filterDataItem.value
+        }; 
     }
 
     /**
