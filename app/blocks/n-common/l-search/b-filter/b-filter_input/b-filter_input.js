@@ -109,6 +109,38 @@ goog.scope(function() {
 
 
     /**
+     * Set input value
+     * @param {Array<{
+     *     name: (string|number),
+     *     value: string
+     * }>} data
+     */
+    FilterInput.prototype.checkOption = function(data) {
+        var option = this.findOption(data);
+
+        if (option) {
+            option.setValue(data.value);
+        }
+    };
+
+
+    /**
+     * Clear input
+     * @param {Array<{
+     *     name: (string|number),
+     *     value: string
+     * }>} data
+     */
+    FilterInput.prototype.uncheckOption = function(data) {
+        var option = this.findOption(data);
+
+        if (option) {
+            option.clear();
+        }
+    };
+
+
+    /**
      * Get all options data
      * @return {Object}
      */

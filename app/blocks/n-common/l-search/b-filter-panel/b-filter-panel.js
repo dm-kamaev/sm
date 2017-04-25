@@ -197,6 +197,42 @@ goog.scope(function() {
 
 
     /**
+     * Checks option by data in filter with name - filterName
+     * @param {string} filterName
+     * @param {{
+     *     name: (string|number),
+     *     value: ?(string|number),
+     *     id: ?string,
+     *     label: ?string,
+     *     isChecked: ?boolean
+     * }} optionData
+     */
+    FilterPanel.prototype.checkFilterOption = function(filterName, optionData) {
+        var filter = this.getFilter_(filterName);
+        filter.checkOption(optionData);
+    };
+
+
+    /**
+     * Unchecks option by data in filter with name - filterName
+     * @param {string} filterName
+     * @param {{
+     *     name: (string|number),
+     *     value: ?(string|number),
+     *     id: ?string,
+     *     label: ?string,
+     *     isChecked: ?boolean
+     * }} optionData
+     */
+    FilterPanel.prototype.uncheckFilterOption = function(filterName,
+        optionData) {
+
+        var filter = this.getFilter_(filterName);
+        filter.uncheckOption(optionData);
+    };
+
+
+    /**
      * Initializes listeners for view
      * @private
      */

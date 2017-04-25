@@ -21,10 +21,13 @@ const Event = {
 };
 
 /**
- * Filter name of ege results filter
- * @const {string}
+ * Filter name enum
+ * @enum {string}
  */
-const EGE_RESULTS_FILTER = 'egeResults';
+const FilterName = {
+    EGE_SUBJECTS: 'egeSubjects',
+    EGE_RESULTS: 'egeResults'
+};
 
 
 /**
@@ -139,7 +142,7 @@ class FilterPanelGroup extends Control {
      * @private
      */
     transformFilterData_(filterData, filterName) {
-        const transformFunction = (filterName === EGE_RESULTS_FILTER) ?
+        const transformFunction = (filterName === FilterName.EGE_RESULTS) ?
             this.getEgeResultsFilterData_ :
             this.getDefaultFilterData_;
 
@@ -243,6 +246,18 @@ class FilterPanelGroup extends Control {
             FilterPanel.Event.RESET,
             this.onMainResetClick_
         );
+
+        this.getHandler().listen(
+            this.mainFilterPanel_,
+            FilterPanel.Event.FILTER_OPTION_CHECK,
+            this.onMainFilterOptionCheck_
+        );
+
+        this.getHandler().listen(
+            this.mainFilterPanel_,
+            FilterPanel.Event.FILTER_OPTION_UNCHECK,
+            this.onMainFilterOptionUncheck_
+        );
     }
 
     /**
@@ -315,6 +330,44 @@ class FilterPanelGroup extends Control {
         this.dependentFilterPanel_.collapse();
     }
 
+
+    /**
+     * On option of main filter panel check
+     * @param {goog.events.Event} event
+     */
+    onMainFilterOptionCheck_(event) {
+        if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
+
+            this.dependentFilterPanel_.showFilterOption(
+                FilterName.EGE_RESULTS,
+                {name: event.data.value}
+            );
+        }
+    }
+
+
+    /**
+     * On option of main filter panel uneck
+     * @param {goog.events.Event} event
+     */
+    onMainFilterOptionUncheck_(event) {
+        if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
+            var optionData = {
+                name: event.data.value
+            };
+
+            this.dependentFilterPanel_.hideFilterOption(
+                FilterName.EGE_RESULTS,
+                optionData
+            );
+
+            this.dependentFilterPanel_.uncheckFilterOption(
+                FilterName.EGE_RESULTS,
+                optionData
+            );
+        }
+    }
+
     /**
      * Filter check event handler
      * @private
@@ -324,7 +377,7 @@ class FilterPanelGroup extends Control {
     }
 
     /**
-     * Filter check event handler
+     * Filter uncheck event handler
      * @private
      */
     onFilterUncheck_() {
