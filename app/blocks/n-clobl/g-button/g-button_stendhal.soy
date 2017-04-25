@@ -6,7 +6,7 @@
  *         default: ?string,
  *         sizeS: ?string,
  *         sizeL: ?string
- *     }|undefined),
+ *     }|string|undefined),
  *     icon: ({
  *         name: string,
  *         type: ('png'|'svg'),
@@ -148,8 +148,18 @@
  */
 {template .text_}
     <div class="{call .rootClass /}__content-text">
-        {$params.data.content.default}
+        {let $isString kind="text"}
+            {call sm.iSmUtils.smUtils.isString
+                data="$params.data.content" /}
+        {/let}
+
+        {if $isString == 'true'}
+            {$params.data.content}
+        {else}
+            {$params.data.content.default}
+        {/if}
     </div>
+
     {if $params.data.content.sizeS}
         <div class="{call .rootClass /}__content-text
             {sp}{call .rootClass /}__content-text_size_s"
@@ -157,6 +167,7 @@
             {$params.data.content.sizeS}
         </div>
     {/if}
+
     {if $params.data.content.sizeL}
         <div class="{call .rootClass /}__content-text
             {sp}{call .rootClass /}__content-text_size_l"

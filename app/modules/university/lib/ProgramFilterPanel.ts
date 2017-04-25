@@ -122,7 +122,6 @@ class ProgramFilterPanel extends FilterPanel {
                 options: [{
                     name: filterName.MAX_PRICE,
                     label: 'Стоимость обучения  (руб. в год)',
-                    value: 175000,
                     step: 50000,
                     minValue: 50000,
                     maxValue: 500000,

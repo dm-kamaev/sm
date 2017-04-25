@@ -10,6 +10,8 @@ const View = goog.require('sm.bFilterPanelGroup.View');
 const events = goog.require('goog.events');
 const object = goog.require('goog.object');
 
+const Link = goog.require('sm.bSmLink.SmLink');
+
 /**
  * Possible event enum
  * @enum {string}
@@ -102,7 +104,7 @@ class FilterPanelGroup extends Control {
     enterDocument() {
         super.enterDocument();
 
-        this.initButtonListeners_();
+        this.initButtonsListeners_();
         this.initFilterPanelsListeners_();
     }
 
@@ -114,7 +116,7 @@ class FilterPanelGroup extends Control {
     decorateInternal(element) {
         super.decorateInternal(element);
 
-        this.initButton_();
+        this.initButtons_();
         this.initFilterPanels_();
     }
 
@@ -173,10 +175,17 @@ class FilterPanelGroup extends Control {
     /**
      * @private
      */
-    initButton_() {
+    initButtons_() {
+        const dom = this.getView().getDom();
+
         this.button_ = this.decorateChild(
             ButtonStendhal.NAME,
-            this.getView().getDom().button
+            dom.button
+        );
+
+        this.reset_ = this.decorateChild(
+            Link.NAME,
+            dom.reset
         );
     }
 
@@ -233,11 +242,17 @@ class FilterPanelGroup extends Control {
     /**
      * @private
      */
-    initButtonListeners_() {
+    initButtonsListeners_() {
         this.getHandler().listen(
             this.button_,
             Button.Event.CLICK,
             this.onButtonClick_
+        );
+
+        this.getHandler().listen(
+            this.reset_,
+            Link.Event.CLICK,
+            this.onResetClick_
         );
     }
 
@@ -248,6 +263,15 @@ class FilterPanelGroup extends Control {
         this.getView().hideControls();
 
         this.showFilters_();
+    }
+
+    /**
+     * @private
+     */
+    onResetClick_() {
+        this.mainFilterPanel_.reset();
+        this.dependentFilterPanel_.reset();
+        this.getView().hideResetButton();
     }
 
     /**
@@ -283,6 +307,7 @@ class FilterPanelGroup extends Control {
      * @private
      */
     onFilterCheck_() {
+        this.getView().showResetButton();
     }
 
     /**
@@ -290,6 +315,10 @@ class FilterPanelGroup extends Control {
      * @private
      */
     onFilterUncheck_() {
+        if (!this.mainFilterPanel_.isChecked() &&
+            !this.dependentFilterPanel_.isChecked()) {
+            this.getView().hideResetButton();
+        }
     }
 };
 

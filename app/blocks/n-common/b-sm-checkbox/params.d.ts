@@ -11,7 +11,7 @@ export namespace bSmCheckbox {
             id?: (string|number);
             name?: (string|number);
             label: string;
-            value: (string|number);
+            value?: (string|number);
             isChecked?: boolean;
         }
 

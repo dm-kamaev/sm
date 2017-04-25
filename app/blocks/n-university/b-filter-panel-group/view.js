@@ -17,7 +17,9 @@ const CssClass = {
     MAIN_FILTER_PANEL_WRAP: 'b-filter-panel-group__filters_main',
     DEPENDENT_FILTER_PANEL_WRAP: 'b-filter-panel-group__filters_dependent',
     FILTER_VISIBLE: 'b-filter-panel-group__filters_visible',
-    CONTROLS_WRAP: 'b-filter-panel-group__controls-wrap'
+    CONTROLS_WRAP: 'b-filter-panel-group__controls-wrap',
+    RESET: 'b-filter-panel-group__reset',
+    COLLAPSED_STATE: 'b-filter-panel-group_state_collapsed'
 };
 
 /**
@@ -56,6 +58,11 @@ class View extends ControlView {
             this.dom.dependentFilterPanelWrap,
             CssClass.FILTER_VISIBLE
         );
+
+        goog.dom.classlist.remove(
+            this.getElement(),
+            CssClass.COLLAPSED_STATE
+        );
     }
 
     /**
@@ -70,6 +77,11 @@ class View extends ControlView {
         goog.dom.classlist.remove(
             this.dom.dependentFilterPanelWrap,
             CssClass.FILTER_VISIBLE
+        );
+
+        goog.dom.classlist.add(
+            this.getElement(),
+            CssClass.COLLAPSED_STATE
         );
     }
 
@@ -89,6 +101,26 @@ class View extends ControlView {
     showControls() {
         goog.dom.classlist.remove(
             this.dom.controlsWrap,
+            Utils.CssClass.HIDDEN
+        );
+    }
+
+    /**
+     * Show reset button
+     */
+    showResetButton() {
+        goog.dom.classlist.remove(
+            this.dom.reset,
+            Utils.CssClass.HIDDEN
+        );
+    }
+
+    /**
+     * Hide reset button
+     */
+    hideResetButton() {
+        goog.dom.classlist.add(
+            this.dom.reset,
             Utils.CssClass.HIDDEN
         );
     }
@@ -127,6 +159,9 @@ class View extends ControlView {
             ),
             controlsWrap: this.getElementByClass(
                 CssClass.CONTROLS_WRAP
+            ),
+            reset: this.getElementByClass(
+                CssClass.RESET
             )
         };
     }

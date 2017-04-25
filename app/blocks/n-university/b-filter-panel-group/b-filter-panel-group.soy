@@ -45,10 +45,12 @@
  * @override
  */
 {template .body}
-    {call .controls_ data="all" /}
-    {call .reset_ data="all" /}
-    {call .mainFilterPanel_ data="all" /}
-    {call .dependentFilterPanel_ data="all" /}
+    <div class="{call .rootClass/}__content">
+        {call .controls_ data="all" /}
+        {call .reset_ data="all" /}
+        {call .mainFilterPanel_ data="all" /}
+        {call .dependentFilterPanel_ data="all" /}
+    </div>
 {/template}
 
 
@@ -167,9 +169,24 @@
 
 /**
  * Reset button
+ * @param params {
+ *     data: {
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params
+ *     }
+ * }
  */
 {template .reset_}
-    <div class="{call .rootClass/}__reset">
+    {let $classes kind="html"}
+        {call .rootClass/}__reset
+
+        {if not $params.data.filterPanel.config.hasCheckedFilters and
+            not $params.data.dependentFilterPanel.config.hasCheckedFilters}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
         {call .renderChild}
             {param params: [
                 'type': 'smLink',
