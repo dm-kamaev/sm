@@ -64,7 +64,11 @@ class SearchView extends LayoutView {
             isBottomLine: true
         };
 
-        this.openGraph = {};
+        this.openGraph = {
+            title: this.seo.metaTitle,
+            description: this.seo.metaDescription,
+            image: '/static/images/n-clobl/i-layout/university_sharing.jpg'
+        };
     }
 
     public initSearchParams(
