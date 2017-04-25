@@ -88,6 +88,7 @@ goog.scope(function() {
     /**
      * Get data of not empty options
      * @return {Array<{
+     *     name: (string|number),
      *     value: string
      * }>}
      */
@@ -97,6 +98,7 @@ goog.scope(function() {
         this.options.forEach(function(option) {
             if (option.getValue()) {
                 result.push({
+                    name: option.getName(),
                     value: option.getValue()
                 });
             }
