@@ -106,14 +106,27 @@ goog.scope(function() {
 
 
     /**
+     * get data from selected item
+     * @return {{
+     *     value: (string|number|undefined),
+     *     label: string
+     * }}
+     * @public
+     */
+    Switch.prototype.getSelectedItemData = function() {
+        return this.params.items[this.selectedLinkId_];
+    };
+
+
+    /**
      * Item click handler
      * @param {number} id
      * @private
      */
     Switch.prototype.onItemClick_ = function(id) {
-        if (id != this.selectedLinkId_) {
+        if (id !== this.selectedLinkId_) {
             this.selectLink(id);
-            var params = this.params.items[id];
+            var params = this.getSelectedItemData();
             var event = new sm.bSmSwitch.Event.ItemSelect(params);
             this.dispatchEvent(event);
         }

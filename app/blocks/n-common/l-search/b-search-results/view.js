@@ -125,20 +125,47 @@ goog.scope(function() {
 
 
     /**
+     * Transform raw params to compressed ones
+     * @param {Array<Object>} rawParams
+     * @return {View.TextHeaderParams}
+     * @public
+     */
+    View.getHeaderRenderParams = function(rawParams) {
+        var headerText = rawParams.map(part => {
+            var text = part['text'];
+
+            return {
+                number: part['number'],
+                text: (text && text['nom']) ? {
+                    nom: text['nom'],
+                    gen: text['gen'],
+                    plu: text['plu']
+                } : text
+            };
+        });
+
+        return {
+            params: {
+                data: {
+                    headerText: headerText
+                }
+            }
+        };
+    };
+
+
+    /**
      * Update headers size s and l for results list
      * @param {sm.lSearch.bSearchResults.View.TextHeaderParams} headerText
      * @public
      */
     View.prototype.updateHeader = function(headerText) {
+        var renderParams = View.getHeaderRenderParams(headerText);
+
         goog.soy.renderElement(
             this.dom.headerText,
-            sm.lSearch.bSearchResults.Template.generateHeaderText, {
-                params: {
-                    data: {
-                        headerText: headerText
-                    }
-                }
-            }
+            sm.lSearch.bSearchResults.Template.generateHeaderText,
+            renderParams
         );
     };
 

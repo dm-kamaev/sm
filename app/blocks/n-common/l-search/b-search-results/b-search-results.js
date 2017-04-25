@@ -6,6 +6,7 @@ goog.require('sm.bSmSwitch.SmSwitch');
 goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lSearch.bSearchResults.Event.SortTypeChanges');
 goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSearchResults.View');
 
@@ -78,7 +79,7 @@ goog.scope(function() {
      * @const
      */
     SearchResults.Event = {
-        SORT_TYPE_CHANGE: goog.events.getUniqueId('sort-type-change'),
+        SORT_TYPE_CHANGE: sm.lSearch.bSearchResults.Event.SortTypeChanges.Type,
         SHOW_MORE_CLICK: cl.gButton.Button.Event.CLICK,
         LIST_ITEM_CLICK: sm.bSmItemList.SmItemList.Event.ITEM_CLICK
     };
@@ -138,7 +139,7 @@ goog.scope(function() {
      * @param {{
      *     items: Array<sm.bSmItem.SmItem.RenderParams>,
      *     countResults: number,
-     *     headerText: sm.lSearch.bSearchResults.TextHeaderParams
+     *     headerText: SearchResults.TextHeaderParams
      * }} params
      * @public
      */
@@ -302,7 +303,9 @@ goog.scope(function() {
      * @protected
      */
     SearchResults.prototype.onSortTypeChange = function() {
-        this.dispatchEvent(SearchResults.Event.SORT_TYPE_CHANGE);
+        var data = this.sort_.getSelectedItemData();
+        var event = new sm.lSearch.bSearchResults.Event.SortTypeChanges(data);
+        this.dispatchEvent(event);
     };
 
 
