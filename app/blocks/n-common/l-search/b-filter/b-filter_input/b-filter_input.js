@@ -119,6 +119,7 @@ goog.scope(function() {
 
     /**
      * Set all options data
+     * @override
      * @protected
      */
     FilterInput.prototype.setAllData = function() {
@@ -127,7 +128,25 @@ goog.scope(function() {
 
 
     /**
+     * Find option
+     * @param {Array<{
+     *     name: (string|number),
+     *     value: string
+     * }>} data
+     * @return {sm.gInput.InputStendhal}
+     * @override
+     * @protected
+     */
+    FilterInput.prototype.findOption = function(data) {
+        return goog.array.find(this.options, function(option) {
+            return option.getName() == data.name;
+        });
+    };
+
+
+    /**
      * Initializes listeners for options
+     * @override
      * @protected
      */
     FilterInput.prototype.initOptionsListeners = function() {

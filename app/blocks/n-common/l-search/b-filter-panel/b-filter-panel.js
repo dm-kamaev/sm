@@ -71,7 +71,9 @@ goog.scope(function() {
         COLLAPSE: View.Event.COLLAPSE,
         CHECK: goog.events.getUniqueId('check'),
         UNCHECK: goog.events.getUniqueId('uncheck'),
-        RESET: goog.events.getUniqueId('reset')
+        RESET: goog.events.getUniqueId('reset'),
+        FILTER_OPTION_CHECK: sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
+        FILTER_OPTION_UNCHECK: sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION
     };
 
 
@@ -161,6 +163,40 @@ goog.scope(function() {
 
 
     /**
+     * Shows option by data in filter with name - filterName
+     * @param {string} filterName
+     * @param {{
+     *     name: (string|number),
+     *     value: ?(string|number),
+     *     id: ?string,
+     *     label: ?string,
+     *     isChecked: ?boolean
+     * }} optionData
+     */
+    FilterPanel.prototype.showFilterOption = function(filterName, optionData) {
+        var filter = this.getFilter_(filterName);
+        filter.showOption(optionData);
+    };
+
+
+    /**
+     * Hides option by data in filter with name - filterName
+     * @param {string} filterName
+     * @param {{
+     *     name: (string|number),
+     *     value: ?(string|number),
+     *     id: ?string,
+     *     label: ?string,
+     *     isChecked: ?boolean
+     * }} optionData
+     */
+    FilterPanel.prototype.hideFilterOption = function(filterName, optionData) {
+        var filter = this.getFilter_(filterName);
+        filter.hideOption(optionData);
+    };
+
+
+    /**
      * Initializes listeners for view
      * @private
      */
@@ -246,6 +282,7 @@ goog.scope(function() {
      */
     FilterPanel.prototype.onFilterCheck_ = function() {
         this.getView().setResetButtonVisibility(true);
+
         this.dispatchEvent(FilterPanel.Event.CHECK);
     };
 
@@ -259,6 +296,28 @@ goog.scope(function() {
             this.getView().setResetButtonVisibility(false);
             this.dispatchEvent(FilterPanel.Event.UNCHECK);
         }
+    };
+
+
+    /**
+     * Returns filter by name
+     * @param {string} filterName
+     * @return {(
+     *     sm.lSearch.bFilter.Filter|
+     *     sm.lSearch.bFilter.FilterClasses|
+     *     sm.lSearch.bFilter.FilterDropdown|
+     *     sm.lSearch.bFilter.FilterExtended|
+     *     sm.lSearch.bFilter.FilterInput|
+     *     sm.lSearch.bFilter.FilterRange|
+     *     sm.lSearch.bFilter.FilterSwitch|
+     *     sm.lSearch.bFilter.FilterSwitchLabels
+     * )}
+     * @private
+     */
+    FilterPanel.prototype.getFilter_ = function(filterName) {
+        return goog.array.find(this.filters_, function(filter) {
+            return filter.getName() == filterName;
+        });
     };
 
 

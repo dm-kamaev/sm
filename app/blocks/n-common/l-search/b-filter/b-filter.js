@@ -234,6 +234,26 @@ goog.scope(function() {
 
 
     /**
+     * Show option
+     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     */
+    Filter.prototype.showOption = function(data) {
+        var option = this.findOption(data);
+        this.getView().showOption(option.getElement());
+    };
+
+
+    /**
+     * Hide option
+     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     */
+    Filter.prototype.hideOption = function(data) {
+        var option = this.findOption(data);
+        this.getView().hideOption(option.getElement());
+    };
+
+
+    /**
      * Remove option
      * @param {sm.bSmCheckbox.SmCheckbox} option
      */

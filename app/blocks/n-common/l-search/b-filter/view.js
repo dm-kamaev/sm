@@ -106,14 +106,30 @@ goog.scope(function() {
      * @param {Element} option
      */
     View.prototype.removeOption = function(option) {
-        var container = goog.dom.getAncestorByClass(
-            option,
-            View.CssClass.OPTION
-        );
+        var container = this.getOptionWrapper_(option);
 
         goog.dom.removeNode(
             container
         );
+    };
+
+    /**
+     * Show option
+     * @param {Element} option
+     */
+    View.prototype.showOption = function(option) {
+        var container = this.getOptionWrapper_(option);
+        this.showElement(container);
+    };
+
+
+    /**
+     * Hide option
+     * @param {Element} option
+     */
+    View.prototype.hideOption = function(option) {
+        var container = this.getOptionWrapper_(option);
+        this.hideElement(container);
     };
 
 
@@ -164,16 +180,10 @@ goog.scope(function() {
             );
 
             if (visible && isContains) {
-                goog.dom.classlist.remove(
-                    this.dom.header,
-                    Utils.CssClass.HIDDEN
-                );
+                this.showElement(this.dom.header);
             }
             else if (!visible && !isContains) {
-                goog.dom.classlist.add(
-                    this.dom.header,
-                    Utils.CssClass.HIDDEN
-                );
+                this.hideElement(this.dom.header);
             }
         }
     };
@@ -286,6 +296,32 @@ goog.scope(function() {
 
 
     /**
+     * Shows dom Element
+     * @param {Element} element
+     * @protected
+     */
+    View.prototype.showElement = function(element) {
+        goog.dom.classlist.remove(
+            element,
+            Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * Hides dom Element
+     * @param {Element} element
+     * @protected
+     */
+    View.prototype.hideElement = function(element) {
+        goog.dom.classlist.add(
+            element,
+            Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
      * Button show or hide content handler
      * @private
      */
@@ -347,16 +383,11 @@ goog.scope(function() {
 
         options.forEach(function(option) {
             visible ?
-                goog.dom.classlist.remove(
-                    option,
-                    Utils.CssClass.HIDDEN
-                ) :
-                goog.dom.classlist.add(
-                    option,
-                    Utils.CssClass.HIDDEN
-                );
-        });
+                this.showElement(option) :
+                this.hideElement(option);
+        }, this);
     };
+
 
 
     /**
@@ -366,24 +397,11 @@ goog.scope(function() {
      */
     View.prototype.setButtonMoreState_ = function(isMore) {
         if (isMore) {
-            goog.dom.classlist.add(
-                this.dom.buttonShowMore,
-                Utils.CssClass.HIDDEN
-            );
-            goog.dom.classlist.remove(
-                this.dom.buttonShowLess,
-                Utils.CssClass.HIDDEN
-            );
+            this.hideElement(this.dom.buttonShowMore);
+            this.showElement(this.dom.buttonShowLess);
         } else {
-            goog.dom.classlist.add(
-                this.dom.buttonShowLess,
-                Utils.CssClass.HIDDEN
-            );
-
-            goog.dom.classlist.remove(
-                this.dom.buttonShowMore,
-                Utils.CssClass.HIDDEN
-            );
+            this.hideElement(this.dom.buttonShowLess);
+            this.showElement(this.dom.buttonShowMore);
         }
     };
 
@@ -395,14 +413,8 @@ goog.scope(function() {
      */
     View.prototype.setContentVisibility_ = function(visible) {
         visible ?
-            goog.dom.classlist.remove(
-                this.dom.content,
-                Utils.CssClass.HIDDEN
-            ) :
-            goog.dom.classlist.add(
-                this.dom.content,
-                Utils.CssClass.HIDDEN
-            );
+            this.showElement(this.dom.content) :
+            this.hideElement(this.dom.content);
     };
 
 
@@ -413,25 +425,26 @@ goog.scope(function() {
      */
     View.prototype.setHeaderIconUpState_ = function(isUp) {
         if (isUp) {
-            goog.dom.classlist.remove(
-                this.dom.iconUp,
-                Utils.CssClass.HIDDEN
-            );
-            goog.dom.classlist.add(
-                this.dom.iconDown,
-                Utils.CssClass.HIDDEN
-            );
+            this.showElement(this.dom.iconUp);
+            this.hideElement(this.dom.iconDown);
         } else {
-            goog.dom.classlist.remove(
-                this.dom.iconDown,
-                Utils.CssClass.HIDDEN
-            );
-
-            goog.dom.classlist.add(
-                this.dom.iconUp,
-                Utils.CssClass.HIDDEN
-            );
+            this.showElement(this.dom.iconDown);
+            this.hideElement(this.dom.iconUp);
         }
+    };
+
+
+    /**
+     * Returns container with option
+     * @param {Element} option
+     * @return {Element}
+     * @private
+     */
+    View.prototype.getOptionWrapper_ = function(option) {
+        return goog.dom.getAncestorByClass(
+            option,
+            View.CssClass.OPTION
+        );
     };
 
 
