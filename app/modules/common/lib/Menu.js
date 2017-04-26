@@ -142,7 +142,7 @@ class Menu {
             name = 'Школы';
             break;
         case entityTypeEnum.COURSE:
-            name = 'Курсы и секции';
+            name = 'Курсы';
             break;
         case entityTypeEnum.UNIVERSITY:
             name = 'Вузы';

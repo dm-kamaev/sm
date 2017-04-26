@@ -211,13 +211,17 @@
 /* type entity university */
 .b-sm-subheader_entity-type_university {
     .b-sm-subheader__logo-img {
-        height: 39px;
+        height: 45px;
     }
 
     .b-sm-subheader__section_search {
         width: auto;
 
         text-align: right;
+    }
+
+    .b-sm-subheader__section_logo {
+        width: 365px;
     }
 
     .b-sm-subheader__search.b-sm-subheader__search_visible_l {
@@ -273,8 +277,12 @@
 
     /* type entity university */
     .b-sm-subheader_entity-type_university {
+        .b-sm-subheader__section_logo {
+            width: 290px;
+        }
+
         .b-sm-subheader__logo-img {
-            width: 225px;
+            width: 272px;
         }
     }
     /* end university */
@@ -388,6 +396,40 @@
         }
     }
     /* header animation end */
+
+     /* type entity university */
+    .b-sm-subheader_entity-type_university {
+        .b-sm-subheader__section_logo {
+            width: auto;
+        }
+
+        .b-sm-subheader__logo-img {
+            width: 215px;
+        }
+
+        .b-sm-subheader__search-links_row {
+            display: inline-block;
+        }
+
+        .b-sm-subheader__search-links_dropdown {
+            display: none;
+        }
+    }
+    /* end university */
+}
+
+@include media-s {
+    /* type entity university */
+    .b-sm-subheader_entity-type_university {
+        .b-sm-subheader__search-links_row {
+            display: none;
+        }
+
+        .b-sm-subheader__search-links_dropdown {
+            display: inline-block;
+        }
+    }
+    /* end university */
 }
 
 
@@ -426,7 +468,7 @@
         width: 100%;
         height: 50px;
         margin: 0;
-        padding: 0 30px;
+        padding: 0 25px;
     }
 
     .b-sm-subheader__search-link {
