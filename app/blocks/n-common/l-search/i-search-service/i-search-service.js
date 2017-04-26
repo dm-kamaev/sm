@@ -89,36 +89,6 @@ goog.scope(function() {
 
 
     /**
-     * Possible addresses of search api to load data depending of entity type
-     * @enum {string}
-     */
-    SearchService.SearchApiAddress = {
-        SCHOOL: '/api/school/search',
-        COURSE: '/api/course/search'
-    };
-
-    /**
-     * Possible addresses of search map api to load data
-     * depending of entity type
-     * @enum {string}
-     */
-    SearchService.SearchMapApiAddress = {
-        SCHOOL: '/api/school/search/map',
-        COURSE: '/api/course/search/map'
-    };
-
-
-    /**
-     * Possible type of data to load form backend
-     * @enum {string}
-     */
-    SearchService.EntityType = {
-        SCHOOL: 'school',
-        COURSE: 'course'
-    };
-
-
-    /**
      * Possible data types for loading
      * @enum {string}
      */
@@ -129,22 +99,14 @@ goog.scope(function() {
 
 
     /**
-     * Init search service by given type
-     * Please note, that servis must be inited before use
-     * @param {string} entityType entityType of search page
+     * Init search service by given search api address
+     * Please note, that service must be inited before use
+     * @param {string} searchApiAddress Search api address
      * @public
      */
-    SearchService.prototype.init = function(entityType) {
-        switch (entityType) {
-            case SearchService.EntityType.SCHOOL:
-                this.searchApi_ = SearchService.SearchApiAddress.SCHOOL;
-                this.searchMapApi_ = SearchService.SearchMapApiAddress.SCHOOL;
-                break;
-            case SearchService.EntityType.COURSE:
-                this.searchApi_ = SearchService.SearchApiAddress.COURSE;
-                this.searchMapApi_ = SearchService.SearchMapApiAddress.COURSE;
-                break;
-        }
+    SearchService.prototype.init = function(searchApiAddress) {
+        this.searchApi_ = searchApiAddress;
+        this.searchMapApi_ = `${searchApiAddress}/map`;
 
         this.request_ = Request.getInstance();
     };
@@ -335,12 +297,12 @@ goog.scope(function() {
     SearchService.prototype.generateApiAddress_ = function(searchType) {
         var apiAddress;
         switch (searchType) {
-            case SearchService.DataType.SEARCH:
-                apiAddress = this.searchApi_;
-                break;
-            case SearchService.DataType.MAP_POINTS:
-                apiAddress = this.searchMapApi_;
-                break;
+        case SearchService.DataType.SEARCH:
+            apiAddress = this.searchApi_;
+            break;
+        case SearchService.DataType.MAP_POINTS:
+            apiAddress = this.searchMapApi_;
+            break;
         }
         return apiAddress;
     };

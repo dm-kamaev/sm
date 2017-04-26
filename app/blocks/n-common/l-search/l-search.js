@@ -36,7 +36,6 @@ goog.scope(function() {
         AnalyticsSender = sm.lSearch.iAnalyticsSender.AnalyticsSender;
 
 
-
     /**
      * Constructor
      * @param {Object} view
@@ -830,7 +829,7 @@ goog.scope(function() {
 
         /** Search service init **/
         this.searchService = new SearchService();
-        this.searchService.init(this.params.type);
+        this.searchService.init(this.params.api.search);
 
         return this;
     };

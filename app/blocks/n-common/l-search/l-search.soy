@@ -38,6 +38,9 @@
  *     }>,
  *     footer: {
  *         seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
+ *     },
+ *     api: {
+ *         search: string
  *     }
  * }} sm.lSearch.Template.Params.Data
  */
@@ -458,7 +461,8 @@
                 'isUserAuthorized': $params.data?.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'modifier': $params.config?.modifier,
-                'type': $params?.config.entityType
+                'type': $params?.config.entityType,
+                'api': $params.data.api
             ] /}
         {/call}"
 {/template}

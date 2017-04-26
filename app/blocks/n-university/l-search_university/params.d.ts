@@ -32,6 +32,9 @@ export namespace lSearchUniversity {
             filterPanel: Object;
             dependentFilterPanel: Object;
             searchParams: SearchParams;
+            api: {
+                search: string;
+            }
         }
 
         /**
