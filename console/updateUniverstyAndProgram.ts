@@ -166,6 +166,7 @@ class UpdateUniversityProgram {
 
 
     private async updateEgeExam(pathFile: string, option?) {
+        option = option || {};
         try {
             logger.info('Reading file egeExam...');
             this.listEgeExams_ = await this.getJsonFromXlsx(
