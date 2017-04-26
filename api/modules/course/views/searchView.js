@@ -201,7 +201,10 @@ searchView.render = function(data) {
             searchParams: data.searchParams
         }),
         searchParams: data.searchParams,
-        footer: footerView.render()
+        footer: footerView.render(),
+        api: {
+            search: '/api/course/search/'
+        }
     };
 };
 

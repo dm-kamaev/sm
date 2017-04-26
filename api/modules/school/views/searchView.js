@@ -154,7 +154,10 @@ searchView.render = function(data) {
             searchParams: data.searchParams
         }),
         searchParams: data.searchParams,
-        footer: footerView.render(data.seoLinks)
+        footer: footerView.render(data.seoLinks),
+        api: {
+            search: '/api/school/search/'
+        }
     };
 };
 

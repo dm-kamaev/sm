@@ -41,6 +41,9 @@ type FilterPanelParams = {
 
 class SearchView extends LayoutView {
     protected params: lSearchUniversity.Params;
+    protected api: {
+        search: string;
+    };
 
     constructor() {
         super(entityType.PROGRAM);
@@ -68,6 +71,10 @@ class SearchView extends LayoutView {
             title: this.seo.metaTitle,
             description: this.seo.metaDescription,
             image: '/static/images/n-clobl/i-layout/university_sharing.jpg'
+        };
+
+        this.api = {
+            search: '/program/filtersearch'
         };
     }
 
@@ -125,6 +132,7 @@ class SearchView extends LayoutView {
         this.setResultsList_(params.data.resultsList);
         this.setFilterPanels_(params.data, searchParams);
         this.setSearchParams_(searchParams);
+        this.setApi_();
     }
 
     private setResultsList_(resultsList: BackendProgramResults) {
@@ -215,6 +223,10 @@ class SearchView extends LayoutView {
     private setSearchParams_(
             searchParams: lSearchUniversity.Params.SearchParams) {
         this.params.data.searchParams = searchParams;
+    }
+
+    private setApi_() {
+        this.params.data.api = this.api;
     }
 }
 
