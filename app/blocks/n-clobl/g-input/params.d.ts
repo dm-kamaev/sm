@@ -15,7 +15,8 @@ export namespace gInputStendhal {
             placeholder?: (string|undefined),
             value?: (string|number),
             name?: (string|undefined),
-            maxLength?: (number|undefined)
+            maxLength?: (number|undefined),
+            type?: string
         }
 
         /*

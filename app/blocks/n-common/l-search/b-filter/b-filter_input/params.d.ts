@@ -20,6 +20,7 @@ export namespace bFilterInput {
                 placeholder?: string;
                 value: (string|number|undefined);
                 maxLength?: number;
+                type?: string;
             }>
         }
 

@@ -12,7 +12,8 @@
  *         label: (string|undefined),
  *         placeholder: ?string,
  *         value: ?string,
- *         maxLength: number
+ *         maxLength: ?number,
+ *         type: ?string
  *     }>
  * }} sm.lSearch.bFilter.TemplateInput.Params.Data
  */
@@ -55,7 +56,8 @@
  *             name?: string,
  *             placeholder?: string,
  *             value?: (string|number),
- *             maxLength?: number
+ *             maxLength: ?number,
+ *             type: ?string
  *         }>
  *     },
  *     config: {
@@ -82,7 +84,8 @@
                         'label': $params.data.options[$i].label,
                         'placeholder': $params.data.options[$i].placeholder,
                         'value': $params.data.options[$i].value,
-                        'maxLength': $params.data.options[$i].maxLength
+                        'maxLength': $params.data.options[$i].maxLength,
+                        'type': $params.data.options[$i].type
                     ],
                     'config': [
                         'hidden': $i + 1 > $numberOptionsToShow ? true : false,
@@ -107,7 +110,8 @@
  *         label: (string|undefined),
  *         placeholder: ?string,
  *         value: ?string,
- *         maxLength: number
+ *         maxLength: ?number,
+ *         type: ?string
  *     },
  *     config: {
  *         hidden: (boolean|undefined),
@@ -207,7 +211,8 @@
  *         name: string,
  *         placeholder: ?string,
  *         value: ?string,
- *         maxLength: number
+ *         maxLength: number,
+ *         type: ?string
  *     },
  *     config: {
  *         stylizationModifier: string,

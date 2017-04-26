@@ -2,7 +2,7 @@ import {filterName} from '../constants/filterName';
 
 import {FilterPanel} from '../../common/lib/FilterPanel';
 
-import {Option, OptionModel} from '../../common/types/filterPanel';
+import {Option, OptionModel, InputOption} from '../../common/types/filterPanel';
 
 import {bFilter} from '../../../blocks/n-common/l-search/b-filter/params';
 import {
@@ -287,13 +287,12 @@ class ProgramFilterPanel extends FilterPanel {
             optionModels: Array<OptionModel>,
             filledOptions?: FilledInputOption[]
     ) {
-        const params = this.filterEgeResults_,
-            options = this.getInputOptions(optionModels);
+        const params = this.filterEgeResults_;
 
-        params.data.options = this.updateInputsIsFilled_(
-            options,
-            filledOptions
-        );
+        let options = this.getInputOptions(optionModels);
+            options = this.updateInputsIsFilled_(options, filledOptions);
+
+        params.data.options = this.updateFilterEgeOptionsParams(options);
 
         this.setFilterInput(params, filledOptions);
 
@@ -357,6 +356,23 @@ class ProgramFilterPanel extends FilterPanel {
         }
 
         return options;
+    }
+
+    /**
+     * Sets inputs type and maxLenght
+     */
+    private updateFilterEgeOptionsParams(
+            options: InputOption[]
+    ): InputOption[] {
+
+        const optionsParams = options.map(option => {
+            option.type = 'number';
+            option.maxLength = 3;
+
+            return option;
+        });
+
+        return optionsParams;
     }
 
     /**

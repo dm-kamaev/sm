@@ -11,3 +11,12 @@ export type OptionModel = {
     name: string;
     displayName?: string;
 };
+
+export type InputOption = {
+    label: string;
+    name?: (string|number);
+    placeholder?: string;
+    value: (string|number|undefined);
+    type?: string;
+    maxLength?: number;
+};

@@ -2,7 +2,7 @@ const lodash = require('lodash').lodash;
 
 import {filterType} from '../constants/filterType';
 
-import {Option, OptionModel} from '../../common/types/filterPanel';
+import {Option, OptionModel, InputOption} from '../../common/types/filterPanel';
 
 import {bFilter} from '../../../blocks/n-common/l-search/b-filter/params';
 import {
@@ -38,14 +38,6 @@ type InitFilterData = {
 type OptionWithoutValue = {
     label: string;
     isChecked?: boolean;
-};
-
-type InputOption = {
-    label: string;
-    name?: (string|number);
-    placeholder?: string;
-    value: (string|number|undefined);
-    maxLength?: number;
 };
 
 type FilterParams = (
