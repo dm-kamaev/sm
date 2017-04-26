@@ -36,6 +36,7 @@ export type Columns = {
     egePassScore?: string;
     ege?: string;
     extraExam?: string;
+    programSite?: string;
 };
 
 

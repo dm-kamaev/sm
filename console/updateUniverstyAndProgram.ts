@@ -60,6 +60,7 @@ class UpdateUniversityProgram {
             commercialPlaces: 'Кол-во платных мест',
             cost: 'Стоимость в год',
             egePassScore: 'Проходной на бюджет',
+            programSite: 'ссылка на офиц сайт программы',
         };
 
         this.hashColumnEgeExam_ = {
@@ -70,19 +71,74 @@ class UpdateUniversityProgram {
         };
     }
 
-    public async updateProgramAndRelation() {
+    // public async updateOtherProgramAndRelation() {
+    //     try {
+    //         // const pathFile: string
+    //         //     = '../assets/universities/listProgramPart.xlsx';
+    //         logger.info('Reading file programs and universities...');
+    //         const pathFile: string =
+    //             '../assets/universities/listProgramAll.xlsx';
+    //         this.listProgram_ = await this.getJsonFromXlsx(pathFile);
+    //         const data = {
+    //             hashColumn: this.hashColumn_,
+    //             listProgram: this.listProgram_,
+    //         };
+    //         // console.log(this.listProgram_);
+    //         logger.info('Update cities...');
+    //         await new Cities(data).updateViaXlsx();
+
+    //         const universities = new Universities(data);
+    //         logger.info('Validate universities...');
+    //         await universities.validate();
+    //         logger.info('Update...');
+    //         await universities.updateViaXlsx();
+
+    //         const programs = new Programs(data);
+    //         logger.info('Validate programs...');
+    //         await programs.validate();
+    //         logger.info('Update...');
+    //         await programs.updateViaXlsx();
+
+    //         const entranceStatistics = new EntranceStatistics(data);
+    //         logger.info('Validate programs...');
+    //         await entranceStatistics.validate();
+    //         logger.info('Update...');
+    //         await entranceStatistics.updateViaXlsx();
+    //     } catch (error) {
+    //         console.log('ERROR=', error);
+    //     }
+    // }
+
+    public async topPrograms() {
+        logger.info('------Top programs-----');
+        // '../assets/universities/listProgramPart.xlsx'
+        const pathFile: string =
+            '../assets/universities/listProgramTop.xlsx';
+        await this.updateProgramAndRelation(pathFile);
+        // await this.updateEgeExam(pathFile, {
+        //     formatEgeExam: 'human'
+        // });
+    }
+
+    public async otherPrograms() {
+        logger.info('------Other programs-----');
+        // '../assets/universities/listProgramPart.xlsx'
+        const pathFile: string =
+            '../assets/universities/listProgramAll.xlsx';
+        await this.updateProgramAndRelation(pathFile);
+        await this.updateEgeExam(pathFile);
+    }
+
+
+    private async updateProgramAndRelation(pathFile: string) {
         try {
-            // const pathFile: string
-            //     = '../assets/universities/listProgramPart.xlsx';
             logger.info('Reading file programs and universities...');
-            const pathFile: string =
-                '../assets/universities/listProgramAll.xlsx';
             this.listProgram_ = await this.getJsonFromXlsx(pathFile);
+            this.filterEmptyRow();
             const data = {
                 hashColumn: this.hashColumn_,
                 listProgram: this.listProgram_,
             };
-            // console.log(this.listProgram_);
             logger.info('Update cities...');
             await new Cities(data).updateViaXlsx();
 
@@ -99,7 +155,7 @@ class UpdateUniversityProgram {
             await programs.updateViaXlsx();
 
             const entranceStatistics = new EntranceStatistics(data);
-            logger.info('Validate programs...');
+            logger.info('Validate entranceStatistics...');
             await entranceStatistics.validate();
             logger.info('Update...');
             await entranceStatistics.updateViaXlsx();
@@ -108,18 +164,17 @@ class UpdateUniversityProgram {
         }
     }
 
-    public async updateEgeExam() {
+
+    private async updateEgeExam(pathFile: string, option?) {
         try {
             logger.info('Reading file egeExam...');
-            const pathFile: string
-                // = '../assets/universities/listProgramPart.xlsx';
-                = '../assets/universities/listProgramAll.xlsx';
             this.listEgeExams_ = await this.getJsonFromXlsx(
                 pathFile, {sheet: 'поступи'}
             );
             const egeExams = new EgeExams({
                 hashColumn: this.hashColumnEgeExam_,
                 listProgram: this.listEgeExams_,
+                formatEgeExam_: option.formatEgeExam
             });
             logger.info('Validate...');
             await egeExams.validate();
@@ -130,12 +185,26 @@ class UpdateUniversityProgram {
         }
     }
 
+
     private async getJsonFromXlsx(
         pathFile: string,
         option?: any
     ): Promise<any[]> {
         const fullPath: string = path.join(__dirname, pathFile);
         return await xlsx.getJson(fullPath, option);
+    }
+
+    private filterEmptyRow() {
+        this.listProgram_ = this.listProgram_.filter(row => {
+            let count = 0;
+            const cellNames = Object.keys(row);
+            cellNames.forEach((cellName: string) => {
+                if (!row[cellName]) {
+                    count++;
+                }
+            });
+            return count === cellNames.length ? false : true;
+        });
     }
 
 };
@@ -145,8 +214,8 @@ commander
     .action(async() => {
         logger.info('-----START-----');
         const updateUniversityProgram = new UpdateUniversityProgram();
-        await updateUniversityProgram.updateProgramAndRelation();
-        await updateUniversityProgram.updateEgeExam();
+        await updateUniversityProgram.topPrograms();
+        await updateUniversityProgram.otherPrograms();
         logger.info('-----THE END-----');
     });
 

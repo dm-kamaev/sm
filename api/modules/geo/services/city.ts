@@ -170,6 +170,8 @@ class CityService {
     public cleanCityName(cityName: string): string {
       return cityName
                 .toString()
+                // latin "C" to russian "С"
+                .replace(/C/, 'С')
                 .replace(/[\w\d_!@#\$%^&*\(\)"':;|,\.\+<>?\[\]~{}\/\\]+/g, '')
                 .replace(/-+/g, '-')
                 .replace(/^-+/g, '')

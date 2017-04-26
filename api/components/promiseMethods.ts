@@ -2,7 +2,10 @@
 const logger
     = require('../../app/components/logger/logger.js').getLogger('app');
 
-export const promiseMethods: any = {};
+type PromiseMethods = {
+    queue?(createPromise: Function, data: any[]): Promise<any>
+};
+export const promiseMethods: PromiseMethods = {};
 
 promiseMethods.queue = function(
     createPromise: Function,

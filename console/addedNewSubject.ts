@@ -24,16 +24,20 @@ class AddedNewSubject {
               const query: string = `
               SELECT id FROM subject WHERE display_name='${displayName}'
               `;
-              const subject = await sequelize.query(
-                  query,
-                  option
-              );
-              if (!subject.id) {
-                  await services.subject.create({
-                    name: displayName.toLowerCase(),
-                    displayName: displayName,
-                    alias: services.urls.stringToURL(displayName),
-                  });
+              try {
+                const subject = await sequelize.query(
+                    query,
+                    option
+                );
+                if (!subject.length) {
+                    await services.subject.create({
+                      name: displayName.toLowerCase(),
+                      displayName: displayName,
+                      alias: services.urls.stringToURL(displayName),
+                    });
+                }
+              } catch (error) {
+                console.log('error=', error);
               }
           });
         } catch (error) {

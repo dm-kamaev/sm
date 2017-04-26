@@ -34,11 +34,14 @@ export class EgeExams extends BaseWorkWithProgram {
     private hashUniverProgram_: Hash<number>;
     private hashSubject_: Hash<number>;
     private hashProgramEge_: Hash<number>;
+    private formatEgeExam_: string; // 'default' or 'human'
 
     constructor(option) {
         super();
         this.hashColumn_ = option.hashColumn;
         this.listProgram_ = option.listProgram;
+        this.formatEgeExam_ = option.formatEgeExam_ || 'default';
+        // console.log('this.formatEgeExam_=', this.formatEgeExam_ );
     }
 
     public async validate() {
@@ -127,11 +130,11 @@ export class EgeExams extends BaseWorkWithProgram {
             let eges: string | string[] =
                 this.cleanWhiteSpace(program[egeColumn]);
             eges = this.getListEge(eges);
-            let extraExam: string | string[] =
-                this.cleanWhiteSpace(program[extraExamColumn]);
-            extraExam = this.getListExtraExam(extraExam);
+            // let extraExam: string | string[] =
+            //     this.cleanWhiteSpace(program[extraExamColumn]);
+            // extraExam = this.getListExtraExam(extraExam);
 
-            // if (eges.length === 1) {
+            // if (!eges.length) {
             //     console.log('+++++++++++++++++');
             //     console.log(eges);
             //     console.log(program);
@@ -143,8 +146,10 @@ export class EgeExams extends BaseWorkWithProgram {
             // console.log(program);
             // }
             const checkEvery = (subject: string) => {
+                // console.log('subject=', subject);
                 const key: string =
                     this.cleanWhiteSpace(subject).toLowerCase();
+                // console.log('key=', key);
                 if (!hashSubject[key]) {
                     notExistSubject[subject] = true;
                     errorText =
@@ -154,6 +159,7 @@ export class EgeExams extends BaseWorkWithProgram {
                         errorText += ` ${JSON.stringify(program, null, 2)},
                                        row=${i}`;
                         logger.critical(errorText);
+                        // throw new Error('STOP');
                     }
                 }
             };
@@ -248,9 +254,10 @@ export class EgeExams extends BaseWorkWithProgram {
             }
             return data;
         });
-        // console.log(
-        // 'egeExams=', util.inspect(egeExams, { depth: 4 }),
-        // egeExams.length);
+        console.log(
+            'egeExams=', util.inspect(egeExams, { depth: 4 }),
+            egeExams.length
+        );
         return egeExams;
     }
 
@@ -270,15 +277,13 @@ export class EgeExams extends BaseWorkWithProgram {
     }
 
     private async updateProgramEgeExam(egeExamsFromFile: EgeExamInfo[]) {
-        // const hashSubject = this.hashSubject_;
-        // const hashProgramEge = this.hashProgramEge_;
         const update = async(egeExam) => {
             const programId: number = egeExam.programId;
-            const egeInfo: EgeInfo | null = egeExam.egeInfo;
+            const egeInfo: EgeInfo[] | null = egeExam.egeInfo;
             if (!egeInfo) {
                 return;
             }
-            await promiseMethods.queue(ege => {
+            await promiseMethods.queue((ege: EgeInfo) => {
                 return this.createOrUpdateEge(ege, programId);
             }, egeInfo);
         };
@@ -342,6 +347,27 @@ export class EgeExams extends BaseWorkWithProgram {
     // 1 вариант ЕГЭМатематика-от27Обществознание-от42Русский язык-от36"'
     // return ['Математика', 'Обществознание', 'Русский']
     private getListEge(str: string): string[] {
+        if (this.formatEgeExam_ === 'human') {
+            return this.parseHumanFormatEge(str);
+        } else {
+            return this.parseEge(str);
+        }
+    }
+
+
+    // str ––
+    //'Экзамены в вузеПрофессиональное испытание-от70Творческое испытание-от70'
+    //return ['Профессиональное испытание', 'Творческое испытание']
+    private getListExtraExam(str: string): string[] {
+        if (this.formatEgeExam_ === 'human') {
+            return this.parseHumanFormatExtraExam(str);
+        } else {
+            return this.parseExtraExam(str);
+        }
+    }
+
+
+    private parseEge(str: string): string[] {
         str = str.replace(/\s+/g, ' ')
             .trim()
             .replace(/[\'\"]/g, '')
@@ -350,13 +376,11 @@ export class EgeExams extends BaseWorkWithProgram {
             .replace(/\,?ЕГЭ/g, '');
 
         return str.split(/-[а-я]*\d+/)
-            .filter(subject => subject.trim());
+                 .filter(subject => subject.trim());
     }
 
-    // str ––
-    //'Экзамены в вузеПрофессиональное испытание-от70Творческое испытание-от70'
-    //return ['Профессиональное испытание', 'Творческое испытание']
-    private getListExtraExam(str: string): string[] {
+
+    private parseExtraExam(str: string): string[] {
         str = str.replace(/[\'\"]/g, '')
             .trim()
             .replace(/\s+/g, ' ')
@@ -380,9 +404,18 @@ export class EgeExams extends BaseWorkWithProgram {
     }
 
     // str - "Обществознание, Иностранный язык, Русский язык: 43, 24, 40"
-    private parseHumanFormatListEge(str: string) {
+    private parseHumanFormatEge(str: string): string[] {
         str = str.replace(/\s+/g, ' ').trim();
         const [subjects] = str.split(':');
-        return subjects.split(',');
+        return subjects.replace(/,\s+\d+,.+/, '')
+                       .split(',')
+                       .map(el => el.trim())
+                       .filter(el => Boolean(el));
+    }
+
+    // str - "Обществознание, Иностранный язык, Русский язык: 43, 24, 40"
+    private parseHumanFormatExtraExam(str: string) {
+        str = str.replace(/:.+/g, '').replace(/\s+/g, ' ').trim();
+        return str.split(',');
     }
 };

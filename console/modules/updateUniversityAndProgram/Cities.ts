@@ -10,9 +10,7 @@ const sequelize = require('../../../app/components/db.js');
 import {
     service as cityService
 } from '../../../api/modules/geo/services/city';
-import {
-    CityInstance
-} from '../../../api/modules/geo/types/city';
+import {CityInstance} from '../../../api/modules/geo/types/city';
 import {Hash, Columns} from './types/updateUniverstyAndProgram';
 
 
@@ -30,6 +28,7 @@ export class Cities {
         let cityNames: string[] = this.extractCities(this.listProgram_);
         const hashCity = await this.getHashCity();
         cityNames = lodash.uniq(cityNames);
+        cityNames = cityNames.filter(cityName => cityName);
         // console.log(hashCity);
         // console.log('cityNames=', cityNames, cityNames.length);
         try {

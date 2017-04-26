@@ -24,12 +24,13 @@ import {
     Hash,
     IUniversities,
     IPrograms,
+    Columns
 } from './types/updateUniverstyAndProgram';
 import {promiseMethods} from '../../../api/components/promiseMethods';
 
 export class EntranceStatistics extends BaseWorkWithProgram {
     private listProgram_: any[];
-    private hashColumn_: Hash<string>;
+    private hashColumn_: Columns;
     private hashUniversities_: Hash<number>;
     private hashPrograms_: Hash<number>;
     private getHashProgramMajor_: Hash<number>;
@@ -133,33 +134,52 @@ export class EntranceStatistics extends BaseWorkWithProgram {
         statistics = this.listProgram_.map((
             program
         ): EntranceStatisticAttribute => {
-            const programName: string =
-                this.cleanWhiteSpace(program[programNameColumn]);
-            const universityName: string = program[universityNameColumn] || '';
-            const abbreviation: string =
-                program[universityAbbreviationColumn] || '';
-            const competition = this.float(program[competitionColumn]);
+            const programName: string = this.cleanWhiteSpace(
+                program[programNameColumn]
+            );
+            const universityName: string = this.cleanWhiteSpace(
+                program[universityNameColumn]
+            );
+            const abbreviation: string = this.cleanWhiteSpace(
+                program[universityAbbreviationColumn]
+            );
+            const competition = this.getCompetition(
+                program[competitionColumn]
+            );
             const budgetPlaces = this.int(program[budgetPlacesColumn]);
             const commercialPlaces = this.int(program[commercialPlacesColumn]);
             const cost = this.int(program[costColumn]);
             const egePassScore = this.int(program[egePassScoreColumn]);
-            const universityKey: string =
-                this.uniteAbbrevationAndName(abbreviation, universityName);
+            const universityKey: string = this.uniteAbbrevationAndName(
+                abbreviation,
+                universityName
+            );
             const universityId: number = hashUniversities[universityKey];
             const programKey: string = this.uniteUniversityIdAndProgramName(
                 universityId,
                 programName
             );
-
-            return {
+            const data: EntranceStatisticAttribute = {
                 programId: hashPrograms[programKey],
                 year: this.STATISTIC_YEAR,
-                competition,
-                budgetPlaces,
-                commercialPlaces,
-                cost,
-                egePassScore,
             };
+            if (competition) {
+                data.competition = competition;
+            }
+            if (budgetPlaces) {
+                data.budgetPlaces = budgetPlaces;
+            }
+            if (commercialPlaces) {
+                data.commercialPlaces = commercialPlaces;
+            }
+            if (cost) {
+                data.cost = cost;
+            }
+            if (cost) {
+                data.egePassScore = egePassScore;
+            }
+
+            return data;
         });
         // console.log('statistics=', statistics, statistics.length);
         return statistics;
@@ -173,7 +193,7 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             await entranceStatisticService.getAll();
         const hashStatisticDb: Hash<number> = {};
         statisticsDb.forEach((statistic: EntranceStatisticAttribute) => {
-            const {id, programId, year} = statistic;
+            const { id, programId, year } = statistic;
             const key: string
                 = this.uniteProgramIdAndYear(programId, year);
             hashStatisticDb[key] = id;
@@ -207,6 +227,20 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             return res;
         };
         await promiseMethods.queue(update, statisticsFromFile);
+    }
+
+    private getCompetition(str: string): number {
+        let res: number;
+        let num: number | string = this.float(str);
+        if (num > 1000) {
+            num = num.toString();
+            // convert 18266 to 18,266
+            res = Number(num.replace(/^(\d{2})/, '$1.'));
+            // console.log(str, res);
+        } else {
+            res = num;
+        }
+        return res;
     }
 
     private int(str: string): number {

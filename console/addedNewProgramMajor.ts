@@ -1,7 +1,7 @@
 'use strict';
 
 // author: dm-kamaev
-// node commander.js fixedEncodingProgramMajor
+// node commander.js addedNewProgramMajor
 // add new program major
 
 import * as commander from 'commander';
@@ -23,6 +23,7 @@ class AddedNewProgramMajor {
             'Техника и технологии наземного транспорта',
             'Фундаментальная медицина',
             'Экранные искусства',
+            'Науки о здоровье и профилактическая медицина',
         ];
         try {
           const option = {type: sequelize.QueryTypes.SELECT};

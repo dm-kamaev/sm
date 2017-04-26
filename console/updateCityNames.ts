@@ -16,7 +16,7 @@ class UpdateCityNames {
         logger.info('-----START-----');
         const cities: Object[] = [
             {oldName: 'москва', newName: 'Москва'},
-            {oldName: 'санкт-петербург', newName: 'Cанкт-Петербург'}
+            {oldName: 'санкт-петербург', newName: 'Санкт-Петербург'}
         ];
         try {
           const option = {type: sequelize.QueryTypes.SELECT};

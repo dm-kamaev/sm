@@ -14,6 +14,9 @@ import {
     ProgramAttribute
 } from '../../../api/modules/university/types/program';
 import {
+    ProgramMajorInstance,
+} from '../../../api/modules/university/models/ProgramMajor';
+import {
     service as programMajorService
 } from '../../../api/modules/university/services/programMajor';
 
@@ -29,6 +32,7 @@ export class Programs extends BaseWorkWithProgram {
     private hashUniversities_: Hash<number>;
     private getHashProgramMajor_: Hash<number>;
     private universitiesInstance: IUniversities;
+    private extractPrograms_: ProgramAttribute[];
 
     constructor(option?) {
         super();
@@ -41,14 +45,13 @@ export class Programs extends BaseWorkWithProgram {
     public async validate() {
         await this.validateParams();
         await this.validateProgramMajor();
-        this.validateDuplicateProgram(
-            this.extractPrograms()
-        );
+        this.extractPrograms_ = this.extractPrograms();
+        this.validateDuplicateProgram(this.extractPrograms_);
     }
 
     public async updateViaXlsx() {
         try {
-            const programs = this.extractPrograms();
+            const programs = this.extractPrograms_;
             await this.updatePrograms(programs);
             logger.info('Success programs updateViaXlsx');
         } catch (error) {
@@ -77,6 +80,7 @@ export class Programs extends BaseWorkWithProgram {
             this.getHashProgramMajor_ = await this.getHashProgramMajor();
         const programMajorColumn: string = this.hashColumn_.programMajor;
         let validateError: boolean = false;
+        // console.log('hashProgramMajor=', hashProgramMajor);
         this.listProgram_.forEach((program, i) => {
             const programMajor: string
                 = this.cleanWhiteSpace(program[programMajorColumn]);
@@ -163,9 +167,10 @@ export class Programs extends BaseWorkWithProgram {
 
 
     private async getHashProgramMajor(): Promise<Hash<number>> {
-        const programMajors = await programMajorService.getAll();
+        const programMajors: ProgramMajorInstance[] =
+            await programMajorService.getAll();
         const hashProgramMajor: Hash<number> = {};
-        programMajors.forEach((programMajor) => {
+        programMajors.forEach((programMajor: ProgramMajorInstance) => {
             const name: string = this.cleanWhiteSpace(programMajor.name);
             hashProgramMajor[name] = programMajor.id;
         });
@@ -183,7 +188,8 @@ export class Programs extends BaseWorkWithProgram {
             duration: durationColumn,
             descriptionProgram: descriptionProgramColumn,
             specialtyСodificator: specialtyСodificatorColumn,
-            programMajor: programMajorColumn
+            programMajor: programMajorColumn,
+            programSite: programSiteColumn,
         } = this.hashColumn_;
         const programs = this.listProgram_.map((program) => {
             const programName: string =
@@ -194,6 +200,8 @@ export class Programs extends BaseWorkWithProgram {
             const specialty: string
                 = program[specialtyСodificatorColumn] || '';
             const name: string = program[universityNameColumn] || '';
+            const programSite
+                = this.cleanWhiteSpace(program[programSiteColumn]);
             const abbreviation: string =
                 program[universityAbbreviationColumn] || '';
             const programMajor: string =
@@ -215,6 +223,9 @@ export class Programs extends BaseWorkWithProgram {
             const oksoCode: string = this.getOksoCode(specialty);
             if (oksoCode) {
                 data.oksoCode = oksoCode;
+            }
+            if (programSite) {
+                data.links = [programSite];
             }
             return data;
         });

@@ -6,7 +6,7 @@
 import * as lodash from 'lodash';
 const logger
     = require('../../../app/components/logger/logger.js').getLogger('app');
-// const sequelize = require('../../../app/components/db.js');
+import {promiseMethods} from '../../../api/components/promiseMethods';
 import {
     service as universityService
 } from '../../../api/modules/university/services/university';
@@ -184,7 +184,7 @@ export class Universities extends BaseWorkWithProgram {
             militaryDepartment: militaryDepartmentColumn,
             dormitory: dormitoryColumn,
         } = this.hashColumn_;
-        const universities = {};
+        const universities: Hash<UniversityAdminList> = {};
         this.listProgram_.forEach((program) => {
             let cityName: string = program[cityColumn] || '';
             cityName = cityService.cleanCityName(cityName);
@@ -222,7 +222,9 @@ export class Universities extends BaseWorkWithProgram {
     }
 
 
-    private async updateUniversities(universitiesFromFile) {
+    private async updateUniversities(
+        universitiesFromFile: Hash<UniversityAdminList>
+    ) {
         const universitiesDb: UniversityAdminList[] =
             await universityService.getAll();
         const hashUniverDb: Hash<number> = {};
@@ -233,16 +235,18 @@ export class Universities extends BaseWorkWithProgram {
             hashUniverDb[key] = university.id;
         });
 
-        let promiseUniversities;
         const universityNames: string[] = Object.keys(universitiesFromFile);
-        promiseUniversities = universityNames.map(async(key: string) => {
-            const universityId: number | null = hashUniverDb[key];
-            const data = universitiesFromFile[key];
+        const update = async(name: string) => {
+            const universityId: number | null = hashUniverDb[name];
+            const data = universitiesFromFile[name];
             let res = null;
             if (universityId) {
                 try {
-                    res =
-                        await universityService.update(universityId, data, []);
+                    res = await universityService.update(
+                        universityId,
+                        data,
+                        []
+                    );
                 } catch (error) {
                     console.log('Error: update =>', error);
                 }
@@ -254,9 +258,9 @@ export class Universities extends BaseWorkWithProgram {
                 }
             }
             return res;
-        });
+        };
         // console.log('hashUniverDb=', hashUniverDb);
-        await Promise.all(promiseUniversities);
+        await promiseMethods.queue(update, universityNames);
     }
 
 };
