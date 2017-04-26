@@ -16,7 +16,7 @@ import {cityService} from '../../geo/services/cityService';
 import {majorService} from '../services/majorService';
 
 import {informationView} from '../views/informationView';
-import {searchView} from '../views/searchView';
+import {programRenderSearchView} from '../views/ProgramRenderSearchView';
 
 const soy = require('../../../components/soy');
 const config = require('../../../config/config.json');
@@ -118,7 +118,7 @@ class UniversityRenderController extends Controller {
                 majorService.getPopular()
         ]);
 
-        const templateParams = searchView.render({
+        const templateParams = programRenderSearchView.render({
             data: {
                 resultsList,
                 cities,

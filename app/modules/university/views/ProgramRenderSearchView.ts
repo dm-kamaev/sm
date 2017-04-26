@@ -13,11 +13,11 @@ import {UniversitySubHeader} from './UniversitySubHeader';
 import {UniversityFooter} from './UniversityFooter';
 import {ProgramFilterPanel} from '../lib/ProgramFilterPanel';
 import {programsView} from './programsView';
+import {programSearchView} from './programSearchView';
 
 import {
     BackendData,
-    RenderParams,
-    QueryParams
+    RenderParams
 } from '../types/programSearchLayout';
 import {BackendProgramResults} from '../types/program';
 
@@ -39,7 +39,7 @@ type FilterPanelParams = {
     isDependentPanel?: boolean;
 };
 
-class SearchView extends LayoutView {
+class ProgramRenderSearchView extends LayoutView {
     protected params: lSearchUniversity.Params;
     protected api: {
         search: string;
@@ -78,24 +78,6 @@ class SearchView extends LayoutView {
         };
     }
 
-    public initSearchParams(
-            data: RenderParams): lSearchUniversity.Params.SearchParams {
-        const formatUtils = new FormatUtils();
-        const params = data.requestData.query;
-
-        return {
-            cities: formatUtils.transformToArray(params.cities),
-            egeSubjects: formatUtils.transformToArray(params.egeSubjects),
-            payType: formatUtils.transformToArray(params.payType),
-            egeResults: formatUtils.transformToArray(params.egeResults),
-            majors: formatUtils.transformToArray(params.majors),
-            maxPrice: formatUtils.transformToArray(params.maxPrice),
-            features: formatUtils.transformToArray(params.features),
-            page: params.page || 0,
-            sortType: params.sortType || 0
-        };
-    }
-
     public generateHeaderText(programCount: number, universityCount: number) {
         return [
             {
@@ -128,7 +110,7 @@ class SearchView extends LayoutView {
     protected setParams(params: RenderParams) {
         super.setParams(params);
 
-        const searchParams = this.initSearchParams(params);
+        const searchParams = this.initSearchParams_(params);
         this.setResultsList_(params.data.resultsList);
         this.setFilterPanels_(params.data, searchParams);
         this.setSearchParams_(searchParams);
@@ -228,6 +210,20 @@ class SearchView extends LayoutView {
     private setApi_() {
         this.params.data.api = this.api;
     }
+
+    private initSearchParams_(
+            renderParams: RenderParams
+    ): lSearchUniversity.Params.SearchParams {
+
+        const filtersData = {
+            egeExams: renderParams.data.egeExams
+        };
+
+        return programSearchView.initSearchParams(
+            renderParams.requestData.query,
+            filtersData
+        );
+    }
 }
 
-export const searchView = new SearchView();
+export const programRenderSearchView = new ProgramRenderSearchView();

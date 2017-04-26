@@ -32,7 +32,7 @@ type FilledInputOption = {
 type RangeOption = {
     name: string,
     label: string,
-    value: number,
+    value?: number,
     step?: number,
     minValue?: number,
     maxValue: number,
@@ -42,6 +42,7 @@ type RangeOption = {
         iconType?: string
     }
 };
+
 
 class ProgramFilterPanel extends FilterPanel {
     private filterCities_: bFilterExtended.Params;
@@ -349,7 +350,7 @@ class ProgramFilterPanel extends FilterPanel {
             checkedValues?: number[]
     ): RangeOption[] {
 
-        var options = rangeOptions;
+        const options = rangeOptions;
 
         if (checkedValues && checkedValues.length) {
             options[0].value = checkedValues[0];

@@ -3,7 +3,7 @@ import {LegacyController} from '../../../../api/components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {searchService} from '../services/searchService';
-import {QueryParams} from '../types/programSearchLayout';
+import {QueryParams} from '../types/programSearch';
 
 export class ProgramController extends Controller {
     /* tslint:disable:max-line-length */

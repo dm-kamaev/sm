@@ -1,6 +1,6 @@
 const logger = require('../../../components/logger/logger').getLogger('app');
 
-import {QueryParams} from '../types/programSearchLayout';
+import {QueryParams} from '../types/programSearch';
 
 import {Service, RequestParams} from '../../common/services/Service';
 import {SuggestProgram, BackendProgramResults} from '../types/program';

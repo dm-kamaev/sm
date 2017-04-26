@@ -73,6 +73,12 @@ abstract class FilterPanel {
      */
     protected filtersData: {[name: string]: (Option[]|number)};
 
+
+    /**
+     * Includes search params
+     */
+    protected searchParams: {[name: string]: (number[]|string[]|Object[])};
+
     /**
      * Params for filter by days of week
      */
@@ -124,7 +130,7 @@ abstract class FilterPanel {
     }
 
     public render(data: InitFiltersData): bFilterPanel.Params {
-        this.setData(data.filtersData);
+        this.setData(data);
 
         this.setButton(data.button);
         this.setConfig(data);
@@ -158,8 +164,9 @@ abstract class FilterPanel {
         };
     }
 
-    protected setData(filtersData: {[name: string]: (Option[]|number)}) {
-        this.filtersData = filtersData;
+    protected setData(data: InitFiltersData) {
+        this.filtersData = data.filtersData;
+        this.searchParams = data.searchParams;
     }
 
     protected initFilters(data: InitFiltersData) {
@@ -347,7 +354,7 @@ abstract class FilterPanel {
 
         const config = filterParams.config;
 
-        config.isShowed = this.isShowedFilter(
+        config.isShowed = config.isShowed || this.isShowedFilter(
             filterParams.data.options,
             checkedValues,
             filterParams.config.type
