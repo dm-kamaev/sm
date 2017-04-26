@@ -48,6 +48,8 @@
 .b-sm-filter_input_inline {
     .b-sm-filter__list-options {
         margin-right: 0;
+        margin-right: -12.5px;
+        margin-left: -12.5px;
     }
 
     .b-sm-filter__option {
@@ -55,14 +57,8 @@
         width: 50%;
         box-sizing: border-box;
         margin-top: 20px;
-
-        &:nth-child(odd) {
-            padding-right: 12.5px;
-        }
-
-        &:nth-child(even) {
-            padding-left: 12.5px;
-        }
+        padding-left: 12.5px;
+        padding-right: 12.5px;
 
         &:nth-child(1) {
             margin-top: 0;
