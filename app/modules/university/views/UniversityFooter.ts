@@ -15,19 +15,19 @@ class UniversityFooter extends Footer {
                 links: [{
                     content: 'Программы обучения',
                     url: 'http://mel.fm/'
-                }, {
+                }/*, {
                     content: 'ВУЗы',
                     url: 'http://mel.fm/'
                 }, {
                     content: 'ВУЗы по регионам',
                     url: 'http://mel.fm/'
-                }],
+                }*/],
                 linksConfig: {
                     theme: 'overcast',
                     size: 'xxl',
                     disableHover: true
                 }
-            }, {
+            }, /*{
                 type: 'smItemList',
                 links: [{
                     content: 'ВУЗы по профилям',
@@ -44,19 +44,19 @@ class UniversityFooter extends Footer {
                     size: 'xxl',
                     disableHover: true
                 }
-            }, {
+            },*/ {
                 label: 'Информация',
                 type: 'smHeadedList',
-                links: [{
+                links: [/*{
                     content: 'Статьи',
                     url: 'http://mel.fm/'
-                }, {
+                }, */{
                     content: 'Сотрудничество ',
                     url: 'mailto:vs@mel.fm'
-                }, {
+                }/*, {
                     content: 'Пользовательское соглашение',
                     url: 'http://mel.fm/terms-of-use'
-                }],
+                }*/],
                 linksConfig: {
                     theme: 'overcast',
                     size: 'xxl',
