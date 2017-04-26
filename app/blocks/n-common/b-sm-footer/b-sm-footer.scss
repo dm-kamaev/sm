@@ -180,6 +180,27 @@
     .b-sm-footer__section_columns {
         margin-bottom: 42px;
     }
+
+    /** Overcast them start */
+    .b-sm-footer_overcast-theme {
+        .b-sm-footer__column {
+            box-sizing: border-box;
+            width: 33.33%;
+            padding-right: 0;
+            padding-left: 35px;
+
+            &:first-child {
+                padding-right: 0;
+                padding-left: 0;
+            }
+
+            &:last-child {
+                padding-right: 0;
+                padding-left: 60px;
+            }
+        }
+    }
+    /** Overcast them end */
 }
 
 @include media-xs {
