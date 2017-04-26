@@ -151,6 +151,14 @@ gulp.task('fonts', function() {
         .pipe(gulp.dest(path.join(__dirname, SHARED_STATIC_DIR, '/fonts')));
 });
 
+gulp.task('manifest', function() {
+    return gulp.src(
+        path.join(__dirname, BLOCKS_DIR, '/n-clobl/i-layout/manifest.json')
+    ).pipe(gulp.dest(
+        path.join(__dirname, SHARED_STATIC_DIR)
+    ));
+});
+
 gulp.task('copySchools', function() {
     return gulp.src([
         path.join(__dirname, '/assets/schools/*.*')
@@ -207,6 +215,7 @@ const tasks = function(bool) {
         'images',
         'fonts',
         'styles',
+        'manifest',
         'copySchools',
         'copyCourses',
         'picturefill',
@@ -222,6 +231,7 @@ const tasks = function(bool) {
         'fonts',
         'styles',
         // 'lint-css',
+        'manifest',
         'copySchools',
         'copyCourses',
         'picturefill',
