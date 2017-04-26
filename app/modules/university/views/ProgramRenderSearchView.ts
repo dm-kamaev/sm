@@ -174,6 +174,9 @@ class ProgramRenderSearchView extends LayoutView {
         const filterPanel = new ProgramFilterPanel();
         this.params.data.filterPanel = filterPanel.render(mainPanelParams);
 
+        // searchParams.egeResults.push({id:37, value: 99});
+        // searchParams.maxPrice.push(300000);
+
         const dependentPanelParams: FilterPanelParams = {
             searchParams: searchParams,
             filtersData: {

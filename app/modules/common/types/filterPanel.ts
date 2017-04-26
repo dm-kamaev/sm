@@ -19,4 +19,5 @@ export type InputOption = {
     value: (string|number|undefined);
     type?: string;
     maxLength?: number;
+    isHidden?: boolean;
 };

@@ -13,7 +13,8 @@
  *         placeholder: ?string,
  *         value: ?string,
  *         maxLength: ?number,
- *         type: ?string
+ *         type: ?string,
+ *         isHidden: ?boolean
  *     }>
  * }} sm.lSearch.bFilter.TemplateInput.Params.Data
  */
@@ -57,7 +58,8 @@
  *             placeholder?: string,
  *             value?: (string|number),
  *             maxLength: ?number,
- *             type: ?string
+ *             type: ?string,
+ *             isHidden: ?boolean
  *         }>
  *     },
  *     config: {
@@ -76,6 +78,10 @@
 
     <div class="{call .rootClass/}__list-options">
         {for $i in range($params.data.options.length)}
+
+            {let $isHidden: $params.data.options[$i].isHidden or
+                ($i + 1 > $numberOptionsToShow ? true : false)/}
+
             {call .option}
                 {param params: [
                     'data': [
@@ -88,8 +94,8 @@
                         'type': $params.data.options[$i].type
                     ],
                     'config': [
-                        'hidden': $i + 1 > $numberOptionsToShow ? true : false,
-                        'hidable': $i + 1> $numberOptionsToShow ? true : false,
+                        'hidden': $isHidden,
+                        'hidable':  $isHidden,
                         'stylizationModifier': $params.config.stylizationModifier,
                         'theme': $params.config.theme ?
                             $params.config.theme : 'light',

@@ -77,7 +77,7 @@ abstract class FilterPanel {
     /**
      * Includes search params
      */
-    protected searchParams: {[name: string]: (number[]|string[]|Object[])};
+    protected searchParams: {[name: string]: any};
 
     /**
      * Params for filter by days of week

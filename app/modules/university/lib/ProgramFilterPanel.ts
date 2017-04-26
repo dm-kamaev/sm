@@ -71,6 +71,7 @@ class ProgramFilterPanel extends FilterPanel {
                 options: []
             },
             config: {
+                isShowed: true,
                 optionsToShow: 3,
                 showMoreButtonText: 'другие города'
             }
@@ -87,6 +88,7 @@ class ProgramFilterPanel extends FilterPanel {
             },
             config: {
                 isShowed: true,
+                optionsToShow: 3,
                 showMoreButtonText: 'все предметы'
             }
         };
@@ -125,7 +127,6 @@ class ProgramFilterPanel extends FilterPanel {
             },
             config: {
                 isShowed: true,
-                optionsToShow: 3,
                 inline: true
             }
         };
@@ -168,6 +169,7 @@ class ProgramFilterPanel extends FilterPanel {
                 options: []
             },
             config: {
+                isShowed: true,
                 optionsToShow: 3,
                 showMoreButtonText: 'выбрать специальность'
             }
@@ -194,6 +196,7 @@ class ProgramFilterPanel extends FilterPanel {
                 ]
             },
             config: {
+                isShowed: true,
                 optionsToShow: 3
             }
         };
@@ -291,9 +294,9 @@ class ProgramFilterPanel extends FilterPanel {
         const params = this.filterEgeResults_;
 
         let options = this.getInputOptions(optionModels);
-            options = this.updateInputsIsFilled_(options, filledOptions);
 
-        params.data.options = this.updateFilterEgeOptionsParams(options);
+        options = this.updateInputsIsFilled_(options, filledOptions);
+        params.data.options = this.updateFilterEgeOptionsParams_(options);
 
         this.setFilterInput(params, filledOptions);
 
@@ -362,27 +365,42 @@ class ProgramFilterPanel extends FilterPanel {
     /**
      * Sets inputs type and maxLenght
      */
-    private updateFilterEgeOptionsParams(
+    private updateFilterEgeOptionsParams_(
             options: InputOption[]
     ): InputOption[] {
 
-        const optionsParams = options.map(option => {
+        return options.map(option => {
             option.type = 'number';
             option.maxLength = 3;
+            option.isHidden = !this.isEgeResultOptionVisible_(option);
 
             return option;
         });
+    }
 
-        return optionsParams;
+    /**
+     * Returns true if egeSubject is checked and egeSubject
+     * corresponds to egeResult
+     */
+    private isEgeResultOptionVisible_(
+            option: InputOption
+    ): boolean {
+
+        const egeSubjects = this.searchParams.egeSubjects;
+
+        return egeSubjects.some(subjectId =>
+            option.name == subjectId
+        );
     }
 
     /**
      * Set options value if options are filled
      */
     private updateInputsIsFilled_(
-            options: Option[],
+            options: InputOption[],
             filledOptions?: FilledInputOption[]
-    ): Option[] {
+    ): InputOption[] {
+
         const filledData = filledOptions || [];
 
         return options.map(option => {

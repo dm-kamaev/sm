@@ -21,6 +21,7 @@ export namespace bFilterInput {
                 value: (string|number|undefined);
                 maxLength?: number;
                 type?: string;
+                isHidden?: boolean;
             }>
         }
 
