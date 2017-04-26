@@ -212,3 +212,12 @@
 {template .rootClass}
     b-filter-panel-group
 {/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass /}_state_collapsed
+{/template}

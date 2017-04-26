@@ -60,8 +60,24 @@
     .b-filter-panel__filter-wrap {
         border-bottom: none;
     }
+
+    .b-filter-panel__reset {
+        float: none;
+        text-align: center;
+    }
+}
+
+.b-filter-panel_dependent.b-filter-panel_neptune-theme {
+    .b-filter-panel__control-links {
+        display: none;
+    }
+
+    .b-filter-panel__button {
+        display: none;
+    }
 }
 /** Neptune theme end */
+
 
 @include media-m {
     .b-filter-panel_state_expanded {
@@ -134,13 +150,21 @@
         .b-filter-panel__reset {
             display: none;
         }
+
+        .b-filter-panel__button {
+            display: inline-block;
+        }
+
+        .b-filter-panel__control-links {
+            display: inline-block;
+        }
     }
     /** Neptune theme end */
 }
 
 @include media-s {
     /** Neptune theme start */
-    .b-filter-panel_neptune-theme {
+    .b-filter-panel_dependent.b-filter-panel_neptune-theme {
         .b-filter-panel__button {
             display: block;
 

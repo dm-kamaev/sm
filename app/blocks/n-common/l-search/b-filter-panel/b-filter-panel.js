@@ -70,7 +70,8 @@ goog.scope(function() {
         SUBMIT: goog.events.getUniqueId('submit'),
         COLLAPSE: View.Event.COLLAPSE,
         CHECK: goog.events.getUniqueId('check'),
-        UNCHECK: goog.events.getUniqueId('uncheck')
+        UNCHECK: goog.events.getUniqueId('uncheck'),
+        RESET: goog.events.getUniqueId('reset')
     };
 
 
@@ -223,6 +224,7 @@ goog.scope(function() {
      */
     FilterPanel.prototype.onResetClick_ = function() {
         this.reset();
+        this.dispatchEvent(FilterPanel.Event.RESET);
     };
 
 

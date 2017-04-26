@@ -237,6 +237,12 @@ class FilterPanelGroup extends Control {
             FilterPanel.Event.UNCHECK,
             this.onFilterUncheck_
         );
+
+        this.getHandler().listen(
+            this.mainFilterPanel_,
+            FilterPanel.Event.RESET,
+            this.onMainResetClick_
+        );
     }
 
     /**
@@ -263,6 +269,13 @@ class FilterPanelGroup extends Control {
         this.getView().hideControls();
 
         this.showFilters_();
+    }
+
+    /**
+     * @private
+     */
+    onMainResetClick_() {
+        this.dependentFilterPanel_.reset();
     }
 
     /**
