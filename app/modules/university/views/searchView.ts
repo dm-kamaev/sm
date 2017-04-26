@@ -118,7 +118,7 @@ class SearchView extends LayoutView {
                 text: {
                     nom: 'вузе',
                     gen: 'вузах',
-                    plu: 'вузов'
+                    plu: 'вузах'
                 },
                 select: 'number'
             },
