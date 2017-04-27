@@ -42,7 +42,7 @@ feedbackView.getLetterBody = function(params) {
     letterBody += `Тема: ${params.theme}${breakHtml}`;
 
     if (params.url) {
-        letterBody += `Url: ${params.url}${breakHtml}`;
+        letterBody += `<p>Url: ${params.url}</p>`;
     }
 
     letterBody += `Сообщение: ${params.text}`;
