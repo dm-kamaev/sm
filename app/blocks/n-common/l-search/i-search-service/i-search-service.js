@@ -9,7 +9,6 @@
 goog.provide('sm.lSearch.iSearchService.SearchService');
 
 goog.require('cl.iRequest.Request');
-goog.require('goog.Uri.QueryData');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 goog.require('sm.lSearch.iSearchService.ListDataLoadedEvent');
@@ -18,6 +17,7 @@ goog.require('sm.lSearch.iSearchService.MapDataLoadedEvent');
 
 goog.scope(function() {
     var Request = cl.iRequest.Request;
+    var QueryBuilder = goog.module.get('sm.iSmQueryBuilder.QueryBuilder');
     var ListDataLoadedEvent =
         sm.lSearch.iSearchService.ListDataLoadedEvent;
     var MapDataLoadedEvent =
@@ -71,6 +71,14 @@ goog.scope(function() {
          * @private
          */
         this.mapDataPromise_ = null;
+
+
+        /**
+         * Query builder instance
+         * @type {sm.iSmQueryBuilder.QueryBuilder}
+         * @private
+         */
+        this.queryBuilder_ = new QueryBuilder();
     };
     goog.inherits(
         sm.lSearch.iSearchService.SearchService, goog.events.EventTarget
@@ -321,9 +329,8 @@ goog.scope(function() {
             searchParams,
             this.isNotEmptyParameter_
         );
-        var queryData = goog.Uri.QueryData.createFromMap(notNullParams);
 
-        return queryData.toString();
+        return this.queryBuilder_.buildApiQuery(notNullParams);
     };
 
 
