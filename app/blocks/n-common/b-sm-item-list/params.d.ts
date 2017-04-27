@@ -1,3 +1,7 @@
+import {bSmInformationCard} from '../b-sm-information-card/params';
+import {bSmItem} from '../b-sm-item/params';
+import {bSmItemCompact} from '../b-sm-item/b-sm-item_compact/params';
+
 export namespace bSmItemList {
     /*
      * sm.bSmItemList.Template.Params
@@ -8,10 +12,14 @@ export namespace bSmItemList {
          * sm.bSmItemList.Params.Data
          */
         export interface Data {
-            items: Array<any>;
+            items: bSmInformationCard.Params.Data[] |
+                bSmItem.Params.Data[] |
+                bSmItemCompact.Params.Data[];
             itemType: string;
             countItemsPerPage?: number;
-            itemConfig?: any;
+            itemConfig?: bSmInformationCard.Params.Config |
+                bSmItem.Params.Config |
+                bSmItemCompact.Params.Config;
         }
 
         /*

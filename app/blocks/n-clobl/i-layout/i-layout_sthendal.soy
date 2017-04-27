@@ -16,7 +16,7 @@
  *     },
  *     subHeader: sm.bSmSubHeader.Template.Params,
  *     header: sm.bSmHeader.Template.Params,
- *     sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
+ *     sideMenu: sm.gModal.TemplateSideMenu.Params,
  *     user: {
  *         id: (number|undefined),
  *         firstName: (string|undefined),
@@ -26,7 +26,7 @@
  *         vk: (string|undefined),
  *         fb: (string|undefined)
  *     },
- *     footer: sm.bSmFooter.Template.Params.Data
+ *     footer: sm.bSmFooter.Template.Params
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
@@ -242,6 +242,7 @@
     {call .analytics data="all"/}
     {call .metrika data="all"/}
     {call .relap data="all" /}
+    {call .picturefill data="all" /}
 {/template}
 
 
@@ -326,6 +327,23 @@
 
 
 /**
+ * Polyfill for <picture> tag
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .picturefill autoescape="strict" kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/picturefill.min.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
  * @param params {{
  *     data: sm.iLayout.TemplateStendhal.Params.Data,
  *     config: sm.iLayout.TemplateStendhal.Params.Config
@@ -360,9 +378,7 @@
         {call .renderChildLayout}
             {param params: $params /}
             {param type: 'side-menu' /}
-            {param renderParams: [
-                'data': $params.data.sideMenu
-            ]/}
+            {param renderParams: $params.data.sideMenu /}
         {/call}
     </div>
 {/template}
@@ -422,7 +438,7 @@
  * Footer
  * @param params {
  *     data: {
- *         footer: sm.bSmFooter.Template.Params.Data
+ *         footer: sm.bSmFooter.Template.Params
  *     }
  * }
  * @protected
@@ -432,9 +448,7 @@
         {call .renderChildLayout}
             {param params: $params /}
             {param type: 'smFooter' /}
-            {param renderParams: [
-                'data': $params.data.footer
-            ]/}
+            {param renderParams: $params.data.footer /}
         {/call}
     </div>
 {/template}

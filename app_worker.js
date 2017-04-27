@@ -94,6 +94,7 @@ app.use('/universities/api', api.university.router);
 app.use('/:subdomain/api', api.user.router);
 app.use('/:subdomain/api', api.mail.router);
 app.use('/:subdomain/api', api.study.router);
+app.use('/:subdomain/api', api.geo.router);
 // generate token in cookies, all request not GET
 app.use(csrf);
 
@@ -103,7 +104,6 @@ app.use('/courses/', modules.course.router);
 app.use('/universities/', modules.university.router);
 
 app.use('/:subdomain/api', api.comment.router);
-app.use('/:subdomain/api', api.geo.router);
 app.use('/:subdomain/api', api.feedback.router);
 app.use('/:subdomain/api', api.favorite.router);
 app.use('/:subdomain/api', api.entity.router);
@@ -114,7 +114,8 @@ async(function() {
         'app/blocks/n-clobl/i-clobl-factory/i-clobl-factory_experimental.js',
         'build/compiledServerSoy/server.soy.concat.js',
         'node_modules/clobl/blocks/i-utils/i-utils.js',
-        'node_modules/clobl/blocks/i-utils-legacy/i-utils.js'
+        'node_modules/clobl/blocks/i-utils-legacy/i-utils.js',
+        'app/blocks/n-common/i-media/i-media.js'
     ];
     soy.loadFiles(
         paths.map(item => path.join(__dirname, item)),

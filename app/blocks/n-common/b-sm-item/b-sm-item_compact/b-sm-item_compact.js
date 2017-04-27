@@ -81,7 +81,7 @@ goog.scope(function() {
      * @private
      */
     Item.prototype.initAdditionalLink_ = function() {
-        var link = this.getView().getDom().additionalLink;
+        var link = this.getView().getDom().descriptionLink;
 
         if (link) {
             this.descriptionLink_ = this.decorateChild(

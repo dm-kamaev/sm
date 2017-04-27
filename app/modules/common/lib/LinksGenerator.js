@@ -86,7 +86,8 @@ class LinksGenerator {
         return {
             [entityType.SCHOOL]: `${protocol}://${config.schools.host}`,
             [entityType.COURSE]: `${protocol}://${config.courses.host}`,
-            [entityType.UNIVERSITY]: `${protocol}://${config.universities.host}`
+            [entityType.UNIVERSITY]: `${protocol}://` +
+                `${config.universities.host}/${entityType.UNIVERSITY}`
         };
     }
 

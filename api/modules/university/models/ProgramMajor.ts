@@ -3,15 +3,25 @@ const sequelize = require('../../../../app/components/db');
 
 import * as Sequelize from 'sequelize/v3';
 
-interface ProgramMajorAttribute {
+import {
+    CourseTypeAttribute,
+    CourseTypeInstance
+} from '../../course/types/courseType';
+
+export interface ProgramMajorAttribute {
     id?: number;
     name?: string;
+    courseTypes?: CourseTypeInstance[];
     createdAt?: string;
     updatedAt?: string;
 }
 
 export interface ProgramMajorInstance
-    extends Sequelize.Instance<ProgramMajorAttribute>, ProgramMajorAttribute {}
+    extends Sequelize.Instance<ProgramMajorAttribute>, ProgramMajorAttribute {
+
+    setCourseTypes: Sequelize.BelongsToManySetAssociationsMixin<
+        CourseTypeInstance, number, CourseTypeAttribute>;
+}
 
 interface ProgramMajorModel
     extends Sequelize.Model<ProgramMajorInstance, ProgramMajorAttribute> {}
@@ -40,6 +50,11 @@ const ProgramMajor: ProgramMajorModel = sequelize.define('ProgramMajor', {
             this.hasMany(models.Program, {
                 as: 'programs',
                 foreignKey: 'program_major_id'
+            });
+            this.belongsToMany(models.CourseType, {
+                through: 'program_major_course_type',
+                foreignKey: 'program_major_id',
+                as: 'courseTypes'
             });
         }
     }

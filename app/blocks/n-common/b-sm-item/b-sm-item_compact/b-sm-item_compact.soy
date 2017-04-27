@@ -13,11 +13,9 @@
  *     alias: ?string,
  *     score: ?number,
  *     description: (string|undefined),
- *     additionalLink: ({
+ *     descriptionLink: ({
  *         content: string,
- *         url: string,
- *         size: ?string,
- *         theme: ?string
+ *         url: string
  *     }|undefined),
  *     metro: ?Array<{
  *         id: number,
@@ -42,9 +40,7 @@
  *     customClasses: ?Array<string>,
  *     theme: ?string,
  *     nameLinkSize: ?string,
- *     nameLinkTheme: ?string,
- *     isNameNotLink: ?boolean,
- *     isDescriptionLink: ?string
+ *     nameLinkTheme: ?string
  * }} sm.bSmItem.TemplateCompact.Params.Config
  */
 
@@ -72,7 +68,10 @@
  *             bold: (string|undefined)
  *         },
  *         score: ?number,
- *         imageUrl: (string|undefined)
+ *         imageUrl: (string|undefined),
+ *         placeholder?: {
+ *             url: string;
+ *         }
  *     }
  * }}
  * @override
@@ -83,6 +82,17 @@
                 {call .rootClass/}__section_cover">
         {if $params.data.imageUrl}
             {call .image data="all" /}
+        {elseif $params.data.placeholder}
+            {call .image}
+                {param params: [
+                    'data': [
+                        'name': $params.data.name,
+                        'url': $params.data.url,
+                        'imageUrl': $params.data.placeholder.url
+                    ],
+                    'config': $params.config
+                ]/}
+            {/call}
         {else}
             {call .score data="all" /}
         {/if}
@@ -111,7 +121,7 @@
 
     <div class="{$classes}">
         {call .description data="all" /}
-        {call .additionalLink_ data="all" /}
+        {call .descriptionLink_ data="all" /}
     </div>
 {/template}
 
@@ -141,8 +151,8 @@
  *     },
  *     config: {
  *         nameLinkTheme: ?string,
- *         isNameNotLink: ?boolean,
- *         nameLinkSize: ?string
+ *         nameLinkSize: ?string,
+ *         isLinksInNewTab: ?boolean
  *     }
  * }}
  * @protected
@@ -171,27 +181,30 @@
             {call .rootClass/}__link-name
         {/let}
 
-        {if $url and not $params.config.isNameNotLink}
-            {call .renderChild}
-                {param params: [
-                    'type': 'smLink',
-                    'renderParams': [
-                        'data': [
-                            'id': $params.data.id,
-                            'content': $name,
-                            'url': $url
-                        ],
-                        'config': [
-                            'customClasses': [$customClasses],
-                            'theme': $params.config.nameLinkTheme ?: 'dark',
-                            'size': $params.config.nameLinkSize ?: 'xxl'
-                        ]
+        {let $target kind="html"}
+            {if $params.config.isLinksInNewTab}
+                _blank
+            {/if}
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'id': $params.data.id,
+                        'content': $name,
+                        'url': $url
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': $params.config.nameLinkTheme ?: 'dark',
+                        'size': $params.config.nameLinkSize ?: 'xxl',
+                        'target': $target
                     ]
-                ]/}
-            {/call}
-        {else}
-            {$name}
-        {/if}
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -234,6 +247,9 @@
  *         },
  *         imageUrl: (string|undefined),
  *         url: ?string
+ *     },
+ *     config: {
+ *         isLinksInNewTab: (boolean|undefined)
  *     }
  * }}
  * @protected
@@ -262,6 +278,9 @@
 
     <{$tag} class="{call .rootClass/}__cover-link"
         href="{$link}"
+        {if $params.config.isLinksInNewTab}
+            target="_blank"
+        {/if}
     >
         <img class="{call .rootClass/}__cover-image"
             src="{$params.data.imageUrl}"
@@ -361,23 +380,22 @@
 {/template}
 
 
+
 /**
  * Description
  * @param params {{
  *     data: {
- *         additionalLink: ({
+ *         descriptionLink: ({
  *             content: string,
- *             url: string,
- *             size: ?string,
- *             theme: ?string
+ *             url: string
  *         }|undefined)
  *     }
  * }}
  */
-{template .additionalLink_}
-    {if $params.data?.additionalLink}
+{template .descriptionLink_}
+    {if $params.data?.descriptionLink}
         {let $customClasses kind="html"}
-            {call .rootClass/}__additional-link
+            {call .rootClass/}__link-description
         {/let}
 
         <div class="{call .rootClass/}__description-link">{sp}
@@ -385,12 +403,9 @@
                 {param params: [
                     'type': 'smLink',
                     'renderParams': [
-                        'data': $params.data?.additionalLink,
+                        'data': $params.data?.descriptionLink,
                         'config': [
-                            'customClasses': [$customClasses],
-                            'size': $params.data?.additionalLink?.size,
-                            'theme': $params.data?.additionalLink?.theme ?:
-                                'default'
+                            'customClasses': [$customClasses]
                         ]
                     ]
                 ]/}

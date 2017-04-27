@@ -43,6 +43,7 @@ class ProgramCommentView {
     ): AdminProgramComment {
         const userData = programComment.userData;
         const renderedUser = userView.renderCommentUser(user);
+
         return {
             id: programComment.id,
             pros: programComment.pros,
@@ -54,7 +55,8 @@ class ProgramCommentView {
             yearGraduate: userData.yearGraduate,
             username: renderedUser.name,
             socialId: renderedUser.socialId,
-            socialType: renderedUser.socialType
+            socialType: renderedUser.socialType,
+            updatedAt: programComment.updatedAt
         };
     }
 

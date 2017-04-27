@@ -9,7 +9,7 @@ class InvalidEmail extends Exception {
     private name_: string;
 
     constructor() {
-        const message: string = `Email is invalid.`;
+        const message: string = `Некорректный email`;
 
         super(message);
 

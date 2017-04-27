@@ -864,13 +864,13 @@ goog.scope(function() {
      */
     Search.prototype.switchMode_ = function(mode) {
         switch (mode) {
-            case Search.Mode.DEFAULT:
-                this.switchToDefaultMode();
-                break;
+        case Search.Mode.DEFAULT:
+            this.switchToDefaultMode();
+            break;
 
-            case Search.Mode.SEARCH:
-                this.switchToSearchMode();
-                break;
+        case Search.Mode.SEARCH:
+            this.switchToSearchMode();
+            break;
         }
     };
 

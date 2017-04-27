@@ -6,24 +6,25 @@
  * @typedef {{
  *     user: ?{
  *         firstName: ?string,
- *         lastName: ?string
+ *         lastName: ?string,
+ *         photoUrl: ?string
  *     }
- * }} sm.bAuthorizationLink.Params.Data
+ * }} sm.bAuthorizationLink.Template.Params.Data
  */
 
 
- /**
+/**
  * @typedef {{
- *     hintOffset: string
- * }} sm.bAuthorizationLink.Params.Config
+ *     entityType?: string
+ * }} sm.bAuthorizationLink.Template.Params.Config
  */
 
 
 /**
  * Constructor
  * @param params {{
- *     data: sm.bAuthorizationLink.Params.Data,
- *     config: sm.bAuthorizationLink.Params.Config
+ *     data: sm.bAuthorizationLink.Template.Params.Data,
+ *     config: sm.bAuthorizationLink.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
  * @factory sm.iCloblFactory.FactoryStendhal
@@ -44,32 +45,184 @@
 /**
  * Body
  * @param params {{
- *     data: sm.bAuthorizationLink.Params.Data,
- *     config: sm.bAuthorizationLink.Params.Config
+ *     data: sm.bAuthorizationLink.Template.Params.Data,
+ *     config: sm.bAuthorizationLink.Template.Params.Config
  * }}
  * @override
  */
 {template .body}
-    {call .icon_/}
-    {call .tooltip_ data="all"/}
+    {call .login_ data="all" /}
+    {call .logout_ data="all" /}
 {/template}
 
 
 /**
- * authorization link icon
+ * Login
+ * @param params {{
+ *     data: sm.bAuthorizationLink.Template.Params.Data,
+ *     config: {
+ *         entityType?: string
+ *     }
+ * }}
  */
-{template .icon_ kind="html" private="true"}
+{template .login_}
+    <div class="{call .rootClass /}__login">
+        {let $linkText kind="html"}
+            {call .getText}
+                {param message: 'Войти'/}
+            {/call}
+        {/let}
+
+        {call .user_ data="all" /}
+
+        {call .link_ }
+            {param params: [
+                'data': [
+                    'content': $linkText
+                ],
+                'config': [
+                    'modifier': 'login'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Logout
+ * @param params {{
+ *     data: sm.bAuthorizationLink.Template.Params.Data,
+ *     config: {
+ *         entityType?: string
+ *     }
+ * }}
+ */
+{template .logout_}
+    <div class="{call .rootClass/}__logout">
+        {let $linkText kind="html"}
+            {call .getText}
+                {param message: 'Выход'/}
+            {/call}
+        {/let}
+
+        {call .user_ data="all"/}
+
+        {call .link_ }
+            {param params: [
+                'data': [
+                    'content': $linkText
+                ],
+                'config': [
+                    'modifier': 'logout'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * User template
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *             firstName: ?string,
+ *             lastName: ?string,
+ *             photoUrl: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .user_}
+    <div class="{call .rootClass /}__user">
+        {if $params?.data?.user?.firstName or $params?.data?.user?.lastName}
+            {call .userData_ data="all" /}
+        {else}
+            {call .userIcon_ /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * User data
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *             firstName: ?string,
+ *             lastName: ?string,
+ *             photoUrl: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .userData_}
+    <img class="{call .rootClass/}__user-photo"{sp}
+        alt="avatar"{sp}
+        src="{$params.data?.user?.photoUrl ?:
+            '/static/images/n-common/b-authorization-link/user.svg'}"
+        >
+
+    <div class="{call .rootClass/}__user-name">
+        {$params.data?.user?.firstName}
+    </div>
+{/template}
+
+
+/**
+ * Link
+ * @param params {{
+ *     data: sm.bSmLink.Template.Params.Data,
+ *     config: {
+ *         modifier: string,
+ *         entityType?: string
+ *     }
+ * }}
+ */
+{template .link_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link-{$params.config.modifier}
+    {/let}
+
+    {let $config: augmentMap(
+        [
+            'customClasses': [$customClasses],
+            'size': 'xxl'
+        ],
+        $params.config
+    ) /}
+
+    <div class="{call .rootClass/}__link{sp}
+                {call .rootClass/}__link_{$params.config.modifier}">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': $config
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * User icon
+ */
+{template .userIcon_ kind="html" private="true"}
     {let $customClasses kind="html"}
         {call .rootClass/}__icon
     {/let}
 
-    <div class="{call .rootClass/}__icon-wrap">
+    <div class="{call .rootClass/}__user-icon">
         {call .renderChild}
             {param params: [
                 'type': 'icon-svg',
                 'renderParams': [
                     'data': [
-                        'type': 'user'
+                        'type': 'person-black'
                     ],
                     'config': [
                         'customClasses': [$customClasses]
@@ -82,125 +235,14 @@
 
 
 /**
- * authorization link Tooltip
- * @param params {{
- *     config: {
- *         hintOffset: string
- *     }
- * }}
- */
-{template .tooltip_ kind="html" private="true"}
-    {let $tooltipData kind="html"}
-        {call .tooltipData_ data="all" /}
-    {/let}
-
-    {let $customClasses kind="html"}
-        {call .rootClass/}__hint
-    {/let}
-
-    {call .renderChild}
-        {param params: [
-            'type': 'hint',
-            'renderParams': [
-                'data': $tooltipData,
-                'config': [
-                    'offset': $params.config.hintOffset ?: 'l',
-                    'topOffset': 'l',
-                    'contentAlign': 'middle',
-                    'customClasses': [$customClasses],
-                    'noPadding': true,
-                    'theme': 'straight-arrow'
-                ]
-            ]
-        ]/}
-    {/call}
-{/template}
-
-
-/**
- * tooltip Data
- */
-{template .tooltipData_ kind="html" private="true"}
-    <div class="{call .rootClass/}__hint-content
-                {sp}{call .rootClass/}__hint-content_logged-out">
-        {call .tooltipLogin_ /}
-    </div>
-
-    <div class="{call .rootClass/}__hint-content
-                {sp}{call .rootClass/}__hint-content_logged">
-        {call .tooltipLogout_ data="all" /}
-    </div>
-{/template}
-
-
-/**
- * tooltip Login
- */
-{template .tooltipLogin_ kind="html" private="true"}
-    {let $customClasses kind="html"}
-        {call .rootClass/}__link{sp}
-        {call .rootClass/}__link_login
-    {/let}
-
-    {call sm.bLink.Template.base}
-        {param params:[
-            'data': [
-                'name': 'Войти'
-            ],
-            'config': [
-                'customClasses': $customClasses
-            ]
-        ]/}
-    {/call}
-{/template}
-
-
-/**
- * tooltip Logout
- */
-{template .tooltipLogout_ kind="html" private="true"}
-    {let $customClasses kind="html"}
-        {call .rootClass/}__link{sp}
-        {call .rootClass/}__link_logout
-    {/let}
-
-    <div class="{call .rootClass/}__name">
-        {call .userName_ data="all" /}
-    </div>
-
-    {call sm.bLink.Template.base}
-        {param params:[
-            'data': [
-                'name': 'Выйти'
-            ],
-            'config': [
-                'customClasses': $customClasses
-            ]
-        ]/}
-    {/call}
-{/template}
-
-
-/**
- * userName
- * @param? params {{
- *     data: sm.bAuthorizationLink.Params.Data
- * }}
- */
-{template .userName_ kind="html" private="true"}
-    {if $params.data?.user?.firstName}
-        {$params.data.user.firstName}{sp}
-    {/if}
-    {if $params.data?.user?.lastName}
-        {$params.data.user.lastName}
-    {/if}
-{/template}
-
-
-/**
  * Css classes
  * @param? params {{
- *     data: sm.bAuthorizationLink.Params.Data
+ *     data: {
+ *         user: ?{
+ *             firstName: ?string,
+ *             lastName: ?string
+ *         }
+ *     }
  * }}
  * @override
  */

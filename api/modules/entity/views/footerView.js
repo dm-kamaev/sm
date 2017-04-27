@@ -14,9 +14,11 @@ footerView.render = function(seoLinks) {
     let year = new Date().getFullYear();
 
     return {
-        copyright: `© Маркет Мела ${year}`,
-        contactLinks: footerView.contactLinks(),
-        seoLinks: seoLinks
+        data: {
+            copyright: `© Маркет Мела ${year}`,
+            contactLinks: footerView.contactLinks(),
+            seoLinks: seoLinks
+        }
     };
 };
 

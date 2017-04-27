@@ -22,8 +22,7 @@
  *         name: string
  *     }>,
  *     category: string,
- *     url: ?string,
- *     buttonLink: ?sm.bSmButtonLink.Template.Params
+ *     url: ?string
  * }} sm.bSmItem.Template.Params.Data
  */
 
@@ -89,7 +88,6 @@
     {/if}
 
     {call .sectionGroupInfo data="all" /}
-    {call .buttonLink_ data="all" /}
 {/template}
 
 
@@ -376,7 +374,7 @@
         <div class="{call .rootClass/}__description">
             {if $params.config.isDescriptionLink}
                 {let $customClasses kind="html"}
-                    {call .rootClass /}__description-link
+                    {call .rootClass /}__description_link
                 {/let}
                 {call .renderChild}
                     {param params: [
@@ -390,7 +388,8 @@
                             'config': [
                                 'customClasses': [$customClasses],
                                 'theme': 'dark',
-                                'size': '6xl'
+                                'size': '6xl',
+                                'target': '_blank'
                             ]
                         ]
                     ]/}
@@ -550,28 +549,6 @@
             ]/}
         {/call}
     </div>
-{/template}
-
-
-/**
- * Button link
- * @param params {{
- *     data: {
- *         buttonLink:
- *     }
- * }}
- */
-{template .buttonLink_}
-    {if $params.data.buttonLink}
-        <div class="{call .rootClass/}__button-link">
-            {call .renderChild}
-                {param params: [
-                    'type': 'smButtonLink',
-                    'renderParams': $params.data.buttonLink
-                ]/}
-            {/call}
-        </div>
-    {/if}
 {/template}
 
 

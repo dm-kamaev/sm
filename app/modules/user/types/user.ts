@@ -20,4 +20,5 @@ export type BackendUser = {
 export interface UserData {
     firstName: string;
     lastName: string;
-}
+    photoUrl?: string;
+};

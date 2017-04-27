@@ -229,7 +229,7 @@ goog.scope(function() {
      */
     SubscribeBoard.prototype.onError_ = function(error) {
         switch (error.status) {
-            case 400:
+            case 409:
                 this.getView().showMessage(SubscribeBoard.Message.EMAIL_EXIST);
                 break;
             case 422:

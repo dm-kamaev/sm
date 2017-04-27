@@ -1,15 +1,24 @@
-var Sequelize = require('sequelize');
+const DataType = require('sequelize');
+import * as Sequelize from 'sequelize/v3';
 
-var db = require('../../../../app/components/db');
+const db = require('../../../../app/components/db');
 
-var CourseType = db.define('CourseType', {
+import {
+    CourseTypeAttribute,
+    CourseTypeInstance
+} from '../types/courseType';
+
+interface CourseTypeModel extends
+        Sequelize.Model<CourseTypeInstance, CourseTypeAttribute> {}
+
+const CourseType: CourseTypeModel = db.define('CourseType', {
     name: {
-        type: Sequelize.STRING,
+        type: DataType.STRING,
         allowNull: false
     },
-    popularity: Sequelize.INTEGER,
+    popularity: DataType.INTEGER,
     categoryId: {
-        type: Sequelize.INTEGER,
+        type: DataType.INTEGER,
         field: 'category_id'
     }
 }, {
@@ -31,4 +40,4 @@ var CourseType = db.define('CourseType', {
     }
 });
 
-module.exports = CourseType;
+export {CourseType as Model};

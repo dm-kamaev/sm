@@ -27,6 +27,7 @@ export interface DefaultRender {
     id: number;
     firstName: string;
     lastName: string;
+    photoUrl?: string;
 }
 
 export interface SchoolRender extends DefaultRender {

@@ -13,13 +13,19 @@ export namespace bSmHeader {
                 type: string,
                 isSelected: boolean
             }>,
-            contacts?: any
+            contacts?: any,
+            user?: {
+                firstName: string,
+                lastName: string,
+                photoUrl?: string
+            }
         }
 
         /*
          * sm.bSmHeader.Params.Config
          */
         export interface Config {
+            entityType?: string,
             theme?: string,
             customClasses?: Array<string>
         }

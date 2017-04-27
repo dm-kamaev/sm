@@ -68,8 +68,8 @@
     letter-spacing: 0;
     text-transform: none;
 
-    color: #007aff;
-    border: solid 2px #007aff;
+    color: #0777e8;
+    border: solid 2px #0777e8;
 
     font-weight: 600;
     line-height: 25px;
@@ -84,15 +84,15 @@
     text-transform: none;
 
     color: #fff;
-    border: solid 2px #007aff;
-    background-color: #007aff;
+    border: solid 2px #0777e8;
+    background-color: #0777e8;
 
     font-family: inherit;
     font-weight: 600;
     line-height: 25px;
 
     &.g-button_hoverable:hover {
-        background-color: #007aff;
+        background-color: #0777e8;
     }
 }
 

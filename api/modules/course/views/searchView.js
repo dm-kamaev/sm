@@ -12,7 +12,9 @@ const courseView = require('./courseView'),
     searchViewEntity = require('../../entity/views/searchView'),
     footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
-    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+    sideMenuView = require(
+        '../../../../app/modules/common/views/sideMenuView'
+    ).sideMenuView;
 
 const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
@@ -126,15 +128,18 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
-        header: headerView.render(data.config, data.entityType),
-        sideMenu: sideMenuView.render(data.config, data.entityType),
+        header: headerView.render(data.config, data.entityType, user),
+        sideMenu: sideMenuView.render({
+            config: data.config,
+            user: user,
+            entityType: data.entityType
+        }),
         subHeader: searchView.subheader({
             listLinks: courseCategoryView.listLinks(
                 data.categories,
                 data.categoryAliases
             ),
-            favoriteEntities: favoriteView.list(data.favorites),
-            user: user
+            favoriteEntities: favoriteView.list(data.favorites)
         }),
         user: user,
         authSocialLinks: data.authSocialLinks,
@@ -268,15 +273,13 @@ searchView.header = function(entityType, links) {
 searchView.subheader = function(data) {
     let subheader = new Subheader();
 
-    subheader.init({
+    return subheader.render({
         isLogoRedirect: true,
         listLinks: data.listLinks,
         isSearchRedirect: data.pageAlias != COMMON_PAGE_ALIAS,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-    return subheader.getParams();
 };
 
 module.exports = searchView;

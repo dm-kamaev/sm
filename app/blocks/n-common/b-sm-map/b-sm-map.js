@@ -539,17 +539,17 @@ goog.scope(function() {
         var scale;
 
         switch (positionType) {
-            case YMap.PositionType.METRO:
-                scale = YMap.Scale.METRO;
-                break;
-            case YMap.PositionType.CITY_CENTER:
-                scale = YMap.Scale.CITY_CENTER;
-                break;
-            case YMap.PositionType.DISTRICT:
-                scale = YMap.Scale.DISTRICT;
-                break;
-            default:
-                scale = YMap.Scale.DEFAULT;
+        case YMap.PositionType.METRO:
+            scale = YMap.Scale.METRO;
+            break;
+        case YMap.PositionType.CITY_CENTER:
+            scale = YMap.Scale.CITY_CENTER;
+            break;
+        case YMap.PositionType.DISTRICT:
+            scale = YMap.Scale.DISTRICT;
+            break;
+        default:
+            scale = YMap.Scale.DEFAULT;
         }
 
         return scale;

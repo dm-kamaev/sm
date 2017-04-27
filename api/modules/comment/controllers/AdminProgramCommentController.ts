@@ -69,27 +69,29 @@ class AdminProgramCommentController extends Controller {
      * @apiGroup AdminProgramComment
      * @apiName GetAdminProgramComments
      *
-     * @apiSuccess ProgramComment            {Object[]}
+     * @apiSuccess ProgramComment              {Object[]}
      *     Requested university comment object
-     * @apiSuccess ProgramComment.socialId   {Number}
+     * @apiSuccess ProgramComment.socialId     {Number}
      *     Id in social network of registered user, who placed comment
-     * @apiSuccess ProgramComment.socialType {String="vk", "fb"}
+     * @apiSuccess ProgramComment.name         {String}
+     *     Name of user, who placed comment
+     * @apiSuccess ProgramComment.socialType   {String="vk", "fb"}
      *     Type of social network of registered user, who placed comment
-     * @apiSuccess ProgramComment.userType   {String="Student", "Graduate"}
+     * @apiSuccess ProgramComment.userType     {String="Student", "Graduate"}
      *     Selected type of user
      * @apiSuccess ProgramComment.grade        {Number}
      *     Current grade of user, if it is student
      * @apiSuccess ProgramComment.yearGraduate {Number}
      *    Graduation year of user if it already graduate university
-     * @apiSuccess ProgramComment.pros       {String}
+     * @apiSuccess ProgramComment.pros         {String}
      *     Pros of study in university
-     * @apiSuccess ProgramComment.cons       {String}
+     * @apiSuccess ProgramComment.cons         {String}
      *     Cons of study in university
-     * @apiSuccess ProgramComment.advice     {String}
+     * @apiSuccess ProgramComment.advice       {String}
      *     Advice for enrollees
-     * @apiSuccess ProgramComment.totalScore {Number}
+     * @apiSuccess ProgramComment.totalScore   {Number}
      *     Total score of comment, calculated from score
-     * @apiSuccess ProgramComment.updatedAt  {Date}
+     * @apiSuccess ProgramComment.updatedAt    {Date}
      *     Date of creation of updating of comment
      *
      * @apiSuccessExample Success-Response:
@@ -97,6 +99,7 @@ class AdminProgramCommentController extends Controller {
      *     [{
      *         "socialId": 234561,
      *         "socialType": "vk",
+     *         "name": "Ольга",
      *         "userType": "Student",
      *         "grade": 4,
      *         "yearGraduate": 2016,
@@ -111,7 +114,8 @@ class AdminProgramCommentController extends Controller {
     public async actionList(actionContext: any, programId: string) {
         const comments =
                 await programCommentService.getAllByProgramIdWithFullData(
-                    +programId
+                    +programId,
+                    {filterEmptyComments: true}
                 ),
             userId = comments.map(comment => comment.userData.userId),
             users = await userService.getUserByIds(userId);
@@ -125,27 +129,29 @@ class AdminProgramCommentController extends Controller {
      * @apiGroup AdminProgramComment
      * @apiName GetAdminProgramComment
      *
-     * @apiSuccess ProgramComment            {Object}
+     * @apiSuccess ProgramComment              {Object}
      *     Requested university comment object
-     * @apiSuccess ProgramComment.socialId   {Number}
+     * @apiSuccess ProgramComment.socialId     {Number}
      *     Id in social network of registered user, who placed comment
-     * @apiSuccess ProgramComment.socialType {String="vk", "fb"}
+     * @apiSuccess ProgramComment.socialType   {String="vk", "fb"}
      *     Type of social network of registered user, who placed comment
-     * @apiSuccess ProgramComment.userType   {String="Student", "Graduate"}
+     * @apiSuccess ProgramComment.name         {String}
+     *     Name of user, who placed comment
+     * @apiSuccess ProgramComment.userType     {String="Student", "Graduate"}
      *     Selected type of user
      * @apiSuccess ProgramComment.grade        {Number}
      *     Current grade of user, if it is student
      * @apiSuccess ProgramComment.yearGraduate {Number}
      *    Graduation year of user if it already graduate university
-     * @apiSuccess ProgramComment.pros       {String}
+     * @apiSuccess ProgramComment.pros         {String}
      *     Pros of study in university
-     * @apiSuccess ProgramComment.cons       {String}
+     * @apiSuccess ProgramComment.cons         {String}
      *     Cons of study in university
-     * @apiSuccess ProgramComment.advice     {String}
+     * @apiSuccess ProgramComment.advice       {String}
      *     Advice for enrollees
-     * @apiSuccess ProgramComment.totalScore {Number}
+     * @apiSuccess ProgramComment.totalScore   {Number}
      *     Total score of comment, calculated from score
-     * @apiSuccess ProgramComment.updatedAt  {Date}
+     * @apiSuccess ProgramComment.updatedAt    {Date}
      *     Date of creation of updating of comment
      *
      * @apiSuccessExample Success-Response:
@@ -153,6 +159,7 @@ class AdminProgramCommentController extends Controller {
      *     {
      *         "socialId": 234561,
      *         "socialType": "vk",
+     *         "name": "Елена",
      *         "userType": "Student",
      *         "grade": 4,
      *         "yearGraduate": 2016,

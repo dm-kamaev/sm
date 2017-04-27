@@ -64,26 +64,17 @@ class UniversityPageService {
         if (duplicate) {
             throw new UniversityAliasDuplicateException(alias, duplicate);
         }
-        return sequelize.transaction(function(t: Sequelize.Transaction) {
-            return pageServices.create({
-                entityId: universityId,
-                entityType: UNIVERSITY,
-                alias,
-                views: 0,
-            }, {transaction: t}).then(function(page) {
-                const pageId: number = page.id;
-                return self.create({
-                    universityId,
-                    pageId
-                }, {transaction: t});
+        await pageServices.create({
+            entityId: universityId,
+            entityType: UNIVERSITY,
+            alias,
+            views: 0
+        }).then(function(page) {
+            const pageId: number = page.id;
+            return self.create({
+                universityId,
+                pageId
             });
-        }).then(function(universityPage: UniversityPageInstance) {
-          // logger.info('Created university page:');
-          // logger.info(JSON.stringify(universityPage, null, 2));
-        }).catch(async function(err): Promise<void> {
-          await universityService.delete(universityId);
-          logger.critical(JSON.stringify(err, null, 2));
-          throw new Error(err);
         });
     }
 

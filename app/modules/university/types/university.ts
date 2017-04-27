@@ -4,6 +4,11 @@ interface City {
     regionId: number;
 }
 
+interface Profile {
+    id: number;
+    name: string;
+}
+
 export interface BackendUniversity {
     id: number;
     name: string;
@@ -16,6 +21,7 @@ export interface BackendUniversity {
     dormitory: boolean;
     cityId: number;
     city: City;
+    profiles: Array<Profile>;
     created_at: Date;
     updated_at: Date;
 }

@@ -1,3 +1,5 @@
+import {ProgramMetaNotFound} from './ProgramMetaNotFound';
+import {ProgramNotFound} from './ProgramNotFound';
 import {
   UniversityNameIsEmptyException
 } from './UniversityNameIsEmptyException';
@@ -10,7 +12,9 @@ import {
 
 
 export {
-  UniversityNameIsEmptyException,
-  UniversityAliasDuplicateException,
-  UniversityAliasNotFoundException,
+    ProgramMetaNotFound,
+    ProgramNotFound,
+    UniversityNameIsEmptyException,
+    UniversityAliasDuplicateException,
+    UniversityAliasNotFoundException
 };

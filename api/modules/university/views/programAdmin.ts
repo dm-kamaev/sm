@@ -1,12 +1,13 @@
 import {
     ProgramInstance,
-    ProgramAdmin
+    ProgramAdmin,
+    ProgramUrl
 } from '../types/program';
 
 import * as lodash from 'lodash';
 
 class ProgramAdminView {
-    public render(program: ProgramInstance): ProgramAdmin {
+    public render(program: ProgramInstance, url: string): ProgramAdmin {
         const lastEntranceStatistic = lodash.maxBy(
             program.entranceStatistics,
             entranceStatistic => entranceStatistic.year
@@ -17,12 +18,20 @@ class ProgramAdminView {
             commentCount: program.commentGroup.programComments.length,
             passScore: lastEntranceStatistic &&
                 lastEntranceStatistic.egePassScore,
+            programUrl: url,
             updatedAt: program.updatedAt
         };
     }
 
-    public renderList(programs: Array<ProgramInstance>): Array<ProgramAdmin> {
-        return programs.map(this.render);
+    public renderList(
+                programs: Array<ProgramInstance>, programUrls: Array<ProgramUrl>
+    ): Array<ProgramAdmin> {
+        return programs.map(program => {
+            const url = programUrls
+                .find(programUrl => programUrl.id === program.id)
+                .url;
+            return this.render(program, url);
+        });
     }
 }
 

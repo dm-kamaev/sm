@@ -4,7 +4,9 @@ const userView = require('../../user/views/user').userView;
 const favoriteView = require('../../favorite/views/favoriteView');
 const footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
-    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+    sideMenuView = require(
+        '../../../../app/modules/common/views/sideMenuView'
+    ).sideMenuView;
 
 const popularView = require('../../../../app/modules/common/views/popularView');
 
@@ -39,11 +41,14 @@ view.render = function(data) {
         },
         subHeader: view.subheader({
             favoriteEntities: favoriteView.list(data.favorites),
+            entityType: data.entityType
+        }),
+        header: headerView.render(data.config, data.entityType, user),
+        sideMenu: sideMenuView.render({
+            config: data.config,
             user: user,
             entityType: data.entityType
         }),
-        header: headerView.render(data.config, data.entityType),
-        sideMenu: sideMenuView.render(data.config, data.entityType),
         user: user,
         authSocialLinks: data.authSocialLinks,
         error: {
@@ -74,14 +79,12 @@ view.subheader = function(data) {
 
     let subheader = new Subheader[data.entityType]();
 
-    subheader.init({
+    return subheader.render({
         isLogoRedirect: true,
         isSearchRedirect: true,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-    return subheader.getParams();
 };
 
 

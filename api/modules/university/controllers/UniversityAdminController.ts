@@ -5,7 +5,7 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 import {UniversityAttribute} from '../models/University';
 
 import {service as universityService} from '../services/university';
-const imageService = require('../../entity/services/image');
+const imageService = require('../../entity/services/image.js');
 import {universityAdminView} from '../views/universityAdmin';
 
 import {UniversityImageSize} from '../constants/UniversityImageSize';
@@ -217,7 +217,7 @@ class UniversityAdminController extends Controller {
      *        "cityId": 3,
      *        "updated_at": "2017-03-20T13:51:53.214Z",
      *        "created_at": "2017-03-20T13:51:53.214Z",
-     *        "imageUrl": null,
+     *        "imageUrl": "http://image.www56.lan/i/p/pEhnXoNLTW/{width}.jpg",
      *        "relapImageUrl": null
      *    }
      * @apiError (422) UniversityNameIsEmpty    University's name is empty.
@@ -241,7 +241,7 @@ class UniversityAdminController extends Controller {
         if (image) {
             const imageUrls = await imageService.upload(
                 [image],
-                [UniversityImageSize.DEFAULT]
+                [UniversityImageSize.DEFAULT, UniversityImageSize.MEDIUM]
             );
             universityData.imageUrl = imageUrls[0];
         }
@@ -252,7 +252,8 @@ class UniversityAdminController extends Controller {
             );
             universityData.relapImageUrl = relapImageUrls[0];
         }
-        const profileIds: Array<number> = body.profiles;
+        const profileIds: number[] = body.profiles;
+
         return universityService.create(universityData, profileIds);
     }
 
@@ -316,7 +317,7 @@ class UniversityAdminController extends Controller {
      *        "city_id": 3,
      *        "created_at": "2017-03-21T08:04:15.095Z",
      *        "updated_at": "2017-03-21T08:05:54.673Z",
-     *        "imageUrl": null,
+     *        "imageUrl": "http://image.www56.lan/i/p/pEhnXoNLTW/{width}.jpg",
      *        "relapImageUrl": null,
      *        "militaryDepartment": true
      *    }
@@ -342,7 +343,7 @@ class UniversityAdminController extends Controller {
         if (image) {
             const imageUrls = await imageService.upload(
                 [image],
-                [UniversityImageSize.DEFAULT]
+                [UniversityImageSize.DEFAULT, UniversityImageSize.MEDIUM]
             );
             universityData.imageUrl = imageUrls[0];
         }
