@@ -284,6 +284,14 @@
         .b-sm-subheader__logo-img {
             width: 272px;
         }
+
+        .b-sm-subheader__search-links_row {
+            display: none;
+        }
+
+        .b-sm-subheader__search-links_dropdown {
+            display: inline-block;
+        }
     }
     /* end university */
 }
@@ -318,18 +326,6 @@
     .b-sm-subheader__logo {
         text-align: left;
     }
-
-    /* type entity university */
-    .b-sm-subheader_entity-type_university {
-        .b-sm-subheader__search-links_row {
-            display: none;
-        }
-
-        .b-sm-subheader__search-links_dropdown {
-            display: inline-block;
-        }
-    }
-    /* end university */
 }
 
 @include media-m {
