@@ -9,6 +9,7 @@ const services = require('../../../../app/components/services').all,
     sequelize = require('../../../../app/components/db');
 
 const entityType = require('../../entity/enums/entityType');
+const categoryPriceType = require('../enums/categoryPrice');
 
 const CATEGORY = 'course_category';
 
@@ -111,7 +112,8 @@ service.getById = async(function(id) {
  * @param  {{
  *     name: string,
  *     isActive: ?boolean,
- *     filters: Array<string>
+ *     filters: Array<string>,
+ *     priceType: ?CategoryPrice
  * }} data
  * @return {CourseCategory}
  */
@@ -129,7 +131,8 @@ service.create = async(function(data) {
  * @param  {{
  *     name: string,
  *     isActive: ?boolean,
- *     filters: Array<string>
+ *     filters: Array<string>,
+ *     priceType: ?CategoryPrice
  * }} data
  * @return {number}
  */
@@ -171,5 +174,12 @@ service.deleteAlias = async(function(courseCategory) {
 service.getAliases = async(function() {
     return await(services.page.getAllAliases(entityType.COURSE_CATEGORY));
 });
+
+/**
+ * @return {Array<string>}
+ */
+service.getCategoryPrices = function() {
+    return categoryPriceType.toArray();
+};
 
 module.exports = service;

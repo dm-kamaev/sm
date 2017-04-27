@@ -202,7 +202,8 @@ goog.scope(function() {
             .initParamsManager_()
             .initLeftMenuInstances_()
             .initSearchResultsInstance_()
-            .initMap_();
+            .initMap_()
+            .initAnalyticsSender_();
     };
 
 
@@ -251,6 +252,10 @@ goog.scope(function() {
             this.search_,
             sm.bSearch.Search.Event.ITEM_SELECT,
             this.onSearchSubmit_
+        ).listen(
+            this.search_,
+            sm.bSearch.Search.Event.TEXT_CHANGE,
+            this.onSearchChange_
         );
 
         return this;
@@ -267,6 +272,10 @@ goog.scope(function() {
             this.filterPanel_,
             sm.lSearch.bFilterPanel.FilterPanel.Event.SUBMIT,
             this.onFilterPanelSubmit_
+        ).listen(
+            this.filterPanel_,
+            sm.lSearch.bFilterPanel.FilterPanel.Event.CHANGE,
+            this.onFilterChange_
         );
         return this;
     };
@@ -366,6 +375,10 @@ goog.scope(function() {
             this.searchService_,
             SearchService.Event.LIST_DATA_LOADED,
             this.onResultsListDataLoaded_
+        ).listen(
+            this.searchService_,
+            SearchService.Event.SEARCH_COUNT_DATA_LOADED,
+            this.onCountSearchDataLoaded_
         );
 
         return this;
@@ -398,8 +411,29 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onFilterPanelSubmit_ = function() {
+        this.sentFilterAnalytics_();
         this.updatePage_();
         this.filterPanel_.collapse();
+    };
+
+
+    /**
+     * Filter change handler
+     * @private
+     */
+    Search.prototype.onFilterChange_ = function() {
+        this.loadSearchCount_();
+    };
+
+
+    /**
+     * Search change handler
+     * @private
+     */
+    Search.prototype.onSearchChange_ = function() {
+        var searchPosition = this.search_.getPosition();
+        this.filterPanel_.setTooltipPosition(searchPosition);
+        this.loadSearchCount_();
     };
 
 
@@ -439,7 +473,6 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onMapReady_ = function() {
-        this.initAnalyticsSender_();
         this.searchService_.loadMapData(this.paramsManager_.getParams());
     };
 
@@ -466,6 +499,16 @@ goog.scope(function() {
         this.detectShowMoreResultsList_();
 
         this.sendAnalyticsItemsLoad_(0);
+    };
+
+
+    /**
+     * Count serch resalt data load event handler
+     * @param  {sm.lSearch.iSearchService.SearchCountDataLoadedEvent} event
+     * @private
+     */
+    Search.prototype.onCountSearchDataLoaded_ = function(event) {
+        this.filterPanel_.showCountResults(event.data);
     };
 
 
@@ -569,6 +612,17 @@ goog.scope(function() {
             this.paramsManager_.getParams(/*requestMapResults*/ true)
         );
         this.searchService_.loadMapData(this.paramsManager_.getParams());
+    };
+
+
+    /**
+     * Send query for load count of search result
+     * @private
+     */
+    Search.prototype.loadSearchCount_ = function() {
+        var params = this.getParamsFromFilterPanel_();
+        params.name = this.getParamsFromSearch_().text;
+        this.searchService_.loadSearchCountData(params);
     };
 
 
@@ -766,6 +820,17 @@ goog.scope(function() {
         Analytics.getInstance().send('pageview');
     };
 
+    /**
+     *
+     * @private
+     */
+    Search.prototype.sentFilterAnalytics_ = function() {
+        var data = this.filterPanel_.getData();
+        var dataWithoutEmptyArrays = goog.object.filter(data, function(arr) {
+            return arr.length != 0;
+        });
+        this.analyticsSender_.sendFiltersData(dataWithoutEmptyArrays);
+    };
 
      /**
      * Send Analytics when shown items
@@ -884,10 +949,12 @@ goog.scope(function() {
 
     /**
      * Initializes instance of Analytics Sender
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initAnalyticsSender_ = function() {
         this.analyticsSender_ = new AnalyticsSender('search page');
+        return this;
     };
 
 

@@ -298,7 +298,7 @@ module.exports = class {
 
     /**
      * @private
-     * @param  {Object} options
+     * @param  {Array<Object>} options
      * @return {Object}
      */
     formatOptions_(options) {
@@ -309,7 +309,10 @@ module.exports = class {
             maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
             totalCost: this.formatTotalCost_(option.totalCost),
             costPerHour: this.formatCostPerHour_(option.costPerHour),
-            regularity: this.formatRegularity_(option.schedule),
+            regularity: this.formatRegularity_(
+                 option.openSchedule,
+                 option.schedule
+            ),
             online: this.formatOnline_(option.online),
             duration: this.formatDuration_(option.duration),
             startDate: this.formatStartDate_(option.startDate),
@@ -449,14 +452,17 @@ module.exports = class {
 
     /**
      * @private
+     * @param  {boolean} openSchedule
      * @param  {Array<Object>} schedule
      * @return {string}
      */
-    formatRegularity_(schedule) {
+    formatRegularity_(openSchedule, schedule) {
         let count = schedule.length,
             result;
-        if (count == 0) {
+        if (openSchedule) {
             result = 'По желанию';
+        } else if (count == 0) {
+            result = null;
         } else if (count < 2 || count > 4) {
             result = count + ' раз в неделю';
         } else {

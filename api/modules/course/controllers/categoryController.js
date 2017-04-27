@@ -205,4 +205,24 @@ controller.delete = async(function(req, res) {
     }
 });
 
+/**
+ * @api {get} /coursecategory/pricetype Get all category price types
+ * @apiVersion 1.0.0
+ * @apiName getPriceTypes
+ * @apiGroup CourseCategory
+ *
+ * @apiSuccess {String[]} - Array of category price types.
+ */
+controller.getPriceTypes = async(function(request, response) {
+    let result;
+    try {
+        result = services.courseCategory.getCategoryPrices();
+    } catch (error) {
+        logger.error(error);
+        result = error.message;
+    } finally {
+        response.send(result);
+    }
+});
+
 module.exports = controller;

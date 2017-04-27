@@ -13,7 +13,6 @@ goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
-goog.require('sm.iCarrotquest.Carrotquest');
 goog.require('sm.iCloblFactory.FactoryExperimental');
 goog.require('sm.iLayout.ViewStendhal');
 goog.require('sm.iMetrika.Metrika');

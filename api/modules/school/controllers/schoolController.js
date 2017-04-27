@@ -11,15 +11,10 @@ const schoolView = require('../views/schoolView'),
     specializedClassesView = require('../views/specializedClassesView'),
     activityView = require('../views/activityView');
 
-const SchoolDepartmentNotFound = require('./errors/DepartmentNotFound');
-
 const searchViewEntity = require('../../entity/views/searchView');
 
 const mapViewType = require('../../entity/enums/mapViewType'),
     entityType = require('../../entity/enums/entityType');
-
-
-const util = require('util');
 
 /**
  * @api {get} api/school Get school list
@@ -565,17 +560,26 @@ exports.popularSpecializedClassType = async(function(req, res) {
  * @apiGroup School
  *
  * @apiSuccess {Object[]} types of school
- [{
-    "id": 1,
-    "name": "Школы и центры образования",
-    "values": ["SCHOOL", "EDUCATION_CENTER"],
-    "alias": "school-or-center"
- },{
-    "id": 4,
-    "name": "Коррекционные",
-    "values": ["CORRECTIONAL_SCHOOL", "CORRECTIONAL_SCHOOL_INTERNAT"],
-    "alias": "correctional"
- }]
+ *  [
+ *      {
+ *          "id": 1,
+ *          "name": "Школы и центры образования",
+ *          "values": [
+ *              "SCHOOL",
+ *              "EDUCATION_CENTER"
+ *          ],
+ *          "alias": "school-or-center"
+ *      },
+ *      {
+ *          "id": 4,
+ *          "name": "Коррекционные",
+ *          "values": [
+ *              "CORRECTIONAL_SCHOOL",
+ *              "CORRECTIONAL_SCHOOL_INTERNAT"
+ *          ],
+ *          "alias": "correctional"
+ *      }
+ *  ]
  *
  */
 exports.getAllTypes = async(function(req, res) {
@@ -591,59 +595,59 @@ exports.getAllTypes = async(function(req, res) {
     res.json(result);
 });
 
-/*
- * Rename department of school
- * @api {get} /school/:schoolId/department/:departmentId
- * @apiVersion 0.1.0
- * @apiName renameDepartment
+
+/**
+ * @api {get} api/school/count Search count controller
+ * @apiVersion 0.0.0
  * @apiGroup School
+ * @apiName Count
  *
- * @apiSuccess {Object} department of school
- * {
- *      "id": 1,
- *      "name": "Новое название",
- *      "created_at": "2016-11-21T09:47:16.370Z",
- *      "updated_at": "2016-12-22T08:08:12.335Z",
- *      "address_id": 3,
- *      "oldName": "Старое название",
- *      "educationalGrades":[5, 6, 7, 8, 9, 10, 11]
- * }
- * @apiError (404) DepartmentNotFound
+ * @apiParam {Object}   searchParams
+ * @apiParam {string}   searchParams.name
+ * @apiParam {number[]} searchParams.classes
+ * @apiParam {number[]} searchParams.schoolType
+ * @apiParam {number[]} searchParams.gia
+ * @apiParam {number[]} searchParams.ege
+ * @apiParam {number[]} searchParams.olimp
+ * @apiParam {number[]} searchParams.specializedClassType
+ * @apiParam {number[]} searchParams.activitySphere
+ * @apiParam {number}   searchParams.metroId
+ * @apiParam {number}   searchParams.areaId
+ * @apiParam {number}   searchParams.districtId
+ *
+ * @apiParamExample {Object} Request-Example:
+ *     {
+ *         "name": "Sky",
+ *         "classes": [1,2,3,4],
+ *         "schoolType": [2, 3],
+ *         "gia": [2, 1],
+ *         "ege": [4, 2],
+ *         "olimp": [3, 2],
+ *         "specializedClassType": [1],
+ *         "activitySphere": [2, 1],
+ *         "metroId: 1,
+ *         "areaId: 2,
+ *         "districtId: 3
+ *     }
+ * @apiSuccess {number} count of school
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     "12"
  */
-exports.renameDepartment = async(function(req, res) {
-    let result = {},
-        schoolId = parseInt(req.params.schoolId, 10),
-        departmentId = parseInt(req.params.departmentId, 10),
-        name = req.body.name;
-
-    let handlerErr_ = function(error) {
-        let err;
-        if (error instanceof SchoolDepartmentNotFound) {
-            logger.critical(error);
-            logger.critical(util.inspect(error.response, { depth: 5 }));
-            res.status(error.status);
-            err = error.response;
-        } else {
-            logger.critical(error);
-            res.status(500);
-            err = error.message;
-        }
-        return err;
-    };
-
+exports.getSearchCount = async(function(req, res) {
+    let result;
     try {
-        let department = services.school.searchDepartment(
-            schoolId,
-            departmentId
-        );
-        if (!department) {
-            throw new SchoolDepartmentNotFound(schoolId, departmentId);
-        }
-        result = services.school.renameDepartment(department, name);
+        let searchParams = searchView.initSearchParams(req.query),
+            schools = await(services.school.list(
+                searchParams, {limitResults: 1}
+            ));
+        result = schools[0] && schools[0].countResults || 0;
         res.status(200);
     } catch (error) {
-        result = handlerErr_(error);
-    } finally {
-        res.json(result);
+        logger.critical(error);
+        result = error.message;
+        res.status(500);
     }
+    res.json(result);
 });

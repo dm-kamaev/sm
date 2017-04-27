@@ -132,7 +132,7 @@
  */
 {template .cost_ kind="html"}
     <div class="{call .rootClass /}__cost">
-        {$params.data.cost.value}
+        {$params.data.cost.value ?: ''}
     </div>
 {/template}
 
