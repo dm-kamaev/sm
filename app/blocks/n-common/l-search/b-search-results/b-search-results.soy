@@ -19,6 +19,7 @@
 /**
  * @typedef {{
  *     [sortController = 'dropdown-list-links']: ('smSwitch'|undefined)
+ *     listTheme: string,
  * }} sm.lSearch.bSearchResults.Template.Params.Config
  */
 
@@ -455,6 +456,7 @@
                'data': $params.data.entityList,
                'config': [
                    'showLine': true,
+                   'theme': $params.config?.listTheme,
                    'customClasses': [$customClasses]
                ]
            ]
