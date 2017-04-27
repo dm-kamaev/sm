@@ -105,7 +105,10 @@ goog.scope(function() {
      * @override
      */
     FilterExtended.prototype.setAllData = function() {
-        this.send_(this.params.api + '/popular')
+        var apiPopular = this.params.apiPopular ||
+            (this.params.api + '/popular');
+
+        this.send_(apiPopular)
             .then(function(data) {
                 this.allOptionsData = data;
             }

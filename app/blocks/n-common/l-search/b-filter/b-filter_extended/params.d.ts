@@ -16,12 +16,13 @@ export namespace bFilterExtended {
                 title: string;
                 tooltip?: string;
             });
-            options: bSmCheckbox.Params.Data[],
-            api: string,
+            options: bSmCheckbox.Params.Data[];
+            api: string;
+            apiPopular?: string;
             modal?: {
-                header?: string,
-                placeholder?: string,
-                filterHeader?: string,
+                header?: string;
+                placeholder?: string;
+                filterHeader?: string;
             }
         }
 

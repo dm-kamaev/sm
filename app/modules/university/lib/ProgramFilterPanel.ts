@@ -63,6 +63,7 @@ class ProgramFilterPanel extends FilterPanel {
                 },
                 name: filterName.CITIES,
                 api: '/cities',
+                apiPopular: '/cities/program',
                 modal: {
                     header: 'Какой город вы ищете?',
                     placeholder: 'Поиск по городам',
@@ -161,6 +162,7 @@ class ProgramFilterPanel extends FilterPanel {
                 },
                 name: filterName.MAJORS,
                 api: '/programmajor/search',
+                apiPopular: '/programmajor/popular',
                 modal: {
                     header: 'Какую специальность вы ищете?',
                     placeholder: 'Поиск по специальностям',

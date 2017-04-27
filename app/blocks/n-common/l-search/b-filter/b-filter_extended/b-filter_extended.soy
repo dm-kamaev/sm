@@ -14,6 +14,7 @@
  *         isChecked: (boolean|undefined)
  *     }>,
  *     api: string,
+ *     apiPopular: ?string,
  *     modal: {
  *         header: (string|undefined),
  *         placeholder: (string|undefined),
@@ -129,6 +130,7 @@
  *             tooltip: (string|undefined)
  *         }|undefined),
  *         api: string,
+ *         apiPopular: ?string,
  *         optionsToShow: (number|undefined),
  *         modal: {
  *             header: (string|undefined),
@@ -149,6 +151,7 @@
                 'name': $params.data.name,
                 'type': $params?.config?.type,
                 'api': $params.data.api,
+                'apiPopular': $params.data.apiPopular ?: '',
                 'optionsToShow': $params?.config?.optionsToShow,
                 'modal': quoteKeysIfJs([
                     'header': $params.data.modal?.header ?: $params.data.header?.title,
