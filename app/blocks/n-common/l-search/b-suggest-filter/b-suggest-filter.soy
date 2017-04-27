@@ -71,9 +71,12 @@
  * }}
  */
 {template .header_}
-    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
-        {$params.data.header}
-    </div>
+    {if $params.data.header}
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_header">
+            {$params.data.header}
+        </div>
+    {/if}
 {/template}
 
 
