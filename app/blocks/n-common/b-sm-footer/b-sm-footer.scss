@@ -139,6 +139,16 @@
     /** Overcast them end */
 }
 
+@include media-l {
+    /** Overcast them start */
+    .b-sm-footer_overcast-theme {
+        .b-sm-footer__column {
+            width: 280px;
+        }
+    }
+    /** Overcast them end */
+}
+
 @include media-m {
     /** Overcast them start */
     .b-sm-footer_overcast-theme {
