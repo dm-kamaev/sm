@@ -11,6 +11,7 @@ goog.provide('sm.lSearch.iSearchService.SearchService');
 goog.require('cl.iRequest.Request');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
+goog.require('sm.iSmQueryBuilder.QueryBuilder');
 goog.require('sm.lSearch.iSearchService.ListDataLoadedEvent');
 goog.require('sm.lSearch.iSearchService.MapDataLoadedEvent');
 

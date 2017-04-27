@@ -33,7 +33,7 @@ router.get(
 );
 
 router.get(
-    '/program/searchbyparameters',
+    '/program/filtersearch',
     programController.actionSearch
 );
 
