@@ -32,7 +32,8 @@
  *         up: (string|undefined),
  *         down: (string|undefined)
  *     }|undefined),
- *     inline: (boolean|undefined)
+ *     inline: (boolean|undefined),
+ *     optionsTheme: (string|undefined)
  * }} sm.lSearch.bFilter.Template.Params.Config
  */
 
@@ -166,7 +167,8 @@
  *         type: (string|undefined),
  *         align: (string|undefined),
  *         stylizationModifier: string,
- *         theme: ('light'|'minimal'|undefined)
+ *         theme: ('light'|'minimal'|undefined),
+ *         optionsTheme: (string|undefined)
  *     }
  * }}
  * @public
@@ -195,7 +197,7 @@
                         'hidden': $i + 1 > $numberOptionsToShow ? true : false,
                         'hidable': $i + 1> $numberOptionsToShow ? true : false,
                         'theme': $params.config.align == 'horizontal' ?
-                            'narrow' : $params.config.theme,
+                            'narrow' : $params.config.optionsTheme,
                         'stylizationModifier': $params.config.stylizationModifier
                     ]
                 ]/}

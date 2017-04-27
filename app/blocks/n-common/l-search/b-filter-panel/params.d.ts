@@ -27,6 +27,7 @@ export namespace bFilterPanel {
             stylizationModifier?: string;
             isMainPanel?: boolean;
             isDependentPanel?: boolean;
+            optionsTheme?: string;
         }
     }
 

@@ -74,7 +74,8 @@ class ProgramFilterPanel extends FilterPanel {
             config: {
                 isShowed: true,
                 optionsToShow: 3,
-                showMoreButtonText: 'другие города'
+                showMoreButtonText: 'другие города',
+                optionsTheme: 'neptune'
             }
         };
 
@@ -90,7 +91,8 @@ class ProgramFilterPanel extends FilterPanel {
             config: {
                 isShowed: true,
                 optionsToShow: 3,
-                showMoreButtonText: 'все предметы'
+                showMoreButtonText: 'все предметы',
+                optionsTheme: 'neptune'
             }
         };
 
@@ -113,7 +115,8 @@ class ProgramFilterPanel extends FilterPanel {
             },
             config: {
                 isShowed: true,
-                optionsToShow: 3
+                optionsToShow: 3,
+                optionsTheme: 'neptune'
             }
         };
 
@@ -128,7 +131,8 @@ class ProgramFilterPanel extends FilterPanel {
             },
             config: {
                 isShowed: true,
-                inline: true
+                inline: true,
+                optionsTheme: 'neptune'
             }
         };
 
@@ -150,7 +154,8 @@ class ProgramFilterPanel extends FilterPanel {
                 }]
             },
             config: {
-                cannotBeHidden: true
+                cannotBeHidden: true,
+                optionsTheme: 'neptune'
             }
         };
 
@@ -173,7 +178,8 @@ class ProgramFilterPanel extends FilterPanel {
             config: {
                 isShowed: true,
                 optionsToShow: 3,
-                showMoreButtonText: 'выбрать специальность'
+                showMoreButtonText: 'выбрать специальность',
+                optionsTheme: 'neptune'
             }
         };
 
@@ -199,7 +205,8 @@ class ProgramFilterPanel extends FilterPanel {
             },
             config: {
                 isShowed: true,
-                optionsToShow: 3
+                optionsToShow: 3,
+                optionsTheme: 'neptune'
             }
         };
     }

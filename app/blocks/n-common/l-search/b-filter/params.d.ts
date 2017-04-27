@@ -35,6 +35,7 @@ export namespace bFilter {
                 down?: string;
             };
             inline?: boolean;
+            optionsTheme?: string;
         }
     }
 
