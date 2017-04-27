@@ -132,10 +132,10 @@ abstract class FilterPanel {
     public render(data: InitFiltersData): bFilterPanel.Params {
         this.setData(data);
 
+        this.initFilters(data);
+
         this.setButton(data.button);
         this.setConfig(data);
-
-        this.initFilters(data);
 
         return this.getParams();
     }

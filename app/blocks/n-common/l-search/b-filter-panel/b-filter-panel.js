@@ -295,8 +295,8 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onResetClick_ = function() {
-        this.reset();
         this.dispatchEvent(FilterPanel.Event.RESET);
+        this.reset();
     };
 
 

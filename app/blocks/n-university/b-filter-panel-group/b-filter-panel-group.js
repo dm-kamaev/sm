@@ -101,6 +101,26 @@ class FilterPanelGroup extends Control {
     }
 
     /**
+     * Resets all filters
+     * @public
+     */
+    reset() {
+        const filterName = FilterName.EGE_SUBJECTS,
+            egeSubjectsData = this.mainFilterPanel_.getData()[filterName];
+
+        if (egeSubjectsData) {
+            const egeResultsData = this.transformEgeDataToEgeResults_(
+                egeSubjectsData
+            );
+
+            this.hideEgeResultsOptions_(egeResultsData);
+        }
+
+        this.mainFilterPanel_.reset();
+        this.dependentFilterPanel_.reset();
+    }
+
+    /**
      * @override
      * @public
      */
@@ -290,15 +310,15 @@ class FilterPanelGroup extends Control {
      * @private
      */
     onMainResetClick_() {
-        this.dependentFilterPanel_.reset();
+        this.reset();
     }
 
     /**
      * @private
      */
     onResetClick_() {
-        this.mainFilterPanel_.reset();
-        this.dependentFilterPanel_.reset();
+        this.reset();
+
         this.getView().hideResetButton();
     }
 
@@ -337,10 +357,13 @@ class FilterPanelGroup extends Control {
      */
     onMainFilterOptionCheck_(event) {
         if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
+            const optionData = this.transformEgeDataToEgeResultsOption_(
+                event.data
+            );
 
             this.dependentFilterPanel_.showFilterOption(
                 FilterName.EGE_RESULTS,
-                {name: event.data.value}
+                optionData
             );
         }
     }
@@ -352,9 +375,9 @@ class FilterPanelGroup extends Control {
      */
     onMainFilterOptionUncheck_(event) {
         if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
-            var optionData = {
-                name: event.data.value
-            };
+            const optionData = this.transformEgeDataToEgeResultsOption_(
+                event.data
+            );
 
             this.dependentFilterPanel_.hideFilterOption(
                 FilterName.EGE_RESULTS,
@@ -385,6 +408,56 @@ class FilterPanelGroup extends Control {
             !this.dependentFilterPanel_.isChecked()) {
             this.getView().hideResetButton();
         }
+    }
+
+    /**
+     * Hide egeResults options in dependent filter panel
+     * by options data
+     * @param {Array<{
+     *     name: number,
+     *     label: string
+     * }>} optionsData
+     * @private
+     */
+    hideEgeResultsOptions_(optionsData) {
+        optionsData.forEach(optionData => {
+            this.dependentFilterPanel_.hideFilterOption(
+                FilterName.EGE_RESULTS,
+                optionData
+            );
+        });
+    }
+
+    /**
+     * Transform egeResults data to egeResults data
+     * @param {Array<sm.bSmCheckbox.Params.Data>} egeSubjectsData
+     * @return {Array<{
+     *     name: number,
+     *     label: string
+     * }>}
+     * @private
+     */
+    transformEgeDataToEgeResults_(egeSubjectsData) {
+        return egeSubjectsData.map(subjectData =>
+            this.transformEgeDataToEgeResultsOption_(subjectData)
+        );
+    }
+
+
+    /**
+     * Transform egeResult option data to egeResult option data
+     * @param {sm.bSmCheckbox.Params.Data} egeSubjectData
+     * @return {{
+     *     name: number,
+     *     label: string
+     * }}
+     * @private
+     */
+    transformEgeDataToEgeResultsOption_(egeSubjectData) {
+        return {
+            name: egeSubjectData.value,
+            label: egeSubjectData.label
+        };
     }
 };
 
