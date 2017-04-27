@@ -74,6 +74,8 @@
 }
 
 .b-sm-checkbox_neptune-theme {
+    padding: 4px 0;
+
     .b-sm-checkbox__input {
         width: 15px;
         height: 15px;
@@ -87,5 +89,25 @@
 .b-sm-checkbox_neptune-theme.b-sm-checkbox_checked {
     .b-sm-checkbox__label {
         color: #000;
+    }
+}
+
+.b-sm-checkbox_custom-icon {
+    input {
+        display: none;
+    }
+
+    .b-sm-checkbox__icon_check {
+        display: none;
+    }
+
+    &.b-sm-checkbox_checked {
+        .b-sm-checkbox__icon_uncheck {
+            display: none;
+        }
+
+        .b-sm-checkbox__icon_check {
+            display: block;
+        }
     }
 }

@@ -74,7 +74,11 @@ class ProgramFilterPanel extends FilterPanel {
                 isShowed: true,
                 optionsToShow: 3,
                 showMoreButtonText: 'другие города',
-                optionsTheme: 'neptune'
+                optionsTheme: 'neptune',
+                customIcon: {
+                    check: 'checked-blue',
+                    uncheck: 'unchecked-blue'
+                }
             }
         };
 
@@ -91,7 +95,11 @@ class ProgramFilterPanel extends FilterPanel {
                 isShowed: true,
                 optionsToShow: 3,
                 showMoreButtonText: 'все предметы',
-                optionsTheme: 'neptune'
+                optionsTheme: 'neptune',
+                customIcon: {
+                    check: 'checked-blue',
+                    uncheck: 'unchecked-blue'
+                }
             }
         };
 
@@ -115,7 +123,11 @@ class ProgramFilterPanel extends FilterPanel {
             config: {
                 isShowed: true,
                 optionsToShow: 3,
-                optionsTheme: 'neptune'
+                optionsTheme: 'neptune',
+                customIcon: {
+                    check: 'checked-blue',
+                    uncheck: 'unchecked-blue'
+                }
             }
         };
 
@@ -177,7 +189,11 @@ class ProgramFilterPanel extends FilterPanel {
                 isShowed: true,
                 optionsToShow: 3,
                 showMoreButtonText: 'выбрать специальность',
-                optionsTheme: 'neptune'
+                optionsTheme: 'neptune',
+                customIcon: {
+                    check: 'checked-blue',
+                    uncheck: 'unchecked-blue'
+                }
             }
         };
 
@@ -204,7 +220,11 @@ class ProgramFilterPanel extends FilterPanel {
             config: {
                 isShowed: true,
                 optionsToShow: 3,
-                optionsTheme: 'neptune'
+                optionsTheme: 'neptune',
+                customIcon: {
+                    check: 'checked-blue',
+                    uncheck: 'unchecked-blue'
+                }
             }
         };
     }

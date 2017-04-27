@@ -22,6 +22,10 @@ export namespace bSmCheckbox {
             theme?: string;
             customClasses?: Array<string>;
             stylizationModifier?: string;
+            customIcon?: {
+                check: string;
+                uncheck: string;
+            };
         }
     }
 

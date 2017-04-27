@@ -36,6 +36,10 @@ export namespace bFilter {
             };
             inline?: boolean;
             optionsTheme?: string;
+            customIcon?: {
+                check: string;
+                uncheck: string;
+            };
         }
     }
 

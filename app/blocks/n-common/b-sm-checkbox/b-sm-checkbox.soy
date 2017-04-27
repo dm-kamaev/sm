@@ -15,7 +15,11 @@
 /**
  * @typedef {{
  *     theme: (string|undefined),
- *     stylizationModifier: string
+ *     stylizationModifier: string,
+ *     customIcon: ({
+ *         check: string,
+ *         uncheck: string
+ *     }|undefined)
  * }} sm.bSmCheckbox.Template.Params.Config
  */
 
@@ -75,7 +79,51 @@
             value="{$params.data.value}"
             {$params.data?.isChecked ? 'checked' : ''}
         />
+        {call .icon_ data="all" /}
     </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     config: {
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .icon_}
+    {if $params.config.customIcon}
+        <div class="{call .rootClass /}__icon_check">
+            {call .renderChild}
+                {param params: [
+                    'type': 'icon-svg',
+                    'renderParams': [
+                        'data': [
+                            'type': $params.config.customIcon.check
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass /}__icon_uncheck">
+            {call .renderChild}
+                {param params: [
+                    'type': 'icon-svg',
+                    'renderParams': [
+                        'data': [
+                            'type': $params.config.customIcon.uncheck
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
 {/template}
 
 
@@ -137,6 +185,12 @@
  * @param params {{
  *     data: {
  *         isChecked: (boolean|undefined)
+ *     },
+ *     config: {
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
  *     }
  * }}
  * @override
@@ -144,5 +198,8 @@
 {template .additionalClasses}
     {if $params.data.isChecked}
         {call .rootClass/}_checked
+    {/if}
+    {if $params.config.customIcon}
+        {sp}{call .rootClass/}_custom-icon
     {/if}
 {/template}

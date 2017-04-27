@@ -33,7 +33,11 @@
  *         down: (string|undefined)
  *     }|undefined),
  *     inline: (boolean|undefined),
- *     optionsTheme: (string|undefined)
+ *     optionsTheme: (string|undefined),
+ *     customIcon: ({
+ *         check: string,
+ *         uncheck: string
+ *     }|undefined)
  * }} sm.lSearch.bFilter.Template.Params.Config
  */
 
@@ -168,7 +172,11 @@
  *         align: (string|undefined),
  *         stylizationModifier: string,
  *         theme: ('light'|'minimal'|undefined),
- *         optionsTheme: (string|undefined)
+ *         optionsTheme: (string|undefined),
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
  *     }
  * }}
  * @public
@@ -198,7 +206,8 @@
                         'hidable': $i + 1> $numberOptionsToShow ? true : false,
                         'theme': $params.config.align == 'horizontal' ?
                             'narrow' : $params.config.optionsTheme,
-                        'stylizationModifier': $params.config.stylizationModifier
+                        'stylizationModifier': $params.config.stylizationModifier,
+                        'customIcon': $params.config.customIcon
                     ]
                 ]/}
             {/call}
@@ -220,7 +229,11 @@
  *     config: {
  *         hidden: (boolean|undefined),
  *         hidable: (boolean|undefined),
- *         theme: (string|undefined)
+ *         theme: (string|undefined),
+ *         customIcon: ({
+ *              check: string,
+ *              uncheck: string
+ *         }|undefined)
  *     }
  * }}
  * @public
@@ -245,7 +258,8 @@
                 'renderParams': [
                     'data': $params.data,
                     'config': [
-                        'theme': $params.config?.theme
+                        'theme': $params.config?.theme,
+                        'customIcon': $params.config?.customIcon
                     ]
                 ]
             ]/}
