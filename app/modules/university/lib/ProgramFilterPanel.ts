@@ -66,7 +66,8 @@ class ProgramFilterPanel extends FilterPanel {
                 apiPopular: '/cities/program',
                 modal: {
                     header: 'В каком городе вы хотите учиться?',
-                    placeholder: 'Поиск по городам'
+                    placeholder: 'Поиск по городам',
+                    theme: 'neptune'
                 },
                 options: []
             },
@@ -181,7 +182,8 @@ class ProgramFilterPanel extends FilterPanel {
                 apiPopular: '/programmajor/popular',
                 modal: {
                     header: 'Какую специальность вы ищете?',
-                    placeholder: 'Поиск по специальностям'
+                    placeholder: 'Поиск по специальностям',
+                    theme: 'neptune'
                 },
                 options: []
             },

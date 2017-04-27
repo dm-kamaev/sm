@@ -3,12 +3,14 @@
 /**
  * typedef {{
  *     sourceUrl: ?string,
+ *     argName: ?string,
  * }} sm.bSearch.Template.Params.Data
  */
 
 /**
  * typedef {{
  *     showSearchIcon: ?boolean,
+ *     notShowList: ?boolean,
  *     height: ?string,
  *     faderSize: ?string,
  *     entityType: string
@@ -108,12 +110,13 @@
                         'autofocus': $params?.autofocus,
                         'placeholder': $params?.placeholder,
                         'sourceUrl': $sourceUrl,
-                        'argName': 'searchString',
+                        'argName': $params.data?.argName ?: 'searchString',
                         'args': $params.searchArgs
                     ],
                     'config': [
                         'customClasses': 'b-search__suggest',
                         'filtrationEnabled': false,
+                        'notShowList': $params?.config?.notShowList
                     ],
                     'list': [
                         'theme': $isUniversity ? 'neptune' : 'stendhal',

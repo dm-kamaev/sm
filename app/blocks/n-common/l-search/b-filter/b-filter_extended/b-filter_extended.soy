@@ -18,7 +18,8 @@
  *     modal: {
  *         header: (string|undefined),
  *         placeholder: (string|undefined),
- *         filterHeader: (string|undefined)
+ *         filterHeader: (string|undefined),
+ *         theme: (string|undefined)
  *     }
  * }} sm.lSearch.bFilter.TemplateExtended.Params.Data
  */
@@ -135,7 +136,8 @@
  *         modal: {
  *             header: (string|undefined),
  *             placeholder: (string|undefined),
- *             filterHeader: (string|undefined)
+ *             filterHeader: (string|undefined),
+ *             theme: (string|undefined)
  *         }
  *     },
  *     config: {
@@ -156,7 +158,8 @@
                 'modal': quoteKeysIfJs([
                     'header': $params.data.modal?.header ?: $params.data.header?.title,
                     'placeholder': $params.data.modal?.placeholder ?: '',
-                    'filterHeader': $params.data.modal?.filterHeader ?: ''
+                    'filterHeader': $params.data.modal?.filterHeader ?: '',
+                    'theme': $params.data.modal?.theme ?: ''
                 ])
             ])/}
         {/call}

@@ -550,7 +550,8 @@
         {call cl.iUtils.Utils.stringify}
             {param json: [
                 'name': $params.data.name,
-                'type': $params?.config?.type
+                'type': $params?.config?.type,
+                'optionsTheme': $params?.config?.optionsTheme
             ]/}
         {/call}
     {/let}

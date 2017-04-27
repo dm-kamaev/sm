@@ -79,6 +79,7 @@
     box-sizing: border-box;
     width: 100%;
     padding-left: 13px;
+    padding-right: 40px;
 
     border: 1px solid #dbdbd4;
     background-color: #ffffff;
@@ -176,9 +177,17 @@
         padding-left: 12px;
     }
 }
+
+.b-search_theme_transparent {
+    .b-search__suggest {
+        border: none;
+        background-color: transparent;
+    }
+}
+
 /* list items in suggest end*/
 
-.b-search_theme_min {
+.b-search_theme_min, .b-search_theme_transparent {
     .b-search__suggest-holder {
         height: 100%;
     }

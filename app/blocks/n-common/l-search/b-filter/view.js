@@ -199,7 +199,10 @@ goog.scope(function() {
         return goog.soy.renderAsElement(
             sm.lSearch.bFilter.Template.option, {
                 params: {
-                    data: data
+                    data: data,
+                    config: {
+                        theme: this.getParams().optionsTheme
+                    }
                 }
             },
             {
@@ -510,7 +513,8 @@ goog.scope(function() {
     View.prototype.transformParams = function(rawParams) {
         return {
             name: rawParams['name'],
-            type: rawParams['type']
+            type: rawParams['type'],
+            optionsTheme: rawParams['optionsTheme']
         };
     };
 });  // goog.scope

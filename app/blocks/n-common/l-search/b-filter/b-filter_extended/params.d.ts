@@ -23,7 +23,8 @@ export namespace bFilterExtended {
                 header?: string;
                 placeholder?: string;
                 filterHeader?: string;
-            }
+                theme?: string;
+            };
         }
 
         /**

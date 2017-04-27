@@ -32,7 +32,8 @@ goog.scope(function() {
      *     modal: {
      *         header: string,
      *         placeholder: ?string,
-     *         filterHeader: string
+     *         filterHeader: string,
+     *         theme: ?string
      *     }
      * }}
      */
@@ -125,7 +126,8 @@ goog.scope(function() {
             modal: {
                 header: rawParams['modal']['header'],
                 placeholder: rawParams['modal']['placeholder'],
-                filterHeader: rawParams['modal']['filterHeader']
+                filterHeader: rawParams['modal']['filterHeader'],
+                theme: rawParams['modal']['theme']
             }
         };
     };

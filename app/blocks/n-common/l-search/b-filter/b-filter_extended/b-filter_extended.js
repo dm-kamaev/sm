@@ -204,17 +204,34 @@ goog.scope(function() {
      * @private
      */
     FilterExtended.prototype.initModalFilter_ = function() {
-        var params = {
-            config: {
-                size: 'l'
-            }
-        };
+        var params = this.getModalData_();
         this.filterModal_ = sm.gModal.ModalStendhal.render(params, true);
 
         this.filterModal_.renderContent(
             sm.lSearch.bSuggestFilter.SuggestFilter.NAME,
-            this.getModalData_()
+            this.getModalContentData_()
         );
+    };
+
+
+    /**
+     * generate params for render modal
+     * @return {sm.gModalStendhal.Params}
+     * @private
+     */
+    FilterExtended.prototype.getModalData_ = function() {
+        return {
+            data: {
+                closer: this.params.modal.theme == 'neptune' ? {
+                    iconName: 'blue-close',
+                    iconType: 'icon-svg'
+                } : null
+            },
+            config: {
+                size: 'l',
+                theme: this.params.modal.theme
+            }
+        };
     };
 
 
@@ -242,7 +259,7 @@ goog.scope(function() {
      * }}
      * @private
      */
-    FilterExtended.prototype.getModalData_ = function() {
+    FilterExtended.prototype.getModalContentData_ = function() {
         var allOptionsData = this.setChecked(
             this.getAllData(),
             this.getCheckedData()
@@ -266,6 +283,9 @@ goog.scope(function() {
                     name: this.getName(),
                     options: this.getCheckedData()
                 }
+            },
+            config: {
+                theme: this.params.modal.theme
             }
         };
     };
