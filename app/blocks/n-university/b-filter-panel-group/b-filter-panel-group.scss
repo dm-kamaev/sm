@@ -53,6 +53,10 @@
         .b-filter-panel-group__reset {
             display: none;
         }
+
+        .b-filter-panel-group__content {
+            padding-top: 0;
+        }
     }
 
     .b-filter-panel-group__filters {
