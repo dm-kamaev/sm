@@ -93,8 +93,8 @@
         {let $sourceUrl: $params?.data?.sourceUrl ?:
             '/api/' + $params.config.entityType + '/search/suggest'/}
 
-        {let $isUniversity: $params.config.entityType ==
-            'university' or 'program' ?
+        {let $isUniversity: ($params.config.entityType == 'university') or
+            ($params.config.entityType == 'program') ?
                 true :
                 false
         /}
