@@ -812,7 +812,7 @@ cliui@^3.0.3, cliui@^3.2.0:
     strip-ansi "^3.0.1"
     wrap-ansi "^2.0.0"
 
-"clobl@git+ssh://git@github.com/c7s/clobl.git#dev":
+"clobl@git+ssh://git@github.com/c7s/clobl.git#release-20170427-QUIZ-1136":
   version "1.0.0"
   resolved "git+ssh://git@github.com/c7s/clobl.git#704ab5753e705af520d0cb018c2c8e463eac5b94"
   dependencies:
@@ -1511,9 +1511,9 @@ depd@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.0.1.tgz#80aec64c9d6d97e65cc2a9caa93c0aa6abf73aaa"
 
-"deployment@git+ssh://git@github.com/c7s/deployment.git#dev":
+"deployment@git+ssh://git@github.com/c7s/deployment.git#release-20170419-BL-119":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/c7s/deployment.git#37f9db0d142bd8919f8d639c968750d9bbe7d6f9"
+  resolved "git+ssh://git@github.com/c7s/deployment.git#6b77391db99bb1016914169de5baa5ab8ce6682e"
 
 deprecated@^0.0.1:
   version "0.0.1"
@@ -5106,13 +5106,9 @@ node-status-codes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/node-status-codes/-/node-status-codes-1.0.0.tgz#5ae5541d024645d32a58fcddc9ceecea7ae3ac2f"
 
-node-uuid@1.4.7:
+node-uuid@1.4.7, node-uuid@~1.4.4, node-uuid@~1.4.7:
   version "1.4.7"
   resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.7.tgz#6da5a17668c4b3dd59623bda11cf7fa4c1f60a6f"
-
-node-uuid@~1.4.4, node-uuid@~1.4.7:
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
 
 node-xlsx@^0.7.2:
   version "0.7.4"
