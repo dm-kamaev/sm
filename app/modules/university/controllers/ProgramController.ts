@@ -2,6 +2,8 @@ import {LegacyController} from '../../../../api/components/interface';
 
 const Controller: LegacyController = require('nodules/controller').Controller;
 
+import {programSearchView} from '../views/programSearchView';
+
 import {searchService} from '../services/searchService';
 import {QueryParams} from '../types/programSearch';
 
@@ -91,6 +93,9 @@ export class ProgramController extends Controller {
     /* tslint:enable:max-line-length */
     public async actionSearch(actionContext: any) {
         const queryParams: QueryParams = actionContext.data;
-        return searchService.findByParams(queryParams);
+        const searchParams = programSearchView.initSearchParams(queryParams);
+
+        return searchService.findByParams(searchParams);
     }
 }
+

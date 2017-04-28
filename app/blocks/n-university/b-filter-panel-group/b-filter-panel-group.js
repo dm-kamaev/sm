@@ -420,7 +420,7 @@ class FilterPanelGroup extends Control {
      * @private
      */
     hideEgeResultsOptions_(optionsData) {
-        optionsData.forEach(optionData => {
+        optionsData.forEach((optionData) => {
             this.dependentFilterPanel_.hideFilterOption(
                 FilterName.EGE_RESULTS,
                 optionData
@@ -438,7 +438,7 @@ class FilterPanelGroup extends Control {
      * @private
      */
     transformEgeDataToEgeResults_(egeSubjectsData) {
-        return egeSubjectsData.map(subjectData =>
+        return egeSubjectsData.map((subjectData) =>
             this.transformEgeDataToEgeResultsOption_(subjectData)
         );
     }

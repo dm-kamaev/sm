@@ -16,7 +16,10 @@ import {cityService} from '../../geo/services/cityService';
 import {majorService} from '../services/majorService';
 
 import {informationView} from '../views/informationView';
+import {programSearchView} from '../views/programSearchView';
 import {programRenderSearchView} from '../views/ProgramRenderSearchView';
+
+import {QueryParams} from '../types/programSearch';
 
 const soy = require('../../../components/soy');
 const config = require('../../../config/config.json');
@@ -104,17 +107,19 @@ class UniversityRenderController extends Controller {
 
     public async actionGetSearch(actionContext: any) {
         const user = userService.getUserFromRequest(actionContext.request);
-        const searchParams = actionContext.request.query;
+        const queryParams: QueryParams = actionContext.request.query;
+        const egeExams = await egeExamService.getExams();
+        const searchParams = programSearchView.initSearchParams(
+            queryParams, {egeExams}
+        );
 
         const [
                 resultsList,
                 cities,
-                egeExams,
                 majors
             ] = await Promise.all([
                 searchService.findByParams(searchParams),
                 cityService.getAllSortedByProgramCount(),
-                egeExamService.getExams(),
                 majorService.getPopular()
         ]);
 
@@ -124,6 +129,7 @@ class UniversityRenderController extends Controller {
                 cities,
                 egeExams,
                 majors,
+                searchParams,
                 favorites: []
             },
             config: config,

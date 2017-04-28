@@ -9,6 +9,11 @@ export namespace lSearchUniversity {
      * sm.lSearch.ParamsUniversity
      */
     export namespace Params {
+        interface EgeResult {
+            subjectId: number;
+            value: number;
+        }
+
         /**
          * sm.lSearch.ParamsUniversity.Data.SearchParams
          */
@@ -16,7 +21,7 @@ export namespace lSearchUniversity {
             cities: number[];
             egeSubjects: number[];
             payType: number[];
-            egeResults: number[];
+            egeResults: EgeResult[];
             maxPrice: number[];
             majors: number[];
             features: number[];

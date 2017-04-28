@@ -1,6 +1,10 @@
 import {FormatUtils} from '../../common/lib/FormatUtils';
 
-import {QueryParams} from '../types/programSearch';
+import {
+    QueryParams,
+    SearchParams,
+    EgeResult
+} from '../types/programSearch';
 import {
     lSearchUniversity
 } from '../../../blocks/n-university/l-search_university/params';
@@ -10,20 +14,20 @@ const ALIAS_RUSSIAN_EXAM: string = 'russian';
 class ProgramSearchView {
     public initSearchParams(
             queryParams: QueryParams,
-            filtersData: any
-    ): lSearchUniversity.Params.SearchParams {
+            filtersData?: any
+    ): SearchParams {
 
         const formatUtils = new FormatUtils();
 
-        const egeSubjects = queryParams.egeSubjects ?
-            queryParams.egeSubjects :
-            this.getEgeDefaultSearchParams(filtersData.egeExams);
+        const egeSubjects = (!queryParams.egeSubjects && filtersData) ?
+            this.getEgeDefaultSearchParams(filtersData.egeExams) :
+            queryParams.egeSubjects;
 
         return {
             cities: formatUtils.transformToArray(queryParams.cities),
             egeSubjects: formatUtils.transformToArray(egeSubjects),
             payType: formatUtils.transformToArray(queryParams.payType),
-            egeResults: formatUtils.transformToArray(queryParams.egeResults),
+            egeResults: this.initEgeResults(queryParams.egeResults),
             majors: formatUtils.transformToArray(queryParams.majors),
             maxPrice: formatUtils.transformToArray(queryParams.maxPrice),
             features: formatUtils.transformToArray(queryParams.features),
@@ -31,6 +35,12 @@ class ProgramSearchView {
             sortType: queryParams.sortType || 0
         };
     };
+
+    private initEgeResults(query: string): EgeResult[] {
+        return query ?
+            JSON.parse(query) :
+            [];
+    }
 
     private getEgeDefaultSearchParams(egeExams): number[] {
         const russianExam = egeExams.find(exam =>

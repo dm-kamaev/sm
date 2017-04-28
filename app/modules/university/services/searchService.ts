@@ -1,14 +1,10 @@
 const logger = require('../../../components/logger/logger').getLogger('app');
 
-<<<<<<< 6f11d6ea8c06b0113ba2e6d9e5869f15e2174760
-import {QueryParams} from '../types/programSearch';
-=======
 import {
     SearchParams,
     BackendEgeSearchParam,
     BackendSearchParams
-} from '../types/search';
->>>>>>> BP-2303 add types and search params transformation in search service
+} from '../types/programSearch';
 
 import {Service, RequestParams} from '../../common/services/Service';
 import {SuggestProgram, BackendProgramResults} from '../types/program';
@@ -60,14 +56,19 @@ class SearchService extends Service {
     }
 
     private initParams_(queryParams: SearchParams): BackendSearchParams {
-        const ege: BackendEgeSearchParam[] = queryParams.egeSubjects.map(
+        const egeSubjects = queryParams.egeSubjects || [];
+        const ege: BackendEgeSearchParam[] = egeSubjects.map(
             (subjectId) => {
                 const subjectResult = queryParams.egeResults.find(
                     (result) => result.subjectId == subjectId
                 );
 
+                const value = subjectResult ?
+                    Number(subjectResult.value) :
+                    100;
+
                 return {
-                    [subjectId]: subjectResult.value || 100
+                    [subjectId]: value
                 };
             }
         );

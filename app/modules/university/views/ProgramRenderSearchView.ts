@@ -109,8 +109,8 @@ class ProgramRenderSearchView extends LayoutView {
 
     protected setParams(params: RenderParams) {
         super.setParams(params);
+        const searchParams = params.data.searchParams;
 
-        const searchParams = this.initSearchParams_(params);
         this.setResultsList_(params.data.resultsList);
         this.setFilterPanels_(params.data, searchParams);
         this.setSearchParams_(searchParams);
@@ -174,9 +174,6 @@ class ProgramRenderSearchView extends LayoutView {
         const filterPanel = new ProgramFilterPanel();
         this.params.data.filterPanel = filterPanel.render(mainPanelParams);
 
-        // searchParams.egeResults.push({id:37, value: 99});
-        // searchParams.maxPrice.push(300000);
-
         const dependentPanelParams: FilterPanelParams = {
             searchParams: searchParams,
             filtersData: {
@@ -213,20 +210,7 @@ class ProgramRenderSearchView extends LayoutView {
     private setApi_() {
         this.params.data.api = this.api;
     }
-
-    private initSearchParams_(
-            renderParams: RenderParams
-    ): lSearchUniversity.Params.SearchParams {
-
-        const filtersData = {
-            egeExams: renderParams.data.egeExams
-        };
-
-        return programSearchView.initSearchParams(
-            renderParams.requestData.query,
-            filtersData
-        );
-    }
 }
 
 export const programRenderSearchView = new ProgramRenderSearchView();
+
