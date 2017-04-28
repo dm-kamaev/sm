@@ -169,7 +169,11 @@
                             'filtersToShow': length($params.data.filter?.options),
                             'theme': 'minimal',
                             'optionsTheme': $params.config?.theme == 'neptune' ?
-                                'neptune' : ''
+                                'neptune' : null,
+                            'customIcon': $params.config?.theme == 'neptune' ? [
+                                'check': 'checked-blue',
+                                'uncheck': 'unchecked-blue'
+                            ] : null
                         ]
                     ]
                 ]/}

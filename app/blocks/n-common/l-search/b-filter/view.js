@@ -201,7 +201,8 @@ goog.scope(function() {
                 params: {
                     data: data,
                     config: {
-                        theme: this.getParams().optionsTheme
+                        theme: this.getParams().optionsTheme,
+                        customIcon: this.getParams().customIcon
                     }
                 }
             },
@@ -514,7 +515,8 @@ goog.scope(function() {
         return {
             name: rawParams['name'],
             type: rawParams['type'],
-            optionsTheme: rawParams['optionsTheme']
+            optionsTheme: rawParams['optionsTheme'],
+            customIcon: rawParams['customIcon']
         };
     };
 });  // goog.scope
