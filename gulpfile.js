@@ -153,7 +153,7 @@ gulp.task('fonts', function() {
 
 gulp.task('manifest', function() {
     return gulp.src(
-        path.join(__dirname, BLOCKS_DIR, '/n-clobl/i-layout/manifest.json')
+        path.join(__dirname, BLOCKS_DIR, '/n-common/i-favicon/manifest.json')
     ).pipe(gulp.dest(
         path.join(__dirname, SHARED_STATIC_DIR)
     ));
