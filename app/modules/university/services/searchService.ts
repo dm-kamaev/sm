@@ -76,7 +76,7 @@ class SearchService extends Service {
         return {
             cities: queryParams.cities,
             ege: ege,
-            features:queryParams.features,
+            features: queryParams.features,
             majors: queryParams.majors,
             maxPrice: queryParams.maxPrice,
             payType: queryParams.payType,
