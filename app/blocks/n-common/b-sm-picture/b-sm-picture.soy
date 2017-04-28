@@ -2,12 +2,7 @@
 
 
 /**
- * @typedef {
- *     sources: Array<{
- *         url: string,
- *         size: string,
- *     }>,
- *     altText: (string|undefined)}
+ * @typedef {sm.bSmPicture.Params.Data}
  * sm.bSmPicture.Template.Params.Data
  */
 
@@ -66,32 +61,43 @@
 /**
  * @param params {{
  *     data: {
- *         sources: Array<{
- *             url: string,
- *             size: string,
- *         }>,
  *         altText: (string|undefined)
  *     }
  * }}
  */
 {template .picture_}
     <picture>
-        {if $params.data.sources}
-            {foreach $source in $params.data.sources}
-                {let $media kind="text"}
-                    {call sm.iMedia.Media.getMediaString}
-                        {param sources: $params.data.sources /}
-                        {param size: $source.size /}
-                    {/call}
-                {/let}
-                <source srcset="{$source.url}" media="{$media}">
-            {/foreach}
-        {/if}
+        {call .sources_ data="all" /}
 
-        <img class="{call .rootClass /}"
+        <img class="{call .rootClass /}__picture"
             {if $params.data.altText}
                 alt="{$params.data.altText}"
             {/if}
         >
     </picture>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         sources: Array<{
+ *             url: string,
+ *             size: string,
+ *         }>
+ *     }
+ * }}
+ */
+{template .sources_}
+    {if $params.data.sources}
+        {foreach $source in $params.data.sources}
+            {let $media kind="text"}
+                {call sm.iMedia.Media.getMediaString}
+                    {param sources: $params.data.sources /}
+                    {param size: $source.size /}
+                {/call}
+            {/let}
+            <source srcset="{$source.url}" media="{$media}">
+        {/foreach}
+    {/if}
 {/template}

@@ -1,3 +1,9 @@
-.b-sm-picture {
+.b-sm-picture, .b-sm-picture__picture {
     width: 100%;
+}
+
+.b-sm-picture_original-sized-theme {
+    .b-sm-picture__picture {
+        width: auto;
+    }
 }

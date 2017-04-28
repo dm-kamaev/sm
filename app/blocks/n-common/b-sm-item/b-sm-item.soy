@@ -185,13 +185,7 @@
         'altText': $params.data.name.light
     ] /}
 
-    {let $url kind="html"}
-        {if $params.data.url}
-            {$params.data.url}
-        {else}
-            /{$params.data.alias}
-        {/if}
-    {/let}
+    {let $url: $params.data.url ?: ('/' + $params.data.alias) /}
 
     <a class="{call .rootClass/}__cover-link" href="{$url}">
         {call .renderChild}

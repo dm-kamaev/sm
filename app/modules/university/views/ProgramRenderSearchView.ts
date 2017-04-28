@@ -12,7 +12,7 @@ import {FormatUtils} from '../../common/lib/FormatUtils';
 import {UniversitySubHeader} from './UniversitySubHeader';
 import {UniversityFooter} from './UniversityFooter';
 import {ProgramFilterPanel} from '../lib/ProgramFilterPanel';
-import {programsView} from './programsView';
+import {programView} from './programView';
 import {programSearchView} from './programSearchView';
 
 import {
@@ -137,7 +137,7 @@ class ProgramRenderSearchView extends LayoutView {
                 resultsList.universityCount
             ),
             entityList: {
-                items: programsView.list(resultsList.programs),
+                items: programView.list(resultsList.programs),
                 itemType: 'smItemUniversity',
                 itemConfig: {
                     enableCover: true

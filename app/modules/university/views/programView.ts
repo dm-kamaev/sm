@@ -3,7 +3,7 @@ import {BackendListProgram} from '../types/program';
 import {FormatUtils} from '../../common/lib/FormatUtils';
 const config = require('../../../config/config.json');
 
-class ProgramsView {
+class ProgramView {
     public getUrl(universityAlias: string, programAlias: string): string {
         const protocol = config.protocol;
         const host =  config.universities.host;
@@ -106,4 +106,4 @@ class ProgramsView {
     }
 }
 
-export const programsView = new ProgramsView();
+export const programView = new ProgramView();
