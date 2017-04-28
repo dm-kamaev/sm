@@ -9,21 +9,6 @@ import * as commander from 'commander';
 import * as path from 'path';
 const logger = require('../app/components/logger/logger.js').getLogger('app');
 const sequelize = require('../app/components/db.js');
-// sequelize.options.logging = function (query) {
-//   console.log(query
-//      .replace(/(,)/g, '$1\n')
-//      .replace(/SELECT/, 'SELECT\n')
-//      .replace(/(INSERT)/, '$1\n')
-//      .replace(/(UPDATE)/, '$1\n')
-//      .replace(/(FROM)/, '\n$1')
-//      .replace(/(LEFT OUTER JOIN)/g, '\n$1')
-//      .replace(/(LEFT JOIN)/g, '\n$1')
-//      .replace(/(WHERE)/g, '\n$1')
-//      .replace(/(VALUES)/g, '\n$1\n')
-//      .replace(/(ARRAY)/g, '\n$1')
-//      .replace(/(GROUP BY)/g, '\n$1\n')
-//   );
-// };
 import {xlsx} from '../api/components/xlsx';
 import {Universities} from './modules/updateUniversityAndProgram/Universities';
 import {Programs} from './modules/updateUniversityAndProgram/Programs';
@@ -71,58 +56,18 @@ class UpdateUniversityProgram {
         };
     }
 
-    // public async updateOtherProgramAndRelation() {
-    //     try {
-    //         // const pathFile: string
-    //         //     = '../assets/universities/listProgramPart.xlsx';
-    //         logger.info('Reading file programs and universities...');
-    //         const pathFile: string =
-    //             '../assets/universities/listProgramAll.xlsx';
-    //         this.listProgram_ = await this.getJsonFromXlsx(pathFile);
-    //         const data = {
-    //             hashColumn: this.hashColumn_,
-    //             listProgram: this.listProgram_,
-    //         };
-    //         // console.log(this.listProgram_);
-    //         logger.info('Update cities...');
-    //         await new Cities(data).updateViaXlsx();
-
-    //         const universities = new Universities(data);
-    //         logger.info('Validate universities...');
-    //         await universities.validate();
-    //         logger.info('Update...');
-    //         await universities.updateViaXlsx();
-
-    //         const programs = new Programs(data);
-    //         logger.info('Validate programs...');
-    //         await programs.validate();
-    //         logger.info('Update...');
-    //         await programs.updateViaXlsx();
-
-    //         const entranceStatistics = new EntranceStatistics(data);
-    //         logger.info('Validate programs...');
-    //         await entranceStatistics.validate();
-    //         logger.info('Update...');
-    //         await entranceStatistics.updateViaXlsx();
-    //     } catch (error) {
-    //         console.log('ERROR=', error);
-    //     }
-    // }
-
     public async topPrograms() {
         logger.info('------Top programs-----');
-        // '../assets/universities/listProgramPart.xlsx'
         const pathFile: string =
             '../assets/universities/listProgramTop.xlsx';
         await this.updateProgramAndRelation(pathFile);
-        // await this.updateEgeExam(pathFile, {
-        //     formatEgeExam: 'human'
-        // });
+        await this.updateEgeExam(pathFile, {
+            formatEgeExam: 'human'
+        });
     }
 
     public async otherPrograms() {
         logger.info('------Other programs-----');
-        // '../assets/universities/listProgramPart.xlsx'
         const pathFile: string =
             '../assets/universities/listProgramAll.xlsx';
         await this.updateProgramAndRelation(pathFile);
@@ -160,7 +105,7 @@ class UpdateUniversityProgram {
             logger.info('Update...');
             await entranceStatistics.updateViaXlsx();
         } catch (error) {
-            console.log('ERROR=', error);
+            logger.critical('updateProgramAndRelation =>', error);
         }
     }
 
@@ -182,7 +127,7 @@ class UpdateUniversityProgram {
             logger.info('Update...');
             await egeExams.updateViaXlsx();
         } catch (error) {
-            console.log('Error=', error);
+            logger.critical('updateEgeExam =>', error);
         }
     }
 

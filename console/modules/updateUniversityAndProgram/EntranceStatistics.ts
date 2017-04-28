@@ -148,12 +148,13 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             );
             const budgetPlaces = this.int(program[budgetPlacesColumn]);
             const commercialPlaces = this.int(program[commercialPlacesColumn]);
-            const cost = this.int(program[costColumn]);
+            const cost = this.int(program[costColumn].replace(/,/g, ''));
             const egePassScore = this.int(program[egePassScoreColumn]);
             const universityKey: string = this.uniteAbbrevationAndName(
                 abbreviation,
                 universityName
             );
+
             const universityId: number = hashUniversities[universityKey];
             const programKey: string = this.uniteUniversityIdAndProgramName(
                 universityId,
@@ -244,6 +245,7 @@ export class EntranceStatistics extends BaseWorkWithProgram {
     }
 
     private int(str: string): number {
+        str = str.replace(/\s+/g, '');
         const res = parseInt(str, 10);
         if (isNaN(res)) {
             return 0;
@@ -252,6 +254,7 @@ export class EntranceStatistics extends BaseWorkWithProgram {
     }
 
     private float(str: string): number {
+        str = str.replace(/\s+/g, '');
         if (typeof str === 'string') {
             str = str.replace(/\,/g, '.');
         }

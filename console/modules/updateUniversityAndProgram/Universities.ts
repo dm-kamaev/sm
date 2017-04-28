@@ -123,7 +123,6 @@ export class Universities extends BaseWorkWithProgram {
         const {
             universityName: universityNameColumn,
             universityAbbreviation: universityAbbreviationColumn,
-            // programName: programNameColumn,
             militaryDepartment: militaryDepartmentColumn,
             dormitory: dormitoryColumn,
         } = this.hashColumn_;
@@ -141,7 +140,6 @@ export class Universities extends BaseWorkWithProgram {
                 = this.uniteAbbrevationAndName(abbreviation, universityName);
 
             let errorText: string = '';
-            // console.log(key, militaryDepartment, dormitory);
             if (!universities[key]) {
                 universities[key] = {
                     militaryDepartment,
@@ -199,14 +197,13 @@ export class Universities extends BaseWorkWithProgram {
                 this.russianBooleanToEnglish(program[dormitoryColumn]);
             const key: string
                 = this.uniteAbbrevationAndName(abbreviation, universityName);
-            const data: any = {
+            const data: UniversityAdminList = {
                 name: this.cleanWhiteSpace(universityName),
                 abbreviation: this.cleanWhiteSpace(abbreviation),
                 cityId
-                // links: program['ссылка на офиц сайт программы'],
             };
             if (typeof militaryDepartment === 'boolean') {
-                data['militaryDepartment'] = militaryDepartment;
+                data.militaryDepartment = militaryDepartment;
             }
             if (typeof dormitory === 'boolean') {
                 data.dormitory = dormitory;

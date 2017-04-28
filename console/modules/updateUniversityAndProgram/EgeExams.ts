@@ -41,7 +41,6 @@ export class EgeExams extends BaseWorkWithProgram {
         this.hashColumn_ = option.hashColumn;
         this.listProgram_ = option.listProgram;
         this.formatEgeExam_ = option.formatEgeExam_ || 'default';
-        // console.log('this.formatEgeExam_=', this.formatEgeExam_ );
     }
 
     public async validate() {
@@ -66,7 +65,6 @@ export class EgeExams extends BaseWorkWithProgram {
         const hashUniverProgram =
             this.hashUniverProgram_ =
             await this.getHashUniverProgram();
-        // console.log('hashUniverProgram=', hashUniverProgram);
         const {
             universityAbbreviation: universityAbbreviationColumn,
             programName: programNameColumn,
@@ -159,7 +157,6 @@ export class EgeExams extends BaseWorkWithProgram {
                         errorText += ` ${JSON.stringify(program, null, 2)},
                                        row=${i}`;
                         logger.critical(errorText);
-                        // throw new Error('STOP');
                     }
                 }
             };
@@ -223,17 +220,22 @@ export class EgeExams extends BaseWorkWithProgram {
             extraExam: extraExamColumn,
         } = this.hashColumn_;
         const egeExams = this.listProgram_.map((program): EgeExamInfo => {
-            const programName: string =
-                this.cleanWhiteSpace(program[programNameColumn]);
-            const abbreviation: string =
-                this.cleanWhiteSpace(program[universityAbbreviationColumn]);
-            const key: string =
-                this.uniteAbbrevationAndName(abbreviation, programName);
-            let extraExam: string | string[] =
-                this.cleanWhiteSpace(program[extraExamColumn]);
+            const programName: string = this.cleanWhiteSpace(
+                program[programNameColumn]
+            );
+            const abbreviation: string = this.cleanWhiteSpace(
+                program[universityAbbreviationColumn]
+            );
+            const key: string = this.uniteAbbrevationAndName(
+                abbreviation, programName
+            );
+            let extraExam: string | string[] = this.cleanWhiteSpace(
+                program[extraExamColumn]
+            );
             extraExam = this.getListExtraExam(extraExam);
-            let eges: string | string[] =
-                this.cleanWhiteSpace(program[egeColumn]);
+            let eges: string | string[] = this.cleanWhiteSpace(
+                program[egeColumn]
+            );
             eges = this.getListEge(eges);
             const programId = hashUniverProgram[key];
             const egeInfo = eges.map((subject: string): EgeInfo => {
@@ -254,10 +256,6 @@ export class EgeExams extends BaseWorkWithProgram {
             }
             return data;
         });
-        console.log(
-            'egeExams=', util.inspect(egeExams, { depth: 4 }),
-            egeExams.length
-        );
         return egeExams;
     }
 
@@ -297,15 +295,16 @@ export class EgeExams extends BaseWorkWithProgram {
         let res: ProgramEgeExamAttribute;
         const hashProgramEge = this.hashProgramEge_;
         const subjectId: number = ege.subjectId;
-        const key: string =
-            this.uniteProgramIdAndSubjectId(programId, subjectId);
+        const key: string = this.uniteProgramIdAndSubjectId(
+            programId,
+            subjectId
+        );
         const programEgeId: number | null = hashProgramEge[key];
+        if (!subjectId) {
+            return;
+        }
         if (!programEgeId) {
             try {
-                // console.log('CREATE', {
-                //     programId,
-                //     subjectId
-                // });
                 res = await programEgeExamService.create({
                     programId,
                     subjectId
@@ -315,10 +314,6 @@ export class EgeExams extends BaseWorkWithProgram {
             }
         } else {
             try {
-                // console.log('UPDATE', programEgeId, {
-                //     programId,
-                //     subjectId
-                // });
                 res = await programEgeExamService.update(programEgeId, {
                     programId,
                     subjectId
@@ -415,7 +410,10 @@ export class EgeExams extends BaseWorkWithProgram {
 
     // str - "Обществознание, Иностранный язык, Русский язык: 43, 24, 40"
     private parseHumanFormatExtraExam(str: string) {
-        str = str.replace(/:.+/g, '').replace(/\s+/g, ' ').trim();
-        return str.split(',');
+        str = str.replace(/:.+/g, '')
+                 .replace(/\s+/g, ' ').trim();
+        return str.split(',')
+                  .map(el => el.replace(/-\d+/g, '').trim())
+                  .filter(el => Boolean(el));
     }
 };
