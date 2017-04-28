@@ -364,7 +364,6 @@ class ProgramFilterPanel extends FilterPanel {
     }
 
     private setFilterFeatures_(
-            optionModels: Array<OptionModel>,
             checkedValues?: (number|string)[]
     ) {
         const params = this.filterFeatures_;
