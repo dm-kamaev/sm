@@ -249,18 +249,20 @@ console/executable/sendNewCommentNotifications.js
 console/modules/geoTools/*.js
 console/modules/modelArchiver/Archiver.js
 console/modules/newCommentNotifier/**/*.js
+console/modules/parseUniversityComments/**/*.js
 console/modules/schoolSpecClasses/*.js
 console/modules/searchUpdater/ProgramActualizer.js
 console/one-off/loadPrograms.js
+console/one-off/parseUniversityComments.js
 console/one-off/shrinkOlympiadResults.js
-console/importSchoolSpecClasses.js
-console/insertRegionForMoscow.js
-console/updateProgramSimilar.js
-console/updateUniverstyAndProgram.js
-console/fixedEncodingProgramMajor.js
 console/addedNewProgramMajor.js
 console/addedNewSubject.js
+console/fixedEncodingProgramMajor.js
+console/importSchoolSpecClasses.js
+console/insertRegionForMoscow.js
 console/updateCityNames.js
+console/updateProgramSimilar.js
+console/updateUniverstyAndProgram.js
 console/modules/updateUniversityAndProgram/*.js
 console/modules/updateUniversityAndProgram/types/*.js
 
