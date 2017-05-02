@@ -1,0 +1,89 @@
+{namespace sm.lHomeUniversity.Template}
+
+
+/**
+ * Home page of universities
+ * @param params {{
+ *     data: sm.lHomeUniversity.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends sm.lSearch.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ * @doc
+ */
+{template .homeUniversity autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lHomeUniversity
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-home-university
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/l-home-university.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {?},
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .mainContent}
+    <div class="{call .rootClass/}__body">
+        {call .sectionContent_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Left menu and Search results
+ * @param params {{
+ *     data: {?},
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .sectionContent_}
+    <div class="{call .rootClass/}__section
+        {sp}{call .rootClass/}__section_content">
+
+        {if $params}{/if}
+    </div>
+{/template}
