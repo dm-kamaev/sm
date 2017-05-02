@@ -2,6 +2,9 @@ import * as express from 'express';
 
 const router = express.Router();
 
+import {UnivrersityRenderController} from './UniversityRenderController';
+const univrersityRenderController: any = new UnivrersityRenderController();
+
 import {ProgramRenderController} from './ProgramRenderController';
 const programRenderController: any = new ProgramRenderController();
 
@@ -28,6 +31,7 @@ router.get(
 );
 
 router.get('/program/search', programRenderController.actionGetSearch);
+router.get('/', univrersityRenderController.actionGetHome);
 
 router.get('/program/filtersearch', programController.actionSearch);
 
