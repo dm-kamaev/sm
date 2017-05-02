@@ -25,11 +25,11 @@
                      schools.update-sitemap,
                      packaging.release.folder.link,
                      packaging.rollback-script,
+                     schools.change-owner,
+                     schools.change-permissions,
                      packaging.supervisor.restart,
                      packaging.crontab.install,
-                     packaging.initd.install,
-                     schools.change-owner,
-                     schools.change-permissions"/>
+                     packaging.initd.install"/>
 
     <!-- Stop previous release -->
     <target name="packaging.release.clean"
