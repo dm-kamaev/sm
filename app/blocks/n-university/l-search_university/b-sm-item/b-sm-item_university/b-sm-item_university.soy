@@ -323,30 +323,6 @@
 
 
 /**
- * Description
- * @param params {{
- *     data: {
- *         description: (string|Array<string>|undefined)
- *     }
- * }}
- * @override
- */
-{template .sectionDescription}
-    {let $classes kind="html"}
-        {call .rootClass/}__section{sp}
-        {call .rootClass/}__section_description
-        {if not $params.data?.description}
-            {sp}i-utils__hidden
-        {/if}
-    {/let}
-
-    <div class="{$classes}">
-        {call .description data="all" /}
-    </div>
-{/template}
-
-
-/**
  * Score
  * @param params {{
  *     data: {

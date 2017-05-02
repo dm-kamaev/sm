@@ -66,7 +66,7 @@ class ProgramView {
                     textDefault: 'Платных мест: ' + item.commercialPlaces,
                     textXs: 'Платных: ' + item.commercialPlaces
                 },
-                value: 'от ' + item.cost + ' тыс./год'
+                value: 'от ' + Math.floor(item.cost / 1000) + ' тыс./год'
             }
         ];
     }
