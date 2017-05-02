@@ -9,6 +9,7 @@ const services = require('../../../../app/components/services').all,
     sequelize = require('../../../../app/components/db');
 
 const entityType = require('../../entity/enums/entityType');
+const categoryPriceType = require('../enums/categoryPrice');
 
 const CATEGORY = 'course_category';
 
@@ -108,10 +109,26 @@ service.getById = async(function(id) {
 });
 
 /**
+ * Get Ccourse categories by given array of id
+ * @param  {number[]} id
+ * @return {CourseCategory[]}
+ */
+service.getByIds = async(function(ids) {
+    return await(models.CourseCategory.findAll({
+        where: {
+            id: {
+                $in: ids
+            }
+        }
+    }));
+});
+
+/**
  * @param  {{
  *     name: string,
  *     isActive: ?boolean,
- *     filters: Array<string>
+ *     filters: Array<string>,
+ *     priceType: ?CategoryPrice
  * }} data
  * @return {CourseCategory}
  */
@@ -129,7 +146,8 @@ service.create = async(function(data) {
  * @param  {{
  *     name: string,
  *     isActive: ?boolean,
- *     filters: Array<string>
+ *     filters: Array<string>,
+ *     priceType: ?CategoryPrice
  * }} data
  * @return {number}
  */
@@ -166,10 +184,23 @@ service.deleteAlias = async(function(courseCategory) {
 });
 
 /**
- * @return {Array<Page>}
+ * Get all of category aliases or by array of their ids
+ * @param {number[]=} ids
+ * @return {models.Page[]}
  */
-service.getAliases = async(function() {
-    return await(services.page.getAllAliases(entityType.COURSE_CATEGORY));
+service.getAliases = async(function(ids) {
+    const result = ids ?
+        services.page.getAliases(ids, entityType.COURSE_CATEGORY) :
+        services.page.getAllAliases(entityType.COURSE_CATEGORY);
+
+    return result;
 });
+
+/**
+ * @return {Array<string>}
+ */
+service.getCategoryPrices = function() {
+    return categoryPriceType.toArray();
+};
 
 module.exports = service;

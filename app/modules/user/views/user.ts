@@ -8,7 +8,8 @@ class UserView {
         return user ?
             {
                 firstName: user.firstName,
-                lastName: user.lastName
+                lastName: user.lastName,
+                photoUrl: user.photoUrl
             } :
             null;
     }

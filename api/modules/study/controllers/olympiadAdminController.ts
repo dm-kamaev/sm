@@ -5,6 +5,9 @@
 import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
+const awardType = require('../enums/olimpStatusType');
+const olympiadType = require('../enums/olimpType');
+
 import {service as olympiadResultService} from '../services/olimpResult';
 import {OlympiadResultNotFound} from './errors/OlympiadResultNotFound';
 import {OlympiadResultsAlreadyExists}
@@ -297,6 +300,42 @@ class OlympiadAdminController extends Controller {
     public async actionDelete(
             actionContext: any, schoolId: number, id: number) {
         await olympiadResultService.delete(id);
+    }
+
+
+    /**
+     * @api {get} /api/admin/awardetype Get all types of status olympiad
+     * @apiVersion 1.0.0
+     * @apiName GetAwardTypes
+     * @apiGroup School Admin
+     *
+     * @apiSuccess {String[]} - school types.
+     * @apiSuccessExample {json} Example response:
+     *    [
+     *        "победитель",
+     *        "призер"
+     *    ]
+     */
+    public actionGetAwardTypes(actionContext: any) {
+        return awardType.toArray();
+    }
+
+
+    /**
+     * @api {get} /api/admin/olymptype Get all types of olympiad
+     * @apiVersion 1.0.0
+     * @apiName GetOlympTypes
+     * @apiGroup School Admin
+     *
+     * @apiSuccess {String[]} - school types.
+     * @apiSuccessExample {json} Example response:
+     *    [
+     *        "всероссийская",
+     *        "московская"
+     *    ]
+     */
+    public actionGetOlympTypes(actionContext: any) {
+        return olympiadType.toArray();
     }
 }
 

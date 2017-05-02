@@ -43,5 +43,5 @@ export interface SchoolDataForView {
 
 
 export interface SchoolAddresses {
-    [ key: string ]: { areaName: string, districtName: string };
+    [key: string]: {areaName: string, districtName: string};
 }

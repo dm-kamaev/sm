@@ -49,7 +49,8 @@ const informationFields = {
         'description',
         'duration',
         'costPerHour',
-        'startDate'
+        'startDate',
+        'openSchedule'
     ],
     SCHEDULE: ['day', 'startTime', 'endTime'],
     DEPARTMENT: ['id'],
@@ -519,6 +520,29 @@ service.getGetByNameAndCategoryAlias = async(function(categoryAlias, name) {
                 in: types.map(type => type.id)
             }
         },
+        raw: true
+    });
+});
+
+/**
+ * Get courses by array of course types in order by ctr and then by updated at
+ * date
+ * @param {number[]} types Array of course type for search courses
+ * @param {number=} limit How to limit results of search
+ * @return {Models.Course[]}
+ */
+service.getByTypes = async(function(types, limit) {
+    return models.Course.findAll({
+        where: {
+            type: {
+                in: types.map(type => type.id)
+            }
+        },
+        order: [
+            ['ctr', 'DESC NULLS LAST'],
+            ['updated_at', 'DESC']
+        ],
+        limit: limit,
         raw: true
     });
 });

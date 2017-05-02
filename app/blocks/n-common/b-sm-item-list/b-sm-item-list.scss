@@ -28,6 +28,7 @@
     }
 }
 
+/** Neptune theme start */
 .b-sm-item-list_neptune-theme {
     .b-sm-item-list__item-wrap {
         margin-bottom: 55px;
@@ -39,6 +40,15 @@
         }
     }
 }
+/** Neptune theme start */
+
+/** Overcast theme start */
+.b-sm-item-list_overcast-theme {
+    .b-sm-item-list__item-wrap {
+        margin-bottom: 12px;
+    }
+}
+/** Overcast theme start */
 
 .b-sm-item-list_inline-theme {
     .b-sm-item-list__list {
@@ -100,6 +110,7 @@
         }
     }
 
+    /** Neptune theme start */
     .b-sm-item-list_neptune-theme {
         .b-sm-item-list__item-wrap {
             margin-bottom: 55px;
@@ -107,6 +118,7 @@
             border-top: 1px solid #e4e4e4;
         }
     }
+    /** Neptune theme end */
 }
 
 @include media-m {
@@ -204,6 +216,7 @@
         }
     }
 
+    /** Neptune theme start */
     .b-sm-item-list_neptune-theme {
         .b-sm-item-list__item-wrap {
             margin-bottom: 30px;
@@ -215,6 +228,6 @@
             }
         }
     }
-
+    /** Neptune theme end */
 }
 

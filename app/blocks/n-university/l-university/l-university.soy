@@ -134,6 +134,7 @@
     <div class="{call .rootClass/}__section{sp}
         {call .rootClass/}__section_data{sp}"
     >
+        {call .navigationPanel_ data="all" /}
         {call .sketchData_ data="all" /}
         {call .mainData_ data="all" /}
     </div>
@@ -267,7 +268,6 @@
     <div class="{call .rootClass/}__data_main-description i-utils__clearfix">
         {call .descriptionSizeXS_ data="all" /}
         {call .summaryBoard_ data="all" /}
-        {call .navigationPanel_ data="all" /}
         {call .description_ data="all" /}
         {call .descriptionList_ data="all" /}
         {call .subscribeBoard_ data="all" /}
@@ -372,27 +372,29 @@
             {$params.data.entityData.subunitName}
         </div>
 
-        <div class="{call .rootClass/}__description">
-            {if $params.data.size == 'xs'}
-                {call .renderChildLayout}
-                    {param params: $params /}
-                    {param type: 'smCollapsedText' /}
-                    {param renderParams: [
-                        'data': [
-                            'text': $params.data.entityData.cutDescription,
-                            'buttonTextExpand': 'Развернуть описание'
-                        ],
-                        'config': [
-                            'isButtonCollapse': true,
-                            'buttonFont': 'inherit',
-                            'buttonTheme': 'neptune'
-                        ]
-                    ]/}
-                {/call}
-            {else}
-                {$params.data.entityData.description}
-            {/if}
-        </div>
+        {if $params.data.entityData.description}
+            <div class="{call .rootClass/}__description">
+                {if $params.data.size == 'xs'}
+                    {call .renderChildLayout}
+                        {param params: $params /}
+                        {param type: 'smCollapsedText' /}
+                        {param renderParams: [
+                            'data': [
+                                'text': $params.data.entityData.cutDescription,
+                                'buttonTextExpand': 'Развернуть описание'
+                            ],
+                            'config': [
+                                'isButtonCollapse': true,
+                                'buttonFont': 'inherit',
+                                'buttonTheme': 'neptune'
+                            ]
+                        ]/}
+                    {/call}
+                {else}
+                    {$params.data.entityData.description}
+                {/if}
+            </div>
+        {/if}
     </div>
 {/template}
 
@@ -413,15 +415,17 @@
  * @private
  */
 {template .descriptionList_}
-    <div class="{call .rootClass/}__description-list">
-        {call .renderChildLayout}
-            {param params: $params /}
-            {param type: 'lUniversity-descriptionList' /}
-            {param renderParams: [
-                'data': $params.data.entityData.descriptionList
-            ]/}
-        {/call}
-    </div>
+    {if $params.data.entityData.descriptionList}
+        <div class="{call .rootClass/}__description-list">
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'lUniversity-descriptionList' /}
+                {param renderParams: [
+                    'data': $params.data.entityData.descriptionList
+                ]/}
+            {/call}
+        </div>
+    {/if}
 {/template}
 
 
@@ -518,8 +522,11 @@
  * @param params {{
  *     data: {
  *         similarPrograms: {
- *              header: string,
- *              data: sm.bSmItemList.Template.Params.Data
+ *             header: {
+ *                 default: string,
+ *                 sizeXS: (string|undefined)
+ *             },
+ *             data: sm.bSmItemList.Template.Params.Data
  *         }
  *     },
  *     config: {
@@ -535,7 +542,12 @@
                 {call .rootClass/}__programs
             {/let}
             <div class="{call .rootClass/}__similar-programs-header">
-                {$params.data.similarPrograms.header}
+                {$params.data.similarPrograms.header.default}
+            </div>
+            <div class="{call .rootClass/}__similar-programs-header{sp}
+                {call .rootClass/}__similar-programs-header_size_xs"
+            >
+                {$params.data.similarPrograms.header.sizeXS}
             </div>
             <div class="{call .rootClass/}__similar-programs-list">
                 {call .renderChildLayout}

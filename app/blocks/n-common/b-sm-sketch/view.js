@@ -1,6 +1,7 @@
 goog.provide('sm.bSmSketch.View');
 
 goog.require('cl.iControl.View');
+goog.require('sm.bSmPicture.View');
 
 
 
@@ -28,7 +29,8 @@ goog.inherits(sm.bSmSketch.View, cl.iControl.View);
 
 
 goog.scope(function() {
-    var View = sm.bSmSketch.View;
+    var View = sm.bSmSketch.View,
+        PictureView = goog.module.get('sm.bSmPicture.View');
 
 
     /**
@@ -38,7 +40,8 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-sketch',
-        BUTTON: 'b-sm-sketch__button-action'
+        BUTTON: 'b-sm-sketch__button-action',
+        PICTURE: PictureView.CssClass.ROOT
     };
 
 
@@ -60,6 +63,9 @@ goog.scope(function() {
         this.dom = {
             button: this.getElementByClass(
                 View.CssClass.BUTTON
+            ),
+            picture: this.getElementByClass(
+                View.CssClass.PICTURE
             )
         };
     };

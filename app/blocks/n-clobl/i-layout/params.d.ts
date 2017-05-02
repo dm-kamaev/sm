@@ -1,5 +1,6 @@
 import {bSmHeader} from '../../n-common/b-sm-header/params';
 import {bSmSubheader} from '../../n-common/b-sm-subheader/params';
+import {gModalSideMenu} from '../g-modal/g-modal_side-menu/params';
 
 export namespace iLayoutStendhal {
     /*
@@ -13,18 +14,18 @@ export namespace iLayoutStendhal {
             openGraph?: (any|undefined),
             seo?: {
                 metaTitle?: string,
-                metaDescription?: (string|undefined)
+                metaDescription?: string
             },
             subHeader?: bSmSubheader.Params,
             header?: bSmHeader.Params,
-            sideMenu?: any,
+            sideMenu?: gModalSideMenu.Params,
             user?: {
-                firstName: (string|undefined),
-                lastName: (string|undefined)
+                firstName: string,
+                lastName: string
             },
             authSocialLinks?: {
-                vk: (string|undefined),
-                fb: (string|undefined)
+                vk: string,
+                fb: string
             },
             footer?: any
         }

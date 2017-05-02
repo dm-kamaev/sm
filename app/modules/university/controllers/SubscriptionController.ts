@@ -17,6 +17,28 @@ class SubscriptionController extends Controller {
         };
     }
 
+    /**
+     * @apiDefine EmailAlreadyExistError
+     * @apiError (409) EmailAlreadyExistError Email already exist
+     * @apiErrorExample {json} Error-Response:
+     *      HTTP/1.1 409 Conflict
+     *      [{
+     *           "code": "EmailAlreadyExist",
+     *           "message": "Данный email уже зарегистрирован"
+     *      }]
+     */
+
+    /**
+     * @apiDefine InvalidEmailError
+     * @apiError (422) InvalidEmailError Invalid email
+     * @apiErrorExample {json} Error-Response:
+     *      HTTP/1.1 422 Unprocessable Entity
+     *      [{
+     *           "code": "InvalidEmail",
+     *           "message": "Некорректный email"
+     *      }]
+     */
+
 
     /**
      * @apiDefine InvalidEmailError

@@ -5,7 +5,7 @@
 }
 
 .l-university__body {
-    margin: 0 auto 60px;
+    margin: 0 auto 45px;
 
     color: #000;
 }
@@ -16,7 +16,7 @@
     width: 1200px;
     min-width: 255px;
     margin: 0 auto 80px auto;
-    padding-top: 30px;
+    padding-top: 25px;
 }
 
 .l-university__data_sketch {
@@ -72,6 +72,8 @@
 .l-university__name {
     margin-bottom: 12px;
 
+    word-wrap: break-word;
+
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 36.3px;
     font-weight: 700;
@@ -103,7 +105,8 @@
 
 .l-university__section_programs {
     width: 100%;
-    background-color: #007aff;
+    margin-bottom: 46px;
+    background-color: #f3f3f3;
 }
 
 .l-university__similar-programs-content{
@@ -117,18 +120,17 @@
     padding-bottom: 35px;
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 24px;
-    font-weight: 800;
-    color: #ffffff;
+    font-weight: 700;
+}
+
+.l-university__similar-programs-header_size_xs {
+    display: none;
 }
 
 .l-university__section_courses {
     width: 1200px;
     min-width: 255px;
     margin: 0 auto;
-}
-
-.l-university__useful-courses-content {
-    padding-top: 46px;
 }
 
 .l-university__useful-courses-header {
@@ -144,7 +146,7 @@
 }
 
 .l-university__navigation-panel {
-    width: calc(100% - 375px);
+    width: 100%;
     padding-bottom: 25px;
 }
 
@@ -181,7 +183,10 @@
 @include media-l {
     .l-university__section_data {
         margin-bottom: 60px;
-        padding-top: 40px;
+    }
+
+    .l-university__section_programs {
+        margin-bottom: 40px;
     }
 
     .l-university__similar-programs-header {
@@ -207,15 +212,6 @@
 
     .l-university__entity-relation {
         display: none;
-    }
-
-    .l-university__useful-courses-content {
-        padding-top: 40px;
-    }
-
-    .l-university__navigation-panel {
-        width: 100%;
-        padding-bottom: 25px;
     }
 
     .l-university__board-wrap {
@@ -244,6 +240,10 @@
 
 
 @include media-xs {
+    .l-university__body {
+        margin-bottom: 30px;
+    }
+
     .l-university__section_data {
         padding-right: 25px;
         padding-left: 25px;
@@ -255,6 +255,7 @@
     }
 
     .l-university__section_programs {
+        margin-bottom: 30px;
         padding-right: 25px;
         padding-left: 25px;
     }
@@ -309,11 +310,11 @@
     }
 
     .l-university__similar-programs-header {
-        padding-bottom: px;
+        display: none;
     }
 
-    .l-university__useful-courses-content {
-        padding-top: 30px;
+    .l-university__similar-programs-header_size_xs {
+        display: block;
     }
 
     .l-university__useful-courses-header {

@@ -30,6 +30,7 @@ let controller = {};
  *             "endTime": "15:00:00",
  *             "day": 2
  *         }],
+ *         "openSchedule": false,
  *         "departments": [16],
  *         "costPerHour": 2300,
  *         "online": false,
@@ -78,6 +79,7 @@ controller.list = async(function(req, res) {
  *             "endTime": "15:00:00",
  *             "day": 2
  *         }],
+ *         "openSchedule": false,
  *         "departments": [16],
  *         "costPerHour": 2300,
  *         "online": false,
@@ -115,6 +117,7 @@ controller.get = async(function(req, res) {
  *     {
  *         "name": "Optima",
  *         "schedule": "Вт, 16:30, 18:45; Чт, 17:30, 19:45",
+ *         "openSchedule": false,
  *         "departments": [1, 2, 3],
  *         "costPerHour": 2300,
  *         "online": false,
@@ -166,6 +169,7 @@ controller.create = async(function(req, res) {
  *             "endTime": "15:00:00",
  *             "day": 2
  *         }],
+ *         "openSchedule": false,
  *         "departments": [1, 2, 3],
  *         "costPerHour": 2300,
  *         "online": false,

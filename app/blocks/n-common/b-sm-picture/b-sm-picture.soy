@@ -1,0 +1,90 @@
+{namespace sm.bSmPicture.Template}
+
+
+/**
+ * @typedef {sm.bSmPicture.Params.Data}
+ * sm.bSmPicture.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {sm.bSmPicture.Params.Config}
+ * sm.bSmPicture.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmPicture.Template.Params.Data,
+ *     config: sm.bSmPicture.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .picture}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    smPicture
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmPicture.Template.Params.Data,
+ *     config: sm.bSmPicture.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .picture_ data="all" /}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-picture
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         sources: Array<{
+ *             url: string,
+ *             size: string,
+ *         }>,
+ *         altText: (string|undefined)
+ *     }
+ * }}
+ */
+{template .picture_}
+    <picture>
+        {foreach $source in $params.data.sources}
+            {let $media kind="text"}
+                {call sm.iMedia.Media.getMediaString}
+                    {param sources: $params.data.sources /}
+                    {param size: $source.size /}
+                {/call}
+            {/let}
+            <source srcset="{$source.url}" media="{$media}">
+        {/foreach}
+
+        <img class="{call .rootClass /}"
+            {if $params.data.altText}
+                alt="{$params.data.altText}"
+            {/if}
+        >
+    </picture>
+{/template}

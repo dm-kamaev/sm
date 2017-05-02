@@ -9,7 +9,6 @@ doc/
 build/
 runtime/
 assets/dump/
-/console/reports
 /vkdata/
 project_tools/
 compile.js
@@ -51,11 +50,12 @@ typings
 #builded typescript files ignore
 api/components/interface.js
 
+#api/modules/comment
 api/modules/comment/controllers/errors/**/*.js
 api/modules/comment/controllers/AdminProgramCommentController.js
 api/modules/comment/controllers/ProgramCommentController.js
 api/modules/comment/lib/**/*.js
-api/modules/comment/migrations/20170227134914-create-program-comments.js
+api/modules/comment/migrations/*.js
 api/modules/comment/models/commentGroup.js
 api/modules/comment/models/ProgramComment.js
 api/modules/comment/models/Rating.js
@@ -63,59 +63,65 @@ api/modules/comment/services/exceptions/**/*.js
 api/modules/comment/services/commentGroup.js
 api/modules/comment/services/programComment.js
 api/modules/comment/services/rating.js
-api/modules/comment/views/programCommentView.js
 api/modules/comment/types/**/*.js
+api/modules/comment/views/programCommentView.js
 
 
-api/modules/entity/models/page.js
-api/modules/entity/services/page.js
-api/modules/entity/types/**/*.js
-
+#api/modules/course
+api/modules/course/controllers/errors/CoursePageMetaAlreadyExists.js
+api/modules/course/controllers/errors/PageMetaNotBelongToCourse.js
 api/modules/course/controllers/middleware/**/*.js
+api/modules/course/controllers/coursePageMetaController.js
+api/modules/course/models/course.js
 api/modules/course/models/courseBrand.js
+api/modules/course/models/CourseType.js
+api/modules/course/services/exceptions/*.js
+api/modules/course/services/coursePageMeta.js
+api/modules/course/types/*.js
 
-api/modules/geo/controllers/index.js
-api/modules/geo/controllers/CityAdminController.js
+
+#api/modules/entity
+api/modules/entity/enums/entityRoutes.js
+api/modules/entity/models/page.js
+api/modules/entity/models/pageMetaInformation.js
+api/modules/entity/services/exceptions/*.js
+api/modules/entity/services/page.js
+api/modules/entity/services/pageMetaInformation.js
+api/modules/entity/types/*.js
+
+
+#api/modules/geo
 api/modules/geo/controllers/errors/*.js
+api/modules/geo/controllers/CityAdminController.js
+api/modules/geo/controllers/index.js
 
-api/modules/geo/interfaces/*.js
+api/modules/geo/migrations/2017*.js
+
 api/modules/geo/models/address.js
 api/modules/geo/models/area.js
 api/modules/geo/models/city.js
 api/modules/geo/models/department.js
 api/modules/geo/models/metro.js
 api/modules/geo/models/Region.js
+
 api/modules/geo/services/exceptions/*.js
 api/modules/geo/services/address.js
 api/modules/geo/services/city.js
 api/modules/geo/services/department.js
 api/modules/geo/services/region.js
-api/modules/geo/views/departmentView.js
-api/modules/geo/services/exceptions/*.js
+
 api/modules/geo/types/**/*.js
 
-api/modules/geo/migrations/20170309140000-create-region.js
-api/modules/geo/migrations/20170309144500-add-region-id-for-city.js
-api/modules/geo/migrations/20170310170002-add-composit-index-by-city-name-region-id.js
+api/modules/geo/views/departmentView.js
 
+
+#api/modules/school
+api/modules/school/controllers/errors/*.js
+!api/modules/school/controllers/errors/SchoolNotFoundError.js
+api/modules/school/controllers/*.js
+!api/modules/school/controllers/schoolController.js
 
 api/modules/school/interfaces/*.js
-
-api/modules/school/controllers/errors/AddressDepartmentExist.js
-api/modules/school/controllers/errors/AddressDoesNotExist.js
-api/modules/school/controllers/errors/AddressIsNotUnique.js
-api/modules/school/controllers/errors/DepartmentNotFound.js
-api/modules/school/controllers/errors/ExamDataAlreadyExistBySubject.js
-api/modules/school/controllers/errors/ProfileNotFound.js
-api/modules/school/controllers/errors/SchoolCategoryNameIsShorter.js
-api/modules/school/controllers/errors/SchoolNotExistTypeError.js
-api/modules/school/controllers/errors/SchoolNotFound.js
-api/modules/school/controllers/errors/SchoolProfileNameIsShorter.js
-api/modules/school/controllers/commentAdminController.js
-api/modules/school/controllers/departmentAdminController.js
-api/modules/school/controllers/index.js
-api/modules/school/controllers/schoolAdminController.js
-api/modules/school/controllers/profileAdminController.js
 
 api/modules/school/migrations/20170215215800-school-specialized-class.js
 api/modules/school/migrations/20170217153500-school-specialized-classes-drop.js
@@ -125,11 +131,8 @@ api/modules/school/models/additionalEducationSphere.js
 api/modules/school/models/school.js
 api/modules/school/models/schoolSpecializedClass.js
 api/modules/school/models/specializedClassType.js
-api/school/services/specializedClasses.js
-
 
 api/modules/school/services/exceptions/*.js
-
 api/modules/school/services/additionalEducation.js
 api/modules/school/services/profileAdminService.js
 api/modules/school/services/schoolAdminService.js
@@ -140,120 +143,111 @@ api/modules/school/services/specializedClasses.js
 api/modules/school/views/commentView.js
 api/modules/school/views/profileAdminView.js
 
-api/modules/study/models/olimpResult.js
-api/modules/study/services/exceptions/*.js
-api/modules/study/services/olimpResult.js
-api/modules/study/controllers/errors/*.js
-api/modules/study/controllers/olympiadAdminController.js
-app/modules/school/views/olympiadResultView.js
 
-api/modules/study/controllers/*.js
-api/modules/study/controllers/errors/*.js
+#api/modules/study
+api/modules/study/controllers/**/*.js
 
-api/modules/study/models/giaResult.js
-api/modules/study/models/subject.js
 api/modules/study/models/egeResult.js
+api/modules/study/models/giaResult.js
+api/modules/study/models/olimpResult.js
+api/modules/study/models/subject.js
 
 api/modules/study/services/exceptions/*.js
-api/modules/study/services/profileAdminService.js
-api/modules/study/services/giaAdminService.js
-api/modules/study/services/examAdminService.js
-api/modules/study/services/egeAdminService.js
 api/modules/study/services/additionalClassAdminService.js
+api/modules/study/services/egeAdminService.js
+api/modules/study/services/examAdminService.js
+api/modules/study/services/giaAdminService.js
+api/modules/study/services/olimpResult.js
 
 api/modules/study/types/*.js
 
 api/modules/study/views/additionalClassAdminView.js
-api/modules/study/views/giaAdminView.js
 api/modules/study/views/egeAdminView.js
-
-api/modules/course/types/*.js
-api/modules/course/models/course.js
-api/modules/course/services/exceptions/*.js
-api/modules/course/services/coursePageMeta.js
-api/modules/course/controllers/coursePageMetaController.js
-api/modules/course/controllers/errors/PageMetaNotBelongToCourse.js
-api/modules/course/controllers/errors/CoursePageMetaAlreadyExists.js
-
-api/modules/entity/types/*.js
-api/modules/entity/models/pageMetaInformation.js
-api/modules/entity/services/pageMetaInformation.js
-api/modules/entity/services/exceptions/*.js
-api/modules/course/types/*.js
+api/modules/study/views/giaAdminView.js
 
 
-api/modules/study/controllers/**/*.js
-
+#api/modules/university
 api/modules/university/**/*.js
 
+
+#api/modules/user
 api/modules/user/controllers/errors/*.js
 api/modules/user/controllers/adminUserController.js
 api/modules/user/lib/*.js
-api/modules/user/models/adminUser.js
-api/modules/user/services/exceptions/*.js
-api/modules/user/services/adminUser.js
-api/modules/user/views/adminUserView.js
-api/modules/user/models/userData.js
-api/modules/user/types/**/*.js
 api/modules/user/migrations/20170227191120-drop-user-data-user-type-enum.js
 api/modules/user/migrations/20170227193010-user-data-class-type-rename.js
-
+api/modules/user/models/adminUser.js
+api/modules/user/models/userData.js
+api/modules/user/services/exceptions/*.js
+api/modules/user/services/adminUser.js
 api/modules/user/services/userData.js
+api/modules/user/types/*.js
+api/modules/user/views/adminUserView.js
 api/modules/user/views/user.js
 
-api/modules/entity/enums/entityRoutes.js
 
+#app/middleware
 app/middleware/ActionChecker/*.js
 app/middleware/adminUser.js
 app/middleware/checkApiToken.js
 
+
+#app/modules/comment
+app/modules/comment/**/*.js
+
+
+#app/modules/common
+app/modules/common/enums/entityType.js
+app/modules/common/lib/Footer.js
 app/modules/common/lib/Header.js
 app/modules/common/lib/Layout.js
-app/modules/common/types/layout.js
-app/modules/common/lib/SubHeader.js
 app/modules/common/lib/LinksFormatter.js
+app/modules/common/lib/SubHeader.js
+app/modules/common/lib/utils.js
+app/modules/common/services/*.js
+app/modules/common/types/**/*.js
+app/modules/common/views/generalDataView.js
+app/modules/common/views/sideMenuView.js
 
-app/modules/common/views/footerView.js
 
-app/modules/common/enums/entityType.js
+#app/modules/course
+app/modules/course/constants/**/*.js
+app/modules/course/types/**/*.js
+app/modules/course/views/**/*.js
 
 
-app/modules/university/index.js
+#app/modules/school
+app/modules/school/views/olympiadResultView.js
 
-app/modules/university/types/**/*.js
 
+#app/modules/university
+app/modules/university/constants/*.js
 app/modules/university/controllers/errors/*.js
 app/modules/university/controllers/index.js
 app/modules/university/controllers/SubscriptionController.js
 app/modules/university/controllers/UniversityController.js
-app/modules/university/controllers/programController.js
-
-app/modules/university/services/exceptions/*.js
-app/modules/university/services/*.js
-app/modules/university/controllers/ProgramCommentController.js
-app/modules/university/types/programComment.js
-app/modules/university/constants/*.js
-
-app/modules/comment/**/*.js
-
+app/modules/university/services/**/*.js
+app/modules/university/types/**/*.js
 app/modules/university/views/*.js
+app/modules/university/index.js
 
+
+#app/modules/user
 app/modules/user/**/*.js
 
-app/modules/common/services/*.js
-app/modules/comment/**/*.js
 
+#console
+console/executable/sendNewCommentNotifications.js
 console/modules/geoTools/*.js
 console/modules/modelArchiver/Archiver.js
 console/modules/newCommentNotifier/**/*.js
-console/executable/sendNewCommentNotifications.js
-
-console/insertRegionForMoscow.js
-console/one-off/loadPrograms.js
-
-console/one-off/shrinkOlympiadResults.js
-console/modules/geoTools/*.js
 console/modules/schoolSpecClasses/*.js
+console/one-off/loadPrograms.js
+console/one-off/shrinkOlympiadResults.js
 console/importSchoolSpecClasses.js
+console/insertRegionForMoscow.js
+console/updateProgramSimilar.js
 
+
+#gulp
 gulp/taskBackendLint.js

@@ -3,6 +3,8 @@ goog.provide('sm.bSmFooter.SmFooter');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmHeadedList.SmHeadedList');
+goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 
@@ -50,6 +52,7 @@ goog.scope(function() {
         Footer.base(this, 'decorateInternal', element);
 
         this.initLinks_();
+        this.initLists_();
     };
 
 
@@ -62,5 +65,28 @@ goog.scope(function() {
             sm.bSmLink.SmLink.NAME,
             this.getView().getDom().links
         );
+    };
+
+
+    /**
+     * Init headed lists
+     * @private
+     */
+    Footer.prototype.initLists_ = function() {
+        var dom = this.getView().getDom();
+
+        if (dom.headedLists) {
+            this.decorateChildren(
+                sm.bSmHeadedList.SmHeadedList.NAME,
+                dom.headedLists
+            );
+        }
+
+        if (dom.itemLists) {
+            this.decorateChildren(
+                sm.bSmItemList.SmItemList.NAME,
+                dom.itemLists
+            );
+        }
     };
 });  // goog.scope

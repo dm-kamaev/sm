@@ -10,6 +10,9 @@ const sitemap = require('sitemap');
 const urlService = require('../../../api/modules/entity/services/urls');
 
 const services = require('../../../app/components/services').all;
+const programService =
+    require('../../../api/modules/university/services/program').service;
+
 const config = require('../../../app/config').config;
 
 const courseView = require('../../../api/modules/course/views/courseView'),
@@ -23,22 +26,26 @@ class SitemapUpdater {
     /**
      * Constructor
      * @param {string} entityType
+     * @param {{
+     *     route: string,
+     *     hostName: string
+     * }} entityRoute
      */
-    constructor(entityType) {
+    constructor(entityType, entityRoute) {
         /**
          * Subdomain page
          * @type {string}
          * @private
          */
-        this.subdomain_ = entityType + 's';
-
+        this.route_ = entityRoute.route;
 
         /**
          * Host name
          * @type {string}
          * @private
          */
-        this.hostName_ = config.protocol + '://' + config[this.subdomain_].host;
+        this.hostName_ =
+            `${config.protocol}://${config[this.route_].host}`;
 
 
         /**
@@ -48,7 +55,7 @@ class SitemapUpdater {
          */
         this.outputPath_ = path.join(
             __dirname,
-            '../../../public/' + this.subdomain_ + '/sitemap.xml'
+            `../../../public/${this.route_}/sitemap.xml`
         );
 
 
@@ -143,10 +150,16 @@ class SitemapUpdater {
      */
     getEntityAliases_() {
         let aliases;
-        if (this.entityType_ == entityTypeEnum.SCHOOL) {
+        switch (this.entityType_) {
+        case entityTypeEnum.SCHOOL:
             aliases = this.getSchoolAliases_();
-        } else if (this.entityType_ == entityTypeEnum.COURSE) {
+            break;
+        case entityTypeEnum.COURSE:
             aliases = this.getCourseAliases_();
+            break;
+        case entityTypeEnum.PROGRAM:
+            aliases = this.getProgramAliases_();
+            break;
         }
         return aliases;
     }
@@ -158,7 +171,7 @@ class SitemapUpdater {
      * @private
      */
     getSeoAliases_() {
-        let aliases;
+        let aliases = [];
         if (this.entityType_ == entityTypeEnum.SCHOOL) {
             aliases = this.getSeoSchoolAliases_();
         }
@@ -210,6 +223,17 @@ class SitemapUpdater {
         return linksList.map(link => link.url);
     }
 
+    /**
+     * Get program aliases
+     * @return {Array<string>}
+     * @private
+     * @async
+     */
+    getProgramAliases_() {
+        const programs = await(programService.getAll());
+        const programUrls = await(programService.getUrls(programs));
+        return programUrls.map(programUrl => programUrl.url);
+    }
 
     /**
      * Add one page data for Sitemap

@@ -19,7 +19,8 @@ class ProgramAdminController extends Controller {
     }
 
     /**
-     * @api {get} /api/admin/university/:universityId/program Get all programs
+     * @api {get} /api/admin/university/:universityId/program Get programs by
+     *     university id
      * @apiVersion 1.0.0
      * @apiName getAllPrograms
      * @apiGroup Admin Program
@@ -29,6 +30,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {String}   -.name            Name.
      * @apiSuccess {Number}   -.commentCount    Number of comments.
      * @apiSuccess {Number}   -.passScore       Ege pass score.
+     * @apiSuccess {String}   -.programUrl      Program's URL.
      * @apiSuccess {String}   -.updatedAt       Updated at.
      *
      * @apiSuccessExample {json} Success-Response:
@@ -38,6 +40,7 @@ class ProgramAdminController extends Controller {
      *             "name": "Прикладная математика",
      *             "commentCount": 14,
      *             "passScore": 256,
+     *             "programUrl": "/vuz/msu/program/managment",
      *             "updatedAt": "2017-03-07T06:59:52.220Z"
      *         }
      *     ]
@@ -46,7 +49,8 @@ class ProgramAdminController extends Controller {
         const programs = await programService.getByUniversityId(
             Number(universityId)
         );
-        return programAdminView.renderList(programs);
+        const programUrls = await programService.getUrls(programs);
+        return programAdminView.renderList(programs, programUrls);
     }
 
     /**
@@ -56,27 +60,30 @@ class ProgramAdminController extends Controller {
      * @apiName getProgram
      * @apiGroup Admin Program
      *
-     * @apiSuccess {Number}   id                  Id.
-     * @apiSuccess {String}   name                Name.
-     * @apiSuccess {String}   universityId        University's id.
-     * @apiSuccess {String}   description         Description.
-     * @apiSuccess {String}   commentGroupId      Comment group's id.
-     * @apiSuccess {String}   category            Program's category.
-     * @apiSuccess {String[]} links               Array of links
-     *  (official site, facebook communities).
-     * @apiSuccess {String[]} specializations     Array of specializations.
-     * @apiSuccess {Number}   duration            Number of studying years.
-     * @apiSuccess {Number}   employment          Percent of employment.
-     * @apiSuccess {Number}   salary              Salary after graduation.
-     * @apiSuccess {String[]} extraExam           Array of extra exams.
-     * @apiSuccess {String}   addressName         Name of address.
+     * @apiSuccess {Number}   id              Id.
+     * @apiSuccess {String}   name            Name.
+     * @apiSuccess {Number}   universityId    University's id.
+     * @apiSuccess {Number}   pageMetaId      Id of page with meta information.
+     * @apiSuccess {String}   description     Description.
+     * @apiSuccess {String}   commentGroupId  Comment group's id.
+     * @apiSuccess {String}   category        Program's category.
+     * @apiSuccess {String[]} links           Array of links
+     *     (official site, facebook communities).
+     * @apiSuccess {String[]} specializations Array of specializations.
+     * @apiSuccess {Number}   duration        Number of studying years.
+     * @apiSuccess {Number}   employment      Percent of employment.
+     * @apiSuccess {Number}   salary          Salary after graduation.
+     * @apiSuccess {String[]} extraExam       Array of extra exams.
+     * @apiSuccess {String}   addressName     Name of address.
+     * @apiSuccess {String}   phone           Phone number.
      * @apiSuccess {String}   exchangeProgram
-     * Array country for exchange program
-     * @apiSuccess {Object}   programMajor        Major program
-     * @apiSuccess {Number}   -.id                Major program id
-     * @apiSuccess {String}   -.name              Major program name
-     * @apiSuccess {String}   createdAt           Created at.
-     * @apiSuccess {String}   updatedAt           Updated at.
+     *     Array country for exchange program
+     * @apiSuccess {Object}   programMajor    Major program for program
+     * @apiSuccess {Number}   -.id            Major program id
+     * @apiSuccess {String}   -.name          Major program name
+     * @apiSuccess {String}   oksoCode        Specialization code.
+     * @apiSuccess {String}   createdAt       Created at.
+     * @apiSuccess {String}   updatedAt       Updated at.
      *
      * @apiError (404) ProgramNotFound Program with given Id not found.
      * @apiSuccessExample {json} Success-Response:
@@ -84,6 +91,7 @@ class ProgramAdminController extends Controller {
      *        "id": 5,
      *        "name": "Прикладная математика",
      *        "universityId": 62,
+     *        "pageMetaId": 62,
      *        "description": "lalala",
      *        "commentGroupId": 369,
      *        "category": "sadadasdsadsad",
@@ -102,7 +110,9 @@ class ProgramAdminController extends Controller {
      *            "100 отжимагий",
      *            "рисование"
      *        ],
-     *        "exchangeProgram": true,
+     *        "exchangeProgram": "да",
+     *        "phone": "+7 125 367 23 41",
+     *        "oksoCode": "12.1.1",
      *        "createdAt": "2017-03-07T06:59:52.220Z",
      *        "updatedAt": "2017-03-07T06:59:52.220Z",
      *        "programMajor": {
@@ -122,18 +132,21 @@ class ProgramAdminController extends Controller {
      * @apiName createProgram
      * @apiGroup Admin Program
      *
-     * @apiParam {String}   name        Name.
-     * @apiParam {String}   description Description.
-     * @apiParam {String}   addressName Name of address.
-     * @apiParam {String[]} extraExam   Array of extra exams.
-     * @apiParam {String}   category    Program's category.
-     * @apiParam {Number}   duration    Number of studying years.
-     * @apiParam {Number}   employment  Percent of employment.
-     * @apiParam {Number}   salary      Salary after graduation.
-     * @apiParam {String[]} links       Array of links
+     * @apiParam {String}   name            Name.
+     * @apiParam {String}   description     Description.
+     * @apiParam {String}   addressName     Name of address.
+     * @apiParam {String[]} extraExam       Array of extra exams.
+     * @apiParam {String}   category        Program's category.
+     * @apiParam {Number}   duration        Number of studying years.
+     * @apiParam {Number}   employment      Percent of employment.
+     * @apiParam {Number}   salary          Salary after graduation.
+     * @apiParam {String[]} links           Array of links
      *     (official site, facebook communities).
-     * @apiParam {Number}   programMajorId Program major Id
+     * @apiParam {String[]} specializations Array of program specializations
+     * @apiParam {String}   phone           Phone number.
+     * @apiParam {Number}   programMajorId  Program major Id
      * @apiParam {String}   exchangeProgram Exchange program
+     * @apiParam {String}   oksoCode        Specialization code.
      *
      *
      * @apiSuccess {Number}   id              Id.
@@ -148,6 +161,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {String[]} links           Array of links
      *     (official site, facebook communities).
      * @apiSuccess {Number}   programMajorId  Program major Id
+     * @apiSuccess {String}   phone           Phone number.
      * @apiSuccess {String}   exchangeProgram Exchange program
      * @apiSuccess {String}   commentGroupId  Comment group's id.
      * @apiSuccess {String[]} specializations Array of specializations.
@@ -155,6 +169,7 @@ class ProgramAdminController extends Controller {
      * @apiSuccess {Number[]} score           Array of scores.
      * @apiSuccess {Number[]} scoreCount      Array of scores' count.
      * @apiSuccess {Number}   reviewCount     Number of reviews.
+     * @apiParam   {String}   oksoCode        Specialization code.
      * @apiSuccess {String}   createdAt       Created at.
      * @apiSuccess {String}   updatedAt       Updated at.
      * @apiSuccess {String}   created_at      Created at.
@@ -173,17 +188,22 @@ class ProgramAdminController extends Controller {
      *         "salary": 80000,
      *         "links": [],
      *         "programMajorId": 1,
-     *         "exchangeProgram": 'да',
+     *         "exchangeProgram": "да",
      *         "commentGroupId": 372,
+     *         "phone": "+7 125 167 45 31",
      *         "updated_at": "2017-03-07T10:43:42.034Z",
      *         "created_at": "2017-03-07T10:43:42.034Z",
-     *         "specializations": null,
+     *         "specializations": [
+     *             "прикладная математика",
+     *             "химия"
+     *         ],
      *         "createdAt": "2017-03-07T10:43:42.034Z",
      *         "updatedAt": "2017-03-07T10:43:42.034Z",
      *         "totalScore": 3,
      *         "score": [3, 3, 3, 3],
      *         "scoreCount": [10, 10, 10, 10],
-     *         "reviewCount": 14
+     *         "reviewCount": 14,
+     *         "oksoCode": "12.1.1"
      *     }
      */
     public async actionCreate(actionContext: any, universityId: string) {
@@ -199,30 +219,36 @@ class ProgramAdminController extends Controller {
             employment: body.employment,
             salary: body.salary,
             links: body.links,
+            specializations: body.specializations,
             addressName: body.addressName,
             programMajorId: Number(body.programMajorId),
+            phone: body.phone,
+            oksoCode: body.oksoCode,
             exchangeProgram: body.exchangeProgram && body.exchangeProgram.trim()
         };
         return programService.create(programData);
     }
 
     /**
-    * @api {put} /api/admin/university/:universityId/program/:id Update program
-    * @apiVersion 1.0.0
-    * @apiName updateProgram
-    * @apiGroup Admin Program
+     * @api {put} /api/admin/university/:universityId/program/:id Update program
+     * @apiVersion 1.0.0
+     * @apiName updateProgram
+     * @apiGroup Admin Program
      *
-     * @apiParam {String}   name        Name.
-     * @apiParam {String}   description Description.
-     * @apiParam {String}   addressName Name of address.
-     * @apiParam {String[]} extraExam   Array of extra exams.
-     * @apiParam {String}   category    Program's category.
-     * @apiParam {Number}   duration    Number of studying years.
-     * @apiParam {Number}   employment  Percent of employment.
-     * @apiParam {Number}   salary      Salary after graduation.
-     * @apiParam {String[]} links       Array of links
+     * @apiParam {String}   name            Name.
+     * @apiParam {String}   description     Description.
+     * @apiParam {String}   addressName     Name of address.
+     * @apiParam {String[]} extraExam       Array of extra exams.
+     * @apiParam {String}   category        Program's category.
+     * @apiParam {Number}   duration        Number of studying years.
+     * @apiParam {Number}   employment      Percent of employment.
+     * @apiParam {Number}   salary          Salary after graduation.
+     * @apiParam {String[]} links           Array of links
      *     (official site, facebook communities).
-     * @apiParam {Number}   programMajorId Program major Id
+     * @apiParam {String[]} specializations Array of program specializations
+     * @apiParam {Number}   programMajorId  Program major Id
+     * @apiParam {String}   phone           Phone number.
+     * @apiParam {String}   oksoCode        Specialization code.
      *
      * @apiSuccess {Array}    -    Response body.
      * @apiSuccess {Number}   -[0] Number of updated rows (Should be always 1).
@@ -238,12 +264,13 @@ class ProgramAdminController extends Controller {
      *                 "name": "Менеджмент",
      *                 "universityId": 1,
      *                 "commentGroupId": 382,
-     *                 "specializations": null,
+     *                 "specializations": ["Прикладная математика", "Химия"],
      *                 "programMajorId": 3,
      *                 "totalScore": null,
      *                 "score": null,
      *                 "scoreCount": null,
      *                 "reviewCount": null,
+     *                 "oksoCode": "12.1.1",
      *                 "createdAt": "2017-03-20T16:15:22.915Z",
      *                 "updatedAt": "2017-03-20T16:15:22.915Z",
      *                 "created_at": "2017-03-20T16:15:22.915Z",
@@ -269,8 +296,11 @@ class ProgramAdminController extends Controller {
             employment: body.employment,
             salary: body.salary,
             links: body.links,
+            specializations: body.specializations,
             addressName: body.addressName,
             programMajorId: Number(body.programMajorId),
+            phone: body.phone,
+            oksoCode: body.oksoCode,
             exchangeProgram: body.exchangeProgram && body.exchangeProgram.trim()
         };
         return programService.update(Number(id), programData);
@@ -294,6 +324,24 @@ class ProgramAdminController extends Controller {
     public async actionDelete(
             actionContext: any, universityId: string, id: string) {
         return programService.delete(Number(id));
+    }
+
+    /**
+     * @api {get} /api/admin/program/:id/alias
+     * @apiVersion 1.0.0
+     * @apiName getAlias
+     * @apiGroup Admin Program
+     *
+     * @apiParam {Number} id Program's id.
+     *
+     * @apiSuccess {String} - alias.
+     *
+     * @apiSuccessExample {json} Example response:
+     *     HTTP/1.1 200 OK
+     *     mgu
+     */
+    public async actionGetAlias(actionContext: any, id: string) {
+        return programService.getProgramAlias(Number(id));
     }
 }
 

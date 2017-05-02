@@ -203,10 +203,14 @@ goog.scope(function() {
      * @private
      */
     University.prototype.initDescriptionList_ = function() {
-        this.decorateChild(
-            sm.lUniversity.bDescriptionList.DescriptionList.NAME,
-            this.getView().getDom().descriptionList
-        );
+        var descriptionList = this.getView().getDom().descriptionList;
+
+        if (descriptionList) {
+            this.decorateChild(
+                sm.lUniversity.bDescriptionList.DescriptionList.NAME,
+                this.getView().getDom().descriptionList
+            );
+        }
     };
 
 
@@ -215,10 +219,14 @@ goog.scope(function() {
      * @private
      */
     University.prototype.initCutDescription_ = function() {
-        this.decorateChild(
-            sm.bSmCollapsedText.SmCollapsedText.NAME,
-            this.getView().getDom().cutDescription
-        );
+        var cutDescription = this.getView().getDom().cutDescription;
+
+        if (cutDescription) {
+            this.decorateChild(
+                sm.bSmCollapsedText.SmCollapsedText.NAME,
+                this.getView().getDom().cutDescription
+            );
+        }
     };
 
 

@@ -31,6 +31,7 @@ const SuperUserActionChecker =
 const superUserCheckAction = SuperUserActionChecker.middleware;
 
 router.get('/course/search', courseController.search);
+router.get('/course/search/count', courseController.getSearchCount);
 router.get('/course/search/map', courseController.searchMap);
 router.get('/course/search/suggest', courseController.suggestSearch);
 
@@ -42,6 +43,8 @@ router.post('/course/enrollment', csrf, courseController.enrollOnCourse);
 router.get('/coursefilter', filterController.list);
 
 router.get('/coursebrand/search', checkToken, brandController.search);
+
+router.get('/coursecategory/pricetype', categoryController.getPriceTypes);
 
 const fileStorage = fileHandler.any();
 
@@ -107,8 +110,8 @@ let initSuperUserCrudRouting = function(route, controller) {
     router.post(
         `${route}`,
         checkToken,
-        // adminUser,
-        // superUserCheckAction,
+        adminUser,
+        superUserCheckAction,
         controller.create || controller.actionCreate
     );
     router.get(
@@ -121,8 +124,8 @@ let initSuperUserCrudRouting = function(route, controller) {
     );
     router.put(`${route}/:id`,
         checkToken,
-        // adminUser,
-        // superUserCheckAction,
+        adminUser,
+        superUserCheckAction,
         controller.update || controller.actionUpdate
     );
     router.delete(

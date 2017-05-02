@@ -10,7 +10,9 @@ const userView = require('../../user/views/user').userView,
     courseCategoryView = require('../../course/views/courseCategoryView'),
     footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
-    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+    sideMenuView = require(
+        '../../../../app/modules/common/views/sideMenuView'
+    ).sideMenuView;
 
 const Subheader = require('../lib/CourseSubheader');
 
@@ -35,6 +37,7 @@ let view = {};
  */
 view.render = function(data) {
     let user = userView.renderDefault(data.user);
+
     return {
         seo: {
             metaTitle: 'Курсы мела',
@@ -51,15 +54,18 @@ view.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
-        header: headerView.render(data.config, data.entityType),
-        sideMenu: sideMenuView.render(data.config, data.entityType),
+        header: headerView.render(data.config, data.entityType, user),
+        sideMenu: sideMenuView.render({
+            config: data.config,
+            user: user,
+            entityType: data.entityType
+        }),
         subHeader: view.subheader({
             listLinks: courseCategoryView.listLinks(
                 data.categories,
                 data.categoryAliases
             ),
-            favoriteEntities: favoriteView.list(data.favorites),
-            user: user
+            favoriteEntities: favoriteView.list(data.favorites)
         }),
         image: {
             imageUrl: '/static/images/n-common/l-home/images/main-courses.svg',
@@ -89,16 +95,13 @@ view.render = function(data) {
 view.subheader = function(data) {
     let subheader = new Subheader();
 
-    subheader.init({
+    return subheader.render({
         isLogoRedirect: false,
         listLinks: data.listLinks,
         isSearchRedirect: true,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         bottomLine: false
     });
-
-    return subheader.getParams();
 };
 
 

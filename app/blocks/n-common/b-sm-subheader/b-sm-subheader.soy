@@ -8,8 +8,8 @@
  *         altText: ?string,
  *         linkUrl: ?string
  *     },
- *     listLinks: (sm.gDropdown.TemplateListLinks.Params.Data|undefined),
- *     contacts: sm.bSmContacts.Template.Params.Data,
+ *     rowLinks: (sm.bSmRowLinks.Template.Params|undefined),
+ *     dropdownLinks: (sm.gDropdown.TemplateListLinks.Params|undefined),
  *     links: ({
  *         nameL: string,
  *         nameM: string,
@@ -21,10 +21,6 @@
  *         placeholder: (string|undefined),
  *         redirect: boolean,
  *         pageAlias: string
- *     },
- *     user: ?{
- *         firstName: ?string,
- *         lastName: ?string
  *     },
  *     favorites: sm.bSmFavorite.Template.Params.Data
  * }} sm.bSmSubheader.Template.Params.Data
@@ -82,7 +78,6 @@
     <div class="{call .rootClass/}__body">
         {call .sectionHamburgerMenu_ /}
         {call .sectionLogo_ data="all" /}
-        {call .sectionContacts_ data="all" /}
         {call .sectionLinks_ data="all" /}
         {call .sectionSearch_ data="all" /}
     </div>
@@ -111,24 +106,7 @@
 
 
 /**
- * Section Contacts
- * @param params {{
- *     data: {
- *         contacts: sm.bSmContacts.Template.Params.Data
- *     }
- * }}
- */
-{template .sectionContacts_}
-    <div class="{call .rootClass/}__section
-                {sp}{call .rootClass/}__section_contacts
-                {sp}i-animate">
-        {call .contacts_ data="all" /}
-    </div>
-{/template}
-
-
-/**
- * sectionHamburgerMenu_
+ * Section hamburger menu template
  */
 {template .sectionHamburgerMenu_}
     <div class="{call .rootClass /}__section
@@ -139,7 +117,7 @@
 
 
 /**
- * hamburgerMenu_
+ * Hamburger menu template
  */
 {template .hamburgerMenu_}
     <div class="{call .rootClass /}__hamburger-menu">
@@ -160,34 +138,12 @@
 {/template}
 
 
-
-/**
- * Contacts template
- * @param params {{
- *     data: {
- *         contacts: sm.bSmContacts.Template.Params.Data
- *     }
- * }}
- */
-{template .contacts_ kind="html"}
-    <div class="{call .rootClass /}__contacts">
-        {call .renderChild}
-            {param params: [
-                'type': 'smContacts',
-                'renderParams': [
-                    'data': $params.data.contacts
-                ]
-            ] /}
-        {/call}
-    </div>
-{/template}
-
-
 /**
  * Section links
  * @param params {{
  *     data: {
- *         listLinks: (sm.gDropdown.TemplateListLinks.Params.Data|undefined),
+ *         rowLinks: (sm.bSmRowLinks.Template.Params|undefined),
+ *         dropdownLinks: (sm.gDropdown.TemplateListLinks.Params|undefined),
  *         links: ({
  *             nameL: string,
  *             nameM: string,
@@ -195,10 +151,6 @@
  *             url: string,
  *             theme: (string|undefined)
  *         }|undefined),
- *         user: ?{
- *             firstName: ?string,
- *             lastName: ?string
- *         },
  *         favorites: sm.bSmFavorite.Template.Params.Data
  *     }
  * }}
@@ -239,7 +191,8 @@
  * Search links
  * @param params {{
  *     data: {
- *         listLinks: (sm.gDropdown.TemplateListLinks.Params.Data|undefined),
+ *         rowLinks: (sm.bSmRowLinks.Template.Params|undefined),
+ *         dropdownLinks: (sm.gDropdown.TemplateListLinks.Params|undefined),
  *         links: ({
  *             nameL: string,
  *             nameM: string,
@@ -251,16 +204,41 @@
  * }}
  */
 {template .linksSearch_}
-    {if $params.data.listLinks}
-        {call .listLinks_ data="all" /}
-    {elseif $params.data.links}
-        {call .stringLinks_ data="all" /}
+    {if $params.data.rowLinks}
+        {call .rowLinks_ data="all" /}
+    {/if}
+
+    {if $params.data.dropdownLinks}
+        {call .dropdownLinks_ data="all" /}
+    {elseif $params.data.link}
+        {call .linkWithIcon_ data="all" /}
     {/if}
 {/template}
 
 
 /**
- * String of links to search
+ * Links line
+ * @param params {{
+ *     data: {
+ *         rowLinks: sm.bSmRowLinks.Template.Params
+ *     }
+ * }}
+ */
+{template .rowLinks_}
+    <div class="{call .rootClass/}__search-links{sp}
+                {call .rootClass/}__search-links_row">
+        {call .renderChild}
+            {param params: [
+                'type': 'smRowLinks',
+                'renderParams': $params.data.rowLinks
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Customizable link
  * @param params {{
  *     data: {
  *         links: {
@@ -273,18 +251,18 @@
  *     }
  * }}
  */
-{template .stringLinks_}
+{template .linkWithIcon_}
     <div class="{call .rootClass/}__search-links{sp}
-                {call .rootClass/}__search-links_string">
+                {call .rootClass/}__search-links_icon">
         {call .linkSearch_}
             {param params: [
                 'data': [
-                    'name': $params.data.links.nameL,
-                    'url': $params.data.links.url
+                    'name': $params.data.link.nameL,
+                    'url': $params.data.link.url
                 ],
                 'config': [
                     'size': 'l',
-                    'theme': $params.data.links.theme
+                    'theme': $params.data.link.theme
                 ]
             ]/}
         {/call}
@@ -292,12 +270,12 @@
         {call .linkSearch_}
             {param params: [
                 'data': [
-                    'name': $params.data.links.nameM,
-                    'url': $params.data.links.url
+                    'name': $params.data.link.nameM,
+                    'url': $params.data.link.url
                 ],
                 'config': [
                     'size': 'm',
-                    'theme': $params.data.links.theme
+                    'theme': $params.data.link.theme
                 ]
             ]/}
         {/call}
@@ -305,12 +283,12 @@
         {call .linkSearch_}
             {param params: [
                 'data': [
-                    'name': $params.data.links.nameS ?: $params.data.links.nameM,
-                    'url': $params.data.links.url
+                    'name': $params.data.link.nameS ?: $params.data.link.nameM,
+                    'url': $params.data.link.url
                 ],
                 'config': [
                     'size': 's',
-                    'theme': $params.data.links.theme
+                    'theme': $params.data.link.theme
                 ]
             ]/}
         {/call}
@@ -319,26 +297,20 @@
 
 
 /**
- * List of links to search
+ * Dropdown links
  * @param params {{
  *     data: {
- *         listLinks: sm.gDropdown.TemplateListLinks.Params.Data
+ *         dropdownLinks: sm.gDropdown.TemplateListLinks.Params
  *     }
  * }}
  */
-{template .listLinks_}
+{template .dropdownLinks_}
     <div class="{call .rootClass/}__search-links{sp}
-                {call .rootClass/}__search-links_list">
+                {call .rootClass/}__search-links_dropdown">
         {call .renderChild}
             {param params: [
                 'type': 'dropdown-list-links',
-                'renderParams': [
-                    'data': $params.data.listLinks,
-                    'config': [
-                        'openerSize': 'xl',
-                        'contentSize': 'l'
-                    ]
-                ]
+                'renderParams': $params.data.dropdownLinks
             ]/}
         {/call}
     </div>
@@ -349,51 +321,14 @@
  * Links for authorization and favorite
  * @param params {{
  *     data: {
- *         user: ?{
- *             firstName: ?string,
- *             lastName: ?string
- *         },
  *         favorites: sm.bSmFavorite.Template.Params.Data
  *     }
  * }}
  */
 {template .userControls_}
-    <div class="{call .rootClass/}__user-controls">
-        {call .linkAuthorization_ data="all" /}
+    <div class="{call .rootClass/}__user-controls{sp}
+                {cl.iUtils.Utils.CssClass.HIDDEN}">
         {call .favorite_ data="all" /}
-    </div>
-{/template}
-
-
-/**
- * link Authorization template
- * @param params {{
- *     data: {
- *        user: ?{
- *            firstName: ?string,
- *            lastName: ?string
- *        }
- *     }
- * }}
- */
-{template .linkAuthorization_}
-    <div class="{call .rootClass/}__user-control
-                {sp}{call .rootClass/}__user-control_authorization">
-        <div class="{call .rootClass/}__authorization-content">
-            {call .renderChild}
-                {param params: [
-                    'type': 'authorization-link',
-                    'renderParams': [
-                        'data': [
-                            'user': $params?.data?.user
-                        ],
-                        'config': [
-                            'hintOffset': 'xs'
-                        ]
-                    ]
-                ]/}
-            {/call}
-        </div>
     </div>
 {/template}
 
@@ -578,6 +513,10 @@
         </div>
     {/let}
 
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link-search
+    {/let}
+
     <div class="{call .rootClass/}__search-link{sp}
                 {call .rootClass/}__search-link_visible_{$params.config.size}">
         {call .renderChild}
@@ -590,7 +529,8 @@
                     ],
                     'config': [
                         'size': 'l',
-                        'theme': $params.config.theme ?: 'default'
+                        'theme': $params.config.theme ?: 'default',
+                        'customClasses': [$customClasses]
                     ]
                 ]
             ]/}

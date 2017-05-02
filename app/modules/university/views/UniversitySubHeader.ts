@@ -1,4 +1,4 @@
-import {SubHeader} from '../../common/lib/SubHeader';
+import {SubHeader, Data} from '../../common/lib/SubHeader';
 
 import {entityType} from '../../common/enums/entityType';
 
@@ -14,25 +14,82 @@ class UniversitySubHeader extends SubHeader {
             imgUrl: '/static/images/n-common/b-sm-subheader/university-logo.svg'
         };
 
-        this.listLinks = {
-            opener: 'Все ВУЗы',
-            content: {
-                items: []
+        this.link = {
+            nameL: 'Подобрать Вуз',
+            nameM: 'Подобрать Вуз',
+            url: '/search'
+        };
+
+        this.rowLinks = {
+            linkConfig: {
+                size: 'xxl'
+            },
+            listConfig: {
+                size: 'xl'
             }
         };
 
-        this.links = {
-            nameL: 'Подобрать ВУЗ',
-            nameM: 'Подобрать ВУЗ',
-            url: '/search',
-            theme: 'neptune'
+        this.dropdownLinks = {
+            data: {
+                content: {
+                    items: [],
+                    itemConfig: {
+                        size: 'xxl'
+                    }
+                }
+            },
+            config: {
+                openerTheme: 'block',
+                openerSize: 'xxl',
+                iconType: 'icon-svg',
+                iconName: 'blue-arrow',
+                theme: 'wide'
+            }
         };
 
         this.search = {
-            placeholder: 'ВУЗ, специальность',
+            placeholder: 'Специальность, вуз…',
             pageAlias: 'search',
             redirect: false
         };
+    }
+
+    protected setLinks(listLinks) {
+        const links = [
+            {
+                url: '/',
+                label: 'Программы обучения',
+                isSelected: true
+            }, {
+                url: '/',
+                label: 'Профессия'
+            }, {
+                url: '/',
+                label: 'Вуз'
+            }
+        ];
+
+        super.setLinks(links);
+
+        if (links) {
+            this.setRowLinks(links);
+        }
+    }
+
+    protected setDropdownLinks(links) {
+        let opener = null;
+
+        const listLinks = links.filter(link => {
+            if (link.isSelected) {
+                opener = link.label;
+            } else {
+                return link;
+            }
+        });
+
+        this.dropdownLinks.data.opener = opener;
+
+        super.setDropdownLinks(listLinks);
     }
 };
 

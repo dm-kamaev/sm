@@ -23,8 +23,7 @@ const config = require('../../../config').config;
 const ANALYTICS_ID = config.schools.analyticsId,
     YANDEX_METRIKA_ID = config.schools.yandexMetrikaId,
     DOMAIN = config.schools.host,
-    FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId;
+    FB_CLIENT_ID = config.facebookClientId;
 
 
 exports.createComment = async(function(req, res) {
@@ -132,7 +131,6 @@ exports.view = async(function(req, res, next) {
                                 staticVersion: config.lastBuildTimestamp,
                                 analyticsId: ANALYTICS_ID,
                                 yandexMetrikaId: YANDEX_METRIKA_ID,
-                                carrotquestId: CARROTQUEST_ID,
                                 csrf: req.csrfToken(),
                                 domain: DOMAIN,
                                 fbClientId: FB_CLIENT_ID
@@ -187,7 +185,6 @@ exports.home = async(function(req, res) {
                 staticVersion: config.lastBuildTimestamp,
                 analyticsId: ANALYTICS_ID,
                 yandexMetrikaId: YANDEX_METRIKA_ID,
-                carrotquestId: CARROTQUEST_ID,
                 csrf: req.csrfToken(),
                 domain: DOMAIN,
                 fbClientId: FB_CLIENT_ID
@@ -332,7 +329,6 @@ exports.catalog = async(function(req, res, next) {
                     staticVersion: config.lastBuildTimestamp,
                     analyticsId: ANALYTICS_ID,
                     yandexMetrikaId: YANDEX_METRIKA_ID,
-                    carrotquestId: CARROTQUEST_ID,
                     csrf: req.csrfToken(),
                     domain: DOMAIN,
                     fbClientId: FB_CLIENT_ID

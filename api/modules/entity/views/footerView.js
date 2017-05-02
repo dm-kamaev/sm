@@ -14,9 +14,11 @@ footerView.render = function(seoLinks) {
     let year = new Date().getFullYear();
 
     return {
-        copyright: `© Маркет Мела ${year}`,
-        contactLinks: footerView.contactLinks(),
-        seoLinks: seoLinks
+        data: {
+            copyright: `© Маркет Мела ${year}`,
+            contactLinks: footerView.contactLinks(),
+            seoLinks: seoLinks
+        }
     };
 };
 
@@ -31,7 +33,7 @@ footerView.contactLinks = function() {
         url: 'mailto:vs@mel.fm'
     }, {
         content: 'Пользовательское соглашение',
-        url: 'http://mel.fm/terms-of-use'
+        url: 'http://mel.fm/page/terms-of-use'
     }];
 };
 

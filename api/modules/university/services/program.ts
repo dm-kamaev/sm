@@ -1,21 +1,32 @@
 /**
- * @fileOverview Service for make CRUD operations on program model
+ * @fileoverview Service for make CRUD operations on program model
  */
 import {CommentGroupInstance} from '../../comment/types/commentGroup';
 
 const sequelize = require('../../../../app/components/db');
 
 import {Model as ProgramModel} from '../models/Program';
-import {Model as ProgramMajor} from '../models/ProgramMajor';
+import {Model as ProgramMajorModel} from '../models/ProgramMajor';
+import {
+    Model as ProgramPageMetaModel
+} from '../models/ProgramPageMetaInformation';
+import {
+    Model as UniversityModel
+} from '../models/University';
 import {Model as CommentGroupModel} from '../../comment/models/commentGroup';
 import {
     Model as ProgramCommentModel
 } from '../../comment/models/ProgramComment';
 import {Model as EntranceStatisticModel} from '../models/EntranceStatistic';
+import {Model as ProgramEgeExamModel} from '../models/ProgramEgeExam';
 import {
     ProgramInstance,
-    ProgramAdmin, ProgramAttribute
+    ProgramAdmin,
+    ProgramAttribute,
+    ProgramUrl
 } from '../types/program';
+
+import {PageAttribute} from '../../entity/types/page';
 
 import {
     service as commentGroupService
@@ -24,6 +35,7 @@ import {service as addressService} from '../../geo/services/address';
 import {service as universityService} from './university';
 import {service as pageService} from '../../entity/services/page';
 const entityType = require('../../entity/enums/entityType');
+import {UrlTemplate} from '../constants/UrlTemplate';
 
 import {ProgramNotFound} from './exceptions/ProgramNotFound';
 
@@ -67,14 +79,28 @@ class ProgramService {
             },
             include: [{
                 attributes: ['id', 'name'],
-                model: ProgramMajor,
+                model: ProgramMajorModel,
                 as: 'programMajor'
-            }],
+            }, {
+                attributes: ['id'],
+                model: ProgramPageMetaModel,
+                as: 'programPageMetaInformations'
+            }]
         });
         if (!program) {
             throw new ProgramNotFound(id);
         }
-        const result: ProgramAdmin = program.toJSON();
+        const data: any = program.toJSON();
+
+        const result: ProgramAdmin = {};
+        Object.keys(data).forEach(key => {
+            if (key != 'programPageMetaInformations') {
+                result[key] = data[key];
+            }
+        });
+        result.pageMetaId = data.programPageMetaInformations ?
+            data.programPageMetaInformations.id :
+            null;
 
         const addresses = await program.getAddresses();
         result.addressName = addresses[0] ? addresses[0].name : null;
@@ -154,6 +180,12 @@ class ProgramService {
         });
     }
 
+    public async getProgramAlias(id: number): Promise<string> {
+        const program: PageAttribute =
+            await pageService.getOne(id, entityType.PROGRAM);
+        return program.alias;
+    }
+
     public async getUrl(program: ProgramAttribute): Promise<string> {
         const programPage = await pageService.getOne(
                 program.id, entityType.PROGRAM
@@ -162,7 +194,61 @@ class ProgramService {
                 program.universityId, entityType.UNIVERSITY
             );
 
-        return `vuz/${universityPage.alias}/specialnost/${programPage.alias}`;
+        return this.convertToUrl(universityPage.alias, programPage.alias);
+    }
+
+    public async getUrls(
+            programs: Array<ProgramInstance>): Promise<Array<ProgramUrl>> {
+        const pages = await Promise.all([
+            pageService.getAllAliases(entityType.PROGRAM),
+            pageService.getAllAliases(entityType.UNIVERSITY)
+        ]);
+        const programPages = pages[0];
+        const universityPages = pages[1];
+
+        return programs.map(program => {
+            const programAlias = programPages
+                .find(programPage => programPage.entityId === program.id)
+                .alias;
+            const universityAlias = universityPages
+                .find(universityPage =>
+                    universityPage.entityId === program.universityId)
+                .alias;
+            return {
+                id: program.id,
+                url: this.convertToUrl(
+                    universityAlias,
+                    programAlias
+                )
+            };
+        });
+    }
+
+    public async getAllWithEgeAndStatistic(): Promise<Array<ProgramInstance>> {
+        const programs: Array<ProgramInstance> = await ProgramModel.findAll({
+            attributes: {
+                exclude: EXCLUDE_FIELDS
+            },
+            include: [{
+                model: EntranceStatisticModel,
+                as: 'entranceStatistics',
+            }, {
+                model: ProgramEgeExamModel,
+                as: 'programEgeExams'
+            }, {
+                model: UniversityModel,
+                as: 'university',
+                attributes: ['cityId']
+            }],
+        });
+        return programs;
+    }
+
+
+    private convertToUrl(universityAlias, programAlias) {
+        return UrlTemplate.PROGRAM
+            .replace('${universityAlias}', universityAlias)
+            .replace('${programAlias}', programAlias);
     }
 
     private async fullCreate(data: ProgramAdmin):

@@ -1,6 +1,8 @@
 import {
-    gDropdownSelect
-} from '../../n-clobl/g-dropdown/g-dropdown_select/params';
+    gDropdownListLinks
+} from '../../n-clobl/g-dropdown/g-dropdown_list-links/params';
+
+import {bSmRowLinks} from '../b-sm-row-links/params';
 
 export namespace bSmSubheader {
     /*
@@ -16,23 +18,19 @@ export namespace bSmSubheader {
                 altText?: string,
                 linkUrl?: string
             },
-            listLinks?: gDropdownSelect.Params.Data,
-            contacts?: any,
-            links?: ({
+            rowLinks?: bSmRowLinks.Params,
+            dropdownLinks?: gDropdownListLinks.Params,
+            link?: ({
                 nameL: string,
                 nameM: string,
-                nameS?: (string|undefined),
+                nameS?: string,
                 url: string,
-                theme?: (string|undefined)
+                theme?: string
             }|undefined),
             search?: {
-                placeholder: (string|undefined),
+                placeholder?: string,
                 redirect: boolean,
                 pageAlias: string
-            },
-            user?: {
-                firstName: (string|undefined),
-                lastName: (string|undefined)
             },
             favorites?: any
         }

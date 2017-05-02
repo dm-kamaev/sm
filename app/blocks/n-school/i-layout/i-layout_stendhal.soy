@@ -7,7 +7,6 @@
  *     staticVersion: (string|undefined),
  *     analyticsId: string,
  *     yandexMetrikaId: number,
- *     carrotquestId: string,
  *     csrf: (string|undefined)
  * }} sm.iLayout.Template.Params.Config
  */
@@ -21,7 +20,7 @@
  *         content: string,
  *         header: sm.bSmHeader.Template.Params,
  *         subHeader: sm.bSmSubheader.Template.Params,
- *         sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
+ *         sideMenu: sm.gModal.TemplateSideMenu.Params,
  *         landingScript: string,
  *         openGraph: ?{
  *             url: ?string,
@@ -36,7 +35,7 @@
  *             imageWidth: ?string,
  *             imageHeight: ?string
  *         },
- *         footer: sm.bSmFooter.Template.Params.Data
+ *         footer: sm.bSmFooter.Template.Params
  *     },
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
@@ -138,7 +137,6 @@
 
     {call .analytics data="all"/}
     {call .metrika data="all"/}
-    {call .carrotquest data="all" /}
     {call .relap /}
 {/template}
 
@@ -181,26 +179,6 @@
     </noscript>
     <!-- /Yandex.Metrika counter -->
 {/template}
-
-
-/**
- * Carrotquest
- * @param params {{
- *     config: {
- *         carrotquestId: string
- *     }
- * }}
- * @protected
- */
-{template .carrotquest autoescape="strict" kind="html"}
-    <!-- CarrotQuest BEGIN -->
-        <script type="text/javascript">
-            var carrotquestInstance = sm.iCarrotquest.Carrotquest.getInstance();
-            carrotquestInstance.init('{$params?.config?.carrotquestId}');
-        </script>
-    <!-- CarrotQuest END -->
-{/template}
-
 
 /**
  * Recommender system
@@ -273,9 +251,7 @@
     <div class="{call .rootClass /}__side-menu">
         {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'side-menu' /}
-            {param renderParams: [
-                'data': $params.data.sideMenu
-            ]/}
+            {param renderParams: $params.data.sideMenu/}
         {/call}
     </div>
 {/template}
@@ -285,7 +261,7 @@
  * Footer
  * @param params {{
  *     data: {
- *         footer: sm.bSmFooter.Template.Params.Data
+ *         footer: sm.bSmFooter.Template.Params
  *     }
  * }}
  */
@@ -293,9 +269,7 @@
     <div class="{call .rootClass/}__footer">
         {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
             {param type: 'smFooter' /}
-            {param renderParams: [
-                'data': $params.data.footer
-            ]/}
+            {param renderParams: $params.data.footer /}
         {/call}
     </div>
 {/template}

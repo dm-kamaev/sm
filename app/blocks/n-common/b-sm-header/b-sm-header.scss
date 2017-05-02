@@ -3,6 +3,7 @@
 .b-sm-header {
     position: relative;
 
+    height: 64px;
     width: 100%;
 
     border-bottom: 1px solid #eee;
@@ -13,6 +14,8 @@
 .b-sm-header__body {
     max-width: 1200px;
     margin: 0 auto;
+
+    line-height: 61px;
 }
 
 .b-sm-header__section {
@@ -25,13 +28,21 @@
     color: #000;
 
     font-family: Proxima, sans-serif;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .b-sm-header__section_contacts {
     float: right;
+}
 
-    margin-top: 25px;
+.b-sm-header__contacts {
+    display: inline-block;
+}
+
+.b-sm-header__authorization {
+    display: inline-block;
+
+    margin-left: 25px;
 }
 
 .b-sm-header__menu-item {
@@ -39,7 +50,10 @@
 
     height: 100%;
     margin-right: 30px;
-    padding: 25px 0 25px 0;
+
+    &:last-child {
+        margin-right: 0px;
+    }
 }
 
 .b-sm-header__menu-item_active-course {
@@ -51,7 +65,7 @@
 }
 
 .b-sm-header__menu-item_active-university {
-    border-bottom: 3px solid #007aff;
+    border-bottom: 3px solid #0777e8;
 }
 
 .b-sm-header__contacts {
@@ -64,7 +78,37 @@
     }
 }
 
+@include media-m {
+    .b-sm-header {
+        height: 70px;
+    }
+
+    .b-sm-header__body {
+        line-height: 67px;
+    }
+}
+
+
+@include media-s {
+    .b-sm-header__authorization {
+        margin-left: 10px;
+    }
+
+    .b-sm-header__menu-item {
+        margin-right: 20px;
+
+        &:last-child {
+            margin-right: 0px;
+        }
+    }
+}
+
+
 @include media-xs {
+    .b-sm-header {
+        height: auto;
+    }
+
     .b-sm-header__main-menu {
         display: none;
     }
