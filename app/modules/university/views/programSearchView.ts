@@ -1,5 +1,8 @@
 import {FormatUtils} from '../../common/lib/FormatUtils';
 
+import {programRenderSearchView} from './ProgramRenderSearchView';
+import {programView} from './programView';
+
 import {
     QueryParams,
     SearchParams,
@@ -8,10 +11,23 @@ import {
 import {
     lSearchUniversity
 } from '../../../blocks/n-university/l-search_university/params';
+import {BackendProgramResults} from '../types/program';
 
 const ALIAS_RUSSIAN_EXAM: string = 'russian';
 
 class ProgramSearchView {
+    public renderList(data: BackendProgramResults) {
+        const headerText = programRenderSearchView.generateHeaderText(
+            data.programCount, data.universityCount
+        );
+        const items = programView.list(data.programs);
+        const countResults = data.programCount;
+
+        return {
+            list: {headerText, items, countResults}
+        };
+    }
+
     public initSearchParams(
             queryParams: QueryParams,
             filtersData?: any

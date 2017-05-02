@@ -24,6 +24,9 @@ import {BackendProgramResults} from '../types/program';
 import {
     lSearchUniversity
 } from '../../../blocks/n-university/l-search_university/params';
+import {
+    bSearchResults
+} from '../../../blocks/n-common/l-search/b-search-results/params';
 
 type FilterPanelParams = {
     filtersData: any;
@@ -78,7 +81,10 @@ class ProgramRenderSearchView extends LayoutView {
         };
     }
 
-    public generateHeaderText(programCount: number, universityCount: number) {
+    public generateHeaderText(
+            programCount: number,
+            universityCount: number
+        ): bSearchResults.Params.HeaderTextEntry[] {
         return [
             {
                 text: 'Мы нашли'
@@ -143,6 +149,7 @@ class ProgramRenderSearchView extends LayoutView {
             ),
             title: 'Вузы Москвы',
             description: this.seo.metaDescription,
+            countResults: resultsList.programCount,
             entityList: {
                 items: programView.list(resultsList.programs),
                 itemType: 'smItemUniversity',

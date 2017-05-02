@@ -95,7 +95,7 @@ export class ProgramController extends Controller {
         const queryParams: QueryParams = actionContext.data;
         const searchParams = programSearchView.initSearchParams(queryParams);
 
-        return searchService.findByParams(searchParams);
+        const data = await searchService.findByParams(searchParams);
+        return programSearchView.renderList(data);
     }
 }
-
