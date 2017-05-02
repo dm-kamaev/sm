@@ -8,7 +8,6 @@ export namespace bSmCheckbox {
          * sm.bSmCheckbox.Params.Data
          */
         export interface Data {
-            id?: (string|number);
             name?: (string|number);
             label: string;
             value?: (string|number);
