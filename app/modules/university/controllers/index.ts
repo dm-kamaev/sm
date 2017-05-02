@@ -2,8 +2,8 @@ import * as express from 'express';
 
 const router = express.Router();
 
-import {UniversityRenderController} from './UniversityRenderController';
-const universityRenderController: any = new UniversityRenderController();
+import {ProgramRenderController} from './ProgramRenderController';
+const programRenderController: any = new ProgramRenderController();
 
 import {SubscriptionController} from './SubscriptionController';
 const subscriptionController = new SubscriptionController();
@@ -24,18 +24,12 @@ const programCommentController: any = new ProgramCommentController();
 
 router.get(
     '/vuz/:universityAlias/specialnost/:programAlias',
-    universityRenderController.actionGetInformation
+    programRenderController.actionGetInformation
 );
 
-router.get(
-    '/program/search',
-    universityRenderController.actionGetSearch
-);
+router.get('/program/search', programRenderController.actionGetSearch);
 
-router.get(
-    '/program/filtersearch',
-    programController.actionSearch
-);
+router.get('/program/filtersearch', programController.actionSearch);
 
 router.get('/university/suggest', universityController.actionSuggestSearch);
 
