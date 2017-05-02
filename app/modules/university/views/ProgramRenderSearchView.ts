@@ -120,22 +120,29 @@ class ProgramRenderSearchView extends LayoutView {
     private setResultsList_(resultsList: BackendProgramResults) {
         this.params.data.resultsList = {
             sort: {
-                items: [{
-                        'label': 'Проще поступить',
-                        'value': 0
-                    }, {
-                        'label': 'Дешевле',
-                        'value': 1
-                    }, {
-                        'label': 'Отзывы',
-                        'value': 2
-                    }
-                ]
+                defaultOpenerText: 'Проще поступить',
+                content: {
+                    items: [
+                        {
+                            label: 'Проще поступить',
+                            value: 0
+                        }, {
+                            label: 'Дешевле',
+                            value: 1
+                        }, {
+                            label: 'Отзывы',
+                            value: 2
+                        }
+                    ],
+                    selectedItemId: 0
+                }
             },
             headerText: this.generateHeaderText(
                 resultsList.programCount,
                 resultsList.universityCount
             ),
+            title: 'Вузы Москвы',
+            description: this.seo.metaDescription,
             entityList: {
                 items: programView.list(resultsList.programs),
                 itemType: 'smItemUniversity',

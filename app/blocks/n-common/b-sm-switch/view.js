@@ -38,10 +38,10 @@ goog.scope(function() {
     };
 
     /**
-     * Select link on id
+     * Select item on id
      * @param {number} id
      */
-    View.prototype.selectLink = function(id) {
+    View.prototype.selectItem = function(id) {
         this.dom.link_wraps.forEach(function(item) {
             goog.dom.classlist.remove(item, View.CssClass.SELECTED);
         });
@@ -57,10 +57,32 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
+        this.params = this.transformParams(this.getParams());
 
         this.dom.links = goog.dom.getElementsByClass(View.CssClass.LINK);
         this.dom.link_wraps =
             goog.dom.getElementsByClass(View.CssClass.LINK_WRAP);
+    };
+
+
+    /**
+     * Transform params to compressed ones
+     * @param {Object} rawParams
+     * @return {sm.bSmSwitch.Params.Data}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            selectedItemId: rawParams['selectedItemId'],
+            items: rawParams['items'] ?
+                rawParams['items'].map(function(item) {
+                    return {
+                        label: item['label'],
+                        value: item['value'],
+                        url: item['url']
+                    };
+                }) : []
+        };
     };
 
 });  // goog.scope

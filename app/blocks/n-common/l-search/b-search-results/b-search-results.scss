@@ -1,3 +1,5 @@
+@import '../../i-media/i-media.scss';
+
 .b-search-results__results,
 .b-search-results__placeholder {
     display: none;
@@ -202,7 +204,14 @@ $longAnimationDuration: 1.5s;
     }
 
     .b-search-results__header-description {
+        font-family: arial, sans-serif;
         color: #747474;
     }
 }
 /* Theme end */
+
+@include media-xs {
+    .b-search-results__sort-control-wrap_switch {
+        display: none;
+    }
+}

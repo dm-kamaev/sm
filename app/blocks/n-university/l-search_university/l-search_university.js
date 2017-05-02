@@ -179,6 +179,10 @@ class SearchUniversity extends Search {
             this.filterPanelGroup,
             FilterPanelGroup.Event.SUBMIT,
             this.onFilterPanelGroupSubmit_
+        ).listen(
+            this.filterPanelGroup,
+            FilterPanelGroup.Event.SORT_TYPE_CHANGE,
+            this.onSortReleased_
         );
 
         return this;
@@ -272,6 +276,19 @@ class SearchUniversity extends Search {
      */
     onFilterPanelGroupSubmit_() {
         this.updatePage();
+    }
+
+    /**
+     * Sort action event handler
+     * @param {Object} event
+     * @override
+     * @private
+     */
+    onSortReleased_(event) {
+        super.onSortReleased_(event);
+
+        this.filterPanelGroup.setSortType(event.data.value);
+        this.searchResults.setSortType(event.data.value);
     }
 
     /**

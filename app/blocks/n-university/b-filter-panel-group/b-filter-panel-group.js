@@ -3,6 +3,7 @@ goog.module('sm.bFilterPanelGroup.FilterPanelGroup');
 const Button = goog.require('cl.gButton.Button');
 const ButtonStendhal = goog.require('sm.gButton.ButtonStendhal');
 const Control = goog.require('cl.iControl.Control');
+const DropdownListLinks = goog.require('sm.gDropdown.DropdownListLinks');
 const Factory = goog.require('sm.iCloblFactory.FactoryStendhal');
 const FilterPanel = goog.require('sm.lSearch.bFilterPanel.FilterPanel');
 const Template = goog.require('sm.bFilterPanelGroup.Template');
@@ -17,7 +18,8 @@ const Link = goog.require('sm.bSmLink.SmLink');
  * @enum {string}
  */
 const Event = {
-    SUBMIT: FilterPanel.Event.SUBMIT
+    SUBMIT: FilterPanel.Event.SUBMIT,
+    SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.ITEM_SELECT
 };
 
 /**
@@ -48,6 +50,13 @@ class FilterPanelGroup extends Control {
          * @private
          */
         this.button_ = null;
+
+        /**
+         * Sort controller
+         * @type {?sm.gDropdown.DropdownListLinks}
+         * @private
+         */
+        this.sort_ = null;
 
         /**
          * Filter panel instance
@@ -121,6 +130,16 @@ class FilterPanelGroup extends Control {
     }
 
     /**
+     * set sort type
+     * @param {string} type
+     */
+    setSortType(type) {
+        if (this.sort_) {
+            this.sort_.setValue(type);
+        }
+    }
+
+    /**
      * @override
      * @public
      */
@@ -140,6 +159,7 @@ class FilterPanelGroup extends Control {
         super.decorateInternal(element);
 
         this.initButtons_();
+        this.initSort_();
         this.initFilterPanels_();
     }
 
@@ -210,6 +230,20 @@ class FilterPanelGroup extends Control {
             Link.NAME,
             dom.reset
         );
+    }
+
+    /**
+     * @private
+     */
+    initSort_() {
+        const dom = this.getView().getDom();
+
+        if(dom.sort) {
+            this.sort_ = this.decorateChild(
+                DropdownListLinks.NAME,
+                dom.sort
+            );
+        }
     }
 
     /**

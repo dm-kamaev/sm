@@ -19,7 +19,8 @@ const CssClass = {
     FILTER_VISIBLE: 'b-filter-panel-group__filters_visible',
     CONTROLS_WRAP: 'b-filter-panel-group__controls-wrap',
     RESET: 'b-filter-panel-group__reset',
-    COLLAPSED_STATE: 'b-filter-panel-group_state_collapsed'
+    COLLAPSED_STATE: 'b-filter-panel-group_state_collapsed',
+    SORT: 'b-filter-panel-group__sort'
 };
 
 /**
@@ -162,6 +163,9 @@ class View extends ControlView {
             ),
             reset: this.getElementByClass(
                 CssClass.RESET
+            ),
+            sort: this.getElementByClass(
+                CssClass.SORT
             )
         };
     }

@@ -214,6 +214,15 @@ goog.scope(function() {
 
 
     /**
+     * set sort type
+     * @param {string} type
+     */
+    SearchResults.prototype.setSortType = function(type) {
+        this.sort_.setValue(type);
+    };
+
+
+    /**
      * Check if all items of current search parameters loaded
      * @return {boolean}
      * @public
