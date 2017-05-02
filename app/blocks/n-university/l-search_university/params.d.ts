@@ -1,6 +1,10 @@
 import {
     bSmSubheader
 } from '../../n-common/b-sm-subheader/params';
+import {bSearchResults} from '../../n-common/l-search/b-search-results/params';
+import {
+    bFilterPanel
+} from '../../n-common/l-search/b-filter-panel/params';
 
 import {iLayoutStendhal} from '../../n-clobl/i-layout/params';
 
@@ -33,9 +37,9 @@ export namespace lSearchUniversity {
          * sm.lSearch.ParamsUniversity.Data
          */
         export interface Data extends iLayoutStendhal.Params.Data {
-            resultsList: any;
-            filterPanel: Object;
-            dependentFilterPanel: Object;
+            resultsList: bSearchResults.Params.Data;
+            filterPanel: bFilterPanel.Params;
+            dependentFilterPanel: bFilterPanel.Params;
             searchParams: SearchParams;
             api: {
                 search: string;
