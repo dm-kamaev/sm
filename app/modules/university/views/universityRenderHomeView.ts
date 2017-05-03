@@ -50,6 +50,7 @@ class UniversityRenderHomeView extends LayoutView {
 
         this.setSearchPanel_(params.data);
         this.setPopularUniversities_();
+        this.setBanner_();
         this.setArticles_();
     }
 
@@ -59,6 +60,19 @@ class UniversityRenderHomeView extends LayoutView {
 
     private setPopularUniversities_() {
         this.params.data.populars = {};
+    }
+
+    private setBanner_() {
+        const imgDirectory = '/static/images/n-university/l-home-university/' +
+            'banner-img/';
+
+        this.params.data.banner = {
+            imgUrl: {
+                default: imgDirectory + 'banner-ege.jpg',
+                sizeXS: imgDirectory + 'banner-ege_size_xs.jpg'
+            },
+            linkUrl: '/'
+        };
     }
 
     private setArticles_() {
