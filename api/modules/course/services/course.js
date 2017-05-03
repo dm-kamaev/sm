@@ -49,7 +49,8 @@ const informationFields = {
         'description',
         'duration',
         'costPerHour',
-        'startDate'
+        'startDate',
+        'openSchedule'
     ],
     SCHEDULE: ['day', 'startTime', 'endTime'],
     DEPARTMENT: ['id'],

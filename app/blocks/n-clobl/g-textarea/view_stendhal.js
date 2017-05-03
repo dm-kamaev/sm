@@ -48,6 +48,15 @@ goog.scope(function() {
 
 
     /**
+     * Events
+     * @enum {string}
+     */
+    View.Event = {
+        FOCUS: goog.events.getUniqueId('textarea-focus')
+    };
+
+
+    /**
      * @override
      * @param {Element} element
      */
@@ -131,6 +140,20 @@ goog.scope(function() {
 
 
     /**
+     * @override
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.getHandler().listen(
+            this.dom.textarea,
+            goog.events.EventType.FOCUS,
+            this.onFocus
+        );
+    };
+
+
+    /**
      * Init value (need if value set from params)
      * @private
      */
@@ -138,6 +161,15 @@ goog.scope(function() {
         if (this.params.maxLength) {
             this.checkAndUpdateLength();
         }
+    };
+
+
+    /**
+     * Focus handler
+     * @protected
+     */
+    View.prototype.onFocus = function() {
+        this.dispatchEvent(View.Event.FOCUS);
     };
 
 

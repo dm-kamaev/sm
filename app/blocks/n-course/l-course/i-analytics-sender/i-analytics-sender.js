@@ -84,14 +84,8 @@ goog.scope(function() {
     /**
      * Send analytics by checkout action
      * @param {sm.iAnalytics.Analytics.actionFieldObjectParams} actionDataEc
-     * @param {{
-     *     category: string,
-     *     action: string,
-     *     name: (string|undefined)
-     * }} actionParams
      */
-    AnalyticsSender.prototype.sendCheckout = function(actionDataEc,
-        actionParams) {
+    AnalyticsSender.prototype.sendCheckout = function(actionDataEc) {
 
         var params = actionDataEc;
         params.list = this.list_;
@@ -111,21 +105,19 @@ goog.scope(function() {
         Analytics.getInstance().checkoutProduct(
             productParamsEc, actionParamsEc
         );
-        this.send(actionParams);
+
+        this.send({
+            category: 'checkout',
+            action: 'form request'
+        });
     };
 
 
     /**
      * Send analytics by purchase action
      * @param {sm.iAnalytics.Analytics.actionFieldObjectParams} actionDataEc
-     * @param {{
-     *     category: string,
-     *     action: string,
-     *     name: (string|undefined)
-     * }} actionParams
      */
-    AnalyticsSender.prototype.sendPurchase = function(actionDataEc,
-        actionParams) {
+    AnalyticsSender.prototype.sendPurchase = function(actionDataEc) {
 
         var params = actionDataEc;
         params.list = this.list_;
@@ -145,7 +137,11 @@ goog.scope(function() {
         Analytics.getInstance().purchaseProduct(
             productParamsEc, actionParamsEc
         );
-        this.send(actionParams);
+
+        this.send({
+            category: 'checkout',
+            action: 'form success'
+        });
     };
 
 

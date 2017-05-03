@@ -86,7 +86,7 @@ class Menu {
         let possibleEnityTypes = [
             entityTypeEnum.SCHOOL,
             entityTypeEnum.COURSE,
-            entityTypeEnum.UNIVERSITY
+            // entityTypeEnum.UNIVERSITY
         ];
 
         return this.generateMenuItems(possibleEnityTypes);
@@ -147,7 +147,7 @@ class Menu {
             name = 'Школы';
             break;
         case entityTypeEnum.COURSE:
-            name = 'Курсы и секции';
+            name = 'Курсы';
             break;
         case entityTypeEnum.UNIVERSITY:
         case entityTypeEnum.PROGRAM:

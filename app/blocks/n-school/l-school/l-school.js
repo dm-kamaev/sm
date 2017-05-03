@@ -23,7 +23,6 @@ goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAuthorization.Authorization');
-goog.require('sm.iCarrotquest.Carrotquest');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
 goog.require('sm.lSchool.bComment.Comment');
@@ -353,6 +352,12 @@ goog.scope(function() {
             this.map_,
             Map.Event.ITEM_NAME_CLICK,
             this.onMapItemNameClick_
+        );
+
+        handler.listen(
+            this.map_,
+            Map.Event.OPEN_BALLOON,
+            this.sendMapAnalytics_
         );
     };
 
@@ -876,4 +881,35 @@ goog.scope(function() {
 
         return this;
     };
+
+
+    /**
+     * @param {Object} event
+     * @private
+     */
+    School.prototype.sendMapAnalytics_ = function(event) {
+        var params = {
+            id: this.params_.id,
+            name: this.params_.schoolName,
+            list: 'map balloon',
+            category: null,
+            position: 1
+        };
+
+        var impressionParams =
+            Analytics.transformImpressionParams(params);
+
+        Analytics.addImpression(impressionParams);
+        Analytics.setView();
+
+        var data = {
+            'hitType': 'event',
+            'eventCategory': 'details map',
+            'eventAction': 'pin details',
+            'eventLabel': event.data.name
+        };
+
+        Analytics.send(data);
+    };
+
 });  // goog.scope

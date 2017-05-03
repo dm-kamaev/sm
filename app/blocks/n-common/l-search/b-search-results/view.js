@@ -245,6 +245,23 @@ goog.scope(function() {
 
 
     /**
+     * Return data-params from dom element
+     * @return {sm.lSearch.bSearchResults.View.DataParams}
+     * @protected
+     * @override
+     */
+    View.prototype.getParams = function() {
+        var rawParams = View.base(this, 'getParams');
+
+        this.params = (rawParams && !goog.object.isEmpty(rawParams)) ?
+            this.transformParams(rawParams) :
+            {};
+
+        return this.params;
+    };
+
+
+    /**
      * Transform raw params to compressed ones
      * @param {Object} rawParams
      * @return {sm.lSearch.bSearchResults.View.DataParams}

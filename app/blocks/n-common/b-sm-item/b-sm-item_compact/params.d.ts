@@ -15,6 +15,9 @@ export namespace bSmItemCompact {
                 url: string;
             }
             nameLinkUrl: string;
+            placeholder?: {
+                url: string;
+            };
         }
 
         /*
@@ -24,6 +27,7 @@ export namespace bSmItemCompact {
         export interface Config extends bSmItem.Params.Config {
             nameLinkSize?: string;
             nameLinkTheme: string;
+            isLinksInNewTab?: boolean;
         }
     }
 

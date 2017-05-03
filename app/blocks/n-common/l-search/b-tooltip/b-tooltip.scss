@@ -1,0 +1,92 @@
+.b-tooltip {
+    position: relative;
+
+    box-sizing: border-box;
+    min-width: 234px;
+    min-height: 48px;
+    padding-left: 8px;
+
+    background-color: #fff;
+    box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.15);
+
+    line-height: 48px;
+}
+
+.b-tooltip__triangle {
+    position: relative;
+    top: 9px;
+    right: -18px;
+
+    width: 34px;
+    height: 34px;
+
+    transform: rotate(45deg);
+
+    background-color: #fff;
+    box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.15);
+}
+
+.b-tooltip__triangle-wrap {
+    position: absolute;
+    top: -2px;
+    left: -27px;
+
+    overflow: hidden;
+
+    width: 35px;
+    height: 52px;
+
+    transform: scaleX(0.6);
+}
+
+.b-tooltip__text {
+    display: inline-block;
+
+    margin-right: 8px;
+}
+
+.b-tooltip__button-wrap {
+    display: inline-block;
+    float: right;
+    overflow: hidden;
+
+    width: 97px;
+    height: 32px;
+    margin-top: 8px;
+    margin-right: 8px;
+
+    line-height: 32px;
+}
+
+
+@keyframes disappear {
+    from {
+        visibility: visible;
+
+        opacity: 1;
+    }
+    99% {
+        visibility: visible;
+
+        opacity: 0.01;
+    }
+    to {
+        visibility: hidden;
+
+        opacity: 0;
+    }
+}
+
+.b-tooltip_disappear_slow {
+    animation-name: disappear;
+    animation-duration: 0.5s;
+    animation-delay: 2s;
+
+    animation-fill-mode: forwards;
+}
+
+.b-tooltip_rounded-button-theme {
+    .b-tooltip__button-wrap {
+        border-radius: 100px;
+    }
+}

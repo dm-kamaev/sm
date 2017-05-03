@@ -42,6 +42,11 @@ type CreateOptions = {
     updateRating?: boolean;
 };
 
+type GetListCommentsParams = {
+    order?: number,
+    filterEmptyComments?: boolean
+};
+
 class ProgramCommentService {
     public readonly name: string = 'programComment';
 
@@ -95,13 +100,18 @@ class ProgramCommentService {
     }
 
     public async getAllByProgramIdWithFullData(
-            programId: number, orderType?: number
+            programId: number, params?: GetListCommentsParams
     ): Promise<Array<ProgramCommentInstance>> {
         const commentGroup = await programService.getCommentGroup(programId);
-        const order = this.getCommentsOrder_(orderType);
+        const order = this.getCommentsOrder_(params.order);
+        const notEmptyCommentCondition = params.filterEmptyComments ?
+            this.getNotEmptyCommentCondition_() :
+            null;
+
         return await ProgramCommentModel.findAll({
             where: {
-                commentGroupId: commentGroup.id
+                commentGroupId: commentGroup.id,
+                $and: notEmptyCommentCondition
             },
             include: [{
                 model: UserDataModel,
@@ -323,6 +333,16 @@ class ProgramCommentService {
                 break;
         }
         return order;
+    }
+
+    private getNotEmptyCommentCondition_(): Sequelize.WhereOptions {
+        return {
+            $or: {
+                advice: {$ne: null},
+                pros: {$ne: null},
+                cons: {$ne: null}
+            }
+        };
     }
 
     private async updateRating_(commentGroupId: number): Promise<any> {

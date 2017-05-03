@@ -3,6 +3,8 @@ goog.provide('sm.lSearch.bFilter.Filter');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.lSearch.bFilter.CheckOptionEvent');
+goog.require('sm.lSearch.bFilter.UncheckOptionEvent');
 goog.require('sm.lSearch.bFilter.Template');
 goog.require('sm.lSearch.bFilter.View');
 
@@ -40,7 +42,9 @@ goog.inherits(sm.lSearch.bFilter.Filter, cl.iControl.Control);
 
 goog.scope(function() {
     var Filter = sm.lSearch.bFilter.Filter,
-        View = sm.lSearch.bFilter.View;
+        View = sm.lSearch.bFilter.View,
+        CheckOptionEvent = sm.lSearch.bFilter.CheckOptionEvent,
+        UncheckOptionEvent = sm.lSearch.bFilter.UncheckOptionEvent;
 
     /**
      * Name of this element in factory
@@ -53,15 +57,27 @@ goog.scope(function() {
     });
 
     /**
+     * @typedef {{
+     *      value: string,
+     *      label: string,
+     *      name: string,
+     *      isChecked: boolean|undefined
+     *  }}
+     */
+    Filter.OptionData;
+
+    /**
      * Event enum
      * @enum {string}
      */
     Filter.Event = {
-        CHECK_OPTION: goog.events.getUniqueId('check_on'),
-        UNCHECK_OPTION: goog.events.getUniqueId('uncheck_on'),
+        CHECK_OPTION: CheckOptionEvent.Type,
+        UNCHECK_OPTION: UncheckOptionEvent.Type,
         CHECK: goog.events.getUniqueId('check'),
         UNCHECK: goog.events.getUniqueId('uncheck'),
-        SUBMIT: goog.events.getUniqueId('submit')
+        SUBMIT: goog.events.getUniqueId('submit'),
+        EXPAND: View.Event.EXPAND,
+        COLLAPSE: View.Event.COLLAPSE
     };
 
 
@@ -364,6 +380,8 @@ goog.scope(function() {
      * @protected
      */
     Filter.prototype.initViewListeners = function() {
+        this.autoDispatch(Filter.Event.COLLAPSE);
+        this.autoDispatch(Filter.Event.EXPAND);
     };
 
 
@@ -443,10 +461,11 @@ goog.scope(function() {
      * @protected
      */
     Filter.prototype.dispatchEventCheckOption = function(option) {
-        this.dispatchEvent({
-            'type': Filter.Event.CHECK_OPTION,
-            'data': option.getData()
+        var checkOptionEvent = new CheckOptionEvent({
+            data: option.getData(),
+            position: this.getView().getOptionOffset(option)
         });
+        this.dispatchEvent(checkOptionEvent);
     };
 
 
@@ -456,10 +475,11 @@ goog.scope(function() {
      * @protected
      */
     Filter.prototype.dispatchEventUncheckOption = function(option) {
-        this.dispatchEvent({
-            'type': Filter.Event.UNCHECK_OPTION,
-            'data': option.getData()
+        var uncheckOptionEvent = new UncheckOptionEvent({
+            data: option.getData(),
+            position: this.getView().getOptionOffset(option)
         });
+        this.dispatchEvent(uncheckOptionEvent);
     };
 
 

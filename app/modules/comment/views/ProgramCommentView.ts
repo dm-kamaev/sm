@@ -310,7 +310,7 @@ class ProgramCommentView {
 
 
     private getDropdownParams_(params: DropdownData): Dropdown {
-        let items = params.contentItems;
+        let items = [].concat(params.contentItems);
 
         if (params.selectedValue) {
             items = items.map(item => {
@@ -395,4 +395,4 @@ class ProgramCommentView {
     };
 }
 
-export const programCommentView = new ProgramCommentView();
+export {ProgramCommentView};

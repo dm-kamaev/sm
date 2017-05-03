@@ -185,12 +185,6 @@
     }
 }
 
-@include media-m {
-    .b-results__dropdown {
-        display: none;
-    }
-}
-
 @include media-s {
     .b-results__item-label {
         width: 100%;
@@ -201,6 +195,12 @@
     }
 
     .b-results__help-icon {
+        display: none;
+    }
+}
+
+@include media-xs {
+    .b-results__dropdown {
         display: none;
     }
 }

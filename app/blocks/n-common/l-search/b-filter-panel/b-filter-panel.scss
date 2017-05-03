@@ -4,9 +4,14 @@
     width: 100%;
 
     color: #000;
+    background-color: inherit;
 
     font-family: Arial, sans-serif;
     font-size: 15px;
+}
+
+.b-filter-panel__content {
+    background-color: inherit;
 }
 
 .b-filter-panel__expander {
@@ -85,6 +90,28 @@
     }
 }
 /** Neptune theme end */
+.b-filter-panel__tooltip-wrap {
+    position: absolute;
+    left: 100%;
+    top: 0;
+}
+
+.b-filter-panel__button-wrap {
+    background-color: inherit;
+}
+
+.b-filter-panel__button-box {
+    height: 50px;
+    background-color: inherit;
+}
+
+.b-filter-panel__button-wrap_fixed {
+    position: fixed;
+    width: calc(100% - 80px);
+    bottom: 20px;
+
+    box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.3);
+}
 
 
 @include media-m {
@@ -183,5 +210,13 @@
             margin-bottom: 20px;
             margin-left: 5px;
         }
+    .b-filter-panel__tooltip-wrap {
+        display: none;
+    }
+}
+
+@include media-xs {
+    .b-filter-panel__button-wrap_fixed {
+        width: calc(100% - 60px);
     }
 }

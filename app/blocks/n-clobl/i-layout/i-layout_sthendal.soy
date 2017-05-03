@@ -40,7 +40,6 @@
  *     analyticsId: string,
  *     experimentId: ?string,
  *     yandexMetrikaId: number,
- *     carrotquestId: string,
  *     domain: string,
  *     fbClientId: ?number,
  *     csrf: string
@@ -234,7 +233,6 @@
  *         staticVersion: (string|undefined),
  *         analyticsId: string,
  *         yandexMetrikaId: number,
- *         carrotquestId: string,
  *         csrf: string
  *     }
  * }}
@@ -245,7 +243,6 @@
     {call .csrf data="all"/}
     {call .analytics data="all"/}
     {call .metrika data="all"/}
-    {call .carrotquest data="all" /}
     {call .relap data="all" /}
     {call .picturefill data="all" /}
 {/template}
@@ -317,25 +314,6 @@
         </div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
-{/template}
-
-
-/**
- * Carrotquest
- * @param params {{
- *     config: {
- *         carrotquestId: string
- *     }
- * }}
- * @protected
- */
-{template .carrotquest autoescape="strict" kind="html"}
-    <!-- CarrotQuest BEGIN -->
-        <script type="text/javascript">
-            var carrotquestInstance = sm.iCarrotquest.Carrotquest.getInstance();
-            carrotquestInstance.init('{$params?.config?.carrotquestId}');
-        </script>
-    <!-- CarrotQuest END -->
 {/template}
 
 

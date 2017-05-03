@@ -48,6 +48,7 @@ router.get('/school/search/map', schoolController.searchMap);
 router.get(
     '/school/searchMapPointsLegacy', schoolController.searchMapPointsLegacy
 );
+router.get('/school/search/count', schoolController.getSearchCount);
 router.get('/school/search/suggest', schoolController.suggestSearch);
 router.get('/school/search/filters', schoolController.listSearchFilters);
 router.get('/school/activitySphere', schoolController.activitySphere);
@@ -162,6 +163,8 @@ initCrudRouting(
 );
 router.get('/admin/schoolsubject', examAdminController.actionGetListSubject);
 router.get('/admin/examyear', examAdminController.actionGetListExamYear);
+router.get('/admin/awardetype', olympiadAdminController.actionGetAwardTypes);
+router.get('/admin/olymptype', olympiadAdminController.actionGetOlympTypes);
 
 
 initCrudRouting(

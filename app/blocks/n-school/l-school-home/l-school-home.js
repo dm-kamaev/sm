@@ -17,7 +17,6 @@ goog.require('sm.gButton.ButtonSocialStendhal');
 goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gModal.ModalSideMenu');
 goog.require('sm.iAnalytics.Analytics');
-goog.require('sm.iCarrotquest.Carrotquest');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
 

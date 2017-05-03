@@ -98,6 +98,17 @@
 .b-sm-footer_overcast-theme {
     background-color: #282828;
 
+    .b-sm-footer__body {
+        padding-bottom: 77px;
+
+        &:after {
+            display: block;
+            clear: both;
+
+            content: '';
+        }
+    }
+
     .b-sm-footer__copyright {
         color: #bdbdbd;
         font-size: 16px;
@@ -128,6 +139,16 @@
     /** Overcast them end */
 }
 
+@include media-l {
+    /** Overcast them start */
+    .b-sm-footer_overcast-theme {
+        .b-sm-footer__column {
+            width: 280px;
+        }
+    }
+    /** Overcast them end */
+}
+
 @include media-m {
     /** Overcast them start */
     .b-sm-footer_overcast-theme {
@@ -152,10 +173,6 @@
 }
 
 @include media-s {
-    .b-sm-footer__body {
-        padding-bottom: 56px;
-    }
-
     .b-sm-footer__section_copyright {
         float: none;
 
@@ -169,6 +186,27 @@
     .b-sm-footer__section_columns {
         margin-bottom: 42px;
     }
+
+    /** Overcast them start */
+    .b-sm-footer_overcast-theme {
+        .b-sm-footer__column {
+            box-sizing: border-box;
+            width: 33.33%;
+            padding-right: 0;
+            padding-left: 35px;
+
+            &:first-child {
+                padding-right: 0;
+                padding-left: 0;
+            }
+
+            &:last-child {
+                padding-right: 0;
+                padding-left: 60px;
+            }
+        }
+    }
+    /** Overcast them end */
 }
 
 @include media-xs {
@@ -202,6 +240,10 @@
 
     /** Overcast them start */
     .b-sm-footer_overcast-theme {
+        .b-sm-footer__body {
+            padding-bottom: 46px;
+        }
+
         .b-sm-footer__column {
             position: static;
             width: 100%;

@@ -6,14 +6,14 @@
 const commentView: any = {};
 
 type InputComment = {
-    id: number,
-    text: string,
-    author: string,
-    socialId: string,
-    socialType: string,
-    userType: string,
-    totalScore: number,
-    updatedAt: string,
+    id: number;
+    text: string;
+    author: string;
+    socialId: string;
+    socialType: string;
+    userType: string;
+    totalScore: number;
+    updatedAt: string;
 };
 
 interface OutComment {

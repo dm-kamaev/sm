@@ -2,7 +2,8 @@ goog.provide('sm.iLayout.ViewStendhal');
 
 goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
-goog.require('goog.dom.classlist');
+goog.require('goog.dom');
+goog.require('goog.events');
 goog.require('sm.bSmHeader.View');
 
 
@@ -131,6 +132,31 @@ goog.scope(function() {
             modifier: rawParams['modifier'],
             type: rawParams['type']
         };
+    };
+
+
+    /**
+     * Enter document
+     * @override
+     * @public
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.getHandler().listen(
+            goog.dom.getWindow(),
+            goog.events.EventType.BEFOREUNLOAD,
+            this.onBeforeunload_
+        );
+    };
+
+
+    /**
+     * Before close page
+     * @private
+     */
+    View.prototype.onBeforeunload_ = function() {
+        this.dispatchEvent(goog.events.EventType.BEFOREUNLOAD);
     };
 
 

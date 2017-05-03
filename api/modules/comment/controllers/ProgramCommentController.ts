@@ -130,11 +130,11 @@ class ProgramCommentController extends Controller {
      * @apiUse ProgramNotFoundError
      */
     public async actionList(actionContext: any, programId: string) {
-        const orderType: number = +actionContext.data.orderType || 0;
+        const order: number = +actionContext.data.orderType || 0;
         const comments =
             await programCommentService.getAllByProgramIdWithFullData(
                 +programId,
-                orderType
+                {order}
             );
 
         return programCommentView.renderList(comments);
@@ -243,9 +243,9 @@ class ProgramCommentController extends Controller {
                 yearGraduate: reviewData.yearGraduate,
                 grade: reviewData.grade,
                 score: reviewData.score,
-                advice: reviewData.advice,
-                pros: reviewData.pros,
-                cons: reviewData.cons
+                advice: reviewData.advice || null,
+                pros: reviewData.pros || null,
+                cons: reviewData.cons || null
             }
         );
     }
@@ -297,9 +297,9 @@ class ProgramCommentController extends Controller {
                 yearGraduate: reviewData.yearGraduate,
                 grade: reviewData.grade,
                 score: reviewData.score,
-                advice: reviewData.advice,
-                pros: reviewData.pros,
-                cons: reviewData.cons
+                advice: reviewData.advice || null,
+                pros: reviewData.pros || null,
+                cons: reviewData.cons || null
             }
         );
     }

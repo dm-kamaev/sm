@@ -15,7 +15,7 @@ import {LinksFormatter} from '../../common/lib/LinksFormatter';
 import {utils} from '../../common/lib/utils';
 
 import {courseView} from '../../course/views/courseView';
-import {programCommentView} from '../../comment/views/programCommentView';
+import {ProgramCommentView} from '../../comment/views/ProgramCommentView';
 import {navigationPanelView} from './navigationPanelView';
 
 import {
@@ -407,7 +407,10 @@ class InformationView extends LayoutView {
             });
         }
 
-        if (budgetPlaces) {
+        if (budgetPlaces &&
+            data.entranceStatistic.competition &&
+            data.entranceStatistic.competition != 0
+        ) {
             listItems.push({
                 data: {
                     header: data.entranceStatistic.competition,
@@ -466,6 +469,7 @@ class InformationView extends LayoutView {
     }
 
     private setComments_(data: BackendData) {
+        const programCommentView = new ProgramCommentView();
         this.params.data.comments = programCommentView.renderCommentsList({
             comments: data.comments,
             users: data.users
@@ -474,7 +478,10 @@ class InformationView extends LayoutView {
 
     private setSimilarPrograms_(data: BackendData) {
         this.params.data.similarPrograms = data.similarPrograms.length ? {
-            header: 'Похожие программы',
+            header: {
+                default: 'Похожие программы обучения',
+                sizeXS: 'Похожие программы'
+            },
             data: {
                 countItemsPerPage: 4,
                 items: data.similarPrograms.map(
@@ -494,7 +501,7 @@ class InformationView extends LayoutView {
             name: similarProgram.name,
             link: {
                 data: {
-                    content: 'Программа обучения',
+                    content: 'Программа',
                     url: similarProgram.url
                 },
                 config: {
@@ -524,7 +531,8 @@ class InformationView extends LayoutView {
                     enableCover: true,
                     isDescriptionLink: true,
                     nameLinkSize: 'xl',
-                    nameLinkTheme: 'default'
+                    nameLinkTheme: 'default',
+                    isLinksInNewTab: true
                 }
             }
         } :
@@ -552,7 +560,11 @@ class InformationView extends LayoutView {
                 altText: data.categoryName,
             },
             url: courseView.getLink(data.url),
-            nameLinkUrl: courseView.getLink(data.categoryUrl)
+            nameLinkUrl: courseView.getLink(data.categoryUrl),
+            placeholder: {
+                url: '/static/images/n-common/b-sm-item/b-sm-item_entity' +
+                    '/images/placeholder.png'
+            }
         };
     }
 
@@ -574,6 +586,7 @@ class InformationView extends LayoutView {
         programId: number,
         userComment: BackendProgramComment
     ) {
+        const programCommentView = new ProgramCommentView();
         this.params.data.modalComment = programCommentView.renderModal({
             programId: programId,
             comment: userComment

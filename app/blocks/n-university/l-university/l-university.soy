@@ -363,22 +363,22 @@
  * @private
  */
 {template .description_}
-    {if $params.data.entityData.description}
-        {let $class kind="text"}
-            {if $params.data.size}
-                {call .rootClass/}__main-description_size_{$params.data.size}
-            {/if}
-        {/let}
+    {let $class kind="text"}
+        {if $params.data.size}
+            {call .rootClass/}__main-description_size_{$params.data.size}
+        {/if}
+    {/let}
 
-        <div class="{call .rootClass/}__main-description {$class}">
-            <div class="{call .rootClass/}__type">
-                {$params.data.entityData.subunitType}
-            </div>
+    <div class="{call .rootClass/}__main-description {$class}">
+        <div class="{call .rootClass/}__type">
+            {$params.data.entityData.subunitType}
+        </div>
 
-            <div class="{call .rootClass/}__name">
-                {$params.data.entityData.subunitName}
-            </div>
+        <div class="{call .rootClass/}__name">
+            {$params.data.entityData.subunitName}
+        </div>
 
+        {if $params.data.entityData.description}
             <div class="{call .rootClass/}__description">
                 {if $params.data.size == 'xs'}
                     {call .renderChildLayout}
@@ -400,8 +400,8 @@
                     {$params.data.entityData.description}
                 {/if}
             </div>
-        </div>
-    {/if}
+        {/if}
+    </div>
 {/template}
 
 
@@ -528,8 +528,11 @@
  * @param params {{
  *     data: {
  *         similarPrograms: {
- *              header: string,
- *              data: sm.bSmItemList.Template.Params.Data
+ *             header: {
+ *                 default: string,
+ *                 sizeXS: (string|undefined)
+ *             },
+ *             data: sm.bSmItemList.Template.Params.Data
  *         }
  *     },
  *     config: {
@@ -545,7 +548,12 @@
                 {call .rootClass/}__programs
             {/let}
             <div class="{call .rootClass/}__similar-programs-header">
-                {$params.data.similarPrograms.header}
+                {$params.data.similarPrograms.header.default}
+            </div>
+            <div class="{call .rootClass/}__similar-programs-header{sp}
+                {call .rootClass/}__similar-programs-header_size_xs"
+            >
+                {$params.data.similarPrograms.header.sizeXS}
             </div>
             <div class="{call .rootClass/}__similar-programs-list">
                 {call .renderChildLayout}

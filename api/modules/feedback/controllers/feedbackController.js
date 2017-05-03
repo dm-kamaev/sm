@@ -5,6 +5,8 @@ var services = require('../../../../app/components/services').all;
 
 var feedbackView = require('../views/feedbackView');
 
+const REFERER_HEADER = 'referer';
+
 /**
  * @api {post} api/user-feedback?type=opinion
  * @apiVersion 0.0.0
@@ -25,6 +27,9 @@ exports.processUserFeedback = async(function(req, res) {
         var params = req.body;
 
         params.type = req.query.type;
+        if (!params.url) {
+            params.url = req.get(REFERER_HEADER);
+        }
 
         if ((params.type === 'opinion' || params.type === 'mistake') &&
             params.name.trim() &&

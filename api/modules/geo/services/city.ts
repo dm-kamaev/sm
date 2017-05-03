@@ -172,6 +172,7 @@ class CityService {
                 .toString()
                 // latin "C" to russian "С"
                 .replace(/C/, 'С')
+                // .toLowerCase()
                 .replace(/[\w\d_!@#\$%^&*\(\)"':;|,\.\+<>?\[\]~{}\/\\]+/g, '')
                 .replace(/-+/g, '-')
                 .replace(/^-+/g, '')

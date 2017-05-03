@@ -83,7 +83,12 @@
 {template .content_}
     <div class="{call .rootClass/}__content">
         {call .filtersList_ data="all" /}
+<<<<<<< HEAD
         {call .button_ data="all" /}
+=======
+        {call .button_ /}
+        {call .tooltip_ /}
+>>>>>>> master
         {call .controlLinks_ data="all" /}
     </div>
 {/template}
@@ -198,22 +203,61 @@
  * }}
  */
 {template .button_}
-    <div class="{call .rootClass/}__button">
-        {call .renderChild}
-            {param params: [
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': [
-                            'default': $params.data.button ?
-                                $params.data.button.content : 'Подобрать'
-                        ]
-                    ],
+    <div class="{call .rootClass/}__button-box">
+        <div class="{call .rootClass/}__button-wrap">
+            {call .renderChild}
+                {param params: [
+                    'type': 'button',
+                    'renderParams': [
+                        'data': [
+                            'content': [
+                                'default': $params.data.button ?
+                                    $params.data.button.content : 'Подобрать'
+                            ]
+                        ],
                     'config': [
                         'theme': $params.data.button ?
                             $params.data.button.theme : 'dark',
                         'size': 's',
                         'borderRoundSize': $params.data.button?.borderRoundSize
+                            'defaultText': 'Подобрать'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Tooltip with count of search result
+ */
+{template .tooltip_}
+    {let $customClass kind="text"}
+        {call .rootClass/}__tooltip
+    {/let}
+    {let $buttonLabel kind="text"}
+        {call .getText}
+            {param message: 'Показать' /}
+        {/call}
+    {/let}
+    <div class="{call .rootClass/}__tooltip-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'lSearch-tooltip',
+                'renderParams': [
+                    'data': [
+                        'buttonLabel': $buttonLabel
+                    ],
+                    'config': [
+                        'customClasses': [
+                            $customClass,
+                            'i-utils__hidden'
+                        ],
+                        'button': [
+                            'theme': 'carrot'
+                        ]
                     ]
                 ]
             ]/}
