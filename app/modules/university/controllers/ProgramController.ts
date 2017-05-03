@@ -7,6 +7,8 @@ import {programSearchView} from '../views/programSearchView';
 import {searchService} from '../services/searchService';
 import {QueryParams} from '../types/programSearch';
 
+const LIMIT = 10;
+
 export class ProgramController extends Controller {
     /* tslint:disable:max-line-length */
     /**
@@ -95,7 +97,7 @@ export class ProgramController extends Controller {
         const queryParams: QueryParams = actionContext.data;
         const searchParams = programSearchView.initSearchParams(queryParams);
 
-        const data = await searchService.findByParams(searchParams);
+        const data = await searchService.findByParams(searchParams, LIMIT);
         return programSearchView.renderList(data);
     }
 }

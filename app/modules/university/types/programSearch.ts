@@ -33,6 +33,7 @@ export type BackendSearchParams = {
     majors?: number[];
     features?: number[];
     page?: number;
+    limit?: number;
     sortType?: number;
 };
 

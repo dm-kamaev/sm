@@ -87,7 +87,7 @@ class ProgramView {
             res.push(`– Программы обмена (${item.exchangeProgram})`);
         }
 
-        if (item.extraExam.length) {
+        if (item.extraExam && item.extraExam.length) {
             const exams = item.extraExam.join(', ');
             const declensionExam = item.extraExam.length == 1 ?
                 'Вступительное испытание' :
