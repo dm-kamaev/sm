@@ -17,6 +17,13 @@ export namespace lHomeUniversity {
             searchPanel: Object;
             populars: Object;
             articles: Object;
+            banner: {
+                imgUrl: {
+                    default: string;
+                    sizeXS: string;
+                };
+                linkUrl: string;
+            }
         }
 
         /**

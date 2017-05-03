@@ -57,7 +57,14 @@
  *     data: {
  *         searchPanel: {},
  *         populars: {},
- *         articles: {}
+ *         articles: {},
+ *         banner: {
+ *            imgUrl: {
+ *                default: string,
+ *                sizeXS: string
+ *            },
+ *            linkUrl: string
+ *        }
  *     }
  * }}
  * @override
@@ -66,9 +73,9 @@
 {template .mainContent}
     <div class="{call .rootClass/}__body">
         {call .sectionSearch_ data="all" /}
-        {call .sectionBannerS_ data="all" /}
+        {call .sectionBannerXs_ data="all"/}
         {call .sectionPopulars_ data="all" /}
-        {call .sectionBannerXl_ data="all" /}
+        {call .sectionBannerXl_ data="all"/}
         {call .sectionArticles_ data="all" /}
     </div>
 {/template}
@@ -86,24 +93,45 @@
 {template .sectionSearch_}
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_search">
-
-        {if $params}{/if}
+        <div class="{call .rootClass /}__section-inner">
+            {if $params}{/if}
+        </div>
     </div>
 {/template}
 
 
 /**
- * Section with banner to shows on screen size s
+ * Section with banner to shows on screen size xs
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         banner: {
+ *            imgUrl: {
+ *                default: string,
+ *                sizeXS: string
+ *            },
+ *            linkUrl: string
+ *        }
+ *     }
  * }}
  * @private
  */
-{template .sectionBannerS_}
+{template .sectionBannerXs_}
     <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_banner-s">
+                {call .rootClass/}__section_banner-xs">
 
-        {if $params}{/if}
+        <div class="{call .rootClass /}__section-inner">
+            {call .banner_}
+                {param params: [
+                    'data': [
+                        'imgUrl': $params.data.banner.imgUrl.sizeXS,
+                        'linkUrl':$params.data.banner.linkUrl
+                    ],
+                    'config': [
+                        'modifier': 'xs'
+                    ]
+                ]/}
+            {/call}
+        </div>
     </div>
 {/template}
 
@@ -121,7 +149,8 @@
     {if $params.data.populars}
         <div class="{call .rootClass/}__section{sp}
                     {call .rootClass/}__section_populars">
-
+            <div class="{call .rootClass /}__section-inner">
+            </div>
         </div>
     {/if}
 {/template}
@@ -130,7 +159,15 @@
 /**
  * Section with banner to shows on screen size xl
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         banner: {
+ *            imgUrl: {
+ *                default: string,
+ *                sizeXS: string
+ *            },
+ *            linkUrl: string
+ *        }
+ *     }
  * }}
  * @private
  */
@@ -138,7 +175,19 @@
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_banner-xl">
 
-        {if $params}{/if}
+        <div class="{call .rootClass /}__section-inner">
+            {call .banner_}
+                {param params: [
+                    'data': [
+                        'imgUrl': $params.data.banner.imgUrl.default,
+                        'linkUrl':$params.data.banner.linkUrl
+                    ],
+                    'config': [
+                        'modifier': 'xl'
+                    ]
+                ]/}
+            {/call}
+        </div>
     </div>
 {/template}
 
@@ -156,7 +205,35 @@
     {if $params.data.articles}
         <div class="{call .rootClass/}__section{sp}
                     {call .rootClass/}__section_articles">
-
+            <div class="{call .rootClass /}__section-inner">
+            </div>
         </div>
     {/if}
+{/template}
+
+
+/**
+ * Banner image - link
+ * @param params {{
+ *     data: {
+ *        imgUrl: string,
+ *        linkUrl: string
+ *     },
+ *     config: {
+ *         modifier
+ *     }
+ * }}
+ * @private
+ */
+{template .banner_}
+    <div class="{call .rootClass/}__banner{sp}
+                {call .rootClass/}__banner_{$params.config.modifier}">
+
+        <a class="{call .rootClass/}__banner-link"
+            href="{$params.data.linkUrl}">
+
+            <img class="{call .rootClass/}__banner-img"
+                src="{$params.data.imgUrl}"/>
+        </a>
+    </div>
 {/template}
