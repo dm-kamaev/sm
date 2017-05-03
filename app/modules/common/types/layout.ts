@@ -1,3 +1,5 @@
+import {BackendUser} from '../../user/types/user';
+
 export type AppConfig = {
     schools: {
         analyticsId: string,
@@ -12,4 +14,10 @@ export type AppConfig = {
     },
     universities: {},
     facebookClientId: number
+};
+
+export interface RequestData {
+    user: BackendUser;
+    csrf: string;
+    query: Object;
 };

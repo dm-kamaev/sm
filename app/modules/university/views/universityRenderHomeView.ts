@@ -10,13 +10,17 @@ import {UniversitySubHeader} from './UniversitySubHeader';
 import {UniversityFooter} from './UniversityFooter';
 
 import {
-    BackendData,
-    RenderParams
-} from '../types/programSearchLayout';
+    RenderParams,
+    BackendData
+} from '../types/universityHomeLayout';
+
+import {
+    lHomeUniversity
+} from '../../../blocks/n-university/l-home-university/params';
 
 
 class UniversityRenderHomeView extends LayoutView {
-    protected params: any;//lHomeUniversity.Params;
+    protected params: lHomeUniversity.Params;
 
     constructor() {
         super(entityType.UNIVERSITY);
@@ -43,6 +47,22 @@ class UniversityRenderHomeView extends LayoutView {
 
     protected setParams(params: RenderParams) {
         super.setParams(params);
+
+        this.setSearchPanel_(params.data);
+        this.setPopularUniversities_();
+        this.setArticles_();
+    }
+
+    private setSearchPanel_(data: BackendData) {
+        this.params.data.searchPanel = {};
+    }
+
+    private setPopularUniversities_() {
+        this.params.data.populars = {};
+    }
+
+    private setArticles_() {
+        this.params.data.articles = {};
     }
 }
 

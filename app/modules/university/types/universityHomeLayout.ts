@@ -9,19 +9,9 @@ import {SearchParams} from './programSearch';
 export type RenderParams = {
     data: BackendData;
     config: AppConfig;
-    requestData: RequestDataProgramSearch;
+    requestData: RequestData;
 };
 
 export type BackendData = {
-    resultsList: BackendProgramResults;
-    cities: BackendCity[],
-    egeExams: Subject[],
-    majors: PopularMajor,
     favorites: Array<{string: any}>;
-    searchParams: SearchParams;
 };
-
-export interface RequestDataProgramSearch extends RequestData {
-    query: QueryParams;
-};
-
