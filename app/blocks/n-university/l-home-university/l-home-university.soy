@@ -54,9 +54,10 @@
 /**
  * Content
  * @param params {{
- *     data: {?},
- *     config: {
- *         entityType: string
+ *     data: {
+ *         searchPanel: {},
+ *         populars: {},
+ *         articles: {}
  *     }
  * }}
  * @override
@@ -64,26 +65,98 @@
  */
 {template .mainContent}
     <div class="{call .rootClass/}__body">
-        {call .sectionContent_ data="all" /}
+        {call .sectionSearch_ data="all" /}
+        {call .sectionBannerS_ data="all" /}
+        {call .sectionPopulars_ data="all" /}
+        {call .sectionBannerXl_ data="all" /}
+        {call .sectionArticles_ data="all" /}
     </div>
 {/template}
 
 
 /**
- * Left menu and Search results
+ * Search programs section
  * @param params {{
- *     data: {?},
- *     config: {
- *         entityType: string
+ *     data: {
+ *         searchPanel: {}
  *     }
  * }}
- * @protected
- * @override
+ * @private
  */
-{template .sectionContent_}
-    <div class="{call .rootClass/}__section
-        {sp}{call .rootClass/}__section_content">
+{template .sectionSearch_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_search">
 
         {if $params}{/if}
     </div>
+{/template}
+
+
+/**
+ * Section with banner to shows on screen size s
+ * @param params {{
+ *     data: {?}
+ * }}
+ * @private
+ */
+{template .sectionBannerS_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_banner-s">
+
+        {if $params}{/if}
+    </div>
+{/template}
+
+
+/**
+ * Section with populars of universities
+ * @param params {{
+ *     data: {
+ *         populars: {}
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionPopulars_}
+    {if $params.data.populars}
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_populars">
+
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Section with banner to shows on screen size xl
+ * @param params {{
+ *     data: {?}
+ * }}
+ * @private
+ */
+{template .sectionBannerXl_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_banner-xl">
+
+        {if $params}{/if}
+    </div>
+{/template}
+
+
+/**
+ * Section with links to articles
+ * @param params {{
+ *     data: {
+ *         articles: {}
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionArticles_}
+    {if $params.data.articles}
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_articles">
+
+        </div>
+    {/if}
 {/template}
