@@ -1,0 +1,206 @@
+{namespace sm.gDropdown.TemplateStendhal}
+
+/**
+ * Dropdown template
+ * @param params {sm.gDropdownStendhal.Params}
+ * @extends cl.gDropdown.Template
+ * @factory cl.iCloblFactory.CloblFactory
+ * @constructor
+ * @doc
+ */
+{template .dropdown}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .NAME}
+    dropdown
+{/template}
+
+
+/**
+ * Opener template
+ * @param params {{
+ *     data: {
+ *        opener: string,
+ *        openerArrowIcon: ?{
+ *            up: ?sm.gDropdownStendhal.Types.Icon,
+ *            down: sm.gDropdownStendhal.Types.Icon
+ *        },
+ *        openerTextIcon: ?sm.gDropdownStendhal.Types.Icon
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .opener}
+    {call .openerContent data="all" /}
+{/template}
+
+
+/**
+ * Content of opener
+ * @param params {{
+ *     data: {
+ *        opener: string,
+ *        openerArrowIcon: ?{
+ *            up: ?sm.gDropdownStendhal.Types.Icon,
+ *            down: sm.gDropdownStendhal.Types.Icon
+ *        },
+ *        openerTextIcon: ?sm.gDropdownStendhal.Types.Icon
+ *     }
+ * }}
+ * @protected
+ */
+{template .openerContent}
+    <div class="{call .rootClass/}__opener-content">
+        // {call .openerTextIcon_ data="all" /}
+        {call .openerText data="all" /}
+        // {call .openerArrowIcon_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Text of opener
+ * @param params {{
+ *     data: {
+ *         opener: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .openerText}
+    <div class="{call .rootClass/}__opener-text">
+        {$params.data.opener}
+    </div>
+{/template}
+
+
+/**
+ * Opener text icon
+ * @param params {{
+ *     data: {
+ *         openerTextIcon: ?sm.gDropdownStendhal.Types.Icon
+ *        }
+ *     }
+ * }}
+ * @private
+ */
+{template .openerTextIcon_}
+    {if $params.data.openerTextIcon}
+        <div class="{call .rootClass/}__opener-text-icon">
+            {call .icon_}
+                {param params: [
+                    'data': $params.data.openerTextIcon
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Opener arrow icon
+ * Two icons - arrow up and arrow down
+ * @param params {{
+ *     data: {
+ *        openerArrowIcon: ?{
+ *            up: ?sm.gDropdownStendhal.Types.Icon,
+ *            down: sm.gDropdownStendhal.Types.Icon
+ *        }
+ *     }
+ * }}
+ * @private
+ */
+{template .openerArrowIcon_}
+    {if $params.data?.openerArrowIcon?.up}
+        <div class="{call .rootClass/}__opener-arrow-icon{sp}
+                    {call .rootClass/}__opener-arrow-icon_up{sp}
+                    {cl.iUtils.Utils.CssClass.HIDDEN}">
+            {call .icon_}
+                {param params: [
+                    'data': $params.data.openerArrowIcon.up
+                ]/}
+            {/call}
+        </div>
+    {/if}
+
+    {if $params.data?.openerArrowIcon?.down}
+        <div class="{call .rootClass/}__opener-arrow-icon{sp}
+                    {call .rootClass/}__opener-arrow-icon_down">
+            {call .icon_}
+                {param params: [
+                    'data': $params.data.openerArrowIcon.down
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Icon
+ * @param params {{
+ *     data: {
+ *         default: {
+ *             iconName: string,
+ *             iconType: ?string,
+ *         },
+ *         hover: ?{
+ *             iconName: string,
+ *             iconType: ?string,
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .icon_}
+    {let $defaultType: $params.data.default?.iconType ?: 'icon' /}
+    {let $defaultName: $params.data.default?.iconName /}
+
+    <div class="{call .rootClass/}__icon-wrap">
+        <div class="{call .rootClass/}__icon {call .rootClass/}__icon_default">
+            {call .renderChild}
+                {param params: [
+                    'type': $defaultType,
+                    'renderParams': [
+                        'data': [
+                            'type': $defaultName ?: 'opener-arrow'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass/}__icon {call .rootClass/}__icon_hover">
+            {call .renderChild}
+                {param params: [
+                    'type': $params.data?.hover?.iconType ?: $defaultType,
+                    'renderParams': [
+                        'data': [
+                            'type': $params.data?.hover?.iconName ?: $defaultName
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * List template
+ * @param params {{
+ *     data: {
+ *        content: ?string
+ *     }
+ * }}
+ */
+{template .content}
+    {$params.data?.content}
+{/template}
+
