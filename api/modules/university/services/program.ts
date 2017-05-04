@@ -19,9 +19,6 @@ import {Model as ProgramMajorModel} from '../models/ProgramMajor';
 import {
     Model as ProgramPageMetaModel
 } from '../models/ProgramPageMetaInformation';
-import {
-    Model as UniversityModel
-} from '../models/University';
 import {Model as CommentGroupModel} from '../../comment/models/commentGroup';
 import {
     Model as ProgramCommentModel

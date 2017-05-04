@@ -83,12 +83,8 @@
 {template .content_}
     <div class="{call .rootClass/}__content">
         {call .filtersList_ data="all" /}
-<<<<<<< HEAD
         {call .button_ data="all" /}
-=======
-        {call .button_ /}
         {call .tooltip_ /}
->>>>>>> master
         {call .controlLinks_ data="all" /}
     </div>
 {/template}
@@ -201,6 +197,7 @@
  *         }|undefined)
  *     }
  * }}
+ * @private
  */
 {template .button_}
     <div class="{call .rootClass/}__button-box">
@@ -215,11 +212,11 @@
                                     $params.data.button.content : 'Подобрать'
                             ]
                         ],
-                    'config': [
-                        'theme': $params.data.button ?
-                            $params.data.button.theme : 'dark',
-                        'size': 's',
-                        'borderRoundSize': $params.data.button?.borderRoundSize
+                        'config': [
+                           'theme': $params.data.button ?
+                                $params.data.button.theme : 'dark',
+                            'size': 's',
+                            'borderRoundSize': $params.data.button?.borderRoundSize,
                             'defaultText': 'Подобрать'
                         ]
                     ]

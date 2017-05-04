@@ -141,7 +141,10 @@ goog.scope(function() {
     View.prototype.getParams = function() {
         var rawParams = View.base(this, 'getParams');
 
-        this.params = rawParams ? this.transformParams_(rawParams) : null;
+        this.params = (rawParams && !goog.object.isEmpty(rawParams)) ?
+            this.transformParams_(rawParams) :
+            {};
+
         return this.params;
     };
 

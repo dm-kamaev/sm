@@ -360,7 +360,7 @@ goog.scope(function() {
             sm.lSearch.bFilterPanel.FilterPanel.Event.SUBMIT,
             this.onFilterPanelSubmit_
         ).listen(
-            this.filterPanel_,
+            this.filterPanel,
             sm.lSearch.bFilterPanel.FilterPanel.Event.CHANGE,
             this.onFilterChange_
         );
@@ -475,7 +475,7 @@ goog.scope(function() {
             SearchService.Event.LIST_DATA_LOADED,
             this.onResultsListDataLoaded_
         ).listen(
-            this.searchService_,
+            this.searchService,
             SearchService.Event.SEARCH_COUNT_DATA_LOADED,
             this.onCountSearchDataLoaded_
         );
@@ -512,7 +512,7 @@ goog.scope(function() {
     Search.prototype.onFilterPanelSubmit_ = function() {
         this.sentFilterAnalytics_();
         this.updatePage_();
-        this.filterPanel_.collapse();
+        this.filterPanel.collapse();
     };
 
 
@@ -531,7 +531,7 @@ goog.scope(function() {
      */
     Search.prototype.onSearchChange_ = function() {
         var searchPosition = this.search_.getPosition();
-        this.filterPanel_.setTooltipPosition(searchPosition);
+        this.filterPanel.setTooltipPosition(searchPosition);
         this.loadSearchCount_();
     };
 
@@ -612,7 +612,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onCountSearchDataLoaded_ = function(event) {
-        this.filterPanel_.showCountResults(event.data);
+        this.filterPanel.showCountResults(event.data);
     };
 
 
@@ -657,8 +657,6 @@ goog.scope(function() {
 
 
     /**
-<<<<<<< HEAD
-=======
      * Make all actions to update information on page
      * @private
      */
@@ -667,12 +665,12 @@ goog.scope(function() {
         this.clearMap_();
         this.updateParams_();
 
-        this.searchResults_.setStatus(
+        this.searchResults.setStatus(
             sm.lSearch.bSearchResults.SearchResults.Status.SEARCH_IN_PROGRESS
         );
 
         this.makeSearch_();
-        this.updateUrl_();
+        this.updateUrl();
     };
 
 
@@ -682,8 +680,8 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.updateParams_ = function() {
-        this.paramsManager_.updateParams(this.getParamsFromFilterPanel_());
-        this.paramsManager_.updateParams(this.getParamsFromSearch_());
+        this.paramsManager.updateParams(this.getParamsFromFilterPanel_());
+        this.paramsManager.updateParams(this.getParamsFromSearch_());
     };
 
 
@@ -694,7 +692,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.resetSecondarySearchParams_ = function() {
-        this.paramsManager_.setPage(0);
+        this.paramsManager.setPage(0);
     };
 
 
@@ -714,10 +712,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.makeSearch_ = function() {
-        this.searchService_.loadSearchData(
-            this.paramsManager_.getParams(/*requestMapResults*/ true)
+        this.searchService.loadSearchData(
+            this.paramsManager.getParams(/*requestMapResults*/ true)
         );
-        this.searchService_.loadMapData(this.paramsManager_.getParams());
+        this.searchService.loadMapData(this.paramsManager.getParams());
     };
 
 
@@ -728,7 +726,7 @@ goog.scope(function() {
     Search.prototype.loadSearchCount_ = function() {
         var params = this.getParamsFromFilterPanel_();
         params.name = this.getParamsFromSearch_().text;
-        this.searchService_.loadSearchCountData(params);
+        this.searchService.loadSearchCountData(params);
     };
 
 
@@ -927,11 +925,11 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.sentFilterAnalytics_ = function() {
-        var data = this.filterPanel_.getData();
+        var data = this.filterPanel.getData();
         var dataWithoutEmptyArrays = goog.object.filter(data, function(arr) {
             return arr.length != 0;
         });
-        this.analyticsSender_.sendFiltersData(dataWithoutEmptyArrays);
+        this.analyticsSender.sendFiltersData(dataWithoutEmptyArrays);
     };
 
      /**
@@ -1069,11 +1067,11 @@ goog.scope(function() {
      * Transform entity items
      * @param {Array<{Object}>} entityItems
      * @return {Array<{
-     *             id: number,
-     *             name: string,
-     *             list: string,
-     *             category: ?string,
-     *             position: number
+     *     id: number,
+     *     name: string,
+     *     list: string,
+     *     category: ?string,
+     *     position: number
      * }>}
      * @private
      */

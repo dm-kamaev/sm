@@ -378,15 +378,15 @@ goog.scope(function() {
     SearchService.prototype.generateApiAddress_ = function(searchType) {
         var apiAddress;
         switch (searchType) {
-            case SearchService.DataType.SEARCH:
-                apiAddress = this.searchApi_;
-                break;
-            case SearchService.DataType.MAP_POINTS:
-                apiAddress = this.searchMapApi_;
-                break;
-            case SearchService.DataType.SEARCH_COUNT:
-                apiAddress = this.searchCountApi_;
-                break;
+        case SearchService.DataType.SEARCH:
+            apiAddress = this.searchApi_;
+            break;
+        case SearchService.DataType.MAP_POINTS:
+            apiAddress = this.searchMapApi_;
+            break;
+        case SearchService.DataType.SEARCH_COUNT:
+            apiAddress = this.searchCountApi_;
+            break;
         }
         return apiAddress;
     };

@@ -131,7 +131,7 @@ goog.scope(function() {
      * @public
      */
     View.getHeaderRenderParams = function(rawParams) {
-        var headerText = rawParams.map(part => {
+        var headerText = rawParams.map((part) => {
             var text = part['text'];
 
             return {
@@ -322,21 +322,21 @@ goog.scope(function() {
      */
     View.prototype.setStatus_ = function(status) {
         switch (status) {
-            case View.Status.NOT_EMPTY_RESULTS:
-                this.setNotEmptyResultsStatus_();
-                break;
+        case View.Status.NOT_EMPTY_RESULTS:
+            this.setNotEmptyResultsStatus_();
+            break;
 
-            case View.Status.SEARCH_IN_PROGRESS:
-                this.setSearchInProgressStatus_();
-                break;
+        case View.Status.SEARCH_IN_PROGRESS:
+            this.setSearchInProgressStatus_();
+            break;
 
-            case View.Status.SORT_IN_PROGRESS:
-                this.setSortInProgressStatus_();
-                break;
+        case View.Status.SORT_IN_PROGRESS:
+            this.setSortInProgressStatus_();
+            break;
 
-            case View.Status.EMPTY_RESULTS:
-                this.setEmptyResultsStatus_();
-                break;
+        case View.Status.EMPTY_RESULTS:
+            this.setEmptyResultsStatus_();
+            break;
         }
     };
 
@@ -459,21 +459,21 @@ goog.scope(function() {
     View.prototype.getCssClassByStatus_ = function(status) {
         var cssClass;
         switch (status) {
-            case View.Status.NOT_EMPTY_RESULTS:
-                cssClass = View.CssClass.NOT_EMPTY_RESULTS;
-                break;
+        case View.Status.NOT_EMPTY_RESULTS:
+            cssClass = View.CssClass.NOT_EMPTY_RESULTS;
+            break;
 
-            case View.Status.SEARCH_IN_PROGRESS:
-                cssClass = View.CssClass.SEARCH_IN_PROGRESS;
-                break;
+        case View.Status.SEARCH_IN_PROGRESS:
+            cssClass = View.CssClass.SEARCH_IN_PROGRESS;
+            break;
 
-            case View.Status.SORT_IN_PROGRESS:
-                cssClass = View.CssClass.SORT_IN_PROGRESS;
-                break;
+        case View.Status.SORT_IN_PROGRESS:
+            cssClass = View.CssClass.SORT_IN_PROGRESS;
+            break;
 
-            case View.Status.EMPTY_RESULTS:
-                cssClass = View.CssClass.EMPTY_RESULTS;
-                break;
+        case View.Status.EMPTY_RESULTS:
+            cssClass = View.CssClass.EMPTY_RESULTS;
+            break;
         }
         return cssClass;
     };
