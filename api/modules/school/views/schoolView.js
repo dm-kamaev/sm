@@ -173,7 +173,7 @@ const getExtra = function(school) {
     const classes = getEducationInterval(school.addresses);
     const kindergarten = getKindergardenAvailability(school.educationInterval);
     const extendedDayCost = getExtendedDayCost(school.extendedDayCost);
-    const dressCode = school.dressCode;
+    const dressCode = getSchoolDressCode(school.dressCode);
     const directorName = getDirector(school.director);
     result = result
         .concat(
@@ -185,6 +185,17 @@ const getExtra = function(school) {
     result = lodash.compact(result).join(', ');
     result = result ? result + `. ${directorName}` : directorName;
     return result;
+};
+
+/**
+ * Create dress code text for school
+ * @param {boolean} dressCode
+ * @return {string}
+ */
+var getSchoolDressCode = function(dressCode) {
+    return dressCode ?
+        'школьная форма обязательна' :
+        null;
 };
 
 /**
