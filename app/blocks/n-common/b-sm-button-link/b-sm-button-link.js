@@ -38,4 +38,15 @@ goog.scope(function() {
             view: View
         }
     );
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object} rawParams
+     * @return {sm.bSmButtonLink.Params}
+     */
+    SmButtonLink.getRenderParams = function(rawParams) {
+        return View.getRenderParams(rawParams);
+    };
+
 });  // goog.scope

@@ -32,13 +32,13 @@ class ProgramView {
             name: {light: item.name},
             url: programUrl,
             score: item.totalScore,
-            picture: {
+            picture: item.imageUrl ? {
                 sources: [{
                     url: item.imageUrl,
                     size: 'default',
                 }],
                 altText: item.name
-            },
+            } : null,
             company: {
                 abbreviation: item.universityAbbreviation,
                 city: item.cityName,
@@ -54,8 +54,10 @@ class ProgramView {
     protected generateNicety(
             item: BackendListProgram): bSmItemUniversity.Params.Nicety[] {
         const formatUtils = new FormatUtils();
+        const res = [];
 
-        return [{
+        if (item.budgetPlaces) {
+            res.push({
                 title: {
                     textDefault: 'Бюджетных мест: ' + item.budgetPlaces,
                     textXs: 'Бюджетных: ' + item.budgetPlaces,
@@ -69,15 +71,20 @@ class ProgramView {
                         plu: 'баллов'
                     }
                 )
-            },
-            {
+            });
+        }
+
+        if (item.commercialPlaces) {
+            res.push({
                 title: {
                     textDefault: 'Платных мест: ' + item.commercialPlaces,
                     textXs: 'Платных: ' + item.commercialPlaces
                 },
                 value: 'от ' + Math.floor(item.cost / 1000) + ' тыс./год'
-            }
-        ];
+            });
+        }
+
+        return res.length ? res : null;
     }
 
     protected generateDescription(item: BackendListProgram): string[] {
@@ -93,8 +100,6 @@ class ProgramView {
                 'Вступительное испытание' :
                 'Вступительные испытания';
             res.push(`– ${declensionExam} - ${exams}`);
-        } else {
-            res.push('– Нет вступительных испытаний');
         }
 
         return res.length ? res : null;

@@ -65,4 +65,14 @@ goog.scope(function() {
         }
     };
 
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, (string|number|Object)>} rawParams
+     * @return {sm.bSmItemUniversity.Params}
+     */
+    Item.getRenderParams = function(rawParams) {
+        return View.getRenderParams(rawParams);
+    };
+
 });  // goog.scope

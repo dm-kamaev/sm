@@ -361,9 +361,9 @@
 {template .sort_ kind="html"}
     <div class="{call .rootClass /}__sort">
         {if $params.config?.sortController == 'smSwitch'}
-            {call .sort_switch_ data="all" /}
+            {call .sortSwitch_ data="all" /}
         {else}
-            {call .sort_dropdown_ data="all" /}
+            {call .sortDropdown_ data="all" /}
         {/if}
     </div>
 {/template}
@@ -377,7 +377,7 @@
  * }}
  * @private
  */
-{template .sort_dropdown_}
+{template .sortDropdown_}
     {let $customClasses kind="html"}
         {call .rootClass /}__sort-control_dropdown
     {/let}
@@ -413,7 +413,7 @@
  * }}
  * @private
  */
-{template .sort_switch_}
+{template .sortSwitch_}
     {let $customClasses kind="html"}
         {call .rootClass /}__sort-control_switch
     {/let}

@@ -140,7 +140,8 @@ goog.scope(function() {
                     nom: text['nom'],
                     gen: text['gen'],
                     plu: text['plu']
-                } : text
+                } : text,
+                select: part['select']
             };
         });
 
