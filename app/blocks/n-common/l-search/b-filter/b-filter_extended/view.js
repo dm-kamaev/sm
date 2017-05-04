@@ -130,9 +130,6 @@ goog.scope(function() {
             };
         }
 
-        console.log(rawParams);
-        console.log(rawParams['modal']);
-
         return {
             name: rawParams['name'],
             type: rawParams['type'],
