@@ -200,7 +200,8 @@ goog.scope(function() {
             .initParamsManager_()
             .initLeftMenuInstances()
             .initSearchResultsInstance()
-            .initMap();
+            .initMap()
+            .initAnalyticsSender_();
     };
 
 
@@ -315,6 +316,18 @@ goog.scope(function() {
             this.subheader,
             sm.bSmSubheader.SmSubheader.Event.SEARCH_SUBMIT,
             this.onHeaderSearchSubmit_
+        ).listen(
+            this.search_,
+            sm.bSearch.Search.Event.SUBMIT,
+            this.onSearchSubmit_
+        ).listen(
+            this.search_,
+            sm.bSearch.Search.Event.ITEM_SELECT,
+            this.onSearchSubmit_
+        ).listen(
+            this.search_,
+            sm.bSearch.Search.Event.TEXT_CHANGE,
+            this.onSearchChange_
         );
 
         return this;
@@ -346,6 +359,10 @@ goog.scope(function() {
             this.filterPanel,
             sm.lSearch.bFilterPanel.FilterPanel.Event.SUBMIT,
             this.onFilterPanelSubmit_
+        ).listen(
+            this.filterPanel,
+            sm.lSearch.bFilterPanel.FilterPanel.Event.CHANGE,
+            this.onFilterChange_
         );
         return this;
     };
@@ -457,6 +474,10 @@ goog.scope(function() {
             this.searchService,
             SearchService.Event.LIST_DATA_LOADED,
             this.onResultsListDataLoaded_
+        ).listen(
+            this.searchService,
+            SearchService.Event.SEARCH_COUNT_DATA_LOADED,
+            this.onCountSearchDataLoaded_
         );
 
         return this;
@@ -489,8 +510,29 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onFilterPanelSubmit_ = function() {
-        this.updatePage();
+        this.sentFilterAnalytics_();
+        this.updatePage_();
         this.filterPanel.collapse();
+    };
+
+
+    /**
+     * Filter change handler
+     * @private
+     */
+    Search.prototype.onFilterChange_ = function() {
+        this.loadSearchCount_();
+    };
+
+
+    /**
+     * Search change handler
+     * @private
+     */
+    Search.prototype.onSearchChange_ = function() {
+        var searchPosition = this.search_.getPosition();
+        this.filterPanel.setTooltipPosition(searchPosition);
+        this.loadSearchCount_();
     };
 
 
@@ -565,6 +607,16 @@ goog.scope(function() {
 
 
     /**
+     * Count serch resalt data load event handler
+     * @param  {sm.lSearch.iSearchService.SearchCountDataLoadedEvent} event
+     * @private
+     */
+    Search.prototype.onCountSearchDataLoaded_ = function(event) {
+        this.filterPanel.showCountResults(event.data);
+    };
+
+
+    /**
      * Window scroll handler
      * @private
      */
@@ -601,6 +653,80 @@ goog.scope(function() {
             event.data.itemId,
             'search results'
         );
+    };
+
+
+    /**
+     * Make all actions to update information on page
+     * @private
+     */
+    Search.prototype.updatePage_ = function() {
+        this.resetSecondarySearchParams_();
+        this.clearMap_();
+        this.updateParams_();
+
+        this.searchResults.setStatus(
+            sm.lSearch.bSearchResults.SearchResults.Status.SEARCH_IN_PROGRESS
+        );
+
+        this.makeSearch_();
+        this.updateUrl();
+    };
+
+
+    /**
+     * Get search params from filters and search field and update
+     * it in params manager
+     * @private
+     */
+    Search.prototype.updateParams_ = function() {
+        this.paramsManager.updateParams(this.getParamsFromFilterPanel_());
+        this.paramsManager.updateParams(this.getParamsFromSearch_());
+    };
+
+
+    /**
+     * Reset secondary search params to default values
+     * Secondary search params is page and sortType, it affect more view of
+     * results page than search results
+     * @private
+     */
+    Search.prototype.resetSecondarySearchParams_ = function() {
+        this.paramsManager.setPage(0);
+    };
+
+
+    /**
+     * Clear a map
+     * @private
+     */
+    Search.prototype.clearMap_ = function() {
+        this.map_.clear();
+    };
+
+
+    /**
+     * Take params from search params manager and send queries for list and map
+     * Update url also
+     * for small amount results and for other map results
+     * @private
+     */
+    Search.prototype.makeSearch_ = function() {
+        this.searchService.loadSearchData(
+            this.paramsManager.getParams(/*requestMapResults*/ true)
+        );
+        this.searchService.loadMapData(this.paramsManager.getParams());
+    };
+
+
+    /**
+     * Send query for load count of search result
+     * @private
+     */
+    Search.prototype.loadSearchCount_ = function() {
+        var params = this.getParamsFromFilterPanel_();
+        params.name = this.getParamsFromSearch_().text;
+        this.searchService.loadSearchCountData(params);
     };
 
 
@@ -794,6 +920,17 @@ goog.scope(function() {
         Analytics.getInstance().send('pageview');
     };
 
+    /**
+     *
+     * @private
+     */
+    Search.prototype.sentFilterAnalytics_ = function() {
+        var data = this.filterPanel.getData();
+        var dataWithoutEmptyArrays = goog.object.filter(data, function(arr) {
+            return arr.length != 0;
+        });
+        this.analyticsSender.sendFiltersData(dataWithoutEmptyArrays);
+    };
 
      /**
      * Send Analytics when shown items
@@ -888,10 +1025,12 @@ goog.scope(function() {
 
     /**
      * Initializes instance of Analytics Sender
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initAnalyticsSender_ = function() {
         this.analyticsSender = new AnalyticsSender('search page');
+        return this;
     };
 
 
@@ -928,11 +1067,11 @@ goog.scope(function() {
      * Transform entity items
      * @param {Array<{Object}>} entityItems
      * @return {Array<{
-     *             id: number,
-     *             name: string,
-     *             list: string,
-     *             category: ?string,
-     *             position: number
+     *     id: number,
+     *     name: string,
+     *     list: string,
+     *     category: ?string,
+     *     position: number
      * }>}
      * @private
      */

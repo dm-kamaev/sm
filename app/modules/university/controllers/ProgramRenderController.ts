@@ -26,6 +26,8 @@ const config = require('../../../config/config.json');
 const entityType =
     require('../../../../api/modules/entity/enums/entityType.js');
 
+const LIMIT = 10;
+
 class ProgramRenderController extends Controller {
     constructor() {
         super();
@@ -118,7 +120,7 @@ class ProgramRenderController extends Controller {
                 cities,
                 majors
             ] = await Promise.all([
-                searchService.findByParams(searchParams),
+                searchService.findByParams(searchParams, LIMIT),
                 cityService.getAllSortedByProgramCount(),
                 majorService.getPopular()
         ]);

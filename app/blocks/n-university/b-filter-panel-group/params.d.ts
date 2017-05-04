@@ -1,5 +1,7 @@
 import {gButtonStendhal} from '../../n-clobl/g-button/params';
 import {bFilterPanel} from '../../n-common/l-search/b-filter-panel/params';
+import {gDropdownListLinks}
+    from '../../n-clobl/g-dropdown/g-dropdown_list-links/params';
 
 
 
@@ -15,6 +17,7 @@ export namespace bFilterPanelGroup {
             filterPanel: bFilterPanel.Params;
             dependentFilterPanel: bFilterPanel.Params;
             button: gButtonStendhal.Params;
+            sortController?: gDropdownListLinks.Params.Data;
         }
 
         /**

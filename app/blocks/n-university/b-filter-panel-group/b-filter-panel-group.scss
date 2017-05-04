@@ -6,14 +6,18 @@
 
 .b-filter-panel-group__content {
     position: relative;
-    max-width: 460px;
-    padding-top: 20px;
 }
 
 .b-filter-panel-group__button {
+    display: inline-block;
+
     width: 167px;
 
     font-family: 'Proxima', Arial, sans-serif;
+}
+
+.b-filter-panel-group__sort-wrap {
+    display: none;
 }
 
 .b-filter-panel-group__filters {
@@ -91,5 +95,16 @@
 @include media-xs {
     .b-filter-panel-group__filters {
         padding: 0 30px;
+    }
+
+    .b-filter-panel-group__controls-wrap {
+        padding: 14px 25px;
+    }
+
+    .b-filter-panel-group__sort-wrap {
+        display: inline-block;
+        float: right;
+
+        color: #356fc4;
     }
 }

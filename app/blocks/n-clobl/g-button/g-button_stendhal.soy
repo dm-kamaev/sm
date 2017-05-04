@@ -11,7 +11,8 @@
  *         name: string,
  *         type: ('png'|'svg'),
  *         position: ('left'|'right')
- *     }|undefined)
+ *     }|undefined),
+ *     defaultText: ?string
  * }}
  * sm.gButton.TemplateStendhal.Params.Data
  */
@@ -142,7 +143,8 @@
  *             default: ?string,
  *             sizeS: ?string,
  *             sizeL: ?string
- *         }|undefined),
+ *         }|string|undefined),
+ *         defaultText: (string|undefined)
  *     }
  * }}
  */
@@ -154,7 +156,7 @@
         {/let}
 
         {if $isString == 'true'}
-            {$params.data.content}
+            {$params.data.content ?: $params.data.defaultText}
         {else}
             {$params.data.content.default}
         {/if}
@@ -221,3 +223,22 @@
         {sp}{call .rootClass /}_viewport-size_l
     {/if}
 {/template}
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     data: {
+ *         defaultText: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: quoteKeysIfJs([
+            'defaultText': $params?.data.defaultText,
+        ]) /}
+    {/call}"
+{/template}
+

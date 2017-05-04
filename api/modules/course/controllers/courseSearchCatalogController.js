@@ -23,14 +23,14 @@ let controller = {};
  *
  * @apiSuccess {Object[]} links from search catalog for main page.
  * [
- *    {
- *       "id": 1,
- *       "name": "Профориентация для дошкольников",
- *       "url": "http://yandex.ru",
- *       "type": "juniorSchool",
- *       "created_at": "2016-11-25T09:20:47.996Z",
- *       "updated_at": "2016-11-25T09:20:47.996Z"
- *    },
+ *     {
+ *         "id": 1,
+ *         "name": "Профориентация для дошкольников",
+ *         "url": "http://yandex.ru",
+ *         "type": "juniorSchool",
+ *         "created_at": "2016-11-25T09:20:47.996Z",
+ *         "updated_at": "2016-11-25T09:20:47.996Z"
+ *     },
  * ]
  */
 controller.list = async(function(req, res) {
@@ -45,14 +45,14 @@ controller.list = async(function(req, res) {
  * @apiVersion 1.0.0
  * @apiGroup Course
  * @apiName CourseGetSearchCatalogLink
- * @apiSuccess {Object{}} link from search catalog for main page by id.
+ * @apiSuccess {Object} link from search catalog for main page by id.
  * {
- *    "id": 1,
- *    "name": "Профориентация для дошкольников",
- *    "url": "http://yandex.ru",
- *    "type": "juniorSchool",
- *    "created_at": "2016-11-25T09:20:47.996Z",
- *    "updated_at": "2016-11-25T09:20:47.996Z"
+ *     "id": 1,
+ *     "name": "Профориентация для дошкольников",
+ *     "url": "http://yandex.ru",
+ *     "type": "juniorSchool",
+ *     "created_at": "2016-11-25T09:20:47.996Z",
+ *     "updated_at": "2016-11-25T09:20:47.996Z"
  * }
  * @apiError (404) SearchCatalogNotFound  not found link by id.
 */
@@ -85,12 +85,12 @@ controller.get = async(function(req, res) {
  * @apiVersion 1.0.0
  * @apiGroup Course
  * @apiName createCourseSearchCatalogLink
- * @apiSuccess {Object{}} empty or error.
+ * @apiSuccess {Object} empty or error.
  * @apiParamExample {json} Request-example
  * {
- *    "name": "Профориентация для дошкольников",
- *    "url": "http://yandex.ru",
- *    "type": "middleSchool"
+ *     "name": "Профориентация для дошкольников",
+ *     "url": "http://yandex.ru",
+ *     "type": "middleSchool"
  * }
  * @apiError (422) SequelizeValidationError  type for link not valid.
  */
@@ -122,12 +122,12 @@ controller.create = async(function(req, res) {
  * @apiVersion 1.0.0
  * @apiGroup Course
  * @apiName updateCourseSearchCatalogLink
- * @apiSuccess {Object{}} empty or error
+ * @apiSuccess {Object} empty or error
  * @apiParamExample {json} Request-example
  * {
- *    "name": "Профориентация для дошкольников",
- *    "url": "http://yandex.ru",
- *    "type": "middleSchool"
+ *     "name": "Профориентация для дошкольников",
+ *     "url": "http://yandex.ru",
+ *     "type": "middleSchool"
  * }
  * @apiError (404) SearchCatalogNotFound not found libk by id
  * @apiError (422) SequelizeValidationError  type for link not valid.
@@ -167,7 +167,7 @@ controller.update = async(function(req, res) {
  * @apiVersion 1.0.0
  * @apiGroup Course
  * @apiName deleteCourseSearchCatalogLink
- * @apiSuccess {Object{}} empty
+ * @apiSuccess {Number} 1 || 0
  */
 controller.delete = async(function(req, res) {
     let result = {}, linkId = req.params.id;

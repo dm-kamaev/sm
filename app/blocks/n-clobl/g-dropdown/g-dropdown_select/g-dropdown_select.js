@@ -128,10 +128,24 @@ goog.scope(function() {
     /**
      * Get value on list item
      * @return {?string}
+     * @override
      * @public
      */
     Dropdown.prototype.getValue = function() {
         return this.getSelectedItemData().value;
+    };
+
+
+    /**
+     * Set value on list item
+     * @param {string} value
+     * @override
+     * @public
+     */
+    Dropdown.prototype.setValue = function(value) {
+        var id = this.getItemId(value);
+        this.selectItem(id);
+        this.list.select(id);
     };
 
 

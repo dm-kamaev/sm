@@ -13,8 +13,8 @@ export interface ProgramCommentAttributes {
     commentGroupId?: number;
     userDataId?: number;
     ratingId?: number;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
     rating?: RatingInstance;
     userData?: UserDataInstance;
 }
@@ -53,6 +53,7 @@ export type AdminProgramComment = {
     username?: string;
     socialId: string;
     socialType: string;
+    updatedAt: Date;
 };
 
 export type BackendProgramComment = {

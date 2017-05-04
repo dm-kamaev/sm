@@ -3,7 +3,6 @@
 
 /**
  * @typedef {{
- *     id: (string|undefined),
  *     name: (string|undefined),
  *     label: string,
  *     value: string,
@@ -55,8 +54,10 @@
  * @override
  */
 {template .body}
-    {call .input_ data="all"/}
-    {call .label_ data="all"/}
+    <label>
+        {call .input_ data="all"/}
+        {call .label_ data="all"/}
+    </label>
 {/template}
 
 
@@ -64,7 +65,6 @@
  * Input template
  * @param params {{
  *     data: {
- *         id: (string|undefined),
  *         value: string,
  *         isChecked: (boolean|undefined)
  *     }
@@ -74,7 +74,6 @@
     <div class="{call .rootClass/}__input-wrap">
         <input type="checkbox"
             class="{call .rootClass/}__input"
-            id="{$params.data?.id ?: $params.data.value}"
             name="{$params.data.name ?: ''}"
             value="{$params.data.value}"
             {$params.data?.isChecked ? 'checked' : ''}
@@ -131,17 +130,15 @@
  * Label template
  * @param params {{
  *     data: {
- *         id: (string|undefined),
  *         label: string,
  *         value: string
  *     }
  * }}
  */
 {template .label_}
-    <label for="{$params.data?.id ?: $params.data.value}"
-        class="{call .rootClass/}__label">
+    <span class="{call .rootClass/}__label">
         {$params.data.label}
-    </label>
+    </span>
 {/template}
 
 
@@ -149,7 +146,6 @@
  * Attributes
  * @param params {{
  *     data {
- *         id: (string|undefined),
  *         name: (string|undefined),
  *         label: string,
  *         value: string,
@@ -162,7 +158,6 @@
     data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: [
-                'id': $params.data?.id ?: $params.data.value,
                 'name': $params.data.name ?: '',
                 'label': $params.data.label,
                 'value': $params.data.value

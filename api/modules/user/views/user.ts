@@ -14,20 +14,17 @@ class UserView {
             {
                 id: user.id,
                 firstName: user.firstName,
-                lastName: user.lastName
+                lastName: user.lastName,
+                photoUrl: user.photoUrl
             } :
             null;
     }
 
     public school(
             user: UserAttributes, isCommented: boolean): SchoolRender | null {
-    return user.id ?
-        {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            isCommented: isCommented || false
-        } :
+    const result = this.renderDefault(user);
+    return result ?
+        Object.assign(result, {isCommented}) :
         null;
     }
 

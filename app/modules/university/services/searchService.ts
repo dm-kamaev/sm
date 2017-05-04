@@ -30,11 +30,13 @@ class SearchService extends Service {
     }
 
     public async findByParams(
-            queryParams: SearchParams): Promise<BackendProgramResults> {
+            searchParams: SearchParams,
+            limit?: number
+    ): Promise<BackendProgramResults> {
         const requestParams: RequestParams = {
             url: `${this.baseUrl}`,
             method: 'get',
-            params: this.initParams_(queryParams)
+            params: this.initParams_(searchParams, limit)
         };
 
         const response = await this.send(requestParams);
@@ -55,11 +57,14 @@ class SearchService extends Service {
         throw error;
     }
 
-    private initParams_(queryParams: SearchParams): BackendSearchParams {
-        const egeSubjects = queryParams.egeSubjects || [];
+    private initParams_(
+            searchParams: SearchParams,
+            limit?: number
+    ): BackendSearchParams {
+        const egeSubjects = searchParams.egeSubjects || [];
         const ege: BackendEgeSearchParam[] = egeSubjects.map(
             (subjectId) => {
-                const subjectResult = queryParams.egeResults.find(
+                const subjectResult = searchParams.egeResults.find(
                     (result) => result.subjectId == subjectId
                 );
 
@@ -74,14 +79,15 @@ class SearchService extends Service {
         );
 
         return {
-            cities: queryParams.cities,
+            cities: searchParams.cities,
             ege: ege,
-            features:queryParams.features,
-            majors: queryParams.majors,
-            maxPrice: queryParams.maxPrice,
-            payType: queryParams.payType,
-            page: queryParams.page,
-            sortType: queryParams.sortType,
+            features: searchParams.features,
+            majors: searchParams.majors,
+            maxPrice: searchParams.maxPrice,
+            payType: searchParams.payType,
+            page: searchParams.page,
+            sortType: searchParams.sortType,
+            limit: limit,
         };
     }
 }

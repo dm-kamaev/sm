@@ -124,12 +124,20 @@
 
 /**
  * Name
+ * @param params {{
+ *     data: {
+ *         sortController: ?sm.gDropdown.TemplateSelect.Params.Data
+ *     }
+ * }}
  * @protected
  */
 {template .controls_}
     <div class="{call .rootClass/}__controls-wrap">
         <div class="{call .rootClass/}__controls">
             {call .button_ data="all" /}
+            {if $params.data.sortController}
+                {call .sortController_ data="all" /}
+            {/if}
         </div>
     </div>
 {/template}
@@ -159,6 +167,42 @@
                         'theme': 'neptune-reverse',
                         'size': 'xs',
                         'borderRoundSize': 'xl'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Name
+ * @param params {{
+ *     data: {
+ *         sortController: ?sm.gDropdown.TemplateSelect.Params.Data
+ *     }
+ * }}
+ */
+{template .sortController_}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__sort
+    {/let}
+
+    <div class="{call .rootClass /}__sort-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'dropdown-list-links',
+                'renderParams': [
+                    'data': $params.data.sortController,
+                    'config': [
+                        'viewType': 'link',
+                        'iconName': 'blue-arrow',
+                        'iconType': 'icon-svg',
+                        'theme': 'affixed',
+                        'openerSize': 'xxl',
+                        'openerTheme': 'block',
+                        'contentSize': 'xxl',
+                        'customClasses': [$customClasses]
                     ]
                 ]
             ]/}

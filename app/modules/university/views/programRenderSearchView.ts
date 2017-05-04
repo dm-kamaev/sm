@@ -24,6 +24,9 @@ import {BackendProgramResults} from '../types/program';
 import {
     lSearchUniversity
 } from '../../../blocks/n-university/l-search_university/params';
+import {
+    bSearchResults
+} from '../../../blocks/n-common/l-search/b-search-results/params';
 
 type FilterPanelParams = {
     filtersData: any;
@@ -78,7 +81,10 @@ class ProgramRenderSearchView extends LayoutView {
         };
     }
 
-    public generateHeaderText(programCount: number, universityCount: number) {
+    public generateHeaderText(
+            programCount: number,
+            universityCount: number
+        ): bSearchResults.Params.HeaderTextEntry[] {
         return [
             {
                 text: 'Мы нашли'
@@ -120,22 +126,30 @@ class ProgramRenderSearchView extends LayoutView {
     private setResultsList_(resultsList: BackendProgramResults) {
         this.params.data.resultsList = {
             sort: {
-                items: [{
-                        'label': 'Проще поступить',
-                        'value': 0
-                    }, {
-                        'label': 'Дешевле',
-                        'value': 1
-                    }, {
-                        'label': 'Отзывы',
-                        'value': 2
-                    }
-                ]
+                defaultOpenerText: 'Проще поступить',
+                content: {
+                    items: [
+                        {
+                            label: 'Проще поступить',
+                            value: 0
+                        }, {
+                            label: 'Дешевле',
+                            value: 1
+                        }, {
+                            label: 'Отзывы',
+                            value: 2
+                        }
+                    ],
+                    selectedItemId: 0
+                }
             },
             headerText: this.generateHeaderText(
                 resultsList.programCount,
                 resultsList.universityCount
             ),
+            title: 'Вузы Москвы',
+            description: this.seo.metaDescription,
+            countResults: resultsList.programCount,
             entityList: {
                 items: programView.list(resultsList.programs),
                 itemType: 'smItemUniversity',

@@ -19,7 +19,8 @@ class ProgramAdminController extends Controller {
     }
 
     /**
-     * @api {get} /api/admin/university/:universityId/program Get all programs
+     * @api {get} /api/admin/university/:universityId/program Get programs by
+     *     university id
      * @apiVersion 1.0.0
      * @apiName getAllPrograms
      * @apiGroup Admin Program
@@ -45,7 +46,9 @@ class ProgramAdminController extends Controller {
      *     ]
      */
     public async actionList(actionContext: any, universityId: string) {
-        const programs = await programService.getAll();
+        const programs = await programService.getByUniversityId(
+            Number(universityId)
+        );
         const programUrls = await programService.getUrls(programs);
         return programAdminView.renderList(programs, programUrls);
     }
@@ -139,6 +142,7 @@ class ProgramAdminController extends Controller {
      * @apiParam {Number}   salary          Salary after graduation.
      * @apiParam {String[]} links           Array of links
      *     (official site, facebook communities).
+     * @apiParam {String[]} specializations Array of program specializations
      * @apiParam {String}   phone           Phone number.
      * @apiParam {Number}   programMajorId  Program major Id
      * @apiParam {String}   exchangeProgram Exchange program
@@ -189,7 +193,10 @@ class ProgramAdminController extends Controller {
      *         "phone": "+7 125 167 45 31",
      *         "updated_at": "2017-03-07T10:43:42.034Z",
      *         "created_at": "2017-03-07T10:43:42.034Z",
-     *         "specializations": null,
+     *         "specializations": [
+     *             "прикладная математика",
+     *             "химия"
+     *         ],
      *         "createdAt": "2017-03-07T10:43:42.034Z",
      *         "updatedAt": "2017-03-07T10:43:42.034Z",
      *         "totalScore": 3,
@@ -212,6 +219,7 @@ class ProgramAdminController extends Controller {
             employment: body.employment,
             salary: body.salary,
             links: body.links,
+            specializations: body.specializations,
             addressName: body.addressName,
             programMajorId: Number(body.programMajorId),
             phone: body.phone,
@@ -222,24 +230,25 @@ class ProgramAdminController extends Controller {
     }
 
     /**
-    * @api {put} /api/admin/university/:universityId/program/:id Update program
-    * @apiVersion 1.0.0
-    * @apiName updateProgram
-    * @apiGroup Admin Program
+     * @api {put} /api/admin/university/:universityId/program/:id Update program
+     * @apiVersion 1.0.0
+     * @apiName updateProgram
+     * @apiGroup Admin Program
      *
-     * @apiParam {String}   name        Name.
-     * @apiParam {String}   description Description.
-     * @apiParam {String}   addressName Name of address.
-     * @apiParam {String[]} extraExam   Array of extra exams.
-     * @apiParam {String}   category    Program's category.
-     * @apiParam {Number}   duration    Number of studying years.
-     * @apiParam {Number}   employment  Percent of employment.
-     * @apiParam {Number}   salary      Salary after graduation.
-     * @apiParam {String[]} links       Array of links
+     * @apiParam {String}   name            Name.
+     * @apiParam {String}   description     Description.
+     * @apiParam {String}   addressName     Name of address.
+     * @apiParam {String[]} extraExam       Array of extra exams.
+     * @apiParam {String}   category        Program's category.
+     * @apiParam {Number}   duration        Number of studying years.
+     * @apiParam {Number}   employment      Percent of employment.
+     * @apiParam {Number}   salary          Salary after graduation.
+     * @apiParam {String[]} links           Array of links
      *     (official site, facebook communities).
-     * @apiParam {Number}   programMajorId Program major Id
-     * @apiParam {String}   phone       Phone number.
-     * @apiParam {String}   oksoCode    Specialization code.
+     * @apiParam {String[]} specializations Array of program specializations
+     * @apiParam {Number}   programMajorId  Program major Id
+     * @apiParam {String}   phone           Phone number.
+     * @apiParam {String}   oksoCode        Specialization code.
      *
      * @apiSuccess {Array}    -    Response body.
      * @apiSuccess {Number}   -[0] Number of updated rows (Should be always 1).
@@ -255,7 +264,7 @@ class ProgramAdminController extends Controller {
      *                 "name": "Менеджмент",
      *                 "universityId": 1,
      *                 "commentGroupId": 382,
-     *                 "specializations": null,
+     *                 "specializations": ["Прикладная математика", "Химия"],
      *                 "programMajorId": 3,
      *                 "totalScore": null,
      *                 "score": null,
@@ -287,6 +296,7 @@ class ProgramAdminController extends Controller {
             employment: body.employment,
             salary: body.salary,
             links: body.links,
+            specializations: body.specializations,
             addressName: body.addressName,
             programMajorId: Number(body.programMajorId),
             phone: body.phone,

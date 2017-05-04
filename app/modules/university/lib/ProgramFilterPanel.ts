@@ -25,7 +25,7 @@ type FilterParams = (
 );
 
 type FilledInputOption = {
-    id: number,
+    subjectId: number,
     value: number
 };
 
@@ -364,7 +364,6 @@ class ProgramFilterPanel extends FilterPanel {
     }
 
     private setFilterFeatures_(
-            optionModels: Array<OptionModel>,
             checkedValues?: (number|string)[]
     ) {
         const params = this.filterFeatures_;
@@ -434,7 +433,7 @@ class ProgramFilterPanel extends FilterPanel {
 
         return options.map(option => {
             filledData.map(filledOption => {
-                if (option.name == filledOption.id) {
+                if (option.name == filledOption.subjectId) {
                     option.value = filledOption.value;
                 }
             });

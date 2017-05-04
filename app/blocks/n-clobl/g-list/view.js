@@ -93,6 +93,61 @@ goog.scope(function() {
         this.enableHover();
     };
 
+    /**
+     * select item
+     * @param {number} id
+     * @protected
+     */
+    View.prototype.select = function(id) {
+        switch (this.params.config.mode) {
+            case ListMode.MULTISELECTION:
+                this.multiselectItem(id);
+                break;
+            case ListMode.SELECTION:
+            default:
+                this.deselectItem(this.lastSelectedItemId_);
+                this.selectItem(id);
+                this.lastSelectedItemId_ = id;
+        }
+    };
+
+
+    /**
+     * On multi selection item select
+     * @param {number} id
+     * @override
+     * @protected
+     */
+    View.prototype.onMultiselectionItemSelect = function(id) {
+        this.multiselectItem(id);
+        this.dispatchEvent({
+            'type': View.Event.ITEM_SELECT,
+            'itemId': id
+        });
+    };
+
+
+    /**
+     * Multi selection item
+     * @param {number} id
+     * @protected
+     */
+    View.prototype.multiselectItem = function(id) {
+        var maxSelection = this.params.config.maxSelection,
+            index,
+            length = this.selectedItemIds_.length;
+
+        if ((index = this.selectedItemIds_.indexOf(id)) != -1) {
+            this.deselectItem(id);
+            goog.array.removeAt(this.selectedItemIds_, index);
+        } else if (length < maxSelection ||
+            !goog.isDefAndNotNull(maxSelection)) {
+            this.selectItem(id);
+            this.selectedItemIds_.push(id);
+            this.lastSelectedItemId_ = id;
+        }
+    };
+
 
     /**
      * Enable hover reaction on element if it possible (not-mobile device)

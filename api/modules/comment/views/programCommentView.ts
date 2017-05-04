@@ -55,7 +55,8 @@ class ProgramCommentView {
             yearGraduate: userData.yearGraduate,
             username: renderedUser.name,
             socialId: renderedUser.socialId,
-            socialType: renderedUser.socialType
+            socialType: renderedUser.socialType,
+            updatedAt: programComment.updatedAt
         };
     }
 

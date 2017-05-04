@@ -248,6 +248,10 @@ class ProgramService {
             }, {
                 model: ProgramEgeExamModel,
                 as: 'programEgeExams'
+            }, {
+                model: UniversityModel,
+                as: 'university',
+                attributes: ['cityId']
             }],
         });
         return programs;

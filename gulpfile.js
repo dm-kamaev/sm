@@ -173,6 +173,13 @@ gulp.task('copyCourses', ['copySchools'], function() {
         .pipe(gulp.dest('public/'));
 });
 
+gulp.task('copyUniversities', ['copyCourses'], function() {
+    return gulp.src([
+        path.join(__dirname, '/assets/universities/*.*')
+    ], {base: 'assets/'})
+        .pipe(gulp.dest('public/'));
+});
+
 gulp.task('localConfig', function() {
     return new Promise(function(resolve, reject) {
         exec('node ./console/buildLocalConfig ' + ENV + ' ../app/config',
@@ -218,6 +225,7 @@ const tasks = function(bool) {
         'manifest',
         'copySchools',
         'copyCourses',
+        'copyUniversities',
         'picturefill',
         'localConfig'
     ] : [
@@ -234,6 +242,7 @@ const tasks = function(bool) {
         'manifest',
         'copySchools',
         'copyCourses',
+        'copyUniversities',
         'picturefill',
         'localConfig',
         'backendLint'

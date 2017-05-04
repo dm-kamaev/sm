@@ -34,6 +34,7 @@
  *         category: string,
  *         score: sm.bSmScore.TemplateBrief.Params.Data,
  *         cost: ?string,
+ *         departmentList: sm.lCourse.bDepartment.Template.Params.Data
  *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
  *         online: ?('only'|'available'|undefidned)
  *     },
@@ -474,7 +475,7 @@
     <div class="{call .rootClass/}__user-interaction">
         {let $cost kind="html"}
             {if $params.data.entityData.cost}
-                От {$params.data.entityData.cost}
+                {$params.data.entityData.cost}
             {else}
                 Цена по запросу
             {/if}

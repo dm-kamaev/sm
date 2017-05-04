@@ -372,8 +372,7 @@
  * Sort dropdown template
  * @param params {{
  *     data: {
- *         sort: (sm.gDropdown.TemplateSelect.Params.Data|
- *                sm.bSmSwitch.Template.Params.Data)
+ *         sort: sm.gDropdown.TemplateSelect.Params.Data
  *     }
  * }}
  * @private
@@ -408,7 +407,8 @@
  * Sort switch template
  * @param params {{
  *     data: {
- *         sort: sm.bSmSwitch.Template.Params.Data
+ *         (sm.gDropdown.TemplateSelect.Params.Data|
+ *                sm.bSmSwitch.Template.Params.Data)
  *     }
  * }}
  * @private
@@ -422,7 +422,7 @@
             {param params: [
                 'type': 'smSwitch',
                 'renderParams': [
-                    'data': $params.data.sort,
+                    'data': $params.data.sort.content ?: $params.data.sort,
                     'config': [
                         'size': 'xxxl',
                         'linksTheme': 'hoar',
@@ -520,9 +520,7 @@
  * Additional classes
  * @param params {{
  *     data: {
- *          search: {
- *               countResults: number
- *          }
+ *          countResults: number
  *     }
  * }}
  * @override

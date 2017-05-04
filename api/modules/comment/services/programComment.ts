@@ -38,6 +38,15 @@ type SequelizeOrder = Array<
     Array<string | {model: Sequelize.Model<any, any>, as?: string}>
 >;
 
+type CreateOptions = {
+    updateRating?: boolean;
+};
+
+type GetListCommentsParams = {
+    order?: number,
+    filterEmptyComments?: boolean
+};
+
 class ProgramCommentService {
     public readonly name: string = 'programComment';
 
@@ -52,8 +61,9 @@ class ProgramCommentService {
         data: ProgramCommentFullCreateAttributes
     ): Promise<void> {
         return await db.transaction(async() => {
-            await this.fullCreate_(programId, data);
+            await this.fullCreateDb(programId, data, {updateRating: true});
         }).catch((error) => {
+            logger.error(error);
             throw error;
         });
     }
@@ -90,13 +100,18 @@ class ProgramCommentService {
     }
 
     public async getAllByProgramIdWithFullData(
-            programId: number, orderType?: number
+            programId: number, params?: GetListCommentsParams
     ): Promise<Array<ProgramCommentInstance>> {
         const commentGroup = await programService.getCommentGroup(programId);
-        const order = this.getCommentsOrder_(orderType);
+        const order = this.getCommentsOrder_(params.order);
+        const notEmptyCommentCondition = params.filterEmptyComments ?
+            this.getNotEmptyCommentCondition_() :
+            null;
+
         return await ProgramCommentModel.findAll({
             where: {
-                commentGroupId: commentGroup.id
+                commentGroupId: commentGroup.id,
+                $and: notEmptyCommentCondition
             },
             include: [{
                 model: UserDataModel,
@@ -181,23 +196,11 @@ class ProgramCommentService {
         });
     }
 
-    private async fullDelete_(
-            programId: number, commentId: number): Promise<void> {
-        const commentInstance = await this.getOne(programId, commentId);
-
-        await commentInstance.destroy();
-        await userDataService.delete(commentInstance.userDataId);
-        if (commentInstance.ratingId) {
-            await ratingService.delete(commentInstance.ratingId);
-        }
-
-        await this.updateRating_(commentInstance.commentGroupId);
-        await this.updateUniversityRating_(commentInstance.commentGroupId);
-    }
-
-    private async fullCreate_(
+    public async fullCreateDb(
             programId: number,
-            data: ProgramCommentFullCreateAttributes): Promise<void> {
+            data: ProgramCommentFullCreateAttributes,
+            options?: CreateOptions
+        ): Promise<void> {
         const userId = data.userId,
             isUserCommented =
                 await this.checkIfCommented_(programId, userId);
@@ -217,8 +220,30 @@ class ProgramCommentService {
         await commentInstance.setUserData(userDataInstance);
         await commentInstance.setCommentGroup(commentGroup);
 
-        await this.updateRating_(commentGroup.id);
-        await this.updateUniversityRating_(commentGroup.id);
+        if (options && options.updateRating) {
+            this.updateRatings(commentGroup.id);
+        }
+    }
+
+    public async updateRatings(commentGroupId: number): Promise<[any, any]> {
+        return Promise.all([
+            this.updateRating_(commentGroupId),
+            this.updateUniversityRating_(commentGroupId)
+        ]);
+    }
+
+    private async fullDelete_(
+            programId: number, commentId: number): Promise<void> {
+        const commentInstance = await this.getOne(programId, commentId);
+
+        await commentInstance.destroy();
+        await userDataService.delete(commentInstance.userDataId);
+        if (commentInstance.ratingId) {
+            await ratingService.delete(commentInstance.ratingId);
+        }
+
+        await this.updateRating_(commentInstance.commentGroupId);
+        await this.updateUniversityRating_(commentInstance.commentGroupId);
     }
 
     private async checkIfCommented_(
@@ -308,6 +333,16 @@ class ProgramCommentService {
                 break;
         }
         return order;
+    }
+
+    private getNotEmptyCommentCondition_(): Sequelize.WhereOptions {
+        return {
+            $or: {
+                advice: {$ne: null},
+                pros: {$ne: null},
+                cons: {$ne: null}
+            }
+        };
     }
 
     private async updateRating_(commentGroupId: number): Promise<any> {

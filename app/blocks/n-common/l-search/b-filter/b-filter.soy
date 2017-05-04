@@ -188,14 +188,9 @@
 
     <div class="{call .rootClass/}__list-options">
         {for $i in range($params.data.options.length)}
-            {let $id: $i + '-' + ($params.config?.type ?: '') + '-' +
-                $params.data.name
-            /}
-
             {call .option}
                 {param params: [
                     'data': [
-                        'id': $id,
                         'name': $params.data.name,
                         'label': $params.data.options[$i].label,
                         'value': $params.data.options[$i].value,

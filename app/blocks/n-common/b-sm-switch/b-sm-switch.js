@@ -83,7 +83,7 @@ goog.scope(function() {
      * @param {number} id
      * @public
      */
-    Switch.prototype.selectLink = function(id) {
+    Switch.prototype.selectItem = function(id) {
         this.selectedLinkId_ = id;
 
         this.items.forEach(function(item) {
@@ -91,7 +91,7 @@ goog.scope(function() {
         });
         this.items[id].select();
 
-        this.getView().selectLink(id);
+        this.getView().selectItem(id);
     };
 
 
@@ -101,7 +101,43 @@ goog.scope(function() {
      */
     Switch.prototype.reset = function() {
         var id = this.params.selectedItemId;
-        this.selectLink(id);
+        this.selectItem(id);
+    };
+
+
+    /**
+     * Get id on list item (index in array)
+     * @param {number} value
+     * @return {number}
+     * @public
+     */
+    Switch.prototype.getItemId = function(value) {
+        return goog.array.findIndex(this.params.items, function(item) {
+            return item.value == value;
+        });
+    };
+
+
+    /**
+     * Get value on list item
+     * @return {?string}
+     * @override
+     * @public
+     */
+    Switch.prototype.getValue = function() {
+        return this.getSelectedItemData().value;
+    };
+
+
+    /**
+     * Set value on list item
+     * @param {string} value
+     * @override
+     * @public
+     */
+    Switch.prototype.setValue = function(value) {
+        var id = this.getItemId(value);
+        this.selectItem(id);
     };
 
 
@@ -125,7 +161,7 @@ goog.scope(function() {
      */
     Switch.prototype.onItemClick_ = function(id) {
         if (id !== this.selectedLinkId_) {
-            this.selectLink(id);
+            this.selectItem(id);
             var params = this.getSelectedItemData();
             var event = new sm.bSmSwitch.Event.ItemSelect(params);
             this.dispatchEvent(event);

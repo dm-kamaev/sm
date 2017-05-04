@@ -33,7 +33,7 @@ footerView.contactLinks = function() {
         url: 'mailto:vs@mel.fm'
     }, {
         content: 'Пользовательское соглашение',
-        url: 'http://mel.fm/terms-of-use'
+        url: 'http://mel.fm/page/terms-of-use'
     }];
 };
 

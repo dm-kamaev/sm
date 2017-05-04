@@ -1,6 +1,7 @@
 goog.provide('sm.bSmItem.SmItem');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmCollapsedText.SmCollapsedText');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.View');
 goog.require('sm.bSmLink.SmLink');

@@ -203,8 +203,10 @@ abstract class FilterPanel {
             filterParams: FilterParams,
             checkedValues?: (number|string)[]
     ) {
-        const params = filterParams;
+        let params = filterParams;
         params.config.type = filterType.EXTENDED;
+
+        params = this.updateOptionsToShowFilterModal_(params, checkedValues);
 
         this.setFilter(params, checkedValues);
 
@@ -458,6 +460,35 @@ abstract class FilterPanel {
 
     protected getLabel(model: OptionModel): string {
         return model.displayName || model.name;
+    }
+
+
+    protected getCheckedOptions(
+            options: Option[],
+            checkedValues?: (number|string)[]
+    ): Option[] {
+        return options.filter(option =>
+            checkedValues.some(checkedValue => option.value == checkedValue)
+        );
+    }
+
+
+    private updateOptionsToShowFilterModal_(
+            filterParams: FilterParams,
+            checkedValues?: (number|string)[]
+    ): FilterParams {
+        const params = filterParams;
+
+        if (checkedValues.length) {
+            params.data.options = this.getCheckedOptions(
+                params.data.options,
+                checkedValues
+            );
+
+            params.config.optionsToShow = params.data.options.length;
+        }
+
+        return params;
     }
 }
 

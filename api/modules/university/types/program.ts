@@ -47,7 +47,6 @@ export interface ProgramInstance
     programEgeExams?: Array<ProgramEgeExamInstance>;
     university?: UniversityInstance;
     pages?: Array<PageIntstance>;
-
     addAddress: Sequelize.BelongsToManyAddAssociationsMixin<
             AddressInstance, number, AddressAttribute
         >;

@@ -52,7 +52,6 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     id: string,
      *     name: ?string,
      *     label: string,
      *     value: string,

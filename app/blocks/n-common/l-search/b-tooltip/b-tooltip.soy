@@ -1,0 +1,152 @@
+{namespace sm.lSearch.bTooltip.Template}
+
+
+/**
+ * @typedef {{
+ *     defaultText: ?string,
+ *     buttonLabel: ?string
+ * }} sm.lSearch.bTooltip.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     button: sm.gButton.TemplateStendhal.Params.Config
+ * }} sm.lSearch.bTooltip.Template.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.lSearch.bTooltip.Template.Params.Data,
+ *     config: sm.lSearch.bTooltip.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .tooltip}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearch-tooltip
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.lSearch.bTooltip.Template.Params.Data,
+ *     config: sm.lSearch.bTooltip.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .text_ data="all"/}
+    {if $params.data.buttonLabel}
+        {call .button_ data="all"/}
+    {/if}
+    {call .triangle_ /}
+{/template}
+
+
+/**
+ * Draw triangle before this block
+ */
+{template .triangle_}
+    <div class="{call .rootClass/}__triangle-wrap">
+        <div class="{call .rootClass/}__triangle"></div>
+    </div>
+{/template}
+
+
+/**
+ * Text
+ * @param params {{
+ *     data: {
+ *         defaultText: ?string
+ *     }
+ * }}
+ * @private
+ */
+{template .text_}
+    <div class="{call .rootClass/}__text">
+        {if $params.data.defaultText}
+            {$params.data.defaultText}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Button
+ * @param params {{
+ *     data: {
+ *          buttonLabel: ?string
+ *      },
+ *     config: {
+ *          button: sm.gButton.TemplateStendhal.Params.Config
+ *      }
+ * }}
+ * @private
+ */
+{template .button_}
+    {let $customClasses kind="text"}
+        {call .rootClass/}__button
+    {/let}
+
+    <div class="{call .rootClass/}__button-wrap i-utils__hidden">
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': [
+                            'default': $params.data.buttonLabel
+                        ]
+                    ],
+                    'config': augmentMap(
+                        $params.config?.button,
+                        [
+                            'customClasses': [$customClasses]
+                        ]
+                    )
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     data: {
+ *         defaultText: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: quoteKeysIfJs([
+            'defaultText': $params?.data.defaultText,
+        ]) /}
+    {/call}"
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-tooltip
+{/template}

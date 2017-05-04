@@ -69,6 +69,10 @@
  *         },
  *         score: ?number,
  *         picture: ?sm.bSmPicture.Template.Params.Data
+ *         imageUrl: (string|undefined),
+ *         placeholder?: {
+ *             url: string;
+ *         }
  *     }
  * }}
  * @override
@@ -79,6 +83,17 @@
                 {call .rootClass/}__section_cover">
         {if $params.data.picture}
             {call .image data="all" /}
+        {elseif $params.data.placeholder}
+            {call .image}
+                {param params: [
+                    'data': [
+                        'name': $params.data.name,
+                        'url': $params.data.url,
+                        'imageUrl': $params.data.placeholder.url
+                    ],
+                    'config': $params.config
+                ]/}
+            {/call}
         {else}
             {call .score data="all" /}
         {/if}
@@ -137,7 +152,8 @@
  *     },
  *     config: {
  *         nameLinkTheme: ?string,
- *         nameLinkSize: ?string
+ *         nameLinkSize: ?string,
+ *         isLinksInNewTab: ?boolean
  *     }
  * }}
  * @protected
@@ -166,6 +182,12 @@
             {call .rootClass/}__link-name
         {/let}
 
+        {let $target kind="html"}
+            {if $params.config.isLinksInNewTab}
+                _blank
+            {/if}
+        {/let}
+
         {call .renderChild}
             {param params: [
                 'type': 'smLink',
@@ -178,7 +200,8 @@
                     'config': [
                         'customClasses': [$customClasses],
                         'theme': $params.config.nameLinkTheme ?: 'dark',
-                        'size': $params.config.nameLinkSize ?: 'xxl'
+                        'size': $params.config.nameLinkSize ?: 'xxl',
+                        'target': $target
                     ]
                 ]
             ]/}
@@ -225,6 +248,9 @@
  *         },
  *         picture: ?sm.bSmPicture.Template.Params.Data,
  *         url: ?string
+ *     },
+ *     config: {
+ *         isLinksInNewTab: (boolean|undefined)
  *     }
  * }}
  * @protected
@@ -234,6 +260,9 @@
     {let $link: $params.data.url ?: '' /}
 
     <{$tag} class="{call .rootClass/}__cover-link" href="{$link}">
+        {if $params.config.isLinksInNewTab}
+            target="_blank"
+        {/if}
         {call .renderChild}
             {param params: [
                 'type': 'smPicture',

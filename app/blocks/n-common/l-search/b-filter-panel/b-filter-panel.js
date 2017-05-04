@@ -3,6 +3,7 @@ goog.provide('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('cl.iControl.Control');
 goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterClasses');
 goog.require('sm.lSearch.bFilter.FilterDropdown');
@@ -13,6 +14,7 @@ goog.require('sm.lSearch.bFilter.FilterSwitch');
 goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
 goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bFilterPanel.View');
+goog.require('sm.lSearch.bTooltip.Tooltip');
 
 
 
@@ -44,13 +46,38 @@ sm.lSearch.bFilterPanel.FilterPanel = function(view, opt_domHelper) {
      * @private
      */
     this.button_ = null;
+
+
+    /**
+     * Instance tooltip
+     * @type {cl.gButton.Button}
+     * @private
+     */
+    this.tooltip_ = null;
+
+
+    /**
+     * Position of last check/uncheck option
+     * @type {number}
+     * @private
+     */
+    this.tooltipPosition_ = null;
+
+
+    /**
+     * Count of search results
+     * @type {?number}
+     * @private
+     */
+    this.countResults_ = null;
 };
 goog.inherits(sm.lSearch.bFilterPanel.FilterPanel, cl.iControl.Control);
 
 
 goog.scope(function() {
     var FilterPanel = sm.lSearch.bFilterPanel.FilterPanel,
-        View = sm.lSearch.bFilterPanel.View;
+        View = sm.lSearch.bFilterPanel.View,
+        viewport = sm.iSmViewport.SmViewport.getInstance();
 
     /**
      * Name of this element in factory
@@ -73,7 +100,8 @@ goog.scope(function() {
         UNCHECK: goog.events.getUniqueId('uncheck'),
         RESET: goog.events.getUniqueId('reset'),
         FILTER_OPTION_CHECK: sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
-        FILTER_OPTION_UNCHECK: sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION
+        FILTER_OPTION_UNCHECK: sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
+        CHANGE: goog.events.getUniqueId('change')
     };
 
 
@@ -92,6 +120,7 @@ goog.scope(function() {
 
         this.initFilters_();
         this.initButton_();
+        this.initTooltip_();
     };
 
 
@@ -104,6 +133,8 @@ goog.scope(function() {
         this.initViewListeners_();
         this.initFiltersListeners_();
         this.initButtonListeners_();
+        this.initTooltipListeners_();
+        this.initViewportListener_();
     };
 
 
@@ -116,6 +147,8 @@ goog.scope(function() {
         });
 
         this.getView().setResetButtonVisibility(false);
+        this.updateButton();
+        this.countResults_ = null;
     };
 
 
@@ -150,6 +183,75 @@ goog.scope(function() {
         return result;
     };
 
+    /**
+     * set count results
+     * @param {number|string|undefined} opt_count
+     * @public
+     */
+    FilterPanel.prototype.showCountResults = function(opt_count) {
+        if (opt_count !== undefined) {
+            this.countResults_ = opt_count;
+        }
+
+        var text = this.countResults_ ?
+            'Найдено' + ': ' + this.countResults_ :
+            'Ничего не найдено';
+        var isEmptyResults = !this.countResults_;
+
+
+        if(viewport.getSize() <= sm.iSmViewport.SmViewport.Size.M) {
+            this.updateButton(text, isEmptyResults);
+        } else {
+            this.showTooltip(text, isEmptyResults);
+        }
+
+        this.updateButtonFixability_();
+    };
+
+    /**
+     * show tooltip with value
+     * @param {string|number} value
+     * @param {boolean=} opt_hideButton
+     * @public
+     */
+    FilterPanel.prototype.showTooltip = function(value, opt_hideButton) {
+        this.getView().setTooltipPosition(this.tooltipPosition_);
+        this.tooltip_.setText(value);
+        if (opt_hideButton) {
+            this.tooltip_.hideButton();
+        } else {
+            this.tooltip_.showButton();
+        }
+        this.tooltip_.display(
+            sm.lSearch.bTooltip.Tooltip.Animation.DISAPPEAR_SLOW
+        );
+    };
+
+
+    /**
+     * set position of tooltip
+     * @param {number} position
+     * @public
+     */
+    FilterPanel.prototype.setTooltipPosition = function(position) {
+        this.tooltipPosition_ = position;
+    };
+
+
+    /**
+     * set text and disable status for button
+     * @param {string|number|undefined} opt_text
+     * @param {boolean=} opt_disable
+     * @public
+     */
+    FilterPanel.prototype.updateButton = function(opt_text, opt_disable) {
+        this.button_.setText(opt_text);
+        if (opt_disable) {
+            this.button_.disable();
+        } else {
+            this.button_.enable();
+        }
+    };
 
     /**
      * Return true if selected least one filter
@@ -242,6 +344,11 @@ goog.scope(function() {
             this.onResetClick_
         );
 
+        this.viewListen(
+            View.Event.SCROLL,
+            this.onScroll_
+        );
+
         this.autoDispatch(FilterPanel.Event.COLLAPSE);
     };
 
@@ -258,18 +365,30 @@ goog.scope(function() {
                 filter,
                 sm.lSearch.bFilter.Filter.Event.CHECK,
                 this.onFilterCheck_
-            );
-
-            this.getHandler().listen(
+            ).listen(
                 filter,
                 sm.lSearch.bFilter.Filter.Event.UNCHECK,
                 this.onFilterUncheck_
-            );
-
-            this.getHandler().listen(
+            ).listen(
                 filter,
                 sm.lSearch.bFilter.Filter.Event.SUBMIT,
                 this.onSubmit_
+            ).listen(
+                filter,
+                sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
+                this.onOption_
+            ).listen(
+                filter,
+                sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
+                this.onOption_
+            ).listen(
+                filter,
+                sm.lSearch.bFilter.Filter.Event.EXPAND,
+                this.onFilterExpand_
+            ).listen(
+                filter,
+                sm.lSearch.bFilter.Filter.Event.COLLAPSE,
+                this.onFilterCollapse_
             );
         }
     };
@@ -287,6 +406,94 @@ goog.scope(function() {
                 this.onSubmit_
             );
         }
+
+        this.getHandler().listen(
+            this.button_,
+            sm.gButton.ButtonStendhal.Event.CLICK,
+            this.onSubmit_
+        );
+    };
+
+
+    /**
+     * checkOption/uncheckOption handler
+     * @param {sm.lSearch.bFilter.CheckOptionEvent|
+     *         sm.lSearch.bFilter.UncheckOptionEvent} event
+     * @private
+     */
+    FilterPanel.prototype.onOption_ = function(event) {
+        this.setTooltipPosition(event.position);
+        this.dispatchEvent(FilterPanel.Event.CHANGE);
+    };
+
+
+    /**
+     * fix button if set count results and required viewport size
+     * @private
+     */
+    FilterPanel.prototype.updateButtonFixability_ = function() {
+        if (this.countResults_ !== null) {
+            this.getView().updateButtonFixability();
+        }
+    };
+
+
+    /**
+     * filter expand handler
+     * @private
+     */
+    FilterPanel.prototype.onFilterExpand_ = function() {
+        this.updateButtonFixability_();
+    };
+
+
+    /**
+     * filter collapse handler
+     * @private
+     */
+    FilterPanel.prototype.onFilterCollapse_ = function() {
+        this.updateButtonFixability_();
+    };
+
+
+    /**
+     * Initializes listeners for tooltip
+     * @private
+     */
+    FilterPanel.prototype.initTooltipListeners_ = function() {
+        this.getHandler().listen(
+            this.tooltip_,
+            sm.lSearch.bTooltip.Tooltip.Event.CLICK,
+            this.onSubmit_
+        );
+    };
+
+
+    /**
+     * Initializes listeners for viewport
+     * @private
+     */
+    FilterPanel.prototype.initViewportListener_ = function() {
+        this.getHandler().listen(
+            viewport,
+            sm.iSmViewport.SmViewport.Event.RESIZE,
+            this.onResize_
+        );
+    };
+
+
+    /**
+     * Resize handler
+     * @param {Object} event
+     * @private
+     */
+    FilterPanel.prototype.onResize_ = function(event) {
+        if (event.newSize > sm.iSmViewport.SmViewport.Size.M) {
+            this.getView().setButtonFixability(false);
+            this.updateButton();
+        } else if (this.countResults_ !== null) {
+            this.showCountResults();
+        }
     };
 
 
@@ -297,6 +504,15 @@ goog.scope(function() {
     FilterPanel.prototype.onResetClick_ = function() {
         this.dispatchEvent(FilterPanel.Event.RESET);
         this.reset();
+    };
+
+
+    /**
+     * Scroll handler
+     * @private
+     */
+    FilterPanel.prototype.onScroll_ = function() {
+        this.updateButtonFixability_();
     };
 
 
@@ -367,29 +583,29 @@ goog.scope(function() {
         var type;
 
         switch (true) {
-            case sm.lSearch.bFilter.FilterExtended.isControl(element) :
-                type = sm.lSearch.bFilter.FilterExtended.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterSwitchLabels.isControl(element) :
-                type = sm.lSearch.bFilter.FilterSwitchLabels.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterSwitch.isControl(element) :
-                type = sm.lSearch.bFilter.FilterSwitch.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterRange.isControl(element) :
-                type = sm.lSearch.bFilter.FilterRange.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterInput.isControl(element) :
-                type = sm.lSearch.bFilter.FilterInput.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterDropdown.isControl(element) :
-                type = sm.lSearch.bFilter.FilterDropdown.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterClasses.isControl(element) :
-                type = sm.lSearch.bFilter.FilterClasses.NAME;
-                break;
-            default:
-                type = sm.lSearch.bFilter.Filter.NAME;
+        case sm.lSearch.bFilter.FilterExtended.isControl(element) :
+            type = sm.lSearch.bFilter.FilterExtended.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterSwitchLabels.isControl(element) :
+            type = sm.lSearch.bFilter.FilterSwitchLabels.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterSwitch.isControl(element) :
+            type = sm.lSearch.bFilter.FilterSwitch.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterRange.isControl(element) :
+            type = sm.lSearch.bFilter.FilterRange.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterInput.isControl(element) :
+            type = sm.lSearch.bFilter.FilterInput.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterDropdown.isControl(element) :
+            type = sm.lSearch.bFilter.FilterDropdown.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterClasses.isControl(element) :
+            type = sm.lSearch.bFilter.FilterClasses.NAME;
+            break;
+        default:
+            type = sm.lSearch.bFilter.Filter.NAME;
         }
 
         return type;
@@ -429,5 +645,17 @@ goog.scope(function() {
                 button
             );
         }
+    };
+
+
+    /**
+     * Initializes button submit
+     * @private
+     */
+    FilterPanel.prototype.initTooltip_ = function() {
+        this.tooltip_ = this.decorateChild(
+            'lSearch-tooltip',
+            this.getView().getDom().tooltip
+        );
     };
 });  // goog.scope

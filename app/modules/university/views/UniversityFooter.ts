@@ -53,10 +53,10 @@ class UniversityFooter extends Footer {
                 }, */{
                     content: 'Сотрудничество ',
                     url: 'mailto:vs@mel.fm'
-                }/*, {
+                }, {
                     content: 'Пользовательское соглашение',
-                    url: 'http://mel.fm/terms-of-use'
-                }*/],
+                    url: 'http://mel.fm/page/terms-of-use'
+                }],
                 linksConfig: {
                     theme: 'overcast',
                     size: 'xxl',

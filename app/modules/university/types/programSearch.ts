@@ -1,7 +1,9 @@
 /**
  * @fileoverview Types related to search
  */
-import {lSearchUniversity} from '../../../blocks/n-university/l-search_university/params';
+import {
+    lSearchUniversity
+} from '../../../blocks/n-university/l-search_university/params';
 
 export type QueryParams = {
     cities?: (string | number[]);
@@ -31,6 +33,7 @@ export type BackendSearchParams = {
     majors?: number[];
     features?: number[];
     page?: number;
+    limit?: number;
     sortType?: number;
 };
 
