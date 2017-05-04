@@ -69,7 +69,11 @@ goog.scope(function() {
         return goog.soy.renderAsElement(
             sm.lSearch.bFilter.TemplateExtended.option, {
                 params: {
-                    data: data
+                    data: data,
+                    config: {
+                        theme: this.getParams().optionsTheme,
+                        customIcon: this.getParams().customIcon
+                    }
                 }
             },
             {
@@ -117,6 +121,18 @@ goog.scope(function() {
      * @protected
      */
     View.prototype.transformParams = function(rawParams) {
+        var customIcon;
+
+        if (rawParams['customIcon']) {
+            customIcon = {
+                check: rawParams['customIcon']['check'],
+                uncheck: rawParams['customIcon']['uncheck']
+            };
+        }
+
+        console.log(rawParams);
+        console.log(rawParams['modal']);
+
         return {
             name: rawParams['name'],
             type: rawParams['type'],
@@ -128,7 +144,9 @@ goog.scope(function() {
                 placeholder: rawParams['modal']['placeholder'],
                 filterHeader: rawParams['modal']['filterHeader'],
                 theme: rawParams['modal']['theme']
-            }
+            },
+            optionsTheme: rawParams['optionsTheme'],
+            customIcon: customIcon
         };
     };
 

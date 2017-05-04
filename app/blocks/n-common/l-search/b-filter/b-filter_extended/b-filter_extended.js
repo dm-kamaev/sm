@@ -158,9 +158,15 @@ goog.scope(function() {
      * @private
      */
     FilterExtended.prototype.onModalFilterButtonClick_ = function(event) {
+        var that = this;
         var params = event.data.filters.length ?
             event.data.filters :
             this.getDefaultOptionsData_();
+
+        params.forEach(function(data) {
+            data.optionsTheme = that.params.optionsTheme;
+            data.customIcon = that.params.customIcon;
+        });
 
         this.updateOptions(params);
         this.removeFilterModal_();

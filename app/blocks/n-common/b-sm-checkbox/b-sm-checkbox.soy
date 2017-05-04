@@ -150,6 +150,13 @@
  *         label: string,
  *         value: string,
  *         isChecked: (boolean|undefined)
+ *     },
+ *     config: {
+ *         theme: (string|undefined),
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
  *     }
  * }}
  * @override
@@ -160,7 +167,9 @@
             {param json: [
                 'name': $params.data.name ?: '',
                 'label': $params.data.label,
-                'value': $params.data.value
+                'value': $params.data.value,
+                'theme': $params.config?.theme,
+                'customIcon': $params.config?.customIcon
             ]/}
         {/call}"
 {/template}

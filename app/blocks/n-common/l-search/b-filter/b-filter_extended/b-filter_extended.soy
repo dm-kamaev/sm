@@ -141,12 +141,24 @@
  *         }
  *     },
  *     config: {
- *         type: (string|undefined)
+ *         type: (string|undefined),
+ *         optionsTheme: (string|undefined),
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
  *     }
  * }}
  * @override
  */
 {template .attributes kind="attributes"}
+    {let $customIcon: $params.config.customIcon ?
+        quoteKeysIfJs([
+            'check': $params.config.customIcon.check,
+            'uncheck': $params.config.customIcon.uncheck
+        ]) : undefined
+    /}
+
     {let $data kind="html"}
         {call cl.iUtils.Utils.stringify}
             {param json: quoteKeysIfJs([
@@ -160,7 +172,9 @@
                     'placeholder': $params.data.modal?.placeholder ?: '',
                     'filterHeader': $params.data.modal?.filterHeader ?: '',
                     'theme': $params.data.modal?.theme ?: ''
-                ])
+                ]),
+                'optionsTheme': $params?.config?.optionsTheme,
+                'customIcon': $customIcon
             ])/}
         {/call}
     {/let}
