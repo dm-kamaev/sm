@@ -1,0 +1,315 @@
+{namespace sm.bSearchPanelUniversity.Template}
+
+
+/**
+ * @typedef {sm.bSearchPanelUniversity.Params.Data}
+ * sm.bSearchPanelUniversity.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {sm.bSearchPanelUniversity.Params.Config}
+ * sm.bSearchPanelUniversity.Template.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSearchPanelUniversity.Template.Params.Data,
+ *     config: sm.bSearchPanelUniversity.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .filterPanel}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    searchPanelUniversity
+{/template}
+
+
+/**
+ * Body
+ * @override
+ */
+{template .body}
+    {call .upperBlock data="all" /}
+    {call .lowerBlock data="all" /}
+{/template}
+
+
+/**
+ * Upper block
+ */
+{template .upperBlock}
+    <div class="{call .rootClass/}__upper-block">
+        {call .titleArea data="all" /}
+        {call .fieldsArea data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Lower block
+ */
+{template .lowerBlock}
+    <div class="{call .rootClass/}__lower-block">
+        {call .pickArea data="all" /}
+        {call .buttonArea data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Title area
+ */
+{template .titleArea}
+    <div class="{call .rootClass/}__title-area">
+        {call .title data="all" /}
+    </div>
+{/template}
+
+/**
+ * Fields area
+ */
+{template .fieldsArea}
+    <div class="{call .rootClass/}__fields-area">
+        {call .searchCity data="all" /}
+        {call .payType data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Pick area
+ */
+{template .pickArea}
+    <div class="{call .rootClass/}__pick-area">
+        {call .searchEge data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Button area
+ */
+{template .buttonArea}
+    <div class="{call .rootClass/}__button-area">
+        {call .button data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Title
+ * @param params {{
+ *     data: {
+ *         title: string
+ *     }
+ * }}
+ */
+{template .title}
+    <div class="{call .rootClass/}__title">
+        {$params.data.title ?: ''}
+    </div>
+{/template}
+
+
+/**
+ * Button to search for entity on filters
+ * @param params {{
+ *     data: {
+ *         button: ({
+ *             content: string,
+ *             theme: string,
+ *             borderRoundSize: string
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .button}
+    {let $customClasses kind="text"}
+        {call .rootClass/}__button
+    {/let}
+
+    <div class="{call .rootClass/}__button-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': [
+                            'default': $params.data.button.content ?: 'Подобрать'
+                        ]
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': $params.data.button.theme,
+                        'size': 's',
+                        'borderRoundSize': $params.data.button?.borderRoundSize
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Button to search for entity on filters
+ * @param params {{
+ *     data: {
+ *         payType: {
+ *             content: sm.gList.Params.Item,
+ *             contentConfig: sm.gList.Params.Config
+ *         }
+ *     }
+ * }}
+ */
+{template .payType}
+    {let $customClasses kind="text"}
+        {call .rootClass/}__pay-type
+    {/let}
+
+   {let $opener kind="text"}
+       {call .openirText}
+           {param content: $params.data.payType.content /}
+       {/call}
+   {/let}
+
+   <div class="{call .rootClass/}__pay-type-wrap">
+       {call .renderChild}
+           {param params: [
+               'type': 'dropdown-select',
+               'renderParams': [
+                   'data': [
+                       'defaultOpenerText': $opener,
+                       'content': [
+                           'items': $params.data.payType.content
+                       ],
+                       'contentConfig': $params.data.payType.contentConfig
+                   ],
+                   'config': [
+                       'customClasses': [$customClasses],
+                       'theme': 'light'
+                   ]
+               ]
+           ] /}
+       {/call}
+   </div>
+{/template}
+
+
+/**
+ * Button to search for entity on filters
+ * @param content {sm.gList.Params.Item}
+ */
+{template .openirText}
+    {let $checkedOpener kind="text"}
+        {foreach $option in $content}
+            {if $option?.isChecked}
+                {$option.label}
+            {/if}
+        {/foreach}
+    {/let}
+
+    {if $checkedOpener == ''}
+        {$content[(length($content) - 1)].label}
+    {else}
+        {$checkedOpener}
+    {/if}
+{/template}
+
+
+/**
+ * Button to search for entity on filters
+ * @param params {{
+ *     data: {
+ *         searchCity: ({
+ *             placeholder: string,
+ *             text: string,
+ *             sourceUrl: string
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .searchCity}
+    {let $customClasses kind="text"}
+        {call .rootClass/}__search-city
+    {/let}
+
+    <div class="{call .rootClass/}__search-city-wrap">
+            {call sm.bSearch.Template.base}
+                {param params: [
+                    'placeholder': $params.data.searchCity.placeholder,
+                    'text': $params.data.searchCity.text,
+                    'theme': 'min',
+                    'customClasses': $customClasses,
+                    'inputSize': 'min',
+                    'data': [
+                        'sourceUrl': $params.data.searchCity.sourceUrl,
+                        'argName': 'name'
+                    ],
+                    'config': [
+                        'showSearchIcon': true,
+                        'height': 'l'
+                    ]
+                ]/}
+            {/call}
+        </div>
+{/template}
+
+
+/**
+ * Filters
+ * @param params {{
+ *     data: {
+ *         ege: sm.lSearch.bFilter.Template.Params.Data
+ *     },
+ *     config: {
+ *         optionsTheme: (string|undefined)
+ *         checkboxIcon: options ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .searchEge}
+    {let $customClasses kind="text"}
+        {call .rootClass/}__search-ege
+    {/let}
+
+    <div class="{call .rootClass/}__search-ege-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'lSearch-filter',
+                'renderParams': [
+                    'data': $params.data.ege,
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'theme': $params.config.panelTheme,
+                        'optionsTheme': $params.config.optionsTheme,
+                        'customIcon': $params.config.checkboxIcon
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-search-panel-university
+{/template}

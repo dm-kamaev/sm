@@ -91,10 +91,26 @@
  * @private
  */
 {template .sectionSearch_}
+    {let $customClasses kind="text"}
+        {call .rootClass/}__search-panel
+    {/let}
+
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_search">
         <div class="{call .rootClass /}__section-inner">
-            {if $params}{/if}
+            {call .renderChildLayout}
+                {param type: 'searchPanelUniversity' /}
+                {param params: $params /}
+                {param renderParams: [
+                    'data': $params.data.searchPanel.data,
+                    'config': augmentMap(
+                        $params.data.searchPanel.config,
+                        [
+                           'customClasses': [$customClasses]
+                        ]
+                    )
+                ] /}
+            {/call}
         </div>
     </div>
 {/template}

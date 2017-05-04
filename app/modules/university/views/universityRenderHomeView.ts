@@ -55,8 +55,58 @@ class UniversityRenderHomeView extends LayoutView {
     }
 
     private setSearchPanel_(data: BackendData) {
-        this.params.data.searchPanel = {};
-    }
+        this.params.data.searchPanel = {
+            data: {
+                title: 'Удобный подбор программ бакалавриата',
+                searchCity: {
+                    placeholder: 'Город или название региона',
+                    sourceUrl: '/cities'
+                },
+                payType: {
+                    content: [
+                        {
+                            label: 'Платное',
+                            value: 0
+                        }, {
+                            label: 'Бюджетное',
+                            value: 1
+                        }, {
+                            label: 'Платное и бюджетное',
+                            value: 2
+                        }
+                    ],
+                    contentConfig: null
+                },
+                ege: {
+                    name: 'ege',
+                    header: {
+                        title: 'Укажите ЕГЭ по выбору'
+                    },
+                    options: [
+                        {
+                            label: 'Русский язык',
+                            value: 0
+                        }, {
+                            label: 'Литература',
+                            value: 1
+                        }, {
+                            label: 'Математика (базовая)',
+                            value: 2
+                        }, {
+                            label: 'Математика (профильн.)',
+                            value: 3
+                        }
+                    ]
+                },
+                button: {
+                    content: 'Подобрать',
+                    theme: 'noon',
+                    borderRoundSize: 'xl'
+                }
+            },
+            config: {}
+        };
+    };
 
     private setPopularUniversities_() {
         this.params.data.populars = {};
@@ -64,7 +114,7 @@ class UniversityRenderHomeView extends LayoutView {
 
     private setBanner_() {
         const imgDirectory = '/static/images/n-university/l-home-university/' +
-            'banner-img/';
+            'img/';
 
         this.params.data.banner = {
             imgUrl: {

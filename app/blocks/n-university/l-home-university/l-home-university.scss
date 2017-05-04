@@ -17,6 +17,15 @@
     margin: 0 auto;
 }
 
+.l-home-university__section_search {
+    color: #ffffff;
+    background: url("/static/images/n-university/l-home-university/img/blue-bg.png") center top no-repeat #3386e1;
+
+    @include pixel-ratio-2x {
+        background-image: url("/static/images/n-university/l-home-university/img/blue-bg@2x.png");
+    }
+}
+
 .l-home-university__section_banner-xl {
     height: 220px;
 
@@ -62,8 +71,8 @@
 @include media-xl {
     .l-home-university__section-inner {
         width: auto;
-        margin-left: 40px;
         margin-right: 40px;
+        margin-left: 40px;
     }
 }
 
@@ -80,8 +89,8 @@
 
 @include media-xs {
     .l-home-university__section-inner {
-        margin-left: 25px;
         margin-right: 25px;
+        margin-left: 25px;
     }
 
     .l-home-university__section_banner-xl {
@@ -90,6 +99,13 @@
 
     .l-home-university__section_banner-xs {
         display: block;
+
+        .l-home-university__section-inner {
+            margin: 0;
+        }
+    }
+
+    .l-home-university__section_search {
 
         .l-home-university__section-inner {
             margin: 0;
