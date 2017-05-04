@@ -2,14 +2,15 @@ const headerView = require('../../../../api/modules/entity/views/headerView'),
     favoriteView =
             require('../../../../api/modules/favorite/views/favoriteView');
 
-const sideMenuView = require('../views/sideMenuView'),
-    configView = require('../views/configView');
+const configView = require('../views/configView');
 
 import {SubHeader} from './SubHeader';
 import {Header} from './Header';
 
+import {Footer} from './Footer';
+
+import {sideMenuView} from '../views/sideMenuView';
 import {userView} from '../../user/views/user';
-import {footerView} from '../views/footerView';
 
 import {iLayoutStendhal} from '../../../blocks/n-clobl/i-layout/params';
 import {BackendUser, UserData} from '../../user/types/user';
@@ -61,7 +62,7 @@ abstract class LayoutView {
         metaDescription?: string
     };
 
-    /*
+    /**
      * Views that can be overridden if necessary
      */
     protected views: {
@@ -92,7 +93,7 @@ abstract class LayoutView {
             subHeader: SubHeader,
             sideMenu: sideMenuView,
             favorite: favoriteView,
-            footer: footerView
+            footer: Footer
         };
 
         this.params = {
@@ -115,15 +116,15 @@ abstract class LayoutView {
 
 
     protected setParams(params: Params) {
-        this.setOpenGraph_(params.config, params.data);
-        this.setSeo_();
+        this.setOpenGraph(params.config, params.data);
+        this.setSeo(params.data);
 
         this.setHeader_(params.config);
         this.setSubHeader_(params.data);
 
         this.setUser_();
         this.setAuthSocialLinks_();
-        this.sideMenu_(params.config);
+        this.setSideMenu_(params.config);
         this.setFooter_();
 
         this.setConfig_(params.config, params.requestData);
@@ -135,15 +136,15 @@ abstract class LayoutView {
     }
 
 
-    private setSeo_() {
+    protected setSeo(data: Data) {
         this.params.data.seo = this.seo;
     }
 
 
-    private setOpenGraph_(config: AppConfig, data: Data) {
-        this.params.data.openGraph = {
-            fbClientId: config.facebookClientId
-        };
+    protected setOpenGraph(config: AppConfig, data: Data) {
+        this.params.data.openGraph = this.openGraph || {};
+
+        this.params.data.openGraph.fbClientId = config.facebookClientId;
     }
 
 
@@ -152,6 +153,7 @@ abstract class LayoutView {
 
         this.params.data.header = headerView.render({
             entityType: this.entityType,
+            user: this.user_,
             config: config
         });
     }
@@ -184,16 +186,18 @@ abstract class LayoutView {
     }
 
 
-    private sideMenu_(config: AppConfig) {
-        this.params.data.sideMenu = this.views.sideMenu.render(
-            config,
-            this.entityType
-        );
+    private setSideMenu_(config: AppConfig) {
+        this.params.data.sideMenu = this.views.sideMenu.render({
+            config: config,
+            user: this.user_,
+            entityType: this.entityType
+        });
     }
 
 
     private setFooter_() {
-        this.params.data.footer = this.views.footer.render();
+        const footerView = new this.views.footer();
+        this.params.data.footer = footerView.render();
     }
 
 

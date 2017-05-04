@@ -1,16 +1,16 @@
-const ContactsGenerator = require('./ContactsGenerator.js');
-
 import {bSmSubheader} from '../../../blocks/n-common/b-sm-subheader/params';
-import {UserData} from '../../user/types/user';
+import {
+    gDropdownListLinks
+} from '../../../blocks/n-clobl/g-dropdown/g-dropdown_list-links/params';
+import {bSmRowLinks} from '../../../blocks/n-common/b-sm-row-links/params';
+import {bSmLink} from '../../../blocks/n-common/b-sm-link/params';
 
 
 type Data = {
     isLogoRedirect?: boolean,
     listLinks?: Array<{[index: string]: string}>,
-    logoRedirectUrl?: string,
     isSearchRedirect?: boolean,
     pageAlias: string,
-    user: UserData,
     favoriteEntities: Array<{string: any}>,
     isBottomLine?: boolean
 };
@@ -24,14 +24,14 @@ abstract class SubHeader {
         imgUrl: string
     };
 
-    protected listLinks: {
-        opener?: string,
-        content: ({
-            items: Array<{[index: string]: string}>
-        }|undefined)
+    protected dropdownLinks: gDropdownListLinks.Params;
+
+    protected rowLinks: {
+        linkConfig?: bSmLink.Params.Config,
+        listConfig?: bSmRowLinks.Params.Config
     };
 
-    protected links: {
+    protected link: {
         nameL: string,
         nameM: string,
         nameS?: string,
@@ -66,16 +66,9 @@ abstract class SubHeader {
 
     protected setParams(data: Data) {
         this.setLogo_(data.isLogoRedirect);
-        this.setContacts_();
-
-        if (data.listLinks) {
-            this.setListLinks_(data.listLinks);
-        } else {
-            this.setLinks_(data.logoRedirectUrl);
-        }
+        this.setLinks(data.listLinks);
 
         this.setSearch_(data.isSearchRedirect, data.pageAlias);
-        this.setUser_(data.user);
         this.setFavorites_(data.favoriteEntities);
 
         this.setConfig_(data.isBottomLine);
@@ -84,6 +77,51 @@ abstract class SubHeader {
 
     protected getParams(): bSmSubheader.Params {
         return this.params;
+    }
+
+
+    protected setLinks(listLinks) {
+        if (listLinks) {
+            this.setDropdownLinks(listLinks);
+        } else {
+            this.setLink_();
+        }
+    }
+
+
+    protected setDropdownLinks(links) {
+        const data = this.dropdownLinks.data || {};
+        data.content = data.content || {};
+        data.content.items = links;
+
+        const config = this.dropdownLinks.config || {};
+        config.openerSize = config.openerSize || 'xl';
+        config.contentSize = config.contentSize || 'l';
+
+        this.params.data.dropdownLinks = {
+            data: data,
+            config: config
+        };
+    }
+
+
+    protected setRowLinks(links) {
+        const linksParams = links.map(link => {
+            return {
+                data: {
+                    url: link.url,
+                    content: link.label
+                },
+                config: this.rowLinks.linkConfig
+            };
+        });
+
+        this.params.data.rowLinks  = {
+            data: {
+                items: linksParams
+            },
+            config:  this.rowLinks.listConfig
+        };
     }
 
 
@@ -96,30 +134,8 @@ abstract class SubHeader {
     }
 
 
-    private setContacts_() {
-        const data = {
-            entityType: this.entityType
-        };
-
-        const contactsGenerator = new ContactsGenerator(data);
-        this.params.data.contacts = contactsGenerator.params;
-    }
-
-
-    private setListLinks_(links) {
-        this.params.data.listLinks = this.listLinks;
-
-        this.params.data.listLinks.content = {};
-        this.params.data.listLinks.content.items = links;
-    }
-
-
-    private setLinks_(url) {
-        this.params.data.links = this.links;
-
-        if (url) {
-            this.params.data.links.url = url;
-        }
+    private setLink_() {
+        this.params.data.link = this.link;
     }
 
 
@@ -128,11 +144,6 @@ abstract class SubHeader {
 
         this.params.data.search.redirect = isRedirect;
         this.params.data.search.pageAlias = pageAlias || this.search.pageAlias;
-    }
-
-
-    private setUser_(user) {
-        this.params.data.user = user;
     }
 
 
@@ -149,4 +160,4 @@ abstract class SubHeader {
     }
 };
 
-export {SubHeader};
+export {SubHeader, Data};

@@ -42,7 +42,10 @@ export namespace lUniversity {
                 entityRelation: bEntityRelation.Params;
             };
             similarPrograms?: {
-                header: string;
+                header: {
+                    default: string;
+                    sizeXS?: string;
+                };
                 data: bSmItemList.Params.Data;
             };
             usefulCourses?: {

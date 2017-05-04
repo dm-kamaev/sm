@@ -8,15 +8,15 @@ export namespace bSmLink {
          */
         export interface Data {
             id?: number;
-            url?: string;
-            content?: string;
+            url?: (string|undefined);
+            content?: (string|undefined);
         }
 
         /*
          * sm.bSmLink.Template.Params.Config
          */
         export interface Config {
-            target?: string;
+            target?: (string|undefined);
             disableHover?: boolean;
             size?: string;
             theme?: string;
@@ -30,7 +30,6 @@ export namespace bSmLink {
      */
     export interface Params {
         data: Params.Data;
-        config: Params.Config;
+        config?: Params.Config;
     }
 }
-

@@ -99,6 +99,41 @@ goog.scope(function() {
 
 
     /**
+     * Stringify object with data from filters
+     * @param {Object} data
+     * @return {string}
+     */
+    AnalyticsSender.prototype.stringifyFiltersData = function(data) {
+        var stringifyData = '';
+
+        goog.object.map(data, function(dataFromOneFilter, key) {
+            var filtredData = goog.array.map(dataFromOneFilter, function(data) {
+                    return data.label ? data.label : data.value;
+                });
+            var stringifyDataFromOneFilter = key + ':' + filtredData.join(',');
+            stringifyData += stringifyDataFromOneFilter + ';';
+        });
+
+        return stringifyData;
+    };
+
+
+    /**
+     * Send data from filters
+     * @param {Object} data
+     */
+    AnalyticsSender.prototype.sendFiltersData = function(data) {
+        var stringifyData = this.stringifyFiltersData(data);
+
+        this.send({
+            category: 'filters',
+            action: 'search',
+            name: stringifyData
+        });
+    };
+
+
+    /**
      * Send data
      * @param {{
      *     category: string,

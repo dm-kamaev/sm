@@ -90,7 +90,7 @@ goog.scope(function() {
         this.getHandler().listen(
             this.getView(),
             View.Event.CLOSE,
-            this.onCloseClick_
+            this.onCloseClick
         );
     };
 
@@ -132,9 +132,9 @@ goog.scope(function() {
 
     /**
      * close click
-     * @private
+     * @protected
      */
-    Modal.prototype.onCloseClick_ = function() {
+    Modal.prototype.onCloseClick = function() {
         if (this.selfDestroy_) {
             this.remove();
         } else {

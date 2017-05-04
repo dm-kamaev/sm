@@ -1,10 +1,11 @@
 'use strict';
 
-const Subheader = require('../../entity/lib/Subheader');
+const SubHeader =
+    require('../../../../app/modules/common/lib/SubHeader').SubHeader;
 
 const entityType = require('../../entity/enums/entityType');
 
-class SchoolSubheader extends Subheader {
+class SchoolSubheader extends SubHeader {
 
     /**
      * Init params for subheader
@@ -40,7 +41,7 @@ class SchoolSubheader extends Subheader {
          * @protected
          * @override
          */
-        this.links = {
+        this.link = {
             nameL: 'Все школы Москвы',
             nameM: 'Все школы',
             url: '/school'

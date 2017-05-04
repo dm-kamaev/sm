@@ -23,7 +23,9 @@ const SubHeader = require('../lib/SchoolSubheader');
 
 const footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
-    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+    sideMenuView = require(
+        '../../../../app/modules/common/views/sideMenuView'
+    ).sideMenuView;
 
 const commentView = require('../../comment/views/commentView');
 
@@ -88,10 +90,13 @@ schoolView.default = function(
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
         user: user,
-        header: headerView.render(config, entityType.SCHOOL),
-        sideMenu: sideMenuView.render(config, entityType.SCHOOL),
-        subHeader: schoolView.subHeader({
+        header: headerView.render(config, entityType.SCHOOL, user),
+        sideMenu: sideMenuView.render({
+            config: config,
             user: user,
+            entityType: entityType.SCHOOL
+        }),
+        subHeader: schoolView.subHeader({
             favoriteEntities: []
         }),
         seoDescription: data.page.description,
@@ -107,7 +112,6 @@ schoolView.default = function(
 /**
  * Sub header params init
  * @param {{
- *      user: Object,
  *      favoriteEntities: Array<Object>
  * }} data
  * @return {Object}
@@ -115,15 +119,12 @@ schoolView.default = function(
 schoolView.subHeader = function(data) {
     let subHeader = new SubHeader();
 
-    subHeader.init({
+    return subHeader.render({
         isLogoRedirect: true,
         isSearchRedirect: true,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-
-    return subHeader.getParams();
 };
 
 
@@ -172,7 +173,7 @@ const getExtra = function(school) {
     const classes = getEducationInterval(school.addresses);
     const kindergarten = getKindergardenAvailability(school.educationInterval);
     const extendedDayCost = getExtendedDayCost(school.extendedDayCost);
-    const dressCode = school.dressCode;
+    const dressCode = getSchoolDressCode(school.dressCode);
     const directorName = getDirector(school.director);
     result = result
         .concat(
@@ -184,6 +185,17 @@ const getExtra = function(school) {
     result = lodash.compact(result).join(', ');
     result = result ? result + `. ${directorName}` : directorName;
     return result;
+};
+
+/**
+ * Create dress code text for school
+ * @param {boolean} dressCode
+ * @return {string}
+ */
+var getSchoolDressCode = function(dressCode) {
+    return dressCode ?
+        'школьная форма обязательна' :
+        null;
 };
 
 /**

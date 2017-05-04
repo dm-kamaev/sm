@@ -13,6 +13,7 @@ goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.ViewEnrollment');
 goog.require('sm.gTextarea.TextareaStendhal');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 
 
@@ -35,7 +36,7 @@ goog.scope(function() {
 
         /**
          * Instance input name
-         * @type {sm.gInput.InputSthendal}
+         * @type {sm.gInput.InputStendhal}
          * @private
          */
         this.nameField_ = null;
@@ -43,7 +44,7 @@ goog.scope(function() {
 
         /**
          * Instance input phone
-         * @type {sm.gInput.InputSthendal}
+         * @type {sm.gInput.InputStendhal}
          * @private
          */
         this.phoneField_ = null;
@@ -79,6 +80,21 @@ goog.scope(function() {
          * @private
          */
         this.button_ = null;
+
+
+        /**
+         * Query params of last request
+         * @type {Object}
+         * @private
+         */
+        this.lastSendEnrollmentData_ = {};
+
+
+        /**
+         * name of product for analytics
+         * @type {string}
+         */
+        this.productName_ = null;
     };
     goog.inherits(sm.gModal.ModalEnrollment, sm.gModal.ModalStendhal);
     var ModalEnrollment = sm.gModal.ModalEnrollment,
@@ -132,6 +148,18 @@ goog.scope(function() {
         ModalEnrollment.base(this, 'enterDocument');
 
         this.initButtonListeners_();
+        this.initFieldListeners_();
+        this.initViewListeners_();
+    };
+
+
+    /**
+     * set name of product
+     * @param {string} name
+     * @public
+     */
+    ModalEnrollment.prototype.setProductName = function(name) {
+        this.productName_ = name;
     };
 
 
@@ -162,11 +190,52 @@ goog.scope(function() {
 
     /**
      * Set selected options data of user
-     * @param {Object} optionsData
+     * @param {sm.lCourse.bDepartment.Event.EnrollButtonClick.Data} optionsData
      * @public
      */
     ModalEnrollment.prototype.setOptionsData = function(optionsData) {
         this.optionsData_ = optionsData ? optionsData : {};
+    };
+
+
+    /**
+     * Return true, if phone or email is valid
+     * @return {boolean}
+     * @public
+     */
+    ModalEnrollment.prototype.isPhoneOrEmailValid = function() {
+        return (this.phoneField_.validate() || this.emailField_.validate());
+    };
+
+    /**
+     * close click handler
+     * @override
+     * @protected
+     */
+    ModalEnrollment.prototype.onCloseClick = function() {
+        ModalEnrollment.base(this, 'onCloseClick');
+
+        this.sendFormAnalytics_('cancel');
+        this.silentSendRequest_();
+    };
+
+
+    /**
+     * Send data to analytics
+     * @param {{
+     *     action: string,
+     *     name: (string|undefined)
+     * }} params
+     */
+    ModalEnrollment.prototype.sendAnalytics_ = function(params) {
+        var data = {
+            'hitType': 'event',
+            'eventCategory': 'checkout',
+            'eventAction': params.action,
+            'eventLabel': params.name || this.productName_
+        };
+
+        sm.iAnalytics.Analytics.getInstance().send(data);
     };
 
 
@@ -193,7 +262,130 @@ goog.scope(function() {
         if (this.isValidFields_()) {
             this.button_.disable();
             this.sendRequest_();
+        } else {
+            this.sendFormErrorAnalytics_();
         }
+    };
+
+
+    /**
+     * Initializes listeners for view
+     * @private
+     */
+    ModalEnrollment.prototype.initViewListeners_ = function() {
+        this.viewListen(
+            goog.events.EventType.BEFOREUNLOAD,
+            this.onBeforeunload_
+        );
+    };
+
+
+    /**
+     * Before close page
+     * @private
+     */
+    ModalEnrollment.prototype.onBeforeunload_ = function() {
+        this.silentSendRequest_();
+    };
+
+
+    /**
+    * Send data on api without messages and analytics
+    * @private
+    */
+    ModalEnrollment.prototype.silentSendRequest_ = function() {
+        if (!this.isEnrollmentNeededSend_() && this.isPhoneOrEmailValid()) {
+            var data = this.buildRequestData_();
+            Request.getInstance().send(data);
+            this.lastSendEnrollmentData_ = data.data;
+        }
+    };
+
+
+    /**
+    * it's true, if data has been sent before
+    * @return {boolean}
+    * @private
+    */
+    ModalEnrollment.prototype.isEnrollmentNeededSend_ = function() {
+        var data = JSON.stringify(this.buildQueryParams_()),
+            lastData = JSON.stringify(this.lastSendEnrollmentData_);
+        return data == lastData;
+    };
+
+
+    /**
+     * Initializes listeners for button
+     * @private
+     */
+    ModalEnrollment.prototype.initFieldListeners_ = function() {
+        this.getHandler().listen(
+            this.nameField_,
+            sm.gInput.InputStendhal.Event.FOCUS,
+            this.onFieldFocus_.bind(this, 'name')
+        ).listen(
+            this.phoneField_,
+            sm.gInput.InputStendhal.Event.FOCUS,
+            this.onFieldFocus_.bind(this, 'phone')
+        ).listen(
+            this.emailField_,
+            sm.gInput.InputStendhal.Event.FOCUS,
+            this.onFieldFocus_.bind(this, 'email')
+        ).listen(
+            this.commentField_,
+            sm.gTextarea.TextareaStendhal.Event.FOCUS,
+            this.onFieldFocus_.bind(this, 'comment')
+        );
+    };
+
+
+    /**
+     * Field focus handler
+     * @param {string} fieldTitle
+     * @private
+     */
+    ModalEnrollment.prototype.onFieldFocus_ = function(fieldTitle) {
+        this.sendFormAnalytics_(fieldTitle);
+    };
+
+
+    /**
+     * send form google analytics
+     * @param {string} action
+     * @private
+     */
+    ModalEnrollment.prototype.sendFormAnalytics_ = function(action) {
+        this.sendAnalytics_({
+            action: 'form ' + action
+        });
+    };
+
+
+    /**
+     * send server error google analytics
+     * @param {Array<string>} messages
+     * @private
+     */
+    ModalEnrollment.prototype.sendServerErrorAnalytics_ = function(messages) {
+        var errorMessage = messages.join(', ');
+        this.sendAnalytics_({
+            action: 'server error',
+            name: this.productName_ + ': ' + errorMessage
+        });
+    };
+
+
+    /**
+     * send form error google analytics
+     * @private
+     */
+    ModalEnrollment.prototype.sendFormErrorAnalytics_ = function() {
+        var validationErrors = this.getFieldValidationErrors_();
+        var errorMessage = validationErrors.join(', ');
+        this.sendAnalytics_({
+            action: 'form error',
+            name: this.productName_ + ': ' + errorMessage
+        });
     };
 
 
@@ -212,14 +404,37 @@ goog.scope(function() {
 
 
     /**
+     * Return array of errors if fields have unvalid values
+     * @return {?Array<string>}
+     * @private
+     */
+    ModalEnrollment.prototype.getFieldValidationErrors_ = function() {
+        var res = [];
+        if (!this.nameField_.validate()) {
+            res.push('Нет имени');
+        }
+        if (!this.phoneField_.validate()) {
+            res.push('Нет телефона');
+        }
+        if (!this.emailField_.validate()) {
+            res.push('Нет email');
+        }
+
+        return res.length ? res : null;
+    };
+
+
+    /**
      * Send data on api
      * @private
      */
     ModalEnrollment.prototype.sendRequest_ = function() {
-        var data = this.buildRequestData_();
-
         this.dispatchEvent(ModalEnrollment.Event.SEND_REQUEST);
+        this.sendAnalytics_({
+            action: 'form submit'
+        });
 
+        var data = this.buildRequestData_();
         Request.getInstance().send(data)
             .then(
                 this.onSuccess_.bind(this),
@@ -242,9 +457,10 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.onSuccess_ = function(response) {
+        this.lastSendEnrollmentData_ = this.buildQueryParams_();
         this.hide();
-
         this.clear();
+
         this.dispatchEventSuccess_(response['data']['applicationId']);
     };
 
@@ -264,6 +480,7 @@ goog.scope(function() {
 
         this.button_.enable();
         this.getView().showErrors(messages);
+        this.sendServerErrorAnalytics_(messages);
         this.dispatchEventError_();
     };
 
@@ -338,10 +555,10 @@ goog.scope(function() {
 
         return {
             '_csrf': window['ctx']['csrf'],
-            'name': this.nameField_.getValue(),
-            'phone': this.phoneField_.getValue(),
-            'email': this.emailField_.getValue(),
-            'comment': this.commentField_.getValue(),
+            'name': this.nameField_.getValue() || 'Данные не указаны',
+            'phone': this.phoneField_.getValue() || 'Данные не указаны',
+            'email': this.emailField_.getValue() || 'Данные не указаны',
+            'comment': this.commentField_.getValue() || 'Данные не указаны',
             'link': window.location.href,
             'department': department
         };

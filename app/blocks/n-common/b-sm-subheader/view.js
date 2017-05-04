@@ -50,7 +50,8 @@ goog.scope(function() {
         HEADER_LINK: 'b-sm-subheader__link',
         HAMBURGER_MENU: 'b-sm-subheader__hamburger-menu',
         SEARCH_SECTION: 'b-sm-subheader__section_search',
-        SEARCH_SECTION_ON_TOP: 'b-sm-subheader__section_search_top'
+        SEARCH_SECTION_ON_TOP: 'b-sm-subheader__section_search_top',
+        ICON_LINK: 'b-sm-subheader__link-search'
     };
 
     /**
@@ -120,10 +121,8 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initSearch_();
-        this.initAuthorizationLink_();
         this.initFavorite_();
         this.initLinks_();
-        this.initListLinks_();
         this.detectAnimationSupportion_();
         this.initHamburgerMenu_();
         this.initSearchSection_();
@@ -202,17 +201,6 @@ goog.scope(function() {
      * Initializes dom elements
      * @private
      */
-    View.prototype.initAuthorizationLink_ = function() {
-        this.dom.authorizationLink = this.getElementByClass(
-            sm.bAuthorizationLink.View.CssClass.ROOT
-        );
-    };
-
-
-    /**
-     * Initializes dom elements
-     * @private
-     */
     View.prototype.initFavorite_ = function() {
         this.dom.favorite = this.getElementByClass(
             sm.bSmFavorite.View.CssClass.ROOT
@@ -225,18 +213,15 @@ goog.scope(function() {
      * @private
      */
     View.prototype.initLinks_ = function() {
-        this.dom.links = this.getElementsByClass(
-            sm.bSmLink.View.CssClass.ROOT
+        this.dom.iconLinks = this.getElementsByClass(
+            View.CssClass.ICON_LINK
         );
-    };
 
+        this.dom.rowLinks = this.getElementByClass(
+            sm.bSmRowLinks.View.CssClass.ROOT
+        );
 
-    /**
-     * Initializes list of links (dom elements)
-     * @private
-     */
-    View.prototype.initListLinks_ = function() {
-        this.dom.listLinks = this.getElementByClass(
+        this.dom.dropdownLinks = this.getElementByClass(
             sm.gDropdown.ViewListLinks.CssClass.ROOT
         );
     };

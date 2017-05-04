@@ -34,7 +34,7 @@
     "csurf": "^1.8.3",
     "csvtojson": "^0.5.0",
     "decompress": "^3.0.0",
-    "deployment": "git+ssh://git@github.com/c7s/deployment.git#release-20170329-SV-1101",
+    "deployment": "git+ssh://git@github.com/c7s/deployment.git#release-20170419-BL-119",
     "ejs": "^2.3.4",
     "express-session": "^1.13.0",
     "fs-extra": "0.26.7",
@@ -71,7 +71,7 @@
     "xlsx-to-json": "^0.2.4"
   },
   "dependencies": {
-    "clobl": "git+ssh://git@github.com/c7s/clobl.git#release-20170411-BP-2340",
+    "clobl": "git+ssh://git@github.com/c7s/clobl.git#release-20170427-QUIZ-1136",
     "continuation-local-storage": "^3.2.0",
     "eslint": "^2.13.1",
     "express": "4.14.1",
@@ -84,6 +84,7 @@
     "pg": "^6.1.2",
     "sequelize-cli": "^2.5.1",
     "typescript": "^2.1.5",
-    "typings": "~1.3.3"
+    "typings": "~1.3.3",
+    "picturefill": "3.0.2"
   }
 }

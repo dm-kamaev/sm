@@ -48,6 +48,10 @@
     font-size: 21px;
     line-height: 26px;
 }
+
+.b-sm-link_size_8xl {
+    font-size: 22px;
+}
 /** Possible sizes end */
 
 /** Themes */
@@ -103,11 +107,16 @@
 }
 
 .b-sm-link_sky-theme {
-    color: #0a60ff;
+    color: #356fc4;
 
-    &.b-sm-link_selected, &.b-sm-link_hoverable:hover {
+    line-height: inherit;
+
+    &.b-sm-link_selected {
         color: #7f7f7f;
     }
+}
 
+.b-sm-link_overcast-theme {
+    color: #bdbdbd;
 }
 /** Themes end */

@@ -26,7 +26,6 @@ class ProgramController extends Controller {
      * @apiSuccess {String}   universityId      University's id.
      * @apiSuccess {String}   description       Description.
      * @apiSuccess {Number}   commentGroupId    Comment group's id.
-     * @apiSuccess {String}   category          Program's category.
      * @apiSuccess {String[]} links             Array of links
      *     (official site, facebook communities).
      * @apiSuccess {String[]} specializations   Array of specializations.
@@ -34,10 +33,13 @@ class ProgramController extends Controller {
      * @apiSuccess {Number}   employment        Percent of employment.
      * @apiSuccess {Number}   salary            Salary after graduation.
      * @apiSuccess {String[]} extraExam         Array of extra exams.
+     * @apiSuccess {String}   exchangeProgram   Exchange program.
+     * @apiSuccess {String}   phone             Phone number.
      * @apiSuccess {String}   addressName       Name of address.
      * @apiSuccess {Object}   programMajor      Major program for program
      * @apiSuccess {Number}   programMajor.id   Major program id
      * @apiSuccess {String}   programMajor.name Major program name
+     * @apiSuccess {String}   oksoCode          Specialization code.
      * @apiSuccess {String}   createdAt         Created at.
      * @apiSuccess {String}   updatedAt         Updated at.
      *
@@ -64,7 +66,9 @@ class ProgramController extends Controller {
      *             "100 отжимагий",
      *             "рисование"
      *         ],
-     *         "exchangeProgram": true,
+     *         "exchangeProgram": "Amurica",
+     *         "phone": "+7 125 167 54 13",
+     *         "oksoCode": "12.1.1",
      *         "createdAt": "2017-03-07T06:59:52.220Z",
      *         "updatedAt": "2017-03-07T06:59:52.220Z",
      *         "programMajor": {

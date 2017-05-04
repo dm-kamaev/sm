@@ -25,4 +25,12 @@ export namespace gDropdownSelect {
             theme?: (string|undefined)
         }
     }
+
+    /*
+     * sm.gDropdownSelect.Params
+     */
+    export interface Params {
+        data: Params.Data,
+        config: Params.Config
+    }
 }

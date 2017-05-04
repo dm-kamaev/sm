@@ -38,6 +38,11 @@ class Header {
      *         schools: {
      *             host: string
      *         }
+     *     },
+     *     user: ?{
+     *         firstName: string,
+     *         lastName: string,
+     *         photoUrl: ?string
      *     }
      * }} data
      * @public
@@ -47,7 +52,9 @@ class Header {
 
         this.initParams()
             .setContacts()
-            .setMenuItems(data);
+            .setUser(data.user)
+            .setMenuItems(data)
+            .setConfig();
     }
 
 
@@ -104,6 +111,23 @@ class Header {
 
 
     /**
+     * Set user data
+     * @return {Header}
+     * @param {{
+     *     firstName: string,
+     *     lastName: string,
+     *     photoUrl: ?string
+     * }} user
+     * @protected
+     */
+    setUser(user) {
+        this.params_.data.user = user;
+
+        return this;
+    }
+
+
+    /**
      * Set menu items
      * @param {{
      *     entityType: string,
@@ -115,6 +139,18 @@ class Header {
     setMenuItems(data) {
         let menu = new Menu(data);
         this.params_.data.menuItems = menu.params;
+
+        return this;
+    }
+
+
+    /**
+     * Set config
+     * @return {Header}
+     * @protected
+     */
+    setConfig() {
+        this.params.config.entityType = this.entityType;
 
         return this;
     }

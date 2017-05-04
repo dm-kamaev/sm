@@ -1,5 +1,7 @@
 goog.provide('sm.gModal.ModalSideMenu');
 
+goog.require('sm.bAuthorizationLink.AuthorizationLink');
+goog.require('sm.bSmContacts.SmContacts');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.TemplateSideMenu');
@@ -34,6 +36,22 @@ sm.gModal.ModalSideMenu = function(view, opt_params, opt_domHelper) {
      * @private
      */
     this.footerLinks_ = null;
+
+
+    /**
+     * Contacts block instance
+     * @type {sm.bSmContacts.SmContacts}
+     * @private
+     */
+    this.contacts_ = null;
+
+
+    /**
+     * Authorization Link instance
+     * @type {sm.bAuthorizationLink.AuthorizationLink}
+     * @private
+     */
+    this.authorizationLink_ = null;
 };
 goog.inherits(sm.gModal.ModalSideMenu, sm.gModal.ModalStendhal);
 
@@ -72,6 +90,8 @@ goog.scope(function() {
 
         this.initMenuLinks_();
         this.initFooterLinks_();
+        this.initContacts_();
+        this.initAuthorizationLink_();
     };
 
 
@@ -95,6 +115,30 @@ goog.scope(function() {
         this.footerLinks_ = this.decorateChildren(
             sm.bSmLink.SmLink.NAME,
             this.getView().getDom().footerLinks
+        );
+    };
+
+
+    /**
+     * Authorization Link instanse initialization
+     * @private
+     */
+    Modal.prototype.initAuthorizationLink_ = function() {
+        this.authorizationLink_ = this.decorateChild(
+            sm.bAuthorizationLink.AuthorizationLink.NAME,
+            this.getView().getDom().authorizationLink
+        );
+    };
+
+
+    /**
+     * Contacts instanse initialization
+     * @private
+     */
+    Modal.prototype.initContacts_ = function() {
+        this.contacts_ = this.decorateChild(
+            sm.bSmContacts.SmContacts.NAME,
+            this.getView().getDom().contacts
         );
     };
 });  // goog.scope

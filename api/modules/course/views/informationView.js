@@ -9,7 +9,9 @@ const courseView = require('./courseView'),
 
 const footerView = require('../../entity/views/footerView'),
     headerView = require('../../entity/views/headerView'),
-    sideMenuView = require('../../../../app/modules/common/views/sideMenuView');
+    sideMenuView = require(
+        '../../../../app/modules/common/views/sideMenuView'
+    ).sideMenuView;
 
 const Subheader = require('../lib/CourseSubheader');
 
@@ -42,7 +44,7 @@ view.render = function(data) {
     let imageOpenGraph = entityData.imageUrl ?
         entityData.imageUrl.replace(
             '{width}',
-            courseImageSize.DEFAULT[0]
+            courseImageSize.MEDIUM[0]
         ) :
         null;
 
@@ -79,15 +81,18 @@ view.render = function(data) {
     return {
         seo: metaInformation.seo,
         openGraph: metaInformation.openGraph,
-        header: headerView.render(data.config, data.entityType),
-        sideMenu: sideMenuView.render(data.config, data.entityType),
+        header: headerView.render(data.config, data.entityType, user),
+        sideMenu: sideMenuView.render({
+            config: data.config,
+            user: user,
+            entityType: data.entityType
+        }),
         subHeader: view.subheader({
             listLinks: courseCategoryView.listLinks(
                 data.categories,
                 data.categoryAliases
             ),
-            favoriteEntities: favoriteView.list(data.favorites),
-            user: user
+            favoriteEntities: favoriteView.list(data.favorites)
         }),
         user: user,
         authSocialLinks: data.authSocialLinks,
@@ -145,16 +150,13 @@ view.actualizeMetaInformation = function(information, actualInformation) {
 view.subheader = function(data) {
     let subheader = new Subheader();
 
-    subheader.init({
+    return subheader.render({
         isLogoRedirect: true,
         listLinks: data.listLinks,
         isSearchRedirect: true,
-        user: data.user,
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
-
-    return subheader.getParams();
 };
 
 module.exports = view;

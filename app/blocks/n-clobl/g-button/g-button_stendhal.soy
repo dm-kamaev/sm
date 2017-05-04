@@ -2,7 +2,8 @@
 
 /**
  * typedef {{
- *     content: ?string
+ *     content: ?string,
+ *     defaultText: ?string
  * }}
  * sm.gButton.TemplateStendhal.Params.Data
  */
@@ -42,6 +43,24 @@
 
 
 /**
+ * Body
+ * @param? params {{
+ *     data: {
+ *         content: ?string
+ *     },
+ *     config: {
+ *     	   isDisabled: ?bool
+ *     }
+ * }}
+ * @override
+ * @doc
+ */
+{template .body}
+    {$params.data.content ?: $params.data.defaultText}
+{/template}
+
+
+/**
  * @param params {
  *     config: {
  *         size: ('s'|'m'|'xl'|undefined),
@@ -69,3 +88,22 @@
         {sp}{call .rootClass /}_border-round-size_{$params?.config?.borderRoundSize}
     {/if}
 {/template}
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     data: {
+ *         defaultText: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: quoteKeysIfJs([
+            'defaultText': $params?.data.defaultText,
+        ]) /}
+    {/call}"
+{/template}
+

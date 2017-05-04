@@ -9,7 +9,8 @@
 
 /**
  *  @typedef {{
- *      theme: ?('breadcrumbs')
+ *      theme: ?('breadcrumbs'),
+ *      size: ('xl'|undefined)
  *  }} sm.bSmRowLinks.Template.Params.Config
  */
 
@@ -100,4 +101,20 @@
  */
 {template .rootClass}
     b-sm-row-links
+{/template}
+
+
+/**
+ * Additional classes
+ * @param params {{
+ *     config: {
+ *        size: ('xl'|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.config.size}
+        {call .rootClass/}_size_{$params.config.size}
+    {/if}
 {/template}

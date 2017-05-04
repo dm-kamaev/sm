@@ -8,13 +8,19 @@
  *         type: string,
  *         isSelected: boolean
  *     }>,
- *     contacts: sm.bSmContacts.Template.Params.Data
+ *     contacts: sm.bSmContacts.Template.Params.Data,
+ *     user?: {
+ *         firstName: string,
+ *         lastName: string,
+ *         photoUrl?: string
+ *     }
  * }} sm.bSmHeader.Template.Params.Data
  */
 
 
 /**
  * @typedef {{
+ *     entityType?: string,
  *     theme: string,
  *     customClasses: Array<string>
  * }} sm.bSmHeader.Template.Params.Config
@@ -57,7 +63,7 @@
  * @override
  */
 {template .body}
-    <div class="{call .rootClass /}__body">
+    <div class="{call .rootClass /}__body i-utils__clearfix">
         {call .headerMainMenu_ data="all" /}
     </div>
 {/template}
@@ -100,7 +106,15 @@
  * Contacts section
  * @param params {{
  *     data: {
- *         contacts: sm.bSmContacts.Template.Params.Data
+ *         contacts: sm.bSmContacts.Template.Params.Data,
+ *         user?: {
+ *             firstName: string,
+ *             lastName: string,
+ *             photoUrl?: string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
  *     }
  * }}
  * @private
@@ -109,6 +123,7 @@
     <div class="{call .rootClass /}__section
         {sp}{call .rootClass /}__section_contacts">
         {call .contacts_ data="all" /}
+        {call .authorization_ data="all" /}
     </div>
 {/template}
 
@@ -210,6 +225,41 @@
             {/call}
         </div>
     {/if}
+{/template}
+
+
+/**
+ * Contacts template
+ * @param params {{
+ *     data: {
+ *         user?: {
+ *             firstName: string,
+ *             lastName: string,
+ *             photoUrl?: string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @private
+ */
+{template .authorization_ kind="html"}
+    <div class="{call .rootClass /}__authorization">
+        {call .renderChild}
+            {param params: [
+                'type': 'authorization-link',
+                'renderParams': [
+                    'data': [
+                        'user': $params.data.user
+                    ],
+                    'config': [
+                        'entityType': $params.config.entityType
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
 {/template}
 
 

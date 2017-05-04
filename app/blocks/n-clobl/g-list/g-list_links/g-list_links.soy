@@ -10,6 +10,7 @@
  *         isSelected: (boolean|undefined),
  *         isDisabled: (boolean|undefined)
  *     }>,
+ *     itemConfig: sm.bSmLink.Template.Params.Config,
  *     selectedItemId: (number|undefined)
  * }} sm.gList.TemplateLinks.Params.Data
  */
@@ -71,6 +72,7 @@
                         ($item?.isSelected),
                     'isDisabled': $item?.isDisabled,
                     'itemData': $item,
+                    'itemConfig': $params.data.itemConfig,
                     'size': $params.config.size
                 ]/}
             {/call}
@@ -87,6 +89,7 @@
  *     isDisabled: boolean
  *     isSelected: boolean,
  *     itemData: Object,
+ *     itemConfig: sm.bSmLink.Template.Params.Config,
  *     size: ('m'|'l'|undefined)
  * }}
  * @override
@@ -97,6 +100,15 @@
         {call .rootClass/}__link
     {/let}
 
+    {let $config: augmentMap(
+        [
+            'size': $params.size,
+            'customClasses': [$customClasses],
+            'disableHover': true
+        ],
+        $params.itemConfig
+    ) /}
+
     <div class="{call .rootClass/}__item-link">
         {call .renderChild}
             {param params: [
@@ -105,11 +117,7 @@
                     'data': [
                         'content': $params.label
                     ],
-                    'config': [
-                        'size': $params.size,
-                        'customClasses': [$customClasses],
-                        'disableHover': true
-                    ]
+                    'config': $config
                 ]
             ]/}
         {/call}

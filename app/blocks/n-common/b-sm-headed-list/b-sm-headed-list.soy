@@ -2,7 +2,6 @@
 
 /**
  * @typedef {{
- *     type: string,
  *     header: {
  *         label: string,
  *         img: ({
@@ -16,9 +15,9 @@
 
 
 /**
- * @typedef {{
+ * @typedef {({
  *     theme: (string|undefined)
- * }} sm.bSmHeadedList.Template.Params.Config
+ * }|undefined)} sm.bSmHeadedList.Template.Params.Config
  */
 
 
@@ -80,7 +79,7 @@
  *         list: sm.bSmItemList.Template.Params.Data
  *     },
  *     config: {
- *         theme: ('inline'|undefined)
+ *         theme: string
  *     }
  * }}
  */
@@ -95,7 +94,8 @@
                 'renderParams': [
                     'data': $params.data.list,
                     'config': [
-                        'customClasses': [$customClasses]
+                        'customClasses': [$customClasses],
+                        'theme': $params.config.theme
                     ]
                 ]
             ]/}

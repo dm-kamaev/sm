@@ -80,7 +80,7 @@ class SchoolAdminService {
             returning: true
         });
 
-        let howRemove: { where: { entityId: number, entityType: string }};
+        let howRemove: {where: {entityId: number, entityType: string}};
         howRemove = {
             where: {
                 entityId: schoolId,

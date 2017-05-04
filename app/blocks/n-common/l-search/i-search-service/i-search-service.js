@@ -13,15 +13,16 @@ goog.require('goog.Uri.QueryData');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 goog.require('sm.lSearch.iSearchService.ListDataLoadedEvent');
+goog.require('sm.lSearch.iSearchService.SearchCountDataLoadedEvent');
 goog.require('sm.lSearch.iSearchService.MapDataLoadedEvent');
 
 
 goog.scope(function() {
     var Request = cl.iRequest.Request;
-    var ListDataLoadedEvent =
-        sm.lSearch.iSearchService.ListDataLoadedEvent;
-    var MapDataLoadedEvent =
-        sm.lSearch.iSearchService.MapDataLoadedEvent;
+    var ListDataLoadedEvent = sm.lSearch.iSearchService.ListDataLoadedEvent,
+        MapDataLoadedEvent = sm.lSearch.iSearchService.MapDataLoadedEvent,
+        SearchCountDataLoadedEvent =
+            sm.lSearch.iSearchService.SearchCountDataLoadedEvent;
 
 
 
@@ -50,6 +51,14 @@ goog.scope(function() {
 
 
         /**
+         * Search count api address
+         * @type {string}
+         * @private
+         */
+        this.searchCountApi_ = null;
+
+
+        /**
          * Search map api
          * @type {string}
          * @private
@@ -63,6 +72,13 @@ goog.scope(function() {
          * @private
          */
         this.searchDataPromise_ = null;
+
+        /**
+         * Stores searchCount promise
+         * @type {goog.Promise}
+         * @private
+         */
+        this.searchCountDataPromise_ = null;
 
 
         /**
@@ -84,6 +100,7 @@ goog.scope(function() {
      */
     SearchService.Event = {
         LIST_DATA_LOADED: ListDataLoadedEvent.Type,
+        SEARCH_COUNT_DATA_LOADED: SearchCountDataLoadedEvent.Type,
         MAP_DATA_LOADED: MapDataLoadedEvent.Type
     };
 
@@ -97,6 +114,7 @@ goog.scope(function() {
         COURSE: '/api/course/search'
     };
 
+
     /**
      * Possible addresses of search map api to load data
      * depending of entity type
@@ -105,6 +123,17 @@ goog.scope(function() {
     SearchService.SearchMapApiAddress = {
         SCHOOL: '/api/school/search/map',
         COURSE: '/api/course/search/map'
+    };
+
+
+    /**
+     * Possible addresses of search count api to load data
+     * depending of entity type
+     * @enum {string}
+     */
+    SearchService.SearchCountApiAddress = {
+        SCHOOL: '/api/school/search/count',
+        COURSE: '/api/course/search/count'
     };
 
 
@@ -124,7 +153,8 @@ goog.scope(function() {
      */
     SearchService.DataType = {
         SEARCH: 'search',
-        MAP_POINTS: 'searchMapPoints'
+        MAP_POINTS: 'searchMapPoints',
+        SEARCH_COUNT: 'count'
     };
 
 
@@ -138,10 +168,14 @@ goog.scope(function() {
         switch (entityType) {
             case SearchService.EntityType.SCHOOL:
                 this.searchApi_ = SearchService.SearchApiAddress.SCHOOL;
+                this.searchCountApi_ =
+                    SearchService.SearchCountApiAddress.SCHOOL;
                 this.searchMapApi_ = SearchService.SearchMapApiAddress.SCHOOL;
                 break;
             case SearchService.EntityType.COURSE:
                 this.searchApi_ = SearchService.SearchApiAddress.COURSE;
+                this.searchCountApi_ =
+                    SearchService.SearchCountApiAddress.COURSE;
                 this.searchMapApi_ = SearchService.SearchMapApiAddress.COURSE;
                 break;
         }
@@ -176,6 +210,24 @@ goog.scope(function() {
         }
     };
 
+
+    /**
+     * Load searchCount data
+     * @param {Object<string, (number|string)>} searchParams
+     * @public
+     */
+    SearchService.prototype.loadSearchCountData = function(searchParams) {
+        if (!this.isSearchCountDataPending()) {
+            this.searchCountDataPromise_ = this.send_(
+                searchParams,
+                SearchService.DataType.SEARCH_COUNT
+            );
+
+            this.searchCountDataPromise_.then(
+                this.onSearchCountDataLoaded_.bind(this)
+            );
+        }
+    };
 
 
     /**
@@ -214,6 +266,15 @@ goog.scope(function() {
         return !goog.isNull(this.searchDataPromise_);
     };
 
+    /**
+     * Check whether loaded searchCount data
+     * @return {boolean}
+     * @public
+     */
+    SearchService.prototype.isSearchCountDataPending = function() {
+        return !goog.isNull(this.searchCountDataPromise_);
+    };
+
 
     /**
      * Search data loaded callback
@@ -226,6 +287,19 @@ goog.scope(function() {
     SearchService.prototype.onSearchDataLoaded_ = function(data) {
         this.dispatchDataEvents_(data.data);
         this.resetSearchDataRequest_();
+    };
+
+
+    /**
+     * Search count data loaded callback
+     * @param {Object} data server response
+     * @private
+     */
+    SearchService.prototype.onSearchCountDataLoaded_ = function(data) {
+        var searchCountDataLoadedEvent =
+            new SearchCountDataLoadedEvent(data.data);
+        this.dispatchEvent(searchCountDataLoadedEvent);
+        this.resetSearchCountDataRequest_();
     };
 
 
@@ -252,6 +326,17 @@ goog.scope(function() {
             this.searchDataPromise_.cancel();
         }
         this.searchDataPromise_ = null;
+    };
+
+    /**
+     * Reset searchCount data request promise
+     * @private
+     */
+    SearchService.prototype.resetSearchCountDataRequest_ = function() {
+        if (this.isSearchCountDataPending()) {
+            this.searchCountDataPromise_.cancel();
+        }
+        this.searchCountDataPromise_ = null;
     };
 
 
@@ -340,6 +425,9 @@ goog.scope(function() {
                 break;
             case SearchService.DataType.MAP_POINTS:
                 apiAddress = this.searchMapApi_;
+                break;
+            case SearchService.DataType.SEARCH_COUNT:
+                apiAddress = this.searchCountApi_;
                 break;
         }
         return apiAddress;

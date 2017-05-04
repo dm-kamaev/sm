@@ -1,11 +1,13 @@
-const Menu = require('../lib/Menu'),
+const Menu = require('./Menu'),
     ContactsGenerator = require('./ContactsGenerator');
 
 import {bSmHeader} from '../../../blocks/n-common/b-sm-header/params';
+import {UserData} from '../../user/types/user';
 import {AppConfig} from '../types/layout';
 
 type Params = {
     entityType: string,
+    user: UserData,
     config: AppConfig
 };
 
@@ -25,14 +27,19 @@ class Header {
         return this.getParams();
     }
 
+
     protected setParams(params: Params) {
         this.setContacts_(params.entityType);
         this.setMenuItems_(params);
+        this.setUser_(params.user);
+        this.setConfig_(params.entityType);
     }
+
 
     protected getParams(): bSmHeader.Params {
         return this.params;
     }
+
 
     private setContacts_(entityType) {
         const data = {
@@ -43,6 +50,7 @@ class Header {
         this.params.data.contacts = contactsGenerator.params;
     }
 
+
     private setMenuItems_(params) {
         const menuData = {
             entityType: this.entityType || params.entityType,
@@ -51,6 +59,16 @@ class Header {
 
         const menu = new Menu(menuData);
         this.params.data.menuItems = menu.params;
+    }
+
+
+    private setUser_(user) {
+        this.params.data.user = user;
+    }
+
+
+    private setConfig_(entityType) {
+        this.params.config.entityType = this.entityType || entityType;
     }
 }
 

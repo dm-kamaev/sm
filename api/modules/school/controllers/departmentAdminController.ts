@@ -26,7 +26,7 @@ class DepartmentAdminController extends Controller {
             DepartmentNotFoundException: DepartmentNotFoundError,
             AddressDoesNotExistException: AddressDoesNotExistError,
             AddressIsNotUniqueException: AddressIsNotUniqueError,
-            AddressDepartmentExist,
+            AddressDepartmentExist
         };
     }
 
@@ -48,8 +48,10 @@ class DepartmentAdminController extends Controller {
      *
      * @apiError (404) SchoolNotFound School with schoolId not found.
      */
-    public async actionList(actionContext: any, schoolId: number) {
-        const departments = await departmentService.getBySchoolId(schoolId);
+    public async actionList(actionContext: any, schoolId: string) {
+        const departments = await departmentService.getBySchoolId(
+            Number(schoolId)
+        );
         return departmentView.adminRenderList(departments);
     }
 
@@ -72,9 +74,9 @@ class DepartmentAdminController extends Controller {
      * @apiError (404) DepartmentNotFound Department with given Id not found.
      */
     public async actionGet(
-        actionContext: any, schoolId: number, id: number
+        actionContext: any, schoolId: string, id: string
     ) {
-        const department = await departmentService.getById(id);
+        const department = await departmentService.getById(Number(id));
         return departmentView.adminRender(department);
     }
 
@@ -164,9 +166,9 @@ class DepartmentAdminController extends Controller {
      * @apiError (404) DepartmentNotFound Department with given Id not found.
      */
     public async actionDelete(
-        actionContext: any, schoolId: number, id: number
+        actionContext: any, schoolId: string, id: string
     ) {
-        await departmentService.delete(id);
+        await departmentService.delete(Number(id));
         actionContext.status = 204;
     }
 }

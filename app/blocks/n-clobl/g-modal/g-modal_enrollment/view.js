@@ -58,6 +58,12 @@ goog.scope(function() {
      */
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
+
+        this.getHandler().listen(
+            goog.dom.getWindow(),
+            goog.events.EventType.BEFOREUNLOAD,
+            this.onBeforeunload_
+        );
     };
 
 
@@ -138,4 +144,14 @@ goog.scope(function() {
             entityType: rawParams['entityType']
         };
     };
+
+
+    /**
+     * Before close page
+     * @private
+     */
+    View.prototype.onBeforeunload_ = function() {
+        this.dispatchEvent(goog.events.EventType.BEFOREUNLOAD);
+    };
+
 });  // goog.scope

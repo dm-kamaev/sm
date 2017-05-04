@@ -99,7 +99,7 @@ class CommentAdminController extends Controller {
      *      },
      * ]
      */
-    public async actionList(ctx, schoolId: string) {
+    public async actionList(actionContext, schoolId: string) {
         let result = [];
         const comments = await
             schoolCommentService.getAllCommentsWithUser(
@@ -151,9 +151,9 @@ class CommentAdminController extends Controller {
      *         "isNoticeSend": false
      *     }
      */
-    public async actionUpdate(ctx, schoolId: string, id: string) {
+    public async actionUpdate(actionContext, schoolId: string, id: string) {
         let result;
-        const text: string = ctx.request.body.text;
+        const text: string = actionContext.request.body.text;
         result =
             await schoolCommentService.textEdit(
                 parseInt(schoolId, 10),
@@ -177,7 +177,7 @@ class CommentAdminController extends Controller {
      * @apiSuccessExample {Number} Success-Response:
      * 1
      */
-    public async actionDelete(ctx, schoolId: string, id: string) {
+    public async actionDelete(actionContext, schoolId: string, id: string) {
         let result: number;
         result =
             await schoolCommentService.removeComment(

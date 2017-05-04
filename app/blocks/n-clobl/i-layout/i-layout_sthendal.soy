@@ -16,7 +16,7 @@
  *     },
  *     subHeader: sm.bSmSubHeader.Template.Params,
  *     header: sm.bSmHeader.Template.Params,
- *     sideMenu: sm.gModal.TemplateSideMenu.Params.Data,
+ *     sideMenu: sm.gModal.TemplateSideMenu.Params,
  *     user: {
  *         id: (number|undefined),
  *         firstName: (string|undefined),
@@ -26,7 +26,7 @@
  *         vk: (string|undefined),
  *         fb: (string|undefined)
  *     },
- *     footer: sm.bSmFooter.Template.Params.Data
+ *     footer: sm.bSmFooter.Template.Params
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
@@ -40,7 +40,6 @@
  *     analyticsId: string,
  *     experimentId: ?string,
  *     yandexMetrikaId: number,
- *     carrotquestId: string,
  *     domain: string,
  *     fbClientId: ?number,
  *     csrf: string
@@ -232,7 +231,6 @@
  *         staticVersion: (string|undefined),
  *         analyticsId: string,
  *         yandexMetrikaId: number,
- *         carrotquestId: string,
  *         csrf: string
  *     }
  * }}
@@ -243,8 +241,8 @@
     {call .csrf data="all"/}
     {call .analytics data="all"/}
     {call .metrika data="all"/}
-    {call .carrotquest data="all" /}
     {call .relap data="all" /}
+    {call .picturefill data="all" /}
 {/template}
 
 
@@ -318,25 +316,6 @@
 
 
 /**
- * Carrotquest
- * @param params {{
- *     config: {
- *         carrotquestId: string
- *     }
- * }}
- * @protected
- */
-{template .carrotquest autoescape="strict" kind="html"}
-    <!-- CarrotQuest BEGIN -->
-        <script type="text/javascript">
-            var carrotquestInstance = sm.iCarrotquest.Carrotquest.getInstance();
-            carrotquestInstance.init('{$params?.config?.carrotquestId}');
-        </script>
-    <!-- CarrotQuest END -->
-{/template}
-
-
-/**
  * Recommender system
  * @protected
  */
@@ -344,6 +323,23 @@
     <script type="text/javascript" async
         src="https://relap.io/api/v6/head.js?token=s4f-T0rORrtGBgMG">
     </script>
+{/template}
+
+
+/**
+ * Polyfill for <picture> tag
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .picturefill autoescape="strict" kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/picturefill.min.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
 {/template}
 
 
@@ -382,9 +378,7 @@
         {call .renderChildLayout}
             {param params: $params /}
             {param type: 'side-menu' /}
-            {param renderParams: [
-                'data': $params.data.sideMenu
-            ]/}
+            {param renderParams: $params.data.sideMenu /}
         {/call}
     </div>
 {/template}
@@ -444,7 +438,7 @@
  * Footer
  * @param params {
  *     data: {
- *         footer: sm.bSmFooter.Template.Params.Data
+ *         footer: sm.bSmFooter.Template.Params
  *     }
  * }
  * @protected
@@ -454,9 +448,7 @@
         {call .renderChildLayout}
             {param params: $params /}
             {param type: 'smFooter' /}
-            {param renderParams: [
-                'data': $params.data.footer
-            ]/}
+            {param renderParams: $params.data.footer /}
         {/call}
     </div>
 {/template}

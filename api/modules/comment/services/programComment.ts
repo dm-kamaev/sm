@@ -34,6 +34,15 @@ import {UserAlreadyCommentedProgram}
 import {Model as ProgramCommentModel} from '../models/ProgramComment';
 import {Model as ProgramModel} from '../../university/models/Program';
 
+type SequelizeOrder = Array<
+    Array<string | {model: Sequelize.Model<any, any>, as?: string}>
+>;
+
+type GetListCommentsParams = {
+    order?: number,
+    filterEmptyComments?: boolean
+};
+
 class ProgramCommentService {
     public readonly name: string = 'programComment';
 
@@ -86,11 +95,18 @@ class ProgramCommentService {
     }
 
     public async getAllByProgramIdWithFullData(
-            programId: number): Promise<Array<ProgramCommentInstance>> {
+            programId: number, params?: GetListCommentsParams
+    ): Promise<Array<ProgramCommentInstance>> {
         const commentGroup = await programService.getCommentGroup(programId);
+        const order = this.getCommentsOrder_(params.order);
+        const notEmptyCommentCondition = params.filterEmptyComments ?
+            this.getNotEmptyCommentCondition_() :
+            null;
+
         return await ProgramCommentModel.findAll({
             where: {
-                commentGroupId: commentGroup.id
+                commentGroupId: commentGroup.id,
+                $and: notEmptyCommentCondition
             },
             include: [{
                 model: UserDataModel,
@@ -105,7 +121,26 @@ class ProgramCommentService {
                 ],
                 as: 'rating'
             }],
-            order: [['createdAt', 'DESC']]
+            order: order
+        });
+    }
+
+
+    public async getAllTotalScore(
+        commentGroupIds: number[]
+    ): Promise<ProgramCommentInstance[]> {
+        return await ProgramCommentModel.findAll({
+            attributes: ['commentGroupId'],
+            where: {
+                commentGroupId: {
+                    $in: commentGroupIds
+                },
+            },
+            include: [{
+                model: RatingModel,
+                attributes: ['totalScore'],
+                as: 'rating'
+            }],
         });
     }
 
@@ -258,6 +293,42 @@ class ProgramCommentService {
         return await ProgramCommentModel.findById(commentId);
     }
 
+    private getCommentsOrder_(orderType: number) {
+        const order: SequelizeOrder = [];
+        switch (orderType) {
+            case 1:
+                order.push([
+                    {model: RatingModel, as: 'rating'},
+                    'totalScore',
+                    'DESC'
+                ]);
+                break;
+            case 2:
+                order.push([
+                    {model: RatingModel, as: 'rating'},
+                    'totalScore',
+                    'ASC'
+                ]);
+                break;
+            default:
+                order.push([
+                    'createdAt',
+                    'DESC'
+                ]);
+                break;
+        }
+        return order;
+    }
+
+    private getNotEmptyCommentCondition_(): Sequelize.WhereOptions {
+        return {
+            $or: {
+                advice: {$ne: null},
+                pros: {$ne: null},
+                cons: {$ne: null}
+            }
+        };
+    }
 
     private async updateRating_(commentGroupId: number): Promise<any> {
         const programTableName: any = ProgramModel.getTableName();
