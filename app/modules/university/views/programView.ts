@@ -9,6 +9,9 @@ import {entityType} from '../../common/enums/entityType';
 
 const config = require('../../../config/config.json');
 
+const staticImgPath =
+    '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
+
 class ProgramView {
     public getUrl(universityAlias: string, programAlias: string): string {
         const protocol = config.protocol;
@@ -26,19 +29,22 @@ class ProgramView {
     protected transformItem(
             item: BackendListProgram): bSmItemUniversity.Params.Data {
         const programUrl = this.getUrl(item.universityAlias, item.programAlias);
+        const imageUrl = item.imageUrl ?
+            item.imageUrl :
+            staticImgPath + 'placeholder_parthenon.png';
 
         return {
             id: item.id,
             name: {light: item.name},
             url: programUrl,
             score: item.totalScore,
-            picture: item.imageUrl ? {
+            picture: {
                 sources: [{
-                    url: item.imageUrl,
+                    url: imageUrl,
                     size: 'default',
                 }],
                 altText: item.name
-            } : null,
+            },
             company: {
                 abbreviation: item.universityAbbreviation,
                 city: item.cityName,

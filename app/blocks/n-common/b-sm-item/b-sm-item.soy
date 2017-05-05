@@ -177,14 +177,6 @@
  * @protected
  */
 {template .image}
-    {let $picture: $params.data.picture ?: [
-        'sources': [[
-            'url': '/static/images/n-common/b-sm-item/b-sm-item_entity/images/placeholder.png',
-            'size': 'default'
-        ]],
-        'altText': $params.data.name.light
-    ] /}
-
     {let $url: $params.data.url ?: ('/' + $params.data.alias) /}
 
     <a class="{call .rootClass/}__cover-link" href="{$url}">
@@ -192,7 +184,7 @@
             {param params: [
                 'type': 'smPicture',
                 'renderParams': [
-                    'data': $picture
+                    'data': $params.data.picture
                 ]
             ]/}
         {/call}

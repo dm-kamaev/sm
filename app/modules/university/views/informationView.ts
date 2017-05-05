@@ -67,6 +67,9 @@ type UserType = {
     isSelected?: boolean;
 };
 
+const staticImgPath =
+    '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
+
 class InformationView extends LayoutView {
     private static FULL_DESCRIPTION_LENGTH = 280;
 
@@ -191,17 +194,28 @@ class InformationView extends LayoutView {
         const imageUrlSizeL = utils.getImageUrl(
             backendImageUrl, UniversityImageSize.DEFAULT);
 
+        const sources = backendImageUrl ?
+            [{
+                url: utils.getImageUrl(
+                    backendImageUrl, UniversityImageSize.MEDIUM
+                ),
+                size: 'default'
+            }, {
+                url: utils.getImageUrl(
+                    backendImageUrl, UniversityImageSize.DEFAULT
+                ),
+                size: 'l'
+            }] :
+            [{
+                url: staticImgPath + 'placeholder_parthenon.png',
+                size: 'default'
+            }]
+
         return {
             description: universityName,
             picture: {
                 altText: universityName,
-                sources: [{
-                    url: imageUrlDefault,
-                    size: 'default'
-                }, {
-                    url: imageUrlSizeL,
-                    size: 'l'
-                }]
+                sources: sources
             },
             button: {
                 data: {

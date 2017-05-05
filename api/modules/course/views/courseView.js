@@ -24,6 +24,9 @@ const FULL_DESCRIPTION_LENGTH = 300,
     LEARNING_OUTCOMES_NAME = 'Результаты обучения',
     BRAND_INDEX = 0;
 
+const staticImgPath =
+    '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
+
 /**
  * @param  {Object} course
  * @param  {string} categoryAlias
@@ -460,6 +463,10 @@ view.mapCourse = function(course) {
  * @return {Object}
  */
 view.getListCourse = function(course) {
+    const imageUrl = course.imageUrl ?
+        course.imageUrl.replace('{width}', courseImageSize.SMALL[0]) :
+        staticImgPath + 'placeholder.png';
+
     return {
         id: course.id,
         alias: this.generateAlias(
@@ -467,16 +474,13 @@ view.getListCourse = function(course) {
             course.brandAlias,
             course.categoryAlias
         ),
-        picture: course.imageUrl ? {
+        picture: {
             sources: [{
-                url: course.imageUrl.replace(
-                    '{width}',
-                    courseImageSize.SMALL[0]
-                ),
+                url: imageUrl,
                 size: 'default',
             }],
             altText: course.name
-        } : null,
+        },
         type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,
