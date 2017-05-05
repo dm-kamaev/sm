@@ -109,7 +109,9 @@ goog.scope(function() {
      * @public
      */
     InputRange.prototype.getValue = function() {
-        return this.range_.getValue();
+        var value = this.range_.getValue() || this.input_.getValue();
+
+        return this.normalizeValue_(value);
     };
 
 
@@ -273,7 +275,7 @@ goog.scope(function() {
             this.setValue(value);
 
         } else {
-            var value = this.range_.getValue();
+            var value = this.range_.getValue() || this.params.defaultValue;
             this.setInputValue_(value);
         }
 
