@@ -90,7 +90,7 @@ class ContactsGenerator {
         case entityTypeEnum.PROGRAM:
             helper = {
                 text: 'Поможем выбрать',
-                url: '/university'
+                url: 'http://maximumtest.ru/events/cons?utm_source=melpartner'
             };
             break;
         }
