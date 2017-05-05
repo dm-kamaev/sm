@@ -15,7 +15,12 @@
  *         maxLength: ?number,
  *         type: ?string,
  *         isHidden: ?boolean
- *     }>
+ *     }>,
+ *     placeholder: ?{
+ *        text: string,
+ *        isHidden: boolean
+ *     },
+ *     minOptionsToShowPlaceholder: ?number
  * }} sm.lSearch.bFilter.TemplateInput.Params.Data
  */
 
@@ -154,6 +159,58 @@
 
 
 /**
+ * Filter content template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             label?: string,
+ *             name?: string,
+ *             placeholder?: string,
+ *             value?: (string|number),
+ *             maxLength: ?number,
+ *             type: ?string,
+ *             isHidden: ?boolean
+ *         }>,
+ *         placeholder: ?{
+ *            text: string,
+ *            isHidden: boolean
+ *         },
+ *         minOptionsToShowPlaceholder: ?number
+ *     },
+ *     config: {
+ *         type: (string|undefined),
+ *         optionsToShow: (number|undefined),
+ *         cannotBeHidden: (boolean|undefined),
+ *         isShowed: (bolean|undefined),
+ *         showMoreButtonText: (number|undefined),
+ *         align: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .content}
+    {let $classes kind="html"}
+        {call .rootClass/}__content
+
+        {if not $params?.config?.cannotBeHidden}
+            {if not $params?.config?.isShowed}
+                {sp}i-utils__hidden
+            {/if}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .listOptions data="all" /}
+        {call .placeholder_ data="all" /}
+        {call .button data="all" /}
+    </div>
+{/template}
+
+
+/**
  * Template button
  * @param params {{
  *     data: {
@@ -163,6 +220,7 @@
  *     }
  * }}
  * @override
+ * @protected
  */
 {template .button}
     {let $isEmptyInputs kind="html"}
@@ -207,6 +265,44 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Template plaseholder
+ * @param params {{
+ *     data: {
+ *          options: Array<{
+ *             label?: string,
+ *             name?: string,
+ *             placeholder?: string,
+ *             value?: (string|number),
+ *             maxLength: ?number,
+ *             type: ?string,
+ *             isHidden: ?boolean
+ *         }>,
+ *         placeholder: ?{
+ *            text: string,
+ *            isHidden: boolean
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .placeholder_}
+    {if $params.data?.placeholder?.text}
+        {let $classes kind="html"}
+            {call .rootClass/}__placeholder
+
+            {if $params.data?.placeholder?.isHidden}
+                {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+            {/if}
+        {/let}
+
+        <div class="{$classes}">
+            {$params.data.placeholder.text}
+        </div>
+    {/if}
 {/template}
 
 
@@ -277,4 +373,40 @@
     {if $params.config.inline}
         {sp}{call .rootClass/}_input_inline
     {/if}
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         minOptionsToShowPlaceholder: ?number
+ *     },
+ *     config: {
+ *         type: (string|undefined),
+ *         optionsTheme: ?string
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $data kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'name': $params.data.name,
+                'type': $params?.config?.type,
+                'optionsTheme': $params?.config?.optionsTheme,
+                'customIcon': $params?.config?.customIcon,
+                'minOptionsToShowPlaceholder':
+                    $params.data.minOptionsToShowPlaceholder ?: 0
+            ]/}
+        {/call}
+    {/let}
+
+    data-params="{$data}"
 {/template}

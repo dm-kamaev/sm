@@ -174,19 +174,18 @@ goog.scope(function() {
 
     /**
      * Initializes options
-     * @param {Element=} opt_element
      */
-    View.prototype.initOptions = function(opt_element) {
-        var element = opt_element || this.getElement();
-
-        this.dom.wrapOptionsHidable = goog.dom.getElementsByClass(
-            View.CssClass.OPTION_HIDABLE,
-            element
+    View.prototype.initOptions = function() {
+        this.dom.wrapOptionsHidable = this.getElementsByClass(
+            View.CssClass.OPTION_HIDABLE
         );
 
-        this.dom.options = goog.dom.getElementsByClass(
-            sm.bSmCheckbox.View.CssClass.ROOT,
-            element
+        this.dom.wrapOptions = this.getElementsByClass(
+            View.CssClass.OPTION
+        );
+
+        this.dom.options = this.getElementsByClass(
+            sm.bSmCheckbox.View.CssClass.ROOT
         );
     };
 
@@ -345,6 +344,22 @@ goog.scope(function() {
             element,
             Utils.CssClass.HIDDEN
         );
+    };
+
+
+    /**
+     * Get number shown options
+     * @return {number}
+     * @protected
+     */
+    View.prototype.getNumberShownOptions = function() {
+        var wrapOptions = Array.prototype.slice.call(this.dom.wrapOptions, 0);
+
+        var shownOptions = wrapOptions.filter(function(option) {
+            return !goog.dom.classlist.contains(option, Utils.CssClass.HIDDEN);
+        });
+
+        return shownOptions.length;
     };
 
 

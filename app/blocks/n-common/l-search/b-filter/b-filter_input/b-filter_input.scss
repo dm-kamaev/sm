@@ -40,6 +40,13 @@
         margin-top: 10px;
     }
 
+    .b-sm-filter__placeholder {
+        color: #ed6327;
+
+        font-size: 14px;
+        line-height: normal;
+    }
+
     .b-sm-filter__button_reset {
         display: none;
     }
@@ -47,7 +54,8 @@
 
 .b-sm-filter_input_inline {
     .b-sm-filter__list-options {
-        margin-right: 0;
+        display: block;
+
         margin-right: -12.5px;
         margin-left: -12.5px;
     }
