@@ -32,6 +32,6 @@ export class UniversityController extends Controller {
      */
     public async actionSuggestSearch(actionContext: any) {
         const params = actionContext.data;
-        return searchService.findByName(params.name);
+        return searchService.findByName(params.searchString);
     }
 }
