@@ -209,7 +209,7 @@ class InformationView extends LayoutView {
             [{
                 url: staticImgPath + 'placeholder_parthenon.png',
                 size: 'default'
-            }]
+            }];
 
         return {
             description: universityName,
