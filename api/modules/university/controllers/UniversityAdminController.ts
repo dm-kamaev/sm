@@ -141,8 +141,8 @@ class UniversityAdminController extends Controller {
      *
      * @apiError (404) UniversityNotFound University with given Id not found.
      */
-    public async actionGet(actionContext: any, id: any) {
-        const university = await universityService.get(id);
+    public async actionGet(actionContext: any, id: string) {
+        const university = await universityService.get(Number(id));
         return universityAdminView.render(university);
     }
 
