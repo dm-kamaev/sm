@@ -72,6 +72,7 @@ import {ProgramSimilarController} from './ProgramSimilarController';
 const programSimilarController: any = new ProgramSimilarController();
 
 router.get('/university/:id', universityController.actionGet);
+router.get('/universities', universityController.actionGetByIds);
 
 router.get(
     '/university/alias/:alias',
@@ -79,6 +80,7 @@ router.get(
 );
 
 router.get('/program/search', programController.actionSearch);
+router.get('/program/search/count', programController.actionCountSearch);
 
 router.get(
     '/program/:id',

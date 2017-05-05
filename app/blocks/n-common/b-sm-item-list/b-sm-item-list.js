@@ -550,7 +550,7 @@ goog.scope(function() {
             transformators[ItemList.ItemType.ITEM_COMPACT] =
                 sm.bSmItem.SmItemCompact.getRenderParams;
             transformators[ItemList.ItemType.ITEM_UNIVERSITY] =
-                sm.bSmItem.SmItem.getRenderParams;
+                sm.bSmItem.SmItemUniversity.getRenderParams;
             transformators[ItemList.ItemType.LINK] =
                 sm.bSmLink.SmLink.getRenderParams;
             transformators[ItemList.ItemType.DEPARTMENT] =

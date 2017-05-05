@@ -1,6 +1,7 @@
 import * as querystring from 'querystring';
 
 import {ProgramSearchQuery} from '../lib/ProgramSearch';
+import {ProgramCountSearchQuery} from '../lib/ProgramCountSearch';
 
 import {QueryParams, SearchParams, EgeSearch} from '../types/programSearch';
 
@@ -31,6 +32,21 @@ class ProgramSearch {
             .setLimit(params.limit)
             .setOffset(params.page * params.limit || 0)
             .setSortType(params.sortType)
+            .setSearchString(params.searchString)
+            .setCities(params.cities)
+            .setEge(params.ege)
+            .setPayType(params.payType)
+            .setMajors(params.majors)
+            .setDiscount(params.discount)
+            .setFeatures(params.features)
+            .setMaxPrice(params.maxPrice)
+            .getQuery();
+    }
+
+    public getCountSearchQuery(params: SearchParams): string {
+        const queryBuilder = new ProgramCountSearchQuery();
+        return queryBuilder
+            .setLimit()
             .setSearchString(params.searchString)
             .setCities(params.cities)
             .setEge(params.ege)

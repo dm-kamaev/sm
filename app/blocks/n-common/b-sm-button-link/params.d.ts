@@ -1,10 +1,10 @@
 export namespace bSmButtonLink {
     /*
-     * sm.bSmButtonLink.Template.Params
+     * sm.bSmButtonLink.Params
      */
     export namespace Params {
         /*
-         * sm.bSmCollapsedText.Template.Params.Data
+         * sm.bSmCollapsedText.Params.Data
          */
         export interface Data {
             id?: number;
@@ -15,7 +15,7 @@ export namespace bSmButtonLink {
         }
 
         /*
-         * sm.bSmButtonLink.Template.Params.Config
+         * sm.bSmButtonLink.Params.Config
          */
         export interface Config {
             disableHover?: boolean;

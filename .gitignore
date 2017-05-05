@@ -258,8 +258,8 @@ console/modules/newCommentNotifier/**/*.js
 console/modules/parseUniversityComments/**/*.js
 console/modules/schoolSpecClasses/*.js
 console/modules/searchUpdater/ProgramActualizer.js
-console/modules/updateUniversityAndProgram/*.js
-console/modules/updateUniversityAndProgram/types/*.js
+console/modules/updateUniversityAndProgram/**/*.js
+console/one-off/addNewSubject.js
 console/one-off/loadPrograms.js
 console/one-off/parseUniversityComments.js
 console/one-off/shrinkOlympiadResults.js

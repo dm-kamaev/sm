@@ -72,29 +72,42 @@ class UniversityService {
         );
     }
 
-    public async get(id: number): Promise<UniversityInstance> {
-        const university: UniversityInstance = await UniversityModel.findOne({
-            attributes: {
-                exclude: ['city_id', 'university_profile']
-            },
-            where: {
-                id: id
-            },
-            include: [{
-                attributes: ['id', 'name', 'regionId'],
-                model: CityModel,
-                as: 'city'
-            }, {
-                attributes: ['id', 'name'],
-                model: ProfileModel,
-                as: 'profiles'
-            }]
-        });
+    public async get(id: number): Promise<UniversityInstance>;
+    public async get(id: number[]): Promise<UniversityInstance[]>;
+    public async get(id): Promise<any> {
+        const isSingleId: boolean = typeof id === 'number';
+        let where;
+        if (isSingleId) {
+            where = {id};
+        } else {
+            where = {
+                id: {
+                    $in: id
+                }
+            };
+        }
+        const result: UniversityInstance[] =
+            await UniversityModel.findAll({
+                attributes: {
+                    exclude: ['city_id', 'university_profile']
+                },
+                where: where,
+                include: [{
+                    attributes: ['id', 'name', 'regionId'],
+                    model: CityModel,
+                    as: 'city'
+                }, {
+                    attributes: ['id', 'name'],
+                    model: ProfileModel,
+                    as: 'profiles'
+                }]
+            });
 
-        if (!university) {
+        if (!result.length && isSingleId) {
             throw new UniversityNotFound(id);
         }
-        return university;
+
+        return isSingleId ? result[0] : result;
     }
 
     public async create(

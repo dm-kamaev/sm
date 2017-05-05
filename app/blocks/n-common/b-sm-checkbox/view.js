@@ -37,7 +37,8 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-checkbox',
         INPUT: 'b-sm-checkbox__input',
-        LABEL: 'b-sm-checkbox__label'
+        LABEL: 'b-sm-checkbox__label',
+        CHECKED: 'b-sm-checkbox_checked'
     };
 
 
@@ -90,7 +91,7 @@ goog.scope(function() {
         this.dom.input.checked = true;
         if (!goog.dom.classlist.contains(
             this.getElement(),
-            'b-sm-checkbox_checked'
+            View.CssClass.CHECKED
         )) {
             this.changeState_();
         }
@@ -104,7 +105,7 @@ goog.scope(function() {
         this.dom.input.checked = false;
         if (goog.dom.classlist.contains(
             this.getElement(),
-            'b-sm-checkbox_checked'
+            View.CssClass.CHECKED
         )) {
             this.changeState_();
         }
@@ -182,7 +183,7 @@ goog.scope(function() {
     View.prototype.changeState_ = function() {
         goog.dom.classlist.toggle(
             this.getElement(),
-            'b-sm-checkbox_checked'
+            View.CssClass.CHECKED
         );
     };
 });  // goog.scope

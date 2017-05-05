@@ -33,7 +33,12 @@ import {
     ProgramUrl
 } from '../types/program';
 import {EntitiesSearch} from '../../entity/types/textSearchData';
-import {ListProgram, SearchListResult} from '../types/programSearch';
+import {
+    ListProgram,
+    SearchListResult,
+    QueryParams,
+    ProgramCountResult
+} from '../types/programSearch';
 
 import {PageAttribute} from '../../entity/types/page';
 
@@ -300,7 +305,8 @@ class ProgramService {
         return await this.getProgramsWithAlias_(programIds);
     }
 
-    public async searchList(queryParams): Promise<SearchListResult> {
+    public async searchList(
+            queryParams: QueryParams): Promise<SearchListResult> {
         const queryResult: ListProgram[] =
             await this.getRawSearchList_(queryParams);
 
@@ -341,8 +347,20 @@ class ProgramService {
         return result;
     }
 
+    public async searchCountList(
+            queryParams: QueryParams): Promise<ProgramCountResult> {
+        const searchParams =
+            programSearchService.converSearchParams(queryParams);
+        const searchQuery =
+            programSearchService.getCountSearchQuery(searchParams);
+        const result = await sequelize.query(searchQuery, {
+            type: Sequelize.QueryTypes.SELECT
+        });
+        return result[0];
+    }
 
-    private async getRawSearchList_(queryParams): Promise<ListProgram[]> {
+    private async getRawSearchList_(
+            queryParams: QueryParams): Promise<ListProgram[]> {
         const searchParams =
             programSearchService.converSearchParams(queryParams);
         const searchQuery = programSearchService.getListSearchQuery(

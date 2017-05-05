@@ -11,6 +11,9 @@ export class EgeController extends Controller {
      * @apiName GetEgeSubjects
      * @apiGroup Ege
      *
+     * @apiParam (query) {String="general","university"} [type="general"]
+     *     Type of ege subjects: general or university.
+     *
      * @apiSuccess {Object[]} - Response body.
      * @apiSuccess {Number}   -.id Subject's id.
      * @apiSuccess {String}   -.name Lowercase name.
@@ -40,6 +43,7 @@ export class EgeController extends Controller {
      *     }]
      */
     public async actionGetAllSorted(actionContext: any) {
-        return egeService.getAllOrdered();
+        const type = actionContext.data.type;
+        return egeService.getAllOrdered(type);
     }
 }

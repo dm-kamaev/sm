@@ -110,7 +110,6 @@ goog.scope(function() {
     Checkbox.prototype.getData = function() {
         var data = this.params;
         this.params.isChecked = this.isChecked();
-
         return data;
     };
 
