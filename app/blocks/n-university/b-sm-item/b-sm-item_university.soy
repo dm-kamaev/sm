@@ -209,6 +209,8 @@
                 ]
             ]/}
         {/call}
+
+        {call .iconLink_ data="all" /}
     </div>
 {/template}
 
@@ -426,6 +428,40 @@
                 ]/}
             {/call}
         </div>
+    {/if}
+{/template}
+
+
+/**
+ * Icon link
+ * @param params {{
+ *     data: {
+ *         iconLink: ({
+ *             icon: string,
+ *             link: string,
+ *             type: ('svg'|'png')
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .iconLink_}
+    {if $params.data.iconLink}
+        {let $type: $params.data.iconLink.type == 'png' ? 'icon' : 'icon-svg' /}
+
+        <a class="{call .rootClass/}__icon-link"
+            href="{$params.data.iconLink.link}"
+        >
+            {call .renderChild}
+                {param params: [
+                    'type': $type,
+                    'renderParams': [
+                        'data': [
+                            'type': $params.data.iconLink.icon
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </a>
     {/if}
 {/template}
 

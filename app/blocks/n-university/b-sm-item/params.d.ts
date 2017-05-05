@@ -2,6 +2,8 @@ import {bSmItem} from '../../n-common/b-sm-item/params';
 import {bSmButtonLink} from '../../n-common/b-sm-button-link/params';
 import {bSmPicture} from '../../n-common/b-sm-picture/params';
 
+type iconType = 'svg' | 'png';
+
 export namespace bSmItemUniversity {
     /*
      * sm.bSmItemUniversity.Params
@@ -27,6 +29,11 @@ export namespace bSmItemUniversity {
             };
             nicety?: Nicety[];
             buttonLink?: bSmButtonLink.Params;
+            iconLink?: {
+                icon: string;
+                link: string;
+                type: iconType;
+            }
         }
 
         /*

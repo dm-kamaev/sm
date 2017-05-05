@@ -50,7 +50,7 @@
 
     .b-sm-item__name {
         margin-bottom: 6px;
-        padding-right: 15px;
+        padding-right: 24px;
 
         font-family: 'Proxima', Arial, sans-serif;
         font-size: 24px;
@@ -145,6 +145,10 @@
         border: solid 2px #0777e8;
         border-radius: 100px;
     }
+
+    .b-sm-item__icon-link {
+        display: none;
+    }
 }
 
 @include media-l {
@@ -237,6 +241,12 @@
 
         .b-sm-item__nicety-value {
             font-size: 18px;
+        }
+
+        .b-sm-item__icon-link {
+            display: inline-block;
+            position: absolute;
+            right: 13px;
         }
     }
 }

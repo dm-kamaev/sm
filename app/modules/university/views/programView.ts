@@ -53,6 +53,11 @@ class ProgramView {
             nicety: this.generateNicety(item),
             description: this.generateDescription(item),
             buttonLink: this.generateButtonLinkParams(programUrl),
+            iconLink: {
+                icon: 'arrow-right',
+                type: 'svg',
+                link: programUrl
+            },
             type: entityType.PROGRAM
         };
     };
