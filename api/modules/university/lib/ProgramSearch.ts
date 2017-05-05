@@ -163,6 +163,13 @@ export class ProgramSearchQuery extends SearchQuery {
             .left_join('city', null, 'university.city_id = city.id');
     }
 
+    protected getLastStatistic_(): string {
+        return squel.select()
+            .field('max(entrance_statistic.year)')
+            .from('entrance_statistic')
+            .where('program.id = entrance_statistic.program_id');
+    }
+
     protected getAlias_(): string {
         return 'program';
     }
@@ -272,13 +279,6 @@ export class ProgramSearchQuery extends SearchQuery {
                 `COUNT(DISTINCT id) = ${this.programDataCount_}`
             )
             .toString();
-    }
-
-    private getLastStatistic_(): string {
-        return squel.select()
-            .field('max(entrance_statistic.year)')
-            .from('entrance_statistic')
-            .where('program.id = entrance_statistic.program_id');
     }
 
     private generateWithProgramEgeScore_(): string {
