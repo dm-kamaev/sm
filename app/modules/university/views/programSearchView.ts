@@ -13,8 +13,6 @@ import {
 } from '../../../blocks/n-university/l-search_university/params';
 import {BackendProgramResults} from '../types/program';
 
-const ALIAS_RUSSIAN_EXAM: string = 'russian';
-
 class ProgramSearchView {
     public renderList(data: BackendProgramResults) {
         const headerText = programRenderSearchView.generateHeaderText(
@@ -35,13 +33,9 @@ class ProgramSearchView {
 
         const formatUtils = new FormatUtils();
 
-        const egeSubjects = (!queryParams.egeSubjects && filtersData) ?
-            this.getEgeDefaultSearchParams(filtersData.egeExams) :
-            queryParams.egeSubjects;
-
         return {
             cities: formatUtils.transformToArray(queryParams.cities),
-            egeSubjects: formatUtils.transformToArray(egeSubjects),
+            egeSubjects: formatUtils.transformToArray(queryParams.egeSubjects),
             payType: formatUtils.transformToArray(queryParams.payType),
             egeResults: this.initEgeResults(queryParams.egeResults),
             majors: formatUtils.transformToArray(queryParams.majors),
@@ -56,14 +50,6 @@ class ProgramSearchView {
         return query ?
             JSON.parse(query) :
             [];
-    }
-
-    private getEgeDefaultSearchParams(egeExams): number[] {
-        const russianExam = egeExams.find(exam =>
-            exam.alias == ALIAS_RUSSIAN_EXAM
-        );
-
-        return [russianExam.id];
     }
 }
 
