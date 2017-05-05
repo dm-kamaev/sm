@@ -34,6 +34,10 @@ goog.scope(function() {
      *         placeholder: ?string,
      *         filterHeader: string,
      *         theme: ?string
+     *     },
+     *     customIcon: ?{
+     *         check: string,
+     *         uncheck: string
      *     }
      * }}
      */
@@ -71,8 +75,8 @@ goog.scope(function() {
                 params: {
                     data: data,
                     config: {
-                        theme: this.getParams().optionsTheme,
-                        customIcon: this.getParams().customIcon
+                        theme: this.params.optionsTheme,
+                        customIcon: this.params.customIcon
                     }
                 }
             },
@@ -122,11 +126,21 @@ goog.scope(function() {
      */
     View.prototype.transformParams = function(rawParams) {
         var customIcon;
+        var modal;
 
         if (rawParams['customIcon']) {
             customIcon = {
                 check: rawParams['customIcon']['check'],
                 uncheck: rawParams['customIcon']['uncheck']
+            };
+        }
+
+        if (rawParams['modal']) {
+            modal = {
+                header: rawParams['modal']['header'],
+                placeholder: rawParams['modal']['placeholder'],
+                filterHeader: rawParams['modal']['filterHeader'],
+                theme: rawParams['modal']['theme']
             };
         }
 
@@ -136,12 +150,7 @@ goog.scope(function() {
             api: rawParams['api'],
             apiPopular: rawParams['apiPopular'],
             optionsToShow: rawParams['optionsToShow'],
-            modal: {
-                header: rawParams['modal']['header'],
-                placeholder: rawParams['modal']['placeholder'],
-                filterHeader: rawParams['modal']['filterHeader'],
-                theme: rawParams['modal']['theme']
-            },
+            modal: modal,
             optionsTheme: rawParams['optionsTheme'],
             customIcon: customIcon
         };
