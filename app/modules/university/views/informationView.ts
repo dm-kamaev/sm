@@ -252,9 +252,12 @@ class InformationView extends LayoutView {
 
         if ((data.egeExams && data.egeExams.length > 0) ||
                 (data.program.extraExam && data.program.extraExam.length > 0)) {
-            const egeTests =
+            let entranceTests =
                 data.egeExams.map(exam => `${exam.subjectName} (ЕГЭ)`);
-            const entranceTests = egeTests.concat(data.program.extraExam);
+
+            if (data.program.extraExam && data.program.extraExam.length > 0) {
+                entranceTests = entranceTests.concat(data.program.extraExam);
+            }
 
             result.items.push({
                 data: {
@@ -299,7 +302,6 @@ class InformationView extends LayoutView {
                 }
             });
         }
-
         return result;
     }
 

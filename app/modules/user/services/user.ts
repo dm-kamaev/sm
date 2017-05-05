@@ -40,6 +40,7 @@ class UserService extends Service {
             id: number | Array<number>
     ): Promise<BackendUser | Array<BackendUser>> {
         let result;
+
         if (Array.isArray(id)) {
             result = this.getAllByIds_(id);
         } else {
@@ -66,7 +67,8 @@ class UserService extends Service {
 
     private async getAllByIds_(
             ids: Array<number>): Promise<Array<BackendUser>> {
-        const uniqueIds = lodashUniq(ids);
+        const notNullIds = ids.filter(id => Boolean(id));
+        const uniqueIds = lodashUniq(notNullIds);
         let result = [];
 
         if (uniqueIds.length > 0) {

@@ -69,8 +69,9 @@ class UniversityRenderController extends Controller {
                 programMetaService.getById(programId),
                 similarProgramsService.getSimilar()
         ]);
-        const usefulCourses =
-            await programMajorService.getAdvicedCourses(program.id);
+        const usefulCourses = await programMajorService.getAdvicedCourses(
+                program.programMajor.id
+        );
 
         const userComment =
             programCommentService.getUserComment(user, comments);
