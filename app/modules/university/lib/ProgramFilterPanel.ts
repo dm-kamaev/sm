@@ -89,6 +89,7 @@ class ProgramFilterPanel extends FilterPanel {
                 header: {
                     title: 'ЕГЭ по выбору'
                 },
+                description: 'Как минимум 3 предмета',
                 name: filterName.EGE_SUBJECTS,
                 options: []
             },
@@ -161,10 +162,10 @@ class ProgramFilterPanel extends FilterPanel {
                 options: [{
                     name: filterName.MAX_PRICE,
                     label: 'Стоимость обучения  (руб. в год)',
-                    step: 50000,
-                    minValue: 50000,
-                    maxValue: 500000,
-                    defaultValue: 500000,
+                    step: 10000,
+                    minValue: 13000,
+                    maxValue: 520000,
+                    defaultValue: 520000,
                     thumb: {
                         iconName: 'thumb-blue',
                         iconType: 'icon-svg'
@@ -495,5 +496,4 @@ class ProgramFilterPanel extends FilterPanel {
         });
     }
 }
-
 export {ProgramFilterPanel};

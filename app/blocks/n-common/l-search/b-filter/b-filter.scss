@@ -113,14 +113,25 @@
     }
 
     .b-sm-filter__header {
-        font-size: 20px;
         padding-bottom: 10px;
+
+        font-size: 20px;
     }
 
     .b-sm-filter__header-icon {
-        float: none;
         display: inline-block;
+        float: none;
+
         margin-left: 5px;
+    }
+
+    .b-sm-filter__description {
+        margin-bottom: 10px;
+
+        color: #ed6327;
+
+        font-size: 14px;
+        line-height: normal;
     }
 
     .b-sm-filter__list-options {
@@ -143,6 +154,7 @@
     .b-sm-filter_neptune-theme {
         .b-sm-filter__option {
             display: block;
+
             width: auto;
         }
     }

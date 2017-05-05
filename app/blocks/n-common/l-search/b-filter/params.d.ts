@@ -14,6 +14,7 @@ export namespace bFilter {
                 title: string;
                 tooltip?: string;
             });
+            description?: string;
             options: bSmCheckbox.Params.Data[]
         }
 

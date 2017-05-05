@@ -45,44 +45,6 @@
 
 
 /**
- * Filter content template
- * @param params {{
- *     data: {
- *         name: string,
- *         options: Array<{
- *             label: string,
- *             value: string,
- *             isChecked: (boolean|undefined)
- *         }>
- *     },
- *     config: {
- *         type: (string|undefined),
- *         optionsToShow: (number|undefined),
- *         cannotBeHidden: (boolean|undefined),
- *         stylizationModifier: string
- *     }
- * }}
- * @protected
- */
-{template .content}
-    {let $classes kind="html"}
-        {call .rootClass/}__content
-
-        {if not $params?.config?.cannotBeHidden}
-            {if not $params?.config?.isShowed}
-                {sp}i-utils__hidden
-            {/if}
-        {/if}
-    {/let}
-
-    <div class="{$classes}">
-        {call .listOptions data="all" /}
-        {call .button data="all" /}
-    </div>
-{/template}
-
-
-/**
  * List options template
  * @param params {{
  *     data: {
