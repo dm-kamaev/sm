@@ -11,7 +11,11 @@
  *     entityList: sm.bSmItemList.Template.Params.Data,
  *     countResults: number,
  *     headerText:
- *          sm.lSearch.bSearchResults.Template.Params.Data.headerText
+ *          sm.lSearch.bSearchResults.Template.Params.Data.headerText,
+ *     placeholder: ?{
+ *         title: ?string,
+ *         text: ?Array<string>
+ *     }
  * }} sm.lSearch.bSearchResults.Template.Params.Data
  */
 
@@ -61,7 +65,7 @@
  */
 {template .body}
     {call .results_ data="all" /}
-    {call .placeholder_ /}
+    {call .placeholder_ data="all" /}
     {call .loader_ /}
 {/template}
 
@@ -84,21 +88,23 @@
 
 /**
  * Placeholder for empty results template
+ * @params {{
+ *     data: {
+ *         placeholder: ?{
+ *            title: ?string,
+ *            text: ?Array<string>
+ *         }
+ *     }
+ * }}
  * @private
  */
 {template .placeholder_ kind="html"}
     <div class="{call .rootClass /}__placeholder">
-        <div class="{call .rootClass /}__placeholder-title">
-            Ничего не найдено
-        </div>
-        <div class="{call .rootClass /}__placeholder-subtitle">
-            Измените параметры поиска
-        </div>
-        <div class="{call .rootClass /}__placeholder-subtitle">
-            и попробуйте ещё раз.
-        </div>
+        {call .placeholderTitle_ data="all" /}
+        {call .placeholderText_ data="all" /}
     </div>
 {/template}
+
 
 /**
  * Text of header for list of schools
@@ -432,6 +438,57 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Placeholder title for empty results template
+ * @param params {{
+ *     data: {
+ *         placeholder: ?{
+ *            title: ?string
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .placeholderTitle_ kind="html"}
+    <div class="{call .rootClass /}__placeholder-title">
+        {$params.data?.placeholder?.title ?: 'Ничего не найдено'}
+    </div>
+{/template}
+
+
+/**
+ * Placeholder text for empty results template
+ * @param params {{
+ *     data: {
+ *         placeholder: ?{
+ *            text: ?Array<string>
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .placeholderText_ kind="html"}
+    {let $defaultText: [
+        'Измените параметры поиска',
+        'и попробуйте ещё раз.'
+    ]/}
+
+    {let $text: ($params.data?.placeholder?.text and
+        length($params.data?.placeholder?.text)) ?
+
+            $params.data?.placeholder?.text :
+            $defaultText
+    /}
+
+    {foreach $string in $text}
+        <div class="{call .rootClass /}__placeholder-text">
+            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                data="$string" /}
+        </div>
+    {/foreach}
 {/template}
 
 

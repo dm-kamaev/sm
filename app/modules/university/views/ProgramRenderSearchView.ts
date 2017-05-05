@@ -148,6 +148,16 @@ class ProgramRenderSearchView extends LayoutView {
                 resultsList.universityCount
             ),
             title: 'Вузы Москвы',
+            placeholder: {
+                text: [
+                    'Ничего страшного! Во-первых, в&nbsp;нашей базе есть ' +
+                        'не&nbsp;все программы обучения, во-вторых, ' +
+                        'мы&nbsp;ориентируемся на&nbsp;проходные  баллы ' +
+                        'прошлого года, в&nbsp;этом году они могут ' +
+                        'быть другими. Попробуйте изменить параметры' +
+                        'поиска и&nbsp;попробовать ещё раз.'
+                ]
+            },
             description: this.seo.metaDescription,
             countResults: resultsList.programCount,
             entityList: {
