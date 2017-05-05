@@ -6,6 +6,8 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 
 const apiAddress = config.backendApi;
 
+const EGE_TYPE = 'university';
+
 class EgeExamService extends Service {
     private programId: number;
     constructor() {
@@ -28,7 +30,10 @@ class EgeExamService extends Service {
     public async getExams(): Promise<Array<Subject>> {
         const params: RequestParams = {
             url: this.baseUrl + '/subject/ege',
-            method: 'get'
+            method: 'get',
+            params: {
+                type: EGE_TYPE
+            }
         };
         const response = await this.send(params);
         return response.data;
