@@ -183,6 +183,10 @@ class SearchUniversity extends Search {
             this.filterPanelGroup,
             FilterPanelGroup.Event.SORT_TYPE_CHANGE,
             this.onSortReleased_
+        ).listen(
+            this.filterPanelGroup,
+            FilterPanelGroup.Event.CHANGE,
+            this.onFilterPanelGroupChange_
         );
 
         return this;
@@ -277,6 +281,34 @@ class SearchUniversity extends Search {
     onFilterPanelGroupSubmit_() {
         this.updatePage();
     }
+
+    /**
+     * Filter group change handler
+     * @private
+     */
+    onFilterPanelGroupChange_() {
+        this.loadSearchCount();
+    }
+
+    /**
+     * Send query for load count of search result
+     * @override
+     * @protected
+     */
+    loadSearchCount() {
+        let params = this.filterPanelGroup.getData();
+        this.searchService.loadSearchCountData(params);
+    };
+
+    /**
+     * Count serch resalt data load event handler
+     * @param  {sm.lSearch.iSearchService.SearchCountDataLoadedEvent} event
+     * @override
+     * @protected
+     */
+    onCountSearchDataLoaded(event) {
+        this.filterPanelGroup.showCountResults(event.data);
+    };
 
     /**
      * Sort action event handler

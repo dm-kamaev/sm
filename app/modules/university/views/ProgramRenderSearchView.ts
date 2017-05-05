@@ -34,7 +34,7 @@ type FilterPanelParams = {
     enabledFilters: string[];
     theme?: string;
     button?: {
-        content: string;
+        defaultText: string;
         theme?: string;
         borderRoundSize?: string;
     };
@@ -178,7 +178,7 @@ class ProgramRenderSearchView extends LayoutView {
             ],
             theme: 'neptune',
             button: {
-                content: 'Найти',
+                defaultText: 'Найти',
                 theme: 'neptune-reverse',
                 borderRoundSize: 'xl'
             },
@@ -203,7 +203,7 @@ class ProgramRenderSearchView extends LayoutView {
             ],
             theme: 'neptune',
             button: {
-                content: 'Найти',
+                defaultText: 'Найти',
                 theme: 'neptune-reverse',
                 borderRoundSize: 'xl'
             },

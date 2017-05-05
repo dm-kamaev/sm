@@ -37,6 +37,11 @@ router.get(
     programController.actionSearch
 );
 
+router.get(
+    '/program/filtersearch/count',
+    programController.actionGetSearchCount
+);
+
 router.get('/university/suggest', universityController.actionSuggestSearch);
 
 router.post(

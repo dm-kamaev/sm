@@ -477,7 +477,7 @@ goog.scope(function() {
         ).listen(
             this.searchService,
             SearchService.Event.SEARCH_COUNT_DATA_LOADED,
-            this.onCountSearchDataLoaded_
+            this.onCountSearchDataLoaded
         );
 
         return this;
@@ -521,7 +521,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onFilterChange_ = function() {
-        this.loadSearchCount_();
+        this.loadSearchCount();
     };
 
 
@@ -532,7 +532,7 @@ goog.scope(function() {
     Search.prototype.onSearchChange_ = function() {
         var searchPosition = this.search_.getPosition();
         this.filterPanel.setTooltipPosition(searchPosition);
-        this.loadSearchCount_();
+        this.loadSearchCount();
     };
 
 
@@ -609,9 +609,9 @@ goog.scope(function() {
     /**
      * Count serch resalt data load event handler
      * @param  {sm.lSearch.iSearchService.SearchCountDataLoadedEvent} event
-     * @private
+     * @protected
      */
-    Search.prototype.onCountSearchDataLoaded_ = function(event) {
+    Search.prototype.onCountSearchDataLoaded = function(event) {
         this.filterPanel.showCountResults(event.data);
     };
 
@@ -721,9 +721,9 @@ goog.scope(function() {
 
     /**
      * Send query for load count of search result
-     * @private
+     * @protected
      */
-    Search.prototype.loadSearchCount_ = function() {
+    Search.prototype.loadSearchCount = function() {
         var params = this.getParamsFromFilterPanel_();
         params.name = this.getParamsFromSearch_().text;
         this.searchService.loadSearchCountData(params);

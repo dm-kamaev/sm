@@ -27,6 +27,7 @@ export namespace gButtonStendhal {
                 type: IconType;
                 position: IconPosition;
             };
+            defaultText?: string;
         }
 
         /*

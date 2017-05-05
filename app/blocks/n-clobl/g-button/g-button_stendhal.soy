@@ -149,6 +149,40 @@
  * }}
  */
 {template .text_}
+    {if $params.data.content}
+        {call .contentText_ data="all" /}
+    {else}
+        {call .defaultText_ data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         defaultText: string
+ *     }
+ * }}
+ */
+{template .defaultText_}
+    <div class="{call .rootClass /}__content-text">
+        {$params.data.defaultText}
+    </div>
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|string|undefined)
+ *     }
+ * }}
+ */
+{template .contentText_}
     <div class="{call .rootClass /}__content-text">
         {let $isString kind="text"}
             {call sm.iSmUtils.smUtils.isString
@@ -156,7 +190,7 @@
         {/let}
 
         {if $isString == 'true'}
-            {$params.data.content ?: $params.data.defaultText}
+            {$params.data.content}
         {else}
             {$params.data.content.default}
         {/if}
@@ -215,11 +249,11 @@
         {sp}{call .rootClass /}_border-round-size_{$params?.config?.borderRoundSize}
     {/if}
 
-    {if $params.data.content.sizeS}
+    {if $params.data.content?.sizeS}
         {sp}{call .rootClass /}_viewport-size_s
     {/if}
 
-    {if $params.data.content.sizeL}
+    {if $params.data.content?.sizeL}
         {sp}{call .rootClass /}_viewport-size_l
     {/if}
 {/template}

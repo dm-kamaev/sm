@@ -19,6 +19,7 @@ const Link = goog.require('sm.bSmLink.SmLink');
  */
 const Event = {
     SUBMIT: FilterPanel.Event.SUBMIT,
+    CHANGE: goog.events.getUniqueId('change'),
     SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.ITEM_SELECT
 };
 
@@ -265,49 +266,58 @@ class FilterPanelGroup extends Control {
      * @private
      */
     initFilterPanelsListeners_() {
+        this.initDependentFilterPanelsListeners_();
+        this.initMainFilterPanelsListeners_();
+    }
+    /**
+     * @private
+     */
+    initDependentFilterPanelsListeners_() {
         this.getHandler().listen(
             this.dependentFilterPanel_,
             FilterPanel.Event.COLLAPSE,
             this.onCollapseFilter_
-        );
-
-        this.getHandler().listen(
+        ).listen(
             this.dependentFilterPanel_,
             FilterPanel.Event.CHECK,
             this.onFilterCheck_
-        );
-
-        this.getHandler().listen(
+        ).listen(
             this.dependentFilterPanel_,
             FilterPanel.Event.UNCHECK,
             this.onFilterUncheck_
+        ).listen(
+            this.dependentFilterPanel_,
+            FilterPanel.Event.FILTER_OPTION_CHECK,
+            this.onDependentFilterOptionCheck_
+        ).listen(
+            this.dependentFilterPanel_,
+            FilterPanel.Event.FILTER_OPTION_UNCHECK,
+            this.onDependentFilterOptionUncheck_
         );
+    }
 
+
+    /**
+     * @private
+     */
+    initMainFilterPanelsListeners_() {
         this.getHandler().listen(
             this.mainFilterPanel_,
             FilterPanel.Event.CHECK,
             this.onFilterCheck_
-        );
-
-        this.getHandler().listen(
+        ).listen(
             this.mainFilterPanel_,
             FilterPanel.Event.UNCHECK,
             this.onFilterUncheck_
-        );
-
-        this.getHandler().listen(
+        ).listen(
             this.mainFilterPanel_,
             FilterPanel.Event.RESET,
             this.onMainResetClick_
-        );
-
-        this.getHandler().listen(
+        ).listen(
             this.mainFilterPanel_,
             FilterPanel.Event.FILTER_OPTION_CHECK,
             this.onMainFilterOptionCheck_
-        );
-
-        this.getHandler().listen(
+        ).listen(
             this.mainFilterPanel_,
             FilterPanel.Event.FILTER_OPTION_UNCHECK,
             this.onMainFilterOptionUncheck_
@@ -387,9 +397,10 @@ class FilterPanelGroup extends Control {
 
     /**
      * On option of main filter panel check
-     * @param {goog.events.Event} event
+     * @param {sm.lSearch.bFilter.CheckOptionEvent} event
      */
     onMainFilterOptionCheck_(event) {
+        this.setTooltipPosition(event.position);
         if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
             const optionData = this.transformEgeDataToEgeResultsOption_(
                 event.data
@@ -405,9 +416,10 @@ class FilterPanelGroup extends Control {
 
     /**
      * On option of main filter panel uneck
-     * @param {goog.events.Event} event
+     * @param {sm.lSearch.bFilter.UncheckOptionEvent} event
      */
     onMainFilterOptionUncheck_(event) {
+        this.setTooltipPosition(event.position);
         if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
             const optionData = this.transformEgeDataToEgeResultsOption_(
                 event.data
@@ -424,6 +436,41 @@ class FilterPanelGroup extends Control {
             );
         }
     }
+
+    /**
+     * On option of dependent filter panel check
+     * @param {sm.lSearch.bFilter.CheckOptionEvent} event
+     */
+    onDependentFilterOptionCheck_(event) {
+        this.setTooltipPosition(event.position);
+    }
+
+
+    /**
+     * On option of dependent filter panel uneck
+     * @param {sm.lSearch.bFilter.UncheckOptionEvent} event
+     */
+    onDependentFilterOptionUncheck_(event) {
+        this.setTooltipPosition(event.position);
+    }
+
+    /**
+     * set tooltip position
+     * @param {number} position
+     */
+    setTooltipPosition(position) {
+        this.dependentFilterPanel_.setTooltipPosition(position);
+        this.dispatchEvent(Event.CHANGE);
+    }
+
+    /**
+     * show count results
+     * @param  {number} count
+     * @private
+     */
+    showCountResults(count) {
+        this.dependentFilterPanel_.showCountResults(count);
+    };
 
     /**
      * Filter check event handler

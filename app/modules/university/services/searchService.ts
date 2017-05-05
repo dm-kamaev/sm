@@ -43,6 +43,18 @@ class SearchService extends Service {
         return response.data;
     }
 
+    public async getCountResults(searchParams: SearchParams
+    ): Promise<BackendProgramResults> {
+        const requestParams: RequestParams = {
+            url: `${this.baseUrl}/count`,
+            method: 'get',
+            params: this.initParams_(searchParams)
+        };
+
+        const response = await this.send(requestParams);
+        return response.data;
+    }
+
     protected handleError(error: any): void {
         const data = error.data || [];
         data.map(errorItem => {
