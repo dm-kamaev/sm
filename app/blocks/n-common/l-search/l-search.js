@@ -819,7 +819,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.isNextPageCanBeLoaded_ = function() {
-        return this.isDocumentEndReached_() &&
+        return this.isResultsListEndReached_() &&
             !this.isAllSearchItemsLoaded_() &&
             !this.isResultsListAnimationEnded_();
     };
@@ -835,6 +835,16 @@ goog.scope(function() {
         var yCoordinate = goog.dom.getDocumentScroll().y;
         var documentHeght = goog.dom.getDocumentHeight();
         return viewportHeght + yCoordinate >= documentHeght;
+    };
+
+
+    /**
+     * Detect is user scroll on search result end
+     * @return {boolean}
+     * @private
+     */
+    Search.prototype.isResultsListEndReached_ = function() {
+        return this.getView().isResultsListEndReached();
     };
 
 

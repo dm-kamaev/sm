@@ -88,6 +88,21 @@ goog.scope(function() {
 
 
     /**
+     * Detect is user scroll on search result end
+     * @return {boolean}
+     */
+    View.prototype.isResultsListEndReached = function() {
+        var resultList = this.dom.searchResults;
+        var viewportHeght = goog.dom.getViewportSize().height;
+        var yCoordinate = goog.dom.getDocumentScroll().y;
+        var endResultList = goog.style.getPosition(resultList).y +
+            goog.style.getSize(resultList).height;
+
+        return viewportHeght + yCoordinate >= endResultList;
+    };
+
+
+    /**
      * Init dom elements
      * @protected
      * @override

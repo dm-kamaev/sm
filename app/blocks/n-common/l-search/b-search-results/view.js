@@ -270,11 +270,6 @@ goog.scope(function() {
      */
     View.prototype.transformParams = function(rawParams) {
         return {
-            declensionEntityType: {
-                nom: rawParams['declensionEntityType']['nom'],
-                gen: rawParams['declensionEntityType']['gen'],
-                plu: rawParams['declensionEntityType']['plu']
-            },
             countResults: rawParams['countResults']
         };
     };

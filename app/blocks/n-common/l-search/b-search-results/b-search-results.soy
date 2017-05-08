@@ -574,6 +574,29 @@
 
 
 /**
+ * @param params {{
+ *     data: {
+ *         countResults: number,
+ *         declensionEntityType: {
+ *              nom: string,
+ *              plu: string,
+ *              gen: string
+ *         }
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: [
+            'countResults': $params.data.countResults
+        ] /}
+    {/call}"
+{/template}
+
+
+/**
  * Additional classes
  * @param params {{
  *     data: {
