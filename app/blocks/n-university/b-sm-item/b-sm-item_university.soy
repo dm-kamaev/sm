@@ -24,7 +24,10 @@
  *             textXs: ?string,
  *             selected: ?boolean
  *         },
- *         value: ?string
+ *         value: {
+ *             text: string,
+ *             selected: ?boolean
+ *         }
  *     }>,
  *     buttonLink: ?sm.bSmButtonLink.Template.Params
  * }} sm.bSmItem.TemplateUniversity.Params.Data
@@ -250,7 +253,10 @@
  *                 textXs: ?string,
  *                 selected: ?boolean
  *             },
- *             value: ?string
+ *             value: {
+ *                 text: string,
+ *                 selected: ?boolean
+ *             }
  *         }>,
  *     }
  * }}
@@ -312,14 +318,24 @@
  * nicety value
  * @param item {{
  *     data: {
- *         value: ?string
+ *         value: {
+ *             text: string,
+ *             selected: ?boolean
+ *         }
  *     }
  * }}
  * @protected
  */
 {template .nicetyValue}
-    <div class="{call .rootClass/}__nicety-value">
-        {$item.data.value}
+    {let $classes kind="text"}
+        {call .rootClass/}__nicety-value
+        {if $item.data.value.selected}
+            {sp}{call .rootClass/}__nicety-value_selected
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {$item.data.value.text}
     </div>
 {/template}
 

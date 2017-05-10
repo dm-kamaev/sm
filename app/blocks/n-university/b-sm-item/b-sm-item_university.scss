@@ -131,12 +131,19 @@
     }
 
     .b-sm-item__nicety-value {
+        opacity: 0.6;
+
+        font-family: Arial, sans-serif;
+        line-height: 20px;
+    }
+
+    .b-sm-item__nicety-value_selected {
+        opacity: 1;
         color: #0777e8;
 
         font-family: 'Proxima', Arial, sans-serif;
         font-size: 20px;
         font-weight: 700;
-        line-height: 1;
     }
 
     .b-sm-item__button-link {
@@ -239,7 +246,7 @@
             display: block;
         }
 
-        .b-sm-item__nicety-value {
+        .b-sm-item__nicety-value_selected {
             font-size: 18px;
         }
 

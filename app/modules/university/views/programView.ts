@@ -74,14 +74,19 @@ class ProgramView {
                     textXs: 'Бюджетных: ' + item.budgetPlaces,
                     selected: (item.competition > 3)
                 },
-                value: `от ${item.egeScore} ` + formatUtils.declensionPrint(
-                    item.egeScore,
-                    {
-                        nom: 'балл',
-                        gen: 'баллов',
-                        plu: 'баллов'
-                    }
-                )
+                value: {
+                    text: item.egeScore ?
+                        `от ${item.egeScore} ` + formatUtils.declensionPrint(
+                            item.egeScore,
+                            {
+                                nom: 'балл',
+                                gen: 'баллов',
+                                plu: 'баллов'
+                            }
+                        ) :
+                        'баллы неизвестны',
+                    selected: !!item.egeScore
+                }
             });
         }
 
@@ -92,7 +97,10 @@ class ProgramView {
                     textDefault: 'Платных мест: ' + item.commercialPlaces,
                     textXs: 'Платных: ' + item.commercialPlaces
                 },
-                value: `от ${cost} тыс./год`
+                value: {
+                    text: cost ? `от ${cost} тыс./год` : 'стоимость неизвестна',
+                    selected: !!cost
+                }
             });
         }
 

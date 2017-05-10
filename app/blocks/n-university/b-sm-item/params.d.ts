@@ -15,7 +15,10 @@ export namespace bSmItemUniversity {
                 textXs?: string;
                 selected?: boolean;
             };
-            value?: string;
+            value?: {
+                text: string;
+                selected?: boolean;
+            };
         }
 
         /*
