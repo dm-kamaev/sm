@@ -86,12 +86,13 @@ class ProgramView {
         }
 
         if (item.commercialPlaces) {
+            const cost = Math.floor(item.cost / 10000) * 10;
             res.push({
                 title: {
                     textDefault: 'Платных мест: ' + item.commercialPlaces,
                     textXs: 'Платных: ' + item.commercialPlaces
                 },
-                value: 'от ' + Math.floor(item.cost / 1000) + ' тыс./год'
+                value: `от ${cost} тыс./год`
             });
         }
 
