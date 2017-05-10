@@ -44,7 +44,7 @@ class UniversityRenderController extends Controller {
                 programId
             ] = await Promise.all([
                 universityService.getIdByAlias(universityAlias),
-                programService.getIdByAlias(programAlias)
+                programService.getIdByAlias(programAlias, universityAlias)
             ]);
 
         const entranceStatisticService =

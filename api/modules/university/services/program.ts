@@ -383,6 +383,18 @@ class ProgramService {
         return result[0];
     }
 
+    public async getUniversityIds(
+            programIds: number[]): Promise<ProgramInstance[]> {
+        return ProgramModel.findAll({
+            attributes: ['id', 'universityId'],
+            where: {
+                id: {
+                    $in: programIds
+                }
+            }
+        });
+    }
+
     private async getRawSearchList_(
             queryParams: QueryParams): Promise<ListProgram[]> {
         const searchParams =

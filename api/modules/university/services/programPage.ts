@@ -1,3 +1,5 @@
+import * as lodash from 'lodash';
+
 import {ProgramInstance} from '../types/program';
 
 import {Model as PageModel} from '../../entity/models/page';
@@ -8,6 +10,7 @@ import {
 
 import {service as programService} from './program';
 import {service as pageService} from '../../entity/services/page';
+import {service as universityService} from './universityPage';
 const urlsService = require('../../entity/services/urls');
 
 import {ProgramAliasNotFound} from './exceptions/ProgramAliasNotFound';
@@ -41,22 +44,41 @@ class ProgramPageService {
         pageService.delete(program.id, PROGRAM_TYPE);
     }
 
-    public async getByAlias(alias: string): Promise<ProgramPageInstance> {
-        const programPage = await ProgramPageModel.findOne({
-                include: [{
-                    model: PageModel,
-                    as: 'page',
-                    where: {
-                        alias: alias
-                    }
-                }]
-            });
+    public async getByAlias(
+            programAlias: string, universityAlias: string
+    ): Promise<ProgramInstance> {
+        const [programPages, univeristyPage] = await Promise.all([
+            this.getByProgramAlias(programAlias),
+            universityService.getByAlias(universityAlias)
+        ]);
 
-        if (!programPage) {
-            throw new ProgramAliasNotFound(alias);
+        const programs = await programService.getUniversityIds(
+            programPages.map(programPage => programPage.programId)
+        );
+
+        const foundProgram = lodash.find(
+            programs,
+            program => program.universityId === univeristyPage.universityId
+        );
+
+        if (!foundProgram) {
+            throw new ProgramAliasNotFound(programAlias);
         }
 
-        return programPage;
+        return foundProgram;
+    }
+
+    private async getByProgramAlias(
+            alias: string): Promise<ProgramPageInstance[]> {
+        return ProgramPageModel.findAll({
+            include: [{
+                model: PageModel,
+                as: 'page',
+                where: {
+                    alias: alias
+                }
+            }]
+        });
     }
 
     private async getAlias(

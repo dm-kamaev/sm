@@ -114,7 +114,7 @@ class UniversityPageService {
         await pageServices.delete(universityId, entityTypies.UNIVERSITY);
     }
 
-    public async getByAlias(alias: string): Promise<UniversityInstance> {
+    public async getByAlias(alias: string): Promise<UniversityPageInstance> {
         const universityPage = await UniversityPageModel.findOne({
             include: [{
                 model: pageModel,
