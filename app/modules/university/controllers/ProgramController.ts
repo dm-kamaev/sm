@@ -6,6 +6,8 @@ import {programSearchView} from '../views/programSearchView';
 
 import {searchService} from '../services/searchService';
 import {QueryParams} from '../types/programSearch';
+import {cityService} from '../../geo/services/cityService';
+
 
 const LIMIT = 10;
 
@@ -99,5 +101,40 @@ export class ProgramController extends Controller {
 
         const data = await searchService.findByParams(searchParams, LIMIT);
         return programSearchView.renderList(data);
+    }
+
+
+    /* tslint:disable:max-line-length */
+    /**
+     * @api {get} /program/geosearch Search programs by city
+     * @apiVersion 1.0.0
+     * @apiName SearchProgram
+     * @apiGroup Program
+     *
+     * @apiExample {curl} Example usage:
+     *     curl 'http://vuz.mel.fm/program/citysearch?name=%D0%A1%D0%B0%D0%BC%D0%B0'
+     *
+     * @apiParam (query) {String} [name] City name
+     *
+     * @apiSuccess {Object[]} cities Array of found cities.
+     * @apiSuccess {Number} cities.id City's id.
+     * @apiSuccess {String} cities.name City's name.
+     * @apiSuccess {Number} cities.regionId City's region id.
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         "cities": [{
+     *             "id": 21,
+     *             "name": "Самара",
+     *             "regionId": 13
+     *         }]
+     *     }
+     */
+    /* tslint:enable:max-line-length */
+    public async actionGeoSuggestSearch(actionContext: any) {
+        const searchString: string = actionContext.data.name || '';
+        const foundCities = await cityService.findByName(searchString);
+        return programSearchView.renderCityResult(foundCities);
     }
 }

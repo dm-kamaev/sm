@@ -76,6 +76,12 @@ sm.bSearch.Search = function(opt_params) {
      */
     this.districtId_ = null;
 
+    /**
+     * @type {?number}
+     * @private
+     */
+    this.cityId_ = null;
+
 
     /**
      * @type {?Array.<number>}
@@ -179,7 +185,8 @@ goog.scope(function() {
         UNIVERSITIES: 'universities',
         AREAS: 'areas',
         METRO: 'metro',
-        DISTRICTS: 'districts'
+        DISTRICTS: 'districts',
+        CITIES: 'cities'
     };
 
 
@@ -316,6 +323,24 @@ goog.scope(function() {
      */
     Search.prototype.setDistrictId = function(districtId) {
         this.districtId_ = districtId;
+    };
+
+
+    /**
+     * @return {?number}
+     * @public
+     */
+    Search.prototype.getCityId = function() {
+        return this.cityId_;
+    };
+
+
+    /**
+     * @param {?number} cityId
+     * @public
+     */
+    Search.prototype.setCityId = function(cityId) {
+        this.cityId_ = cityId;
     };
 
 
@@ -829,6 +854,7 @@ goog.scope(function() {
     /**
      * Type is entity type
      * @param {string} type
+     * @private
      * @return {boolean}
      */
     Search.prototype.isEntityType_ = function(type) {
@@ -939,18 +965,19 @@ goog.scope(function() {
             'metroId': null,
             'areaId': null,
             'districtId': null,
+            'cityId': null,
             'coords': item['coords'],
             'text': item['name']
         };
 
         if (type == 'metro') {
             data['metroId'] = item['id'];
-        }
-        else if (type == 'areas') {
+        } else if (type == 'areas') {
             data['areaId'] = item['id'];
-        }
-        else if (type == 'districts') {
+        } else if (type == 'districts') {
             data['districtId'] = item['id'];
+        } else if (type == 'cities') {
+            data['cityId'] = item['id'];
         }
         this.setData(data);
     };
@@ -1023,7 +1050,8 @@ goog.scope(function() {
         this.setData({
             'metroId': null,
             'areaId': null,
-            'districtId': null
+            'districtId': null,
+            'cityId': null
         });
         this.dispatchEvent(Search.Event.TEXT_CHANGE);
     };
@@ -1045,6 +1073,8 @@ goog.scope(function() {
             url += '&areaId=' + data['item']['id'];
         } else if (data['item']['type'] === 'districts') {
             url += '&districtId=' + data['item']['id'];
+        } else if (data['item']['type'] === 'cities') {
+            url += '&cityId=' + data['item']['id'];
         }
         document.location.href = url;
     };

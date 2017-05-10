@@ -60,7 +60,7 @@ class UniversityRenderHomeView extends LayoutView {
                 title: 'Удобный подбор программ бакалавриата',
                 searchCity: {
                     placeholder: 'Город или название региона',
-                    sourceUrl: '/cities'
+                    sourceUrl: '/program/geosearch'
                 },
                 payType: {
                     content: [

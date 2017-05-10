@@ -34,6 +34,7 @@ router.get('/program/search', programRenderController.actionGetSearch);
 router.get('/', univrersityRenderController.actionGetHome);
 
 router.get('/program/filtersearch', programController.actionSearch);
+router.get('/program/geosearch', programController.actionGeoSuggestSearch);
 
 router.get('/university/suggest', universityController.actionSuggestSearch);
 

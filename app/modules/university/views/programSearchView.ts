@@ -52,6 +52,12 @@ class ProgramSearchView {
         };
     };
 
+    public renderCityResult(cities) {
+        return {
+            cities: cities
+        };
+    }
+
     private initEgeResults(query: string): EgeResult[] {
         return query ?
             JSON.parse(query) :
