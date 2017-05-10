@@ -162,6 +162,17 @@ class ProgramService {
         return instance;
     }
 
+    public async getByIds(programIds: number[]): Promise<ProgramInstance[]> {
+        return ProgramModel.findAll({
+            where: {
+                id: programIds
+            },
+            attributes: {
+                exclude: EXCLUDE_FIELDS
+            }
+        });
+    }
+
     public async getCommentGroup(
         programId: number): Promise<CommentGroupInstance> {
         const program = await this.getOne(programId);
@@ -217,12 +228,25 @@ class ProgramService {
 
     public async getUrls(
             programs: Array<ProgramInstance>): Promise<Array<ProgramUrl>> {
-        const pages = await Promise.all([
-            pageService.getAllAliases(entityType.PROGRAM),
-            pageService.getAllAliases(entityType.UNIVERSITY)
+        const entityIds = programs.reduce(
+            (result, program) => {
+                result.program.push(program.id);
+                result.university.push(program.universityId);
+                return result;
+            },
+            {
+                program: [],
+                university: []
+            });
+
+
+        const [
+            programPages,
+            universityPages
+        ] = await Promise.all([
+            pageService.getAliases(entityIds.program, entityType.PROGRAM),
+            pageService.getAliases(entityIds.university, entityType.UNIVERSITY)
         ]);
-        const programPages = pages[0];
-        const universityPages = pages[1];
 
         return programs.map(program => {
             const programAlias = programPages
@@ -302,7 +326,7 @@ class ProgramService {
             return null;
         }
         const programIds: number[] = founded.program;
-        return await this.getProgramsWithAlias_(programIds);
+        return await this.getByIds(programIds);
     }
 
     public async searchList(

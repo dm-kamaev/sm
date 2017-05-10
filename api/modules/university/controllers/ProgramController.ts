@@ -149,7 +149,8 @@ class ProgramController extends Controller {
             = await programService.suggestSearch(searchString);
         const result: any = {};
         if (data) {
-            result.programs = programView.suggestSearch(data);
+            const urls = await programService.getUrls(data);
+            result.programs = programView.suggestSearch(data, urls);
         }
         return result;
     }
