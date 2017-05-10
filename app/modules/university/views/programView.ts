@@ -67,13 +67,14 @@ class ProgramView {
         const formatUtils = new FormatUtils();
         const res = [];
 
-        if (item.budgetPlaces) {
+        if (item.budgetPlaces || item.egeScore) {
             res.push({
-                title: {
+                title: item.budgetPlaces ? {
                     textDefault: 'Бюджетных мест: ' + item.budgetPlaces,
                     textXs: 'Бюджетных: ' + item.budgetPlaces,
                     selected: (item.competition > 3)
-                },
+                } :
+                null,
                 value: {
                     text: item.egeScore ?
                         `от ${item.egeScore} ` + formatUtils.declensionPrint(

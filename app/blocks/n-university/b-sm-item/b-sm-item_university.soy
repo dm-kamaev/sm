@@ -34,7 +34,7 @@
  */
 
 
- /**
+/**
  * @typedef {{
  *     enableCover: boolean,
  *     stylizationModifier: string,
@@ -46,7 +46,7 @@
  */
 
 
- /**
+/**
  * Constructor
  * @param params {{
  *     data: sm.bSmItem.TemplateUniversity.Params.Data,
@@ -248,7 +248,7 @@
  * @param params {{
  *     data: {
  *         nicety: Array<{
- *             title: {
+ *             title?: {
  *                 textDefault: string,
  *                 textXs: ?string,
  *                 selected: ?boolean
@@ -297,20 +297,22 @@
  * @protected
  */
 {template .nicetyTitle}
-    {let $nicetyTitleClasses kind="text"}
-        {call .rootClass/}__nicety-title
-        {if $item.data.title.selected}
-            {sp}{call .rootClass/}__nicety-title_selected
-        {/if}
-    {/let}
+    {if $item.data.title}
+        {let $nicetyTitleClasses kind="text"}
+                {call .rootClass/}__nicety-title
+                {if $item.data.title.selected}
+                    {sp}{call .rootClass/}__nicety-title_selected
+                {/if}
+        {/let}
 
-    <div class="{$nicetyTitleClasses}
-            {sp}{call .rootClass/}__nicety-title_default">
-        {$item.data.title.textDefault}
-    </div>
-    <div class="{$nicetyTitleClasses}{sp}{call .rootClass/}__nicety-title_xs">
-        {$item.data.title.textXs}
-    </div>
+        <div class="{$nicetyTitleClasses}
+                {sp}{call .rootClass/}__nicety-title_default">
+            {$item.data.title.textDefault}
+        </div>
+        <div class="{$nicetyTitleClasses}{sp}{call .rootClass/}__nicety-title_xs">
+            {$item.data.title.textXs}
+        </div>
+    {/if}
 {/template}
 
 
