@@ -33,6 +33,10 @@ class UniversityRenderController extends Controller {
         super();
     }
 
+    public async actionGetHome(actionContext: any) {
+        actionContext.response.redirect('/program/search');
+    }
+
     public async actionGetInformation(
             actionContext: any,
             universityAlias: string,

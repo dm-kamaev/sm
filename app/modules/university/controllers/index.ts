@@ -27,6 +27,8 @@ router.get(
     universityRenderController.actionGetInformation
 );
 
+router.get('/', universityRenderController.actionGetHome);
+
 router.get(
     '/program/search',
     universityRenderController.actionGetSearch
