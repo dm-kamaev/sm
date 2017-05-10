@@ -129,6 +129,7 @@ export class ProgramSearchQuery extends SearchQuery {
             .field('program.university_id')
             .field('program.name')
             .field('program.total_score')
+            .field('program.review_count')
             .field('program.exchange_program')
             .field('program.extra_exam')
             .field('university.image_url', 'university_image_url')
@@ -185,8 +186,9 @@ export class ProgramSearchQuery extends SearchQuery {
             sortOrder = true; // squel 'ASC'
             break;
         case 2:
-            innerSortField = baseSortField = 'program.total_score';
-            sortOrder = false; // squel 'DESC'
+            innerSortField = baseSortField =
+                'program.review_count DESC NULLS LAST';
+            sortOrder = null;
             break;
         }
 
