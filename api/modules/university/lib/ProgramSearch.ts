@@ -259,13 +259,13 @@ export class ProgramSearchQuery extends SearchQuery {
 
     private setBaseOrder_(): void {
         this.baseQuery_
-            .order('program.last_ege_score', true)
+            .order('program.last_ege_score ASC NULLS LAST', null)
             .order('program.id', true);
     }
 
     private setInnerOrder_(): void {
         this.innerQuery_
-            .order('entrance_statistic.ege_pass_score')
+            .order('entrance_statistic.ege_pass_score ASC NULLS LAST', null)
             .order('program.id', true);
     }
 
