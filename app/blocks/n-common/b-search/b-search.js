@@ -891,7 +891,6 @@ goog.scope(function() {
             this.sendEcAnalytics_(data);
         }
         this.sendAnalyticsSchoolData_(data);
-
         this.redirect_(event, data);
     };
 
@@ -913,8 +912,7 @@ goog.scope(function() {
             var pageUrl = (itemType == Search.SearchType.SCHOOLS) ?
                 '/' + this.dataParams_['pageAlias'] : '';
 
-            document.location.href = pageUrl + '/' + data['item']['alias'];
-
+            document.location.href = `${pageUrl}${data['item']['alias']}`;
         } else if (this.dataParams_.redirect) {
             this.onNotEntitySelect_(event, data);
         } else {

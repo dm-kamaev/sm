@@ -356,11 +356,11 @@ view.suggest = function(data) {
 view.suggestList = function(courses) {
     return courses.map(course => ({
         id: course.id,
-        alias: this.generateAlias(
+        alias: `/${this.generateAlias(
             course.alias,
             course.brandAlias,
             course.categoryAlias
-        ),
+        )}`,
         name: course.name,
         score: course.score || [0, 0, 0, 0],
         totalScore: course.totalScore,
