@@ -72,7 +72,7 @@ class ProgramView {
                 title: item.budgetPlaces ? {
                     textDefault: 'Бюджетных мест: ' + item.budgetPlaces,
                     textXs: 'Бюджетных: ' + item.budgetPlaces,
-                    selected: (item.competition > 3)
+                    selected: (item.competition > 20)
                 } :
                 null,
                 value: {

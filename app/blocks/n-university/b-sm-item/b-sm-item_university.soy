@@ -305,8 +305,16 @@
                 {/if}
         {/let}
 
+        {let $titleAttribute kind="attributes"}
+            {if $item.data.value.selected}
+                title="Высокий конкурс"
+            {/if}
+        {/let}
+
         <div class="{$nicetyTitleClasses}
-                {sp}{call .rootClass/}__nicety-title_default">
+            {sp}{call .rootClass/}__nicety-title_default"
+            {$titleAttribute}
+        >
             {$item.data.title.textDefault}
         </div>
         <div class="{$nicetyTitleClasses}{sp}{call .rootClass/}__nicety-title_xs">
