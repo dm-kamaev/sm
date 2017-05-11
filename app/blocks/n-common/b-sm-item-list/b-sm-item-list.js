@@ -162,7 +162,7 @@ goog.scope(function() {
      */
     ItemList.prototype.addItemsBottom = function(data) {
         goog.array.forEach(data, function(rawItemData) {
-                this.addItem(rawItemData);
+            this.addItem(rawItemData);
         }, this);
 
         this.initItems_();
@@ -362,6 +362,7 @@ goog.scope(function() {
      * @public
      */
     ItemList.prototype.sendAnalyticsItemClick = function(itemId, list) {
+
         var item = this.getItem_(itemId);
 
         var data = item.getAnalyticsData({
@@ -416,7 +417,8 @@ goog.scope(function() {
         var itemId;
 
         if ((this.params.itemType == ItemList.ItemType.ITEM) ||
-            (this.params.itemType == ItemList.ItemType.ITEM_ENTITY)) {
+            (this.params.itemType == ItemList.ItemType.ITEM_ENTITY) ||
+            (this.params.itemType == ItemList.ItemType.ITEM_UNIVERSITY)) {
             itemId = event.target.getItemId();
         }
 
@@ -543,22 +545,23 @@ goog.scope(function() {
      */
     ItemList.prototype.initRenderParamsTransformator_ = function(itemType) {
         var transformators = {};
-            transformators[ItemList.ItemType.ITEM] =
-                sm.bSmItem.SmItem.getRenderParams;
-            transformators[ItemList.ItemType.ITEM_ENTITY] =
-                sm.bSmItem.SmItemEntity.getRenderParams;
-            transformators[ItemList.ItemType.ITEM_COMPACT] =
-                sm.bSmItem.SmItemCompact.getRenderParams;
-            transformators[ItemList.ItemType.ITEM_UNIVERSITY] =
-                sm.bSmItem.SmItemUniversity.getRenderParams;
-            transformators[ItemList.ItemType.LINK] =
-                sm.bSmLink.SmLink.getRenderParams;
-            transformators[ItemList.ItemType.DEPARTMENT] =
-                sm.lCourse.bDepartment.Department.getRenderParams;
-            transformators[ItemList.ItemType.COMMENT] =
-                sm.bSmComment.SmComment.getRenderParams;
-            transformators[ItemList.ItemType.INFORMATION_CARD] =
-                Card.getRenderParams;
+
+        transformators[ItemList.ItemType.ITEM] =
+            sm.bSmItem.SmItem.getRenderParams;
+        transformators[ItemList.ItemType.ITEM_ENTITY] =
+            sm.bSmItem.SmItemEntity.getRenderParams;
+        transformators[ItemList.ItemType.ITEM_COMPACT] =
+            sm.bSmItem.SmItemCompact.getRenderParams;
+        transformators[ItemList.ItemType.ITEM_UNIVERSITY] =
+            sm.bSmItem.SmItemUniversity.getRenderParams;
+        transformators[ItemList.ItemType.LINK] =
+            sm.bSmLink.SmLink.getRenderParams;
+        transformators[ItemList.ItemType.DEPARTMENT] =
+            sm.lCourse.bDepartment.Department.getRenderParams;
+        transformators[ItemList.ItemType.COMMENT] =
+            sm.bSmComment.SmComment.getRenderParams;
+        transformators[ItemList.ItemType.INFORMATION_CARD] =
+            Card.getRenderParams;
 
         this.renderParamsTransformator_ = transformators[itemType];
     };
