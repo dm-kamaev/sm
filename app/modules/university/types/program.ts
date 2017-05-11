@@ -25,7 +25,7 @@ export interface BackendProgramResults {
     programCount: number;
     universityCount: number;
     programs: Array<BackendListProgram>;
-};
+}
 
 export interface BackendListProgram {
     id: number;
@@ -46,7 +46,7 @@ export interface BackendListProgram {
     universityAlias: string;
     programCount?: string;
     universityCount?: string;
-};
+}
 
 export interface SuggestProgram {
     id: number;
@@ -54,4 +54,16 @@ export interface SuggestProgram {
     alias: string;
     score: number[];
     totalScore: number;
+}
+
+export interface BackendSuggestProgram extends SuggestProgram {
+    universityAbbreviation: string;
+}
+
+export interface SuggestList {
+    programs: SuggestProgram[];
+}
+
+export interface BackendSuggestList {
+    programs: BackendSuggestProgram[];
 }

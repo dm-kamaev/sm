@@ -3,7 +3,7 @@ import {LegacyController} from '../../../../api/components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {searchService} from '../services/searchService';
-
+import {searchView} from '../views/searchView';
 import {ProgramNameIsShorter} from './errors/ProgramNameIsShorter';
 
 export class UniversityController extends Controller {
@@ -32,6 +32,7 @@ export class UniversityController extends Controller {
      */
     public async actionSuggestSearch(actionContext: any) {
         const params = actionContext.data;
-        return searchService.findByName(params.searchString);
+        const foundData = await searchService.findByName(params.searchString);
+        return searchView.suggestList(foundData);
     }
 }

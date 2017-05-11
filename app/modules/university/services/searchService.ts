@@ -7,7 +7,7 @@ import {
 } from '../types/programSearch';
 
 import {Service, RequestParams} from '../../common/services/Service';
-import {SuggestProgram, BackendProgramResults} from '../types/program';
+import {BackendSuggestList, BackendProgramResults} from '../types/program';
 
 import {ProgramNameIsShorter} from './exceptions/ProgramNameIsShorter';
 
@@ -18,7 +18,7 @@ class SearchService extends Service {
         this.baseUrl += '/universities/api/program/search';
     }
 
-    public async findByName(name: string): Promise<SuggestProgram[]> {
+    public async findByName(name: string): Promise<BackendSuggestList> {
         const requestParams: RequestParams = {
             url: this.baseUrl + '/suggest',
             method: 'get',
@@ -105,4 +105,3 @@ class SearchService extends Service {
 }
 
 export const searchService = new SearchService();
-
