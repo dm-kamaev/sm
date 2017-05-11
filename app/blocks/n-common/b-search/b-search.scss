@@ -99,6 +99,12 @@
     display: none;
 }
 
+.b-search__icon_position_left {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+}
+
 .b-search__item {
     position: relative;
 
@@ -183,6 +189,22 @@
         border: none;
         background-color: transparent;
     }
+}
+
+.b-search_theme_neptune {
+    .b-search__suggest {
+        padding-left: 32px;
+        border-radius: 2px;
+    }
+
+    .b-search__item {
+        padding-left: 20px;
+        font-size: 15px;
+    }
+}
+
+.b-search__list_shifted {
+    top: calc(100% + 2px);
 }
 
 /* list items in suggest end*/

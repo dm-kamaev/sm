@@ -235,7 +235,17 @@
  *         searchCity: ({
  *             placeholder: string,
  *             text: string,
- *             sourceUrl: string
+ *             sourceUrl: string,
+ *             suggestList: ({
+ *                 theme: string,
+ *                 color: string,
+ *                 isShifted: boolean
+ *             }|undefined),
+ *             icon: ({
+ *                 name: string,
+ *                 type: string,
+ *                 position: string
+ *             }|undefined)
  *         }|undefined)
  *     }
  * }}
@@ -250,15 +260,17 @@
                 {param params: [
                     'placeholder': $params.data.searchCity.placeholder,
                     'text': $params.data.searchCity.text,
-                    'theme': 'min',
+                    'theme': $params.data.searchCity.theme,
                     'customClasses': $customClasses,
                     'inputSize': 'min',
+                    'icon': $params.data.searchCity.icon,
+                    'suggestList': $params.data.searchCity.suggestList,
                     'data': [
                         'sourceUrl': $params.data.searchCity.sourceUrl,
                         'argName': 'name'
                     ],
                     'config': [
-                        'showSearchIcon': true,
+                        'showSearchIcon': false,
                         'height': 'l'
                     ]
                 ]/}

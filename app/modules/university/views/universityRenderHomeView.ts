@@ -66,7 +66,18 @@ class UniversityRenderHomeView extends LayoutView {
                 urlRedirect: '/program/search',
                 searchCity: {
                     placeholder: 'Город или название региона',
-                    sourceUrl: '/program/geosearch'
+                    sourceUrl: '/program/geosearch',
+                    icon: {
+                        name: 'location_black',
+                        type: 'svg',
+                        position: 'left'
+                    },
+                    theme: 'neptune',
+                    suggestList: {
+                        theme: 'neptune',
+                        color: 'blue',
+                        isShifted: true
+                    }
                 },
                 payType: {
                     content: [

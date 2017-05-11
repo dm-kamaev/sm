@@ -29,6 +29,16 @@
  *     customClasses: ?string,
  *     inputSize: ?string,
  *     searchArgs: ?string,
+ *     icon: ({
+ *         name: string,
+ *         type: string,
+ *         position: string
+ *     }|undefinded),
+ *     suggestList: ({
+ *         theme: string,
+ *         color: string,
+ *         isShifted: string
+ *     }}|undefined),
  *     data: ?sm.bSearch.Template.Params.Data,
  *     config: ?sm.bSearch.Template.Params.Config
  * }} sm.bSearch.Template.Params
@@ -90,6 +100,21 @@
             {call .searchButton_ /}
         {/if}
 
+        {if $params.icon}
+            {let $type: $params.icon.type == 'png' ? 'icon' : 'icon-svg' /}
+
+            <div class="b-search__icon b-search__icon_position_{$params.icon.position}">
+                {call sm.iCloblFactory.FactoryStendhal.INSTANCE.soy}
+                    {param type: $type /}
+                    {param renderParams: [
+                        'data': [
+                            'type': $params.icon.name
+                        ]
+                    ]/}
+                {/call}
+            </div>
+        {/if}
+
         {let $minLength: $params.config.entityType == 'school' ? 2 : 3 /}
 
         {let $sourceUrl: $params?.data?.sourceUrl ?:
@@ -100,6 +125,26 @@
                 true :
                 false
         /}
+
+        {let $suggestListTheme kind="text"}
+            {if $params.suggestList and $params.suggestList.theme}
+                {$params.suggestList.theme}
+            {elseif $isUniversity}
+                neptune
+            {else}
+                stendhal
+            {/if}
+        {/let}
+
+        {let $suggestListColor kind="text"}
+            {if $params.suggestList and $params.suggestList.color}
+                {$params.suggestList.color}
+            {elseif $isUniversity}
+                blue
+            {else}
+                sienna
+            {/if}
+        {/let}
 
         <div class="b-search__suggest-holder i-animate">
             {call gorod.gSuggest.SuggestTemplate.render}
@@ -119,8 +164,10 @@
                         'notShowList': $params?.config?.notShowList
                     ],
                     'list': [
-                        'theme': $isUniversity ? 'neptune' : 'stendhal',
-                        'color': $isUniversity ? 'blue' : 'sienna'
+                        'theme': $suggestListTheme,
+                        'color': $suggestListColor,
+                        'extraClasses': $params.suggestList?.isShifted ?
+                            'b-search__list_shifted' : ''
                     ],
                     'input': [
                         'style': [
