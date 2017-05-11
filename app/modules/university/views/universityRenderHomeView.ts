@@ -9,6 +9,7 @@ const pageName = require('../../common/enums/pageName');
 import {UniversitySubHeader} from './UniversitySubHeader';
 import {UniversityFooter} from './UniversityFooter';
 
+import {Subject} from '../types/egeExam';
 import {
     RenderParams,
     BackendData
@@ -18,6 +19,10 @@ import {
     lHomeUniversity
 } from '../../../blocks/n-university/l-home-university/params';
 
+type Ege = {
+    label: string;
+    value: number;
+};
 
 class UniversityRenderHomeView extends LayoutView {
     protected params: lHomeUniversity.Params;
@@ -80,23 +85,9 @@ class UniversityRenderHomeView extends LayoutView {
                 ege: {
                     name: 'ege',
                     header: {
-                        title: 'Укажите ЕГЭ по выбору'
+                        title: 'Укажите минимум 3 предмета ЕГЭ по выбору'
                     },
-                    options: [
-                        {
-                            label: 'Русский язык',
-                            value: 0
-                        }, {
-                            label: 'Литература',
-                            value: 1
-                        }, {
-                            label: 'Математика (базовая)',
-                            value: 2
-                        }, {
-                            label: 'Математика (профильн.)',
-                            value: 3
-                        }
-                    ]
+                    options: this.transformEge(data.ege)
                 },
                 button: {
                     content: 'Подобрать',
@@ -104,7 +95,13 @@ class UniversityRenderHomeView extends LayoutView {
                     borderRoundSize: 'xl'
                 }
             },
-            config: {}
+            config: {
+                optionsTheme: 'zebra',
+                checkboxIcon: {
+                    check: 'checked-blue',
+                    uncheck: 'unchecked-blue'
+                }
+            }
         };
     };
 
@@ -127,6 +124,15 @@ class UniversityRenderHomeView extends LayoutView {
 
     private setArticles_() {
         this.params.data.articles = {};
+    }
+
+    private transformEge(data: Subject[]): Ege[] {
+        return data.map(item => {
+            return {
+                label: item.displayName,
+                value: item.id
+            };
+        });
     }
 }
 

@@ -13,5 +13,6 @@ export type RenderParams = {
 };
 
 export type BackendData = {
-    favorites: Array<{string: any}>;
+    favorites: {string: any}[];
+    ege: Subject[];
 };
