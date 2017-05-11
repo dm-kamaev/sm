@@ -40,10 +40,11 @@ abstract class SubHeader {
     };
 
     protected search: {
-        placeholder: string,
-        pageAlias: string,
-        redirect: boolean,
-        sourceUrl?: string
+        placeholder: string;
+        pageAlias: string;
+        redirect: boolean;
+        sourceUrl?: string;
+        disableSearchBehavior?: boolean;
     };
 
     protected favorites: {

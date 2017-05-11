@@ -11,6 +11,7 @@
  * typedef {{
  *     showSearchIcon: ?boolean,
  *     notShowList: ?boolean,
+ *     disableSearchBehavior: ?boolean,
  *     height: ?string,
  *     faderSize: ?string,
  *     entityType: string
@@ -42,14 +43,18 @@
 {template .base autoescape="strict" kind="html"}
     {let $data: [
         'redirect': $params?.redirect,
-        'pageAlias': $params.pageAlias
+        'pageAlias': $params.pageAlias,
+        'disableSearchBehavior': $params?.config.disableSearchBehavior
     ] /}
 
     <div class="b-search{sp}
                 b-search_theme_{$params.theme}{sp}
                 b-search_height_{$params?.config?.height ?: 'm'}{sp}
                 {$params?.customClasses ? $params?.customClasses + ' ' : ''}
-                {$params?.theme == 'foldable' ? 'i-animate ' : ''}"
+                {$params?.theme == 'foldable' ? 'i-animate ' : ''}
+                {$params?.config.disableSearchBehavior ?
+                    ' b-search_search-behavior_disabled' :
+                    ''}"
         data-params="{call goog.json.serialize data="$data" /}"
     >
 

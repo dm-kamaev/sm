@@ -21,7 +21,8 @@
  *         placeholder: (string|undefined),
  *         redirect: boolean,
  *         pageAlias: string,
- *         sourceUrl: ?string
+ *         sourceUrl: ?string,
+ *         disableSearchBehavior: boolean
  *     },
  *     favorites: sm.bSmFavorite.Template.Params.Data
  * }} sm.bSmSubheader.Template.Params.Data
@@ -439,6 +440,17 @@
         {call .rootClass/}__search_visible_l
     {/let}
 
+    {let $data: [
+        'sourceUrl': $params.data?.search?.sourceUrl
+    ] /}
+
+    {let $config: [
+        'entityType': $params.config.entityType,
+        'showSearchIcon': true,
+        'disableSearchBehavior': $params.data.search?.disableSearchBehavior,
+        'height': 'l'
+    ] /}
+
     {call sm.bSearch.Template.base}
         {param params: [
             'placeholder': $params.data?.search?.placeholder,
@@ -447,14 +459,8 @@
             'redirect': $params.data?.search?.redirect,
             'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
-            'data': [
-                'sourceUrl': $params.data?.search?.sourceUrl
-            ],
-            'config': [
-                'entityType': $params.config.entityType,
-                'showSearchIcon': true,
-                'height': 'l'
-            ]
+            'data': $data,
+            'config': $config
         ]/}
     {/call}
 {/template}
@@ -482,6 +488,16 @@
         {call .rootClass/}__search_visible_s
     {/let}
 
+    {let $data: [
+        'sourceUrl': $params.data?.search?.sourceUrl
+    ] /}
+
+    {let $config: [
+        'entityType': $params.config.entityType,
+        'disableSearchBehavior': $params.data.search?.disableSearchBehavior,
+        'height': 'xxl'
+    ] /}
+
     {call sm.bSearch.Template.base}
         {param params: [
             'placeholder': $params.data?.search?.placeholder,
@@ -490,13 +506,8 @@
             'redirect': $params.data?.search?.redirect,
             'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
-            'data': [
-                'sourceUrl': $params.data?.search?.sourceUrl
-            ],
-            'config': [
-                'entityType': $params.config.entityType,
-                'height': 'xxl'
-            ]
+            'data': $data,
+            'config': $config
         ]/}
     {/call}
 {/template}

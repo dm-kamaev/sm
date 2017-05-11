@@ -47,7 +47,8 @@ class UniversitySubHeader extends SubHeader {
             placeholder: 'Специальность, вуз…',
             pageAlias: 'search',
             redirect: false,
-            sourceUrl: '/university/suggest'
+            sourceUrl: '/university/suggest',
+            disableSearchBehavior: true
         };
     }
 

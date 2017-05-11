@@ -993,7 +993,9 @@ goog.scope(function() {
      * @param {Object} event
      */
     Search.prototype.onSubmit_ = function(event) {
-        this.search();
+        if (!this.dataParams_['disableSearchBehavior']) {
+            this.search();
+        }
     };
 
 
