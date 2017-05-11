@@ -14,7 +14,7 @@ class UniversityFooter extends Footer {
                 type: 'smHeadedList',
                 links: [{
                     content: 'Программы обучения',
-                    url: 'http://mel.fm/'
+                    url: '/program/search'
                 }/*, {
                     content: 'ВУЗы',
                     url: 'http://mel.fm/'
