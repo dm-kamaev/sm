@@ -327,8 +327,9 @@ class InformationView extends LayoutView {
             itemDescription;
         const cost = data.entranceStatistic.cost;
         if (cost) {
+            const formattedCost = this.formatCost(cost);
             itemHeader = 'Стоимость / год';
-            itemDescription = `${cost} ₽`;
+            itemDescription = `${formattedCost} ₽`;
         }
 
 
@@ -444,6 +445,13 @@ class InformationView extends LayoutView {
         }];
 
         return {item, list, buttonLink};
+    }
+
+    private formatCost(cost) {
+        const costStr = cost.toString();
+        return costStr.length ?
+            this.formatCost(costStr.substr(0, costStr.length - 3)) + ' ' +
+                    costStr.slice(-3) : '';
     }
 
     private getBannerParams_(data: BackendData): bSmBanner.Params {
