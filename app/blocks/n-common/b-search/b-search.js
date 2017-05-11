@@ -195,6 +195,7 @@ goog.scope(function() {
      *     areaId: ?number,
      *     metroId: ?number,
      *     districtId: ?number,
+     *     cityId: ?number,
      *     text: ?string
      * }}
      */
@@ -210,6 +211,7 @@ goog.scope(function() {
             'metroId': this.getMetroId(),
             'areaId': this.getAreaId(),
             'districtId': this.getDistrictId(),
+            'cityId': this.getCityId(),
             'text': this.getText()
         };
     };
@@ -220,6 +222,7 @@ goog.scope(function() {
      *     areaId: ?number,
      *     metroId: ?number,
      *     districtId: ?number,
+     *     cityId: ?number,
      *     coords: Array.<number>,
      *     text: ?string
      * }} data
@@ -237,6 +240,10 @@ goog.scope(function() {
 
         if (data.hasOwnProperty('districtId')) {
             this.setDistrictId(data['districtId']);
+        }
+
+        if (data.hasOwnProperty('cityId')) {
+            this.setCityId(data['cityId']);
         }
 
         if (data.hasOwnProperty('text')) {

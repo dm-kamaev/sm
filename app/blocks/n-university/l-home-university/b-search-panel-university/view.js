@@ -58,4 +58,28 @@ goog.scope(function() {
             )
         };
     };
+
+
+    /**
+     * Return data-params from dom element
+     * @return {Object}
+     * @protected
+     * @override
+     */
+    View.prototype.getParams = function() {
+        var dataParams = View.base(this, 'getParams');
+        return this.transformParams(dataParams);
+    };
+
+    /**
+     * Transform raw params from dom element
+     * @param {Object} rawParams
+     * @return {Object}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            urlRedirect: rawParams['urlRedirect']
+        };
+    };
 });  // goog.scope

@@ -1,6 +1,7 @@
 /**
  * @fileoverview View for search page
  */
+/* tslint:disable:max-file-line-count */
 import {LayoutView} from '../../common/lib/Layout';
 
 import {entityType} from '../../common/enums/entityType';
@@ -15,9 +16,8 @@ import {
     BackendData
 } from '../types/universityHomeLayout';
 
-import {
-    lHomeUniversity
-} from '../../../blocks/n-university/l-home-university/params';
+import {lHomeUniversity} from '../../../blocks/n-university/l-home-university/params';
+import {bSearchPanel} from '../../../blocks/n-university/l-home-university/b-search-panel-university/params';
 
 type Ege = {
     label: string;
@@ -60,9 +60,10 @@ class UniversityRenderHomeView extends LayoutView {
     }
 
     private setSearchPanel_(data: BackendData) {
-        this.params.data.searchPanel = {
+        const params: bSearchPanel.Params = {
             data: {
                 title: 'Удобный подбор программ бакалавриата',
+                urlRedirect: '/program/search',
                 searchCity: {
                     placeholder: 'Город или название региона',
                     sourceUrl: '/program/geosearch'
@@ -77,7 +78,8 @@ class UniversityRenderHomeView extends LayoutView {
                             value: 1
                         }, {
                             label: 'Платное и бюджетное',
-                            value: 2
+                            value: [0, 1],
+                            isSelected: true
                         }
                     ],
                     contentConfig: null
@@ -103,6 +105,7 @@ class UniversityRenderHomeView extends LayoutView {
                 }
             }
         };
+        this.params.data.searchPanel = params;
     };
 
     private setPopularUniversities_() {

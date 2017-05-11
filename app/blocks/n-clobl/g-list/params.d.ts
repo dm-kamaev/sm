@@ -10,7 +10,7 @@ export namespace gList {
          */
         export interface Item {
             label?: string;
-            value?: (string|number);
+            value?: (string|number|string[]|number[]);
             url?: string;
             isSelected?: boolean;
             isDisabled?: boolean;

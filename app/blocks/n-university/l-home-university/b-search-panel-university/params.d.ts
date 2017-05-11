@@ -1,7 +1,7 @@
 import {bFilter} from '../../../n-common/l-search/b-filter/params';
 import {gList} from '../../../n-clobl/g-list/params';
 
-export namespace bFilterPanel {
+export namespace bSearchPanel {
     /**
      * sm.bSearchPanelUniversity.Params
      */
@@ -11,6 +11,7 @@ export namespace bFilterPanel {
          */
         export interface Data {
             title?: string;
+            urlRedirect?: string;
             searchCity?: any;
             payType?: {
                 content?: gList.Params.Item[],

@@ -214,7 +214,7 @@
 {template .openirText}
     {let $checkedOpener kind="text"}
         {foreach $option in $content}
-            {if $option?.isChecked}
+            {if $option?.isSelected}
                 {$option.label}
             {/if}
         {/foreach}
@@ -306,6 +306,24 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     data: {
+ *         urlRedirect: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: quoteKeysIfJs([
+            'urlRedirect': $params?.data.urlRedirect,
+        ]) /}
+    {/call}"
 {/template}
 
 

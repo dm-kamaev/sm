@@ -5,6 +5,7 @@ goog.require('sm.bSearch.Search');
 goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.iCloblFactory.FactoryStendhal');
+goog.require('sm.iSmQueryBuilder.QueryBuilder');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.bSearchPanelUniversity.Template');
@@ -23,6 +24,8 @@ sm.bSearchPanelUniversity.SearchPanelUniversity =
     function(view, opt_domHelper) {
     sm.bSearchPanelUniversity.SearchPanelUniversity.base(this, 'constructor',
         view, opt_domHelper);
+
+    var QueryBuilder = goog.module.get('sm.iSmQueryBuilder.QueryBuilder');
 
     /**
      * Instance of bSearch
@@ -54,6 +57,14 @@ sm.bSearchPanelUniversity.SearchPanelUniversity =
      * @private
      */
     this.button_ = null;
+
+
+    /**
+     * Query builder instance
+     * @type {sm.iSmQueryBuilder.QueryBuilder}
+     * @private
+     */
+    this.queryBuilder_ = new QueryBuilder();
 };
 goog.inherits(
     sm.bSearchPanelUniversity.SearchPanelUniversity,
@@ -113,20 +124,41 @@ goog.scope(function() {
         this.initButtonListeners_();
     };
 
+
     /**
      * Get data
      * @return {{
-     *      searchCity: string,
-     *      payType: number,
-     *      searchEge: sm.lSearch.bFilter.Filter.Data
+     *      cities: ?number,
+     *      payType: (number|number[]),
+     *      egeSubjects: ?(number[])
      * }}
      */
     SearchPanel.prototype.getData = function() {
-        return {
-            searchCity: this.searchCity_.getText(),
-            payType: this.payType_.getValue(),
-            searchEge: this.searchEge_.getCheckedData()
+        var data = {
+            payType: this.payType_.getValue()
         };
+
+        var cities = this.searchCity_.getCityId();
+        if (cities) {
+            data.cities = cities;
+        }
+
+        var ege = this.getEgeIdes();
+        if (ege.length) {
+            data.egeSubjects = ege;
+        }
+
+        return data;
+    };
+
+
+    /**
+     * Get data
+     * @return {number[]}
+     */
+    SearchPanel.prototype.getEgeIdes = function() {
+        var ege = this.searchEge_.getCheckedData();
+        return ege.map(item => item.value);
     };
 
 
@@ -150,12 +182,21 @@ goog.scope(function() {
      * @private
      */
     SearchPanel.prototype.onSubmit_ = function() {
-        this.dispatchEvent({
-            'type': SearchPanel.Event.SUBMIT,
-            'data': this.getData()
-        });
+        this.redirect_();
     };
 
+
+    /**
+     * Button submit handler
+     * @private
+     */
+    SearchPanel.prototype.redirect_ = function() {
+        var data = this.getData();
+        var queryData = this.queryBuilder_.buildUrlQuery(data);
+        var url = this.params.urlRedirect + '?' + queryData.toString();
+
+        window.location.href = url;
+    };
 
     /**
      * Initializes listeners for viewport
