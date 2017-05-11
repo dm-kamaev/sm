@@ -6,6 +6,7 @@ goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.bSearchPanelUniversity.Template');
 goog.require('sm.bSearchPanelUniversity.View');
 
@@ -62,7 +63,8 @@ goog.inherits(
 
 goog.scope(function() {
     var SearchPanel = sm.bSearchPanelUniversity.SearchPanelUniversity,
-        View = sm.bSearchPanelUniversity.View;
+        View = sm.bSearchPanelUniversity.View,
+        viewport = sm.iSmViewport.SmViewport.getInstance();
 
     /**
      * Name of this element in factory
@@ -96,6 +98,7 @@ goog.scope(function() {
     SearchPanel.prototype.decorateInternal = function(element) {
         SearchPanel.base(this, 'decorateInternal', element);
 
+        this.initViewportListener_();
         this.initSearchBlocks_();
         this.initButton_();
     };
@@ -154,6 +157,38 @@ goog.scope(function() {
     };
 
 
+    /**
+     * Initializes listeners for viewport
+     * @private
+     */
+    SearchPanel.prototype.initViewportListener_ = function() {
+        this.getHandler().listen(
+            viewport,
+            sm.iSmViewport.SmViewport.Event.RESIZE,
+            this.onResize_
+        );
+    };
+
+
+    /**
+     * Resize handler
+     * @private
+     */
+    SearchPanel.prototype.onResize_ = function() {
+        this.displayNeededCountOfCheckboxes();
+    };
+
+    /**
+     * Show/hide options in different sizes of screen
+     */
+    SearchPanel.prototype.displayNeededCountOfCheckboxes = function() {
+        if (viewport.getSize() <= sm.iSmViewport.SmViewport.Size.XS) {
+            this.searchEge_.showLess();
+        } else {
+            this.searchEge_.showMore();
+        }
+    };
+
 
     /**
      * Initializes filter array
@@ -162,6 +197,12 @@ goog.scope(function() {
     SearchPanel.prototype.initSearchBlocks_ = function() {
         var dom = this.getView().getDom();
 
+        this.searchEge_ = this.decorateChild(
+            sm.lSearch.bFilter.Filter.NAME,
+            dom.searchEge
+        );
+        this.displayNeededCountOfCheckboxes();
+
         this.searchCity_ = new sm.bSearch.Search();
         this.addChild(this.searchCity_);
         this.searchCity_.decorate(dom.searchCity);
@@ -169,11 +210,6 @@ goog.scope(function() {
         this.payType_ = this.decorateChild(
             sm.gDropdown.DropdownSelect.NAME,
             dom.payType
-        );
-
-        this.searchEge_ = this.decorateChild(
-            sm.lSearch.bFilter.Filter.NAME,
-            dom.searchEge
         );
     };
 

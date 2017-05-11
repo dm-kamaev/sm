@@ -224,6 +224,24 @@ goog.scope(function() {
 
 
     /**
+     * Show more options
+     * @public
+     */
+    Filter.prototype.showMore = function() {
+        this.getView().showMore();
+    };
+
+
+    /**
+     * Hide more options
+     * @public
+     */
+    Filter.prototype.showLess = function() {
+        this.getView().showLess();
+    };
+
+
+    /**
      * Check option
      * @param {sm.bSmCheckbox.SmCheckbox.Params} data
      */

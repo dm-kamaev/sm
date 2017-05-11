@@ -364,7 +364,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onButtonShowMoreClick_ = function() {
-        this.showMore_();
+        this.showMore();
     };
 
 
@@ -373,15 +373,15 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onButtonShowLessClick_ = function() {
-        this.showLess_();
+        this.showLess();
     };
 
 
     /**
      * Show more options
-     * @private
+     * @public
      */
-    View.prototype.showMore_ = function() {
+    View.prototype.showMore = function() {
         this.setMoreOptionsVisibility_(true);
         this.setButtonMoreState_(true);
     };
@@ -389,9 +389,9 @@ goog.scope(function() {
 
     /**
      * Hide more options
-     * @private
+     * @public
      */
-    View.prototype.showLess_ = function() {
+    View.prototype.showLess = function() {
         this.setMoreOptionsVisibility_(false);
         this.setButtonMoreState_(false);
     };

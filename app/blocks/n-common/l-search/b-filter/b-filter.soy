@@ -23,6 +23,7 @@
  *     optionsToShow: (number|undefined),
  *     cannotBeHidden: (boolean|undefined),
  *     isShowed: (boolean|undefined),
+ *     showAllDefault: (boolean|undefined),
  *     showMoreButtonText: (number|undefined),
  *     theme: ('light'|'minimal'|undefined),
  *     align: (string|undefined),
@@ -129,6 +130,7 @@
  *         type: (string|undefined),
  *         optionsToShow: (number|undefined),
  *         cannotBeHidden: (boolean|undefined),
+ *         showAllDefault: (boolean|undefined),
  *         isShowed: (bolean|undefined),
  *         showMoreButtonText: (number|undefined),
  *         align: (string|undefined),
@@ -168,6 +170,7 @@
  *     },
  *     config: {
  *         optionsToShow: (number|undefined),
+ *         showAllDefault: (boolean|undefined),
  *         type: (string|undefined),
  *         align: (string|undefined),
  *         stylizationModifier: string,
@@ -197,7 +200,9 @@
                         'isChecked': $params.data.options[$i]?.isChecked ?: ''
                     ],
                     'config': [
-                        'hidden': $i + 1 > $numberOptionsToShow ? true : false,
+                        'hidden': $i + 1 > $numberOptionsToShow ?
+                            not $params.config?.showAllDefault :
+                            false,
                         'hidable': $i + 1> $numberOptionsToShow ? true : false,
                         'theme': $params.config.align == 'horizontal' ?
                             'narrow' : $params.config.optionsTheme,
@@ -367,6 +372,7 @@
  *     },
  *     config: {
  *         cannotBeHidden: (boolean|undefined),
+ *         showAllDefault: (boolean|undefined),
  *         optionsToShow: (number|undefined),
  *         showMoreButtonText: (number|undefined)
  *     }
@@ -389,6 +395,7 @@
     {if $params.data.options.length > $numberOptionsToShow}
         {call .showMoreButton}
             {param text: $showMoreButtonText/}
+            {param showAllDefault: $params.config?.showAllDefault/}
         {/call}
     {/if}
 {/template}
@@ -397,11 +404,18 @@
 /**
  * Show more template
  * @param text {string}
+ * @param showAllDefault {boolean}
  * @protected
  */
 {template .showMoreButton}
-    <div class="{call .rootClass/}__button{sp}
-                {call .rootClass/}__button_show-more">
+    {let $showMoreClasses kind="text"}
+        {call .rootClass/}__button {sp}{call .rootClass/}__button_show-more
+        {if $showAllDefault}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$showMoreClasses}">
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
@@ -414,9 +428,14 @@
         {/call}
     </div>
 
-    <div class="{call .rootClass/}__button{sp}
-                {call .rootClass/}__button_show-less{sp}
-                i-utils__hidden">
+    {let $showLessClasses kind="text"}
+        {call .rootClass/}__button {sp}{call .rootClass/}__button_show-less
+        {if not $showAllDefault}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$showLessClasses}">
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
