@@ -251,6 +251,12 @@
     }
 }
 
+.b-search_search-behavior_disabled {
+    .b-search__control {
+        cursor: default;
+    }
+}
+
 /* animation polyfill */
 .b-search_mode_search.b-search_animation_off {
     .b-search__control {
