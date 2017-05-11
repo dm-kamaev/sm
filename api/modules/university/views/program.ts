@@ -35,6 +35,7 @@ class ProgramView {
             return {
                 id: program.id,
                 name: program.name || '',
+                universityAbbreviation: program.university.abbreviation,
                 alias: url,
                 score: program.score || [],
                 totalScore: program.totalScore || 0,

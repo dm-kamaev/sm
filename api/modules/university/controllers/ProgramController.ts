@@ -103,23 +103,29 @@ class ProgramController extends Controller {
      *
      * @apiParamExample {json} Request-Example:
      *     {
-     *         "searchString" : "ика",
+     *         "searchString" : "ика"
      *     }
      *
-     * @apiSuccess {Object[]} programs            Array of found programs.
-     * @apiSuccess {Number}   programs.id         Program's id.
-     * @apiSuccess {String}   programs.name       Program's name.
-     * @apiSuccess {String}   programs.alias      Program's url
-     * @apiSuccess {Number[]} programs.score      Program's scores array
-     * @apiSuccess {Number}   programs.totalScore Program's total score.
+     * @apiSuccess {Object[]} programs                       Array of found
+     *     programs.
+     * @apiSuccess {Number}   programs.id                    Program's id.
+     * @apiSuccess {String}   programs.name                  Program's name.
+     * @apiSuccess {String}   program.universityAbbreviation Abbreviation of
+     *     university.
+     * @apiSuccess {String}   programs.alias                 Program's url.
+     * @apiSuccess {Number[]} programs.score                 Program's scores
+     *     array.
+     * @apiSuccess {Number}   programs.totalScore            Program's total
+     *     score.
      *
      * @apiSuccessExample {json} Success-Response:
      *    {
      *        "programs": [
      *            {
      *                "id": 12,
-     *                "name": "Прикладная математика",
-     *                "alias": "prikladnaya-matematika",
+     *                "name": "Экономика",
+     *                "universityAbbreviation": "МГТУ им. Н. Э. Баумана",
+     *                "alias": "/vuz/niu-vshe/specialnost/ekonomika",
      *                "score": [
      *                    1,
      *                    2,
@@ -131,7 +137,8 @@ class ProgramController extends Controller {
      *            {
      *                "id": 13,
      *                "name": "Экономика",
-     *                "alias": "ehkonomika",
+     *                "universityAbbreviation": "МИРЭА, МГУПИ, МИТХТ",
+     *                "alias": "/vuz/msu/specialnost/ekonomika",
      *                "score": [],
      *                "totalScore": 0
      *            }

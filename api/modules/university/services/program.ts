@@ -57,6 +57,10 @@ import {UrlTemplate} from '../constants/UrlTemplate';
 
 import {ProgramNotFound, ProgramNameIsShorterException} from './exceptions';
 
+type GetByIdsParams = {
+    includeUniversities?: boolean;
+};
+
 const EXCLUDE_FIELDS = [
     'created_at',
     'updated_at',
@@ -162,14 +166,22 @@ class ProgramService {
         return instance;
     }
 
-    public async getByIds(programIds: number[]): Promise<ProgramInstance[]> {
+    public async getByIds(
+            programIds: number[],
+            params?: GetByIdsParams
+    ): Promise<ProgramInstance[]> {
+        const include = params && params.includeUniversities && [{
+            model: UniversityModel,
+            as: 'university'
+        }];
         return ProgramModel.findAll({
             where: {
                 id: programIds
             },
             attributes: {
                 exclude: EXCLUDE_FIELDS
-            }
+            },
+            include: include
         });
     }
 
@@ -326,7 +338,7 @@ class ProgramService {
             return null;
         }
         const programIds: number[] = founded.program;
-        return await this.getByIds(programIds);
+        return await this.getByIds(programIds, {includeUniversities: true});
     }
 
     public async searchList(
