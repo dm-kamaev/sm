@@ -110,7 +110,8 @@ class UniversityRenderHomeView extends LayoutView {
                 button: {
                     content: 'Подобрать',
                     theme: 'noon',
-                    borderRoundSize: 'xl'
+                    borderRoundSize: 'xl',
+                    size: 'm'
                 }
             },
             config: {

@@ -22,6 +22,7 @@ export namespace bSearchPanel {
                 content: string;
                 theme?: string;
                 borderRoundSize?: string;
+                size?: string;
             };
         }
 

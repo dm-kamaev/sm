@@ -56,13 +56,16 @@
 
 .g-button_carrot-theme {
     height: 100%;
+    padding: 0;
+
+    letter-spacing: 0.5px;
+
+    color: #fff;
+    border: none;
+    background-color: #ed6327;
+
     font-size: 12px;
     line-height: inherit;
-    letter-spacing: 0.5px;
-    color: #fff;
-    background-color: #ed6327;
-    border: none;
-    padding: 0;
 
     &:hover {
         background-color: #ed6327;
@@ -121,15 +124,18 @@
 }
 
 .g-button_noon-theme {
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-    background-color: #ffa836;
-    color: #ffffff;
-    font-weight: 600;
+    letter-spacing: 0;
     text-transform: none;
+
+    color: #ffffff;
     border-color: transparent;
+    background-color: #ffa836;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+
+    font-weight: 600;
 
     &:hover {
-        background-color: #ffa836;
+        background-color: #ffbd55;
     }
 }
 
@@ -143,6 +149,7 @@
     .g-button__content-icon {
         position: relative;
         top: -1px;
+
         margin-right: 5px;
     }
 }
