@@ -34,6 +34,44 @@
     }
 }
 
+.g-dropdown_select.g-dropdown_neptune-theme {
+    .g-dropdown__opener {
+        box-sizing: border-box;
+        height: 50px;
+        border-radius: 2px;
+
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+
+        border: 1px solid #deded8;
+
+        line-height: 50px;
+    }
+
+    .g-dropdown__opener-text {
+        color: #747474;
+        margin-left: 10px;
+    }
+
+    .g-dropdown__opener-arrow-icon {
+        float: right;
+
+        margin-right: 10px;
+    }
+
+    .g-dropdown__opener-text-icon {
+        float: left;
+
+        margin-left: 10px;
+        position: relative;
+        top: -1px;
+    }
+
+    .g-dropdown__content {
+        margin-top: 2px;
+    }
+}
+
 
 .g-dropdown_select.g-dropdown_light-theme {
     .g-dropdown__opener {

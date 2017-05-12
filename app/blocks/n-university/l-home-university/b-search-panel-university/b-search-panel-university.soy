@@ -167,8 +167,7 @@
  * @param params {{
  *     data: {
  *         payType: {
- *             content: sm.gList.Params.Item,
- *             contentConfig: sm.gList.Params.Config
+ *             content: sm.gList.Params.Item
  *         }
  *     }
  * }}
@@ -194,11 +193,26 @@
                        'content': [
                            'items': $params.data.payType.content
                        ],
-                       'contentConfig': $params.data.payType.contentConfig
+                       'contentConfig': [
+                           'theme': 'neptune'
+                       ]
                    ],
                    'config': [
                        'customClasses': [$customClasses],
-                       'theme': 'light'
+                        'openerArrowIcon': [
+                            'down': [
+                                'default': [
+                                    'iconName': 'filter-arrow-down'
+                                ]
+                            ]
+                        ],
+                        'openerTextIcon': [
+                            'default': [
+                                'iconType': 'icon-svg',
+                                'iconName': 'coins'
+                            ]
+                        ],
+                       'theme': 'neptune'
                    ]
                ]
            ] /}

@@ -88,18 +88,17 @@ class UniversityRenderHomeView extends LayoutView {
                 payType: {
                     content: [
                         {
-                            label: 'Платное',
-                            value: 0
-                        }, {
-                            label: 'Бюджетное',
-                            value: 1
-                        }, {
                             label: 'Платное и бюджетное',
                             value: [0, 1],
                             isSelected: true
+                        }, {
+                            label: 'Только платное',
+                            value: 1
+                        }, {
+                            label: 'Только бюджетное',
+                            value: 0
                         }
-                    ],
-                    contentConfig: null
+                    ]
                 },
                 ege: {
                     name: 'ege',
