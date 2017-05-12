@@ -22,7 +22,7 @@ import {
     lHomeUniversity
 } from '../../../blocks/n-university/l-home-university/params';
 
-// tslint:disable-next-line:disable:max-line-length
+// tslint:disable-next-line:max-line-length
 import {bSearchPanel} from '../../../blocks/n-university/l-home-university/b-search-panel-university/params';
 
 type Ege = {
