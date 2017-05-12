@@ -29,7 +29,7 @@
  *     data: sm.gDropdown.TemplateSelect.Params.Data,
  *     config: sm.gDropdown.TemplateSelect.Params.Config
  * }}
- * @extends cl.gDropdown.Template
+ * @extends sm.gDropdown.TemplateStendhal
  * @factory sm.iCloblFactory.FactoryStendhal
  * @constructor
  * @doc
@@ -63,29 +63,6 @@
  */
 {template .opener}
     {call .openerContent data="all" /}
-{/template}
-
-
-/**
- * Content of opener
- * @param params {{
- *     data: {
- *         opener: (string|undefined),
- *         defaultOpenerText: (string|undefined)
- *     },
- *     config: {
- *         iconName: (string|undefined),
- *         iconType: ('icon-svg'|undefined),
- *         isChangingOpenerText: boolean
- *     }
- * }}
- * @protected
- */
-{template .openerContent}
-    <div class="{call .rootClass/}__opener-content">
-        {call .openerText data="all" /}
-        {call .openerIcon data="all" /}
-    </div>
 {/template}
 
 
@@ -125,33 +102,6 @@
         {/if}
     </div>
 {/template}
-
-
-/**
- * Icon of opener
- * @param params {{
- *     config: {
- *         iconName: (string|undefined),
- *         iconType: ('icon-svg'|undefined)
- *     }
- * }}
- * @protected
- */
-{template .openerIcon}
-    <div class="{call .rootClass/}__opener-icon">
-        {call .renderChild}
-            {param params: [
-                'type': $params.config.iconType ?: 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': $params.config.iconName ?: 'opener-arrow'
-                    ]
-                ]
-            ]/}
-        {/call}
-    </div>
-{/template}
-
 
 
 /**

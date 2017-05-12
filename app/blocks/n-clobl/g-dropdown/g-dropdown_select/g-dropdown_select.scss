@@ -8,10 +8,6 @@
     .g-dropdown__text {
         display: inline-block;
     }
-
-    .g-dropdown__opener-icon {
-        display: inline-block;
-    }
 }
 
 .g-dropdown_select.g-dropdown_rectangle-theme {
@@ -27,7 +23,7 @@
         margin-left: 10px;
     }
 
-    .g-dropdown__opener-icon {
+    .g-dropdown__opener-arrow-icon {
         float: right;
 
         margin-right: 10px;
@@ -53,7 +49,7 @@
         margin-left: 15px;
     }
 
-    .g-dropdown__opener-icon {
+    .g-dropdown__opener-arrow-icon {
         float: right;
 
         margin-right: 20px;

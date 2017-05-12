@@ -1,8 +1,8 @@
 goog.provide('sm.gDropdown.DropdownSelect');
 
-goog.require('cl.gDropdown.Dropdown');
 goog.require('sm.gDropdown.Event.ItemSelect');
 goog.require('sm.gDropdown.TemplateSelect');
+goog.require('sm.gDropdown.DropdownStendhal');
 goog.require('sm.gDropdown.ViewSelect');
 goog.require('sm.gList.ListStendhal');
 goog.require('sm.iCloblFactory.FactoryStendhal');
@@ -49,7 +49,7 @@ sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
      */
     this.selectedItemData = {};
 };
-goog.inherits(sm.gDropdown.DropdownSelect, cl.gDropdown.Dropdown);
+goog.inherits(sm.gDropdown.DropdownSelect, sm.gDropdown.DropdownStendhal);
 
 
 goog.scope(function() {

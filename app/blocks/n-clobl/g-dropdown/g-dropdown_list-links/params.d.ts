@@ -1,3 +1,5 @@
+import {gDropdownSelect} from '../g-dropdown_select/params';
+
 export namespace gDropdownListLinks {
     /*
      * sm.gDropdownListLinks.Params
@@ -6,23 +8,16 @@ export namespace gDropdownListLinks {
         /*
          * sm.gDropdownListLinks.Params.Data
          */
-        export interface Data {
-            opener?: (string|undefined),
-            defaultOpenerText?: (string|undefined),
-            content?: any
+        export interface Data extends gDropdownSelect.Params.Data {
         }
 
         /*
          * sm.gDropdownListLinks.Params.Config
          */
-        export interface Config {
-            stylizationModifier?: string,
-            openerSize?: (string|undefined),
-            openerTheme?: (string|undefined),
-            iconName?: (string|undefined),
-            iconType?: (string|undefined)
-            contentSize?: (string|undefined),
-            theme?: (string|undefined)
+        export interface Config extends gDropdownSelect.Params.Config {
+            openerSize?: (string|undefined);
+            openerTheme?: (string|undefined);
+            contentSize?: (string|undefined);
         }
     }
 
@@ -30,7 +25,7 @@ export namespace gDropdownListLinks {
      * sm.gDropdownListLinks.Params
      */
     export interface Params {
-        data: Params.Data,
-        config?: Params.Config
+        data: Params.Data;
+        config?: Params.Config;
     }
 }

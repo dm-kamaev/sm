@@ -23,16 +23,6 @@
 
 /**
  * Opener template
- * @param params {{
- *     data: {
- *        opener: string,
- *        openerArrowIcon: ?{
- *            up: ?sm.gDropdownStendhal.Types.Icon,
- *            down: sm.gDropdownStendhal.Types.Icon
- *        },
- *        openerTextIcon: ?sm.gDropdownStendhal.Types.Icon
- *     }
- * }}
  * @override
  * @protected
  */
@@ -43,23 +33,13 @@
 
 /**
  * Content of opener
- * @param params {{
- *     data: {
- *        opener: string,
- *        openerArrowIcon: ?{
- *            up: ?sm.gDropdownStendhal.Types.Icon,
- *            down: sm.gDropdownStendhal.Types.Icon
- *        },
- *        openerTextIcon: ?sm.gDropdownStendhal.Types.Icon
- *     }
- * }}
  * @protected
  */
 {template .openerContent}
     <div class="{call .rootClass/}__opener-content">
-        // {call .openerTextIcon_ data="all" /}
+        {call .openerTextIcon_ data="all" /}
         {call .openerText data="all" /}
-        // {call .openerArrowIcon_ data="all" /}
+        {call .openerArrowIcon_ data="all" /}
     </div>
 {/template}
 
@@ -83,7 +63,7 @@
 /**
  * Opener text icon
  * @param params {{
- *     data: {
+ *     config: {
  *         openerTextIcon: ?sm.gDropdownStendhal.Types.Icon
  *        }
  *     }
@@ -91,11 +71,11 @@
  * @private
  */
 {template .openerTextIcon_}
-    {if $params.data.openerTextIcon}
+    {if $params.config?.openerTextIcon}
         <div class="{call .rootClass/}__opener-text-icon">
-            {call .icon_}
+            {call .icon}
                 {param params: [
-                    'data': $params.data.openerTextIcon
+                    'data': $params.config?.openerTextIcon
                 ]/}
             {/call}
         </div>
@@ -107,38 +87,35 @@
  * Opener arrow icon
  * Two icons - arrow up and arrow down
  * @param params {{
- *     data: {
+ *     config: {
  *        openerArrowIcon: ?{
  *            up: ?sm.gDropdownStendhal.Types.Icon,
- *            down: sm.gDropdownStendhal.Types.Icon
+ *            down: ?sm.gDropdownStendhal.Types.Icon
  *        }
  *     }
  * }}
  * @private
  */
 {template .openerArrowIcon_}
-    {if $params.data?.openerArrowIcon?.up}
-        <div class="{call .rootClass/}__opener-arrow-icon{sp}
-                    {call .rootClass/}__opener-arrow-icon_up{sp}
-                    {cl.iUtils.Utils.CssClass.HIDDEN}">
-            {call .icon_}
-                {param params: [
-                    'data': $params.data.openerArrowIcon.up
-                ]/}
-            {/call}
-        </div>
-    {/if}
+    <div class="{call .rootClass/}__opener-arrow-icon{sp}
+                {call .rootClass/}__opener-arrow-icon_up{sp}
+                {cl.iUtils.Utils.CssClass.HIDDEN}">
+        {call .icon}
+            {param params: [
+                'data': $params.config?.openerArrowIcon?.up ?:
+                        $params.config?.openerArrowIcon?.down
+            ]/}
+        {/call}
+    </div>
 
-    {if $params.data?.openerArrowIcon?.down}
-        <div class="{call .rootClass/}__opener-arrow-icon{sp}
-                    {call .rootClass/}__opener-arrow-icon_down">
-            {call .icon_}
-                {param params: [
-                    'data': $params.data.openerArrowIcon.down
-                ]/}
-            {/call}
-        </div>
-    {/if}
+    <div class="{call .rootClass/}__opener-arrow-icon{sp}
+                {call .rootClass/}__opener-arrow-icon_down">
+        {call .icon}
+            {param params: [
+                'data': $params.config?.openerArrowIcon?.down
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 
@@ -147,50 +124,95 @@
  * @param params {{
  *     data: {
  *         default: {
- *             iconName: string,
+ *             iconName: ?string,
  *             iconType: ?string,
  *         },
  *         hover: ?{
- *             iconName: string,
+ *             iconName: ?string,
  *             iconType: ?string,
  *         }
  *     }
  * }}
- * @private
+ * @protected
  */
-{template .icon_}
-    {let $defaultType: $params.data.default?.iconType ?: 'icon' /}
-    {let $defaultName: $params.data.default?.iconName /}
+{template .icon}
+    {let $defaultType kind="text"}
+        {call .getDefaultIconType data="all" /}
+    {/let}
+    {let $defaultName kind="text"}
+        {call .getDefaultIconName data="all" /}
+    {/let}
 
     <div class="{call .rootClass/}__icon-wrap">
+
         <div class="{call .rootClass/}__icon {call .rootClass/}__icon_default">
-            {call .renderChild}
-                {param params: [
-                    'type': $defaultType,
-                    'renderParams': [
-                        'data': [
-                            'type': $defaultName ?: 'opener-arrow'
-                        ]
-                    ]
-                ]/}
+            {call .iconRenderer}
+                {param type: $defaultType /}
+                {param name: $defaultName /}
             {/call}
         </div>
 
         <div class="{call .rootClass/}__icon {call .rootClass/}__icon_hover">
-            {call .renderChild}
-                {param params: [
-                    'type': $params.data?.hover?.iconType ?: $defaultType,
-                    'renderParams': [
-                        'data': [
-                            'type': $params.data?.hover?.iconName ?: $defaultName
-                        ]
-                    ]
-                ]/}
+            {call .iconRenderer}
+                {param type: $params.data?.hover?.iconType ?: $defaultType /}
+                {param name: $params.data?.hover?.iconName ?: $defaultName /}
             {/call}
         </div>
+
     </div>
 {/template}
 
+
+/**
+ * Icon renderer
+ * @param type {string}
+ * @param name {string}
+ * @protected
+ */
+{template .iconRenderer}
+    {call .renderChild}
+        {param params: [
+            'type': $type,
+            'renderParams': [
+                'data': [
+                    'type': $name
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Default icon name
+ * @param params {{
+ *     data: {
+ *         default: {
+ *             iconName: ?string
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .getDefaultIconName}
+    {$params.data?.default?.iconName ?: 'opener-arrow'}
+{/template}
+
+
+/**
+ * Default icon type
+ * @param params {{
+ *     data: {
+ *         default: {
+ *             iconType: ?string
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .getDefaultIconType}
+    {$params.data?.default?.iconType ?: 'icon'}
+{/template}
 
 /**
  * List template

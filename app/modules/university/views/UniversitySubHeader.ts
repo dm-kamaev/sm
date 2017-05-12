@@ -37,8 +37,14 @@ class UniversitySubHeader extends SubHeader {
             config: {
                 openerTheme: 'block',
                 openerSize: 'xxl',
-                iconType: 'icon-svg',
-                iconName: 'blue-arrow',
+                openerArrowIcon: {
+                    down: {
+                        default: {
+                            iconName: 'blue-arrow',
+                            iconType: 'icon-svg',
+                        }
+                    }
+                },
                 theme: 'wide'
             }
         };

@@ -7,13 +7,13 @@
         text-align: right;
     }
 
-    .g-dropdown__opener-icon {
+    .g-dropdown__opener-arrow-icon {
         margin-left: 10px;
 
         opacity: 0.4;
     }
 
-    .g-dropdown__opener:hover .g-dropdown__opener-icon {
+    .g-dropdown__opener:hover .g-dropdown__opener-arrow-icon {
         opacity: 1;
     }
 
@@ -60,13 +60,13 @@
         padding-left: 20px;
     }
 
-    .g-dropdown__opener-icon {
+    .g-dropdown__opener-arrow-icon {
         opacity: 1;
     }
 }
 
 .g-dropdown.g-dropdown_list-links.g-dropdown_wide-theme {
-    .g-dropdown__opener-icon {
+    .g-dropdown__opener-arrow-icon {
         opacity: 1;
     }
 }

@@ -9,11 +9,6 @@ export namespace gDropdownStendhal {
         export interface Data {
             opener?: string;
             content?: string;
-            openerArrowIcon?: {
-                up?: Types.Icon;
-                down: Types.Icon;
-            };
-            openerTextIcon?: Types.Icon;
         }
 
         /*
@@ -22,6 +17,11 @@ export namespace gDropdownStendhal {
         export interface Config {
             stylizationModifier?: string;
             theme?: string;
+            openerArrowIcon?: {
+                up?: Types.Icon;
+                down: Types.Icon;
+            };
+            openerTextIcon?: Types.Icon;
         }
     }
 
