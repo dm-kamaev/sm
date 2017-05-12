@@ -112,7 +112,8 @@ popularView.catalog = function(entityType, numberEntities) {
                 url: '/static/images/n-school/images/catalog.svg',
                 size: 'default',
             }],
-            altText: 'Каталог'
+            altText: 'Каталог',
+            size: 'original'
         },
         description: 'Мы&nbsp;составили полный каталог школ Москвы&nbsp;' +
             '&mdash; в&nbsp;нём сейчас',

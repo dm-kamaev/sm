@@ -87,9 +87,14 @@
             {call .image}
                 {param params: [
                     'data': [
-                        'name': $params.data.name,
                         'url': $params.data.url,
-                        'imageUrl': $params.data.placeholder.url
+                        'picture': [
+                            'altText': $params.data.name,
+                            'sources': [[
+                                'url': $params.data.placeholder.url,
+                                'size': 'default'
+                            ]]
+                        ]
                     ],
                     'config': $params.config
                 ]/}
@@ -259,18 +264,16 @@
     {let $tag: $params.data.url ? 'a' : 'div' /}
     {let $link: $params.data.url ?: '' /}
 
-    <{$tag} class="{call .rootClass/}__cover-link" href="{$link}">
+    <{$tag} class="{call .rootClass/}__cover-link" href="{$link}"
         {if $params.config.isLinksInNewTab}
             target="_blank"
         {/if}
+    >
         {call .renderChild}
             {param params: [
                 'type': 'smPicture',
                 'renderParams': [
-                    'data': $params.data.picture,
-                    'config': [
-                        'theme': 'original-sized'
-                    ]
+                    'data': $params.data.picture
                 ]
             ]/}
         {/call}

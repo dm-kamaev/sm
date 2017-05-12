@@ -7,11 +7,12 @@ export namespace bSmPicture {
          * sm.bSmPicture.Params.Data
          */
         export interface Data {
-            altText: string;
+            altText?: string;
             sources: Array<{
                 url: string;
                 size: string;
             }>;
+            size?: string;
         }
 
         /*
@@ -26,7 +27,7 @@ export namespace bSmPicture {
      * sm.bSmPicture.Params
      */
     export interface Params {
-        data: Params.Data,
-        config?: Params.Config
+        data: Params.Data;
+        config?: Params.Config;
     }
 }
