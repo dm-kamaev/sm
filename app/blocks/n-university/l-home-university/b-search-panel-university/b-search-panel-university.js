@@ -4,6 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSearch.Search');
 goog.require('sm.gButton.ButtonStendhal');
 goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iSmQueryBuilder.QueryBuilder');
 goog.require('sm.lSearch.bFilter.Filter');
@@ -163,6 +164,40 @@ goog.scope(function() {
 
 
     /**
+     * Get ege labels
+     * @return {string[]}
+     */
+    SearchPanel.prototype.getEgeLabels = function() {
+        var ege = this.searchEge_.getCheckedData();
+        return ege.map(item => item.label);
+    };
+
+
+    /**
+     * Get data for analytics
+     * @return {string}
+     * @protected
+     */
+    SearchPanel.prototype.getDataForAnalytics = function() {
+        var data = [
+            'payType=' + this.payType_.getLabel()
+        ];
+
+        var city = this.searchCity_.getText();
+        if (city) {
+            data.push('cities=' + city);
+        }
+
+        var ege = this.getEgeLabels();
+        if (ege.length) {
+            data.push('egeSubjects=' + ege.join(','));
+        }
+
+        return data.join('&');
+    };
+
+
+    /**
      * Initializes listeners for button submit
      * @private
      */
@@ -182,7 +217,24 @@ goog.scope(function() {
      * @private
      */
     SearchPanel.prototype.onSubmit_ = function() {
+        this.sendAnalytics_();
         this.redirect_();
+    };
+
+
+    /**
+     * Send data to analytics
+     * @private
+     */
+    SearchPanel.prototype.sendAnalytics_ = function() {
+        var data = {
+            'hitType': 'event',
+            'eventCategory': 'homepage',
+            'eventAction': 'search',
+            'eventLabel': this.getDataForAnalytics()
+        };
+
+        sm.iAnalytics.Analytics.getInstance().send(data);
     };
 
 
