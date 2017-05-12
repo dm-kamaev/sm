@@ -6,11 +6,14 @@ import {bSmItemUniversity} from '../../../blocks/n-university/b-sm-item/params';
 import {bSmButtonLink} from '../../../blocks/n-common/b-sm-button-link/params';
 
 import {entityType} from '../../common/enums/entityType';
+import {UniversityImageSize} from '../constants/UniversityImageSize';
 
 const config = require('../../../config/config.json');
 
 const staticImgPath =
     '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
+
+const IMAGE_WIDTH_TAG = '{width}';
 
 class ProgramView {
     public getUrl(universityAlias: string, programAlias: string): string {
@@ -30,7 +33,10 @@ class ProgramView {
             item: BackendListProgram): bSmItemUniversity.Params.Data {
         const programUrl = this.getUrl(item.universityAlias, item.programAlias);
         const imageUrl = item.imageUrl ?
-            item.imageUrl :
+            item.imageUrl.replace(
+                IMAGE_WIDTH_TAG,
+                UniversityImageSize.DEFAULT[0].toString()
+            ) :
             staticImgPath + 'placeholder_parthenon.png';
 
         return {
