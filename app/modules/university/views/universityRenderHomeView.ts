@@ -6,6 +6,8 @@ import {LayoutView} from '../../common/lib/Layout';
 
 import {entityType} from '../../common/enums/entityType';
 const pageName = require('../../common/enums/pageName');
+const LinksGenerator = require('../../common/lib/LinksGenerator');
+const config = require('../../../config/config.json');
 
 import {UniversitySubHeader} from './UniversitySubHeader';
 import {UniversityFooter} from './UniversityFooter';
@@ -24,11 +26,19 @@ import {
 
 // tslint:disable-next-line:max-line-length
 import {bSearchPanel} from '../../../blocks/n-university/l-home-university/b-search-panel-university/params';
+import {
+    bSmInformationCard
+} from '../../../blocks/n-common/b-sm-information-card/params';
+
+
 
 type Ege = {
     label: string;
     value: number;
 };
+
+const linksGenerator = new LinksGenerator(config);
+const searchUrl = linksGenerator.links.university;
 
 class UniversityRenderHomeView extends LayoutView {
     protected params: lHomeUniversity.Params;
@@ -126,12 +136,47 @@ class UniversityRenderHomeView extends LayoutView {
     }
 
     private setPopularUniversities_(populars: BackendUniversity[]) {
-        this.params.data.populars = populars.map(university => ({
+        this.params.data.populars = {
+            header: 'Популярные вузы',
+            data: {
+                countItemsPerPage: 4,
+                items: populars.map(
+                    university => this.getPopularUniversityItem_(university)
+                ),
+                itemType: 'smInformationCard'
+            }
+        };
+    }
+
+    private getPopularUniversityItem_(
+            university: BackendUniversity
+    ): bSmInformationCard.Params.Data {
+        return {
             id: university.id,
-            name: university.name,
-            image: university.imageUrl,
-            city: university.city.name
-        }));
+            type: entityType.UNIVERSITY,
+            name: {
+                data: {
+                    content: university.abbreviation
+                },
+                config: {
+                    theme: 'dark',
+                    target: '_blank',
+                    size: '6xl'
+                }
+            },
+            link: {
+                data: {
+                    content: university.city.name,
+                    url: `${searchUrl}?cities=${university.city.id}`
+                },
+                config: {
+                    size: 'xl'
+                }
+            },
+            logo: {
+                url: university.imageUrl
+            }
+        };
     }
 
     private setBanner_() {

@@ -498,7 +498,11 @@ class InformationView extends LayoutView {
         return {
             id: similarProgram.id,
             type: entityType.PROGRAM,
-            name: similarProgram.name,
+            name: {
+                data: {
+                    content: similarProgram.name
+                }
+            },
             link: {
                 data: {
                     content: 'Программа',

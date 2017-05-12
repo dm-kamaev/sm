@@ -27,7 +27,7 @@ class PopularUniversitiesService extends Service {
             url: this.baseUrl,
             method: 'get',
             params: {
-                ids: [127, 131, 62, 126]
+                ids: [6, 11, 7, 95]
             }
         };
 
