@@ -1,7 +1,7 @@
 /**
  * @fileoverview View for search page
  */
-/* tslint:disable:max-file-line-count */
+
 import {LayoutView} from '../../common/lib/Layout';
 
 import {entityType} from '../../common/enums/entityType';
@@ -15,8 +15,14 @@ import {
     RenderParams,
     BackendData
 } from '../types/universityHomeLayout';
+import {BackendUniversity} from '../types/university';
 
-import {lHomeUniversity} from '../../../blocks/n-university/l-home-university/params';
+
+import {
+    lHomeUniversity
+} from '../../../blocks/n-university/l-home-university/params';
+
+// tslint:disable-next-line:disable:max-line-length
 import {bSearchPanel} from '../../../blocks/n-university/l-home-university/b-search-panel-university/params';
 
 type Ege = {
@@ -54,7 +60,7 @@ class UniversityRenderHomeView extends LayoutView {
         super.setParams(params);
 
         this.setSearchPanel_(params.data);
-        this.setPopularUniversities_();
+        this.setPopularUniversities_(params.data.populars);
         this.setBanner_();
         this.setArticles_();
     }
@@ -117,10 +123,15 @@ class UniversityRenderHomeView extends LayoutView {
             }
         };
         this.params.data.searchPanel = params;
-    };
+    }
 
-    private setPopularUniversities_() {
-        this.params.data.populars = {};
+    private setPopularUniversities_(populars: BackendUniversity[]) {
+        this.params.data.populars = populars.map(university => ({
+            id: university.id,
+            name: university.name,
+            image: university.imageUrl,
+            city: university.city.name
+        }));
     }
 
     private setBanner_() {

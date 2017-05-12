@@ -5,6 +5,8 @@ import {BackendCity} from '../../geo/types/city';
 import {PopularMajor} from './major';
 import {QueryParams} from './programSearch';
 import {SearchParams} from './programSearch';
+import {BackendUniversity} from './university';
+
 
 export type RenderParams = {
     data: BackendData;
@@ -15,4 +17,5 @@ export type RenderParams = {
 export type BackendData = {
     favorites: {string: any}[];
     ege: Subject[];
+    populars: BackendUniversity[];
 };

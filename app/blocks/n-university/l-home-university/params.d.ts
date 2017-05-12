@@ -15,7 +15,12 @@ export namespace lHomeUniversity {
          */
         export interface Data extends iLayoutStendhal.Params.Data {
             searchPanel: Object;
-            populars: Object;
+            populars: {
+                id: number;
+                name: string;
+                image: string;
+                city: string;
+            }[];
             articles: Object;
             banner: {
                 imgUrl: {

@@ -4,6 +4,10 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 
 import {userService} from '../../user/services/user';
 import {egeExamService} from '../services/egeExamService';
+import {
+    popularUniversitiesService
+} from '../services/popularUniversitiesService';
+
 
 import {universityRenderHomeView} from '../views/universityRenderHomeView';
 
@@ -18,15 +22,17 @@ class UnivrersityRenderController extends Controller {
     public async actionGetHome(actionContext: any) {
         const user = userService.getUserFromRequest(actionContext.request);
         const ege = await egeExamService.getExams();
+        const populars = await popularUniversitiesService.getPopulars();
 
         const templateParams = universityRenderHomeView.render({
             data: {
-                ege: ege,
-                favorites: []
+                ege,
+                favorites: [],
+                populars
             },
             config: config,
             requestData: {
-                user: user,
+                user,
                 query: actionContext.request.query,
                 csrf: actionContext.request.csrfToken()
             },
