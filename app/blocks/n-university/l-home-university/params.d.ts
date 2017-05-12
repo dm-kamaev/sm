@@ -3,6 +3,7 @@ import {
 } from '../../n-common/b-sm-subheader/params';
 
 import {iLayoutStendhal} from '../../n-clobl/i-layout/params';
+import {bSmItemList} from '../../n-common/b-sm-item-list/params';
 
 export namespace lHomeUniversity {
     /**
@@ -16,11 +17,9 @@ export namespace lHomeUniversity {
         export interface Data extends iLayoutStendhal.Params.Data {
             searchPanel: Object;
             populars: {
-                id: number;
-                name: string;
-                image: string;
-                city: string;
-            }[];
+                header: string;
+                data: bSmItemList.Params.Data;
+            };
             articles: Object;
             banner: {
                 imgUrl: {

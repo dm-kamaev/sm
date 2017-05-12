@@ -8,6 +8,7 @@ const View = goog.require('sm.lHomeUniversity.View');
 const Factory = goog.require('sm.iCloblFactory.FactoryStendhal');
 const Template = goog.require('sm.lHomeUniversity.Template');
 const ILayout = goog.require('sm.iLayout.LayoutStendhal');
+const ItemList = goog.require('sm.bSmItemList.SmItemList');
 const SearchPanel =
     goog.require('sm.bSearchPanelUniversity.SearchPanelUniversity');
 
@@ -48,6 +49,7 @@ class HomeUniversity extends ILayout {
         super.decorateInternal(element);
 
         this.initSearch_();
+        this.initUniversities_();
     }
 
 
@@ -63,7 +65,18 @@ class HomeUniversity extends ILayout {
             dom.searchPanel
         );
     }
-}
+
+    /**
+     * Init popular universities
+     * @private
+     */
+    initUniversities_() {
+        this.universities_ = this.decorateChild(
+            ItemList.NAME,
+            this.getView().getDom().universities
+        );
+    }
+};
 
 
 /**

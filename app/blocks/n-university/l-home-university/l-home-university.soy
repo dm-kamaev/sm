@@ -156,7 +156,13 @@
  * Section with populars of universities
  * @param params {{
  *     data: {
- *         populars: {}
+ *         populars: {
+ *             header: string,
+ *             data: sm.bSmItemList.Template.Params.Data
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
  *     }
  * }}
  * @private
@@ -165,10 +171,31 @@
     {if $params.data.populars}
         <div class="{call .rootClass/}__section{sp}
                     {call .rootClass/}__section_populars">
-            <div class="{call .rootClass /}__section-inner">
+            <div class="{call .rootClass/}__section-inner">
+                {let $customClasses kind="html"}
+                    {call .rootClass/}__universities
+                {/let}
+
+                <div class="{call .rootClass/}__popular-universities-header">
+                    {$params.data.populars.header}
+                </div>
+
+                <div class="{call .rootClass/}__popular-universities-list">
+                    {call .renderChildLayout}
+                        {param params: $params /}
+                        {param type: 'smItemList' /}
+                        {param renderParams: [
+                            'data': $params.data.populars.data,
+                            'config': [
+                                'theme': 'inline',
+                                'customClasses': [$customClasses]
+                            ]
+                        ] /}
+                    {/call}
+                </div>
             </div>
-        </div>
-    {/if}
+        {/if}
+    </div>
 {/template}
 
 

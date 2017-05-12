@@ -13,7 +13,8 @@ const ILayoutViewStendhal = goog.require('sm.iLayout.ViewStendhal');
  */
 const CssClass = {
     ROOT: 'l-home-university',
-    SEARCH_PANEL: 'l-home-university__search-panel'
+    SEARCH_PANEL: 'l-home-university__search-panel',
+    UNIVERSITIES: 'l-home-university__universities'
 };
 
 
@@ -57,6 +58,10 @@ class View extends ILayoutViewStendhal {
 
         this.dom.searchPanel = this.getElementByClass(
             CssClass.SEARCH_PANEL
+        );
+
+        this.dom.universities = this.getElementByClass(
+            CssClass.UNIVERSITIES
         );
     }
 }

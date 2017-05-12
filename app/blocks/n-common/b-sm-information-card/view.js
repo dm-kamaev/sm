@@ -54,7 +54,7 @@ class View extends ControlView {
      */
     initDom_() {
         this.dom = {
-            link: this.getElementByClass(sm.bSmLink.View.CssClass.ROOT),
+            links: this.getElementsByClass(sm.bSmLink.View.CssClass.ROOT),
             buttonLink:
                 this.getElementByClass(sm.bSmButtonLink.View.CssClass.ROOT)
         };

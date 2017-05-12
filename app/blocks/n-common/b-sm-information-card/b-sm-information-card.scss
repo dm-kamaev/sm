@@ -29,6 +29,17 @@
     right: 3px;
 }
 
+.b-sm-information-card__logo {
+    position: absolute;
+    max-width: 64px;
+    bottom: 25px;
+    right: 25px;
+}
+
+.b-sm-information-card__logo-image {
+    width: 100%;
+}
+
 @include media-m {
     .b-sm-information-card {
         height: 210px;

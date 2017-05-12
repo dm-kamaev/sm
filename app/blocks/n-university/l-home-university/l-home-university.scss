@@ -1,4 +1,4 @@
-@import "../../n-common/i-media/i-media";
+@import '../../n-common/i-media/i-media';
 
 
 .l-home-university__body {
@@ -18,11 +18,11 @@
 }
 
 .l-home-university__section_search {
-    color: #ffffff;
-    background: url("/static/images/n-university/l-home-university/img/blue-bg.png") center top no-repeat #3487e2;
+    color: #fff;
+    background: url('/static/images/n-university/l-home-university/img/blue-bg.png') center top no-repeat #3487e2;
 
     @include pixel-ratio-2x {
-        background-image: url("/static/images/n-university/l-home-university/img/blue-bg@2x.png");
+        background-image: url('/static/images/n-university/l-home-university/img/blue-bg@2x.png');
     }
 }
 
@@ -68,6 +68,21 @@
     height: 100%;
 }
 
+.l-home-university__section_populars {
+    padding: 60px 0 57px 0;
+
+    color: #000;
+    background-color: #f2f2f2;
+}
+
+.l-home-university__popular-universities-header {
+    padding-bottom: 35px;
+
+    font-family: 'Proxima', Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+}
+
 @include media-xl {
     .l-home-university__section-inner {
         width: auto;
@@ -106,7 +121,6 @@
     }
 
     .l-home-university__section_search {
-
         .l-home-university__section-inner {
             margin: 0;
         }
