@@ -56,7 +56,7 @@ goog.scope(function() {
         var params = sm.bSmItem.View.getRenderParams(rawParams);
 
         var buttonLink = rawParams['buttonLink'] ?
-            sm.bSmButtonLink.View.getRenderParams(rawParams['buttonLink']):
+            sm.bSmButtonLink.View.getRenderParams(rawParams['buttonLink']) :
             null;
 
         var nicety = rawParams['nicety'];
@@ -75,6 +75,16 @@ goog.scope(function() {
             });
         }
 
+        var iconLink = rawParams['iconLink'];
+
+        if (iconLink) {
+            iconLink = {
+                icon: iconLink['icon'],
+                link: iconLink['link'],
+                type: iconLink['type']
+            };
+        }
+
         goog.object.extend(params.data, {
             buttonLink: buttonLink,
             company: rawParams['company'] ? {
@@ -82,7 +92,8 @@ goog.scope(function() {
                 city: rawParams['company']['city'],
                 name: rawParams['company']['name']
             } : null,
-            nicety: nicety
+            nicety: nicety,
+            iconLink: iconLink
         });
 
         return params;
