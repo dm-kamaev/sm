@@ -50,9 +50,8 @@
 
 .g-dropdown.g-dropdown_list-links.g-dropdown_affixed-theme {
     .g-dropdown__content {
-        margin-top: 12px;
-
         width: 220px;
+        margin-top: 12px;
     }
 
     .g-dropdown__opener-content {
@@ -89,9 +88,9 @@
 
     .g-dropdown.g-dropdown_list-links.g-dropdown_affixed-theme {
         .g-dropdown__content {
+            top: auto;
             right: -13px;
             left: auto;
-            top: auto;
         }
 
         .g-dropdown__opener-content {
