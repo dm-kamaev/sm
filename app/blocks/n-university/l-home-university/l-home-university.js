@@ -10,7 +10,7 @@ const Template = goog.require('sm.lHomeUniversity.Template');
 const ILayout = goog.require('sm.iLayout.LayoutStendhal');
 const ItemList = goog.require('sm.bSmItemList.SmItemList');
 const SearchPanel =
-    goog.require('sm.bSearchPanelUniversity.SearchPanelUniversity');
+    goog.require('sm.lHomeUniversity.bSearchPanelUniversity.SearchPanelUniversity');
 
 
 
