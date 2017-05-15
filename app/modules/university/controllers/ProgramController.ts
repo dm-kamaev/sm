@@ -104,13 +104,50 @@ export class ProgramController extends Controller {
     }
 
 
-    /* tslint:disable:max-line-length */
     /**
-     * @api {get} /program/geosearch Search programs by city
+     * @api {get} /program/filtersearch/count Search count of programs
      * @apiVersion 1.0.0
      * @apiName SearchProgram
      * @apiGroup Program
+     * @apiParam (query) {Number} [limit] Limit quantity of search results.
+     * @apiParam (query) {Number} [page] Page of result.
+     *     Applied only if limit parameter exists.
+     * @apiParam (query) {Number=0,1,2} [sortType=0] Sort results by:
+     *     0 – ege pass score; 1 – cost; 2 – total score.
+     * @apiParam (query) {String} [searchString] Program names will contain
+     *     that search string.
+     * @apiParam (query) {Number[]} [cities] Cities' id search programs in.
+     * @apiParam (query) {Number[]} [ege] Array of ege's ids
+     *     that program have to contain.
+     * @apiParam (query) {Number[]=0,1} [payType] Program's pay type:
+     *     0 – budget type; 1 – commercial type.
+     * @apiParam (query) {Number[]} [majors] Array of program's majors.
+     * @apiParam (query) {Boolean=1} [discount] Search programs with discount.
+     * @apiParam (query) {Number[]=0,1,2} [features] Array of program's
+     *     features. 0 – exchange program; 1 – military department;
+     *     2 – dormitory.
+     * @apiParam (query) {Number} [maxPrice] Program's price cap.
+     * @apiParam (query) {Number} [maxPassScore] Program's ege pass cap.
      *
+     * @apiSuccess {Number} programCount Count of found programs.
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         123
+     *     }
+     */
+    public async actionGetSearchCount(actionContext: any) {
+        const queryParams: QueryParams = actionContext.data;
+        const searchParams = programSearchView.initSearchParams(queryParams);
+
+        const data = await searchService.getCountResults(searchParams);
+        return data.programCount;
+    }
+
+
+    /* tslint:disable:max-line-length */
+    /**
+     * @api {get} /program/geosearch Search programs by city
      * @apiExample {curl} Example usage:
      *     curl 'http://vuz.mel.fm/program/citysearch?name=%D0%A1%D0%B0%D0%BC%D0%B0'
      *

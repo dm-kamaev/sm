@@ -37,7 +37,16 @@
     }
 
     .b-sm-filter__content {
-        margin-top: 10px;
+        margin-top: 0;
+    }
+
+    .b-sm-filter__placeholder {
+        padding-bottom: 10px;
+
+        color: #ed6327;
+
+        font-size: 14px;
+        line-height: normal;
     }
 
     .b-sm-filter__button_reset {
@@ -47,7 +56,9 @@
 
 .b-sm-filter_input_inline {
     .b-sm-filter__list-options {
-        margin-right: 0;
+        display: block;
+
+        margin-top: -10px;
         margin-right: -12.5px;
         margin-left: -12.5px;
     }
@@ -59,14 +70,6 @@
         margin-top: 20px;
         padding-left: 12.5px;
         padding-right: 12.5px;
-
-        &:nth-child(1) {
-            margin-top: 0;
-        }
-
-        &:nth-child(2) {
-            margin-top: 0;
-        }
     }
 
     .b-sm-filter__input-label {

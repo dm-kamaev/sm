@@ -32,9 +32,13 @@ export class Cities {
         // console.log(hashCity);
         // console.log('cityNames=', cityNames, cityNames.length);
         try {
+            let sequence: Promise<void | CityInstance> = Promise.resolve();
             const promiseCities: Promise<CityInstance | null>[]
                 = cityNames.map((cityName) => {
-                    return this.create(cityName, hashCity);
+                    sequence = sequence.then(() =>
+                        this.create(cityName, hashCity)
+                    );
+                    return sequence;
                 });
             await Promise.all(promiseCities);
             logger.info('Success cities updateViaXlsx');

@@ -72,6 +72,10 @@
         border: none;
     }
 
+    .b-filter-panel-group__filters_main {
+        padding-top: 20px;
+    }
+
     .b-filter-panel-group__controls-wrap {
         display: block;
     }
@@ -95,6 +99,10 @@
 @include media-xs {
     .b-filter-panel-group__filters {
         padding: 0 30px;
+    }
+
+    .b-filter-panel-group__filters_main {
+        padding-top: 20px;
     }
 
     .b-filter-panel-group__controls-wrap {

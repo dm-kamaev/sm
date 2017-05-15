@@ -140,7 +140,8 @@ goog.scope(function() {
                     nom: text['nom'],
                     gen: text['gen'],
                     plu: text['plu']
-                } : text
+                } : text,
+                select: part['select']
             };
         });
 
@@ -269,11 +270,6 @@ goog.scope(function() {
      */
     View.prototype.transformParams = function(rawParams) {
         return {
-            declensionEntityType: {
-                nom: rawParams['declensionEntityType']['nom'],
-                gen: rawParams['declensionEntityType']['gen'],
-                plu: rawParams['declensionEntityType']['plu']
-            },
             countResults: rawParams['countResults']
         };
     };

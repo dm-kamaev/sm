@@ -497,7 +497,7 @@ schoolView.suggestList = function(schools) {
         .map(school => {
             return {
                 id: school.id,
-                alias: school.alias,
+                alias: `/${school.alias}`,
                 name: school.name,
                 description: '',
                 abbreviation: school.abbreviation,

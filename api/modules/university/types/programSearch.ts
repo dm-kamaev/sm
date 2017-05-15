@@ -57,3 +57,7 @@ export type SearchListResult = {
     universityCount: number;
     programs: ListProgram[]
 };
+
+export type ProgramCountResult = {
+    programCount: string;
+};

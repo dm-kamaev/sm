@@ -24,14 +24,17 @@
  *             textXs: ?string,
  *             selected: ?boolean
  *         },
- *         value: ?string
+ *         value: {
+ *             text: string,
+ *             selected: ?boolean
+ *         }
  *     }>,
  *     buttonLink: ?sm.bSmButtonLink.Template.Params
  * }} sm.bSmItem.TemplateUniversity.Params.Data
  */
 
 
- /**
+/**
  * @typedef {{
  *     enableCover: boolean,
  *     stylizationModifier: string,
@@ -43,7 +46,7 @@
  */
 
 
- /**
+/**
  * Constructor
  * @param params {{
  *     data: sm.bSmItem.TemplateUniversity.Params.Data,
@@ -209,6 +212,8 @@
                 ]
             ]/}
         {/call}
+
+        {call .iconLink_ data="all" /}
     </div>
 {/template}
 
@@ -243,12 +248,15 @@
  * @param params {{
  *     data: {
  *         nicety: Array<{
- *             title: {
+ *             title?: {
  *                 textDefault: string,
  *                 textXs: ?string,
  *                 selected: ?boolean
  *             },
- *             value: ?string
+ *             value: {
+ *                 text: string,
+ *                 selected: ?boolean
+ *             }
  *         }>,
  *     }
  * }}
@@ -289,20 +297,30 @@
  * @protected
  */
 {template .nicetyTitle}
-    {let $nicetyTitleClasses kind="text"}
-        {call .rootClass/}__nicety-title
-        {if $item.data.title.selected}
-            {sp}{call .rootClass/}__nicety-title_selected
-        {/if}
-    {/let}
+    {if $item.data.title}
+        {let $nicetyTitleClasses kind="text"}
+                {call .rootClass/}__nicety-title
+                {if $item.data.title.selected}
+                    {sp}{call .rootClass/}__nicety-title_selected
+                {/if}
+        {/let}
 
-    <div class="{$nicetyTitleClasses}
-            {sp}{call .rootClass/}__nicety-title_default">
-        {$item.data.title.textDefault}
-    </div>
-    <div class="{$nicetyTitleClasses}{sp}{call .rootClass/}__nicety-title_xs">
-        {$item.data.title.textXs}
-    </div>
+        {let $titleAttribute kind="attributes"}
+            {if $item.data.title.selected}
+                title="Высокий конкурс"
+            {/if}
+        {/let}
+
+        <div class="{$nicetyTitleClasses}
+            {sp}{call .rootClass/}__nicety-title_default"
+            {$titleAttribute}
+        >
+            {$item.data.title.textDefault}
+        </div>
+        <div class="{$nicetyTitleClasses}{sp}{call .rootClass/}__nicety-title_xs">
+            {$item.data.title.textXs}
+        </div>
+    {/if}
 {/template}
 
 
@@ -310,14 +328,24 @@
  * nicety value
  * @param item {{
  *     data: {
- *         value: ?string
+ *         value: {
+ *             text: string,
+ *             selected: ?boolean
+ *         }
  *     }
  * }}
  * @protected
  */
 {template .nicetyValue}
-    <div class="{call .rootClass/}__nicety-value">
-        {$item.data.value}
+    {let $classes kind="text"}
+        {call .rootClass/}__nicety-value
+        {if $item.data.value.selected}
+            {sp}{call .rootClass/}__nicety-value_selected
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {$item.data.value.text}
     </div>
 {/template}
 
@@ -426,6 +454,40 @@
                 ]/}
             {/call}
         </div>
+    {/if}
+{/template}
+
+
+/**
+ * Icon link
+ * @param params {{
+ *     data: {
+ *         iconLink: ({
+ *             icon: string,
+ *             link: string,
+ *             type: ('svg'|'png')
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .iconLink_}
+    {if $params.data.iconLink}
+        {let $type: $params.data.iconLink.type == 'png' ? 'icon' : 'icon-svg' /}
+
+        <a class="{call .rootClass/}__icon-link"
+            href="{$params.data.iconLink.link}"
+        >
+            {call .renderChild}
+                {param params: [
+                    'type': $type,
+                    'renderParams': [
+                        'data': [
+                            'type': $params.data.iconLink.icon
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </a>
     {/if}
 {/template}
 

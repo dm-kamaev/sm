@@ -8,6 +8,7 @@ import {
     SubjectInstance
 } from '../../study/models/subject';
 
+const EXCLUDE_SUBJECTS = ['иностранный язык'];
 
 class ExamAdminService {
     public readonly name: string = 'examAdminService';
@@ -16,6 +17,11 @@ class ExamAdminService {
     public async getListSubject(): Promise<SubjectInstance[]> {
         return await SubjectModel.findAll({
             attributes: ['id', 'displayName'],
+            where: {
+                name: {
+                    $notIn: EXCLUDE_SUBJECTS
+                }
+            }
         });
     }
 
@@ -35,4 +41,3 @@ class ExamAdminService {
 
 };
 export const examAdminService = new ExamAdminService();
-

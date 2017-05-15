@@ -21,7 +21,7 @@ type InitFiltersData = {
     searchParams: {[name: string]: number[] | string[] | any};
     theme?: string;
     button?: {
-        content: string;
+        defaultText: string;
         theme?: string;
         borderRoundSize?: string;
     };

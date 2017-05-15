@@ -103,23 +103,29 @@ class ProgramController extends Controller {
      *
      * @apiParamExample {json} Request-Example:
      *     {
-     *         "searchString" : "ика",
+     *         "searchString" : "ика"
      *     }
      *
-     * @apiSuccess {Object[]} programs            Array of found programs.
-     * @apiSuccess {Number}   programs.id         Program's id.
-     * @apiSuccess {String}   programs.name       Program's name.
-     * @apiSuccess {String}   programs.alias      Program's url
-     * @apiSuccess {Number[]} programs.score      Program's scores array
-     * @apiSuccess {Number}   programs.totalScore Program's total score.
+     * @apiSuccess {Object[]} programs                       Array of found
+     *     programs.
+     * @apiSuccess {Number}   programs.id                    Program's id.
+     * @apiSuccess {String}   programs.name                  Program's name.
+     * @apiSuccess {String}   program.universityAbbreviation Abbreviation of
+     *     university.
+     * @apiSuccess {String}   programs.alias                 Program's url.
+     * @apiSuccess {Number[]} programs.score                 Program's scores
+     *     array.
+     * @apiSuccess {Number}   programs.totalScore            Program's total
+     *     score.
      *
      * @apiSuccessExample {json} Success-Response:
      *    {
      *        "programs": [
      *            {
      *                "id": 12,
-     *                "name": "Прикладная математика",
-     *                "alias": "prikladnaya-matematika",
+     *                "name": "Экономика",
+     *                "universityAbbreviation": "МГТУ им. Н. Э. Баумана",
+     *                "alias": "/vuz/niu-vshe/specialnost/ekonomika",
      *                "score": [
      *                    1,
      *                    2,
@@ -131,7 +137,8 @@ class ProgramController extends Controller {
      *            {
      *                "id": 13,
      *                "name": "Экономика",
-     *                "alias": "ehkonomika",
+     *                "universityAbbreviation": "МИРЭА, МГУПИ, МИТХТ",
+     *                "alias": "/vuz/msu/specialnost/ekonomika",
      *                "score": [],
      *                "totalScore": 0
      *            }
@@ -149,7 +156,8 @@ class ProgramController extends Controller {
             = await programService.suggestSearch(searchString);
         const result: any = {};
         if (data) {
-            result.programs = programView.suggestSearch(data);
+            const urls = await programService.getUrls(data);
+            result.programs = programView.suggestSearch(data, urls);
         }
         return result;
     }
@@ -239,6 +247,40 @@ class ProgramController extends Controller {
     public async actionSearch(actionContext: any) {
         const queryParams: QueryParams = actionContext.data;
         return programService.searchList(queryParams);
+    }
+
+    /**
+     * @api {get} /api/program/search/count
+     *     Search program's count by name and / or filters
+     * @apiVersion 1.0.0
+     * @apiName SearchProgramCount
+     * @apiGroup Program
+     *
+     * @apiParam (query) {String} [searchString] Program names will contain
+     *     that search string.
+     * @apiParam (query) {Number[]} [cities] Cities' id search programs in.
+     * @apiParam (query) {Object[]} [ege] Array of ege objects.
+     *     Ex: [{"12": 60}, {"13": 70}, {"14": 70}].
+     * @apiParam (query) {Number[]=0,1} [payType] Program's pay type:
+     *     0 – budget type; 1 – commercial type.
+     * @apiParam (query) {Number[]} [majors] Array of program's majors.
+     * @apiParam (query) {Boolean=1} [discount] Search programs with discount.
+     * @apiParam (query) {Number[]=0,1,2} [features] Array of program's
+     *     features. 0 – exchange program; 1 – military department;
+     *     2 – dormitory.
+     * @apiParam (query) {Number} [maxPrice] Program's price cap.
+     *
+     * @apiSuccess {Number} programCount Count of found programs.
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         "programCount": 125
+     *     }
+     */
+    public async actionCountSearch(actionContext: any) {
+        const queryParams: QueryParams = actionContext.data;
+        return programService.searchCountList(queryParams);
     }
 }
 

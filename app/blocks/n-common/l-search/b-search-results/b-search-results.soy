@@ -11,7 +11,11 @@
  *     entityList: sm.bSmItemList.Template.Params.Data,
  *     countResults: number,
  *     headerText:
- *          sm.lSearch.bSearchResults.Template.Params.Data.headerText
+ *          sm.lSearch.bSearchResults.Template.Params.Data.headerText,
+ *     placeholder: ?{
+ *         title: ?string,
+ *         text: ?Array<string>
+ *     }
  * }} sm.lSearch.bSearchResults.Template.Params.Data
  */
 
@@ -61,7 +65,7 @@
  */
 {template .body}
     {call .results_ data="all" /}
-    {call .placeholder_ /}
+    {call .placeholder_ data="all" /}
     {call .loader_ /}
 {/template}
 
@@ -84,21 +88,23 @@
 
 /**
  * Placeholder for empty results template
+ * @params {{
+ *     data: {
+ *         placeholder: ?{
+ *            title: ?string,
+ *            text: ?Array<string>
+ *         }
+ *     }
+ * }}
  * @private
  */
 {template .placeholder_ kind="html"}
     <div class="{call .rootClass /}__placeholder">
-        <div class="{call .rootClass /}__placeholder-title">
-            Ничего не найдено
-        </div>
-        <div class="{call .rootClass /}__placeholder-subtitle">
-            Измените параметры поиска
-        </div>
-        <div class="{call .rootClass /}__placeholder-subtitle">
-            и попробуйте ещё раз.
-        </div>
+        {call .placeholderTitle_ data="all" /}
+        {call .placeholderText_ data="all" /}
     </div>
 {/template}
+
 
 /**
  * Text of header for list of schools
@@ -361,9 +367,9 @@
 {template .sort_ kind="html"}
     <div class="{call .rootClass /}__sort">
         {if $params.config?.sortController == 'smSwitch'}
-            {call .sort_switch_ data="all" /}
+            {call .sortSwitch_ data="all" /}
         {else}
-            {call .sort_dropdown_ data="all" /}
+            {call .sortDropdown_ data="all" /}
         {/if}
     </div>
 {/template}
@@ -377,7 +383,7 @@
  * }}
  * @private
  */
-{template .sort_dropdown_}
+{template .sortDropdown_}
     {let $customClasses kind="html"}
         {call .rootClass /}__sort-control_dropdown
     {/let}
@@ -413,7 +419,7 @@
  * }}
  * @private
  */
-{template .sort_switch_}
+{template .sortSwitch_}
     {let $customClasses kind="html"}
         {call .rootClass /}__sort-control_switch
     {/let}
@@ -432,6 +438,57 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Placeholder title for empty results template
+ * @param params {{
+ *     data: {
+ *         placeholder: ?{
+ *            title: ?string
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .placeholderTitle_ kind="html"}
+    <div class="{call .rootClass /}__placeholder-title">
+        {$params.data?.placeholder?.title ?: 'Ничего не найдено'}
+    </div>
+{/template}
+
+
+/**
+ * Placeholder text for empty results template
+ * @param params {{
+ *     data: {
+ *         placeholder: ?{
+ *            text: ?Array<string>
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .placeholderText_ kind="html"}
+    {let $defaultText: [
+        'Измените параметры поиска',
+        'и попробуйте ещё раз.'
+    ]/}
+
+    {let $text: ($params.data?.placeholder?.text and
+        length($params.data?.placeholder?.text)) ?
+
+            $params.data?.placeholder?.text :
+            $defaultText
+    /}
+
+    {foreach $string in $text}
+        <div class="{call .rootClass /}__placeholder-text">
+            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                data="$string" /}
+        </div>
+    {/foreach}
 {/template}
 
 
@@ -513,6 +570,29 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         countResults: number,
+ *         declensionEntityType: {
+ *              nom: string,
+ *              plu: string,
+ *              gen: string
+ *         }
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: [
+            'countResults': $params.data.countResults
+        ] /}
+    {/call}"
 {/template}
 
 

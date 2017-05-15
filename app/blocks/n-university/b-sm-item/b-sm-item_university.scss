@@ -50,7 +50,7 @@
 
     .b-sm-item__name {
         margin-bottom: 6px;
-        padding-right: 15px;
+        padding-right: 24px;
 
         font-family: 'Proxima', Arial, sans-serif;
         font-size: 24px;
@@ -131,12 +131,19 @@
     }
 
     .b-sm-item__nicety-value {
+        opacity: 0.6;
+
+        font-family: Arial, sans-serif;
+        line-height: 20px;
+    }
+
+    .b-sm-item__nicety-value_selected {
+        opacity: 1;
         color: #0777e8;
 
         font-family: 'Proxima', Arial, sans-serif;
         font-size: 20px;
         font-weight: 700;
-        line-height: 1;
     }
 
     .b-sm-item__button-link {
@@ -144,6 +151,10 @@
 
         border: solid 2px #0777e8;
         border-radius: 100px;
+    }
+
+    .b-sm-item__icon-link {
+        display: none;
     }
 }
 
@@ -235,8 +246,14 @@
             display: block;
         }
 
-        .b-sm-item__nicety-value {
+        .b-sm-item__nicety-value_selected {
             font-size: 18px;
+        }
+
+        .b-sm-item__icon-link {
+            display: inline-block;
+            position: absolute;
+            right: 13px;
         }
     }
 }

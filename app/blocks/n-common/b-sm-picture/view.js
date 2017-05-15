@@ -19,6 +19,7 @@ class View extends ControlView {
     static getRenderParams(rawParams) {
         return {
             altText: rawParams['altText'],
+            size: rawParams['size'],
             sources: rawParams['sources'].map(sourse => ({
                 url: sourse['url'],
                 size: sourse['size']

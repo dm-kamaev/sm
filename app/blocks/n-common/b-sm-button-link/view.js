@@ -39,4 +39,34 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-button-link'
     };
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object} rawParams
+     * @return {sm.bSmButtonLink.Params}
+     * @override
+     * @public
+     */
+    View.getRenderParams = function(rawParams) {
+        var data = rawParams['data'],
+            config = rawParams['config'];
+
+        return {
+            data: data ? {
+                id: data['id'],
+                url: data['url'],
+                icon: data['icon'],
+                iconType: data['iconType'],
+                content: data['content']
+            } : null,
+            config: config ? {
+                disableHover: config['disableHover'],
+                size: config['size'],
+                theme: config['theme'],
+                borderRoundSize: config['borderRoundSize']
+            } : null
+        };
+    };
+
 });  // goog.scope

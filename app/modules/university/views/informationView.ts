@@ -67,6 +67,9 @@ type UserType = {
     isSelected?: boolean;
 };
 
+const staticImgPath =
+    '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
+
 class InformationView extends LayoutView {
     private static FULL_DESCRIPTION_LENGTH = 280;
 
@@ -191,17 +194,28 @@ class InformationView extends LayoutView {
         const imageUrlSizeL = utils.getImageUrl(
             backendImageUrl, UniversityImageSize.DEFAULT);
 
+        const sources = backendImageUrl ?
+            [{
+                url: utils.getImageUrl(
+                    backendImageUrl, UniversityImageSize.MEDIUM
+                ),
+                size: 'default'
+            }, {
+                url: utils.getImageUrl(
+                    backendImageUrl, UniversityImageSize.DEFAULT
+                ),
+                size: 'l'
+            }] :
+            [{
+                url: staticImgPath + 'placeholder_parthenon.png',
+                size: 'default'
+            }];
+
         return {
             description: universityName,
             picture: {
                 altText: universityName,
-                sources: [{
-                    url: imageUrlDefault,
-                    size: 'default'
-                }, {
-                    url: imageUrlSizeL,
-                    size: 'l'
-                }]
+                sources: sources
             },
             button: {
                 data: {
@@ -252,9 +266,12 @@ class InformationView extends LayoutView {
 
         if ((data.egeExams && data.egeExams.length > 0) ||
                 (data.program.extraExam && data.program.extraExam.length > 0)) {
-            const egeTests =
+            let entranceTests =
                 data.egeExams.map(exam => `${exam.subjectName} (ЕГЭ)`);
-            const entranceTests = egeTests.concat(data.program.extraExam);
+
+            if (data.program.extraExam && data.program.extraExam.length > 0) {
+                entranceTests = entranceTests.concat(data.program.extraExam);
+            }
 
             result.items.push({
                 data: {
@@ -299,7 +316,6 @@ class InformationView extends LayoutView {
                 }
             });
         }
-
         return result;
     }
 
@@ -311,8 +327,9 @@ class InformationView extends LayoutView {
             itemDescription;
         const cost = data.entranceStatistic.cost;
         if (cost) {
+            const formattedCost = this.formatCost(cost);
             itemHeader = 'Стоимость / год';
-            itemDescription = `${cost} ₽`;
+            itemDescription = `${formattedCost} ₽`;
         }
 
 
@@ -428,6 +445,13 @@ class InformationView extends LayoutView {
         }];
 
         return {item, list, buttonLink};
+    }
+
+    private formatCost(cost) {
+        const costStr = cost.toString();
+        return costStr.length ?
+            this.formatCost(costStr.substr(0, costStr.length - 3)) + ' ' +
+                    costStr.slice(-3) : '';
     }
 
     private getBannerParams_(data: BackendData): bSmBanner.Params {
@@ -546,6 +570,11 @@ class InformationView extends LayoutView {
     private getUsefulCourseParams_(
             data: BackendCourseAdviced
     ): bSmItemCompact.Params.Data {
+        const imageUrl = utils.getImageUrl(
+            data.imageUrl,
+            CourseImageSize.LARGE
+        );
+
         return {
             id: data.id,
             type: 'course',
@@ -553,16 +582,13 @@ class InformationView extends LayoutView {
                 light: data.categoryName
             },
             description: `${data.name} ${data.brandName}`,
-            picture: {
+            picture: imageUrl ? {
                 sources: [{
-                    url: utils.getImageUrl(
-                        data.imageUrl,
-                        CourseImageSize.LARGE
-                    ),
+                    url: imageUrl,
                     size: 'default'
                 }],
                 altText: data.categoryName,
-            },
+            } : null,
             url: courseView.getLink(data.url),
             nameLinkUrl: courseView.getLink(data.categoryUrl),
             placeholder: {

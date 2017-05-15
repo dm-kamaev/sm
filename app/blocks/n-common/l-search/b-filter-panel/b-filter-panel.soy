@@ -84,7 +84,7 @@
     <div class="{call .rootClass/}__content">
         {call .filtersList_ data="all" /}
         {call .button_ data="all" /}
-        {call .tooltip_ /}
+        {call .tooltip_ data="all" /}
         {call .controlLinks_ data="all" /}
     </div>
 {/template}
@@ -200,24 +200,29 @@
  * @private
  */
 {template .button_}
+    {let $classes kind="text"}
+        {call .rootClass/}__button-wrap
+        {if $params.data.button?.borderRoundSize}
+            {sp}{call .rootClass/}__button-wrap_rounded
+        {/if}
+    {/let}
+
     <div class="{call .rootClass/}__button-box">
-        <div class="{call .rootClass/}__button-wrap">
+        <div class="{$classes}">
             {call .renderChild}
                 {param params: [
                     'type': 'button',
                     'renderParams': [
                         'data': [
-                            'content': [
-                                'default': $params.data.button ?
-                                    $params.data.button.content : 'Подобрать'
-                            ]
+                            'content': $params.data.button?.content,
+                            'defaultText': $params.data.button?.defaultText ?:
+                                'Подобрать'
                         ],
                         'config': [
                            'theme': $params.data.button ?
                                 $params.data.button.theme : 'dark',
                             'size': 's',
-                            'borderRoundSize': $params.data.button?.borderRoundSize,
-                            'defaultText': 'Подобрать'
+                            'borderRoundSize': $params.data.button?.borderRoundSize
                         ]
                     ]
                 ]/}
@@ -229,6 +234,11 @@
 
 /**
  * Tooltip with count of search result
+ * @param params {{
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
  */
 {template .tooltip_}
     {let $customClass kind="text"}
@@ -254,7 +264,10 @@
                         ],
                         'button': [
                             'theme': 'carrot'
-                        ]
+                        ],
+                        'theme': $params.config?.theme == 'neptune' ?
+                            'rounded-button' :
+                            ''
                     ]
                 ]
             ]/}

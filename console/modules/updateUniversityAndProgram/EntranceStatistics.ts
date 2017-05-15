@@ -176,7 +176,7 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             if (cost) {
                 data.cost = cost;
             }
-            if (cost) {
+            if (egePassScore) {
                 data.egePassScore = egePassScore;
             }
 

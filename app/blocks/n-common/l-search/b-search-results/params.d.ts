@@ -34,6 +34,10 @@ export namespace bSearchResults {
             entityList: bSmItemList.Params.Data;
             countResults: number;
             headerText: HeaderTextEntry[];
+            placeholder?: {
+                title?: string;
+                text?: Array<string>;
+            }
         }
 
         /**

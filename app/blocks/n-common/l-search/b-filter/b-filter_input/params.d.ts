@@ -22,7 +22,12 @@ export namespace bFilterInput {
                 maxLength?: number;
                 type?: string;
                 isHidden?: boolean;
-            }>
+            }>,
+            placeholder?: {
+               text: string,
+               isHidden?: boolean
+            },
+            minOptionsToShowPlaceholder?: number
         }
 
         /**

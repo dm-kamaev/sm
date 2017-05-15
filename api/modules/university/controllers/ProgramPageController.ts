@@ -24,8 +24,10 @@ class ProgramPageController extends Controller {
      * @apiName getProgramByAlias
      * @apiGroup Program Page
      *
+     * @apiParam (query) {String} universityAlias Alias of university.
+     *
      * @apiSuccess {Object} Program
-     * @apiSuccess {Number} Program.programId Id of found program
+     * @apiSuccess {Number} Program.programId Id of found program.
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
@@ -42,9 +44,15 @@ class ProgramPageController extends Controller {
      *      }]
      */
     public async actionGet(actionContext: any, alias: string) {
-        const sanitizedAlias = urlsService.stringToURL(alias),
-            programPage = await programPageService.getByAlias(sanitizedAlias),
-            programId = programPage.programId;
+        const universityAlias: string = actionContext.data.universityAlias;
+        const sanitizedProgramAlias: string = urlsService.stringToURL(alias),
+            sanitizedUniversityAlias: string =
+                urlsService.stringToURL(universityAlias),
+            program = await programPageService.getByAlias(
+                sanitizedProgramAlias,
+                sanitizedUniversityAlias
+            ),
+            programId = program.id;
 
         return {programId};
     }

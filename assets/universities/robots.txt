@@ -1,5 +1,5 @@
 Allow: /
-Allow: /search
+Allow: /program/search
 
 Host: vuz.mel.fm
-Sitemap: http://courses.mel.fm/sitemap.xml
+Sitemap: http://vuz.mel.fm/sitemap.xml

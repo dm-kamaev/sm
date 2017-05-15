@@ -4,6 +4,8 @@ const Controller: LegacyController = require('nodules/controller').Controller;
 
 const subjectService = require('../services/subject');
 
+const entityRoutes = require('../../entity/enums/entityRoutes').routes;
+
 class SubjectController extends Controller {
     /**
      * @api {get} /api/subject/search Search subject by name
@@ -11,7 +13,7 @@ class SubjectController extends Controller {
      * @apiName searchSubject
      * @apiGroup Subject
      *
-     * @apiParam {string} name Part of a subject's name you search for.
+     * @apiParam (query) {String} name Part of a subject's name you search for.
      *
      * @apiSuccess {Number} id          Id.
      * @apiSuccess {String} name        Name written in lower case.
@@ -21,7 +23,15 @@ class SubjectController extends Controller {
      * @apiSuccess {String} updated_at  Updated at.
      */
     public async actionSearch(actionContext: any) {
-        return subjectService.searchByName(actionContext.request.query.name);
+        const entitySubdomain: string = actionContext.request.subdomains[0];
+        let type: string | undefined;
+        if (entitySubdomain === entityRoutes.UNIVERSITY.hostName) {
+            type = entityRoutes.UNIVERSITY.route;
+        }
+        return subjectService.searchByName(
+            actionContext.request.query.name,
+            type
+        );
     }
 }
 

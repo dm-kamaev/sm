@@ -75,5 +75,6 @@ export interface ProgramUrl {
 }
 
 export interface ProgramSuggest extends ProgramAttribute {
-    alias?: string;
+    alias: string;
+    universityAbbreviation: string;
 }

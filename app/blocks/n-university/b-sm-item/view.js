@@ -1,6 +1,7 @@
 goog.provide('sm.bSmItem.ViewUniversity');
 
 goog.require('sm.bSmItem.View');
+goog.require('sm.bSmButtonLink.View');
 
 
 
@@ -42,4 +43,49 @@ goog.scope(function() {
         View.base(this, 'initDom');
         this.dom.stars = this.getElementByClass(View.CssClass.STARS);
     };
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object} rawParams
+     * @return {sm.bSmItemUniversity.Params}
+     * @override
+     * @public
+     */
+    View.getRenderParams = function(rawParams) {
+        var params = sm.bSmItem.View.getRenderParams(rawParams);
+
+        var buttonLink = rawParams['buttonLink'] ?
+            sm.bSmButtonLink.View.getRenderParams(rawParams['buttonLink']):
+            null;
+
+        var nicety = rawParams['nicety'];
+        if (nicety) {
+            nicety = nicety.map(item => {
+                var title = item['title'];
+
+                return {
+                    title: title ? {
+                        textDefault: title['textDefault'],
+                        textXs: title['textXs'],
+                        selected: title['selected'],
+                    } : null,
+                    value: item['value']
+                };
+            });
+        }
+
+        goog.object.extend(params.data, {
+            buttonLink: buttonLink,
+            company: rawParams['company'] ? {
+                abbreviation: rawParams['company']['abbreviation'],
+                city: rawParams['company']['city'],
+                name: rawParams['company']['name']
+            } : null,
+            nicety: nicety
+        });
+
+        return params;
+    };
+
 });  // goog.scope

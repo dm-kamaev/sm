@@ -11,9 +11,9 @@ class UniversitySubHeader extends SubHeader {
         };
 
         this.link = {
-            nameL: 'Подобрать Вуз',
-            nameM: 'Подобрать Вуз',
-            url: '/search'
+            nameL: 'Все программы обучения',
+            nameM: 'Все программы обучения',
+            url: '/program/search'
         };
 
         this.rowLinks = {
@@ -53,46 +53,49 @@ class UniversitySubHeader extends SubHeader {
             placeholder: 'Специальность, вуз…',
             pageAlias: 'search',
             redirect: false,
-            sourceUrl: '/university/suggest'
+            sourceUrl: '/university/suggest',
+            disableSearchBehavior: true
         };
     }
 
     protected setLinks(listLinks) {
-        const links = [
-            {
-                url: '/',
-                label: 'Программы обучения',
-                isSelected: true
-            }, {
-                url: '/',
-                label: 'Профессия'
-            }, {
-                url: '/',
-                label: 'Вуз'
-            }
-        ];
+        // const links = [
+        //     {
+        //         url: '/',
+        //         label: 'Программы обучения',
+        //         isSelected: true
+        //     }, {
+        //         url: '/',
+        //         label: 'Профессия'
+        //     }, {
+        //         url: '/',
+        //         label: 'Вуз'
+        //     }
+        // ];
 
-        super.setLinks(links);
+        super.setLinks(listLinks);
 
-        if (links) {
-            this.setRowLinks(links);
+        if (listLinks) {
+            this.setRowLinks(listLinks);
         }
     }
 
     protected setDropdownLinks(links) {
-        let opener = null;
+        // let opener = null;
 
-        const listLinks = links.filter(link => {
-            if (link.isSelected) {
-                opener = link.label;
-            } else {
-                return link;
-            }
-        });
+        // const listLinks = links.filter(link => {
+        //     if (link.isSelected) {
+        //         opener = link.label;
+        //     } else {
+        //         return link;
+        //     }
+        // });
 
-        this.dropdownLinks.data.opener = opener;
+        // this.dropdownLinks.data.opener = opener;
 
-        super.setDropdownLinks(listLinks);
+        // super.setDropdownLinks(listLinks);
+
+        super.setDropdownLinks(links);
     }
 };
 

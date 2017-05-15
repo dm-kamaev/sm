@@ -33,7 +33,12 @@ import {
     ProgramUrl
 } from '../types/program';
 import {EntitiesSearch} from '../../entity/types/textSearchData';
-import {ListProgram, SearchListResult} from '../types/programSearch';
+import {
+    ListProgram,
+    SearchListResult,
+    QueryParams,
+    ProgramCountResult
+} from '../types/programSearch';
 
 import {PageAttribute} from '../../entity/types/page';
 
@@ -51,6 +56,10 @@ const entityType = require('../../entity/enums/entityType');
 import {UrlTemplate} from '../constants/UrlTemplate';
 
 import {ProgramNotFound, ProgramNameIsShorterException} from './exceptions';
+
+type GetByIdsParams = {
+    includeUniversities?: boolean;
+};
 
 const EXCLUDE_FIELDS = [
     'created_at',
@@ -157,6 +166,25 @@ class ProgramService {
         return instance;
     }
 
+    public async getByIds(
+            programIds: number[],
+            params?: GetByIdsParams
+    ): Promise<ProgramInstance[]> {
+        const include = params && params.includeUniversities && [{
+            model: UniversityModel,
+            as: 'university'
+        }];
+        return ProgramModel.findAll({
+            where: {
+                id: programIds
+            },
+            attributes: {
+                exclude: EXCLUDE_FIELDS
+            },
+            include: include
+        });
+    }
+
     public async getCommentGroup(
         programId: number): Promise<CommentGroupInstance> {
         const program = await this.getOne(programId);
@@ -212,12 +240,25 @@ class ProgramService {
 
     public async getUrls(
             programs: Array<ProgramInstance>): Promise<Array<ProgramUrl>> {
-        const pages = await Promise.all([
-            pageService.getAllAliases(entityType.PROGRAM),
-            pageService.getAllAliases(entityType.UNIVERSITY)
+        const entityIds = programs.reduce(
+            (result, program) => {
+                result.program.push(program.id);
+                result.university.push(program.universityId);
+                return result;
+            },
+            {
+                program: [],
+                university: []
+            });
+
+
+        const [
+            programPages,
+            universityPages
+        ] = await Promise.all([
+            pageService.getAliases(entityIds.program, entityType.PROGRAM),
+            pageService.getAliases(entityIds.university, entityType.UNIVERSITY)
         ]);
-        const programPages = pages[0];
-        const universityPages = pages[1];
 
         return programs.map(program => {
             const programAlias = programPages
@@ -297,10 +338,11 @@ class ProgramService {
             return null;
         }
         const programIds: number[] = founded.program;
-        return await this.getProgramsWithAlias_(programIds);
+        return await this.getByIds(programIds, {includeUniversities: true});
     }
 
-    public async searchList(queryParams): Promise<SearchListResult> {
+    public async searchList(
+            queryParams: QueryParams): Promise<SearchListResult> {
         const queryResult: ListProgram[] =
             await this.getRawSearchList_(queryParams);
 
@@ -341,8 +383,32 @@ class ProgramService {
         return result;
     }
 
+    public async searchCountList(
+            queryParams: QueryParams): Promise<ProgramCountResult> {
+        const searchParams =
+            programSearchService.converSearchParams(queryParams);
+        const searchQuery =
+            programSearchService.getCountSearchQuery(searchParams);
+        const result = await sequelize.query(searchQuery, {
+            type: Sequelize.QueryTypes.SELECT
+        });
+        return result[0];
+    }
 
-    private async getRawSearchList_(queryParams): Promise<ListProgram[]> {
+    public async getUniversityIds(
+            programIds: number[]): Promise<ProgramInstance[]> {
+        return ProgramModel.findAll({
+            attributes: ['id', 'universityId'],
+            where: {
+                id: {
+                    $in: programIds
+                }
+            }
+        });
+    }
+
+    private async getRawSearchList_(
+            queryParams: QueryParams): Promise<ListProgram[]> {
         const searchParams =
             programSearchService.converSearchParams(queryParams);
         const searchQuery = programSearchService.getListSearchQuery(

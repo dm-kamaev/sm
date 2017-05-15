@@ -101,3 +101,18 @@
         {/foreach}
     {/if}
 {/template}
+
+
+/**
+ * @param params {
+ *     data: {
+ *         size: ?string
+ *     }
+ * }
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.data.size}
+        {call .rootClass /}_size_{$params.data.size}
+    {/if}
+{/template}

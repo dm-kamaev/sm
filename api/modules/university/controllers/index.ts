@@ -80,6 +80,7 @@ router.get(
 );
 
 router.get('/program/search', programController.actionSearch);
+router.get('/program/search/count', programController.actionCountSearch);
 
 router.get(
     '/program/:id',

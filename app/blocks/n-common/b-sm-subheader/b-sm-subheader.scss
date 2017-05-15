@@ -408,7 +408,8 @@
     /* header animation end */
 
      /* type entity university */
-    .b-sm-subheader_entity-type_university {
+    .b-sm-subheader_entity-type_university,
+    .b-sm-subheader_entity-type_program {
         .b-sm-subheader__section_logo {
             width: auto;
         }
@@ -430,7 +431,8 @@
 
 @include media-s {
     /* type entity university */
-    .b-sm-subheader_entity-type_university {
+    .b-sm-subheader_entity-type_university,
+    .b-sm-subheader_entity-type_program {
         .b-sm-subheader__search-links_row {
             display: none;
         }

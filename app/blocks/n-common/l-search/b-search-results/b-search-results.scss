@@ -25,7 +25,7 @@
     line-height: 1;
 }
 
-.b-search-results__placeholder-subtitle {
+.b-search-results__placeholder-text {
     font-family: arial, sans-serif;
     font-size: 15px;
     line-height: 1.47;
@@ -209,6 +209,12 @@ $longAnimationDuration: 1.5s;
     }
 }
 /* Theme end */
+
+@include media-m {
+    .b-search-results__placeholder {
+        padding-top: 60px;
+    }
+}
 
 @include media-xs {
     .b-search-results__sort-control-wrap_switch {

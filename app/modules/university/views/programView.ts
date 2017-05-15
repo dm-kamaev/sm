@@ -6,8 +6,14 @@ import {bSmItemUniversity} from '../../../blocks/n-university/b-sm-item/params';
 import {bSmButtonLink} from '../../../blocks/n-common/b-sm-button-link/params';
 
 import {entityType} from '../../common/enums/entityType';
+import {UniversityImageSize} from '../constants/UniversityImageSize';
 
 const config = require('../../../config/config.json');
+
+const staticImgPath =
+    '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
+
+const IMAGE_WIDTH_TAG = '{width}';
 
 class ProgramView {
     public getUrl(universityAlias: string, programAlias: string): string {
@@ -26,6 +32,12 @@ class ProgramView {
     protected transformItem(
             item: BackendListProgram): bSmItemUniversity.Params.Data {
         const programUrl = this.getUrl(item.universityAlias, item.programAlias);
+        const imageUrl = item.imageUrl ?
+            item.imageUrl.replace(
+                IMAGE_WIDTH_TAG,
+                UniversityImageSize.DEFAULT[0].toString()
+            ) :
+            staticImgPath + 'placeholder_parthenon.png';
 
         return {
             id: item.id,
@@ -34,7 +46,7 @@ class ProgramView {
             score: item.totalScore,
             picture: {
                 sources: [{
-                    url: item.imageUrl,
+                    url: imageUrl,
                     size: 'default',
                 }],
                 altText: item.name
@@ -47,6 +59,11 @@ class ProgramView {
             nicety: this.generateNicety(item),
             description: this.generateDescription(item),
             buttonLink: this.generateButtonLinkParams(programUrl),
+            iconLink: {
+                icon: 'arrow-right',
+                type: 'svg',
+                link: programUrl
+            },
             type: entityType.PROGRAM
         };
     };
@@ -54,30 +71,47 @@ class ProgramView {
     protected generateNicety(
             item: BackendListProgram): bSmItemUniversity.Params.Nicety[] {
         const formatUtils = new FormatUtils();
+        const res = [];
 
-        return [{
-                title: {
+        if (item.budgetPlaces || item.egeScore) {
+            res.push({
+                title: item.budgetPlaces ? {
                     textDefault: 'Бюджетных мест: ' + item.budgetPlaces,
                     textXs: 'Бюджетных: ' + item.budgetPlaces,
-                    selected: (item.competition > 3)
-                },
-                value: `от ${item.egeScore} ` + formatUtils.declensionPrint(
-                    item.egeScore,
-                    {
-                        nom: 'балл',
-                        gen: 'баллов',
-                        plu: 'баллов'
-                    }
-                )
-            },
-            {
+                    selected: (item.competition > 20)
+                } :
+                null,
+                value: {
+                    text: item.egeScore ?
+                        `от ${item.egeScore} ` + formatUtils.declensionPrint(
+                            item.egeScore,
+                            {
+                                nom: 'балл',
+                                gen: 'баллов',
+                                plu: 'баллов'
+                            }
+                        ) :
+                        'баллы неизвестны',
+                    selected: !!item.egeScore
+                }
+            });
+        }
+
+        if (item.commercialPlaces) {
+            const cost = Math.floor(item.cost / 10000) * 10;
+            res.push({
                 title: {
                     textDefault: 'Платных мест: ' + item.commercialPlaces,
                     textXs: 'Платных: ' + item.commercialPlaces
                 },
-                value: 'от ' + Math.floor(item.cost / 1000) + ' тыс./год'
-            }
-        ];
+                value: {
+                    text: cost ? `от ${cost} тыс./год` : 'стоимость неизвестна',
+                    selected: !!cost
+                }
+            });
+        }
+
+        return res.length ? res : null;
     }
 
     protected generateDescription(item: BackendListProgram): string[] {
@@ -93,8 +127,6 @@ class ProgramView {
                 'Вступительное испытание' :
                 'Вступительные испытания';
             res.push(`– ${declensionExam} - ${exams}`);
-        } else {
-            res.push('– Нет вступительных испытаний');
         }
 
         return res.length ? res : null;

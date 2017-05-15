@@ -24,10 +24,12 @@ class ProgramService extends Service {
         return response.data;
     }
 
-    public async getIdByAlias(alias: string): Promise<number> {
+    public async getIdByAlias(
+            programAlias: string, universityAlias: string): Promise<number> {
         const requestParams: RequestParams = {
-            url: `${this.baseUrl}/alias/${encodeURI(alias)}`,
-            method: 'get'
+            url: `${this.baseUrl}/alias/${encodeURI(programAlias)}`,
+            method: 'get',
+            params: {universityAlias}
         };
 
         const response = await this.send(requestParams);
