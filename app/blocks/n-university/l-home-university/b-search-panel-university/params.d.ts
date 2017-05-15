@@ -3,11 +3,11 @@ import {gList} from '../../../n-clobl/g-list/params';
 
 export namespace bSearchPanel {
     /**
-     * sm.bSearchPanelUniversity.Params
+     * sm.lHomeUniversity.bSearchPanelUniversity.Params
      */
     export namespace Params {
         /**
-         * sm.bSearchPanelUniversity.Params.Data
+         * sm.lHomeUniversity.bSearchPanelUniversity.Params.Data
          */
         export interface Data {
             title?: string;
@@ -27,7 +27,7 @@ export namespace bSearchPanel {
         }
 
         /**
-         * sm.bSearchPanelUniversity.Params.Config
+         * sm.lHomeUniversity.bSearchPanelUniversity.Params.Config
          */
         export interface Config {
             theme?: string;
@@ -39,7 +39,7 @@ export namespace bSearchPanel {
 
 
     /**
-     * sm.bSearchPanelUniversity.Params
+     * sm.lHomeUniversity.bSearchPanelUniversity.Params
      */
     export interface Params {
         data: Params.Data;

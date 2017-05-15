@@ -1,4 +1,4 @@
-goog.provide('sm.bSearchPanelUniversity.SearchPanelUniversity');
+goog.provide('sm.lHomeUniversity.bSearchPanelUniversity.SearchPanelUniversity');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSearch.Search');
@@ -9,8 +9,8 @@ goog.require('sm.iCloblFactory.FactoryStendhal');
 goog.require('sm.iSmQueryBuilder.QueryBuilder');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.iSmViewport.SmViewport');
-goog.require('sm.bSearchPanelUniversity.Template');
-goog.require('sm.bSearchPanelUniversity.View');
+goog.require('sm.lHomeUniversity.bSearchPanelUniversity.Template');
+goog.require('sm.lHomeUniversity.bSearchPanelUniversity.View');
 
 
 
@@ -21,10 +21,10 @@ goog.require('sm.bSearchPanelUniversity.View');
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bSearchPanelUniversity.SearchPanelUniversity =
+sm.lHomeUniversity.bSearchPanelUniversity.SearchPanelUniversity =
     function(view, opt_domHelper) {
-    sm.bSearchPanelUniversity.SearchPanelUniversity.base(this, 'constructor',
-        view, opt_domHelper);
+    sm.lHomeUniversity.bSearchPanelUniversity.SearchPanelUniversity.base(
+        this, 'constructor', view, opt_domHelper);
 
     var QueryBuilder = goog.module.get('sm.iSmQueryBuilder.QueryBuilder');
 
@@ -68,20 +68,22 @@ sm.bSearchPanelUniversity.SearchPanelUniversity =
     this.queryBuilder_ = new QueryBuilder();
 };
 goog.inherits(
-    sm.bSearchPanelUniversity.SearchPanelUniversity,
+    sm.lHomeUniversity.bSearchPanelUniversity.SearchPanelUniversity,
     cl.iControl.Control
 );
 
 
 goog.scope(function() {
-    var SearchPanel = sm.bSearchPanelUniversity.SearchPanelUniversity,
-        View = sm.bSearchPanelUniversity.View,
+    var SearchPanel =
+            sm.lHomeUniversity.bSearchPanelUniversity.SearchPanelUniversity,
+        View = sm.lHomeUniversity.bSearchPanelUniversity.View,
         viewport = sm.iSmViewport.SmViewport.getInstance();
 
     /**
      * Name of this element in factory
      */
-    SearchPanel.NAME = sm.bSearchPanelUniversity.Template.NAME();
+    SearchPanel.NAME =
+        sm.lHomeUniversity.bSearchPanelUniversity.Template.NAME();
 
     sm.iCloblFactory.FactoryStendhal.getInstance().register(SearchPanel.NAME, {
         control: SearchPanel,
@@ -94,25 +96,6 @@ goog.scope(function() {
      */
     SearchPanel.Event = {
         SUBMIT: goog.events.getUniqueId('submit')
-    };
-
-
-    /**
-     * @typedef {?}
-     */
-    SearchPanel.FilterData;
-
-
-    /**
-     * @override
-     * @param {Element} element
-     */
-    SearchPanel.prototype.decorateInternal = function(element) {
-        SearchPanel.base(this, 'decorateInternal', element);
-
-        this.initViewportListener_();
-        this.initSearchBlocks_();
-        this.initButton_();
     };
 
 
@@ -150,6 +133,19 @@ goog.scope(function() {
         }
 
         return data;
+    };
+
+
+    /**
+     * Show/hide options in different sizes of screen
+     * @public
+     */
+    SearchPanel.prototype.displayNeededCountOfCheckboxes = function() {
+        if (viewport.getSize() <= sm.iSmViewport.SmViewport.Size.XS) {
+            this.searchEge_.showLess();
+        } else {
+            this.searchEge_.showMore();
+        }
     };
 
 
@@ -194,6 +190,20 @@ goog.scope(function() {
         }
 
         return data.join('&');
+    };
+
+
+    /**
+     * @override
+     * @param {Element} element
+     * @protected
+     */
+    SearchPanel.prototype.decorateInternal = function(element) {
+        SearchPanel.base(this, 'decorateInternal', element);
+
+        this.initViewportListener_();
+        this.initSearchBlocks_();
+        this.initButton_();
     };
 
 
@@ -269,17 +279,6 @@ goog.scope(function() {
      */
     SearchPanel.prototype.onResize_ = function() {
         this.displayNeededCountOfCheckboxes();
-    };
-
-    /**
-     * Show/hide options in different sizes of screen
-     */
-    SearchPanel.prototype.displayNeededCountOfCheckboxes = function() {
-        if (viewport.getSize() <= sm.iSmViewport.SmViewport.Size.XS) {
-            this.searchEge_.showLess();
-        } else {
-            this.searchEge_.showMore();
-        }
     };
 
 

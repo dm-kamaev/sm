@@ -1,4 +1,4 @@
-goog.provide('sm.bSearchPanelUniversity.View');
+goog.provide('sm.lHomeUniversity.bSearchPanelUniversity.View');
 
 goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
@@ -14,14 +14,15 @@ goog.require('goog.dom.classlist');
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.bSearchPanelUniversity.View = function(opt_params, opt_type, opt_modifier) {
-    sm.bSearchPanelUniversity.View.base(this, 'constructor', opt_params,
-        opt_type, opt_modifier);
+sm.lHomeUniversity.bSearchPanelUniversity.View =
+            function(opt_params, opt_type, opt_modifier) {
+    sm.lHomeUniversity.bSearchPanelUniversity.View.base(
+        this, 'constructor', opt_params, opt_type, opt_modifier);
 };
-goog.inherits(sm.bSearchPanelUniversity.View, cl.iControl.View);
+goog.inherits(sm.lHomeUniversity.bSearchPanelUniversity.View, cl.iControl.View);
 
 goog.scope(function() {
-    var View = sm.bSearchPanelUniversity.View;
+    var View = sm.lHomeUniversity.bSearchPanelUniversity.View;
 
 
     /**

@@ -38,19 +38,19 @@
     .g-dropdown__opener {
         box-sizing: border-box;
         height: 50px;
-        border-radius: 2px;
-
-        background-color: #ffffff;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 
         border: 1px solid #deded8;
+        border-radius: 2px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 
         line-height: 50px;
     }
 
     .g-dropdown__opener-text {
-        color: #747474;
         margin-left: 10px;
+
+        color: #747474;
     }
 
     .g-dropdown__opener-arrow-icon {
@@ -60,11 +60,12 @@
     }
 
     .g-dropdown__opener-text-icon {
+        position: relative;
+        top: -1px;
+
         float: left;
 
         margin-left: 10px;
-        position: relative;
-        top: -1px;
     }
 
     .g-dropdown__content {
