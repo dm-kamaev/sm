@@ -73,7 +73,8 @@ class ProgramRenderSearchView extends LayoutView {
         this.openGraph = {
             title: this.seo.metaTitle,
             description: this.seo.metaDescription,
-            image: '/static/images/n-clobl/i-layout/university_sharing.jpg'
+            image: '/static/images/n-clobl/i-layout/university_sharing.jpg',
+            relapImage: '/static/images/n-university/relap.png'
         };
 
         this.api = {

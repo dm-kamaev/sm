@@ -70,6 +70,9 @@ type UserType = {
 const staticImgPath =
     '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
 
+const relapImgPath =
+    '/static/images/n-university/relap.png';
+
 class InformationView extends LayoutView {
     private static FULL_DESCRIPTION_LENGTH = 280;
 
@@ -128,10 +131,17 @@ class InformationView extends LayoutView {
         this.params.data.openGraph.description = description;
         this.params.data.openGraph.relapTag = this.subunitType;
 
-        const relapImage = utils.getImageUrl(
-            data.university.imageUrl,
-            UniversityImageSize.RELAP
-        );
+        let relapImage;
+
+        if (data.university.imageUrl) {
+            relapImage = utils.getImageUrl(
+                data.university.imageUrl,
+                UniversityImageSize.RELAP
+            );
+        } else {
+            relapImage = relapImgPath;
+        }
+
         this.params.data.openGraph.image = relapImage;
         this.params.data.openGraph.relapImage = relapImage;
     }
