@@ -198,6 +198,11 @@ $longAnimationDuration: 1.5s;
 
 /* Theme */
 .b-search-results_neptune-theme {
+    .b-search-results__header-text {
+        font-size: 22px;
+        line-height: 29px;
+    }
+
     .b-search-results__header-text_selected {
         font-weight: inherit;
         color: #2656ba;

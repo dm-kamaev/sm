@@ -127,6 +127,7 @@
     }
 
     .b-sm-item__nicety-title_selected {
+        opacity: 1;
         color: #ed6327;
     }
 
@@ -253,7 +254,7 @@
         .b-sm-item__icon-link {
             display: inline-block;
             position: absolute;
-            right: 13px;
+            right: -10px;
         }
     }
 }
