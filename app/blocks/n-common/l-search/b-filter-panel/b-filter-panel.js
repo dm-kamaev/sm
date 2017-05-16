@@ -101,6 +101,8 @@ goog.scope(function() {
         RESET: goog.events.getUniqueId('reset'),
         FILTER_OPTION_CHECK: sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
         FILTER_OPTION_UNCHECK: sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
+        FILTER_COLLAPSE: sm.lSearch.bFilter.Filter.Event.COLLAPSE,
+        FILTER_EXPAND: sm.lSearch.bFilter.Filter.Event.EXPAND,
         CHANGE: goog.events.getUniqueId('change')
     };
 
@@ -147,6 +149,7 @@ goog.scope(function() {
         });
 
         this.getView().setResetButtonVisibility(false);
+        this.getView().setButtonFixability(false);
         this.updateButton();
         this.countResults_ = null;
     };
@@ -205,7 +208,7 @@ goog.scope(function() {
             this.showTooltip(text, isEmptyResults);
         }
 
-        this.updateButtonFixability_();
+        this.updateButtonFixability();
     };
 
     /**
@@ -335,6 +338,17 @@ goog.scope(function() {
 
 
     /**
+     * fix button if set count results and required viewport size
+     * @public
+     */
+    FilterPanel.prototype.updateButtonFixability = function() {
+        if (this.countResults_ !== null) {
+            this.getView().updateButtonFixability();
+        }
+    };
+
+
+    /**
      * Initializes listeners for view
      * @private
      */
@@ -428,22 +442,11 @@ goog.scope(function() {
 
 
     /**
-     * fix button if set count results and required viewport size
-     * @private
-     */
-    FilterPanel.prototype.updateButtonFixability_ = function() {
-        if (this.countResults_ !== null) {
-            this.getView().updateButtonFixability();
-        }
-    };
-
-
-    /**
      * filter expand handler
      * @private
      */
     FilterPanel.prototype.onFilterExpand_ = function() {
-        this.updateButtonFixability_();
+        this.updateButtonFixability();
     };
 
 
@@ -452,7 +455,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onFilterCollapse_ = function() {
-        this.updateButtonFixability_();
+        this.updateButtonFixability();
     };
 
 
@@ -512,7 +515,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onScroll_ = function() {
-        this.updateButtonFixability_();
+        this.updateButtonFixability();
     };
 
 

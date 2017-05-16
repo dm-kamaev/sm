@@ -213,6 +213,8 @@ goog.scope(function() {
      * @override
      */
     FilterInput.prototype.initViewListeners = function() {
+        FilterInput.base(this, 'initViewListeners');
+
         this.viewListen(
             View.Event.RESET_CLICK,
             this.onResetClick_

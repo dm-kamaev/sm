@@ -122,6 +122,8 @@ goog.scope(function() {
      * @protected
      */
     FilterExtended.prototype.initViewListeners = function() {
+        FilterExtended.base(this, 'initViewListeners');
+
         this.viewListen(
             View.Event.SHOW_MODAL_CLICK,
             this.onShowModalClick_
