@@ -98,7 +98,7 @@ class ProgramRenderSearchView extends LayoutView {
             {
                 number: programCount,
                 text: {
-                    nom: 'програму',
+                    nom: 'программу',
                     gen: 'программы',
                     plu: 'программ'
                 },
