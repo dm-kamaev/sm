@@ -82,6 +82,11 @@ class ProgramRenderSearchView extends LayoutView {
         };
     }
 
+
+    public render(params: RenderParams): lSearchUniversity.Params {
+        return super.render(params) as lSearchUniversity.Params;
+    }
+
     public generateHeaderText(
             programCount: number,
             universityCount: number
@@ -122,6 +127,10 @@ class ProgramRenderSearchView extends LayoutView {
         this.setFilterPanels_(params.data, searchParams);
         this.setSearchParams_(searchParams);
         this.setApi_();
+    }
+
+    protected getParams(): lSearchUniversity.Params {
+        return this.params;
     }
 
     private setResultsList_(resultsList: BackendProgramResults) {
@@ -174,7 +183,6 @@ class ProgramRenderSearchView extends LayoutView {
     private setFilterPanels_(
             data: BackendData,
             searchParams: lSearchUniversity.Params.SearchParams) {
-
         const mainPanelParams: FilterPanelParams = {
             searchParams: searchParams,
             filtersData: {

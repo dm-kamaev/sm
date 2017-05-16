@@ -97,6 +97,11 @@ class InformationView extends LayoutView {
         this.subunitType = 'Программа обучения';
     }
 
+
+    public render(params: RenderParams): lUniversity.Params {
+        return super.render(params) as lUniversity.Params;
+    }
+
     protected setParams(params: RenderParams) {
         super.setParams(params);
 
@@ -107,6 +112,11 @@ class InformationView extends LayoutView {
         this.setSimilarPrograms_(params.data);
         this.setUsefulCourses_(params.data);
         this.setModalComment_(params.data.program.id, params.data.userComment);
+    }
+
+
+    protected getParams(): lUniversity.Params {
+        return this.params;
     }
 
     protected setSeo(data: BackendData) {

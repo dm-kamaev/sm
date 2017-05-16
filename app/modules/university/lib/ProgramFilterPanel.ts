@@ -151,6 +151,7 @@ class ProgramFilterPanel extends FilterPanel {
             config: {
                 isShowed: true,
                 inline: true,
+                cannotBeHidden: true,
                 optionsTheme: 'neptune'
             }
         };
