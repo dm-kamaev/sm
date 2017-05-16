@@ -14,6 +14,7 @@ export namespace bSmItemUniversity {
                 textDefault: string;
                 textXs?: string;
                 selected?: boolean;
+                tooltip?: string;
             };
             value?: {
                 text: string;

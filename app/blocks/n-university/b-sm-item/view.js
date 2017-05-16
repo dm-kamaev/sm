@@ -61,7 +61,7 @@ goog.scope(function() {
 
         var nicety = rawParams['nicety'];
         if (nicety) {
-            nicety = nicety.map(item => {
+            nicety = nicety.map((item) => {
                 var title = item['title'];
 
                 return {
@@ -69,6 +69,7 @@ goog.scope(function() {
                         textDefault: title['textDefault'],
                         textXs: title['textXs'],
                         selected: title['selected'],
+                        tooltip: title['tooltip'],
                     } : null,
                     value: item['value']
                 };
