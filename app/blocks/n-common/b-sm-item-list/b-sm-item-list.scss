@@ -195,10 +195,15 @@
 
                 &:nth-child(odd) {
                     margin-right: 0px;
+                    margin-bottom: 30px;
                 }
 
                 &:last-child {
                     margin-bottom: 0;
+                }
+
+                &:nth-child(2) {
+                    margin-bottom: 30px;
                 }
             }
         }

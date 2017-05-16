@@ -102,6 +102,13 @@
     }
 }
 
+@include media-s {
+    .l-home-university__section_populars {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+}
+
 @include media-xs {
     .l-home-university__section-inner {
         margin-right: 25px;
@@ -124,5 +131,14 @@
         .l-home-university__section-inner {
             margin: 0;
         }
+    }
+
+    .l-home-university__section_populars {
+        padding-top: 37px;
+        padding-bottom: 30px;
+    }
+
+    .l-home-university__popular-universities-header {
+        padding-bottom: 29px;
     }
 }

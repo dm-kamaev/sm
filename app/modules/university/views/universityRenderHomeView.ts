@@ -38,7 +38,7 @@ type Ege = {
 };
 
 const linksGenerator = new LinksGenerator(config);
-const searchUrl = linksGenerator.links.university;
+const searchUrl = linksGenerator.links.university + '/program/search';
 
 class UniversityRenderHomeView extends LayoutView {
     protected params: lHomeUniversity.Params;
