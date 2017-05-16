@@ -43,7 +43,6 @@ type RangeOption = {
     }
 };
 
-
 class ProgramFilterPanel extends FilterPanel {
     private filterCities_: bFilterExtended.Params;
     private filterEgeSubjects_: bFilter.Params;
@@ -83,7 +82,6 @@ class ProgramFilterPanel extends FilterPanel {
             }
         };
 
-
         this.filterEgeSubjects_ = {
             data: {
                 header: {
@@ -104,7 +102,6 @@ class ProgramFilterPanel extends FilterPanel {
                 }
             }
         };
-
 
         this.filterPayType_ = {
             data: {
@@ -133,7 +130,6 @@ class ProgramFilterPanel extends FilterPanel {
             }
         };
 
-
         this.filterEgeResults_ = {
             data: {
                 header: {
@@ -156,7 +152,6 @@ class ProgramFilterPanel extends FilterPanel {
             }
         };
 
-
         this.filterMaxPrice_ = {
             data: {
                 name: filterName.MAX_PRICE,
@@ -178,7 +173,6 @@ class ProgramFilterPanel extends FilterPanel {
                 optionsTheme: 'neptune'
             }
         };
-
 
         this.filterMajors_ = {
             data: {
@@ -206,7 +200,6 @@ class ProgramFilterPanel extends FilterPanel {
                 }
             }
         };
-
 
         this.filterFeatures_ = {
             data: {
@@ -239,7 +232,6 @@ class ProgramFilterPanel extends FilterPanel {
         };
     }
 
-
     protected get filterInitializers(): {[name: string]: Function} {
         return {
             [filterName.CITIES]: this.setFilterCities_.bind(
@@ -267,7 +259,6 @@ class ProgramFilterPanel extends FilterPanel {
         ];
     }
 
-
     /**
      * Adds new filter params in array of filters for filter panel
      */
@@ -285,7 +276,6 @@ class ProgramFilterPanel extends FilterPanel {
 
         return this;
     }
-
 
     private setFilterCities_(
             count: number,
@@ -388,7 +378,6 @@ class ProgramFilterPanel extends FilterPanel {
         return this;
     }
 
-
     /**
      * Sets getting values in options
      */
@@ -405,7 +394,6 @@ class ProgramFilterPanel extends FilterPanel {
 
         return options;
     }
-
 
     private updateFilterEgeOptionsParams_(
             options: InputOption[],
@@ -435,7 +423,6 @@ class ProgramFilterPanel extends FilterPanel {
             return option;
         });
     }
-
 
     /**
      * Returns number of visible options

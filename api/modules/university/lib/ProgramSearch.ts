@@ -186,8 +186,9 @@ export class ProgramSearchQuery extends SearchQuery {
             sortOrder = true; // squel 'ASC'
             break;
         case 2:
-            innerSortField = baseSortField =
-                'program.review_count DESC NULLS LAST';
+            this.addCommentCount_();
+            innerSortField = 'comment_count DESC NULLS LAST';
+            baseSortField = 'program.comment_count DESC NULLS LAST';
             sortOrder = null;
             break;
         }
@@ -338,5 +339,26 @@ export class ProgramSearchQuery extends SearchQuery {
 
     private booleanToSearchArray_(value: boolean): number[] {
         return value ? [1] : [];
+    }
+
+    private addCommentCount_(): void {
+        this.innerQuery_
+            .field('count(program_comment.id)', 'comment_count')
+            .left_join(
+                'comment_group',
+                null,
+                'program.comment_group_id = comment_group.id'
+            )
+            .left_join(
+                'program_comment',
+                null,
+                'comment_group.id = program_comment.comment_group_id'
+            )
+            .group('program.id')
+            .group('university.id')
+            .group('entrance_statistic.id')
+            .group('city.id');
+        this.baseQuery_
+            .field('program.comment_count', 'commentCount');
     }
 }
