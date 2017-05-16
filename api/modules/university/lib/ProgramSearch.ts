@@ -74,7 +74,11 @@ export class ProgramSearchQuery extends SearchQuery {
 
     public setMaxPrice(price: number): this {
         if (price) {
-            this.innerQuery_.where('entrance_statistic.cost <= ?', price);
+            this.innerQuery_.where(
+                'entrance_statistic.cost <= ? ' +
+                    'OR entrance_statistic.cost IS NULL',
+                price
+            );
         }
 
         return this;
