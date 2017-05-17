@@ -94,7 +94,8 @@ service.getUserById = async(function(id) {
  * }>}
  */
 service.getUserByIds = async(function(ids) {
-    const uniqueIds = lodashUniq(ids);
+    const notNullIds = ids.filter(id => Boolean(id));
+    const uniqueIds = lodashUniq(notNullIds);
 
     let formattedIds = '';
     let result = [];
