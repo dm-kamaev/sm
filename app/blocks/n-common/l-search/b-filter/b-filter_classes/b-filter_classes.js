@@ -93,8 +93,6 @@ goog.scope(function() {
                 this.options[key].reset();
             }
         }
-
-        this.collapse();
     };
 
 

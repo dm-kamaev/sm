@@ -74,7 +74,6 @@ goog.scope(function() {
     FilterInput.prototype.reset = function() {
         this.resetInputs_();
         this.getView().setButtonResetVisibility(false);
-        this.collapse();
     };
 
 

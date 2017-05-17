@@ -68,8 +68,6 @@ goog.scope(function() {
         for (var i = 0; i < this.options.length; i++) {
             this.options[i].reset();
         }
-
-        this.collapse();
     };
 
 

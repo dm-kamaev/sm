@@ -75,8 +75,6 @@ goog.scope(function() {
      */
     FilterLabels.prototype.reset = function() {
         this.updateOptions(this.getAllData());
-
-        this.collapse();
     };
 
 

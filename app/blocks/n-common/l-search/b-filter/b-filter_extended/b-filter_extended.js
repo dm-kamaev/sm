@@ -80,7 +80,6 @@ goog.scope(function() {
      */
     FilterExtended.prototype.reset = function() {
         this.updateOptions(this.getDefaultOptionsData_());
-        this.collapse();
     };
 
 
