@@ -73,6 +73,9 @@ const staticImgPath =
 const relapImgPath =
     '/static/images/n-university/relap.png';
 
+const formatter = new FormatUtils();
+const programNameMaxLength = 50;
+
 class InformationView extends LayoutView {
     private static FULL_DESCRIPTION_LENGTH = 280;
 
@@ -542,7 +545,12 @@ class InformationView extends LayoutView {
         return {
             id: similarProgram.id,
             type: entityType.PROGRAM,
-            name: similarProgram.name,
+            name: similarProgram.name.length > programNameMaxLength ?
+                formatter.getFormattedCutName(
+                    similarProgram.name,
+                    programNameMaxLength
+                ) :
+                similarProgram.name,
             link: {
                 data: {
                     content: 'Программа',
@@ -597,7 +605,7 @@ class InformationView extends LayoutView {
             name: {
                 light: data.categoryName
             },
-            description: `${data.name} ${data.brandName}`,
+            description: `${data.name}`,
             picture: imageUrl ? {
                 sources: [{
                     url: imageUrl,

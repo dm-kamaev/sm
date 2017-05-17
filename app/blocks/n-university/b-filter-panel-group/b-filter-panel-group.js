@@ -407,7 +407,7 @@ class FilterPanelGroup extends Control {
      * @param {sm.lSearch.bFilter.CheckOptionEvent} event
      */
     onMainFilterOptionCheck_(event) {
-        this.setTooltipPosition(event.position);
+        this.positioningTooltip(event.bounds);
         if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
             const optionData = this.transformEgeDataToEgeResultsOption_(
                 event.data
@@ -426,7 +426,7 @@ class FilterPanelGroup extends Control {
      * @param {sm.lSearch.bFilter.UncheckOptionEvent} event
      */
     onMainFilterOptionUncheck_(event) {
-        this.setTooltipPosition(event.position);
+        this.positioningTooltip(event.bounds);
         if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
             const optionData = this.transformEgeDataToEgeResultsOption_(
                 event.data
@@ -463,7 +463,7 @@ class FilterPanelGroup extends Control {
      * @param {sm.lSearch.bFilter.CheckOptionEvent} event
      */
     onDependentFilterOptionCheck_(event) {
-        this.setTooltipPosition(event.position);
+        this.positioningTooltip(event.bounds);
     }
 
 
@@ -472,15 +472,18 @@ class FilterPanelGroup extends Control {
      * @param {sm.lSearch.bFilter.UncheckOptionEvent} event
      */
     onDependentFilterOptionUncheck_(event) {
-        this.setTooltipPosition(event.position);
+        this.positioningTooltip(event.bounds);
     }
 
     /**
      * set tooltip position
-     * @param {number} position
+     * @param {{
+     *     top: number,
+     *     height: number
+     * }} bounds
      */
-    setTooltipPosition(position) {
-        this.dependentFilterPanel_.setTooltipPosition(position);
+    positioningTooltip(bounds) {
+        this.dependentFilterPanel_.positioningTooltip(bounds);
         this.dispatchEvent(Event.CHANGE);
     }
 

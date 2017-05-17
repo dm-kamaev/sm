@@ -57,14 +57,6 @@ sm.lSearch.bFilterPanel.FilterPanel = function(view, opt_domHelper) {
 
 
     /**
-     * Position of last check/uncheck option
-     * @type {number}
-     * @private
-     */
-    this.tooltipPosition_ = null;
-
-
-    /**
      * Count of search results
      * @type {?number}
      * @private
@@ -218,7 +210,6 @@ goog.scope(function() {
      * @public
      */
     FilterPanel.prototype.showTooltip = function(value, opt_hideButton) {
-        this.getView().setTooltipPosition(this.tooltipPosition_);
         this.tooltip_.setText(value);
         if (opt_hideButton) {
             this.tooltip_.hideButton();
@@ -233,11 +224,14 @@ goog.scope(function() {
 
     /**
      * set position of tooltip
-     * @param {number} position
+     * @param {{
+     *     top: number,
+     *     height: number
+     * }} bounds
      * @public
      */
-    FilterPanel.prototype.setTooltipPosition = function(position) {
-        this.tooltipPosition_ = position;
+    FilterPanel.prototype.positioningTooltip = function(bounds) {
+        this.getView().positioningTooltip(bounds);
     };
 
 
@@ -436,7 +430,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onOption_ = function(event) {
-        this.setTooltipPosition(event.position);
+        this.positioningTooltip(event.bounds);
         this.dispatchEvent(FilterPanel.Event.CHANGE);
     };
 

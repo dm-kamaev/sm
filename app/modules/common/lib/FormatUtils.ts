@@ -98,6 +98,20 @@ class FormatUtils {
 
         return word;
     };
+
+    /**
+     * Get formatted cut name
+     */
+    public getFormattedCutName(name: string, maxLength: number): string {
+        let cutName = name.substring(0, maxLength);
+
+        return cutName
+            .replace(/(\s+[a-zа-я0-9ё()-\/]+)(?=\s*$)/i, '')
+            .replace(/\s+(?=$)/, '')
+            .replace(/\"/g, '')
+            .replace(/\sи(?=$)/i, '')
+            .concat('...');
+    }
 }
 
 export {FormatUtils};

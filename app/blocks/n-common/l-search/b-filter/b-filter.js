@@ -400,7 +400,7 @@ goog.scope(function() {
             handler.listen(
                 this.options[i],
                 sm.bSmCheckbox.SmCheckbox.Event.UNCHECK,
-                this.onOptionUnheck
+                this.onOptionUncheck
             );
         }
     };
@@ -432,7 +432,7 @@ goog.scope(function() {
      * @param {Object} event
      * @protected
      */
-    Filter.prototype.onOptionUnheck = function(event) {
+    Filter.prototype.onOptionUncheck = function(event) {
         this.dispatchEventUncheckOption(event.target);
         this.dispatchEventChangeOptions();
     };
@@ -461,7 +461,7 @@ goog.scope(function() {
     Filter.prototype.dispatchEventCheckOption = function(option) {
         var checkOptionEvent = new CheckOptionEvent({
             data: option.getData(),
-            position: this.getView().getOptionOffset(option)
+            bounds: this.getView().getOptionBounds(option)
         });
         this.dispatchEvent(checkOptionEvent);
     };
@@ -475,7 +475,7 @@ goog.scope(function() {
     Filter.prototype.dispatchEventUncheckOption = function(option) {
         var uncheckOptionEvent = new UncheckOptionEvent({
             data: option.getData(),
-            position: this.getView().getOptionOffset(option)
+            bounds: this.getView().getOptionBounds(option)
         });
         this.dispatchEvent(uncheckOptionEvent);
     };

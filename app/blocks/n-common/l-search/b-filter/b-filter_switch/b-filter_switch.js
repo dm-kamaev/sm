@@ -66,7 +66,7 @@ goog.scope(function() {
             handler.listen(
                 this.options[i],
                 sm.bSmRadioButton.SmRadioButton.Event.UNCHECK,
-                this.onOptionUnheck
+                this.onOptionUncheck
             );
         }
     };

@@ -39,7 +39,9 @@ goog.inherits(sm.lSearch.bFilter.FilterDropdown, sm.lSearch.bFilter.Filter);
 
 goog.scope(function() {
     var FilterDropdown = sm.lSearch.bFilter.FilterDropdown,
-        View = sm.lSearch.bFilter.ViewDropdown;
+        View = sm.lSearch.bFilter.ViewDropdown,
+        CheckOptionEvent = sm.lSearch.bFilter.CheckOptionEvent,
+        UncheckOptionEvent = sm.lSearch.bFilter.UncheckOptionEvent;
 
     /**
      * Name of this element in factory
@@ -170,9 +172,9 @@ goog.scope(function() {
      */
     FilterDropdown.prototype.onListItemChange = function(event) {
         if (this.isChecked()) {
-            this.dispatchEventCheckOption(event.data);
+            this.dispatchEventCheckOption(event.target);
         } else {
-            this.dispatchEventUncheckOption(event.data);
+            this.dispatchEventUncheckOption(event.target);
         }
         this.dispatchEventChangeOptions();
     };
@@ -180,35 +182,31 @@ goog.scope(function() {
 
     /**
      * Dispatch event if check option
-     * @param {{
-     *     value: (string|number),
-     *     label: string
-     * }} optionData
+     * @param {sm.gDropdown.DropdownSelect} option
      * @override
      * @protected
      */
-    FilterDropdown.prototype.dispatchEventCheckOption = function(optionData) {
-        this.dispatchEvent({
-            'type': FilterDropdown.Event.CHECK_OPTION,
-            'data': optionData
+    FilterDropdown.prototype.dispatchEventCheckOption = function(option) {
+        var checkOptionEvent = new CheckOptionEvent({
+            data: option.getSelectedItemData(),
+            bounds: this.getView().getOptionBounds(option)
         });
+        this.dispatchEvent(checkOptionEvent);
     };
 
 
     /**
      * Dispatch event if uncheck option
-     * @param {{
-     *     value: (string|number),
-     *     label: string
-     * }} optionData
+     * @param {sm.gDropdown.DropdownSelect} option
      * @override
      * @protected
      */
-    FilterDropdown.prototype.dispatchEventUncheckOption = function(optionData) {
-        this.dispatchEvent({
-            'type': FilterDropdown.Event.UNCHECK_OPTION,
-            'data': optionData
+    FilterDropdown.prototype.dispatchEventUncheckOption = function(option) {
+        var uncheckOptionEvent = new UncheckOptionEvent({
+            data: option.getSelectedItemData(),
+            bounds: this.getView().getOptionBounds(option)
         });
+        this.dispatchEvent(uncheckOptionEvent);
     };
 
 
