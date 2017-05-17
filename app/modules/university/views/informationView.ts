@@ -605,7 +605,7 @@ class InformationView extends LayoutView {
             name: {
                 light: data.categoryName
             },
-            description: `${data.name} ${data.brandName}`,
+            description: `${data.name}`,
             picture: imageUrl ? {
                 sources: [{
                     url: imageUrl,
