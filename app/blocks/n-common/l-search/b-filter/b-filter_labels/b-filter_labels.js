@@ -180,7 +180,7 @@ goog.scope(function() {
             handler.listen(
                 this.options[i],
                 sm.lSearch.bLabel.Label.Event.REMOVE_CLICK,
-                this.onOptionUnheck
+                this.onOptionUncheck
             );
         }
     };
@@ -191,8 +191,8 @@ goog.scope(function() {
      * @param {Object} event
      * @override
      */
-    FilterLabels.prototype.onOptionUnheck = function(event) {
-        FilterLabels.base(this, 'onOptionUnheck', event);
+    FilterLabels.prototype.onOptionUncheck = function(event) {
+        FilterLabels.base(this, 'onOptionUncheck', event);
 
         this.removeOption(event.target);
     };

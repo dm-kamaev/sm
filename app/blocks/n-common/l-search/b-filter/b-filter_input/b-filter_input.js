@@ -254,7 +254,7 @@ goog.scope(function() {
     FilterInput.prototype.dispatchEventCheckOption = function(option) {
         var checkOptionEvent = new CheckOptionEvent({
             data: option.getValue(),
-            position: this.getView().getOptionOffset(option)
+            bounds: this.getView().getOptionBounds(option)
         });
         this.dispatchEvent(checkOptionEvent);
     };
@@ -269,7 +269,7 @@ goog.scope(function() {
     FilterInput.prototype.dispatchEventUncheckOption = function(option) {
         var uncheckOptionEvent = new UncheckOptionEvent({
             data: option.getValue(),
-            position: this.getView().getOptionOffset(option)
+            bounds: this.getView().getOptionBounds(option)
         });
         this.dispatchEvent(uncheckOptionEvent);
     };

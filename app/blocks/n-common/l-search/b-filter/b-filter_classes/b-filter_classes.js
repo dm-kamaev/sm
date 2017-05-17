@@ -149,90 +149,6 @@ goog.scope(function() {
 
 
     /**
-     * Initializes listeners for options
-     * @override
-     * @protected
-     */
-    FilterClasses.prototype.initOptionsListeners = function() {
-        var handler = this.getHandler();
-
-        handler.listen(
-            this.options.optionList,
-            sm.lSearch.bFilter.FilterDropdown.Event.CHECK_OPTION,
-            this.onOptionListCheck_
-        );
-
-        handler.listen(
-            this.options.optionLabels,
-            sm.lSearch.bFilter.FilterSwitchLabels.Event.CHECK_OPTION,
-            this.onOptionLabelsCheck_
-        );
-
-        handler.listen(
-            this.options.optionKindergarten,
-            sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
-            this.onOptionKindergartenCheck_
-        );
-
-        handler.listen(
-            this.options.optionList,
-            sm.lSearch.bFilter.FilterDropdown.Event.UNCHECK_OPTION,
-            this.onOptionListUncheck_
-        );
-
-        handler.listen(
-            this.options.optionLabels,
-            sm.lSearch.bFilter.FilterSwitchLabels.Event.UNCHECK_OPTION,
-            this.onOptionLabelsUncheck_
-        );
-
-        handler.listen(
-            this.options.optionKindergarten,
-            sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
-            this.onOptionKindergartenUncheck_
-        );
-    };
-
-
-    /**
-     * Dispatch event if check option
-     * @param {{
-     *     value: (string|number),
-     *     label: string,
-     *     name: string,
-     *     isChecked: boolean
-     * }} optionData
-     * @override
-     * @protected
-     */
-    FilterClasses.prototype.dispatchEventCheckOption = function(optionData) {
-        this.dispatchEvent({
-            'type': FilterClasses.Event.CHECK_OPTION,
-            'data': optionData
-        });
-    };
-
-
-    /**
-     * Dispatch event if uncheck option
-     * @param {{
-     *     value: (string|number),
-     *     label: string,
-     *     name: string,
-     *     isChecked: boolean
-     * }} optionData
-     * @override
-     * @protected
-     */
-    FilterClasses.prototype.dispatchEventUncheckOption = function(optionData) {
-        this.dispatchEvent({
-            'type': FilterClasses.Event.UNCHECK_OPTION,
-            'data': optionData
-        });
-    };
-
-
-    /**
      * Initializes options
      * @override
      * @protected
@@ -261,14 +177,38 @@ goog.scope(function() {
 
 
     /**
+     * Initializes listeners for options
+     * @override
+     * @protected
+     */
+    FilterClasses.prototype.initOptionsListeners = function() {
+        this.getHandler().listen(
+            this.options.optionList,
+            sm.lSearch.bFilter.FilterDropdown.Event.CHECK_OPTION,
+            this.onOptionListCheck_
+        ).listen(
+            this.options.optionLabels,
+            sm.lSearch.bFilter.FilterSwitchLabels.Event.CHECK_OPTION,
+            this.onOptionLabelsCheck_
+        ).listen(
+            this.options.optionList,
+            sm.lSearch.bFilter.FilterDropdown.Event.UNCHECK_OPTION,
+            this.onOptionListUncheck_
+        ).listen(
+            this.options.optionLabels,
+            sm.lSearch.bFilter.FilterSwitchLabels.Event.UNCHECK_OPTION,
+            this.onOptionLabelsUncheck_
+        );
+    };
+
+
+    /**
      * Handler for option check
      * @param {Object} event
      * @private
      */
     FilterClasses.prototype.onOptionListCheck_ = function(event) {
         this.options.optionLabels.checkOption(event.data);
-        this.dispatchEventCheckOption(event.data);
-        this.dispatchEventChangeOptions();
     };
 
 
@@ -279,55 +219,23 @@ goog.scope(function() {
      */
     FilterClasses.prototype.onOptionLabelsCheck_ = function(event) {
         this.options.optionList.checkOption(event.data);
-        this.dispatchEventCheckOption(event.data);
-        this.dispatchEventChangeOptions();
-    };
-
-
-    /**
-     * Handler for option check
-     * @param {Object} event
-     * @private
-     */
-    FilterClasses.prototype.onOptionKindergartenCheck_ = function(event) {
-        this.dispatchEventCheckOption(event.data);
-        this.dispatchEventChangeOptions();
     };
 
 
     /**
      * Handler for option uncheck
-     * @param {Object} event
      * @private
      */
-    FilterClasses.prototype.onOptionListUncheck_ = function(event) {
+    FilterClasses.prototype.onOptionListUncheck_ = function() {
         this.options.optionLabels.reset();
-
-        this.dispatchEventUncheckOption(event.data);
-        this.dispatchEventChangeOptions();
     };
 
 
     /**
      * Handler for option uncheck
-     * @param {Object} event
      * @private
      */
-    FilterClasses.prototype.onOptionLabelsUncheck_ = function(event) {
+    FilterClasses.prototype.onOptionLabelsUncheck_ = function() {
         this.options.optionList.reset();
-
-        this.dispatchEventUncheckOption(event.data);
-        this.dispatchEventChangeOptions();
-    };
-
-
-    /**
-     * Handler for option uncheck
-     * @param {Object} event
-     * @private
-     */
-    FilterClasses.prototype.onOptionKindergartenUncheck_ = function(event) {
-        this.dispatchEventUncheckOption(event.data);
-        this.dispatchEventChangeOptions();
     };
 });  // goog.scope

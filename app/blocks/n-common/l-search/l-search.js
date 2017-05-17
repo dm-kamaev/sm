@@ -530,8 +530,8 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onSearchChange_ = function() {
-        var searchPosition = this.search_.getPosition();
-        this.filterPanel.setTooltipPosition(searchPosition);
+        var searchBounds = this.search_.getBounds();
+        this.filterPanel.positioningTooltip(searchBounds);
         this.loadSearchCount();
     };
 

@@ -241,13 +241,19 @@ goog.scope(function() {
 
 
     /**
-     * get position of this element
-     * @return {number}
+     * get bounds of this element
+     * @return {{
+     *     top: number,
+     *     height: number
+     * }}
      * @public
      */
-    Search.prototype.getPosition = function() {
+    Search.prototype.getBounds = function() {
         var element = this.getElement();
-        return element.offsetTop;
+        return {
+            top: element.offsetTop,
+            height: element.clientHeight
+        };
     };
 
     /**
