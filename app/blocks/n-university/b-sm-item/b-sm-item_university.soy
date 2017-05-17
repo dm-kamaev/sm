@@ -22,7 +22,8 @@
  *         title: {
  *             textDefault: string,
  *             textXs: ?string,
- *             selected: ?boolean
+ *             selected: ?boolean,
+ *             tooltip:: ?string
  *         },
  *         value: {
  *             text: string,
@@ -290,7 +291,8 @@
  *         title: {
  *             textDefault: string,
  *             textXs: ?string,
- *             selected: ?boolean
+ *             selected: ?boolean,
+ *             tooltip?: string
  *         }
  *     }
  * }}
@@ -305,15 +307,15 @@
                 {/if}
         {/let}
 
-        {let $titleAttribute kind="attributes"}
-            {if $item.data.title.selected}
-                title="Высокий конкурс"
+        {let $tooltipAttribute kind="attributes"}
+            {if $item.data.title.tooltip}
+                title="{$item.data.title.tooltip}"
             {/if}
         {/let}
 
         <div class="{$nicetyTitleClasses}
             {sp}{call .rootClass/}__nicety-title_default"
-            {$titleAttribute}
+            {$tooltipAttribute}
         >
             {$item.data.title.textDefault}
         </div>

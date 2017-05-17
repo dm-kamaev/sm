@@ -74,11 +74,13 @@ class ProgramView {
         const res = [];
 
         if (item.budgetPlaces || item.egeScore) {
+            const isTitleSelected = Boolean(item.competition > 20);
             res.push({
                 title: item.budgetPlaces ? {
                     textDefault: 'Бюджетных мест: ' + item.budgetPlaces,
                     textXs: 'Бюджетных: ' + item.budgetPlaces,
-                    selected: (item.competition > 20)
+                    selected: isTitleSelected,
+                    tooltip: isTitleSelected ? 'Высокий конкурс' : null
                 } :
                 null,
                 value: {
@@ -97,15 +99,16 @@ class ProgramView {
             });
         }
 
-        if (item.commercialPlaces) {
-            const cost = Math.floor(item.cost / 10000) * 10;
+        if (item.commercialPlaces || item.cost) {
+            const cost = Math.floor(item.cost / 1000);
             res.push({
-                title: {
+                title: item.commercialPlaces ? {
                     textDefault: 'Платных мест: ' + item.commercialPlaces,
                     textXs: 'Платных: ' + item.commercialPlaces
-                },
+                } :
+                null,
                 value: {
-                    text: cost ? `от ${cost} тыс./год` : 'стоимость неизвестна',
+                    text: cost ? `${cost} тыс./год` : 'стоимость неизвестна',
                     selected: !!cost
                 }
             });

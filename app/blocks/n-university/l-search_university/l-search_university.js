@@ -11,6 +11,7 @@ const Factory = goog.require('sm.iCloblFactory.FactoryStendhal');
 const Template = goog.require('sm.lSearch.Template');
 const ILayout = goog.require('sm.iLayout.LayoutStendhal');
 const FilterPanelGroup = goog.require('sm.bFilterPanelGroup.FilterPanelGroup');
+const Viewport = sm.iSmViewport.SmViewport;
 
 
 /**
@@ -280,6 +281,9 @@ class SearchUniversity extends Search {
      */
     onFilterPanelGroupSubmit_() {
         this.updatePage();
+        if (Viewport.getInstance().getSize() <= Viewport.Size.M) {
+            this.filterPanelGroup.collapse();
+        }
     }
 
     /**

@@ -50,7 +50,7 @@ class ProgramMajorService extends Service {
 
     public async getAdvicedCourses(
             programMajorId: number
-    ): Promise<BackendCourseAdviced> {
+    ): Promise<BackendCourseAdviced[]> {
         const params: RequestParams = {
             method: 'get',
             url: `${this.baseUrl}/${programMajorId}/advicedcourses`

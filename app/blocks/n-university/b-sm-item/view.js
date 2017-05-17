@@ -56,12 +56,12 @@ goog.scope(function() {
         var params = sm.bSmItem.View.getRenderParams(rawParams);
 
         var buttonLink = rawParams['buttonLink'] ?
-            sm.bSmButtonLink.View.getRenderParams(rawParams['buttonLink']):
+            sm.bSmButtonLink.View.getRenderParams(rawParams['buttonLink']) :
             null;
 
         var nicety = rawParams['nicety'];
         if (nicety) {
-            nicety = nicety.map(item => {
+            nicety = nicety.map((item) => {
                 var title = item['title'];
 
                 return {
@@ -69,10 +69,21 @@ goog.scope(function() {
                         textDefault: title['textDefault'],
                         textXs: title['textXs'],
                         selected: title['selected'],
+                        tooltip: title['tooltip'],
                     } : null,
                     value: item['value']
                 };
             });
+        }
+
+        var iconLink = rawParams['iconLink'];
+
+        if (iconLink) {
+            iconLink = {
+                icon: iconLink['icon'],
+                link: iconLink['link'],
+                type: iconLink['type']
+            };
         }
 
         goog.object.extend(params.data, {
@@ -82,7 +93,8 @@ goog.scope(function() {
                 city: rawParams['company']['city'],
                 name: rawParams['company']['name']
             } : null,
-            nicety: nicety
+            nicety: nicety,
+            iconLink: iconLink
         });
 
         return params;

@@ -74,7 +74,6 @@ goog.scope(function() {
     FilterInput.prototype.reset = function() {
         this.resetInputs_();
         this.getView().setButtonResetVisibility(false);
-        this.collapse();
     };
 
 
@@ -213,6 +212,8 @@ goog.scope(function() {
      * @override
      */
     FilterInput.prototype.initViewListeners = function() {
+        FilterInput.base(this, 'initViewListeners');
+
         this.viewListen(
             View.Event.RESET_CLICK,
             this.onResetClick_
@@ -252,7 +253,7 @@ goog.scope(function() {
     FilterInput.prototype.dispatchEventCheckOption = function(option) {
         var checkOptionEvent = new CheckOptionEvent({
             data: option.getValue(),
-            position: this.getView().getOptionOffset(option)
+            bounds: this.getView().getOptionBounds(option)
         });
         this.dispatchEvent(checkOptionEvent);
     };
@@ -267,7 +268,7 @@ goog.scope(function() {
     FilterInput.prototype.dispatchEventUncheckOption = function(option) {
         var uncheckOptionEvent = new UncheckOptionEvent({
             data: option.getValue(),
-            position: this.getView().getOptionOffset(option)
+            bounds: this.getView().getOptionBounds(option)
         });
         this.dispatchEvent(uncheckOptionEvent);
     };

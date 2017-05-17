@@ -73,12 +73,18 @@ class ProgramRenderSearchView extends LayoutView {
         this.openGraph = {
             title: this.seo.metaTitle,
             description: this.seo.metaDescription,
-            image: '/static/images/n-clobl/i-layout/university_sharing.jpg'
+            image: '/static/images/n-clobl/i-layout/university_sharing.jpg',
+            relapImage: '/static/images/n-university/relap.png'
         };
 
         this.api = {
             search: '/program/filtersearch'
         };
+    }
+
+
+    public render(params: RenderParams): lSearchUniversity.Params {
+        return super.render(params) as lSearchUniversity.Params;
     }
 
     public generateHeaderText(
@@ -92,7 +98,7 @@ class ProgramRenderSearchView extends LayoutView {
             {
                 number: programCount,
                 text: {
-                    nom: 'програму',
+                    nom: 'программу',
                     gen: 'программы',
                     plu: 'программ'
                 },
@@ -121,6 +127,10 @@ class ProgramRenderSearchView extends LayoutView {
         this.setFilterPanels_(params.data, searchParams);
         this.setSearchParams_(searchParams);
         this.setApi_();
+    }
+
+    protected getParams(): lSearchUniversity.Params {
+        return this.params;
     }
 
     private setResultsList_(resultsList: BackendProgramResults) {
@@ -173,7 +183,6 @@ class ProgramRenderSearchView extends LayoutView {
     private setFilterPanels_(
             data: BackendData,
             searchParams: lSearchUniversity.Params.SearchParams) {
-
         const mainPanelParams: FilterPanelParams = {
             searchParams: searchParams,
             filtersData: {

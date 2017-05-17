@@ -131,6 +131,28 @@ class FilterPanelGroup extends Control {
     }
 
     /**
+     * @public
+     */
+    collapse() {
+        this.getView().showControls();
+        this.getView().hideFilters();
+
+        this.mainFilterPanel_.collapse();
+        this.dependentFilterPanel_.collapse();
+    }
+
+    /**
+     * @public
+     */
+    expand() {
+        this.getView().hideControls();
+        this.getView().showFilters();
+
+        this.mainFilterPanel_.expand();
+        this.dependentFilterPanel_.expand();
+    }
+
+    /**
      * set sort type
      * @param {string} type
      */
@@ -276,7 +298,7 @@ class FilterPanelGroup extends Control {
         this.getHandler().listen(
             this.dependentFilterPanel_,
             FilterPanel.Event.COLLAPSE,
-            this.onCollapseFilter_
+            this.onCollapseFilterPanel_
         ).listen(
             this.dependentFilterPanel_,
             FilterPanel.Event.CHECK,
@@ -321,6 +343,14 @@ class FilterPanelGroup extends Control {
             this.mainFilterPanel_,
             FilterPanel.Event.FILTER_OPTION_UNCHECK,
             this.onMainFilterOptionUncheck_
+        ).listen(
+            this.mainFilterPanel_,
+            FilterPanel.Event.FILTER_EXPAND,
+            this.onMainFilterExpand_
+        ).listen(
+            this.mainFilterPanel_,
+            FilterPanel.Event.FILTER_COLLAPSE,
+            this.onMainFilterCollapse_
         );
     }
 
@@ -345,9 +375,8 @@ class FilterPanelGroup extends Control {
      * @private
      */
     onButtonClick_() {
-        this.getView().hideControls();
-
-        this.showFilters_();
+        this.expand();
+        this.updateButtonFixability();
     }
 
     /**
@@ -369,38 +398,16 @@ class FilterPanelGroup extends Control {
     /**
      * @private
      */
-    onCollapseFilter_() {
-        this.getView().showControls();
-        this.hideFilters_();
+    onCollapseFilterPanel_() {
+        this.collapse();
     }
-
-    /**
-     * @private
-     */
-    showFilters_() {
-        this.getView().showFilters();
-
-        this.mainFilterPanel_.expand();
-        this.dependentFilterPanel_.expand();
-    }
-
-    /**
-     * @private
-     */
-    hideFilters_() {
-        this.getView().hideFilters();
-
-        this.mainFilterPanel_.collapse();
-        this.dependentFilterPanel_.collapse();
-    }
-
 
     /**
      * On option of main filter panel check
      * @param {sm.lSearch.bFilter.CheckOptionEvent} event
      */
     onMainFilterOptionCheck_(event) {
-        this.setTooltipPosition(event.position);
+        this.positioningTooltip(event.bounds);
         if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
             const optionData = this.transformEgeDataToEgeResultsOption_(
                 event.data
@@ -419,7 +426,7 @@ class FilterPanelGroup extends Control {
      * @param {sm.lSearch.bFilter.UncheckOptionEvent} event
      */
     onMainFilterOptionUncheck_(event) {
-        this.setTooltipPosition(event.position);
+        this.positioningTooltip(event.bounds);
         if (event.data && event.data.name == FilterName.EGE_SUBJECTS) {
             const optionData = this.transformEgeDataToEgeResultsOption_(
                 event.data
@@ -438,11 +445,25 @@ class FilterPanelGroup extends Control {
     }
 
     /**
+     * On filter of main filter panel expand
+     */
+    onMainFilterExpand_() {
+        this.updateButtonFixability();
+    }
+
+    /**
+     * On filter of main filter panel collapse
+     */
+    onMainFilterCollapse_() {
+        this.updateButtonFixability();
+    }
+
+    /**
      * On option of dependent filter panel check
      * @param {sm.lSearch.bFilter.CheckOptionEvent} event
      */
     onDependentFilterOptionCheck_(event) {
-        this.setTooltipPosition(event.position);
+        this.positioningTooltip(event.bounds);
     }
 
 
@@ -451,16 +472,26 @@ class FilterPanelGroup extends Control {
      * @param {sm.lSearch.bFilter.UncheckOptionEvent} event
      */
     onDependentFilterOptionUncheck_(event) {
-        this.setTooltipPosition(event.position);
+        this.positioningTooltip(event.bounds);
     }
 
     /**
      * set tooltip position
-     * @param {number} position
+     * @param {{
+     *     top: number,
+     *     height: number
+     * }} bounds
      */
-    setTooltipPosition(position) {
-        this.dependentFilterPanel_.setTooltipPosition(position);
+    positioningTooltip(bounds) {
+        this.dependentFilterPanel_.positioningTooltip(bounds);
         this.dispatchEvent(Event.CHANGE);
+    }
+
+    /**
+     * update button fixability
+     */
+    updateButtonFixability() {
+        this.dependentFilterPanel_.updateButtonFixability();
     }
 
     /**

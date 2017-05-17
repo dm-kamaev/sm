@@ -11,7 +11,10 @@ goog.scope(function() {
      * Event with data on filter option check/uncheck
      * @param {{
      *      data: sm.lSearch.bFilter.Filter.OptionData,
-     *      position: number
+     *      bounds: {
+     *          top: number,
+     *          height: number
+     *      }
      * }} params
      * @constructor
      */
@@ -27,10 +30,13 @@ goog.scope(function() {
         this.data = params.data;
 
         /**
-         * position of filter option
-         * @type {number}
+         * bounds of filter option
+         * @type {{
+         *     top: number,
+         *     height: number
+         * }}
          */
-        this.position = params.position;
+        this.bounds = params.bounds;
     };
     goog.inherits(sm.lSearch.bFilter.UncheckOptionEvent, goog.events.Event);
     var UncheckOptionEvent = sm.lSearch.bFilter.UncheckOptionEvent;

@@ -1,8 +1,10 @@
 goog.provide('sm.bSmSwitch.View');
 
 goog.require('cl.iControl.View');
+goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.json');
+
 goog.require('sm.bSmSwitch.Event.ItemSelect');
 
 
@@ -42,11 +44,11 @@ goog.scope(function() {
      * @param {number} id
      */
     View.prototype.selectItem = function(id) {
-        this.dom.link_wraps.forEach(function(item) {
+        this.dom.linkWraps.forEach(function(item) {
             goog.dom.classlist.remove(item, View.CssClass.SELECTED);
         });
 
-        goog.dom.classlist.add(this.dom.link_wraps[id], View.CssClass.SELECTED);
+        goog.dom.classlist.add(this.dom.linkWraps[id], View.CssClass.SELECTED);
     };
 
 
@@ -60,8 +62,9 @@ goog.scope(function() {
         this.params = this.transformParams(this.getParams());
 
         this.dom.links = goog.dom.getElementsByClass(View.CssClass.LINK);
-        this.dom.link_wraps =
-            goog.dom.getElementsByClass(View.CssClass.LINK_WRAP);
+        this.dom.linkWraps = goog.array.toArray(
+            goog.dom.getElementsByClass(View.CssClass.LINK_WRAP)
+        );
     };
 
 

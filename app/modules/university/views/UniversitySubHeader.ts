@@ -50,7 +50,7 @@ class UniversitySubHeader extends SubHeader {
         };
 
         this.search = {
-            placeholder: 'Специальность, вуз…',
+            placeholder: 'Название программы',
             pageAlias: 'search',
             redirect: false,
             sourceUrl: '/university/suggest',

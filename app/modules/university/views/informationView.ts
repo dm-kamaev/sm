@@ -70,6 +70,12 @@ type UserType = {
 const staticImgPath =
     '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
 
+const relapImgPath =
+    '/static/images/n-university/relap.png';
+
+const formatter = new FormatUtils();
+const programNameMaxLength = 50;
+
 class InformationView extends LayoutView {
     private static FULL_DESCRIPTION_LENGTH = 280;
 
@@ -94,6 +100,11 @@ class InformationView extends LayoutView {
         this.subunitType = 'Программа обучения';
     }
 
+
+    public render(params: RenderParams): lUniversity.Params {
+        return super.render(params) as lUniversity.Params;
+    }
+
     protected setParams(params: RenderParams) {
         super.setParams(params);
 
@@ -104,6 +115,11 @@ class InformationView extends LayoutView {
         this.setSimilarPrograms_(params.data);
         this.setUsefulCourses_(params.data);
         this.setModalComment_(params.data.program.id, params.data.userComment);
+    }
+
+
+    protected getParams(): lUniversity.Params {
+        return this.params;
     }
 
     protected setSeo(data: BackendData) {
@@ -128,10 +144,17 @@ class InformationView extends LayoutView {
         this.params.data.openGraph.description = description;
         this.params.data.openGraph.relapTag = this.subunitType;
 
-        const relapImage = utils.getImageUrl(
-            data.university.imageUrl,
-            UniversityImageSize.RELAP
-        );
+        let relapImage;
+
+        if (data.university.imageUrl) {
+            relapImage = utils.getImageUrl(
+                data.university.imageUrl,
+                UniversityImageSize.RELAP
+            );
+        } else {
+            relapImage = relapImgPath;
+        }
+
         this.params.data.openGraph.image = relapImage;
         this.params.data.openGraph.relapImage = relapImage;
     }
@@ -522,11 +545,12 @@ class InformationView extends LayoutView {
         return {
             id: similarProgram.id,
             type: entityType.PROGRAM,
-            name: {
-                data: {
-                    content: similarProgram.name
-                }
-            },
+            name: similarProgram.name.length > programNameMaxLength ?
+                formatter.getFormattedCutName(
+                    similarProgram.name,
+                    programNameMaxLength
+                ) :
+                similarProgram.name,
             link: {
                 data: {
                     content: 'Программа',
@@ -581,7 +605,7 @@ class InformationView extends LayoutView {
             name: {
                 light: data.categoryName
             },
-            description: `${data.name} ${data.brandName}`,
+            description: `${data.name}`,
             picture: imageUrl ? {
                 sources: [{
                     url: imageUrl,

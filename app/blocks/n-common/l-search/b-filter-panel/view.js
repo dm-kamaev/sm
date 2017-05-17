@@ -129,11 +129,16 @@ goog.scope(function() {
 
 
      /**
-     * Set top offset for balloon
-     * @param {number} position
+     * positioning tooltip
+     * @param {{
+     *     top: number,
+     *     height: number
+     * }} bounds
      */
-    View.prototype.setTooltipPosition = function(position) {
-        var top = position + 'px';
+    View.prototype.positioningTooltip = function(bounds) {
+        var tooltipHeight = 48;
+        var offset = (tooltipHeight - bounds.height) / 2;
+        var top = (bounds.top - offset) + 'px';
         goog.style.setStyle(this.dom.tooltipWrap, 'top', top);
     };
 

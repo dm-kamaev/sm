@@ -162,13 +162,19 @@ goog.scope(function() {
 
 
     /**
-     * Get offset of option
+     * Get bounds of option
      * @param {sm.bSmCheckbox.SmCheckbox} option
-     * @return {number}
+     * @return {{
+     *     top: number,
+     *     height: number
+     * }}
      */
-    View.prototype.getOptionOffset = function(option) {
+    View.prototype.getOptionBounds = function(option) {
         var element = option.getElement();
-        return element.offsetTop;
+        return {
+            top: element.offsetTop,
+            height: element.clientHeight
+        };
     };
 
 
