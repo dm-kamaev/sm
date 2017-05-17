@@ -137,13 +137,11 @@ goog.scope(function() {
 
 
     /**
-     * Show/hide options in different sizes of screen
+     * Show all options in big sizes of screen
      * @public
      */
     SearchPanel.prototype.displayNeededCountOfCheckboxes = function() {
-        if (viewport.getSize() <= sm.iSmViewport.SmViewport.Size.XS) {
-            this.searchEge_.showLess();
-        } else {
+        if (viewport.getSize() > sm.iSmViewport.SmViewport.Size.XS) {
             this.searchEge_.showMore();
         }
     };
