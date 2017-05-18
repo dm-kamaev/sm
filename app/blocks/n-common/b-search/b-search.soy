@@ -4,6 +4,7 @@
  * typedef {{
  *     sourceUrl: ?string,
  *     argName: ?string,
+ *     minLength: ?number
  * }} sm.bSearch.Template.Params.Data
  */
 
@@ -120,7 +121,7 @@
             </div>
         {/if}
 
-        {let $minLength: $params.config.entityType == 'school' ? 2 : 3 /}
+        {let $defaultMinLength: $params.config.entityType == 'school' ? 2 : 3 /}
 
         {let $sourceUrl: $params?.data?.sourceUrl ?:
             '/api/' + $params.config.entityType + '/search/suggest'/}
@@ -156,7 +157,8 @@
                 {param params: [
                     'data': [
                         'text': $params?.text,
-                        'minLength': $minLength,
+                        'minLength': $params.data.minLength ?:
+                            $defaultMinLength,
                         'autofocus': $params?.autofocus,
                         'placeholder': $params?.placeholder,
                         'sourceUrl': $sourceUrl,
