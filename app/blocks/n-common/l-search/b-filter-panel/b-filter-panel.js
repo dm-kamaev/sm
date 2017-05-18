@@ -223,15 +223,15 @@ goog.scope(function() {
 
 
     /**
-     * set position of tooltip
+     * update tooltip position
      * @param {{
      *     top: number,
      *     height: number
      * }} bounds
      * @public
      */
-    FilterPanel.prototype.positioningTooltip = function(bounds) {
-        this.getView().positioningTooltip(bounds);
+    FilterPanel.prototype.updateTooltipPosition = function(bounds) {
+        this.getView().updateTooltipPosition(bounds);
     };
 
 
@@ -430,7 +430,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onOption_ = function(event) {
-        this.positioningTooltip(event.bounds);
+        this.updateTooltipPosition(event.bounds);
         this.dispatchEvent(FilterPanel.Event.CHANGE);
     };
 

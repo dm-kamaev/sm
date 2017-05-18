@@ -166,7 +166,7 @@
                         'data': $params.data.filter,
                         'config': [
                             'cannotBeHidden': true,
-                            'filtersToShow': length($params.data.filter?.options),
+                            'optionsToShow': length($params.data.filter?.options),
                             'theme': 'minimal',
                             'optionsTheme': $params.config?.theme == 'neptune' ?
                                 'neptune' : null,
@@ -204,7 +204,7 @@
                     'config': [
                         'type': 'labels',
                         'cannotBeHidden': true,
-                        'filtersToShow': $params.data?.selected ? 6 : ''
+                        'optionsToShow': $params.data?.selected ? 6 : ''
                     ]
                 ]
             ]/}

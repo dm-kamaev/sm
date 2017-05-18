@@ -229,8 +229,8 @@ goog.scope(function() {
                 params: {
                     data: data,
                     config: {
-                        theme: this.getParams().optionsTheme,
-                        customIcon: this.getParams().customIcon
+                        theme: this.params.optionsTheme,
+                        customIcon: this.params.customIcon
                     }
                 }
             },
@@ -557,11 +557,15 @@ goog.scope(function() {
      * @protected
      */
     View.prototype.transformParams = function(rawParams) {
-        return {
+        var params = {
             name: rawParams['name'],
             type: rawParams['type'],
             optionsTheme: rawParams['optionsTheme'],
             customIcon: rawParams['customIcon']
         };
+        /* need simultaneously params and compressed params, because
+        it's unknown, where was render this element (server or client) */
+        goog.object.extend(params, rawParams);
+        return params;
     };
 });  // goog.scope
