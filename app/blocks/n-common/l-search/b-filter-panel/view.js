@@ -129,13 +129,13 @@ goog.scope(function() {
 
 
      /**
-     * positioning tooltip
+     * update tooltip position
      * @param {{
      *     top: number,
      *     height: number
      * }} bounds
      */
-    View.prototype.positioningTooltip = function(bounds) {
+    View.prototype.updateTooltipPosition = function(bounds) {
         var tooltipHeight = 48;
         var offset = (tooltipHeight - bounds.height) / 2;
         var top = (bounds.top - offset) + 'px';

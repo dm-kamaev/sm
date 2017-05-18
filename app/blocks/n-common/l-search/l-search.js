@@ -531,7 +531,7 @@ goog.scope(function() {
      */
     Search.prototype.onSearchChange_ = function() {
         var searchBounds = this.search_.getBounds();
-        this.filterPanel.positioningTooltip(searchBounds);
+        this.filterPanel.updateTooltipPosition(searchBounds);
         this.loadSearchCount();
     };
 
