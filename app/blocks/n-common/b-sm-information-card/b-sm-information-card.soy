@@ -55,14 +55,14 @@
  * Name
  * @param params {{
  *     data: {
- *         name: sm.bSmLink.Template.Params
+ *         name: (sm.bSmLink.Template.Params|string)
  *     }
  * }}
  * @protected
  */
 {template .header_}
     <div class="{call .rootClass/}__name">
-        {if $params.data.name.data.url}
+        {if $params.data.name?.data?.url}
             {call .renderChild}
                 {param params: [
                     'type': 'smLink',
@@ -70,7 +70,7 @@
                 ]/}
             {/call}
         {else}
-            {$params.data.name.data.content}
+            {$params.data.name}
         {/if}
     </div>
 {/template}

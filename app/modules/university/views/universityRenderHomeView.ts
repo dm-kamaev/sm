@@ -154,16 +154,7 @@ class UniversityRenderHomeView extends LayoutView {
         return {
             id: university.id,
             type: entityType.UNIVERSITY,
-            name: {
-                data: {
-                    content: university.abbreviation
-                },
-                config: {
-                    theme: 'dark',
-                    target: '_blank',
-                    size: '6xl'
-                }
-            },
+            name: university.abbreviation,
             link: {
                 data: {
                     content: university.city.name,
