@@ -224,6 +224,8 @@ class FilterPanelGroup extends Control {
 
     /**
      * Ege resulte filter data transformation
+     * It return uncompessed params as in params manager params stores in
+     * uncompressed state
      * @param {Object<string, (string | number)>} filterDataItem
      * @return {{
      *     subjectId: number,
@@ -233,8 +235,8 @@ class FilterPanelGroup extends Control {
      */
     getEgeResultsFilterData_(filterDataItem) {
         return {
-            subjectId: filterDataItem.name,
-            value: filterDataItem.value
+            'subjectId': filterDataItem.name,
+            'value': filterDataItem.value
         };
     }
 
