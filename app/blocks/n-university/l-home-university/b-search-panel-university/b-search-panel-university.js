@@ -119,17 +119,17 @@ goog.scope(function() {
      */
     SearchPanel.prototype.getData = function() {
         var data = {
-            payType: this.payType_.getValue()
+            'payType': this.payType_.getValue()
         };
 
         var cities = this.searchCity_.getCityId();
         if (cities) {
-            data.cities = cities;
+            data['cities'] = cities;
         }
 
         var ege = this.getEgeIdes();
         if (ege.length) {
-            data.egeSubjects = ege;
+            data['egeSubjects'] = ege;
         }
 
         return data;
