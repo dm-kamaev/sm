@@ -123,7 +123,7 @@ class ProgramRenderSearchView extends LayoutView {
         super.setParams(params);
         const searchParams = params.data.searchParams;
 
-        this.setResultsList_(params.data.resultsList);
+        this.setResultsList_(params.data);
         this.setFilterPanels_(params.data, searchParams);
         this.setSearchParams_(searchParams);
         this.setApi_();
@@ -133,7 +133,8 @@ class ProgramRenderSearchView extends LayoutView {
         return this.params;
     }
 
-    private setResultsList_(resultsList: BackendProgramResults) {
+    private setResultsList_(data: BackendData) {
+        const resultsList = data.resultsList;
         this.params.data.resultsList = {
             sort: {
                 defaultOpenerText: 'Проще поступить',
@@ -150,7 +151,7 @@ class ProgramRenderSearchView extends LayoutView {
                             value: 2
                         }
                     ],
-                    selectedItemId: 0
+                    selectedItemId: data.searchParams.sortType
                 }
             },
             headerText: this.generateHeaderText(
