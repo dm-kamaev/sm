@@ -136,7 +136,7 @@ class UniversityRenderHomeView extends LayoutView {
     }
 
     private setPopularUniversities_(populars: BackendUniversity[]) {
-        this.params.data.populars = {
+        this.params.data.populars = populars.length ? {
             header: 'Популярные вузы',
             data: {
                 countItemsPerPage: 4,
@@ -145,7 +145,7 @@ class UniversityRenderHomeView extends LayoutView {
                 ),
                 itemType: 'smInformationCard'
             }
-        };
+        } : null;
     }
 
     private getPopularUniversityItem_(
