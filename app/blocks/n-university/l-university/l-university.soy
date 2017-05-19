@@ -201,11 +201,13 @@
  * @private
  */
 {template .sectionUsefulCourses_}
-    <div class="{call .rootClass/}__section{sp}
-        {call .rootClass/}__section_courses{sp}"
-    >
-        {call .courses_ data="all" /}
-    </div>
+    {if $params.data.usefulCourses}
+        <div class="{call .rootClass/}__section{sp}
+            {call .rootClass/}__section_courses{sp}"
+        >
+            {call .courses_ data="all" /}
+        </div>
+    {/if}
 {/template}
 
 
@@ -589,30 +591,28 @@
  * @private
  */
 {template .courses_}
-    {if $params.data.usefulCourses}
-        <div class="{call .rootClass/}__useful-courses-content">
-            {let $customClasses kind="html"}
-                {call .rootClass/}__courses
-            {/let}
-            <div class="{call .rootClass/}__useful-courses-header">
-                {$params.data.usefulCourses.header}
-            </div>
-            <div class="{call .rootClass/}__useful-courses-list">
-                {call .renderChildLayout}
-                    {param params: $params /}
-                    {param type: 'smItemList' /}
-                    {param renderParams: [
-                        'data': $params.data.usefulCourses.data,
-                        'config': [
-                            'enableCover': true,
-                            'theme': 'inline',
-                            'customClasses': [$customClasses]
-                        ]
-                    ] /}
-                {/call}
-            </div>
+    <div class="{call .rootClass/}__useful-courses-content">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__courses
+        {/let}
+        <div class="{call .rootClass/}__useful-courses-header">
+            {$params.data.usefulCourses.header}
         </div>
-    {/if}
+        <div class="{call .rootClass/}__useful-courses-list">
+            {call .renderChildLayout}
+                {param params: $params /}
+                {param type: 'smItemList' /}
+                {param renderParams: [
+                    'data': $params.data.usefulCourses.data,
+                    'config': [
+                        'enableCover': true,
+                        'theme': 'inline',
+                        'customClasses': [$customClasses]
+                    ]
+                ] /}
+            {/call}
+        </div>
+    </div>
 {/template}
 
 
