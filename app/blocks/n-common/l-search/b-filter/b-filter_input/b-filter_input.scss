@@ -18,7 +18,7 @@
         height: 40px;
     }
 
-    .b-sm-filter__input-title {
+    .b-sm-filter__input-label {
         display: inline-block;
 
         margin-left: 20px;
@@ -31,6 +31,61 @@
     }
 }
 
+.b-sm-filter_input.b-sm-filter_neptune-theme {
+    .b-sm-filter__input-label {
+        color: #747474;
+    }
+
+    .b-sm-filter__content {
+        margin-top: 0;
+    }
+
+    .b-sm-filter__placeholder {
+        padding-bottom: 10px;
+
+        color: #747474;
+
+        font-size: 14px;
+        line-height: normal;
+    }
+
+    .b-sm-filter__button_reset {
+        display: none;
+    }
+}
+
+.b-sm-filter_input_inline {
+    .b-sm-filter__list-options {
+        display: block;
+
+        margin-top: -10px;
+        margin-right: -12.5px;
+        margin-left: -12.5px;
+    }
+
+    .b-sm-filter__option {
+        display: inline-block;
+        width: 50%;
+        box-sizing: border-box;
+        margin-top: 20px;
+        padding-left: 12.5px;
+        padding-right: 12.5px;
+    }
+
+    .b-sm-filter__input-label {
+        display: block;
+
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+    .b-sm-filter__input {
+        display: block;
+        width: 100%;
+        height: 38px;
+    }
+}
+
 
 @include media-l {
     .b-sm-filter_input {
@@ -38,6 +93,12 @@
             width: auto;
 
             vertical-align: baseline;
+        }
+    }
+
+    .b-sm-filter_input_inline {
+        .b-sm-filter__option {
+            width: 50%;
         }
     }
 }

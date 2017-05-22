@@ -40,9 +40,11 @@ abstract class SubHeader {
     };
 
     protected search: {
-        placeholder: string,
-        pageAlias: string,
-        redirect: boolean
+        placeholder: string;
+        pageAlias: string;
+        redirect: boolean;
+        sourceUrl?: string;
+        disableSearchBehavior?: boolean;
     };
 
     protected favorites: {
@@ -51,7 +53,9 @@ abstract class SubHeader {
 
     protected params: bSmSubheader.Params;
 
-    constructor() {
+    constructor(entityType: string) {
+        this.entityType = entityType;
+
         this.params = {
             data: {},
             config: {}

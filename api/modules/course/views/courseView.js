@@ -24,6 +24,9 @@ const FULL_DESCRIPTION_LENGTH = 300,
     LEARNING_OUTCOMES_NAME = 'Результаты обучения',
     BRAND_INDEX = 0;
 
+const staticImgPath =
+    '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
+
 /**
  * @param  {Object} course
  * @param  {string} categoryAlias
@@ -353,11 +356,11 @@ view.suggest = function(data) {
 view.suggestList = function(courses) {
     return courses.map(course => ({
         id: course.id,
-        alias: this.generateAlias(
+        alias: `/${this.generateAlias(
             course.alias,
             course.brandAlias,
             course.categoryAlias
-        ),
+        )}`,
         name: course.name,
         score: course.score || [0, 0, 0, 0],
         totalScore: course.totalScore,
@@ -460,6 +463,10 @@ view.mapCourse = function(course) {
  * @return {Object}
  */
 view.getListCourse = function(course) {
+    const imageUrl = course.imageUrl ?
+        course.imageUrl.replace('{width}', courseImageSize.SMALL[0]) :
+        staticImgPath + 'placeholder.png';
+
     return {
         id: course.id,
         alias: this.generateAlias(
@@ -467,11 +474,13 @@ view.getListCourse = function(course) {
             course.brandAlias,
             course.categoryAlias
         ),
-        imageUrl: course.imageUrl ? course.imageUrl.replace(
-            '{width}',
-            courseImageSize.SMALL[0]
-        ) :
-        null,
+        picture: {
+            sources: [{
+                url: imageUrl,
+                size: 'default',
+            }],
+            altText: course.name
+        },
         type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,

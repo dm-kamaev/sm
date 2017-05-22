@@ -15,7 +15,8 @@
  *     },
  *     alias: ?string,
  *     score: (sm.bSmScore.TemplateBrief.Params|undefined),
- *     description: string,
+ *     description: (string|Array<string>|undefined),
+ *     picture: ?sm.bSmPicture.Template.Params.Data,
  *     brand: (string|undefined),
  *     metro: (Array<{
  *         id: number,
@@ -100,7 +101,7 @@
  *             value: (number|undefined),
  *             type: string
  *         },
- *         description: (string|undefined),
+ *         description: (string|Array<string>|undefined),
  *         brand: (string|undefined)
  *     }
  * }}

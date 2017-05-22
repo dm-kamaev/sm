@@ -10,7 +10,7 @@ goog.require('cl.gDropdown.View');
  * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.iControl.View}
+ * @extends {cl.gDropdown.View}
  */
 sm.gDropdown.ViewSelectLegacy = function(opt_params, opt_type, opt_modifier) {
     goog.base(this, opt_params, opt_type, opt_modifier);

@@ -34,6 +34,7 @@ const ProgramMajor: ProgramMajorModel = sequelize.define('ProgramMajor', {
         primaryKey: true
     },
     name: DataType.STRING,
+    popularity: DataType.INTEGER,
     createdAt: {
         field: 'created_at',
         type: DataType.DATE

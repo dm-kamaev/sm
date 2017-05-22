@@ -95,14 +95,3 @@ goog.scope(function() {
         }
     );
 });  // goog.scope
-
-
-/**
- * creates sm.lErrorNotFound.ErrorNotFound instance
- */
-jQuery(function() {
-    sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lErrorNotFound.ErrorNotFound.NAME,
-        sm.lErrorNotFound.View.CssClass.ROOT
-    );
-});

@@ -5,11 +5,12 @@
     height: 176px;
     box-sizing: border-box;
     background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 .b-sm-information-card__name {
     padding: 25px;
-    margin-bottom: 80px;
+
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 19px;
     font-weight: 600;
@@ -27,6 +28,17 @@
     position: absolute;
     bottom: 5px;
     right: 3px;
+}
+
+.b-sm-information-card__logo {
+    position: absolute;
+    max-width: 64px;
+    bottom: 25px;
+    right: 25px;
+}
+
+.b-sm-information-card__logo-image {
+    width: 100%;
 }
 
 @include media-m {

@@ -61,6 +61,20 @@ goog.scope(function() {
 
 
     /**
+     * Events enum
+     * @enum {string}
+     * @const
+     */
+    ModalInteraction.Event = {
+        SHOW: sm.gModal.ModalStendhal.Event.SHOW,
+        HIDE: sm.gModal.ModalStendhal.Event.HIDE,
+        SUBMIT: goog.events.getUniqueId('submit'),
+        SUCCESS: goog.events.getUniqueId('success'),
+        ERROR: goog.events.getUniqueId('error')
+    };
+
+
+    /**
      * Show error messages
      * @param {Array<string>} messages
      * @public
@@ -127,6 +141,8 @@ goog.scope(function() {
     ModalInteraction.prototype.sendRequest_ = function() {
         var data = this.buildRequestData_();
 
+        this.dispatchEvent(ModalInteraction.Event.SUBMIT);
+
         Request.getInstance().send(data).then(
             this.onSuccess_.bind(this),
             this.onError_.bind(this)
@@ -140,6 +156,8 @@ goog.scope(function() {
      * @private
      */
     ModalInteraction.prototype.onSuccess_ = function(response) {
+        this.dispatchEvent(ModalInteraction.Event.SUCCESS);
+
         this.hide();
         location.reload();
     };
@@ -156,6 +174,8 @@ goog.scope(function() {
      * @private
      */
     ModalInteraction.prototype.onError_ = function(errors) {
+        this.dispatchEvent(ModalInteraction.Event.ERROR);
+
         var errorMessages = errors.data.map(function(error) {
             return error.message;
         });

@@ -87,7 +87,9 @@ abstract class LayoutView {
     private authSocialLinks_: AuthSocialLinks;
     private user_: UserData;
 
-    constructor() {
+    constructor(entityType: string) {
+        this.entityType = entityType;
+
         this.views = {
             header: Header,
             subHeader: SubHeader,
@@ -167,7 +169,7 @@ abstract class LayoutView {
             this.views.favorite.list(data.favorites) :
             {};
 
-        const subHeaderView = new this.views.subHeader();
+        const subHeaderView = new this.views.subHeader(this.entityType);
         this.params.data.subHeader = subHeaderView.render(params);
     }
 

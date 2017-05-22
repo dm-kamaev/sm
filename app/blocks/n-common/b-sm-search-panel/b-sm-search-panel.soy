@@ -189,24 +189,15 @@
  */
 {template .button_}
     <div class="{call .rootClass/}__button">
-        {let $content kind="html"}
-            <div class="{call .rootClass/}__button-text{sp}
-                        {call .rootClass/}__button-text_l">
-                {$params.data.button.textL}
-            </div>
-
-            <div class="{call .rootClass/}__button-text{sp}
-                        {call .rootClass/}__button-text_s">
-                {$params.data.button.textS}
-            </div>
-        {/let}
-
         {call .renderChild}
             {param params: [
                 'type': 'button',
                 'renderParams': [
                     'data': [
-                        'content': $content
+                        'content': [
+                            'default': $params.data.button.textL,
+                            'sizeL': $params.data.button.textS
+                        ]
                     ],
                     'config': [
                         'disableHover': true,

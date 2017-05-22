@@ -118,14 +118,30 @@ goog.scope(function() {
      * @param {Element} option
      */
     View.prototype.removeOption = function(option) {
-        var container = goog.dom.getAncestorByClass(
-            option,
-            View.CssClass.OPTION
-        );
+        var container = this.getOptionWrapper_(option);
 
         goog.dom.removeNode(
             container
         );
+    };
+
+    /**
+     * Show option
+     * @param {Element} option
+     */
+    View.prototype.showOption = function(option) {
+        var container = this.getOptionWrapper_(option);
+        this.showElement(container);
+    };
+
+
+    /**
+     * Hide option
+     * @param {Element} option
+     */
+    View.prototype.hideOption = function(option) {
+        var container = this.getOptionWrapper_(option);
+        this.hideElement(container);
     };
 
 
@@ -146,31 +162,36 @@ goog.scope(function() {
 
 
     /**
-     * Get offset of option
+     * Get bounds of option
      * @param {sm.bSmCheckbox.SmCheckbox} option
-     * @return {number}
+     * @return {{
+     *     top: number,
+     *     height: number
+     * }}
      */
-    View.prototype.getOptionOffset = function(option) {
+    View.prototype.getOptionBounds = function(option) {
         var element = option.getElement();
-        return element.offsetTop;
+        return {
+            top: element.offsetTop,
+            height: element.clientHeight
+        };
     };
 
 
     /**
      * Initializes options
-     * @param {Element=} opt_element
      */
-    View.prototype.initOptions = function(opt_element) {
-        var element = opt_element || this.getElement();
-
-        this.dom.wrapOptionsHidable = goog.dom.getElementsByClass(
-            View.CssClass.OPTION_HIDABLE,
-            element
+    View.prototype.initOptions = function() {
+        this.dom.wrapOptionsHidable = this.getElementsByClass(
+            View.CssClass.OPTION_HIDABLE
         );
 
-        this.dom.options = goog.dom.getElementsByClass(
-            sm.bSmCheckbox.View.CssClass.ROOT,
-            element
+        this.dom.wrapOptions = this.getElementsByClass(
+            View.CssClass.OPTION
+        );
+
+        this.dom.options = this.getElementsByClass(
+            sm.bSmCheckbox.View.CssClass.ROOT
         );
     };
 
@@ -187,16 +208,10 @@ goog.scope(function() {
             );
 
             if (visible && isContains) {
-                goog.dom.classlist.remove(
-                    this.dom.header,
-                    Utils.CssClass.HIDDEN
-                );
+                this.showElement(this.dom.header);
             }
             else if (!visible && !isContains) {
-                goog.dom.classlist.add(
-                    this.dom.header,
-                    Utils.CssClass.HIDDEN
-                );
+                this.hideElement(this.dom.header);
             }
         }
     };
@@ -212,7 +227,11 @@ goog.scope(function() {
         return goog.soy.renderAsElement(
             sm.lSearch.bFilter.Template.option, {
                 params: {
-                    data: data
+                    data: data,
+                    config: {
+                        theme: this.params.optionsTheme,
+                        customIcon: this.params.customIcon
+                    }
                 }
             },
             {
@@ -309,6 +328,48 @@ goog.scope(function() {
 
 
     /**
+     * Shows dom Element
+     * @param {Element} element
+     * @protected
+     */
+    View.prototype.showElement = function(element) {
+        goog.dom.classlist.remove(
+            element,
+            Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * Hides dom Element
+     * @param {Element} element
+     * @protected
+     */
+    View.prototype.hideElement = function(element) {
+        goog.dom.classlist.add(
+            element,
+            Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * Get number shown options
+     * @return {number}
+     * @protected
+     */
+    View.prototype.getNumberShownOptions = function() {
+        var wrapOptions = Array.prototype.slice.call(this.dom.wrapOptions, 0);
+
+        var shownOptions = wrapOptions.filter(function(option) {
+            return !goog.dom.classlist.contains(option, Utils.CssClass.HIDDEN);
+        });
+
+        return shownOptions.length;
+    };
+
+
+    /**
      * Button show or hide content handler
      * @private
      */
@@ -324,7 +385,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onButtonShowMoreClick_ = function() {
-        this.showMore_();
+        this.showMore();
     };
 
 
@@ -333,15 +394,15 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onButtonShowLessClick_ = function() {
-        this.showLess_();
+        this.showLess();
     };
 
 
     /**
      * Show more options
-     * @private
+     * @public
      */
-    View.prototype.showMore_ = function() {
+    View.prototype.showMore = function() {
         this.setMoreOptionsVisibility_(true);
         this.setButtonMoreState_(true);
     };
@@ -349,9 +410,9 @@ goog.scope(function() {
 
     /**
      * Hide more options
-     * @private
+     * @public
      */
-    View.prototype.showLess_ = function() {
+    View.prototype.showLess = function() {
         this.setMoreOptionsVisibility_(false);
         this.setButtonMoreState_(false);
     };
@@ -370,16 +431,11 @@ goog.scope(function() {
 
         options.forEach(function(option) {
             visible ?
-                goog.dom.classlist.remove(
-                    option,
-                    Utils.CssClass.HIDDEN
-                ) :
-                goog.dom.classlist.add(
-                    option,
-                    Utils.CssClass.HIDDEN
-                );
-        });
+                this.showElement(option) :
+                this.hideElement(option);
+        }, this);
     };
+
 
 
     /**
@@ -389,24 +445,11 @@ goog.scope(function() {
      */
     View.prototype.setButtonMoreState_ = function(isMore) {
         if (isMore) {
-            goog.dom.classlist.add(
-                this.dom.buttonShowMore,
-                Utils.CssClass.HIDDEN
-            );
-            goog.dom.classlist.remove(
-                this.dom.buttonShowLess,
-                Utils.CssClass.HIDDEN
-            );
+            this.hideElement(this.dom.buttonShowMore);
+            this.showElement(this.dom.buttonShowLess);
         } else {
-            goog.dom.classlist.add(
-                this.dom.buttonShowLess,
-                Utils.CssClass.HIDDEN
-            );
-
-            goog.dom.classlist.remove(
-                this.dom.buttonShowMore,
-                Utils.CssClass.HIDDEN
-            );
+            this.hideElement(this.dom.buttonShowLess);
+            this.showElement(this.dom.buttonShowMore);
         }
     };
 
@@ -418,14 +461,8 @@ goog.scope(function() {
      */
     View.prototype.setContentVisibility_ = function(visible) {
         visible ?
-            goog.dom.classlist.remove(
-                this.dom.content,
-                Utils.CssClass.HIDDEN
-            ) :
-            goog.dom.classlist.add(
-                this.dom.content,
-                Utils.CssClass.HIDDEN
-            );
+            this.showElement(this.dom.content) :
+            this.hideElement(this.dom.content);
     };
 
 
@@ -436,25 +473,26 @@ goog.scope(function() {
      */
     View.prototype.setHeaderIconUpState_ = function(isUp) {
         if (isUp) {
-            goog.dom.classlist.remove(
-                this.dom.iconUp,
-                Utils.CssClass.HIDDEN
-            );
-            goog.dom.classlist.add(
-                this.dom.iconDown,
-                Utils.CssClass.HIDDEN
-            );
+            this.showElement(this.dom.iconUp);
+            this.hideElement(this.dom.iconDown);
         } else {
-            goog.dom.classlist.remove(
-                this.dom.iconDown,
-                Utils.CssClass.HIDDEN
-            );
-
-            goog.dom.classlist.add(
-                this.dom.iconUp,
-                Utils.CssClass.HIDDEN
-            );
+            this.showElement(this.dom.iconDown);
+            this.hideElement(this.dom.iconUp);
         }
+    };
+
+
+    /**
+     * Returns container with option
+     * @param {Element} option
+     * @return {Element}
+     * @private
+     */
+    View.prototype.getOptionWrapper_ = function(option) {
+        return goog.dom.getAncestorByClass(
+            option,
+            View.CssClass.OPTION
+        );
     };
 
 
@@ -519,9 +557,15 @@ goog.scope(function() {
      * @protected
      */
     View.prototype.transformParams = function(rawParams) {
-        return {
+        var params = {
             name: rawParams['name'],
-            type: rawParams['type']
+            type: rawParams['type'],
+            optionsTheme: rawParams['optionsTheme'],
+            customIcon: rawParams['customIcon']
         };
+        /* need simultaneously params and compressed params, because
+        it's unknown, where was render this element (server or client) */
+        goog.object.extend(params, rawParams);
+        return params;
     };
 });  // goog.scope

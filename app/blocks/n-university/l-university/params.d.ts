@@ -28,6 +28,8 @@ export namespace lUniversity {
             entityData: {
                 id: number,
                 name: string,
+                abbreviation: string,
+                category: string,
                 subunitName: string,
                 subunitType: string,
                 description: string,

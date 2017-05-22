@@ -15,6 +15,7 @@ goog.require('sm.bSmComment.SmComment');
 goog.require('sm.bSmInformationCard.SmInformationCard');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemCompact');
+goog.require('sm.bSmItem.SmItemUniversity');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItemList.Template');
 goog.require('sm.bSmItemList.View');
@@ -111,6 +112,7 @@ goog.scope(function() {
         ITEM: sm.bSmItem.SmItem.NAME,
         ITEM_ENTITY: sm.bSmItem.SmItemEntity.NAME,
         ITEM_COMPACT: sm.bSmItem.SmItemCompact.NAME,
+        ITEM_UNIVERSITY: sm.bSmItem.SmItemUniversity.NAME,
         LINK: sm.bSmLink.SmLink.NAME,
         DEPARTMENT: sm.lCourse.bDepartment.Department.NAME,
         COMMENT: sm.bSmComment.SmComment.NAME,
@@ -160,7 +162,7 @@ goog.scope(function() {
      */
     ItemList.prototype.addItemsBottom = function(data) {
         goog.array.forEach(data, function(rawItemData) {
-                this.addItem(rawItemData);
+            this.addItem(rawItemData);
         }, this);
 
         this.initItems_();
@@ -360,6 +362,7 @@ goog.scope(function() {
      * @public
      */
     ItemList.prototype.sendAnalyticsItemClick = function(itemId, list) {
+
         var item = this.getItem_(itemId);
 
         var data = item.getAnalyticsData({
@@ -414,7 +417,8 @@ goog.scope(function() {
         var itemId;
 
         if ((this.params.itemType == ItemList.ItemType.ITEM) ||
-            (this.params.itemType == ItemList.ItemType.ITEM_ENTITY)) {
+            (this.params.itemType == ItemList.ItemType.ITEM_ENTITY) ||
+            (this.params.itemType == ItemList.ItemType.ITEM_UNIVERSITY)) {
             itemId = event.target.getItemId();
         }
 
@@ -519,6 +523,8 @@ goog.scope(function() {
             sm.bSmItem.SmItemEntity.Event;
         ItemEvent[ItemList.ItemType.ITEM_COMPACT] =
             sm.bSmItem.SmItemCompact.Event;
+        ItemEvent[ItemList.ItemType.ITEM_UNIVERSITY] =
+            sm.bSmItem.SmItemUniversity.Event;
         ItemEvent[ItemList.ItemType.LINK] =
             sm.bSmLink.SmLink.Event;
         ItemEvent[ItemList.ItemType.DEPARTMENT] =
@@ -539,20 +545,23 @@ goog.scope(function() {
      */
     ItemList.prototype.initRenderParamsTransformator_ = function(itemType) {
         var transformators = {};
-            transformators[ItemList.ItemType.ITEM] =
-                sm.bSmItem.SmItem.getRenderParams;
-            transformators[ItemList.ItemType.ITEM_ENTITY] =
-                sm.bSmItem.SmItemEntity.getRenderParams;
-            transformators[ItemList.ItemType.ITEM_COMPACT] =
-                sm.bSmItem.SmItemCompact.getRenderParams;
-            transformators[ItemList.ItemType.LINK] =
-                sm.bSmLink.SmLink.getRenderParams;
-            transformators[ItemList.ItemType.DEPARTMENT] =
-                sm.lCourse.bDepartment.Department.getRenderParams;
-            transformators[ItemList.ItemType.COMMENT] =
-                sm.bSmComment.SmComment.getRenderParams;
-            transformators[ItemList.ItemType.INFORMATION_CARD] =
-                Card.getRenderParams;
+
+        transformators[ItemList.ItemType.ITEM] =
+            sm.bSmItem.SmItem.getRenderParams;
+        transformators[ItemList.ItemType.ITEM_ENTITY] =
+            sm.bSmItem.SmItemEntity.getRenderParams;
+        transformators[ItemList.ItemType.ITEM_COMPACT] =
+            sm.bSmItem.SmItemCompact.getRenderParams;
+        transformators[ItemList.ItemType.ITEM_UNIVERSITY] =
+            sm.bSmItem.SmItemUniversity.getRenderParams;
+        transformators[ItemList.ItemType.LINK] =
+            sm.bSmLink.SmLink.getRenderParams;
+        transformators[ItemList.ItemType.DEPARTMENT] =
+            sm.lCourse.bDepartment.Department.getRenderParams;
+        transformators[ItemList.ItemType.COMMENT] =
+            sm.bSmComment.SmComment.getRenderParams;
+        transformators[ItemList.ItemType.INFORMATION_CARD] =
+            Card.getRenderParams;
 
         this.renderParamsTransformator_ = transformators[itemType];
     };

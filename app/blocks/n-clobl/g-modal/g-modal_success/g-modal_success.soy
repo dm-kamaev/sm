@@ -110,7 +110,9 @@
                 'type': 'button',
                 'renderParams': [
                     'data': [
-                        'content': $params.data.content.buttonText ?: 'Закрыть'
+                        'content': [
+                            'default': $params.data.content.buttonText ?: 'Закрыть'
+                        ]
                     ]
                 ]
             ]/}

@@ -1,20 +1,23 @@
 import {ProgramMetaNotFound} from './ProgramMetaNotFound';
-import {ProgramNotFound} from './ProgramNotFound';
 import {
-  UniversityNameIsEmptyException
+    UniversityNameIsEmptyException
 } from './UniversityNameIsEmptyException';
 import {
-  UniversityAliasDuplicateException
+    UniversityAliasDuplicateException
 } from './UniversityAliasDuplicateException';
 import {
-  UniversityAliasNotFoundException
+    UniversityAliasNotFoundException
 } from './UniversityAliasNotFoundException';
-
+import {
+    ProgramNameIsShorterException
+} from './ProgramNameIsShorterException';
+import {ProgramNotFound} from './ProgramNotFound';
 
 export {
     ProgramMetaNotFound,
+    ProgramNameIsShorterException,
     ProgramNotFound,
-    UniversityNameIsEmptyException,
     UniversityAliasDuplicateException,
-    UniversityAliasNotFoundException
+    UniversityAliasNotFoundException,
+    UniversityNameIsEmptyException,
 };

@@ -72,11 +72,15 @@ import {ProgramSimilarController} from './ProgramSimilarController';
 const programSimilarController: any = new ProgramSimilarController();
 
 router.get('/university/:id', universityController.actionGet);
+router.get('/universities', universityController.actionGetByIds);
 
 router.get(
     '/university/alias/:alias',
     universityPageController.actionFindByAlias
 );
+
+router.get('/program/search', programController.actionSearch);
+router.get('/program/search/count', programController.actionCountSearch);
 
 router.get(
     '/program/:id',
@@ -93,6 +97,11 @@ router.get(
     entranceStatisticController.actionGet
 );
 router.get('/program/:id/exam', examController.actionList);
+
+router.get('/program/search/suggest', programController.actionSuggestSearch);
+
+router.get('/programmajor/search', programMajorController.actionSearch);
+router.get('/programmajor/popular', programMajorController.actionGetPopular);
 
 router.get('/program/:programId/pagemeta', programMetaController.actionGet);
 
@@ -173,7 +182,6 @@ initSimpleCrudRouting(
     programCommentController
 );
 
-// /universities/api/admin/program/:id/pagemeta/
 const programMetaAdminController: any = new ProgramMetaAdminController();
 router.get(
     '/admin/program/:programId/pagemeta/:id',

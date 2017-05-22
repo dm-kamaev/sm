@@ -27,11 +27,17 @@ goog.scope(function() {
      *     name: string,
      *     type: string,
      *     api: string,
+     *     apiPopular: ?string,
      *     optionsToShow: number,
      *     modal: {
      *         header: string,
      *         placeholder: ?string,
-     *         filterHeader: string
+     *         filterHeader: string,
+     *         theme: ?string
+     *     },
+     *     customIcon: ?{
+     *         check: string,
+     *         uncheck: string
      *     }
      * }}
      */
@@ -67,7 +73,11 @@ goog.scope(function() {
         return goog.soy.renderAsElement(
             sm.lSearch.bFilter.TemplateExtended.option, {
                 params: {
-                    data: data
+                    data: data,
+                    config: {
+                        theme: this.params.optionsTheme,
+                        customIcon: this.params.customIcon
+                    }
                 }
             },
             {
@@ -115,16 +125,34 @@ goog.scope(function() {
      * @protected
      */
     View.prototype.transformParams = function(rawParams) {
+        var customIcon;
+        var modal;
+
+        if (rawParams['customIcon']) {
+            customIcon = {
+                check: rawParams['customIcon']['check'],
+                uncheck: rawParams['customIcon']['uncheck']
+            };
+        }
+
+        if (rawParams['modal']) {
+            modal = {
+                header: rawParams['modal']['header'],
+                placeholder: rawParams['modal']['placeholder'],
+                filterHeader: rawParams['modal']['filterHeader'],
+                theme: rawParams['modal']['theme']
+            };
+        }
+
         return {
             name: rawParams['name'],
             type: rawParams['type'],
             api: rawParams['api'],
+            apiPopular: rawParams['apiPopular'],
             optionsToShow: rawParams['optionsToShow'],
-            modal: {
-                header: rawParams['modal']['header'],
-                placeholder: rawParams['modal']['placeholder'],
-                filterHeader: rawParams['modal']['filterHeader']
-            }
+            modal: modal,
+            optionsTheme: rawParams['optionsTheme'],
+            customIcon: customIcon
         };
     };
 

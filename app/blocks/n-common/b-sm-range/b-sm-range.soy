@@ -1,0 +1,163 @@
+{namespace sm.bSmRange.Template}
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmRange.Params.Data,
+ *     config: sm.bSmRange.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ */
+{template .range}
+    {let $config: augmentMap(
+        [
+            'theme': 'default'
+        ],
+        $params.config
+    ) /}
+
+    {call .init}
+        {param params: [
+            'data': $params.data,
+            'config': $config
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    smRange
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmRange.Params.Data,
+ *     config: sm.bSmRange.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .bar_ data="all" /}
+    {call .thumb_ data="all"/}
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         name: (string|undefined),
+ *         value: ?number,
+ *         minValue: ?number,
+ *         maxValue: number,
+ *         defaultValue: ?number,
+ *         step: ?number
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'name': $params.data.name ?: '',
+                'value': $params.data.value,
+                'minValue': $params.data.minValue,
+                'maxValue': $params.data.maxValue,
+                'defaultValue': $params.data.defaultValue,
+                'step': $params.data.step
+            ]/}
+        {/call}"
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-range
+{/template}
+
+
+/**
+ * Bar of range
+ * @param params {{
+ *     data: {
+ *         value: ?string,
+ *         minValue: ?number,
+ *         maxValue: number,
+ *         defaultValue: ?number
+ *     }
+ * }}
+ */
+{template .bar_}
+    {let $value: $params.data.value ?: $params.data.defaultValue /}
+    {let $minValue: $params.data.minValue ?: 0 /}
+
+    {let $width: ($value - $minValue) > 0 ? 100 *
+        (($value - $minValue)/($params.data.maxValue - $minValue)):
+        0
+    /}
+
+    <div class="{call .rootClass/}__bar-wrap">
+        <div class="{call .rootClass/}__bar-progress"
+            style="width: {$width}%;">
+        </div>
+        <div class="{call .rootClass/}__bar">
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Thumb of range
+ * @param params {{
+ *     data: {
+ *         value: ?string,
+ *         minValue: ?number,
+ *         maxValue: number,
+ *         defaultValue: ?number,
+ *         thumb: ?{
+ *             iconName: string,
+ *             iconType: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .thumb_}
+    {let $value: $params.data.value ?: $params.data.defaultValue /}
+    {let $minValue: $params.data.minValue ?: 0 /}
+
+    {let $position: ($value - $minValue) > 0 ? 100 *
+        (($value - $minValue)/($params.data.maxValue - $minValue)):
+        0
+    /}
+
+    {let $side: $position < 100 ? 'left' : 'right' /}
+
+
+    <div class="{call .rootClass/}__thumb"
+        style="{$side}: {$position < 100 ? $position : 0}%;">
+
+        {if $params.data?.thumb?.iconName}
+            {call .renderChild}
+                {param params: [
+                    'type': $params.data.thumb.iconType ?: 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': $params.data.thumb.iconName
+                        ]
+                    ]
+                ]/}
+            {/call}
+        {/if}
+    </div>
+{/template}

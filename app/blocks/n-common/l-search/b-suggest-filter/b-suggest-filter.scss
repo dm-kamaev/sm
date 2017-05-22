@@ -31,12 +31,9 @@
 }
 
 .b-suggest-filter__section_filter {
-    overflow: auto;
+    position: relative;
 
-    height: 275px;
-    padding-top: 15px;
-    padding-right: 20px;
-    padding-bottom: 10px;
+    padding-right: 0;
 }
 
 .b-suggest-filter__section_search {
@@ -67,10 +64,81 @@
     box-sizing: border-box;
     width: 100%;
     height: 39px;
-    padding-left: 7px;
 
     border: 1px solid #dbdbd4;
     background-color: #ffffff;
+    box-shadow: inset 0 1px 6px #dbdbd4;
+}
+
+.b-suggest-filter__filter {
+    overflow: auto;
+
+    height: 275px;
+    padding-top: 15px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+.b-suggest-filter__filter-bar {
+    position: absolute;
+
+    width: calc(100% - 60px);
+}
+
+.b-suggest-filter__filter-bar_top {
+    top: 0;
+
+    height: 15px;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.9) 25%,
+        rgba(255,255,255,0.5) 50%,
+        rgba(255,255,255,0)
+    );
+}
+
+.b-suggest-filter__filter-bar_bottom {
+    bottom: 0;
+
+    height: 10px;
+
+    background: linear-gradient(
+        to top,
+        rgba(255,255,255,0.9) 25%,
+        rgba(255,255,255,0.5) 50%,
+        rgba(255,255,255,0)
+    );
+}
+
+.b-suggest-filter_neptune-theme {
+    .b-suggest-filter__section {
+        background-color: #ffffff;
+    }
+
+    .b-suggest-filter__section_button {
+        width: 219px;
+        margin: 42px auto;
+        padding: 0;
+    }
+
+    .b-suggest-filter__section_filter {
+        border-top: 1px #ececec solid;
+        border-bottom: 1px #ececec solid;
+    }
+
+    .b-suggest-filter__section_header {
+        text-transform: initial;
+
+        font: bold 28px 'Proxima', Arial, sans-serif;
+    }
+
+    .b-suggest-filter__suggest {
+        height: 50px;
+
+        border: 1px #deded8 solid;
+        box-shadow: none;
+    }
 }
 
 
@@ -85,8 +153,21 @@
         min-height: 220px;
     }
 
-    .b-suggest-filter__section_filter {
+    .b-suggest-filter__filter {
         height: auto;
         min-height: 220px;
     }
 }
+
+
+@include media-xs {
+    .b-suggest-filter__section {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    .b-suggest-filter__section_header {
+        padding-right: 70px;
+    }
+}
+

@@ -28,6 +28,7 @@ deployment-config.json
 .ftpconfig
 .csscomb*
 .tags*
+.syncrconf
 jsconfig.json
 tslint.json
 
@@ -49,6 +50,8 @@ typings
 
 #builded typescript files ignore
 api/components/interface.js
+api/components/xlsx.js
+api/components/promiseMethods.js
 
 #api/modules/comment
 api/modules/comment/controllers/errors/**/*.js
@@ -82,17 +85,20 @@ api/modules/course/types/*.js
 
 #api/modules/entity
 api/modules/entity/enums/entityRoutes.js
+api/modules/entity/lib/Search.js
 api/modules/entity/models/page.js
 api/modules/entity/models/pageMetaInformation.js
 api/modules/entity/services/exceptions/*.js
 api/modules/entity/services/page.js
 api/modules/entity/services/pageMetaInformation.js
+api/modules/entity/services/textSearchData.js
 api/modules/entity/types/*.js
 
 
 #api/modules/geo
 api/modules/geo/controllers/errors/*.js
 api/modules/geo/controllers/CityAdminController.js
+api/modules/geo/controllers/CityController.js
 api/modules/geo/controllers/index.js
 
 api/modules/geo/migrations/2017*.js
@@ -146,16 +152,15 @@ api/modules/school/views/profileAdminView.js
 
 #api/modules/study
 api/modules/study/controllers/**/*.js
-
 api/modules/study/models/egeResult.js
 api/modules/study/models/giaResult.js
 api/modules/study/models/olimpResult.js
 api/modules/study/models/subject.js
-
-api/modules/study/services/exceptions/*.js
 api/modules/study/services/additionalClassAdminService.js
+api/modules/study/services/ege.js
 api/modules/study/services/egeAdminService.js
 api/modules/study/services/examAdminService.js
+api/modules/study/services/exceptions/*.js
 api/modules/study/services/giaAdminService.js
 api/modules/study/services/olimpResult.js
 
@@ -197,8 +202,11 @@ app/modules/comment/**/*.js
 
 
 #app/modules/common
+app/modules/common/constants/*.js
 app/modules/common/enums/entityType.js
+app/modules/common/lib/FilterPanel.js
 app/modules/common/lib/Footer.js
+app/modules/common/lib/FormatUtils.js
 app/modules/common/lib/Header.js
 app/modules/common/lib/Layout.js
 app/modules/common/lib/LinksFormatter.js
@@ -206,9 +214,12 @@ app/modules/common/lib/SubHeader.js
 app/modules/common/lib/utils.js
 app/modules/common/services/*.js
 app/modules/common/types/**/*.js
+app/modules/common/views/footerView.js
 app/modules/common/views/generalDataView.js
 app/modules/common/views/sideMenuView.js
 
+
+app/modules/geo/**/*.js
 
 #app/modules/course
 app/modules/course/constants/**/*.js
@@ -222,14 +233,12 @@ app/modules/school/views/olympiadResultView.js
 
 #app/modules/university
 app/modules/university/constants/*.js
-app/modules/university/controllers/errors/*.js
-app/modules/university/controllers/index.js
-app/modules/university/controllers/SubscriptionController.js
-app/modules/university/controllers/UniversityController.js
+app/modules/university/controllers/**/*.js
+app/modules/university/index.js
+app/modules/university/lib/ProgramFilterPanel.js
 app/modules/university/services/**/*.js
 app/modules/university/types/**/*.js
 app/modules/university/views/*.js
-app/modules/university/index.js
 
 
 #app/modules/user
@@ -237,16 +246,26 @@ app/modules/user/**/*.js
 
 
 #console
+console/addedNewProgramMajor.js
+console/addedNewSubject.js
 console/executable/sendNewCommentNotifications.js
+console/fixedEncodingProgramMajor.js
+console/importSchoolSpecClasses.js
+console/insertRegionForMoscow.js
 console/modules/geoTools/*.js
 console/modules/modelArchiver/Archiver.js
 console/modules/newCommentNotifier/**/*.js
+console/modules/parseUniversityComments/**/*.js
 console/modules/schoolSpecClasses/*.js
+console/modules/searchUpdater/ProgramActualizer.js
+console/modules/updateUniversityAndProgram/**/*.js
+console/one-off/addNewSubject.js
 console/one-off/loadPrograms.js
+console/one-off/parseUniversityComments.js
 console/one-off/shrinkOlympiadResults.js
-console/importSchoolSpecClasses.js
-console/insertRegionForMoscow.js
+console/updateCityNames.js
 console/updateProgramSimilar.js
+console/updateUniverstyAndProgram.js
 
 
 #gulp

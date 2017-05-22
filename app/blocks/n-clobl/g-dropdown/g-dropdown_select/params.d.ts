@@ -1,3 +1,5 @@
+import {gDropdownStendhal} from '../params';
+
 export namespace gDropdownSelect {
     /*
      * sm.gDropdownSelect.Params
@@ -6,23 +8,18 @@ export namespace gDropdownSelect {
         /*
          * sm.gDropdownSelect.Params.Data
          */
-        export interface Data {
-            opener?: string,
-            defaultOpenerText?: string,
-            name?: (string|undefined),
-            content?: any,
-            contentConfig?: any
+        export interface Data extends gDropdownStendhal.Params.Data {
+            opener?: string;
+            defaultOpenerText?: string;
+            name?: (string|undefined);
+            content?: any;
+            contentConfig?: any;
         }
 
         /*
          * sm.gDropdownSelect.Params.Config
          */
-        export interface Config {
-            stylizationModifier?: string,
-            iconName?: string,
-            iconType?: string,
-            customClasses?: (Array<string>|undefined),
-            theme?: (string|undefined)
+        export interface Config extends gDropdownStendhal.Params.Config {
         }
     }
 
@@ -30,7 +27,7 @@ export namespace gDropdownSelect {
      * sm.gDropdownSelect.Params
      */
     export interface Params {
-        data: Params.Data,
-        config: Params.Config
+        data: Params.Data;
+        config: Params.Config;
     }
 }

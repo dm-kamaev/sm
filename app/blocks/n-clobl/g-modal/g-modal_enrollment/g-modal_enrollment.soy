@@ -113,8 +113,10 @@
                 'type': 'button',
                 'renderParams': [
                     'data': [
-                        'content': $params.data?.content?.buttonText ?:
-                            'Перезвоните мне'
+                        'content': [
+                            'default': $params.data?.content?.buttonText ?:
+                                'Перезвоните мне'
+                            ]
                     ]
                 ]
             ]/}

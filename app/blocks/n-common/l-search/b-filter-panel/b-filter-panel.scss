@@ -1,4 +1,4 @@
-@import "../../i-media/i-media";
+@import '../../i-media/i-media';
 
 .b-filter-panel {
     width: 100%;
@@ -60,6 +60,36 @@
     float: right;
 }
 
+/** Neptune theme start */
+.b-filter-panel_neptune-theme {
+    .b-filter-panel__filter-wrap {
+        border-bottom: none;
+    }
+
+    .b-filter-panel__filter-wrap_range {
+        max-width: 235px;
+    }
+
+    .b-filter-panel__reset {
+        float: none;
+        text-align: center;
+    }
+
+    .b-filter-panel__filters-list {
+        margin-bottom: 14px;
+    }
+}
+
+.b-filter-panel_dependent.b-filter-panel_neptune-theme {
+    .b-filter-panel__control-links {
+        display: none;
+    }
+
+    .b-filter-panel__button-box {
+        display: none;
+    }
+}
+/** Neptune theme end */
 .b-filter-panel__tooltip-wrap {
     position: absolute;
     left: 100%;
@@ -68,6 +98,10 @@
 
 .b-filter-panel__button-wrap {
     background-color: inherit;
+}
+
+.b-filter-panel__button-wrap_rounded {
+    border-radius: 100px;
 }
 
 .b-filter-panel__button-box {
@@ -105,12 +139,82 @@
         }
     }
 
+    .b-filter-panel__tooltip-wrap {
+        display: none;
+    }
+
     .b-filter-panel__collapser {
         display: inline-block;
     }
 
-    .b-filter-panel__tooltip-wrap {
-        display: none;
+    /** Neptune theme start */
+    .b-filter-panel_neptune-theme {
+        .b-filter-panel__content {
+            position: relative;
+        }
+
+        .b-filter-panel__button-box {
+            display: inline-block;
+
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .b-filter-panel__control-links {
+            display: inline-block;
+
+            width: auto;
+            margin: 0;
+            margin-bottom: 20px;
+
+            vertical-align: middle;
+        }
+
+        .b-filter-panel__filters-list {
+            padding-left: 5px;
+        }
+    }
+
+    .b-filter-panel_main.b-filter-panel_neptune-theme {
+        .b-filter-panel__button-box {
+            display: none;
+        }
+
+        .b-filter-panel__control-links {
+            display: none;
+        }
+
+        .b-filter-panel__filters-list {
+            margin-bottom: 0;
+        }
+    }
+
+    .b-filter-panel_dependent.b-filter-panel_neptune-theme {
+        .b-filter-panel__reset {
+            display: none;
+        }
+
+        .b-filter-panel__button-box {
+            display: inline-block;
+        }
+
+        .b-filter-panel__control-links {
+            display: inline-block;
+        }
+    }
+    /** Neptune theme end */
+}
+
+@include media-s {
+    /** Neptune theme start */
+    .b-filter-panel_dependent.b-filter-panel_neptune-theme {
+        .b-filter-panel__button-box {
+            display: block;
+        }
+
+        .b-filter-panel__control-links {
+            margin-left: 5px;
+        }
     }
 }
 

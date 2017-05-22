@@ -17,11 +17,11 @@ goog.scope(function() {
      * @extends {cl.iControl.Control}
      */
     sm.bSmCollapsedText.SmCollapsedText = function(view, opt_domHelper) {
-    sm.bSmCollapsedText.SmCollapsedText.base(
-        this, 'constructor', view, opt_domHelper
-    );
-};
-goog.inherits(sm.bSmCollapsedText.SmCollapsedText, cl.iControl.Control);
+        sm.bSmCollapsedText.SmCollapsedText.base(
+            this, 'constructor', view, opt_domHelper
+        );
+    };
+    goog.inherits(sm.bSmCollapsedText.SmCollapsedText, cl.iControl.Control);
 
 
     var CollapsedText = sm.bSmCollapsedText.SmCollapsedText,

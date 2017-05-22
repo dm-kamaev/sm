@@ -9,6 +9,7 @@ goog.require('sm.lSearch.bFilter.FilterClasses');
 goog.require('sm.lSearch.bFilter.FilterDropdown');
 goog.require('sm.lSearch.bFilter.FilterExtended');
 goog.require('sm.lSearch.bFilter.FilterInput');
+goog.require('sm.lSearch.bFilter.FilterRange');
 goog.require('sm.lSearch.bFilter.FilterSwitch');
 goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
 goog.require('sm.lSearch.bFilterPanel.Template');
@@ -56,14 +57,6 @@ sm.lSearch.bFilterPanel.FilterPanel = function(view, opt_domHelper) {
 
 
     /**
-     * Position of last check/uncheck option
-     * @type {number}
-     * @private
-     */
-    this.tooltipPosition_ = null;
-
-
-    /**
      * Count of search results
      * @type {?number}
      * @private
@@ -94,6 +87,14 @@ goog.scope(function() {
      */
     FilterPanel.Event = {
         SUBMIT: goog.events.getUniqueId('submit'),
+        COLLAPSE: View.Event.COLLAPSE,
+        CHECK: goog.events.getUniqueId('check'),
+        UNCHECK: goog.events.getUniqueId('uncheck'),
+        RESET: goog.events.getUniqueId('reset'),
+        FILTER_OPTION_CHECK: sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
+        FILTER_OPTION_UNCHECK: sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
+        FILTER_COLLAPSE: sm.lSearch.bFilter.Filter.Event.COLLAPSE,
+        FILTER_EXPAND: sm.lSearch.bFilter.Filter.Event.EXPAND,
         CHANGE: goog.events.getUniqueId('change')
     };
 
@@ -140,6 +141,7 @@ goog.scope(function() {
         });
 
         this.getView().setResetButtonVisibility(false);
+        this.getView().setButtonFixability(false);
         this.updateButton();
         this.countResults_ = null;
     };
@@ -198,7 +200,7 @@ goog.scope(function() {
             this.showTooltip(text, isEmptyResults);
         }
 
-        this.updateButtonFixability_();
+        this.updateButtonFixability();
     };
 
     /**
@@ -208,7 +210,6 @@ goog.scope(function() {
      * @public
      */
     FilterPanel.prototype.showTooltip = function(value, opt_hideButton) {
-        this.getView().setTooltipPosition(this.tooltipPosition_);
         this.tooltip_.setText(value);
         if (opt_hideButton) {
             this.tooltip_.hideButton();
@@ -222,12 +223,15 @@ goog.scope(function() {
 
 
     /**
-     * set position of tooltip
-     * @param {number} position
+     * update tooltip position
+     * @param {{
+     *     top: number,
+     *     height: number
+     * }} bounds
      * @public
      */
-    FilterPanel.prototype.setTooltipPosition = function(position) {
-        this.tooltipPosition_ = position;
+    FilterPanel.prototype.updateTooltipPosition = function(bounds) {
+        this.getView().updateTooltipPosition(bounds);
     };
 
 
@@ -247,6 +251,98 @@ goog.scope(function() {
     };
 
     /**
+     * Return true if selected least one filter
+     * @return {boolean}
+     */
+    FilterPanel.prototype.isChecked = function() {
+        return this.filters_.some(function(filter) {
+            return filter.isChecked();
+        });
+    };
+
+
+    /**
+     * Shows option by data in filter with name - filterName
+     * @param {string} filterName
+     * @param {{
+     *     name: (string|number),
+     *     value: ?(string|number),
+     *     id: ?string,
+     *     label: ?string,
+     *     isChecked: ?boolean
+     * }} optionData
+     */
+    FilterPanel.prototype.showFilterOption = function(filterName, optionData) {
+        var filter = this.getFilter_(filterName);
+        filter.showOption(optionData);
+    };
+
+
+    /**
+     * Hides option by data in filter with name - filterName
+     * @param {string} filterName
+     * @param {{
+     *     name: (string|number),
+     *     value: ?(string|number),
+     *     id: ?string,
+     *     label: ?string,
+     *     isChecked: ?boolean
+     * }} optionData
+     */
+    FilterPanel.prototype.hideFilterOption = function(filterName, optionData) {
+        var filter = this.getFilter_(filterName);
+        filter.hideOption(optionData);
+    };
+
+
+    /**
+     * Checks option by data in filter with name - filterName
+     * @param {string} filterName
+     * @param {{
+     *     name: (string|number),
+     *     value: ?(string|number),
+     *     id: ?string,
+     *     label: ?string,
+     *     isChecked: ?boolean
+     * }} optionData
+     */
+    FilterPanel.prototype.checkFilterOption = function(filterName, optionData) {
+        var filter = this.getFilter_(filterName);
+        filter.checkOption(optionData);
+    };
+
+
+    /**
+     * Unchecks option by data in filter with name - filterName
+     * @param {string} filterName
+     * @param {{
+     *     name: (string|number),
+     *     value: ?(string|number),
+     *     id: ?string,
+     *     label: ?string,
+     *     isChecked: ?boolean
+     * }} optionData
+     */
+    FilterPanel.prototype.uncheckFilterOption = function(filterName,
+        optionData) {
+
+        var filter = this.getFilter_(filterName);
+        filter.uncheckOption(optionData);
+    };
+
+
+    /**
+     * fix button if set count results and required viewport size
+     * @public
+     */
+    FilterPanel.prototype.updateButtonFixability = function() {
+        if (this.countResults_ !== null) {
+            this.getView().updateButtonFixability();
+        }
+    };
+
+
+    /**
      * Initializes listeners for view
      * @private
      */
@@ -255,10 +351,13 @@ goog.scope(function() {
             View.Event.RESET,
             this.onResetClick_
         );
+
         this.viewListen(
             View.Event.SCROLL,
             this.onScroll_
         );
+
+        this.autoDispatch(FilterPanel.Event.COLLAPSE);
     };
 
 
@@ -308,6 +407,14 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.initButtonListeners_ = function() {
+        if (this.button_) {
+            this.getHandler().listen(
+                this.button_,
+                cl.gButton.Button.Event.CLICK,
+                this.onSubmit_
+            );
+        }
+
         this.getHandler().listen(
             this.button_,
             sm.gButton.ButtonStendhal.Event.CLICK,
@@ -323,19 +430,8 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onOption_ = function(event) {
-        this.setTooltipPosition(event.position);
+        this.updateTooltipPosition(event.bounds);
         this.dispatchEvent(FilterPanel.Event.CHANGE);
-    };
-
-
-    /**
-     * fix button if set count results and required viewport size
-     * @private
-     */
-    FilterPanel.prototype.updateButtonFixability_ = function() {
-        if (this.countResults_ !== null) {
-            this.getView().updateButtonFixability();
-        }
     };
 
 
@@ -344,7 +440,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onFilterExpand_ = function() {
-        this.updateButtonFixability_();
+        this.updateButtonFixability();
     };
 
 
@@ -353,7 +449,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onFilterCollapse_ = function() {
-        this.updateButtonFixability_();
+        this.updateButtonFixability();
     };
 
 
@@ -403,6 +499,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onResetClick_ = function() {
+        this.dispatchEvent(FilterPanel.Event.RESET);
         this.reset();
     };
 
@@ -412,7 +509,7 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onScroll_ = function() {
-        this.updateButtonFixability_();
+        this.updateButtonFixability();
     };
 
 
@@ -434,6 +531,8 @@ goog.scope(function() {
      */
     FilterPanel.prototype.onFilterCheck_ = function() {
         this.getView().setResetButtonVisibility(true);
+
+        this.dispatchEvent(FilterPanel.Event.CHECK);
     };
 
 
@@ -442,20 +541,31 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.onFilterUncheck_ = function() {
-        if (!this.isChecked_()) {
+        if (!this.isChecked()) {
             this.getView().setResetButtonVisibility(false);
+            this.dispatchEvent(FilterPanel.Event.UNCHECK);
         }
     };
 
 
     /**
-     * Return true if selected least one filter
-     * @return {boolean}
+     * Returns filter by name
+     * @param {string} filterName
+     * @return {(
+     *     sm.lSearch.bFilter.Filter|
+     *     sm.lSearch.bFilter.FilterClasses|
+     *     sm.lSearch.bFilter.FilterDropdown|
+     *     sm.lSearch.bFilter.FilterExtended|
+     *     sm.lSearch.bFilter.FilterInput|
+     *     sm.lSearch.bFilter.FilterRange|
+     *     sm.lSearch.bFilter.FilterSwitch|
+     *     sm.lSearch.bFilter.FilterSwitchLabels
+     * )}
      * @private
      */
-    FilterPanel.prototype.isChecked_ = function() {
-        return this.filters_.some(function(filter) {
-            return filter.isChecked();
+    FilterPanel.prototype.getFilter_ = function(filterName) {
+        return goog.array.find(this.filters_, function(filter) {
+            return filter.getName() == filterName;
         });
     };
 
@@ -470,26 +580,29 @@ goog.scope(function() {
         var type;
 
         switch (true) {
-            case sm.lSearch.bFilter.FilterExtended.isControl(element) :
-                type = sm.lSearch.bFilter.FilterExtended.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterSwitchLabels.isControl(element) :
-                type = sm.lSearch.bFilter.FilterSwitchLabels.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterSwitch.isControl(element) :
-                type = sm.lSearch.bFilter.FilterSwitch.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterInput.isControl(element) :
-                type = sm.lSearch.bFilter.FilterInput.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterDropdown.isControl(element) :
-                type = sm.lSearch.bFilter.FilterDropdown.NAME;
-                break;
-            case sm.lSearch.bFilter.FilterClasses.isControl(element) :
-                type = sm.lSearch.bFilter.FilterClasses.NAME;
-                break;
-            default:
-                type = sm.lSearch.bFilter.Filter.NAME;
+        case sm.lSearch.bFilter.FilterExtended.isControl(element) :
+            type = sm.lSearch.bFilter.FilterExtended.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterSwitchLabels.isControl(element) :
+            type = sm.lSearch.bFilter.FilterSwitchLabels.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterSwitch.isControl(element) :
+            type = sm.lSearch.bFilter.FilterSwitch.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterRange.isControl(element) :
+            type = sm.lSearch.bFilter.FilterRange.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterInput.isControl(element) :
+            type = sm.lSearch.bFilter.FilterInput.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterDropdown.isControl(element) :
+            type = sm.lSearch.bFilter.FilterDropdown.NAME;
+            break;
+        case sm.lSearch.bFilter.FilterClasses.isControl(element) :
+            type = sm.lSearch.bFilter.FilterClasses.NAME;
+            break;
+        default:
+            type = sm.lSearch.bFilter.Filter.NAME;
         }
 
         return type;
@@ -522,10 +635,13 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.initButton_ = function() {
-        this.button_ = this.decorateChild(
-            sm.gButton.ButtonStendhal.NAME,
-            this.getView().getDom().button
-        );
+        var button = this.getView().getDom().button;
+        if (button) {
+            this.button_ = this.decorateChild(
+                sm.gButton.ButtonStendhal.NAME,
+                button
+            );
+        }
     };
 
 

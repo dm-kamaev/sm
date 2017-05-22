@@ -89,28 +89,19 @@
 
 
 /**
- * Icon of opener
+ * Default icon name
  * @param params {{
- *     config: {
- *         iconName: (string|undefined),
- *         iconType: ('icon-svg'|undefined)
+ *     data: {
+ *         default: {
+ *             iconName: ?string
+ *         }
  *     }
  * }}
  * @override
+ * @protected
  */
-{template .openerIcon}
-    <div class="{call .rootClass/}__opener-icon">
-        {call .renderChild}
-            {param params: [
-                'type': $params.config.iconType ?: 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': $params.config.iconName ?: 'small-opener-arrow'
-                    ]
-                ]
-            ]/}
-        {/call}
-    </div>
+{template .getDefaultIconName}
+    {$params.data?.default?.iconName ?: 'small-opener-arrow'}
 {/template}
 
 

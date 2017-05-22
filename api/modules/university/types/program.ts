@@ -25,6 +25,8 @@ export interface ProgramAttribute {
     exchangeProgram?: string;
     phone?: string;
     programMajorId?: number;
+    score?: Array<number>;
+    totalScore?: number;
     oksoCode?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -43,8 +45,8 @@ export interface ProgramInstance
     commentGroup?: CommentGroupInstance;
     entranceStatistics?: Array<EntranceStatisticInstance>;
     programEgeExams?: Array<ProgramEgeExamInstance>;
-    university: UniversityInstance;
-
+    university?: UniversityInstance;
+    pages?: Array<PageIntstance>;
     addAddress: Sequelize.BelongsToManyAddAssociationsMixin<
             AddressInstance, number, AddressAttribute
         >;
@@ -70,4 +72,9 @@ export interface ProgramAdmin extends ProgramAttribute {
 export interface ProgramUrl {
     id: number;
     url: string;
+}
+
+export interface ProgramSuggest extends ProgramAttribute {
+    alias: string;
+    universityAbbreviation: string;
 }

@@ -189,7 +189,7 @@ class OlympiadAdminController extends Controller {
      *         awardeeAmount: 5
      *     }
      *
-     * @apiUse OlympiadResultsAlreadyExists
+     * @apiUse OlympiadResultsAlreadyExistsError
      */
     public async actionCreate(actionContext: any, schoolId: number) {
         const data = actionContext.data;

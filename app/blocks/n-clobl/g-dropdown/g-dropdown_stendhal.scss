@@ -1,8 +1,9 @@
-.g-dropdown.g-dropdown_stendhal {
+.g-dropdown_stendhal {
     width: 100%;
     height: 100%;
 
     .g-dropdown__content {
+        width: 100%;
         margin-top: 6px;
     }
 
@@ -11,7 +12,33 @@
         height: 100%;
     }
 
-    .g-dropdown__content {
-        width: 100%;
+    .g-dropdown__icon_hover {
+        display: none;
+    }
+
+    .g-dropdown__opener-text {
+        display: inline-block;
+    }
+
+    .g-dropdown__opener-text-icon {
+        display: inline-block;
+    }
+
+    .g-dropdown__opener-arrow-icon {
+        display: inline-block;
+    }
+
+    .g-dropdown__icon-wrap {
+        display: inline-block;
+
+        &:hover {
+            .g-dropdown__icon_hover {
+                display: block;
+            }
+
+            .g-dropdown__icon_default {
+                display: none;
+            }
+        }
     }
 }

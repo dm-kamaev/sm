@@ -35,4 +35,32 @@ goog.scope(function() {
         control: SummaryBoard,
         view: View
     });
+
+
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    SummaryBoard.Event = {
+        LINK_CLICK: View.Event.LINK_CLICK
+    };
+
+
+    /**
+     * @override
+     */
+    SummaryBoard.prototype.enterDocument = function() {
+        SummaryBoard.base(this, 'enterDocument');
+
+        this.initViewListeners_();
+    };
+
+
+    /**
+     * Initializes listeners for view
+     * @private
+     */
+    SummaryBoard.prototype.initViewListeners_ = function() {
+        this.autoDispatch(SummaryBoard.Event.LINK_CLICK);
+    };
 });  // goog.scope

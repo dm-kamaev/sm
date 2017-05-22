@@ -1,8 +1,4 @@
-interface City {
-    id: number;
-    name: string;
-    regionId: number;
-}
+import {BackendCity} from '../../geo/types/city';
 
 interface Profile {
     id: number;
@@ -20,7 +16,7 @@ export interface BackendUniversity {
     militaryDepartment: boolean;
     dormitory: boolean;
     cityId: number;
-    city: City;
+    city: BackendCity;
     profiles: Array<Profile>;
     created_at: Date;
     updated_at: Date;

@@ -11,6 +11,11 @@ import {ExamNotFound} from './exceptions/ExamNotFound';
 const subjectService = require('../../study/services/subject');
 
 class ProgramEgeExamService {
+
+    public async getAll(): Promise<ProgramEgeExamAdmin[]> {
+         return await ExamModel.findAll();
+    }
+
     public async getByProgramId(programId: number):
             Promise<Array<ProgramEgeExamAdmin>> {
         const exams: Array<ProgramEgeExamAdmin> = await ExamModel.findAll({

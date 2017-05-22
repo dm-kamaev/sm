@@ -1,0 +1,5 @@
+Allow: /
+Allow: /program/search
+
+Host: vuz.mel.fm
+Sitemap: http://vuz.mel.fm/sitemap.xml

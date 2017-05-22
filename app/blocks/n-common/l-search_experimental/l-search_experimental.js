@@ -48,7 +48,7 @@ goog.scope(function() {
      * @protected
      */
     SearchExperimental.prototype.onMapDataLoaded = function(event) {
-        var params = this.paramsManager_.getParams();
+        var params = this.paramsManager.getParams();
 
         var itemGroups = event.getItemGroups();
 
@@ -63,14 +63,3 @@ goog.scope(function() {
         this.map_.center(event.getPosition());
     };
 });  // goog.scope
-
-
-/**
- * creates sm.lSearch.SearchExperimental instance
- */
-jQuery(function() {
-    sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lSearch.SearchExperimental.NAME,
-        sm.lSearch.ViewExperimental.CssClass.ROOT
-    );
-});

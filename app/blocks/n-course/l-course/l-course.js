@@ -483,14 +483,3 @@ goog.scope(function() {
         );
     };
 });  // goog.scope
-
-
-/**
- * creates sm.lCourse.Course instance
- */
-jQuery(function() {
-    sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lCourse.Course.NAME,
-        sm.lCourse.View.CssClass.ROOT
-    );
-});

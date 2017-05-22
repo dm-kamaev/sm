@@ -13,6 +13,10 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 const apiAddress = config.backendApi;
 
 import {BackendCourseAdviced} from '../../course/types/course';
+import {
+    BackendProgramMajor,
+    BackendProgramMajorPopular
+} from '../types/programMajor';
 
 class ProgramMajorService extends Service {
     constructor() {
@@ -21,10 +25,32 @@ class ProgramMajorService extends Service {
         this.baseUrl = `${apiAddress}/universities/api/programmajor`;
     }
 
+    public async getPopular(
+            count: number | undefined): Promise<BackendProgramMajorPopular> {
+        const params: RequestParams = {
+            method: 'get',
+            url: `${this.baseUrl}/popular`,
+            params: {count}
+        };
+
+        const result = await this.send(params);
+        return result.data;
+    }
+
+    public async findByName(name: string): Promise<BackendProgramMajor[]> {
+        const params: RequestParams = {
+            method: 'get',
+            url: `${this.baseUrl}/search`,
+            params: {name}
+        };
+
+        const result = await this.send(params);
+        return result.data;
+    }
 
     public async getAdvicedCourses(
             programMajorId: number
-    ): Promise<BackendCourseAdviced> {
+    ): Promise<BackendCourseAdviced[]> {
         const params: RequestParams = {
             method: 'get',
             url: `${this.baseUrl}/${programMajorId}/advicedcourses`

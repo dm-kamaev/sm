@@ -4,6 +4,10 @@ var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 var sequelizeInclude = require('../../../../api/components/sequelizeInclude');
 
+const entityRoutes = require('../../entity/enums/entityRoutes').routes;
+const universityEgeSubjectsOrder =
+    require('../views/constants/universityEgeSubjectsOrder');
+
 exports.name = 'subject';
 
 /**
@@ -134,12 +138,22 @@ exports.getByIds = async(function(ids) {
     });
 });
 
-exports.searchByName = async(function(name) {
+/**
+ * @async
+ * @param  {string}  name
+ * @param  {string?} type
+ * @return {Promise<SubjectModel[]>}
+ */
+exports.searchByName = async(function(name, type) {
+    const nameSearch = {
+        $ilike: `%${name}%`
+    };
+    if (type === entityRoutes.UNIVERSITY.route) {
+        nameSearch['$in'] = universityEgeSubjectsOrder;
+    }
     return models.Subject.findAll({
         where: {
-            name: {
-                $ilike: `%${name}%`
-            }
+            name: nameSearch
         }
     });
 });

@@ -117,13 +117,11 @@ searchView.render = function(data) {
             description: seoParams.description,
             linksTitle: seoParams.linksTitle,
             links: seoParams.links,
+            headerText: this.generateHeaderText(
+                data.searchParams.name,
+                data.countResults
+            ),
             countResults: data.countResults,
-            searchText: data.searchParams.name,
-            declensionEntityType: {
-                nom: 'школу',
-                gen: 'школы',
-                plu: 'школ'
-            },
             sort: {
                 opener: 'Сортировать ',
                 defaultOpenerText: 'по средней оценке',
@@ -156,7 +154,10 @@ searchView.render = function(data) {
             searchParams: data.searchParams
         }),
         searchParams: data.searchParams,
-        footer: footerView.render(data.seoLinks)
+        footer: footerView.render(data.seoLinks),
+        api: {
+            search: '/api/school/search/'
+        }
     };
 };
 
@@ -262,6 +263,41 @@ searchView.subheader = function(data) {
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
+};
+
+
+/**
+ * @param {string} searchText
+ * @param {number} countResults
+ * @return {Array<Object>}
+ */
+searchView.generateHeaderText = function(searchText, countResults) {
+    let res = [];
+    if (searchText) {
+        res.push({
+            text: 'По запросу'
+        });
+        res.push({
+            text: '«' + searchText + '»'
+        });
+    } else {
+        res.push({
+            text: 'По вашему запросу'
+        });
+    }
+    res.push({
+        text: 'мы нашли'
+    });
+    res.push({
+        number: countResults,
+        text: {
+            nom: 'школу',
+            gen: 'школы',
+            plu: 'школ'
+        },
+        select: 'all'
+    });
+    return res;
 };
 
 module.exports = searchView;

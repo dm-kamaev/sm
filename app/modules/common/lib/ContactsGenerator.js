@@ -87,9 +87,10 @@ class ContactsGenerator {
             helper.text = 'Поможем выбрать курс!';
             break;
         case entityTypeEnum.UNIVERSITY:
+        case entityTypeEnum.PROGRAM:
             helper = {
                 text: 'Поможем выбрать',
-                url: '/university'
+                url: 'http://maximumtest.ru/events/cons?utm_source=melpartner'
             };
             break;
         }
@@ -106,7 +107,8 @@ class ContactsGenerator {
     getPhone() {
         let phone;
 
-        if (this.entityType_ != entityTypeEnum.UNIVERSITY) {
+        if (this.entityType_ != entityTypeEnum.UNIVERSITY &&
+            this.entityType_ != entityTypeEnum.PROGRAM) {
             phone = this.phone_;
         }
 

@@ -1,0 +1,52 @@
+.b-sm-range {
+    position: relative;
+}
+
+.b-sm-range__thumb {
+    top: 0;
+    bottom: 0;
+    position: absolute;
+
+    margin: auto;
+
+    cursor: pointer;
+}
+
+.b-sm-range__bar-wrap {
+    position: relative;
+
+    cursor: pointer;
+}
+
+.b-sm-range__bar-progress {
+    position: absolute;
+
+    height: 100%;
+}
+
+
+.b-sm-range_neptune-theme {
+    height: 17px;
+
+    .b-sm-range__bar-wrap {
+        top: 8px;
+
+        height: 3px;
+    }
+
+    .b-sm-range__bar {
+        height: 1px;
+
+        background: #e4e4e4;
+    }
+
+    .b-sm-range__bar-progress {
+        background: #0777e8;
+    }
+
+    .b-sm-range__thumb {
+        width: 10px;
+        height: 17px;
+    }
+}
+

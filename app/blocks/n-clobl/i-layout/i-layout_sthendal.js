@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Base layout control. It contains init logic of common blocks on
+ * layout like header, footer, etc.
+ *
+ * PLease note, that layouts must have name starting from 'l-' and have folder
+ * name (where it places) the same of it name. Also in layout folder must be
+ * 'Initer.js' file, which will init and require layout. This demands are due to
+ * our assembly system.
+ */
 goog.provide('sm.iLayout.LayoutStendhal');
 
 goog.require('cl.iControl.Control');

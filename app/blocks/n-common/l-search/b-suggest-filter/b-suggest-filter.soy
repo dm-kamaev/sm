@@ -58,7 +58,7 @@
     {call .placeholder_ /}
     {call .filter_ data="all" /}
     {call .selected_ data="all" /}
-    {call .button_ /}
+    {call .button_ data="all"  /}
 {/template}
 
 
@@ -71,9 +71,12 @@
  * }}
  */
 {template .header_}
-    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
-        {$params.data.header}
-    </div>
+    {if $params.data.header}
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_header">
+            {$params.data.header}
+        </div>
+    {/if}
 {/template}
 
 
@@ -95,29 +98,21 @@
     {/let}
 
     <div class="{call .rootClass/}__section {call .rootClass/}__section_search">
-        {call gorod.gSuggest.SuggestTemplate.render}
+        {call sm.bSearch.Template.base}
             {param params: [
+                'placeholder': $params.data?.search?.placeholder,
+                'text': $params.data.search?.text,
+                'theme': 'transparent',
+                'customClasses': $customClasses,
+                'inputSize': 'min',
                 'data': [
-                    'text': $params.data.search?.text,
-                    'minLength': 3,
-                    'placeholder': $params.data.search?.placeholder,
-                    'sourceUrl': $params.data.search?.sourceUrl,
+                    'sourceUrl': $params.data?.search?.sourceUrl,
                     'argName': 'name'
                 ],
                 'config': [
-                    'customClasses': $customClasses,
-                    'filtrationEnabled': false,
-                    'notShowList': true
-                ],
-                'list': [
-                    'theme': 'stendhal',
-                    'color': 'sienna'
-                ],
-                'input': [
-                    'style': [
-                        'theme': 'stendhal',
-                        'size': 'min'
-                    ]
+                    'showSearchIcon': true,
+                    'notShowList': true,
+                    'height': 'xxl'
                 ]
             ]/}
         {/call}
@@ -160,19 +155,33 @@
  */
 {template .filter_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_filter">
-        {call .renderChild}
-            {param params: [
-                'type': 'lSearch-filter',
-                'renderParams': [
-                    'data': $params.data.filter,
-                    'config': [
-                        'cannotBeHidden': true,
-                        'filtersToShow': length($params.data.filter?.options),
-                        'theme': 'minimal'
+        <div class="{call .rootClass/}__filter-bar
+            {sp}{call .rootClass/}__filter-bar_top">
+        </div>
+        <div class="{call .rootClass/}__filter">
+            {call .renderChild}
+                {param params: [
+                    'type': 'lSearch-filter',
+                    'renderParams': [
+                        'data': $params.data.filter,
+                        'config': [
+                            'cannotBeHidden': true,
+                            'optionsToShow': length($params.data.filter?.options),
+                            'theme': 'minimal',
+                            'optionsTheme': $params.config?.theme == 'neptune' ?
+                                'neptune' : null,
+                            'customIcon': $params.config?.theme == 'neptune' ? [
+                                'check': 'checked-blue',
+                                'uncheck': 'unchecked-blue'
+                            ] : null
+                        ]
                     ]
-                ]
-            ]/}
-        {/call}
+                ]/}
+            {/call}
+        </div>
+        <div class="{call .rootClass/}__filter-bar
+            {sp}{call .rootClass/}__filter-bar_bottom">
+        </div>
     </div>
 {/template}
 
@@ -195,7 +204,7 @@
                     'config': [
                         'type': 'labels',
                         'cannotBeHidden': true,
-                        'filtersToShow': $params.data?.selected ? 6 : ''
+                        'optionsToShow': $params.data?.selected ? 6 : ''
                     ]
                 ]
             ]/}
@@ -206,16 +215,30 @@
 
 /**
  * Button
+ * @param params {{
+ *     config: {
+ *         theme: (string|undefined)
+ *     }
+ * }}
  */
 {template .button_}
+    {let $neptuneConfig: [
+        'theme': 'neptune-reverse',
+        'borderRoundSize': 'xl'
+    ]/}
+
     <div class="{call .rootClass/}__section {call .rootClass/}__section_button">
         {call .renderChild}
             {param params: [
                 'type': 'button',
                 'renderParams': [
                     'data': [
-                        'content': 'Применить'
-                    ]
+                        'content': [
+                            'default': 'Применить'
+                        ]
+                    ],
+                    'config': $params.config?.theme == 'neptune' ?
+                        $neptuneConfig : []
                 ]
             ]/}
         {/call}

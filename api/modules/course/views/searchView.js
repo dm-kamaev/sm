@@ -114,7 +114,8 @@ searchView.render = function(data) {
             data.coursesList, data.aliases
         ),
         courses = courseView.list(aliasedCourses, data.categories),
-        seoParams = data.seoParams || {};
+        seoParams = data.seoParams || {},
+        countResults = searchView.countResults(data.coursesList);
     return {
         seo: {
             metaTitle: seoParams.tabTitle,
@@ -159,13 +160,11 @@ searchView.render = function(data) {
         resultsList: {
             title: seoParams.listTitle,
             description: seoParams.text && seoParams.text[0] || null,
-            countResults: searchView.countResults(data.coursesList),
-            searchText: data.searchParams.name,
-            declensionEntityType: {
-                nom: 'курс',
-                gen: 'курса',
-                plu: 'курсов'
-            },
+            headerText: this.generateHeaderText(
+                data.searchParams.name,
+                countResults
+            ),
+            countResults: countResults,
             sort: {
                 opener: 'Сортировать ',
                 defaultOpenerText: 'по популярности',
@@ -202,7 +201,10 @@ searchView.render = function(data) {
             searchParams: data.searchParams
         }),
         searchParams: data.searchParams,
-        footer: footerView.render()
+        footer: footerView.render(),
+        api: {
+            search: '/api/course/search/'
+        }
     };
 };
 
@@ -280,6 +282,42 @@ searchView.subheader = function(data) {
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
+};
+
+
+
+/**
+ * @param {string} searchText
+ * @param {number} countResults
+ * @return {Array<Object>}
+ */
+searchView.generateHeaderText = function(searchText, countResults) {
+    let res = [];
+    if (searchText) {
+        res.push({
+            text: 'По запросу'
+        });
+        res.push({
+            text: '«' + searchText + '»'
+        });
+    } else {
+        res.push({
+            text: 'По вашему запросу'
+        });
+    }
+    res.push({
+        text: 'мы нашли'
+    });
+    res.push({
+        number: countResults,
+        text: {
+            nom: 'курс',
+            gen: 'курса',
+            plu: 'курсов'
+        },
+        select: 'all'
+    });
+    return res;
 };
 
 module.exports = searchView;

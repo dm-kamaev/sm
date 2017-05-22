@@ -131,10 +131,11 @@ gulp.task('watch', function() {
         [path.join(__dirname, BLOCKS_DIR, '/**/*.js')],
         ['scripts']
     );
-    gulp.watch(
-        [path.join(__dirname, BLOCKS_DIR, '**/*.s+(a|c)ss')],
-        ['lint-css']
-    );
+    // TODO: make rules for css-linter and enable this watcher
+    // gulp.watch(
+    //     [path.join(__dirname, BLOCKS_DIR, '**/*.s+(a|c)ss')],
+    //     ['lint-css']
+    // );
     gulp.watch(
         [path.join(__dirname, ROOT_DIR, '/**/*.ts')],
         ['tsCompile']
@@ -150,6 +151,14 @@ gulp.task('fonts', function() {
         .pipe(gulp.dest(path.join(__dirname, SHARED_STATIC_DIR, '/fonts')));
 });
 
+gulp.task('manifest', function() {
+    return gulp.src(
+        path.join(__dirname, BLOCKS_DIR, '/n-common/i-favicon/manifest.json')
+    ).pipe(gulp.dest(
+        path.join(__dirname, SHARED_STATIC_DIR)
+    ));
+});
+
 gulp.task('copySchools', function() {
     return gulp.src([
         path.join(__dirname, '/assets/schools/*.*')
@@ -160,6 +169,13 @@ gulp.task('copySchools', function() {
 gulp.task('copyCourses', ['copySchools'], function() {
     return gulp.src([
         path.join(__dirname, '/assets/courses/*.*')
+    ], {base: 'assets/'})
+        .pipe(gulp.dest('public/'));
+});
+
+gulp.task('copyUniversities', ['copyCourses'], function() {
+    return gulp.src([
+        path.join(__dirname, '/assets/universities/*.*')
     ], {base: 'assets/'})
         .pipe(gulp.dest('public/'));
 });
@@ -206,8 +222,10 @@ const tasks = function(bool) {
         'images',
         'fonts',
         'styles',
+        'manifest',
         'copySchools',
         'copyCourses',
+        'copyUniversities',
         'picturefill',
         'localConfig'
     ] : [
@@ -221,8 +239,10 @@ const tasks = function(bool) {
         'fonts',
         'styles',
         // 'lint-css',
+        'manifest',
         'copySchools',
         'copyCourses',
+        'copyUniversities',
         'picturefill',
         'localConfig',
         'backendLint'

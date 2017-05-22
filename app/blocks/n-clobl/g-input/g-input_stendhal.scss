@@ -17,6 +17,17 @@
         &:focus {
             outline: none;
         }
+
+        &[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        &[type="number"]::-webkit-inner-spin-button,
+        &[type="number"]::-webkit-inner-spin-button {
+            margin: 0;
+
+            -webkit-appearance: none;
+        }
     }
 }
 
@@ -56,5 +67,18 @@
         box-shadow: none;
 
         font-size: 15px;
+    }
+}
+
+.g-input_stendhal.g-input_minimal-theme {
+    .g-input__input {
+        width: 100%;
+        height: 100%;
+        padding: 0 0 0 60px;
+
+        background: transparent;
+
+        border: none;
+        box-shadow: none;
     }
 }

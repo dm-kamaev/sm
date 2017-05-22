@@ -8,6 +8,7 @@
  *         title: (string|undefined),
  *         tooltip: (string|undefined)
  *     }|undefined),
+ *     description: ?string,
  *     options: Array<{
  *         label: string,
  *         value: string,
@@ -20,14 +21,25 @@
 /**
  * @typedef {{
  *     type: (string|undefined),
- *     optionsToShow: (boolean|undefined),
+ *     optionsToShow: (number|undefined),
  *     cannotBeHidden: (boolean|undefined),
  *     isShowed: (boolean|undefined),
+ *     showAllDefault: (boolean|undefined),
  *     showMoreButtonText: (number|undefined),
  *     theme: ('light'|'minimal'|undefined),
  *     align: (string|undefined),
  *     customClasses: (Array<string>|undefined),
- *     stylizationModifier: string
+ *     stylizationModifier: string,
+ *     filterArrowIcon: ({
+ *         up: (string|undefined),
+ *         down: (string|undefined)
+ *     }|undefined),
+ *     inline: (boolean|undefined),
+ *     optionsTheme: (string|undefined),
+ *     customIcon: ({
+ *         check: string,
+ *         uncheck: string
+ *     }|undefined)
  * }} sm.lSearch.bFilter.Template.Params.Config
  */
 
@@ -119,6 +131,7 @@
  *         type: (string|undefined),
  *         optionsToShow: (number|undefined),
  *         cannotBeHidden: (boolean|undefined),
+ *         showAllDefault: (boolean|undefined),
  *         isShowed: (bolean|undefined),
  *         showMoreButtonText: (number|undefined),
  *         align: (string|undefined),
@@ -139,6 +152,7 @@
     {/let}
 
     <div class="{$classes}">
+        {call .description data="all" /}
         {call .listOptions data="all" /}
         {call .button data="all" /}
     </div>
@@ -158,9 +172,16 @@
  *     },
  *     config: {
  *         optionsToShow: (number|undefined),
+ *         showAllDefault: (boolean|undefined),
  *         type: (string|undefined),
  *         align: (string|undefined),
- *         stylizationModifier: string
+ *         stylizationModifier: string,
+ *         theme: ('light'|'minimal'|undefined),
+ *         optionsTheme: (string|undefined),
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
  *     }
  * }}
  * @public
@@ -172,24 +193,23 @@
 
     <div class="{call .rootClass/}__list-options">
         {for $i in range($params.data.options.length)}
-            {let $id: $i + '-' + ($params.config?.type ?: '') + '-' +
-                $params.data.name
-            /}
-
             {call .option}
                 {param params: [
                     'data': [
-                        'id': $id,
                         'name': $params.data.name,
                         'label': $params.data.options[$i].label,
                         'value': $params.data.options[$i].value,
                         'isChecked': $params.data.options[$i]?.isChecked ?: ''
                     ],
                     'config': [
-                        'hidden': $i + 1 > $numberOptionsToShow ? true : false,
+                        'hidden': $i + 1 > $numberOptionsToShow ?
+                            not $params.config?.showAllDefault :
+                            false,
                         'hidable': $i + 1> $numberOptionsToShow ? true : false,
-                        'theme': $params.config.align == 'horizontal' ? 'narrow' : '',
-                        'stylizationModifier': $params.config.stylizationModifier
+                        'theme': $params.config.align == 'horizontal' ?
+                            'narrow' : $params.config.optionsTheme,
+                        'stylizationModifier': $params.config.stylizationModifier,
+                        'customIcon': $params.config.customIcon
                     ]
                 ]/}
             {/call}
@@ -211,7 +231,11 @@
  *     config: {
  *         hidden: (boolean|undefined),
  *         hidable: (boolean|undefined),
- *         theme: (string|undefined)
+ *         theme: (string|undefined),
+ *         customIcon: ({
+ *              check: string,
+ *              uncheck: string
+ *         }|undefined)
  *     }
  * }}
  * @public
@@ -236,7 +260,8 @@
                 'renderParams': [
                     'data': $params.data,
                     'config': [
-                        'theme': $params.config?.theme
+                        'theme': $params.config?.theme,
+                        'customIcon': $params.config?.customIcon
                     ]
                 ]
             ]/}
@@ -285,23 +310,67 @@
 
 
 /**
+ * Filter description template
+ * @param params {{
+ *     data: {
+ *         description: ?string
+ *     }
+ * }}
+ * @protected
+ */
+{template .description}
+    {let $classes kind="html"}
+        {call .rootClass/}__description
+
+        {if not $params.data?.description}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {$params.data?.description ?: ''}
+    </div>
+{/template}
+
+
+/**
  * Show filter options button
  * @param params {{
  *     config: {
  *         cannotBeHidden: (boolean|undefined),
- *         isShowed: (boolean|undefined)
+ *         isShowed: (boolean|undefined),
+ *         filterArrowIcon: ({
+ *             up: string,
+ *             down: string
+ *         }|undefined)
  *     }
  * }}
  * @protected
  */
 {template .showOptions}
     {if not $params?.config?.cannotBeHidden}
+        {let $iconUp kind="text"}
+            {if $params.config.filterArrowIcon?.up}
+                {$params.config.filterArrowIcon.up}
+            {else}
+                filter-arrow-up
+            {/if}
+        {/let}
+
+        {let $iconDown kind="text"}
+            {if $params.config.filterArrowIcon?.down}
+                {$params.config.filterArrowIcon.down}
+            {else}
+                filter-arrow-down
+            {/if}
+        {/let}
+
         <div class="{call .rootClass/}__header-icon{sp}
                     {call .rootClass/}__header-icon_up{sp}
                     {$params?.config?.isShowed ? '' : 'i-utils__hidden'}">
 
             {call .icon}
-                {param type: 'filter-arrow-up'/}
+                {param type: $iconUp /}
             {/call}
         </div>
 
@@ -310,7 +379,7 @@
                     {$params?.config?.isShowed ? 'i-utils__hidden' : ''}">
 
             {call .icon}
-                {param type: 'filter-arrow-down'/}
+                {param type: $iconDown /}
             {/call}
         </div>
     {/if}
@@ -329,6 +398,7 @@
  *     },
  *     config: {
  *         cannotBeHidden: (boolean|undefined),
+ *         showAllDefault: (boolean|undefined),
  *         optionsToShow: (number|undefined),
  *         showMoreButtonText: (number|undefined)
  *     }
@@ -351,6 +421,7 @@
     {if $params.data.options.length > $numberOptionsToShow}
         {call .showMoreButton}
             {param text: $showMoreButtonText/}
+            {param showAllDefault: $params.config?.showAllDefault/}
         {/call}
     {/if}
 {/template}
@@ -359,11 +430,18 @@
 /**
  * Show more template
  * @param text {string}
+ * @param showAllDefault {boolean}
  * @protected
  */
 {template .showMoreButton}
-    <div class="{call .rootClass/}__button{sp}
-                {call .rootClass/}__button_show-more">
+    {let $showMoreClasses kind="text"}
+        {call .rootClass/}__button {sp}{call .rootClass/}__button_show-more
+        {if $showAllDefault}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$showMoreClasses}">
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
@@ -376,9 +454,14 @@
         {/call}
     </div>
 
-    <div class="{call .rootClass/}__button{sp}
-                {call .rootClass/}__button_show-less{sp}
-                i-utils__hidden">
+    {let $showLessClasses kind="text"}
+        {call .rootClass/}__button {sp}{call .rootClass/}__button_show-less
+        {if not $showAllDefault}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$showLessClasses}">
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
@@ -507,7 +590,9 @@
         {call cl.iUtils.Utils.stringify}
             {param json: [
                 'name': $params.data.name,
-                'type': $params?.config?.type
+                'type': $params?.config?.type,
+                'optionsTheme': $params?.config?.optionsTheme,
+                'customIcon': $params?.config?.customIcon
             ]/}
         {/call}
     {/let}

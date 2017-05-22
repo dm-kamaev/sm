@@ -1,6 +1,7 @@
 goog.provide('sm.bSmItem.SmItem');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmCollapsedText.SmCollapsedText');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.View');
 goog.require('sm.bSmLink.SmLink');
@@ -154,10 +155,14 @@ goog.scope(function() {
      * @private
      */
     Item.prototype.initBadges_ = function() {
-        this.badges = this.decorateChildren(
-            'smBadge',
-            this.getView().getDom().badges
-        );
+        var domElements = this.getView().getDom().badges;
+
+        if(domElements && domElements.length) {
+            this.badges = this.decorateChildren(
+                'smBadge',
+                domElements
+            );
+        }
     };
 
 

@@ -112,14 +112,3 @@ goog.scope(function() {
         }
     };
 });  // goog.scope
-
-
-/**
- * creates sm.lHome.Home instance
- */
-jQuery(function() {
-    sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lHome.Home.NAME,
-        sm.lHome.View.CssClass.ROOT
-    );
-});

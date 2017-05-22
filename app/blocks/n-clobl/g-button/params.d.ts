@@ -5,6 +5,9 @@
  * borderRoundSize: ('xl')
  */
 
+type IconType = 'png' | 'svg';
+type IconPosition = 'left' | 'right';
+
 export namespace gButtonStendhal {
     /*
      * sm.gButtonStendhal.Params
@@ -14,18 +17,28 @@ export namespace gButtonStendhal {
          * sm.gButtonStendhal.Params.Data
          */
         export interface Data {
-            content?: string
+            content?: ({
+                default?: string;
+                sizeS?: string;
+                sizeL?: string;
+            }|string);
+            icon?: {
+                name: string;
+                type: IconType;
+                position: IconPosition;
+            };
+            defaultText?: string;
         }
 
         /*
          * sm.gButtonStendhal.Params.Config
          */
         export interface Config {
-            theme?: string,
-            isDisabled?: boolean,
-            size?: string,
-            disableHover?: boolean,
-            borderRoundSize?: string
+            theme?: string;
+            isDisabled?: boolean;
+            size?: string;
+            disableHover?: boolean;
+            borderRoundSize?: string;
         }
     }
 
@@ -33,7 +46,7 @@ export namespace gButtonStendhal {
      * sm.gButtonStendhal.Params
      */
     export interface Params {
-        data: Params.Data,
-        config: Params.Config
+        data: Params.Data;
+        config: Params.Config;
     }
 }

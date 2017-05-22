@@ -332,8 +332,14 @@ class ProgramCommentView {
                 }
             },
             config: {
-                iconName: 'blue-arrow',
-                iconType: 'icon-svg',
+                openerArrowIcon: {
+                    down: {
+                        default: {
+                            iconName: 'blue-arrow',
+                            iconType: 'icon-svg',
+                        }
+                    }
+                },
                 theme: 'light'
             },
             controlName: 'dropdown-select'

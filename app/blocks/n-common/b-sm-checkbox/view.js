@@ -37,7 +37,8 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-checkbox',
         INPUT: 'b-sm-checkbox__input',
-        LABEL: 'b-sm-checkbox__label'
+        LABEL: 'b-sm-checkbox__label',
+        CHECKED: 'b-sm-checkbox_checked'
     };
 
 
@@ -52,7 +53,6 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     id: string,
      *     name: ?string,
      *     label: string,
      *     value: string,
@@ -89,6 +89,12 @@ goog.scope(function() {
      */
     View.prototype.check = function() {
         this.dom.input.checked = true;
+        if (!goog.dom.classlist.contains(
+            this.getElement(),
+            View.CssClass.CHECKED
+        )) {
+            this.changeState_();
+        }
     };
 
 
@@ -97,6 +103,12 @@ goog.scope(function() {
      */
     View.prototype.uncheck = function() {
         this.dom.input.checked = false;
+        if (goog.dom.classlist.contains(
+            this.getElement(),
+            View.CssClass.CHECKED
+        )) {
+            this.changeState_();
+        }
     };
 
 
@@ -126,9 +138,12 @@ goog.scope(function() {
 
     /**
      * Input handler
+     * @param {Event} event
      * @private
      */
-    View.prototype.onInputClick_ = function() {
+    View.prototype.onInputClick_ = function(event) {
+        this.changeState_();
+
         this.dispatchEvent({
             'type': View.Event.INPUT_CLICK
         });
@@ -157,6 +172,18 @@ goog.scope(function() {
     View.prototype.initParams_ = function() {
         this.params = JSON.parse(
             this.getElement().getAttribute('data-params')
+        );
+    };
+
+
+    /**
+     * Change css class
+     * @private
+     */
+    View.prototype.changeState_ = function() {
+        goog.dom.classlist.toggle(
+            this.getElement(),
+            View.CssClass.CHECKED
         );
     };
 });  // goog.scope

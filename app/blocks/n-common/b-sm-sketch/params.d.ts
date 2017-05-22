@@ -1,4 +1,6 @@
 import {bSmPicture} from '../b-sm-picture/params';
+import {gButtonStendhal} from '../../n-clobl/g-button/params';
+
 
 
 export namespace bSmSketch {
@@ -12,15 +14,7 @@ export namespace bSmSketch {
         export interface Data {
             description: string;
             picture: bSmPicture.Params.Data;
-            button: {
-                data: {
-                    content: string
-                },
-                config?: {
-                    theme?: string,
-                    borderRoundSize?: string
-                }
-            };
+            button: gButtonStendhal.Params;
         }
 
         /*

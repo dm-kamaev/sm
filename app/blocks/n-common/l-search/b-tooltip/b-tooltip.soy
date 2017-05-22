@@ -106,7 +106,9 @@
                 'type': 'button',
                 'renderParams': [
                     'data': [
-                        'content': $params.data.buttonLabel
+                        'content': [
+                            'default': $params.data.buttonLabel
+                        ]
                     ],
                     'config': augmentMap(
                         $params.config?.button,

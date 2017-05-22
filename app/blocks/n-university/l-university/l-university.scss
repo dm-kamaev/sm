@@ -5,7 +5,7 @@
 }
 
 .l-university__body {
-    margin: 0 auto 45px;
+    margin: 0 auto;
 
     color: #000;
 }
@@ -100,12 +100,12 @@
 .l-university__entity-relation {
     width: 208px;
     height: 21px;
-    padding-bottom: 23px;
+    padding-bottom: 13px;
 }
 
 .l-university__section_programs {
     width: 100%;
-    margin-bottom: 46px;
+    margin-bottom: 0;
     background-color: #f3f3f3;
 }
 
@@ -118,6 +118,7 @@
 
 .l-university__similar-programs-header {
     padding-bottom: 35px;
+
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 24px;
     font-weight: 700;
@@ -130,15 +131,16 @@
 .l-university__section_courses {
     width: 1200px;
     min-width: 255px;
-    margin: 0 auto;
+    margin: 45px auto;
 }
 
 .l-university__useful-courses-header {
     padding-bottom: 25px;
-    line-height: 29px;
+
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 24px;
     font-weight: 600;
+    line-height: 29px;
 }
 
 .l-university__section_comments {
@@ -170,8 +172,7 @@
 
     .l-university__section_courses {
         width: auto;
-        padding-right: 40px;
-        padding-left: 40px;
+        padding: 40px;
     }
 
     .l-university__similar-programs-content{
@@ -183,10 +184,6 @@
 @include media-l {
     .l-university__section_data {
         margin-bottom: 60px;
-    }
-
-    .l-university__section_programs {
-        margin-bottom: 40px;
     }
 
     .l-university__similar-programs-header {
@@ -245,9 +242,9 @@
     }
 
     .l-university__section_data {
+        margin-bottom: 30px;
         padding-right: 25px;
         padding-left: 25px;
-        margin-bottom: 30px;
     }
 
     .l-university__data_sketch {
@@ -273,6 +270,11 @@
         display: block;
 
         width: 100%;
+    }
+
+    .l-university__name {
+        font-size: 28px;
+        line-height: 31px;
     }
 
     .l-university__description-list {
@@ -301,6 +303,7 @@
 
     .l-university__entity-relation {
         display: block;
+
         padding-bottom: 20px;
     }
 

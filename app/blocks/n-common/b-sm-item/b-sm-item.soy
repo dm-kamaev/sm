@@ -9,10 +9,10 @@
  *         light: string,
  *         bold: ?string
  *     },
- *     imageUrl: (string|undefined),
+ *     picture: ?sm.bSmPicture.Template.Params.Data,
  *     alias: ?string,
  *     score: ?number,
- *     description: (string|undefined),
+ *     description: (string|Array<string>|undefined),
  *     metro: ?Array<{
  *         id: number,
  *         name: string
@@ -99,7 +99,9 @@
  *             light: string,
  *             bold: (string|undefined)
  *         },
- *         imageUrl: (string|undefined)
+ *         url: ?string,
+ *         alias: ?string,
+ *         picture: ?sm.bSmPicture.Template.Params.Data
  *     }
  * }}
  * @protected
@@ -143,10 +145,11 @@
  * @param params {{
  *     data: {
  *         name: {
- *             light: string,
- *             bold: (string|undefined)
+ *             light: string
  *         },
- *         imageUrl: (string|undefined)
+ *         url: ?string,
+ *         alias: ?string,
+ *         picture: ?sm.bSmPicture.Template.Params.Data
  *     }
  * }}
  * @protected
@@ -164,44 +167,27 @@
  * @param params {{
  *     data: {
  *         name: {
- *             light: string,
- *             bold: (string|undefined)
+ *             light: string
  *         },
- *         imageUrl: (string|undefined)
+ *         url: ?string,
+ *         alias: ?string,
+ *         picture: ?sm.bSmPicture.Template.Params.Data
  *     }
  * }}
  * @protected
  */
 {template .image}
-    {let $imageUrl kind="html"}
-        {if $params.data.imageUrl}
-            {$params.data.imageUrl}
-        {else}
-            /static/images/n-common/b-sm-item/b-sm-item_entity/images/placeholder.png
-        {/if}
-    {/let}
-
-    {let $description kind="html"}
-        {$params.data.name.light}
-        {if $params.data.name.bold}
-            {sp}{$params.data.name.bold}
-        {/if}
-    {/let}
-
-    {let $url kind="html"}
-        {if $params.data.url}
-            {$params.data.url}
-        {else}
-            /{$params.data.alias}
-        {/if}
-    {/let}
+    {let $url: $params.data.url ?: ('/' + $params.data.alias) /}
 
     <a class="{call .rootClass/}__cover-link" href="{$url}">
-
-        <img class="{call .rootClass/}__cover-image"
-            src="{$imageUrl}"
-            alt="{$description}"
-        >
+        {call .renderChild}
+            {param params: [
+                'type': 'smPicture',
+                'renderParams': [
+                    'data': $params.data.picture
+                ]
+            ]/}
+        {/call}
     </a>
 {/template}
 
@@ -211,8 +197,7 @@
  * @param params {{
  *     data: {
  *         name: {
- *             light: string,
- *             bold: ?string
+ *             light: string
  *         },
  *         score: ?number
  *     },
@@ -299,41 +284,14 @@
  */
 {template .name}
     <div class="{call .rootClass/}__name">
-        {let $name kind="html"}
-            {$params.data.name.light}
-
-            {if $params.data.name?.bold}
-                {$params.data.name.bold}
-            {/if}
-        {/let}
-
-        {let $url kind="html"}
-            {if $params.data.url}
-                {$params.data.url}
-            {else}
-                /{$params.data.alias}
-            {/if}
-        {/let}
-
         {let $customClasses kind="html"}
             {call .rootClass/}__link-name
         {/let}
 
-        {let $size kind="html"}
-            {if $params.config.theme == 'minimal'}
-                l
-            {else}
-                7xl
-            {/if}
-        {/let}
-
-        {let $theme kind="html"}
-            {if $params.config.theme == 'minimal'}
-                default
-            {else}
-                dark
-            {/if}
-        {/let}
+        {let $name: $params.data.name.light + ($params.data.name.bold ?: '') /}
+        {let $url: $params.data.url ?: ('/' + $params.data.alias) /}
+        {let $size: $params.config.theme == 'minimal' ? 'l' : '7xl' /}
+        {let $theme: $params.config.theme == 'minimal' ? 'default' : 'dark' /}
 
         {call .renderChild}
             {param params: [
@@ -361,7 +319,7 @@
  * @param params {{
  *     data: {
  *         id: ?number,
- *         description: (string|undefined),
+ *         description: (string|Array<string>|undefined),
  *         url: ?string,
  *     },
  *     config: {
@@ -373,33 +331,83 @@
     {if $params.data?.description}
         <div class="{call .rootClass/}__description">
             {if $params.config.isDescriptionLink}
-                {let $customClasses kind="html"}
-                    {call .rootClass /}__description_link
-                {/let}
-                {call .renderChild}
-                    {param params: [
-                        'type': 'smLink',
-                        'renderParams': [
-                            'data': [
-                                'id': $params.data.id,
-                                'content': $params.data.description,
-                                'url': $params.data.url
-                            ],
-                            'config': [
-                                'customClasses': [$customClasses],
-                                'theme': 'dark',
-                                'size': '6xl',
-                                'target': '_blank'
-                            ]
-                        ]
-                    ]/}
-                {/call}
+                {call .descriptionLink data="all" /}
             {else}
-                {call soydata.VERY_UNSAFE.ordainSanitizedHtml
-                    data="$params.data.description" /}
+                {let $isString kind="html"}
+                    {call sm.iSmUtils.smUtils.isString
+                        data="$params.data.description" /}
+                {/let}
+
+                {if $isString == 'false'}
+                    {call .descriptionParagraphs data="all" /}
+                {else}
+                    {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                        data="$params.data.description" /}
+                {/if}
             {/if}
         </div>
     {/if}
+{/template}
+
+
+/**
+ * Description link
+ * @param params {{
+ *     data: {
+ *         id: ?number,
+ *         description: (string|undefined),
+ *         url: ?string,
+ *     }
+ * }}
+ */
+{template .descriptionLink}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__description_link
+    {/let}
+    {call .renderChild}
+        {param params: [
+            'type': 'smLink',
+            'renderParams': [
+                'data': [
+                    'id': $params.data.id,
+                    'content': $params.data.description,
+                    'url': $params.data.url
+                ],
+                'config': [
+                    'customClasses': [$customClasses],
+                    'theme': 'dark',
+                    'size': '6xl'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Description paragraphs
+ * @param params {{
+ *     data: {
+ *         description: (string|Array<string>|undefined),
+ *     }
+ * }}
+ */
+{template .descriptionParagraphs}
+    {call .renderChild}
+        {param params: [
+            'type': 'smCollapsedText',
+            'renderParams': [
+                'data': [
+                    'text': [
+                        'cutText': $params.data.description
+                    ]
+                ],
+                'config': [
+                    'theme': 'paragraphs'
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 

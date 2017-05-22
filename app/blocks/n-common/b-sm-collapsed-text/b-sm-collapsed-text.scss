@@ -15,3 +15,14 @@
 .b-sm-collapsed-text__button {
     display: inline-block;
 }
+
+.b-sm-collapsed-text_paragraphs-theme {
+    .b-sm-collapsed-text__text {
+        display: block;
+        margin-right: 0;
+    }
+
+    .b-sm-collapsed-text__paragraph {
+        display: block;
+    }
+}

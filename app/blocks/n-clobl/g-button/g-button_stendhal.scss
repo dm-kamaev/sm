@@ -1,3 +1,5 @@
+@import '../../n-common/i-media/i-media';
+
 .g-button_stendhal {
     box-sizing: border-box;
     width: 100%;
@@ -25,6 +27,14 @@
     }
 }
 
+.g-button__content-text {
+    display: inline-block;
+}
+
+.g-button__content-icon {
+    display: inline-block;
+}
+
 .g-button_dark-theme {
     color: #000;
     border: 4px solid #000;
@@ -46,13 +56,16 @@
 
 .g-button_carrot-theme {
     height: 100%;
+    padding: 0;
+
+    letter-spacing: 0.5px;
+
+    color: #fff;
+    border: none;
+    background-color: #ed6327;
+
     font-size: 12px;
     line-height: inherit;
-    letter-spacing: 0.5px;
-    color: #fff;
-    background-color: #ed6327;
-    border: none;
-    padding: 0;
 
     &:hover {
         background-color: #ed6327;
@@ -110,6 +123,37 @@
     }
 }
 
+.g-button_noon-theme {
+    letter-spacing: 0;
+    text-transform: none;
+
+    color: #ffffff;
+    border-color: transparent;
+    background-color: #ffa836;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+
+    font-weight: 600;
+
+    &:hover {
+        background-color: #ffbd55;
+    }
+}
+
+.g-button_size_xs {
+    height: 32px;
+    padding: 8px;
+
+    font-size: 13px;
+    line-height: 12px;
+
+    .g-button__content-icon {
+        position: relative;
+        top: -1px;
+
+        margin-right: 5px;
+    }
+}
+
 .g-button_size_s {
     height: 47px;
     padding: 7px;
@@ -144,4 +188,40 @@
 
 .g-button_border-round-size_xl {
     border-radius: 100px;
+}
+
+.g-button.g-button_viewport-size_s {
+    .g-button__content-text_size_s {
+        display: none;
+    }
+}
+
+.g-button.g-button_viewport-size_l {
+    .g-button__content-text_size_l {
+        display: none;
+    }
+}
+
+@include media-l {
+    .g-button.g-button_viewport-size_l {
+        .g-button__content-text {
+            display: none;
+        }
+
+        .g-button__content-text_size_l {
+            display: inline-block;
+        }
+    }
+}
+
+@include media-s {
+    .g-button.g-button_viewport-size_s {
+        .g-button__content-text {
+            display: none;
+        }
+
+        .g-button__content-text_size_s {
+            display: inline-block;
+        }
+    }
 }

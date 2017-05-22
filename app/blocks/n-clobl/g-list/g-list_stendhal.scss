@@ -33,3 +33,20 @@
         padding-left: 16px;
     }
 }
+
+.g-list.g-list_neptune-theme {
+    box-shadow: none;
+
+    .g-list__item {
+        border: 1px #e4e4e4 solid;
+        padding-left: 40px;
+    }
+
+    .g-list__item:not(:last-child) {
+        border-bottom: none;
+    }
+
+    .g-list__item:hover {
+        background-color: #f5f5f5;
+    }
+}

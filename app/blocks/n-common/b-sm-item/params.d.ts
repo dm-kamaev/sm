@@ -1,3 +1,5 @@
+import {bSmPicture} from '../b-sm-picture/params';
+
 export namespace bSmItem {
     interface BadgeItem {
         id: number;
@@ -19,10 +21,10 @@ export namespace bSmItem {
                 light?: string,
                 bold?: string
             }
-            imageUrl: string;
+            picture?: bSmPicture.Params.Data;
             alias?: string;
             score?: number;
-            description?: string;
+            description?: (string|Array<string>);
             metro?: BadgeItem[];
             area?: BadgeItem[];
             category?: string;

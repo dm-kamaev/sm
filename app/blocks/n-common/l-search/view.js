@@ -24,11 +24,11 @@ goog.scope(function() {
             opt_type, opt_modifier);
 
 
-            /**
-             * @type {sm.lSearch.View.Params}
-             * @protected
-             */
-            this.params = null;
+        /**
+         * @type {sm.lSearch.View.Params}
+         * @protected
+         */
+        this.params = null;
     };
     goog.inherits(sm.lSearch.View, sm.iLayout.ViewStendhal);
     var View = sm.lSearch.View;
@@ -88,6 +88,21 @@ goog.scope(function() {
 
 
     /**
+     * Detect is user scroll on search result end
+     * @return {boolean}
+     */
+    View.prototype.isResultsListEndReached = function() {
+        var resultList = this.dom.searchResults;
+        var viewportHeght = goog.dom.getViewportSize().height;
+        var yCoordinate = goog.dom.getDocumentScroll().y;
+        var endResultList = goog.style.getPosition(resultList).y +
+            goog.style.getSize(resultList).height;
+
+        return viewportHeght + yCoordinate >= endResultList;
+    };
+
+
+    /**
      * Init dom elements
      * @protected
      * @override
@@ -129,7 +144,10 @@ goog.scope(function() {
         var params = View.base(this, 'transformParams', rawParams);
 
         goog.object.extend(params, {
-            searchParams: rawParams['searchParams']
+            searchParams: rawParams['searchParams'],
+            api: {
+                search: rawParams['api']['search']
+            }
         });
 
         return params;

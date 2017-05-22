@@ -1,8 +1,8 @@
 goog.provide('sm.gDropdown.DropdownSelect');
 
-goog.require('cl.gDropdown.Dropdown');
 goog.require('sm.gDropdown.Event.ItemSelect');
 goog.require('sm.gDropdown.TemplateSelect');
+goog.require('sm.gDropdown.DropdownStendhal');
 goog.require('sm.gDropdown.ViewSelect');
 goog.require('sm.gList.ListStendhal');
 goog.require('sm.iCloblFactory.FactoryStendhal');
@@ -49,7 +49,7 @@ sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
      */
     this.selectedItemData = {};
 };
-goog.inherits(sm.gDropdown.DropdownSelect, cl.gDropdown.Dropdown);
+goog.inherits(sm.gDropdown.DropdownSelect, sm.gDropdown.DropdownStendhal);
 
 
 goog.scope(function() {
@@ -128,10 +128,24 @@ goog.scope(function() {
     /**
      * Get value on list item
      * @return {?string}
+     * @override
      * @public
      */
     Dropdown.prototype.getValue = function() {
         return this.getSelectedItemData().value;
+    };
+
+
+    /**
+     * Set value on list item
+     * @param {string} value
+     * @override
+     * @public
+     */
+    Dropdown.prototype.setValue = function(value) {
+        var id = this.getItemId(value);
+        this.selectItem(id);
+        this.list.select(id);
     };
 
 

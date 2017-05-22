@@ -29,12 +29,6 @@ goog.scope(function() {
             this, 'constructor', opt_params, opt_type, opt_modifier
         );
 
-        /**
-         * @type {sm.lSearch.bSearchResults.View.Params}
-         * @protected
-         */
-        this.params = null;
-
 
         /**
          * Is css 3 animations supported by browser
@@ -78,7 +72,9 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-search-results',
         HEADER: 'b-search-results__header_active',
-        SORT: 'b-search-results__sort-control',
+        HEADER_TEXT: 'b-search-results__header-text',
+        SORT_DROPDOWN: 'b-search-results__sort-control_dropdown',
+        SORT_SWITCH: 'b-search-results__sort-control_switch',
         ITEM_LIST: 'b-search-results__item-list',
         SHOW_MORE_BUTTON: 'b-search-results__show-more-button',
         SHOW_MORE_BUTTON_WRAP: 'b-search-results__show-more-button-wrap',
@@ -115,38 +111,62 @@ goog.scope(function() {
         HIDE_ANIMATION_END: goog.events.getUniqueId('hideAnimationEnd')
     };
 
-
     /**
-     * @typedef {{
-     *     declensionEntityType: {
+     * @typedef {Array<{
+     *     number: (number|undefined),
+     *     text: (string|{
      *         nom: string,
      *         gen: string,
      *         plu: string
-     *     }
-     * }}
+     *     })
+     * }>}
      */
-    View.Params;
+    View.TextHeaderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Array<Object>} rawParams
+     * @return {View.TextHeaderParams}
+     * @public
+     */
+    View.getHeaderRenderParams = function(rawParams) {
+        var headerText = rawParams.map((part) => {
+            var text = part['text'];
+
+            return {
+                number: part['number'],
+                text: (text && text['nom']) ? {
+                    nom: text['nom'],
+                    gen: text['gen'],
+                    plu: text['plu']
+                } : text,
+                select: part['select']
+            };
+        });
+
+        return {
+            params: {
+                data: {
+                    headerText: headerText
+                }
+            }
+        };
+    };
 
 
     /**
      * Update headers size s and l for results list
-     * @param {number} countResults
-     * @param {string} searchText
+     * @param {sm.lSearch.bSearchResults.View.TextHeaderParams} headerText
      * @public
      */
-    View.prototype.updateHeader = function(countResults, searchText) {
+    View.prototype.updateHeader = function(headerText) {
+        var renderParams = View.getHeaderRenderParams(headerText);
+
         goog.soy.renderElement(
-            this.dom.header,
-            sm.lSearch.bSearchResults.Template.header_, {
-                params: {
-                    data: {
-                        countResults: countResults,
-                        searchText: searchText,
-                        declensionEntityType:
-                            this.params.declensionEntityType
-                    }
-                }
-            }
+            this.dom.headerText,
+            sm.lSearch.bSearchResults.Template.generateHeaderText,
+            renderParams
         );
     };
 
@@ -250,11 +270,6 @@ goog.scope(function() {
      */
     View.prototype.transformParams = function(rawParams) {
         return {
-            declensionEntityType: {
-                nom: rawParams['declensionEntityType']['nom'],
-                gen: rawParams['declensionEntityType']['gen'],
-                plu: rawParams['declensionEntityType']['plu']
-            },
             countResults: rawParams['countResults']
         };
     };
@@ -303,21 +318,21 @@ goog.scope(function() {
      */
     View.prototype.setStatus_ = function(status) {
         switch (status) {
-            case View.Status.NOT_EMPTY_RESULTS:
-                this.setNotEmptyResultsStatus_();
-                break;
+        case View.Status.NOT_EMPTY_RESULTS:
+            this.setNotEmptyResultsStatus_();
+            break;
 
-            case View.Status.SEARCH_IN_PROGRESS:
-                this.setSearchInProgressStatus_();
-                break;
+        case View.Status.SEARCH_IN_PROGRESS:
+            this.setSearchInProgressStatus_();
+            break;
 
-            case View.Status.SORT_IN_PROGRESS:
-                this.setSortInProgressStatus_();
-                break;
+        case View.Status.SORT_IN_PROGRESS:
+            this.setSortInProgressStatus_();
+            break;
 
-            case View.Status.EMPTY_RESULTS:
-                this.setEmptyResultsStatus_();
-                break;
+        case View.Status.EMPTY_RESULTS:
+            this.setEmptyResultsStatus_();
+            break;
         }
     };
 
@@ -440,21 +455,21 @@ goog.scope(function() {
     View.prototype.getCssClassByStatus_ = function(status) {
         var cssClass;
         switch (status) {
-            case View.Status.NOT_EMPTY_RESULTS:
-                cssClass = View.CssClass.NOT_EMPTY_RESULTS;
-                break;
+        case View.Status.NOT_EMPTY_RESULTS:
+            cssClass = View.CssClass.NOT_EMPTY_RESULTS;
+            break;
 
-            case View.Status.SEARCH_IN_PROGRESS:
-                cssClass = View.CssClass.SEARCH_IN_PROGRESS;
-                break;
+        case View.Status.SEARCH_IN_PROGRESS:
+            cssClass = View.CssClass.SEARCH_IN_PROGRESS;
+            break;
 
-            case View.Status.SORT_IN_PROGRESS:
-                cssClass = View.CssClass.SORT_IN_PROGRESS;
-                break;
+        case View.Status.SORT_IN_PROGRESS:
+            cssClass = View.CssClass.SORT_IN_PROGRESS;
+            break;
 
-            case View.Status.EMPTY_RESULTS:
-                cssClass = View.CssClass.EMPTY_RESULTS;
-                break;
+        case View.Status.EMPTY_RESULTS:
+            cssClass = View.CssClass.EMPTY_RESULTS;
+            break;
         }
         return cssClass;
     };
@@ -570,7 +585,9 @@ goog.scope(function() {
             results: this.getElementByClass(View.CssClass.RESULTS),
             placeholder: this.getElementByClass(View.CssClass.PLACEHOLDER),
             header: this.getElementByClass(View.CssClass.HEADER),
-            sort: this.getElementByClass(View.CssClass.SORT),
+            headerText: this.getElementByClass(View.CssClass.HEADER_TEXT),
+            sortDropdown: this.getElementByClass(View.CssClass.SORT_DROPDOWN),
+            sortSwitch: this.getElementByClass(View.CssClass.SORT_SWITCH),
             itemList: this.getElementByClass(View.CssClass.ITEM_LIST),
             showMore: this.getElementByClass(View.CssClass.SHOW_MORE_BUTTON),
             showMoreWrap: this.getElementByClass(

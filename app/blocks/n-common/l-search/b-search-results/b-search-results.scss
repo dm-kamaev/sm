@@ -1,3 +1,5 @@
+@import '../../i-media/i-media.scss';
+
 .b-search-results__results,
 .b-search-results__placeholder {
     display: none;
@@ -9,15 +11,41 @@
     font: 600 22px/38px Proxima, arial, sans-serif;
 }
 
+.b-search-results__placeholder {
+    padding-top: 200px;
+}
+
+.b-search-results__placeholder-title {
+    font-family: Proxima, arial, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    color: #000000;
+    padding-bottom: 13px;
+    line-height: 1;
+}
+
+.b-search-results__placeholder-text {
+    font-family: arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.47;
+    text-align: center;
+    color: #747474;
+}
+
 .b-search-results__sort {
     position: relative;
 
-    height: 13px;
+    min-height: 13px;
 }
 
-.b-search-results__sort-control-wrap {
+.b-search-results__sort-control-wrap_dropdown {
     position: absolute;
     right: 0;
+}
+
+.b-search-results__sort-control-wrap_switch {
+    margin-top: 30px;
 }
 
 .b-search-results__horizontal-line {
@@ -32,21 +60,22 @@
     display: inline-block;
 }
 
-.b-search-results__header-text_title {
+.b-search-results__header-title {
     margin-bottom: 15px;
 }
 
-.b-search-results__header-text_strong {
+.b-search-results__header-text {
+    margin-top: 40px;
+}
+
+.b-search-results__header-text_selected {
     font-weight: 800;
 }
 
 .b-search-results__header-description {
     font: 16px 'PT Serif', serif;
     line-height: 22px;
-
-    &:last-child {
-        margin-bottom: 45px;
-    }
+    margin-bottom: 40px;
 }
 
 /** Header text seo */
@@ -166,3 +195,34 @@ $longAnimationDuration: 1.5s;
     animation-name: fadeOut;
 }
 /* Animations end */
+
+/* Theme */
+.b-search-results_neptune-theme {
+    .b-search-results__header-text {
+        font-size: 22px;
+        line-height: 29px;
+    }
+
+    .b-search-results__header-text_selected {
+        font-weight: inherit;
+        color: #2656ba;
+    }
+
+    .b-search-results__header-description {
+        font-family: arial, sans-serif;
+        color: #747474;
+    }
+}
+/* Theme end */
+
+@include media-m {
+    .b-search-results__placeholder {
+        padding-top: 60px;
+    }
+}
+
+@include media-xs {
+    .b-search-results__sort-control-wrap_switch {
+        display: none;
+    }
+}

@@ -115,8 +115,8 @@ goog.scope(function() {
      * @override
      * @protected
      */
-    FilterSwitchLabels.prototype.onOptionUnheck = function(event) {
-        FilterSwitchLabels.base(this, 'onOptionUnheck', event);
+    FilterSwitchLabels.prototype.onOptionUncheck = function(event) {
+        FilterSwitchLabels.base(this, 'onOptionUncheck', event);
         this.switchStatusOptions_();
     };
 

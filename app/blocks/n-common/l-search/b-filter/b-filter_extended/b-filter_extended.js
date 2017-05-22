@@ -80,7 +80,6 @@ goog.scope(function() {
      */
     FilterExtended.prototype.reset = function() {
         this.updateOptions(this.getDefaultOptionsData_());
-        this.collapse();
     };
 
 
@@ -105,7 +104,10 @@ goog.scope(function() {
      * @override
      */
     FilterExtended.prototype.setAllData = function() {
-        this.send_(this.params.api + '/popular')
+        var apiPopular = this.params.apiPopular ||
+            (this.params.api + '/popular');
+
+        this.send_(apiPopular)
             .then(function(data) {
                 this.allOptionsData = data;
             }
@@ -119,6 +121,8 @@ goog.scope(function() {
      * @protected
      */
     FilterExtended.prototype.initViewListeners = function() {
+        FilterExtended.base(this, 'initViewListeners');
+
         this.viewListen(
             View.Event.SHOW_MODAL_CLICK,
             this.onShowModalClick_
@@ -155,9 +159,15 @@ goog.scope(function() {
      * @private
      */
     FilterExtended.prototype.onModalFilterButtonClick_ = function(event) {
+        var that = this;
         var params = event.data.filters.length ?
             event.data.filters :
             this.getDefaultOptionsData_();
+
+        params.forEach(function(data) {
+            data.optionsTheme = that.params.optionsTheme;
+            data.customIcon = that.params.customIcon;
+        });
 
         this.updateOptions(params);
         this.removeFilterModal_();
@@ -201,17 +211,34 @@ goog.scope(function() {
      * @private
      */
     FilterExtended.prototype.initModalFilter_ = function() {
-        var params = {
-            config: {
-                size: 'l'
-            }
-        };
+        var params = this.getModalData_();
         this.filterModal_ = sm.gModal.ModalStendhal.render(params, true);
 
         this.filterModal_.renderContent(
             sm.lSearch.bSuggestFilter.SuggestFilter.NAME,
-            this.getModalData_()
+            this.getModalContentData_()
         );
+    };
+
+
+    /**
+     * generate params for render modal
+     * @return {sm.gModalStendhal.Params}
+     * @private
+     */
+    FilterExtended.prototype.getModalData_ = function() {
+        return {
+            data: {
+                closer: this.params.modal.theme == 'neptune' ? {
+                    iconName: 'blue-close',
+                    iconType: 'icon-svg'
+                } : null
+            },
+            config: {
+                size: 'l',
+                theme: this.params.modal.theme
+            }
+        };
     };
 
 
@@ -239,7 +266,7 @@ goog.scope(function() {
      * }}
      * @private
      */
-    FilterExtended.prototype.getModalData_ = function() {
+    FilterExtended.prototype.getModalContentData_ = function() {
         var allOptionsData = this.setChecked(
             this.getAllData(),
             this.getCheckedData()
@@ -263,6 +290,9 @@ goog.scope(function() {
                     name: this.getName(),
                     options: this.getCheckedData()
                 }
+            },
+            config: {
+                theme: this.params.modal.theme
             }
         };
     };

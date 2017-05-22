@@ -59,6 +59,15 @@ goog.scope(function() {
 
 
     /**
+     * Event enum
+     * @enum {string}
+     */
+    SubscribeBoard.Event = {
+        SUCCESS: goog.events.getUniqueId('success')
+    };
+
+
+    /**
      * Validation error message
      * @enum {string}
      */
@@ -218,6 +227,8 @@ goog.scope(function() {
      * @private
      */
     SubscribeBoard.prototype.onSuccess_ = function() {
+        this.dispatchEvent(SubscribeBoard.Event.SUCCESS);
+
         this.getView().showMessage(SubscribeBoard.Message.SUCCESS);
     };
 

@@ -9,10 +9,10 @@
  *         light: string,
  *         bold: ?string
  *     },
- *     imageUrl: (string|undefined),
+ *     picture: ?sm.bSmPicture.Template.Params.Data,
  *     alias: ?string,
  *     score: ?number,
- *     description: (string|undefined),
+ *     description: (string|Array<string>|undefined),
  *     descriptionLink: ({
  *         content: string,
  *         url: string
@@ -68,6 +68,7 @@
  *             bold: (string|undefined)
  *         },
  *         score: ?number,
+ *         picture: ?sm.bSmPicture.Template.Params.Data
  *         imageUrl: (string|undefined),
  *         placeholder?: {
  *             url: string;
@@ -80,15 +81,20 @@
 {template .sectionCover}
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_cover">
-        {if $params.data.imageUrl}
+        {if $params.data.picture}
             {call .image data="all" /}
         {elseif $params.data.placeholder}
             {call .image}
                 {param params: [
                     'data': [
-                        'name': $params.data.name,
                         'url': $params.data.url,
-                        'imageUrl': $params.data.placeholder.url
+                        'picture': [
+                            'altText': $params.data.name,
+                            'sources': [[
+                                'url': $params.data.placeholder.url,
+                                'size': 'default'
+                            ]]
+                        ]
                     ],
                     'config': $params.config
                 ]/}
@@ -104,7 +110,7 @@
  * Description
  * @param params {{
  *     data: {
- *         description: (string|undefined)
+ *         description: (string|Array<string>|undefined)
  *     }
  * }}
  * @protected
@@ -245,7 +251,7 @@
  *             light: string,
  *             bold: (string|undefined)
  *         },
- *         imageUrl: (string|undefined),
+ *         picture: ?sm.bSmPicture.Template.Params.Data,
  *         url: ?string
  *     },
  *     config: {
@@ -255,37 +261,22 @@
  * @protected
  */
 {template .image}
-    {let $description kind="html"}
-        {$params.data.name.light}
-        {if $params.data.name.bold}
-            {sp}{$params.data.name.bold}
-        {/if}
-    {/let}
+    {let $tag: $params.data.url ? 'a' : 'div' /}
+    {let $link: $params.data.url ?: '' /}
 
-    {let $tag kind="html"}
-        {if $params.data.url}
-            a
-        {else}
-            div
-        {/if}
-    {/let}
-
-    {let $link kind="html"}
-        {if $params.data.url}
-            {$params.data.url}
-        {/if}
-    {/let}
-
-    <{$tag} class="{call .rootClass/}__cover-link"
-        href="{$link}"
+    <{$tag} class="{call .rootClass/}__cover-link" href="{$link}"
         {if $params.config.isLinksInNewTab}
             target="_blank"
         {/if}
     >
-        <img class="{call .rootClass/}__cover-image"
-            src="{$params.data.imageUrl}"
-            alt="{$description}"
-        >
+        {call .renderChild}
+            {param params: [
+                'type': 'smPicture',
+                'renderParams': [
+                    'data': $params.data.picture
+                ]
+            ]/}
+        {/call}
     </{$tag}>
 {/template}
 

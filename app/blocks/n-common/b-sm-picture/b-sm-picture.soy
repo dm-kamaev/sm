@@ -61,16 +61,35 @@
 /**
  * @param params {{
  *     data: {
- *         sources: Array<{
- *             url: string,
- *             size: string,
- *         }>,
  *         altText: (string|undefined)
  *     }
  * }}
  */
 {template .picture_}
     <picture>
+        {call .sources_ data="all" /}
+
+        <img class="{call .rootClass /}__picture"
+            {if $params.data.altText}
+                alt="{$params.data.altText}"
+            {/if}
+        >
+    </picture>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         sources: Array<{
+ *             url: string,
+ *             size: string,
+ *         }>
+ *     }
+ * }}
+ */
+{template .sources_}
+    {if $params.data.sources}
         {foreach $source in $params.data.sources}
             {let $media kind="text"}
                 {call sm.iMedia.Media.getMediaString}
@@ -80,11 +99,20 @@
             {/let}
             <source srcset="{$source.url}" media="{$media}">
         {/foreach}
+    {/if}
+{/template}
 
-        <img class="{call .rootClass /}"
-            {if $params.data.altText}
-                alt="{$params.data.altText}"
-            {/if}
-        >
-    </picture>
+
+/**
+ * @param params {
+ *     data: {
+ *         size: ?string
+ *     }
+ * }
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.data.size}
+        {call .rootClass /}_size_{$params.data.size}
+    {/if}
 {/template}

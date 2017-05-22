@@ -2,7 +2,7 @@
 
 var squel = require('squel').useFlavour('postgres');
 
-var SearchQuery = require('../../entity/lib/Search');
+var SearchQuery = require('../../entity/lib/Search').SearchQuery;
 
 var addressSearchType = require('../../geo/enums/addressSearchType'),
     schoolSearchType = require('../enums/searchType'),

@@ -1,16 +1,15 @@
 /* tslint:disable:max-file-line-count */
 // Made by anedashkovsky for store some params in view
 // TODO: enable this rule
-const FormatUtils = require('../../../../api/modules/entity/lib/FormatUtils');
-
 const pageName = require('../../common/enums/pageName');
 import {entityType} from '../../common/enums/entityType';
 
 import {LayoutView} from '../../common/lib/Layout';
 import {UniversitySubHeader} from './UniversitySubHeader';
+import {UniversityFooter} from './UniversityFooter';
+import {FormatUtils} from '../../common/lib/FormatUtils';
 
 import {lUniversity} from '../../../blocks/n-university/l-university/params';
-import {UniversityFooter} from './UniversityFooter';
 
 import {LinksFormatter} from '../../common/lib/LinksFormatter';
 import {utils} from '../../common/lib/utils';
@@ -68,6 +67,15 @@ type UserType = {
     isSelected?: boolean;
 };
 
+const staticImgPath =
+    '/static/images/n-common/b-sm-item/b-sm-item_entity/images/';
+
+const relapImgPath =
+    '/static/images/n-university/relap.png';
+
+const formatter = new FormatUtils();
+const programNameMaxLength = 50;
+
 class InformationView extends LayoutView {
     private static FULL_DESCRIPTION_LENGTH = 280;
 
@@ -76,12 +84,11 @@ class InformationView extends LayoutView {
     private subunitType: string;
 
     constructor() {
-        super();
+        super(entityType.PROGRAM);
 
         this.views.subHeader = UniversitySubHeader;
         this.views.footer = UniversityFooter;
 
-        this.entityType = entityType.UNIVERSITY;
         this.pageName = pageName.INFORMATION;
 
         this.subHeader = {
@@ -91,6 +98,11 @@ class InformationView extends LayoutView {
         };
 
         this.subunitType = 'Программа обучения';
+    }
+
+
+    public render(params: RenderParams): lUniversity.Params {
+        return super.render(params) as lUniversity.Params;
     }
 
     protected setParams(params: RenderParams) {
@@ -105,9 +117,13 @@ class InformationView extends LayoutView {
         this.setModalComment_(params.data.program.id, params.data.userComment);
     }
 
+
+    protected getParams(): lUniversity.Params {
+        return this.params;
+    }
+
     protected setSeo(data: BackendData) {
         const seoData = this.getDefaultSeoData_(data);
-
         this.params.data.seo = {
             metaTitle: data.pageMeta.tabTitle || seoData.title,
             metaDescription: data.pageMeta.seoDescription || seoData.description
@@ -128,10 +144,17 @@ class InformationView extends LayoutView {
         this.params.data.openGraph.description = description;
         this.params.data.openGraph.relapTag = this.subunitType;
 
-        const relapImage = utils.getImageUrl(
-            data.university.imageUrl,
-            UniversityImageSize.RELAP
-        );
+        let relapImage;
+
+        if (data.university.imageUrl) {
+            relapImage = utils.getImageUrl(
+                data.university.imageUrl,
+                UniversityImageSize.RELAP
+            );
+        } else {
+            relapImage = relapImgPath;
+        }
+
         this.params.data.openGraph.image = relapImage;
         this.params.data.openGraph.relapImage = relapImage;
     }
@@ -140,6 +163,8 @@ class InformationView extends LayoutView {
         this.params.data.entityData = {
             id: data.program.id,
             name: data.university.name,
+            abbreviation: data.university.abbreviation,
+            category: 'major',
             subunitName: data.program.name,
             subunitType: this.subunitType,
             description: data.program.description,
@@ -192,21 +217,34 @@ class InformationView extends LayoutView {
         const imageUrlSizeL = utils.getImageUrl(
             backendImageUrl, UniversityImageSize.DEFAULT);
 
+        const sources = backendImageUrl ?
+            [{
+                url: utils.getImageUrl(
+                    backendImageUrl, UniversityImageSize.MEDIUM
+                ),
+                size: 'default'
+            }, {
+                url: utils.getImageUrl(
+                    backendImageUrl, UniversityImageSize.DEFAULT
+                ),
+                size: 'l'
+            }] :
+            [{
+                url: staticImgPath + 'placeholder_parthenon.png',
+                size: 'default'
+            }];
+
         return {
             description: universityName,
             picture: {
                 altText: universityName,
-                sources: [{
-                    url: imageUrlDefault,
-                    size: 'default'
-                }, {
-                    url: imageUrlSizeL,
-                    size: 'l'
-                }]
+                sources: sources
             },
             button: {
                 data: {
-                    content: 'Оставить отзыв'
+                    content: {
+                        default: 'Оставить отзыв'
+                    }
                 },
                 config: {
                     theme: 'neptune',
@@ -251,9 +289,12 @@ class InformationView extends LayoutView {
 
         if ((data.egeExams && data.egeExams.length > 0) ||
                 (data.program.extraExam && data.program.extraExam.length > 0)) {
-            const egeTests =
+            let entranceTests =
                 data.egeExams.map(exam => `${exam.subjectName} (ЕГЭ)`);
-            const entranceTests = egeTests.concat(data.program.extraExam);
+
+            if (data.program.extraExam && data.program.extraExam.length > 0) {
+                entranceTests = entranceTests.concat(data.program.extraExam);
+            }
 
             result.items.push({
                 data: {
@@ -298,7 +339,6 @@ class InformationView extends LayoutView {
                 }
             });
         }
-
         return result;
     }
 
@@ -310,8 +350,9 @@ class InformationView extends LayoutView {
             itemDescription;
         const cost = data.entranceStatistic.cost;
         if (cost) {
+            const formattedCost = this.formatCost(cost);
             itemHeader = 'Стоимость / год';
-            itemDescription = `${cost} ₽`;
+            itemDescription = `${formattedCost} ₽`;
         }
 
 
@@ -429,6 +470,13 @@ class InformationView extends LayoutView {
         return {item, list, buttonLink};
     }
 
+    private formatCost(cost) {
+        const costStr = cost.toString();
+        return costStr.length ?
+            this.formatCost(costStr.substr(0, costStr.length - 3)) + ' ' +
+                    costStr.slice(-3) : '';
+    }
+
     private getBannerParams_(data: BackendData): bSmBanner.Params {
         return {
             data: {
@@ -496,8 +544,13 @@ class InformationView extends LayoutView {
     ): bSmInformationCard.Params.Data {
         return {
             id: similarProgram.id,
-            type: entityType.UNIVERSITY,
-            name: similarProgram.name,
+            type: entityType.PROGRAM,
+            name: similarProgram.name.length > programNameMaxLength ?
+                formatter.getFormattedCutName(
+                    similarProgram.name,
+                    programNameMaxLength
+                ) :
+                similarProgram.name,
             link: {
                 data: {
                     content: 'Программа',
@@ -541,14 +594,25 @@ class InformationView extends LayoutView {
     private getUsefulCourseParams_(
             data: BackendCourseAdviced
     ): bSmItemCompact.Params.Data {
+        const imageUrl = utils.getImageUrl(
+            data.imageUrl,
+            CourseImageSize.LARGE
+        );
+
         return {
             id: data.id,
             type: 'course',
             name: {
                 light: data.categoryName
             },
-            description: `${data.name} ${data.brandName}`,
-            imageUrl: utils.getImageUrl(data.imageUrl, CourseImageSize.LARGE),
+            description: `${data.name}`,
+            picture: imageUrl ? {
+                sources: [{
+                    url: imageUrl,
+                    size: 'default'
+                }],
+                altText: data.categoryName,
+            } : null,
             url: courseView.getLink(data.url),
             nameLinkUrl: courseView.getLink(data.categoryUrl),
             placeholder: {

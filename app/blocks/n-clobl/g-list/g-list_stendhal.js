@@ -47,4 +47,13 @@ goog.scope(function() {
         ITEM_SELECT: cl.gList.List.Event.ITEM_SELECT,
         ITEM_CLICK: cl.gList.List.Event.ITEM_CLICK
     };
+
+    /**
+     * select item
+     * @param {number} id
+     */
+    List.prototype.select = function(id) {
+        this.getView().select(id);
+    };
+
 });  // goog.scope

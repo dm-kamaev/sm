@@ -8,6 +8,7 @@ goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bSearch.Template');
+goog.require('sm.bSmStars.SmStars');
 goog.require('sm.gIcon.IconSvg');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAnimate.Animate');
@@ -74,6 +75,12 @@ sm.bSearch.Search = function(opt_params) {
      * @private
      */
     this.districtId_ = null;
+
+    /**
+     * @type {?number}
+     * @private
+     */
+    this.cityId_ = null;
 
 
     /**
@@ -174,9 +181,12 @@ goog.scope(function() {
     Search.SearchType = {
         SCHOOLS: 'schools',
         COURSES: 'courses',
+        PROGRAMS: 'programs',
+        UNIVERSITIES: 'universities',
         AREAS: 'areas',
         METRO: 'metro',
-        DISTRICTS: 'districts'
+        DISTRICTS: 'districts',
+        CITIES: 'cities'
     };
 
 
@@ -185,6 +195,7 @@ goog.scope(function() {
      *     areaId: ?number,
      *     metroId: ?number,
      *     districtId: ?number,
+     *     cityId: ?number,
      *     text: ?string
      * }}
      */
@@ -200,6 +211,7 @@ goog.scope(function() {
             'metroId': this.getMetroId(),
             'areaId': this.getAreaId(),
             'districtId': this.getDistrictId(),
+            'cityId': this.getCityId(),
             'text': this.getText()
         };
     };
@@ -210,6 +222,7 @@ goog.scope(function() {
      *     areaId: ?number,
      *     metroId: ?number,
      *     districtId: ?number,
+     *     cityId: ?number,
      *     coords: Array.<number>,
      *     text: ?string
      * }} data
@@ -229,6 +242,10 @@ goog.scope(function() {
             this.setDistrictId(data['districtId']);
         }
 
+        if (data.hasOwnProperty('cityId')) {
+            this.setCityId(data['cityId']);
+        }
+
         if (data.hasOwnProperty('text')) {
             this.setText(data['text']);
         }
@@ -238,13 +255,19 @@ goog.scope(function() {
 
 
     /**
-     * get position of this element
-     * @return {number}
+     * get bounds of this element
+     * @return {{
+     *     top: number,
+     *     height: number
+     * }}
      * @public
      */
-    Search.prototype.getPosition = function() {
+    Search.prototype.getBounds = function() {
         var element = this.getElement();
-        return element.offsetTop;
+        return {
+            top: element.offsetTop,
+            height: element.clientHeight
+        };
     };
 
     /**
@@ -313,6 +336,24 @@ goog.scope(function() {
      */
     Search.prototype.setDistrictId = function(districtId) {
         this.districtId_ = districtId;
+    };
+
+
+    /**
+     * @return {?number}
+     * @public
+     */
+    Search.prototype.getCityId = function() {
+        return this.cityId_;
+    };
+
+
+    /**
+     * @param {?number} cityId
+     * @public
+     */
+    Search.prototype.setCityId = function(cityId) {
+        this.cityId_ = cityId;
     };
 
 
@@ -481,7 +522,6 @@ goog.scope(function() {
 
         this.initSuggestListeners_();
         this.initElementsListeners_();
-        this.initDocumentListeners_();
 
         var that = this;
 
@@ -498,8 +538,8 @@ goog.scope(function() {
                     for (var j = 0, item; item = items[j]; j++) {
                         item['type'] = type;
                     }
-                    if (type == Search.SearchType.SCHOOLS ||
-                        type == Search.SearchType.COURSES) {
+
+                    if (that.isEntityType_(type)) {
 
                         items = items.sort(function(entity1, entity2) {
                             var res = 0,
@@ -524,7 +564,6 @@ goog.scope(function() {
                 res = res.slice(0, 10);
 
                 that.sendItemImpressions_(res);
-
                 return res;
             },
 
@@ -636,23 +675,6 @@ goog.scope(function() {
                 this.elements_.searchButton,
                 goog.events.EventType.CLICK,
                 this.onSubmit_
-            );
-        }
-    };
-
-
-    /**
-     * Init document listeners
-     * @private
-     */
-    Search.prototype.initDocumentListeners_ = function() {
-        var handler = this.getHandler();
-
-        if (this.type_ === Search.Type.FOLDABLE) {
-            handler.listen(
-                goog.dom.getDocument(),
-                goog.events.EventType.SCROLL,
-                this.onDocumentScroll_
             );
         }
     };
@@ -786,21 +808,6 @@ goog.scope(function() {
     };
 
 
-     /**
-     * On document scroll
-     * @private
-     */
-    Search.prototype.onDocumentScroll_ = function() {
-        var suggest = this.elements_.suggest,
-            scrollY = goog.dom.getPageScroll().y;
-
-        var suggestTop = suggest ? goog.style.getBounds(suggest).top : null,
-            top = (scrollY > suggestTop) ? 0 : 'auto';
-
-        goog.style.setPosition(this.elements_.fader, null, top);
-    };
-
-
     /**
      * On list show
      * @private
@@ -815,7 +822,6 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onListHide_ = function() {
-        goog.style.setPosition(this.elements_.fader, null, 'auto');
         goog.dom.getWindow().scrollTo(0, 0);
 
         this.disableScroll_();
@@ -856,6 +862,21 @@ goog.scope(function() {
             this.suggest_.focus();
         }
     };
+
+
+    /**
+     * Type is entity type
+     * @param {string} type
+     * @private
+     * @return {boolean}
+     */
+    Search.prototype.isEntityType_ = function(type) {
+        return type == Search.SearchType.SCHOOLS ||
+            type == Search.SearchType.COURSES ||
+            type == Search.SearchType.PROGRAMS ||
+            type == Search.SearchType.UNIVERSITIES;
+    };
+
 
     /**
      * Switch mode of view
@@ -909,7 +930,6 @@ goog.scope(function() {
             this.sendEcAnalytics_(data);
         }
         this.sendAnalyticsSchoolData_(data);
-
         this.redirect_(event, data);
     };
 
@@ -926,14 +946,12 @@ goog.scope(function() {
 
         var itemType = data['item']['type'];
 
-        if (itemType == Search.SearchType.SCHOOLS ||
-            itemType == Search.SearchType.COURSES) {
+        if (this.isEntityType_(itemType)) {
 
             var pageUrl = (itemType == Search.SearchType.SCHOOLS) ?
                 '/' + this.dataParams_['pageAlias'] : '';
 
-            document.location.href = pageUrl + '/' + data['item']['alias'];
-
+            document.location.href = `${pageUrl}${data['item']['alias']}`;
         } else if (this.dataParams_.redirect) {
             this.onNotEntitySelect_(event, data);
         } else {
@@ -958,18 +976,19 @@ goog.scope(function() {
             'metroId': null,
             'areaId': null,
             'districtId': null,
+            'cityId': null,
             'coords': item['coords'],
             'text': item['name']
         };
 
         if (type == 'metro') {
             data['metroId'] = item['id'];
-        }
-        else if (type == 'areas') {
+        } else if (type == 'areas') {
             data['areaId'] = item['id'];
-        }
-        else if (type == 'districts') {
+        } else if (type == 'districts') {
             data['districtId'] = item['id'];
+        } else if (type == 'cities') {
+            data['cityId'] = item['id'];
         }
         this.setData(data);
     };
@@ -1014,7 +1033,9 @@ goog.scope(function() {
      * @param {Object} event
      */
     Search.prototype.onSubmit_ = function(event) {
-        this.search();
+        if (!this.dataParams_['disableSearchBehavior']) {
+            this.search();
+        }
     };
 
 
@@ -1042,7 +1063,8 @@ goog.scope(function() {
         this.setData({
             'metroId': null,
             'areaId': null,
-            'districtId': null
+            'districtId': null,
+            'cityId': null
         });
         this.dispatchEvent(Search.Event.TEXT_CHANGE);
     };
@@ -1064,6 +1086,8 @@ goog.scope(function() {
             url += '&areaId=' + data['item']['id'];
         } else if (data['item']['type'] === 'districts') {
             url += '&districtId=' + data['item']['id'];
+        } else if (data['item']['type'] === 'cities') {
+            url += '&cityId=' + data['item']['id'];
         }
         document.location.href = url;
     };

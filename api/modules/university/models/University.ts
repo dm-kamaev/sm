@@ -100,7 +100,7 @@ const University: UniversityModel = sequelize.define('University', {
     classMethods: {
         associate: function(models) {
             this.belongsTo(models.City, {
-                foreignKey: 'city_id',
+                foreignKey: 'cityId',
                 as: 'city'
             });
             this.belongsToMany(models.Profile, {
@@ -112,6 +112,10 @@ const University: UniversityModel = sequelize.define('University', {
                 as: 'page',
                 through: 'university_page',
                 foreignKey: 'university_id',
+            });
+            this.hasMany(models.Program, {
+                as: 'programs',
+                foreignKey: 'university_id'
             });
         }
     }

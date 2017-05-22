@@ -913,16 +913,3 @@ goog.scope(function() {
     };
 
 });  // goog.scope
-
-
-/**
- * creates sm.lSchool.School instance
- */
-jQuery(function() {
-    var root = goog.dom.getElementByClass(sm.lSchool.School.CssClass.ROOT);
-
-    if (root) {
-        var school = new sm.lSchool.School();
-        school.decorate(root);
-    }
-});

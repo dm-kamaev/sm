@@ -2,7 +2,16 @@
 
 /**
  * typedef {{
- *     content: ?string,
+ *     content: ({
+ *         default: ?string,
+ *         sizeS: ?string,
+ *         sizeL: ?string
+ *     }|string|undefined),
+ *     icon: ({
+ *         name: string,
+ *         type: ('png'|'svg'),
+ *         position: ('left'|'right')
+ *     }|undefined),
  *     defaultText: ?string
  * }}
  * sm.gButton.TemplateStendhal.Params.Data
@@ -46,22 +55,174 @@
  * Body
  * @param? params {{
  *     data: {
- *         content: ?string
- *     },
- *     config: {
- *     	   isDisabled: ?bool
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|undefined),
+ *         icon: ({
+ *             name: string,
+ *             type: ('png'|'svg'),
+ *             position: ('left'|'right')
+ *         }|undefined)
  *     }
  * }}
  * @override
- * @doc
  */
 {template .body}
-    {$params.data.content ?: $params.data.defaultText}
+    {if $params.data.icon}
+        {call .content_ data="all" /}
+    {else}
+        {call .text_ data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|undefined),
+ *         icon: {
+ *             name: string,
+ *             type: ('png'|'svg'),
+ *             position: ('left'|'right')
+ *         }
+ *     }
+ * }}
+ */
+{template .content_}
+    <div class="{call .rootClass /}__content">
+        {if $params.data.icon.position == 'left'}
+            {call .icon_ data="all" /}
+            {call .text_ data="all" /}
+        {else}
+            {call .text_ data="all" /}
+            {call .icon_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         icon: {
+ *             name: string,
+ *             type: ('png'|'svg'),
+ *             position: ('left'|'right')
+ *         }
+ *     }
+ * }}
+ */
+{template .icon_}
+    {let $type: $params.data.icon.type == 'png' ? 'icon' : 'icon-svg' /}
+
+    <div class="{call .rootClass /}__content-icon">
+        {call .renderChild}
+            {param params: [
+                'type': $type,
+                'renderParams': [
+                    'data': [
+                        'type': $params.data.icon.name
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|string|undefined),
+ *         defaultText: (string|undefined)
+ *     }
+ * }}
+ */
+{template .text_}
+    {if $params.data.content}
+        {call .contentText_ data="all" /}
+    {else}
+        {call .defaultText_ data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         defaultText: string
+ *     }
+ * }}
+ */
+{template .defaultText_}
+    <div class="{call .rootClass /}__content-text">
+        {$params.data.defaultText}
+    </div>
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|string|undefined)
+ *     }
+ * }}
+ */
+{template .contentText_}
+    <div class="{call .rootClass /}__content-text">
+        {let $isString kind="text"}
+            {call sm.iSmUtils.smUtils.isString
+                data="$params.data.content" /}
+        {/let}
+
+        {if $isString == 'true'}
+            {$params.data.content}
+        {else}
+            {$params.data.content.default}
+        {/if}
+    </div>
+
+    {if $params.data.content.sizeS}
+        <div class="{call .rootClass /}__content-text
+            {sp}{call .rootClass /}__content-text_size_s"
+        >
+            {$params.data.content.sizeS}
+        </div>
+    {/if}
+
+    {if $params.data.content.sizeL}
+        <div class="{call .rootClass /}__content-text
+            {sp}{call .rootClass /}__content-text_size_l"
+        >
+            {$params.data.content.sizeL}
+        </div>
+    {/if}
 {/template}
 
 
 /**
  * @param params {
+ *     data: {
+ *         content: ({
+ *             default: ?string,
+ *             sizeS: ?string,
+ *             sizeL: ?string
+ *         }|undefined)
+ *     },
  *     config: {
  *         size: ('s'|'m'|'xl'|undefined),
  *         isDisabled: (boolean|undefined),
@@ -86,6 +247,14 @@
 
     {if $params?.config?.borderRoundSize}
         {sp}{call .rootClass /}_border-round-size_{$params?.config?.borderRoundSize}
+    {/if}
+
+    {if $params.data.content?.sizeS}
+        {sp}{call .rootClass /}_viewport-size_s
+    {/if}
+
+    {if $params.data.content?.sizeL}
+        {sp}{call .rootClass /}_viewport-size_l
     {/if}
 {/template}
 

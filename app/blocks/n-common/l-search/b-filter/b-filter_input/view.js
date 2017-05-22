@@ -29,7 +29,10 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-filter_input',
-        BUTTON_RESET: 'b-sm-filter__button_reset'
+        PLACEHOLDER: 'b-sm-filter__placeholder',
+        BUTTON_RESET: 'b-sm-filter__button_reset',
+        OPTION: sm.lSearch.bFilter.View.CssClass.OPTION,
+        OPTION_HIDABLE: sm.lSearch.bFilter.View.CssClass.OPTION_HIDABLE
     };
 
 
@@ -43,21 +46,76 @@ goog.scope(function() {
 
 
     /**
-     * Initializes options
-     * @param {Element=} opt_element
+     * Show option
+     * @param {Element} option
+     * @override
+     * @public
      */
-    View.prototype.initOptions = function(opt_element) {
-        var element = opt_element || this.getElement();
+    View.prototype.showOption = function(option) {
+        View.base(this, 'showOption', option);
 
-        this.dom.wrapOptionsHidable = goog.dom.getElementsByClass(
-            View.CssClass.OPTION_HIDABLE,
-            element
+        this.updatePlaceholderVisibility_();
+    };
+
+
+    /**
+     * Hide option
+     * @param {Element} option
+     * @override
+     * @public
+     */
+    View.prototype.hideOption = function(option) {
+        View.base(this, 'hideOption', option);
+
+        this.updatePlaceholderVisibility_();
+    };
+
+
+    /**
+     * Show or hide placeholder, it depends on number of visible options
+     * @param {Element} option
+     * @override
+     * @public
+     */
+    View.prototype.updatePlaceholderVisibility_ = function() {
+        var shownOptions = this.getNumberShownOptions();
+
+        if (this.dom.placeholder) {
+            if (shownOptions <= this.params.minOptionsToShowPlaceholder) {
+                this.showElement(this.dom.placeholder);
+            } else {
+                this.hideElement(this.dom.placeholder);
+            }
+        }
+    };
+
+
+    /**
+     * Initializes options
+     */
+    View.prototype.initOptions = function() {
+        this.dom.wrapOptionsHidable = this.getElementsByClass(
+            View.CssClass.OPTION_HIDABLE
         );
 
-        this.dom.options = goog.dom.getElementsByClass(
-            sm.gInput.ViewStendhal.CssClass.ROOT,
-            element
+        this.dom.wrapOptions = this.getElementsByClass(
+            View.CssClass.OPTION
         );
+
+        this.dom.options = this.getElementsByClass(
+            sm.gInput.ViewStendhal.CssClass.ROOT
+        );
+    };
+
+
+    /**
+     * @param {Element} element
+     * @override
+     */
+    View.prototype.decorateInternal = function(element) {
+        View.base(this, 'decorateInternal', element);
+
+        this.initPlaceholder_();
     };
 
 
@@ -107,6 +165,41 @@ goog.scope(function() {
 
 
     /**
+     * Transform raw params to compressed ones
+     * @param {{
+     *     name: string,
+     *     type: string,
+     *     optionsTheme: ?string,
+     *     customIcon: ?{
+     *         check: string,
+     *         uncheck: string
+     *     },
+     *     minOptionsToShowPlaceholder: ?number
+     * }} rawParams
+     * @return {{
+     *     name: string,
+     *     type: string,
+     *     optionsTheme: ?string,
+     *     customIcon: ?{
+     *         check: string,
+     *         uncheck: string
+     *     },
+     *     minOptionsToShowPlaceholder: ?number
+     * }}
+     * @override
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        var params = View.base(this, 'transformParams', rawParams);
+
+        params.minOptionsToShowPlaceholder =
+            rawParams['minOptionsToShowPlaceholder'];
+
+        return params;
+    };
+
+
+    /**
      * Button reset handler
      * @private
      */
@@ -114,5 +207,16 @@ goog.scope(function() {
         this.dispatchEvent({
             'type': View.Event.RESET_CLICK
         });
+    };
+
+
+    /**
+     * Init placeholder
+     * @private
+     */
+    View.prototype.initPlaceholder_ = function() {
+        this.dom.placeholder = this.getElementByClass(
+            View.CssClass.PLACEHOLDER
+        );
     };
 });  // goog.scope

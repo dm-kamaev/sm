@@ -20,3 +20,50 @@ export interface BackendProgram {
     programMajor: BackendProgramMajor;
     addressName: string;
 }
+
+export interface BackendProgramResults {
+    programCount: number;
+    universityCount: number;
+    programs: Array<BackendListProgram>;
+}
+
+export interface BackendListProgram {
+    id: number;
+    name: string;
+    totalScore: number;
+    exchangeProgram: string;
+    extraExam: string[];
+    egeScore: number;
+    cost: number;
+    budgetPlaces: number;
+    commercialPlaces: number;
+    competition: number;
+    imageUrl: string;
+    universityName: string;
+    universityAbbreviation: string;
+    cityName: string;
+    programAlias: string;
+    universityAlias: string;
+    programCount?: string;
+    universityCount?: string;
+}
+
+export interface SuggestProgram {
+    id: number;
+    name: string;
+    alias: string;
+    score: number[];
+    totalScore: number;
+}
+
+export interface BackendSuggestProgram extends SuggestProgram {
+    universityAbbreviation: string;
+}
+
+export interface SuggestList {
+    programs: SuggestProgram[];
+}
+
+export interface BackendSuggestList {
+    programs: BackendSuggestProgram[];
+}

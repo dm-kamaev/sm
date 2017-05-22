@@ -98,6 +98,15 @@ goog.scope(function() {
     };
 
     /**
+     * Disable hover reaction on element
+     * @public
+     */
+    Link.prototype.disableHover = function() {
+        this.getView().disableHover();
+    };
+
+
+    /**
      * Enable hover reaction on element if it possible (not-mobile device)
      * @public
      */
@@ -105,13 +114,32 @@ goog.scope(function() {
         this.getView().enableHover();
     };
 
-
     /**
-     * Disable hover reaction on element
+     * Return isSelected status
+     * @return {boolean}
      * @public
      */
-    Link.prototype.disableHover = function() {
-        this.getView().disableHover();
+
+    Link.prototype.isSelected = function() {
+        return this.getView().isSelected();
+    };
+
+
+    /**
+     * Set class SELECTED
+     * @public
+     */
+    Link.prototype.select = function() {
+        this.getView().select();
+    };
+
+
+    /**
+     * Remove class SELECTED
+     * @public
+     */
+    Link.prototype.deselect = function() {
+        this.getView().deselect();
     };
 
 
@@ -124,7 +152,7 @@ goog.scope(function() {
 
 
         /** Enable hover here as params initialization already occurs */
-        if (!this.params.disableHover) {
+        if (!this.getView().getParams().disableHover) {
             this.enableHover();
         }
     };

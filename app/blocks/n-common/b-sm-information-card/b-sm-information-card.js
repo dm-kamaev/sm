@@ -64,10 +64,10 @@ class InformationCard extends Control {
     initLinks_() {
         const dom = this.getView().getDom();
 
-        if (dom.link) {
-            this.decorateChild(
+        if (dom.links) {
+            this.decorateChildren(
                 Link.NAME,
-                dom.link
+                dom.links
             );
         }
 

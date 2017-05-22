@@ -1,0 +1,243 @@
+{namespace sm.lSearch.TemplateUniversity}
+
+
+/**
+ * @typedef {sm.lSearch.ParamsUniversity.Data} sm.lSearch.Template.Params.Data
+ */
+
+
+/**
+ * Search page
+ * @param params {{
+ *     data: sm.lSearch.Template.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends sm.lSearch.Template
+ * @factory sm.iCloblFactory.FactoryStendhal
+ * @constructor
+ * @doc
+ */
+{template .search autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .NAME}
+    lSearchUniversity
+{/template}
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/l-search_university.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined),
+ *             textLeft: (Array<string>|undefined),
+ *             textRight: (Array<string>|undefined)
+ *         },
+ *         map: sm.bSmMap.Template.Params.Data,
+ *         search: {
+ *             countResults: number,
+ *             searchText: ?string,
+ *             placeholder: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         },
+ *         sort: sm.gDropdown.TemplateSelect.Params.Data
+ *         entityList: sm.bSmItemList.Template.Params.Data,
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .mainContent autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__body">
+        {call .sectionContent_ data="all" /}
+        {call .sectionFooterSeo_ data="all" /}
+        {call .sectionPopular_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Left menu and Search results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: ?string,
+ *             placeholder: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         },
+ *         entityList: sm.bSmItemList.Template.Params.Data,
+ *         filterPanel: {sm.lSearch.bFilterPanel.Template.Params},
+ *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .sectionContent_}
+    <div class="{call .rootClass/}__section
+        {sp}{call .rootClass/}__section_content">
+
+        <div class="{call .rootClass /}__section-inner">
+            {call .leftMenu_ data="all" /}
+            {call .results_ data="all" /}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Left menu template
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string
+ *             searchText: ?string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .leftMenu_}
+    <div class="{call .rootClass/}__left-menu">
+        {call .filterPanelGroup_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Filter strip template
+ * @param params {{
+ *     data: {
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         dependentFilterPanel: sm.lSearch.bFilterPanel.Template.Params
+ *     }
+ * }}
+ */
+{template .filterPanelGroup_}
+    <div class="{call .rootClass/}__filter-panel-group">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'filter-panel-group' /}
+            {param renderParams: [
+                'data': [
+                    'filterPanel': $params.data.filterPanel,
+                    'dependentFilterPanel': $params.data.dependentFilterPanel,
+                    'sortController': $params.data.resultsList.sort
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Search results block template
+ * @param params {{
+ *     data: {
+ *         resultsList: {
+ *             title: (string|undefined),
+ *              description: (Array<string>|undefined),
+ *              linksTitle: (string|undefined),
+ *              links: (Array<sm.bSmLink.SmLink.Template.Params.Data>|undefined),
+ *              sort: (sm.gDropdown.TemplateSelect.Params.Data|
+ *                     sm.bSmSwitch.Template.Params.Data),
+ *              entityList: sm.bSmItemList.Template.Params.Data,
+ *              countResults: number,
+ *              headerText:
+ *                   sm.lSearch.bSearchResults.Template.Params.Data.headerText,
+ *              headerTextPlaceholder:
+ *                   sm.lSearch.bSearchResults.Template.Params.Data.headerText
+ *         }
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .results_}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__search-results
+    {/let}
+
+    <div class="{call .rootClass/}__search-results-wrap">
+        {call .renderChildLayout}
+            {param params: $params /}
+            {param type: 'lSearch-searchResults' /}
+            {param renderParams: [
+                'data': $params.data.resultsList,
+                'config': [
+                    'customClasses': [$customClasses],
+                    'theme': 'neptune',
+                    'sortController': 'smSwitch',
+                    'listTheme': 'wide'
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @param params {?}
+ * @protected
+ * @override
+ */
+{template .modifierClasses kind="html"}
+    {call .super_modifierClasses data="all" /}
+    {sp}{call .rootClass /}_university
+{/template}

@@ -47,6 +47,7 @@
 {template .body}
     {call .header_ data="all" /}
     {call .links_ data="all" /}
+    {call .image_ data="all" /}
 {/template}
 
 
@@ -54,14 +55,23 @@
  * Name
  * @param params {{
  *     data: {
- *         name: string
+ *         name: (sm.bSmLink.Template.Params|string)
  *     }
  * }}
  * @protected
  */
 {template .header_}
     <div class="{call .rootClass/}__name">
-        {$params.data.name}
+        {if $params.data.name?.data?.url}
+            {call .renderChild}
+                {param params: [
+                    'type': 'smLink',
+                    'renderParams': $params.data.name
+                ]/}
+            {/call}
+        {else}
+            {$params.data.name}
+        {/if}
     </div>
 {/template}
 
@@ -113,14 +123,40 @@
  * @protected
  */
 {template .buttonLink_}
-    <div class="{call .rootClass/}__button-link">
-        {call .renderChild}
-            {param params: [
-                'type': 'smButtonLink',
-                'renderParams': $params.data.buttonLink
-            ]/}
-        {/call}
-    </div>
+    {if $params.data.buttonLink}
+        <div class="{call .rootClass/}__button-link">
+            {call .renderChild}
+                {param params: [
+                    'type': 'smButtonLink',
+                    'renderParams': $params.data.buttonLink
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * ButtonLink
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         logo: {
+ *             url: string
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .image_}
+    {if $params.data.logo and $params.data.logo.url}
+        <div class="{call .rootClass/}__logo">
+            <img class="{call .rootClass/}__logo-image"
+                src="{$params.data.logo.url}"
+                altText="{$params.data.name}"
+            />
+        </div>
+    {/if}
 {/template}
 
 

@@ -74,7 +74,6 @@ goog.scope(function() {
     FilterInput.prototype.reset = function() {
         this.resetInputs_();
         this.getView().setButtonResetVisibility(false);
-        this.collapse();
     };
 
 
@@ -97,6 +96,7 @@ goog.scope(function() {
     /**
      * Get data of not empty options
      * @return {Array<{
+     *     name: (string|number),
      *     value: string
      * }>}
      */
@@ -106,12 +106,45 @@ goog.scope(function() {
         this.options.forEach(function(option) {
             if (option.getValue()) {
                 result.push({
+                    name: option.getName(),
                     value: option.getValue()
                 });
             }
         }, this);
 
         return result;
+    };
+
+
+    /**
+     * Set input value
+     * @param {Array<{
+     *     name: (string|number),
+     *     value: string
+     * }>} data
+     */
+    FilterInput.prototype.checkOption = function(data) {
+        var option = this.findOption(data);
+
+        if (option) {
+            option.setValue(data.value);
+        }
+    };
+
+
+    /**
+     * Clear input
+     * @param {Array<{
+     *     name: (string|number),
+     *     value: string
+     * }>} data
+     */
+    FilterInput.prototype.uncheckOption = function(data) {
+        var option = this.findOption(data);
+
+        if (option) {
+            option.clear();
+        }
     };
 
 
@@ -126,6 +159,7 @@ goog.scope(function() {
 
     /**
      * Set all options data
+     * @override
      * @protected
      */
     FilterInput.prototype.setAllData = function() {
@@ -134,7 +168,25 @@ goog.scope(function() {
 
 
     /**
+     * Find option
+     * @param {Array<{
+     *     name: (string|number),
+     *     value: string
+     * }>} data
+     * @return {sm.gInput.InputStendhal}
+     * @override
+     * @protected
+     */
+    FilterInput.prototype.findOption = function(data) {
+        return goog.array.find(this.options, function(option) {
+            return option.getName() == data.name;
+        });
+    };
+
+
+    /**
      * Initializes listeners for options
+     * @override
      * @protected
      */
     FilterInput.prototype.initOptionsListeners = function() {
@@ -160,6 +212,8 @@ goog.scope(function() {
      * @override
      */
     FilterInput.prototype.initViewListeners = function() {
+        FilterInput.base(this, 'initViewListeners');
+
         this.viewListen(
             View.Event.RESET_CLICK,
             this.onResetClick_
@@ -199,7 +253,7 @@ goog.scope(function() {
     FilterInput.prototype.dispatchEventCheckOption = function(option) {
         var checkOptionEvent = new CheckOptionEvent({
             data: option.getValue(),
-            position: this.getView().getOptionOffset(option)
+            bounds: this.getView().getOptionBounds(option)
         });
         this.dispatchEvent(checkOptionEvent);
     };
@@ -214,7 +268,7 @@ goog.scope(function() {
     FilterInput.prototype.dispatchEventUncheckOption = function(option) {
         var uncheckOptionEvent = new UncheckOptionEvent({
             data: option.getValue(),
-            position: this.getView().getOptionOffset(option)
+            bounds: this.getView().getOptionBounds(option)
         });
         this.dispatchEvent(uncheckOptionEvent);
     };

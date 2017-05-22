@@ -3,7 +3,6 @@
 
 /**
  * @typedef {{
- *     id: (string|undefined),
  *     name: (string|undefined),
  *     label: string,
  *     value: string,
@@ -15,7 +14,11 @@
 /**
  * @typedef {{
  *     theme: (string|undefined),
- *     stylizationModifier: string
+ *     stylizationModifier: string,
+ *     customIcon: ({
+ *         check: string,
+ *         uncheck: string
+ *     }|undefined)
  * }} sm.bSmCheckbox.Template.Params.Config
  */
 
@@ -51,8 +54,10 @@
  * @override
  */
 {template .body}
-    {call .input_ data="all"/}
-    {call .label_ data="all"/}
+    <label>
+        {call .input_ data="all"/}
+        {call .label_ data="all"/}
+    </label>
 {/template}
 
 
@@ -60,7 +65,6 @@
  * Input template
  * @param params {{
  *     data: {
- *         id: (string|undefined),
  *         value: string,
  *         isChecked: (boolean|undefined)
  *     }
@@ -70,12 +74,55 @@
     <div class="{call .rootClass/}__input-wrap">
         <input type="checkbox"
             class="{call .rootClass/}__input"
-            id="{$params.data?.id ?: $params.data.value}"
             name="{$params.data.name ?: ''}"
             value="{$params.data.value}"
             {$params.data?.isChecked ? 'checked' : ''}
         />
+        {call .icon_ data="all" /}
     </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     config: {
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .icon_}
+    {if $params.config.customIcon}
+        <div class="{call .rootClass /}__icon_check">
+            {call .renderChild}
+                {param params: [
+                    'type': 'icon-svg',
+                    'renderParams': [
+                        'data': [
+                            'type': $params.config.customIcon.check
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass /}__icon_uncheck">
+            {call .renderChild}
+                {param params: [
+                    'type': 'icon-svg',
+                    'renderParams': [
+                        'data': [
+                            'type': $params.config.customIcon.uncheck
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
 {/template}
 
 
@@ -83,17 +130,15 @@
  * Label template
  * @param params {{
  *     data: {
- *         id: (string|undefined),
  *         label: string,
  *         value: string
  *     }
  * }}
  */
 {template .label_}
-    <label for="{$params.data?.id ?: $params.data.value}"
-        class="{call .rootClass/}__label">
+    <span class="{call .rootClass/}__label">
         {$params.data.label}
-    </label>
+    </span>
 {/template}
 
 
@@ -101,11 +146,17 @@
  * Attributes
  * @param params {{
  *     data {
- *         id: (string|undefined),
  *         name: (string|undefined),
  *         label: string,
  *         value: string,
  *         isChecked: (boolean|undefined)
+ *     },
+ *     config: {
+ *         theme: (string|undefined),
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
  *     }
  * }}
  * @override
@@ -114,10 +165,11 @@
     data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: [
-                'id': $params.data?.id ?: $params.data.value,
                 'name': $params.data.name ?: '',
                 'label': $params.data.label,
-                'value': $params.data.value
+                'value': $params.data.value,
+                'theme': $params.config?.theme,
+                'customIcon': $params.config?.customIcon
             ]/}
         {/call}"
 {/template}
@@ -129,4 +181,29 @@
  */
 {template .rootClass}
     b-sm-checkbox
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     data: {
+ *         isChecked: (boolean|undefined)
+ *     },
+ *     config: {
+ *         customIcon: ({
+ *             check: string,
+ *             uncheck: string
+ *         }|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.data.isChecked}
+        {call .rootClass/}_checked
+    {/if}
+    {if $params.config.customIcon}
+        {sp}{call .rootClass/}_custom-icon
+    {/if}
 {/template}

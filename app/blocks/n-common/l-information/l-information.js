@@ -35,14 +35,3 @@ goog.scope(function() {
         view: View
     });
 });  // goog.scope
-
-
-/**
- * creates sm.lInformation.Information instance
- */
-jQuery(function() {
-    sm.iLayout.LayoutStendhal.autoInstance(
-        sm.lInformation.Information,
-        sm.lInformation.View
-    );
-});

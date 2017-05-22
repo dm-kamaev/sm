@@ -58,7 +58,8 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-link',
-        HOVERABLE: 'b-sm-link_hoverable'
+        HOVERABLE: 'b-sm-link_hoverable',
+        SELECTED: 'b-sm-link_selected'
     };
 
 
@@ -73,6 +74,7 @@ goog.scope(function() {
         ATTENTION: 'attention',
         DARK: 'dark',
         BLOCK: 'block',
+        HOAR: 'hoar',
         NEPTUNE: 'neptune'
     };
 
@@ -111,6 +113,7 @@ goog.scope(function() {
                 target: rawParams['target'],
                 size: rawParams['size'],
                 disableHover: rawParams['disableHover'],
+                isSelected: rawParams['isSelected'],
                 theme: rawParams['theme']
             }
         };
@@ -137,15 +140,14 @@ goog.scope(function() {
 
 
     /**
-     * Enable hover reaction on element if it possible (not-mobile device)
+     * Enable hover reaction on element if it possible (not-mobile device
+     * and element isn't selected)
      * @public
      */
     View.prototype.enableHover = function() {
-        if (goog.labs.userAgent.device.isDesktop()) {
-            goog.dom.classlist.add(
-                this.getElement(),
-                View.CssClass.HOVERABLE
-            );
+        if (goog.labs.userAgent.device.isDesktop() && !this.isSelected()) {
+            goog.dom.classlist.add(this.getElement(), View.CssClass.HOVERABLE);
+            this.params.disableHover = false;
         }
     };
 
@@ -155,10 +157,42 @@ goog.scope(function() {
      * @public
      */
     View.prototype.disableHover = function() {
-        goog.dom.classlist.remove(
+        goog.dom.classlist.remove(this.getElement(), View.CssClass.HOVERABLE);
+        this.params.disableHover = true;
+    };
+
+
+    /**
+     * Return isSelected status
+     * @return {boolean}
+     * @public
+     */
+    View.prototype.isSelected = function() {
+        return goog.dom.classlist.contains(
             this.getElement(),
-            View.CssClass.HOVERABLE
+            View.CssClass.SELECTED
         );
+    };
+
+
+    /**     * Set class SELECTED and disable hover
+     * @public
+     */
+    View.prototype.select = function() {
+        goog.dom.classlist.add(this.getElement(), View.CssClass.SELECTED);
+        goog.dom.classlist.remove(this.getElement(), View.CssClass.HOVERABLE);
+    };
+
+
+    /**
+     * Remove class SELECTED and enable hover if it possible
+     * @public
+     */
+    View.prototype.deselect = function() {
+        goog.dom.classlist.remove(this.getElement(), View.CssClass.SELECTED);
+        if (!this.params.disableHover) {
+            this.enableHover();
+        }
     };
 
 
@@ -195,7 +229,7 @@ goog.scope(function() {
     View.prototype.transformParams = function(rawParams) {
         return {
             id: rawParams['id'],
-            disableHover: rawParams['disableHover']
+            disableHover: rawParams['disableHover'] || false
         };
     };
 

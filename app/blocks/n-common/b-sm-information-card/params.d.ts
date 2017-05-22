@@ -13,9 +13,12 @@ export namespace bSmInformationCard {
         export interface Data {
             id: number;
             type: string;
-            name: string;
+            name: (string|bSmLink.Params);
             link: bSmLink.Params;
-            buttonLink: bSmButtonLink.Params;
+            buttonLink?: bSmButtonLink.Params;
+            logo?: {
+                url: string;
+            }
         }
 
         /*

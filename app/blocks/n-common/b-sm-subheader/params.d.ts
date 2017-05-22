@@ -30,7 +30,8 @@ export namespace bSmSubheader {
             search?: {
                 placeholder?: string,
                 redirect: boolean,
-                pageAlias: string
+                pageAlias: string,
+                sourceUrl?: string
             },
             favorites?: any
         }

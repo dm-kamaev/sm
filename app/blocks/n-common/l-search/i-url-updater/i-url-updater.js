@@ -8,22 +8,31 @@
  */
 goog.provide('sm.lSearch.iUrlUpdater.UrlUpdater');
 
-goog.require('goog.Uri.QueryData');
 goog.require('goog.events.EventTarget');
 goog.require('goog.history.Html5History');
 goog.require('goog.object');
 goog.require('goog.structs.Map');
+goog.require('sm.iSmQueryBuilder.QueryBuilder');
 
 
 goog.scope(function() {
-
+    var QueryBuilder = goog.module.get('sm.iSmQueryBuilder.QueryBuilder');
 
 
     /**
      * Url updater
      * @constructor
      */
-    sm.lSearch.iUrlUpdater.UrlUpdater = function() {};
+    sm.lSearch.iUrlUpdater.UrlUpdater = function() {
+
+
+        /**
+         * Query builder instance
+         * @type {sm.iSmQueryBuilder.QueryBuilder}
+         * @private
+         */
+        this.queryBuilder_ = new QueryBuilder();
+    };
     var UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater;
 
 
@@ -38,7 +47,7 @@ goog.scope(function() {
         var newUrl = this.generateUrl_(params);
 
         if (goog.history.Html5History.isSupported()) {
-           window.history.pushState(null, null, newUrl);
+            window.history.pushState(null, null, newUrl);
         } else {
             window.location.href = newUrl;
         }
@@ -53,8 +62,8 @@ goog.scope(function() {
      */
     UrlUpdater.prototype.generateUrl_ = function(params) {
         var currentPath = window.location.pathname;
-        var transformedParams = this.transformParams_(params);
-        var queryData = this.makeQueryData_(transformedParams);
+        var transformedParams = this.prepareParams_(params);
+        var queryData = this.queryBuilder_.buildUrlQuery(transformedParams);
 
         return currentPath + '?' + queryData.toString();
     };
@@ -73,28 +82,26 @@ goog.scope(function() {
     };
 
     /**
-    * Transform params map for build url
-    * @param  {Object<string, (Array|string|number|boolean)>} params
-    * @return {Object<string, (string|number|boolean)>}
-    * @private
-    */
-    UrlUpdater.prototype.transformParams_ = function(params) {
-        var notEmptyParams = goog.object.filter(
+     * Prepare params map for build url
+     * @param  {Object<string, (Array|string|number|boolean)>} params
+     * @return {Object<string, (string|number|boolean)>}
+     * @private
+     */
+    UrlUpdater.prototype.prepareParams_ = function(params) {
+        return goog.object.filter(
             params, this.isNotEmptyParam_
         );
-
-        return goog.object.map(notEmptyParams, this.transformParam_);
     };
 
 
     /**
-    * Check that parame is not empty
-    * Which means is not null and
-    * if param is array it has length more than zero
-    * @param  {?(Array|number|string|boolean)} param
-    * @return {boolean}
-    * @private
-    */
+     * Check that parame is not empty
+     * Which means is not null and
+     * if param is array it has length more than zero
+     * @param  {?(Array|number|string|boolean)} param
+     * @return {boolean}
+     * @private
+     */
     UrlUpdater.prototype.isNotEmptyParam_ = function(param) {
         var result = param;
         if (goog.isDefAndNotNull(param) && Array.isArray(param)) {
@@ -103,21 +110,5 @@ goog.scope(function() {
 
         return !!result;
     };
-
-
-    /**
-    * Transform array to string of elements divivded by commas
-    * @param  {(Array|number|string|boolean)} param
-    * @return {(string|number|boolean)} trasformed param
-    * @private
-    */
-    UrlUpdater.prototype.transformParam_ = function(param) {
-        var result = param;
-        if (Array.isArray(param)) {
-            result = goog.isNull(param) ? null : param.toString();
-        }
-
-        return result;
-    };
-
 });  // goog.scope
+

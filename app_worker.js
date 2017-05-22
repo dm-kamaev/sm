@@ -99,6 +99,7 @@ app.use('/:subdomain/api', api.geo.router);
 app.use(csrf);
 
 app.use('/:subdomain/', api.user.router);
+app.use('/:subdomain', modules.geo.router);
 app.use('/schools/', modules.school.router);
 app.use('/courses/', modules.course.router);
 app.use('/universities/', modules.university.router);
@@ -115,6 +116,7 @@ async(function() {
         'build/compiledServerSoy/server.soy.concat.js',
         'node_modules/clobl/blocks/i-utils/i-utils.js',
         'node_modules/clobl/blocks/i-utils-legacy/i-utils.js',
+        'app/blocks/n-common/i-sm-utils/i-sm-utils.js',
         'app/blocks/n-common/i-media/i-media.js'
     ];
     soy.loadFiles(

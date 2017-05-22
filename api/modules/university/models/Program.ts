@@ -69,6 +69,10 @@ const Program: ProgramModel = sequelize.define('Program', {
         }
     },
     phone: DataType.STRING,
+    oksoCode: {
+        type: DataType.STRING,
+        field: 'okso_code',
+    },
     totalScore: {
         field: 'total_score',
         type: DataType.INTEGER
@@ -81,10 +85,6 @@ const Program: ProgramModel = sequelize.define('Program', {
     reviewCount: {
         field: 'review_count',
         type: DataType.ARRAY(DataType.INTEGER)
-    },
-    oksoCode: {
-        field: 'okso_code',
-        type: DataType.STRING
     },
     createdAt: {
         field: 'created_at',

@@ -54,6 +54,30 @@
     }
 }
 
+.b-sm-stars_size_xxxs {
+    .b-sm-stars__star {
+        margin-right: 6px;
+
+        font-size: 15px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+.b-sm-stars_size_5xs {
+    .b-sm-stars__star {
+        margin-right: 1.5px;
+
+        font-size: 8px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
 .b-sm-stars_colored-theme {
     .b-sm-stars__star {
         color: #e6e6e6;
@@ -67,7 +91,11 @@
 .b-sm-stars_neptune-theme {
     text-align: left;
 
+    .b-sm-stars__star {
+        color: #dfdfdf;
+    }
+
     .b-sm-stars__star_selected {
-        color: #0777e8;
+        color: #356fc4;
     }
 }

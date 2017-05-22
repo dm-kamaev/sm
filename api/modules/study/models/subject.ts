@@ -3,7 +3,7 @@ const DataType = require('sequelize'),
 
 import * as Sequelize from 'sequelize/v3';
 
-interface SubjectAttribute {
+export interface SubjectAttribute {
     id: number;
     name: string;
     displayName: string;

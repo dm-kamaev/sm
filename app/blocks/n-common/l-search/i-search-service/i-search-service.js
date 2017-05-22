@@ -9,9 +9,9 @@
 goog.provide('sm.lSearch.iSearchService.SearchService');
 
 goog.require('cl.iRequest.Request');
-goog.require('goog.Uri.QueryData');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
+goog.require('sm.iSmQueryBuilder.QueryBuilder');
 goog.require('sm.lSearch.iSearchService.ListDataLoadedEvent');
 goog.require('sm.lSearch.iSearchService.SearchCountDataLoadedEvent');
 goog.require('sm.lSearch.iSearchService.MapDataLoadedEvent');
@@ -19,9 +19,12 @@ goog.require('sm.lSearch.iSearchService.MapDataLoadedEvent');
 
 goog.scope(function() {
     var Request = cl.iRequest.Request;
-    var ListDataLoadedEvent = sm.lSearch.iSearchService.ListDataLoadedEvent,
-        MapDataLoadedEvent = sm.lSearch.iSearchService.MapDataLoadedEvent,
-        SearchCountDataLoadedEvent =
+    var QueryBuilder = goog.module.get('sm.iSmQueryBuilder.QueryBuilder');
+    var ListDataLoadedEvent =
+        sm.lSearch.iSearchService.ListDataLoadedEvent;
+    var MapDataLoadedEvent =
+        sm.lSearch.iSearchService.MapDataLoadedEvent;
+    var SearchCountDataLoadedEvent =
             sm.lSearch.iSearchService.SearchCountDataLoadedEvent;
 
 
@@ -87,6 +90,14 @@ goog.scope(function() {
          * @private
          */
         this.mapDataPromise_ = null;
+
+
+        /**
+         * Query builder instance
+         * @type {sm.iSmQueryBuilder.QueryBuilder}
+         * @private
+         */
+        this.queryBuilder_ = new QueryBuilder();
     };
     goog.inherits(
         sm.lSearch.iSearchService.SearchService, goog.events.EventTarget
@@ -106,48 +117,6 @@ goog.scope(function() {
 
 
     /**
-     * Possible addresses of search api to load data depending of entity type
-     * @enum {string}
-     */
-    SearchService.SearchApiAddress = {
-        SCHOOL: '/api/school/search',
-        COURSE: '/api/course/search'
-    };
-
-
-    /**
-     * Possible addresses of search map api to load data
-     * depending of entity type
-     * @enum {string}
-     */
-    SearchService.SearchMapApiAddress = {
-        SCHOOL: '/api/school/search/map',
-        COURSE: '/api/course/search/map'
-    };
-
-
-    /**
-     * Possible addresses of search count api to load data
-     * depending of entity type
-     * @enum {string}
-     */
-    SearchService.SearchCountApiAddress = {
-        SCHOOL: '/api/school/search/count',
-        COURSE: '/api/course/search/count'
-    };
-
-
-    /**
-     * Possible type of data to load form backend
-     * @enum {string}
-     */
-    SearchService.EntityType = {
-        SCHOOL: 'school',
-        COURSE: 'course'
-    };
-
-
-    /**
      * Possible data types for loading
      * @enum {string}
      */
@@ -159,26 +128,15 @@ goog.scope(function() {
 
 
     /**
-     * Init search service by given type
-     * Please note, that servis must be inited before use
-     * @param {string} entityType entityType of search page
+     * Init search service by given search api address
+     * Please note, that service must be inited before use
+     * @param {string} searchApiAddress Search api address
      * @public
      */
-    SearchService.prototype.init = function(entityType) {
-        switch (entityType) {
-            case SearchService.EntityType.SCHOOL:
-                this.searchApi_ = SearchService.SearchApiAddress.SCHOOL;
-                this.searchCountApi_ =
-                    SearchService.SearchCountApiAddress.SCHOOL;
-                this.searchMapApi_ = SearchService.SearchMapApiAddress.SCHOOL;
-                break;
-            case SearchService.EntityType.COURSE:
-                this.searchApi_ = SearchService.SearchApiAddress.COURSE;
-                this.searchCountApi_ =
-                    SearchService.SearchCountApiAddress.COURSE;
-                this.searchMapApi_ = SearchService.SearchMapApiAddress.COURSE;
-                break;
-        }
+    SearchService.prototype.init = function(searchApiAddress) {
+        this.searchApi_ = searchApiAddress;
+        this.searchMapApi_ = `${searchApiAddress}/map`;
+        this.searchCountApi_ = `${searchApiAddress}/count`;
 
         this.request_ = Request.getInstance();
     };
@@ -420,15 +378,15 @@ goog.scope(function() {
     SearchService.prototype.generateApiAddress_ = function(searchType) {
         var apiAddress;
         switch (searchType) {
-            case SearchService.DataType.SEARCH:
-                apiAddress = this.searchApi_;
-                break;
-            case SearchService.DataType.MAP_POINTS:
-                apiAddress = this.searchMapApi_;
-                break;
-            case SearchService.DataType.SEARCH_COUNT:
-                apiAddress = this.searchCountApi_;
-                break;
+        case SearchService.DataType.SEARCH:
+            apiAddress = this.searchApi_;
+            break;
+        case SearchService.DataType.MAP_POINTS:
+            apiAddress = this.searchMapApi_;
+            break;
+        case SearchService.DataType.SEARCH_COUNT:
+            apiAddress = this.searchCountApi_;
+            break;
         }
         return apiAddress;
     };
@@ -447,9 +405,8 @@ goog.scope(function() {
             searchParams,
             this.isNotEmptyParameter_
         );
-        var queryData = goog.Uri.QueryData.createFromMap(notNullParams);
 
-        return queryData.toString();
+        return this.queryBuilder_.buildApiQuery(notNullParams);
     };
 
 
