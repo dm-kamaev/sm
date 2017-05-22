@@ -146,9 +146,9 @@ class InformationView extends LayoutView {
 
         let relapImage;
 
-        if (data.university.imageUrl) {
+        if (data.university.relapImageUrl) {
             relapImage = utils.getImageUrl(
-                data.university.imageUrl,
+                data.university.relapImageUrl,
                 UniversityImageSize.RELAP
             );
         } else {
