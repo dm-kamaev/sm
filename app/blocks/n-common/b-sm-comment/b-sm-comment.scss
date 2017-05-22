@@ -35,8 +35,9 @@
 .b-sm-comment__author-photo {
     width: 100%;
     height: 100%;
-    background-size: cover;
+
     background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .b-sm-comment__author-data {
@@ -66,6 +67,8 @@
 }
 
 .b-sm-comment__paragraph-description {
+    word-wrap: break-word;
+
     color: #747474;
 
     line-height: 22px;
