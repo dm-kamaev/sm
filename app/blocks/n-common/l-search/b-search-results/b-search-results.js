@@ -1,5 +1,6 @@
 goog.provide('sm.lSearch.bSearchResults.SearchResults');
 
+goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmSwitch.SmSwitch');
@@ -41,6 +42,7 @@ goog.scope(function() {
          * @private
          */
         this.sort_ = null;
+
 
         /**
          * Show more button instance
@@ -291,7 +293,7 @@ goog.scope(function() {
      * @public
      */
     SearchResults.prototype.isAnimationEnded = function() {
-        return this.getView().getAnimationPromise() ? true : false;
+        return !!this.getView().getAnimationPromise();
     };
 
 

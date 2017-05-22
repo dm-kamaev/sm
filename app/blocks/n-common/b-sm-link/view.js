@@ -197,6 +197,29 @@ goog.scope(function() {
 
 
     /**
+     * Set class SELECTED and disable hover
+     * @public
+     */
+    View.prototype.select = function() {
+        goog.dom.classlist.add(this.getElement(), View.CssClass.SELECTED);
+        goog.dom.classlist.remove(this.getElement(), View.CssClass.HOVERABLE);
+    };
+
+
+    /**
+     * Remove class SELECTED and enable hover if it possible
+     * @public
+     */
+    View.prototype.deselect = function() {
+        goog.dom.classlist.remove(this.getElement(), View.CssClass.SELECTED);
+
+        if (!this.params.disableHover) {
+            this.enableHover();
+        }
+    };
+
+
+    /**
      * Check if theme is valid and set it to block
      * @param {sm.bSmLink.View.Theme} theme
      * @public

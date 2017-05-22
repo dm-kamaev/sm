@@ -59,6 +59,7 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
+
         this.params = this.transformParams(this.getParams());
 
         this.dom.links = goog.dom.getElementsByClass(View.CssClass.LINK);
