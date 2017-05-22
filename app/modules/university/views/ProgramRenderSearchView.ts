@@ -158,7 +158,7 @@ class ProgramRenderSearchView extends LayoutView {
                 resultsList.programCount,
                 resultsList.universityCount
             ),
-            title: 'Вузы Москвы',
+            title: 'Поиск программ обучения',
             placeholder: {
                 text: [
                     'Ничего страшного! Во-первых, в&nbsp;нашей базе есть ' +
