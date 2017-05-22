@@ -139,6 +139,8 @@ goog.scope(function() {
      * @private
      */
     ModalInteraction.prototype.sendRequest_ = function() {
+        this.button_.disable();
+
         var data = this.buildRequestData_();
 
         this.dispatchEvent(ModalInteraction.Event.SUBMIT);
@@ -159,6 +161,7 @@ goog.scope(function() {
         this.dispatchEvent(ModalInteraction.Event.SUCCESS);
 
         this.hide();
+        this.button_.enable();
         location.reload();
     };
 
@@ -180,6 +183,7 @@ goog.scope(function() {
             return error.message;
         });
 
+        this.button_.enable();
         this.showErrors(errorMessages);
     };
 

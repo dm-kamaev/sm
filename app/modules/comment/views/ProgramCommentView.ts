@@ -162,9 +162,13 @@ class ProgramCommentView {
     public renderModal(
             params: ModalRenderParams
     ): gModalInteraction.Params.Data {
+        const buttonText = Object.keys(params.comment).length ?
+            'Изменить отзыв':
+            'Оставить отзыв';
+
         const button: gButtonStendhal.Params = {
             data: {
-                content: 'Оставить отзыв'
+                content: buttonText
             },
             config: {
                 theme: 'neptune-reverse',
