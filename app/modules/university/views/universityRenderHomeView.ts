@@ -29,7 +29,7 @@ import {bSearchPanel} from '../../../blocks/n-university/l-home-university/b-sea
 import {
     bSmInformationCard
 } from '../../../blocks/n-common/b-sm-information-card/params';
-
+import {UniversityImageSize} from '../constants/UniversityImageSize';
 
 
 type Ege = {
@@ -39,6 +39,7 @@ type Ege = {
 
 const linksGenerator = new LinksGenerator(config);
 const searchUrl = linksGenerator.links.university + '/program/search';
+const IMAGE_WIDTH_TAG = '{width}';
 
 class UniversityRenderHomeView extends LayoutView {
     protected params: lHomeUniversity.Params;
@@ -151,6 +152,12 @@ class UniversityRenderHomeView extends LayoutView {
     private getPopularUniversityItem_(
             university: BackendUniversity
     ): bSmInformationCard.Params.Data {
+        const imageUrl = university.imageUrl ?
+            university.imageUrl.replace(
+                IMAGE_WIDTH_TAG,
+                UniversityImageSize.DEFAULT[0].toString()
+            ) : null;
+
         return {
             id: university.id,
             type: entityType.UNIVERSITY,
@@ -165,7 +172,7 @@ class UniversityRenderHomeView extends LayoutView {
                 }
             },
             logo: {
-                url: university.imageUrl
+                url: imageUrl
             }
         };
     }
