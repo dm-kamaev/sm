@@ -86,6 +86,7 @@ type ModalRenderParams = {
 };
 
 type CommentsListParams = {
+    title: string;
     comments: Array<BackendProgramComment>;
     users: Array<BackendUser>;
 };
@@ -253,7 +254,7 @@ class ProgramCommentView {
         }) :
         null;
         return {
-            header: 'Отзывы – Менеджмент (НИУ–ВШЭ)',
+            header: params.title,
             list: {
                 items: items,
                 itemType: 'smComment'

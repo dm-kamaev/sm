@@ -224,7 +224,7 @@ class InformationView extends LayoutView {
             backendImageUrl, UniversityImageSize.DEFAULT);
 
         const buttonText = Object.keys(userComment).length ?
-            'Изменить отзыв':
+            'Изменить отзыв' :
             'Оставить отзыв';
 
         const sources = backendImageUrl ?
@@ -524,8 +524,12 @@ class InformationView extends LayoutView {
     }
 
     private setComments_(data: BackendData) {
+        const programName = data.program.name,
+            abbreviation = data.university.abbreviation;
+
         const programCommentView = new ProgramCommentView();
         this.params.data.comments = programCommentView.renderCommentsList({
+            title: `Отзывы – ${programName} (${abbreviation})`,
             comments: data.comments,
             users: data.users
         });
