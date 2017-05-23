@@ -111,7 +111,7 @@ class InformationView extends LayoutView {
         this.setEntityData_(params.data, params.data.userComment);
         this.setSubscribeBoard_(params.data);
         this.setNavigationPanel_(params.data);
-        this.setComments_(params.data);
+        this.setComments_(params.data, params.data.userComment);
         this.setSimilarPrograms_(params.data);
         this.setUsefulCourses_(params.data);
         this.setModalComment_(params.data.program.id, params.data.userComment);
@@ -523,7 +523,10 @@ class InformationView extends LayoutView {
         };
     }
 
-    private setComments_(data: BackendData) {
+    private setComments_(
+        data: BackendData,
+        userComment: BackendProgramComment
+    ) {
         const programName = data.program.name,
             abbreviation = data.university.abbreviation;
 
@@ -531,6 +534,7 @@ class InformationView extends LayoutView {
         this.params.data.comments = programCommentView.renderCommentsList({
             title: `Отзывы – ${programName} (${abbreviation})`,
             comments: data.comments,
+            userComment: userComment,
             users: data.users
         });
     }

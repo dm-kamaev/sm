@@ -88,6 +88,7 @@ type ModalRenderParams = {
 type CommentsListParams = {
     title: string;
     comments: Array<BackendProgramComment>;
+    userComment: BackendProgramComment;
     users: Array<BackendUser>;
 };
 
@@ -239,6 +240,9 @@ class ProgramCommentView {
     public renderCommentsList(
         params: CommentsListParams
     ): bCommentList.Params.Data {
+        const buttonText = Object.keys(params.userComment).length ?
+            'Изменить отзыв' :
+            'Оставить отзыв';
 
         const items = params.comments ? params.comments
             .filter(comment => this.isEmptyCommentText_(comment))
@@ -255,6 +259,9 @@ class ProgramCommentView {
         null;
         return {
             header: params.title,
+            leaveCommentButton: {
+                content: buttonText
+            },
             list: {
                 items: items,
                 itemType: 'smComment'
