@@ -173,7 +173,7 @@ class InformationView extends LayoutView {
             descriptionList: this.getDescriptionListParams_(data),
             summaryBoard: this.getSummaryBoardParams_(data),
             banner: this.getBannerParams_(data),
-            entityRelation: this.getEntityRelationParams_(),
+            entityRelation: this.getEntityRelationParams_(data),
         };
     }
 
@@ -499,7 +499,9 @@ class InformationView extends LayoutView {
         };
     }
 
-    private getEntityRelationParams_(): bEntityRelation.Params {
+    private getEntityRelationParams_(
+        data: BackendData
+    ): bEntityRelation.Params {
         return {
             data: {
                 items: [{
@@ -508,7 +510,7 @@ class InformationView extends LayoutView {
                     }
                 }, {
                     data: {
-                        content: 'Москва'
+                        content: data.university.city.name
                     }
                 }]
             }
