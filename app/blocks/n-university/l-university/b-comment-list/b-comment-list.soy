@@ -56,6 +56,7 @@
     // {call .filterPanel_ data="all" /}
     {call .leaveCommentButton_}
         {param params: [
+            'leaveCommentButton': $params.data.leaveCommentButton,
             'displaySize': 's',
             'commentsCount': $params.data.list.items.length
         ] /}
@@ -84,9 +85,9 @@
  */
 {template .header_}
     <div class="{call .rootClass /}__header">
-        <div class="{call .rootClass /}__header-content">
+        <h2 class="{call .rootClass /}__header-content">
             {$params.data.header}
-        </div>
+        </h2>
     </div>
 {/template}
 
@@ -146,14 +147,19 @@
  *     data: {
  *         list: {
  *             items: Array<sm.bSmComment.Template.Params.Data>
- *         }
+ *         },
+ *         leaveCommentButton: sm.gButtonStendhal.Template.Params.Data,
  *     }
  * }}
  */
 {template .controlPanel_}
     <div class="{call .rootClass /}__control-panel">
         {call .showCommentsButtons_ data="all" /}
-        {call .leaveCommentButton_ data="all" /}
+        {call .leaveCommentButton_}
+            {param params: [
+                'leaveCommentButton': $params.data.leaveCommentButton
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -244,6 +250,7 @@
  * Button leave comment
  * @param params {{
  *     displaySize: (string|undefined),
+ *     leaveCommentButton: sm.gButtonStendhal.Params.Data,
  *     commentsCount: (number|undefined)
  * }}
  */
@@ -268,11 +275,7 @@
             {param params: [
                 'type': 'button',
                 'renderParams': [
-                    'data': [
-                        'content': [
-                            'default': 'Оставить отзыв'
-                        ]
-                    ],
+                    'data': $params.leaveCommentButton,
                     'config': [
                         'customClasses': [$customClasses],
                         'theme': 'neptune',

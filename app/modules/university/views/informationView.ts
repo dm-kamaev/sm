@@ -108,10 +108,10 @@ class InformationView extends LayoutView {
     protected setParams(params: RenderParams) {
         super.setParams(params);
 
-        this.setEntityData_(params.data);
+        this.setEntityData_(params.data, params.data.userComment);
         this.setSubscribeBoard_(params.data);
         this.setNavigationPanel_(params.data);
-        this.setComments_(params.data);
+        this.setComments_(params.data, params.data.userComment);
         this.setSimilarPrograms_(params.data);
         this.setUsefulCourses_(params.data);
         this.setModalComment_(params.data.program.id, params.data.userComment);
@@ -146,9 +146,9 @@ class InformationView extends LayoutView {
 
         let relapImage;
 
-        if (data.university.imageUrl) {
+        if (data.university.relapImageUrl) {
             relapImage = utils.getImageUrl(
-                data.university.imageUrl,
+                data.university.relapImageUrl,
                 UniversityImageSize.RELAP
             );
         } else {
@@ -159,7 +159,10 @@ class InformationView extends LayoutView {
         this.params.data.openGraph.relapImage = relapImage;
     }
 
-    private setEntityData_(data: BackendData) {
+    private setEntityData_(
+        data: BackendData,
+        userComment: BackendProgramComment
+    ) {
         this.params.data.entityData = {
             id: data.program.id,
             name: data.university.name,
@@ -168,7 +171,7 @@ class InformationView extends LayoutView {
             subunitName: data.program.name,
             subunitType: this.subunitType,
             description: data.program.description,
-            sketch: this.getSketchParams_(data),
+            sketch: this.getSketchParams_(data, userComment),
             cutDescription: this.getCutDescription_(data.program.description),
             descriptionList: this.getDescriptionListParams_(data),
             summaryBoard: this.getSummaryBoardParams_(data),
@@ -208,7 +211,10 @@ class InformationView extends LayoutView {
         };
     }
 
-    private getSketchParams_(data: BackendData): bSmSketch.Params.Data {
+    private getSketchParams_(
+        data: BackendData,
+        userComment: BackendProgramComment
+    ): bSmSketch.Params.Data {
         const universityName: string = data.university.name,
             backendImageUrl = data.university.imageUrl;
 
@@ -216,6 +222,10 @@ class InformationView extends LayoutView {
             backendImageUrl, UniversityImageSize.MEDIUM);
         const imageUrlSizeL = utils.getImageUrl(
             backendImageUrl, UniversityImageSize.DEFAULT);
+
+        const buttonText = Object.keys(userComment).length ?
+            'Изменить отзыв' :
+            'Оставить отзыв';
 
         const sources = backendImageUrl ?
             [{
@@ -242,9 +252,7 @@ class InformationView extends LayoutView {
             },
             button: {
                 data: {
-                    content: {
-                        default: 'Оставить отзыв'
-                    }
+                    content: buttonText
                 },
                 config: {
                     theme: 'neptune',
@@ -517,10 +525,18 @@ class InformationView extends LayoutView {
         };
     }
 
-    private setComments_(data: BackendData) {
+    private setComments_(
+        data: BackendData,
+        userComment: BackendProgramComment
+    ) {
+        const programName = data.program.name,
+            abbreviation = data.university.abbreviation;
+
         const programCommentView = new ProgramCommentView();
         this.params.data.comments = programCommentView.renderCommentsList({
+            title: `Отзывы – ${programName} (${abbreviation})`,
             comments: data.comments,
+            userComment: userComment,
             users: data.users
         });
     }

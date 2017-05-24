@@ -325,6 +325,8 @@ class SearchUniversity extends Search {
 
         this.filterPanelGroup.setSortType(event.data.value);
         this.searchResults.setSortType(event.data.value);
+
+        this.updateUrl();
     }
 
     /**

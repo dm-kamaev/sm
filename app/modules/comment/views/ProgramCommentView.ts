@@ -86,7 +86,9 @@ type ModalRenderParams = {
 };
 
 type CommentsListParams = {
+    title: string;
     comments: Array<BackendProgramComment>;
+    userComment: BackendProgramComment;
     users: Array<BackendUser>;
 };
 
@@ -162,9 +164,13 @@ class ProgramCommentView {
     public renderModal(
             params: ModalRenderParams
     ): gModalInteraction.Params.Data {
+        const buttonText = Object.keys(params.comment).length ?
+            'Изменить отзыв':
+            'Оставить отзыв';
+
         const button: gButtonStendhal.Params = {
             data: {
-                content: 'Оставить отзыв'
+                content: buttonText
             },
             config: {
                 theme: 'neptune-reverse',
@@ -234,6 +240,9 @@ class ProgramCommentView {
     public renderCommentsList(
         params: CommentsListParams
     ): bCommentList.Params.Data {
+        const buttonText = Object.keys(params.userComment).length ?
+            'Изменить отзыв' :
+            'Оставить отзыв';
 
         const items = params.comments ? params.comments
             .filter(comment => this.isEmptyCommentText_(comment))
@@ -249,7 +258,10 @@ class ProgramCommentView {
         }) :
         null;
         return {
-            header: 'Отзывы – Менеджмент (НИУ–ВШЭ)',
+            header: params.title,
+            leaveCommentButton: {
+                content: buttonText
+            },
             list: {
                 items: items,
                 itemType: 'smComment'
