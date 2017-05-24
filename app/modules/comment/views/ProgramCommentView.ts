@@ -165,7 +165,7 @@ class ProgramCommentView {
             params: ModalRenderParams
     ): gModalInteraction.Params.Data {
         const buttonText = Object.keys(params.comment).length ?
-            'Изменить отзыв':
+            'Изменить отзыв' :
             'Оставить отзыв';
 
         const button: gButtonStendhal.Params = {
