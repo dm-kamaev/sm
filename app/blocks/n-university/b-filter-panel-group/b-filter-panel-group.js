@@ -19,7 +19,7 @@ const Link = goog.require('sm.bSmLink.SmLink');
  */
 const Event = {
     SUBMIT: FilterPanel.Event.SUBMIT,
-    CHANGE: goog.events.getUniqueId('change'),
+    CHANGE: FilterPanel.Event.CHANGE,
     SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.ITEM_SELECT
 };
 
@@ -486,7 +486,6 @@ class FilterPanelGroup extends Control {
      */
     updateTooltipPosition(bounds) {
         this.dependentFilterPanel_.updateTooltipPosition(bounds);
-        this.dispatchEvent(Event.CHANGE);
     }
 
     /**

@@ -27,6 +27,10 @@ export interface BackendProgramResults {
     programs: Array<BackendListProgram>;
 }
 
+export interface BackendProgramCountResults {
+    programCount: number;
+}
+
 export interface BackendListProgram {
     id: number;
     name: string;

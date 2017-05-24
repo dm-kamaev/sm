@@ -7,7 +7,11 @@ import {
 } from '../types/programSearch';
 
 import {Service, RequestParams} from '../../common/services/Service';
-import {BackendSuggestList, BackendProgramResults} from '../types/program';
+import {
+    BackendSuggestList,
+    BackendProgramResults,
+    BackendProgramCountResults
+} from '../types/program';
 
 import {ProgramNameIsShorter} from './exceptions/ProgramNameIsShorter';
 
@@ -43,8 +47,9 @@ class SearchService extends Service {
         return response.data;
     }
 
-    public async getCountResults(searchParams: SearchParams
-    ): Promise<BackendProgramResults> {
+    public async getCountResults(
+            searchParams: SearchParams
+    ): Promise<BackendProgramCountResults> {
         const requestParams: RequestParams = {
             url: `${this.baseUrl}/count`,
             method: 'get',
