@@ -80,7 +80,6 @@ export class Programs extends BaseWorkWithProgram {
             this.getHashProgramMajor_ = await this.getHashProgramMajor();
         const programMajorColumn: string = this.hashColumn_.programMajor;
         let validateError: boolean = false;
-        // console.log('hashProgramMajor=', hashProgramMajor);
         this.listProgram_.forEach((program, i) => {
             const programMajor: string
                 = this.cleanWhiteSpace(program[programMajorColumn]);
@@ -190,22 +189,33 @@ export class Programs extends BaseWorkWithProgram {
             specialtyСodificator: specialtyСodificatorColumn,
             programMajor: programMajorColumn,
             programSite: programSiteColumn,
+            exchangeProgram: exchangeProgramColumn,
         } = this.hashColumn_;
         const programs = this.listProgram_.map((program) => {
-            const programName: string =
-                this.cleanWhiteSpace(program[programNameColumn]);
+            const programName: string = this.cleanWhiteSpace(
+                program[programNameColumn]
+            );
             const duration: number = parseInt(program[durationColumn], 10);
-            const description: string =
-                this.cleanWhiteSpace(program[descriptionProgramColumn]);
-            const specialty: string
-                = program[specialtyСodificatorColumn] || '';
-            const name: string = program[universityNameColumn] || '';
-            const programSite
-                = this.cleanWhiteSpace(program[programSiteColumn]);
+            const description: string = this.cleanWhiteSpace(
+                program[descriptionProgramColumn]
+            );
+            const specialty: string =
+                this.cleanWhiteSpace(program[specialtyСodificatorColumn]);
+            const name: string = this.cleanWhiteSpace(
+                program[universityNameColumn]
+            );
+            const programSite = this.cleanWhiteSpace(
+                program[programSiteColumn]
+            );
             const abbreviation: string =
                 program[universityAbbreviationColumn] || '';
-            const programMajor: string =
-                this.cleanWhiteSpace(program[programMajorColumn]);
+            const programMajor: string = this.cleanWhiteSpace(
+                program[programMajorColumn]
+             );
+            const exchangeProgram: string = this.cleanWhiteSpace(
+                program[exchangeProgramColumn]
+            );
+
             const key: string
                 = this.uniteAbbrevationAndName(abbreviation, name);
 
@@ -227,6 +237,9 @@ export class Programs extends BaseWorkWithProgram {
             if (programSite) {
                 data.links = [programSite];
             }
+            if (exchangeProgram) {
+                data.exchangeProgram = exchangeProgram;
+            }
             return data;
         });
         // console.log('programs=', programs, programs.length);
@@ -240,8 +253,10 @@ export class Programs extends BaseWorkWithProgram {
         const hashProgramDb: Hash<number> = {};
         programsDb.forEach((program: ProgramInstance) => {
             const {universityId, name} = program;
-            const key: string
-                = this.uniteUniversityIdAndProgramName(universityId, name);
+            const key: string = this.uniteUniversityIdAndProgramName(
+                universityId,
+                name
+            );
             hashProgramDb[key] = program.id;
         });
 

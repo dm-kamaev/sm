@@ -46,6 +46,7 @@ class UpdateUniversityProgram {
             cost: 'Стоимость в год',
             egePassScore: 'Проходной на бюджет',
             programSite: 'ссылка на офиц сайт программы',
+            exchangeProgram: 'Программы обмена (страны через запятую)',
         };
 
         this.hashColumnEgeExam_ = {

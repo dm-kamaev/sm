@@ -37,6 +37,7 @@ export type Columns = {
     ege?: string;
     extraExam?: string;
     programSite?: string;
+    exchangeProgram?: string;
 };
 
 

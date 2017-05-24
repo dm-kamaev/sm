@@ -416,4 +416,13 @@ export class EgeExams extends BaseWorkWithProgram {
                   .map(el => el.replace(/-\d+/g, '').trim())
                   .filter(el => Boolean(el));
     }
+
+    private replaceSuject(subjects: string[]): string[] {
+        return subjects.map(subject => {
+            if (/Информатика и ИКТ/.test(subject)) {
+                subject = 'Информатика';
+            }
+            return subject;
+        });
+    }
 };
