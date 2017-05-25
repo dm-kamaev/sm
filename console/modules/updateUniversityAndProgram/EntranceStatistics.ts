@@ -6,6 +6,8 @@
 const logger
     = require('../../../app/components/logger/logger.js').getLogger('app');
 const sequelize = require('../../../app/components/db.js');
+import * as fs from 'fs';
+import * as path from 'path';
 import {
     EntranceStatisticAttribute,
 } from '../../../api/modules/university/models/EntranceStatistic';
@@ -33,6 +35,7 @@ export class EntranceStatistics extends BaseWorkWithProgram {
     private hashColumn_: Columns;
     private hashUniversities_: Hash<number>;
     private hashPrograms_: Hash<number>;
+    private hashEgeSkipScore_: Hash<any>;
     private getHashProgramMajor_: Hash<number>;
     private universitiesInstance: IUniversities;
     private programsInstance: IPrograms;
@@ -53,6 +56,9 @@ export class EntranceStatistics extends BaseWorkWithProgram {
 
     public async updateViaXlsx() {
         try {
+            this.hashEgeSkipScore_ = this.getHashSkipEgeScore(
+                '../../../assets/universities/skipEge.json'
+            );
             const statistics = this.extractStatistics();
             await this.updateStatistics(statistics);
             logger.info('success entranceStatistics updateViaXlsx');
@@ -120,6 +126,7 @@ export class EntranceStatistics extends BaseWorkWithProgram {
     private extractStatistics() {
         const hashPrograms = this.hashPrograms_;
         const hashUniversities = this.hashUniversities_;
+        const hashEgeSkipScore = this.hashEgeSkipScore_;
         const {
             programName: programNameColumn,
             universityName: universityNameColumn,
@@ -131,6 +138,7 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             egePassScore: egePassScoreColumn,
         } = this.hashColumn_;
         let statistics: EntranceStatisticAttribute[];
+        let count = 0;
         statistics = this.listProgram_.map((
             program
         ): EntranceStatisticAttribute => {
@@ -176,12 +184,22 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             if (cost) {
                 data.cost = cost;
             }
-            if (egePassScore) {
+            const egeKey: string = this.uniteUniversityNameAndProgramName(
+                universityName,
+                programName
+            );
+            if (egePassScore && hashEgeSkipScore[egeKey]) {
+                // console.log(hashEgeSkipScore[egeKey]);
+                // console.log(universityName, programName);
+                count++;
+            }
+            if (egePassScore && !hashEgeSkipScore[egeKey]) {
                 data.egePassScore = egePassScore;
             }
 
             return data;
         });
+        console.log('count=', count);
         // console.log('statistics=', statistics, statistics.length);
         return statistics;
     }
@@ -228,6 +246,11 @@ export class EntranceStatistics extends BaseWorkWithProgram {
             return res;
         };
         await promiseMethods.queue(update, statisticsFromFile);
+    }
+
+    private getHashSkipEgeScore(pathFile: string): Hash<any> {
+        const fullPath: string = path.join(__dirname, pathFile);
+        return JSON.parse(fs.readFileSync(fullPath).toString());
     }
 
     private getCompetition(str: string): number {

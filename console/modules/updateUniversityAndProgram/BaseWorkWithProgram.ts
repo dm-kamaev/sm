@@ -66,4 +66,13 @@ export abstract class BaseWorkWithProgram {
              '::::' +
              this.cleanWhiteSpace(String(subjectId));
     }
+
+    protected uniteUniversityNameAndProgramName(
+      universityName: string,
+      programName: string
+    ): string {
+      return this.cleanWhiteSpace(universityName) +
+             '::::' +
+             this.cleanWhiteSpace(programName);
+    }
 }
