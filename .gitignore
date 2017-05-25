@@ -11,8 +11,6 @@ runtime/
 assets/dump/
 /console/reports
 /vkdata/
-project_tools/
-compile.js
 /*.xlsx
 
 *.log
