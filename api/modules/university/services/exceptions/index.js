@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const ProgramMetaNotFound_1 = require("./ProgramMetaNotFound");
+exports.ProgramMetaNotFound = ProgramMetaNotFound_1.ProgramMetaNotFound;
+const UniversityNameIsEmptyException_1 = require("./UniversityNameIsEmptyException");
+exports.UniversityNameIsEmptyException = UniversityNameIsEmptyException_1.UniversityNameIsEmptyException;
+const UniversityAliasDuplicateException_1 = require("./UniversityAliasDuplicateException");
+exports.UniversityAliasDuplicateException = UniversityAliasDuplicateException_1.UniversityAliasDuplicateException;
+const UniversityAliasNotFoundException_1 = require("./UniversityAliasNotFoundException");
+exports.UniversityAliasNotFoundException = UniversityAliasNotFoundException_1.UniversityAliasNotFoundException;
+const ProgramNameIsShorterException_1 = require("./ProgramNameIsShorterException");
+exports.ProgramNameIsShorterException = ProgramNameIsShorterException_1.ProgramNameIsShorterException;
+const ProgramNotFound_1 = require("./ProgramNotFound");
+exports.ProgramNotFound = ProgramNotFound_1.ProgramNotFound;

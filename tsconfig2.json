@@ -1,0 +1,23 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "rootDir": "./",
+    "watch": true
+    // "diagnostics": true
+  },
+  "exclude": [
+    "node_modules",
+    "project_tools",
+    "sql",
+    "public",
+    "bin",
+    "build",
+    "environment",
+    "assets"
+    // "app",
+    // "console"
+  ]
+}

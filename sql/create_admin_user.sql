@@ -1,0 +1,8 @@
+INSERT INTO admin_user VALUES
+(
+ DEFAULT,
+ 1,
+ '{"isSuperUser": true}',
+ CURRENT_TIMESTAMP,
+ CURRENT_TIMESTAMP
+) RETURNING *;
