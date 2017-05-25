@@ -67,4 +67,5 @@ export type BackendProgramComment = {
     grade?: number;
     yearGraduate?: number;
     userId: number;
+    username: string;
 };

@@ -27,7 +27,8 @@ class ProgramCommentView {
             userType: userData.userType,
             grade: userData.grade,
             yearGraduate: userData.yearGraduate,
-            userId: userData.userId
+            userId: userData.userId,
+            username: userData.username
         };
     }
 
