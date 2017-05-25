@@ -70,6 +70,20 @@ class PageService {
         });
     }
 
+
+    public async getAlias(
+        entityId: number,
+        entityType: string
+    ): Promise<PageIntstance> {
+        return await PageModel.findOne({
+            attributes: ['entityId', 'alias'],
+            where: {
+                entityId,
+                entityType,
+            }
+        });
+    }
+
     public async getAliases(entityIds, entityType) {
         return PageModel.findAll({
             attributes: ['entityId', 'alias'],

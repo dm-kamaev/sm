@@ -206,6 +206,7 @@ class UniversityService {
             throw error;
         });
     }
+
 }
 
 export const service = new UniversityService();

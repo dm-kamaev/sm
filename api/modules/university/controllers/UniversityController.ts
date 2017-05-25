@@ -1,11 +1,15 @@
 import {LegacyController} from '../../../components/interface';
 const Controller: LegacyController = require('nodules/controller').Controller;
+import * as util from 'util';
 
 import {service as universityService} from '../services/university';
 import {service as universityPageService} from '../services/universityPage';
-import {universityPageView} from '../views/universityPageView';
+import {service as programService} from '../services/program';
+import {service as pageService} from '../../entity/services/page';
+import {universityView} from '../views/university';
 
 import {UniversityNotFound} from './errors/UniversityNotFound';
+const entityTypes = require('../../entity/enums/entityType.js');
 
 class UniversityController extends Controller {
     constructor() {
@@ -65,6 +69,20 @@ class UniversityController extends Controller {
      */
     public async actionGet(actionContext: any, universityId: string) {
         return await universityService.get(parseInt(universityId, 10));
+    }
+
+
+    public async actionGetAll(actionContext: any, id: string) {
+        const universityId: number = parseInt(id, 10);
+        const programs = await programService.getByUniversityIdWithPage(
+            universityId
+        ) || [];
+        const universityPage = await pageService.getAlias(
+            universityId,
+            entityTypes.UNIVERSITY
+        ) || {};
+        const universityAlias: string = (universityPage as any).alias;
+        return universityView.renderAll(programs, universityAlias);
     }
 }
 

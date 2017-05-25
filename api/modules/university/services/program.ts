@@ -19,6 +19,7 @@ import {
 } from '../../comment/models/ProgramComment';
 import {Model as EntranceStatisticModel} from '../models/EntranceStatistic';
 import {Model as ProgramEgeExamModel} from '../models/ProgramEgeExam';
+import {Model as PageModel} from '../../entity/models/page';
 import {
     ProgramInstance,
     ProgramAdmin,
@@ -167,6 +168,25 @@ class ProgramService {
             }, {
                 model: EntranceStatisticModel,
                 as: 'entranceStatistics'
+            }]
+        });
+    }
+
+
+    public async getByUniversityIdWithPage(
+        universityId: number
+    ): Promise<ProgramInstance[]> {
+        return ProgramModel.findAll({
+            where: {universityId},
+            attributes: {
+                exclude: EXCLUDE_FIELDS
+            },
+            include: [{
+                model: PageModel,
+                as: 'pages',
+            }, {
+                model: ProgramMajorModel,
+                as: 'programMajor',
             }]
         });
     }
