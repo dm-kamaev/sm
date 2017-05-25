@@ -12,4 +12,6 @@ export interface ProgramCommentData {
 export interface BackendProgramComment extends ProgramCommentData {
     totalScore?: number;
     userId?: number;
+    username?: string;
 }
+

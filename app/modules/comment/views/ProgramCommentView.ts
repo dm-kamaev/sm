@@ -224,10 +224,14 @@ class ProgramCommentView {
         }) :
         null;
 
+        const userName: string = params.user ?
+            params.user.firstName :
+            (params.comment.username || null);
+
         return {
             author: {
                 photoUrl: params.user ? params.user.photoUrl : null,
-                name: params.user ? params.user.firstName : null,
+                name: userName,
                 status: userStatus,
                 grade: params.comment.grade
             },
